@@ -9,7 +9,7 @@ Window.resize(1280, 720)
 
 rag = Rag.new({ :width => 1280,
                 :height => 720,
-                :script_path => "./scenario/scenario02.rb",
+                :script_path => "./scenario/scenario04a.rb",
                 :id => :default_layout_container
                 })
 #ゲームループ

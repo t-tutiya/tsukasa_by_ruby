@@ -271,14 +271,12 @@ class Control
 
     #コマンドストレージが空の場合
     if @script_storage.empty?
-      pp "@script_storage.empty"
       #コマンドストレージのコールスタックが存在する場合
       if !@script_storage_call_stack.empty?
         #コールスタックからコマンドストレージをポップする
         @script_storage = @script_storage_call_stack.pop
       #次に読み込むスクリプトファイルが指定されている場合
       elsif @next_script_file_path
-        pp @next_script_file_path
         #指定されたスクリプトファイルを読み込む
         @script_storage = Tsukasa::ScriptCompiler.new(@next_script_file_path)
         #予約スクリプトファイルパスの初期化
@@ -527,8 +525,8 @@ class Control
     return false #リスト探査続行
   end
 
+  #次に読み込むスクリプトファイルのパスを設定する
   def command_next_scenario(options)
-    pp options[:next_scenario]
     @next_script_file_path = options[:next_scenario]
     return false #リスト探査続行
   end

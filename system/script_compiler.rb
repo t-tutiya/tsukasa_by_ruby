@@ -145,6 +145,7 @@ class ScriptCompiler
   #文字描画速度の設定
   impl_with_one_option_command :delay,        :CharContainer
 
+  #次に読み込むスクリプトファイルの指定
   impl_with_one_option_command :next_scenario,         :LayoutContainer
 
   #サブオプションを持つコマンド

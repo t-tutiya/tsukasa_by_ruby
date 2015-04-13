@@ -34,7 +34,7 @@ require_relative './module_drawable.rb'
 
 class Control
   @@root = nil        #コントロールツリーのルート
-  @@glabal_flag = {}  #グローバルフラグ
+  @@global_flag = {}  #グローバルフラグ
   @@procedure_list = Hash.new #プロシージャーのリスト
   @@ailias_list =  Hash.new #エイリアスのリスト
 
@@ -387,6 +387,15 @@ class Control
     return true #リスト探査続行
   end
 
+  def command_wait_flag(options)
+    flag = @@global_flag[("user_" + options[:wait_flag].to_s).to_sym]
+    if flag
+      return false #コマンド探査の続行
+    else
+      return true, true, [:wait_flag, options]#コマンド探査の終了
+    end
+  end
+
   #sleepコマンド
   #スリープ状態を開始する
   def command_sleep(options)
@@ -440,6 +449,7 @@ class Control
 
   #条件分岐
   def command_if(options)
+    pp "go if"
     #evalで評価した条件式が真の場合
     if eval(options[:if])
       #現在のコマンドセットをコールスタックにプッシュ
@@ -450,12 +460,16 @@ class Control
       @script_storage = options[:then].dup
     #else節がある場合
     elsif options[:else]
+      pp "commands"
+      pp options[:else]
+      pp @command_list
       #現在のコマンドセットをコールスタックにプッシュ
       @call_stack.push(@command_list)
       #現在のスクリプトストレージをコールスタックにプッシュ
       @script_storage_call_stack.push(@script_storage) if !@script_storage.empty?
       #コマンドリストをクリアする
       @script_storage = options[:else].dup
+      pp @command_list
     end
     return false #フレーム続行
   end
@@ -522,6 +536,17 @@ class Control
   def command_ailias(options)
     @@ailias_list[options[:ailias]] = options[:commands]
 
+    return false #リスト探査続行
+  end
+
+  #############################################################################
+  #分類未決定
+  #############################################################################
+
+  #フラグを設定する
+  def command_flag(options)
+    @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
+    pp @@global_flag
     return false #リスト探査続行
   end
 

@@ -97,7 +97,8 @@ create :ButtonControl, :x_pos => 0, :y_pos => 0, :id=>:button1 do
         create :ImageControl, 
               :file_path=>"./sozai/button_key_up.png", 
               :id=>:key_up do
-#                flag :key=>1, :data=>true
+                flag :key=>1, :data=>2
+                flag :key=>2, :data=>true
               end
         create :ImageControl, 
               :file_path=>"./sozai/button_out.png", 
@@ -149,6 +150,9 @@ create :LayoutContainer,
     end
 end
 
+next_frame
+
+=begin
 next_scenario "./scenario/scenario04b.rb"
 
 next_frame
@@ -157,4 +161,52 @@ text "ＡＤＶエンジン「司（Tsukasa）」のα１バージョンを"
 line_feed
 text "ひとまず公開します。testA"
 pause
+=end
 
+IF "false" do
+  THEN do
+    EVAL "pp 'test 1_a'"
+  end
+  ELSE do
+    EVAL "pp 'test 1_b'"
+    #text "test"
+  end
+end
+
+next_frame
+
+IF "false" do
+  THEN do
+    EVAL "pp 'test 1_c'"
+  end
+  ELSE do
+    EVAL "pp 'test 1_d'"
+    #text "test"
+  end
+end
+wait_flag 1
+pause
+
+IF "false" do
+  THEN do
+    EVAL "pp 'test 2_a'"
+  end
+  ELSE do
+    EVAL "pp 'test 2_b'"
+    #text "test"
+  end
+end
+
+
+EVAL "pp 'YESYES2'"
+
+IF "@@global_flag[:user_1] == 1" do
+  THEN do
+    EVAL "pp 'YES'"
+    next_scenario "./scenario/scenario04b.rb"
+  end
+  ELSE do
+    EVAL "pp 'NO'"
+    next_scenario "./scenario/scenario04c.rb"
+  end
+end

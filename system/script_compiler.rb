@@ -153,6 +153,7 @@ class ScriptCompiler
 
   #サブオプションを持つコマンド
   impl_with_block :create,              :LayoutContainer
+  impl_with_block :button_create,              :LayoutContainer
 
   #画像スタック
   impl_with_block :graph,               :CharContainer

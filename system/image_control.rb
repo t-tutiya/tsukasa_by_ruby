@@ -39,10 +39,17 @@ class ImageControl < Control
   include Movable
   include Drawable
 
+  #Imageのキャッシュ機構
+  @@image_cache = Hash.new
+  #キャッシュされていない画像パスが指定されたら読み込む
+  @@image_cache.default_proc = ->(hsh, key) {
+    hsh[key] = Image.load(key)
+  }
+
   def initialize(options)
     super(options)
     #保持オブジェクトの初期化
-    @entity = Image.load(options[:file_path])
+    @entity = @@image_cache[options[:file_path]]
 
     @width  = @entity.width
     @height = @entity.height

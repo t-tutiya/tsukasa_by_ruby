@@ -58,8 +58,8 @@ class ButtonControl  < Control
     if @x_pos < x  and x < @x_pos + @control_list[0].width and
        @y_pos < y  and y < @y_pos + @control_list[0].height
       #描画コントロールをoverに切り替え
-      send_command(:update, {:visible => false}, :normal)
-      send_command(:update, {:visible => true}, :over)
+      send_command(:visible, {:visible => false}, :normal)
+      send_command(:visible, {:visible => true}, :over)
       return true, false, [:over, {}]  #コマンド探査終了
     else
       #normalを維持
@@ -77,16 +77,16 @@ class ButtonControl  < Control
     if !(@x_pos < x  and x < @x_pos + @control_list[0].width and
          @y_pos < y  and y < @y_pos + @control_list[0].height)
       #描画コントロールをoutに切り替え
-      send_command(:update, {:visible => false}, :over)
-      send_command(:update, {:visible => true}, :out)
+      send_command(:visible, {:visible => false}, :over)
+      send_command(:visible, {:visible => true}, :out)
       return true, false, [:out, {}]  #コマンド探査終了
     end
 
     #マウスボタンが押された場合
     if Input.mouse_push?( M_LBUTTON )
       #描画コントロールをkey_downに切り替え
-      send_command(:update, {:visible => false}, :over)
-      send_command(:update, {:visible => true}, :key_down)
+      send_command(:visible, {:visible => false}, :over)
+      send_command(:visible, {:visible => true}, :key_down)
       return true, false, [:key_down, {}]  #フレーム終了
     else
       #overを維持
@@ -104,16 +104,16 @@ class ButtonControl  < Control
     if !(@x_pos < x  and x < @x_pos + @control_list[0].width and
          @y_pos < y  and y < @y_pos + @control_list[0].height)
       #描画コントロールをoutに切り替え
-      send_command(:update, {:visible => false}, :key_down)
-      send_command(:update, {:visible => true}, :out)
+      send_command(:visible, {:visible => false}, :key_down)
+      send_command(:visible, {:visible => true}, :out)
       return true, false, [:out, {}] #コマンド探査終了
     end
 
     #マウスボタン押下が解除された場合
     if Input.mouse_release?( M_LBUTTON )
       #描画コントロールをkey_upに切り替え
-      send_command(:update, {:visible => false}, :key_down)
-      send_command(:update, {:visible => true}, :key_up)
+      send_command(:visible, {:visible => false}, :key_down)
+      send_command(:visible, {:visible => true}, :key_up)
       return true, false, [:key_up, {}] #コマンド探査終了
     else
       #key_downを維持
@@ -124,16 +124,16 @@ class ButtonControl  < Control
   #ボタンから指が離れた後の状態
   def command_key_up(options)
     #描画コントロールをoverに切り替え
-    send_command(:update, {:visible => false}, :key_up)
-    send_command(:update, {:visible => true}, :over)
+    send_command(:visible, {:visible => false}, :key_up)
+    send_command(:visible, {:visible => true}, :over)
     return true, false, [:over, {}] #コマンド探査終了
   end
 
   #マウスカーソルが範囲外に出た後の状態
   def command_out(options)
     #描画コントロールをnormalに切り替え
-    send_command(:update, {:visible => false}, :out)
-    send_command(:update, {:visible => true}, :normal)
+    send_command(:visible, {:visible => false}, :out)
+    send_command(:visible, {:visible => true}, :normal)
     return true, false, [:normal, {}] #コマンド探査終了
   end
 end

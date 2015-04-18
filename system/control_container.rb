@@ -270,9 +270,9 @@ class Control
     return false  #フレーム続行
   end
 
-  def command_update(options)
+  #コントロールの可視設定
+  def command_visible(options)
     @visible = options[:visible]
-
     return false  #フレーム続行
   end
 

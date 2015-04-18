@@ -48,6 +48,8 @@ class Control
     @control_list = Array.new #コントロールリスト
     @call_stack = Array.new #コールスタック
 
+    @event_list = Hash.new #イベントリスト
+
     @next_frame_commands =  Array.new  #一時コマンドリスト
 
     @skip_mode = false #スキップモードの初期化
@@ -485,6 +487,12 @@ class Control
       #then節を新たなコマンドセットとする
       @command_list = options[:commands].dup
     end
+    return false #フレーム続行
+  end
+
+  def command_event(options)
+    @event_list[options[:event]] = options[:commands]
+    pp @event_list
     return false #フレーム続行
   end
 

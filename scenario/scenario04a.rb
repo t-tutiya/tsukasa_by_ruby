@@ -81,8 +81,6 @@ create :LayoutContainer,
   end
 end
 
-
-
 #ボタンコントロール
 create :ButtonControl, :x_pos => 0, :y_pos => 0, :id=>:button1 do
         button_create :ImageControl, 
@@ -103,6 +101,47 @@ create :ButtonControl, :x_pos => 0, :y_pos => 0, :id=>:button1 do
         button_create :ImageControl, 
               :file_path=>"./sozai/button_out.png", 
               :id=>:out
+end
+
+=begin
+#ボタンコントロール
+create :ButtonControl, :x_pos => 0, :y_pos => 0, :id=>:button1 do
+        create :ImageControl, 
+               :file_path=>"./sozai/button_normal.png", 
+               :id=>:normal
+        create :ImageControl, 
+              :file_path=>"./sozai/button_over.png", 
+              :id=>:over,
+              :visble => false
+        create :ImageControl, 
+              :file_path=>"./sozai/button_key_down.png", 
+              :id=>:key_down,
+              :visble => false
+        create :ImageControl, 
+              :file_path=>"./sozai/button_key_up.png", 
+              :id=>:key_up,
+              :visble => false
+        create :ImageControl, 
+              :file_path=>"./sozai/button_out.png", 
+              :id=>:out,
+              :visble => false
+
+        event :key_up do
+          flag :key=>1, :data=>2
+          flag :key=>2, :data=>true
+        end
+end
+=end
+
+event :key_up do
+  next_frame
+  next_frame
+  next_frame
+  next_frame
+end
+
+event :key_down do
+  next_frame
 end
 
 next_frame

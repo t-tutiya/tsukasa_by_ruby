@@ -186,6 +186,8 @@ class ScriptCompiler
   #フラグ設定（未実装）
   impl_with_option_command :flag,            :LayoutContainer
 
+  #文字レンダラの指定
+  #これはtext_layer内に動作を限定できないか？
   def char_renderer(&block)
       impl(:char_renderer, :LayoutContainer, nil)do
         if block; @key_name = :commands; block.call; end
@@ -205,6 +207,13 @@ class ScriptCompiler
       if block; @key_name = :commands; block.call; end
     end
     @ailias_list.push(command_name)
+  end
+
+  #コントロール単位でイベント駆動するコマンド群を格納する
+  def event(command_name, &block)
+    impl(:event, :LayoutContainer, command_name)do
+      if block; @key_name = :commands; block.call; end
+    end
   end
 
   #制御構造関連

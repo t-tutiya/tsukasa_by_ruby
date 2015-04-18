@@ -52,6 +52,7 @@ create :ImageControl ,
   move offset_x: -100, offset_y: 0, frame: 60, offset: true
 end
 
+=begin
 create :LayoutContainer,
   x_pos: 0,
   y_pos: 0,
@@ -102,8 +103,8 @@ create :ButtonControl, :x_pos => 0, :y_pos => 0, :id=>:button1 do
               :file_path=>"./sozai/button_out.png", 
               :id=>:out
 end
+=end
 
-=begin
 #ボタンコントロール
 create :ButtonControl, :x_pos => 0, :y_pos => 0, :id=>:button1 do
         create :ImageControl, 
@@ -112,26 +113,26 @@ create :ButtonControl, :x_pos => 0, :y_pos => 0, :id=>:button1 do
         create :ImageControl, 
               :file_path=>"./sozai/button_over.png", 
               :id=>:over,
-              :visble => false
+              :visible => false
         create :ImageControl, 
               :file_path=>"./sozai/button_key_down.png", 
               :id=>:key_down,
-              :visble => false
+              :visible => false
         create :ImageControl, 
               :file_path=>"./sozai/button_key_up.png", 
               :id=>:key_up,
-              :visble => false
+              :visible => false
         create :ImageControl, 
               :file_path=>"./sozai/button_out.png", 
               :id=>:out,
-              :visble => false
+              :visible => false
 
         event :key_up do
           flag :key=>1, :data=>2
           flag :key=>2, :data=>true
         end
+        normal
 end
-=end
 
 event :key_up do
   next_frame
@@ -153,7 +154,10 @@ WHILE "true", target_control: :button1 do
   move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 0,   start_y: 300
 end
 
-
+=begin
+update :key_up, visible: true
+update :normal, visible: false
+=end
 
 
 

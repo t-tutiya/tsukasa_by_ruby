@@ -134,6 +134,10 @@ class ScriptCompiler
   imple_non_option_command :flash,      :CharContainer
   imple_non_option_command :pause,      :CharContainer
 
+  #ボタン制御コマンド群
+  #TODOこれホントに必要？
+  imple_non_option_command :normal,      :ButtonControl
+
   #特定コマンドの終了を待つ
   impl_with_one_option_command :wait_command, :LayoutContainer
 
@@ -153,7 +157,6 @@ class ScriptCompiler
 
   #サブオプションを持つコマンド
   impl_with_block :create,              :LayoutContainer
-  impl_with_block :button_create,              :LayoutContainer
 
   #画像スタック
   impl_with_block :graph,               :CharContainer

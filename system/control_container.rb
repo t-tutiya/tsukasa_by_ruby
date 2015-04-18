@@ -58,7 +58,9 @@ class Control
     @sleep_mode = :wake #スリープの初期状態を設定する
 
     @delete_flag = false #削除フラグの初期化
-    @visible = options[:visible] || true #Controlの可視フラグ
+    
+    #Controlの可視フラグ
+    @visible = options[:visible] == false ? false : true
 
     #子コントロールをentityに描画するかどうか
     @draw_to_entity = options[:draw_to_entity]
@@ -265,6 +267,12 @@ class Control
   def command_create(options)
     #指定されたコントロールを生成してリストに連結する
     @control_list.push(Module.const_get(options[:create]).new(options))
+    return false  #フレーム続行
+  end
+
+  def command_update(options)
+    @visible = options[:visible]
+
     return false  #フレーム続行
   end
 

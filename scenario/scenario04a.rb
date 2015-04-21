@@ -261,3 +261,5 @@ IF "@@global_flag[:user_1] == 1" do
     next_scenario "./scenario/scenario04c.rb"
   end
 end
+
+pause

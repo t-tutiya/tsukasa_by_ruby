@@ -283,44 +283,31 @@ class Control
 
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
   def command_take_token(options)
-=begin
-    if !@@global_flag[:system_script_parse]
-      pp @command_list
-      return true, true, [:take_token, nil]  #コマンド探査終了
-    end
-=end
     #コマンドストレージが空の場合
     if @script_storage.empty?
       #コマンドストレージのコールスタックが存在する場合
       if !@script_storage_call_stack.empty?
-        pp "script_storage_call_stack.empty"
         #コールスタックからコマンドストレージをポップする
         @script_storage = @script_storage_call_stack.pop
       #次に読み込むスクリプトファイルが指定されている場合
       elsif @next_script_file_path
-        pp "read next script"
         #指定されたスクリプトファイルを読み込む
         @script_storage = Tsukasa::ScriptCompiler.new(@next_script_file_path)
         #予約スクリプトファイルパスの初期化
         @next_script_file_path = nil
       else
-        pp "end"
         #ループを抜ける
-        return false
+        return false #コマンド探査続行
       end
     end
 
     #コマンドを取り出す
     command,options  = @script_storage.shift
 
-=begin
+    #stopコマンドを取得した場合は処理を終了する
     if command == :stop
-      pp "stop"
-      raise
-      @@global_flag[:system_script_parse] = false
-      return true, true, [:take_token, nil]  #コマンド探査終了
+      return false #コマンド探査続行
     end
-=end
 
     #コマンドがプロシージャーリストに登録されている場合
     if @@procedure_list.key?(command)
@@ -351,9 +338,9 @@ class Control
       raise
     end
 
-    #return false, false, [:take_token, nil]  #コマンド探査続行
+    #スクリプトパースコマンドをリスト末端に追加する
     send_command(:take_token, nil)
-    return false
+    return false  #コマンド探査続行
   end
 
   #文字列を評価する（デバッグ用）
@@ -372,6 +359,7 @@ class Control
   end
 
   def command_pause(options)
+
     #※ページスキップ的な機能が実装されたら、このへんでその処理を行う筈
   
     #rootクラスをスリープさせる
@@ -476,7 +464,10 @@ class Control
     #スリープ状態を解除
     @sleep_mode = :wake
     @skip_mode = false
-    return true #リスト探査続行
+
+    return true, false, [:take_token, nil]  #コマンド探査続行
+
+    #return true #リスト探査続行
   end
 
   #############################################################################

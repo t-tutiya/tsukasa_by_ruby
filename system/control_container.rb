@@ -38,8 +38,6 @@ class Control
   @@procedure_list = Hash.new #プロシージャーのリスト
   @@ailias_list =  Hash.new #エイリアスのリスト
 
-  @@global_flag[:system_script_parse] = true
-
   def initialize(options)
     @x_pos = 0
     @y_pos = 0

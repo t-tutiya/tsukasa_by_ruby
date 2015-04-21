@@ -478,16 +478,12 @@ class Control
   def command_if(options)
     #evalで評価した条件式が真の場合
     if eval(options[:if])
-      #現在のコマンドセットをコールスタックにプッシュ
-      @call_stack.push(@command_list)
       #現在のスクリプトストレージをコールスタックにプッシュ
       @script_storage_call_stack.push(@script_storage) if !@script_storage.empty?
       #コマンドリストをクリアする
       @script_storage = options[:then].dup
     #else節がある場合
     elsif options[:else]
-      #現在のコマンドセットをコールスタックにプッシュ
-      @call_stack.push(@command_list)
       #現在のスクリプトストレージをコールスタックにプッシュ
       @script_storage_call_stack.push(@script_storage) if !@script_storage.empty?
       #コマンドリストをクリアする

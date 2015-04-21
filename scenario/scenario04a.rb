@@ -128,8 +128,8 @@ create :ButtonControl, :x_pos => 0, :y_pos => 0, :id=>:button1 do
               :visible => false
 
         event :key_up do
-          flag :key=>1, :data=>2
-          flag :key=>2, :data=>true
+          flag :key=>3, :data=>2
+          flag :key=>4, :data=>true
         end
         normal
 end
@@ -147,13 +147,14 @@ end
 
 next_frame
 
+=begin
 WHILE "true", target_control: :button1 do
   move_line x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
   move_line x: 300, y: 300, count:0, frame: 60, start_x: 300, start_y: 0
   move_line x: 0,   y: 300, count:0, frame: 60, start_x: 300, start_y: 300
   move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 0,   start_y: 300
 end
-
+=end
 =begin
 update :key_up, visible: true
 update :normal, visible: false
@@ -195,16 +196,25 @@ end
 
 next_frame
 
+#wait_flag "3"
+#next_frame
+#stop
+
+text "てｓｔ"
+
+#next_scenario "./scenario/scenario04b.rb"
+
+#next_frame
+
 =begin
-next_scenario "./scenario/scenario04b.rb"
-
-next_frame
-
 text "ＡＤＶエンジン「司（Tsukasa）」のα１バージョンを"
 line_feed
 text "ひとまず公開します。testA"
 pause
+flash
 =end
+#pause #これがあるとスクリプトファイルが二回読み込まれる
+#pause #これがあるとスクリプトファイルが二回読み込まれる
 
 IF "false" do
   THEN do
@@ -216,8 +226,6 @@ IF "false" do
   end
 end
 
-next_frame
-
 IF "false" do
   THEN do
     EVAL "pp 'test 1_c'"
@@ -227,8 +235,8 @@ IF "false" do
     #text "test"
   end
 end
-wait_flag 1
-pause
+#wait_flag 1
+#pause
 
 IF "false" do
   THEN do

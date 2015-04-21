@@ -18,4 +18,5 @@ Window.loop do
   rag.update
   #Ragエンジン描画
   rag.render(0, 0, Window, 1280, 720)
+  #pp "next_frane"
 end

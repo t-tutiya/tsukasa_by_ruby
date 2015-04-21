@@ -38,9 +38,15 @@ class Control
   @@procedure_list = Hash.new #プロシージャーのリスト
   @@ailias_list =  Hash.new #エイリアスのリスト
 
+  @@global_flag[:system_script_parse] = true
+
   def initialize(options)
     @x_pos = 0
     @y_pos = 0
+    
+    @script_storage = Array.new #スクリプトストレージ
+    @script_storage_call_stack = Array.new #コールスタック
+    
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
 
@@ -77,7 +83,6 @@ class Control
     if options[:script_path]
       #シナリオファイルの読み込み
       @script_storage = Tsukasa::ScriptCompiler.new(options[:script_path])
-      @script_storage_call_stack = Array.new #コールスタック
       #初期コマンドの設定
       send_command_interrupt(:take_token, nil)
     end
@@ -278,28 +283,44 @@ class Control
 
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
   def command_take_token(options)
-
+=begin
+    if !@@global_flag[:system_script_parse]
+      pp @command_list
+      return true, true, [:take_token, nil]  #コマンド探査終了
+    end
+=end
     #コマンドストレージが空の場合
     if @script_storage.empty?
       #コマンドストレージのコールスタックが存在する場合
       if !@script_storage_call_stack.empty?
+        pp "script_storage_call_stack.empty"
         #コールスタックからコマンドストレージをポップする
         @script_storage = @script_storage_call_stack.pop
       #次に読み込むスクリプトファイルが指定されている場合
       elsif @next_script_file_path
+        pp "read next script"
         #指定されたスクリプトファイルを読み込む
         @script_storage = Tsukasa::ScriptCompiler.new(@next_script_file_path)
         #予約スクリプトファイルパスの初期化
         @next_script_file_path = nil
       else
+        pp "end"
         #ループを抜ける
         return false
       end
-
     end
 
     #コマンドを取り出す
     command,options  = @script_storage.shift
+
+=begin
+    if command == :stop
+      pp "stop"
+      raise
+      @@global_flag[:system_script_parse] = false
+      return true, true, [:take_token, nil]  #コマンド探査終了
+    end
+=end
 
     #コマンドがプロシージャーリストに登録されている場合
     if @@procedure_list.key?(command)
@@ -330,7 +351,9 @@ class Control
       raise
     end
 
-    return false, false,[:take_token, nil]  #コマンド探査終了
+    #return false, false, [:take_token, nil]  #コマンド探査続行
+    send_command(:take_token, nil)
+    return false
   end
 
   #文字列を評価する（デバッグ用）
@@ -398,8 +421,11 @@ class Control
   end
 
   def command_wait_flag(options)
+    pp "wait flag"
     flag = @@global_flag[("user_" + options[:wait_flag].to_s).to_sym]
+    #pp @command_list
     if flag
+      pp "go"
       return false #コマンド探査の続行
     else
       return true, true, [:wait_flag, options]#コマンド探査の終了
@@ -458,8 +484,9 @@ class Control
   #############################################################################
 
   #条件分岐
+  #TODO:コードが冗長
+  
   def command_if(options)
-    pp "go if"
     #evalで評価した条件式が真の場合
     if eval(options[:if])
       #現在のコマンドセットをコールスタックにプッシュ
@@ -470,16 +497,12 @@ class Control
       @script_storage = options[:then].dup
     #else節がある場合
     elsif options[:else]
-      pp "commands"
-      pp options[:else]
-      pp @command_list
       #現在のコマンドセットをコールスタックにプッシュ
       @call_stack.push(@command_list)
       #現在のスクリプトストレージをコールスタックにプッシュ
       @script_storage_call_stack.push(@script_storage) if !@script_storage.empty?
       #コマンドリストをクリアする
       @script_storage = options[:else].dup
-      pp @command_list
     end
     return false #フレーム続行
   end
@@ -498,9 +521,22 @@ class Control
     return false #フレーム続行
   end
 
+  #イベントコマンドの登録
   def command_event(options)
+    #TODO：コマンドは追加にする
     @event_list[options[:event]] = options[:commands]
-    pp @event_list
+    return false #フレーム続行
+  end
+
+  #イベントの実行
+  def command_fire(options)
+    #キーが登録されていないなら終了
+    return false if !@event_list[options[:fire]]
+
+    #コマンドリストにイベントを追加する
+    #TODO:ただしくコマンドブロックをスタックする
+    @command_list = @event_list[options[:fire]].dup + @command_list
+
     return false #フレーム続行
   end
 
@@ -561,8 +597,8 @@ class Control
 
   #フラグを設定する
   def command_flag(options)
+    #ユーザー定義フラグを更新する
     @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
-    pp @@global_flag
     return false #リスト探査続行
   end
 

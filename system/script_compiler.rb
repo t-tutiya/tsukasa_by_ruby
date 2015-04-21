@@ -132,7 +132,9 @@ class ScriptCompiler
   imple_non_option_command :pause,      :CharContainer
   imple_non_option_command :line_feed,  :CharContainer
   imple_non_option_command :flash,      :CharContainer
-  imple_non_option_command :pause,      :CharContainer
+
+  #スクリプトストレージのパースを強制的に終了する
+  imple_non_option_command :stop,      :CharContainer
 
   #ボタン制御コマンド群
   #TODOこれホントに必要？

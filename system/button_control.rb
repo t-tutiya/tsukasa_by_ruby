@@ -50,6 +50,7 @@ class ButtonControl  < Control
 
   #ボタンのノーマル状態
   def command_normal(options)
+    #send_command_interrupt(:fire, {:fire => :normal})
     #マウスカーソル座標を取得
     x = Input.mouse_pos_x
     y = Input.mouse_pos_y
@@ -69,6 +70,7 @@ class ButtonControl  < Control
 
   #マウスカーソルが範囲内に入っている
   def command_over(options)
+    #send_command_interrupt(:fire, {:fire => :over})
     #マウスカーソル座標を取得
     x = Input.mouse_pos_x
     y = Input.mouse_pos_y
@@ -96,6 +98,7 @@ class ButtonControl  < Control
 
   #ボタンが押下されている状態
   def command_key_down(options)
+    #send_command_interrupt(:fire, {:fire => :down})
     #マウスカーソル座標を取得
     x = Input.mouse_pos_x
     y = Input.mouse_pos_y
@@ -114,6 +117,7 @@ class ButtonControl  < Control
       #描画コントロールをkey_upに切り替え
       send_command(:visible, {:visible => false}, :key_down)
       send_command(:visible, {:visible => true}, :key_up)
+      #イベント実行
       return true, false, [:key_up, {}] #コマンド探査終了
     else
       #key_downを維持
@@ -123,6 +127,9 @@ class ButtonControl  < Control
 
   #ボタンから指が離れた後の状態
   def command_key_up(options)
+    #イベントを実行
+    send_command_interrupt(:fire, {:fire => :key_up})
+
     #描画コントロールをoverに切り替え
     send_command(:visible, {:visible => false}, :key_up)
     send_command(:visible, {:visible => true}, :over)
@@ -131,6 +138,7 @@ class ButtonControl  < Control
 
   #マウスカーソルが範囲外に出た後の状態
   def command_out(options)
+    #send_command_interrupt(:fire, {:fire => :out})
     #描画コントロールをnormalに切り替え
     send_command(:visible, {:visible => false}, :out)
     send_command(:visible, {:visible => true}, :normal)

@@ -226,7 +226,7 @@ IF "false" do
   end
 end
 
-IF "false" do
+IF "true" do
   THEN do
     EVAL "pp 'test 1_c'"
   end
@@ -240,10 +240,10 @@ end
 
 IF "false" do
   THEN do
-    EVAL "pp 'test 2_a'"
+    EVAL "pp 'test 2_e'"
   end
   ELSE do
-    EVAL "pp 'test 2_b'"
+    EVAL "pp 'test 2_f'"
     #text "test"
   end
 end
@@ -251,7 +251,7 @@ end
 
 EVAL "pp 'YESYES2'"
 
-IF "@@global_flag[:user_1] == 1" do
+IF "@@global_flag[:user_1] != 1" do
   THEN do
     EVAL "pp 'YES'"
     next_scenario "./scenario/scenario04b.rb"
@@ -263,3 +263,4 @@ IF "@@global_flag[:user_1] == 1" do
 end
 
 pause
+sleep_frame

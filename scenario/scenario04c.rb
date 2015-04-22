@@ -20,5 +20,5 @@ next_scenario "./scenario/scenario04c.rb"
 #EVAL "pp 'script next'"
 
 pause
+sleep_frame
 flash
-stop

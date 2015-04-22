@@ -293,19 +293,17 @@ class Control
         @script_storage = Tsukasa::ScriptCompiler.new(@next_script_file_path)
         #予約スクリプトファイルパスの初期化
         @next_script_file_path = nil
-      else
+      else 
+        #TODO:このブロックが冗長のように思える
+        #自コマンドをリスト末端に追加する
+        send_command(:take_token, nil)
         #ループを抜ける
-        return false #コマンド探査続行
+        return true, true
       end
     end
 
     #コマンドを取り出す
     command,options  = @script_storage.shift
-
-    #stopコマンドを取得した場合は処理を終了する
-    if command == :stop
-      return false #コマンド探査続行
-    end
 
     #コマンドがプロシージャーリストに登録されている場合
     if @@procedure_list.key?(command)
@@ -328,16 +326,16 @@ class Control
     #コマンドをコントロールに登録する
     if !send_command(command,options,options[:target_control]) then
       pp "error"
-      pp command
+      pp options[:target_control]
       pp options
 #      pp @control_list
-      pp options[:target_control]
-      pp "commandは、伝搬先が見つかりませんでした"
+      pp command.to_s + " commandは、伝搬先が見つかりませんでした"
       raise
     end
 
-    #スクリプトパースコマンドをリスト末端に追加する
+    #自コマンドをリスト末端に追加する
     send_command(:take_token, nil)
+
     return false  #コマンド探査続行
   end
 
@@ -357,7 +355,6 @@ class Control
   end
 
   def command_pause(options)
-
     #※ページスキップ的な機能が実装されたら、このへんでその処理を行う筈
   
     #rootクラスをスリープさせる
@@ -474,22 +471,26 @@ class Control
 
   #条件分岐
   #TODO:コードが冗長
-  
   def command_if(options)
     #evalで評価した条件式が真の場合
     if eval(options[:if])
-      #現在のスクリプトストレージをコールスタックにプッシュ
-      @script_storage_call_stack.push(@script_storage) if !@script_storage.empty?
-      #コマンドリストをクリアする
-      @script_storage = options[:then].dup
+      eval_block(options[:then])
     #else節がある場合
     elsif options[:else]
-      #現在のスクリプトストレージをコールスタックにプッシュ
-      @script_storage_call_stack.push(@script_storage) if !@script_storage.empty?
-      #コマンドリストをクリアする
-      @script_storage = options[:else].dup
+      eval_block(options[:else])
     end
     return false #フレーム続行
+  end
+
+  #ブロック文の実行
+  #TODO：単体コマンドとして実装すべき？
+  def eval_block(block)
+    #現在のスクリプトストレージをコールスタックにプッシュ
+    @script_storage_call_stack.push(@script_storage) if !@script_storage.empty?
+    #コマンドリストをクリアする
+    @script_storage = block.dup
+    pp @script_storage
+    pp @command_list
   end
 
   #繰り返し
@@ -515,12 +516,11 @@ class Control
 
   #イベントの実行
   def command_fire(options)
+    pp @event_list[options[:fire]]
     #キーが登録されていないなら終了
     return false if !@event_list[options[:fire]]
 
-    #コマンドリストにイベントを追加する
-    #TODO:ただしくコマンドブロックをスタックする
-    @command_list = @event_list[options[:fire]].dup + @command_list
+    eval_block(@event_list[options[:fire]])
 
     return false #フレーム続行
   end

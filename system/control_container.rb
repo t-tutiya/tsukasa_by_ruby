@@ -92,7 +92,8 @@ class Control
   #コマンドをスタックに格納する
   def send_command(command, options, id = @id)
     #自身が送信対象として指定されている場合
-    if @id == id
+    #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
+    if @id == id or id == :default_layout_container
       #コマンドをスタックの末端に挿入する
       @command_list.push([command, options])
       return true #コマンドをスタックした
@@ -110,7 +111,8 @@ class Control
   #コマンドをスタックに格納する
   def send_command_interrupt(command, options, id = @id)
     #自身が送信対象として指定されている場合
-    if @id == id
+    #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
+    if @id == id or id == :default_layout_container
       #コマンドをスタックの先頭に挿入する
       @command_list.unshift([command, options])
       return true #コマンドをスタックした
@@ -489,8 +491,6 @@ class Control
     @script_storage_call_stack.push(@script_storage) if !@script_storage.empty?
     #コマンドリストをクリアする
     @script_storage = block.dup
-    pp @script_storage
-    pp @command_list
   end
 
   #繰り返し
@@ -516,7 +516,7 @@ class Control
 
   #イベントの実行
   def command_fire(options)
-    pp @event_list[options[:fire]]
+    pp "fire"
     #キーが登録されていないなら終了
     return false if !@event_list[options[:fire]]
 
@@ -582,6 +582,7 @@ class Control
 
   #フラグを設定する
   def command_flag(options)
+    raise
     #ユーザー定義フラグを更新する
     @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
     return false #リスト探査続行

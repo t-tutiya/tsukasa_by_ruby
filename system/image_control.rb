@@ -57,7 +57,8 @@ class ImageControl < Control
   end
 
   def dispose()
-    @entity.dispose
+    #TODO：キャッシュ機構が作り込まれてないのでここで削除できない
+    #@entity.dispose
     super
   end
   

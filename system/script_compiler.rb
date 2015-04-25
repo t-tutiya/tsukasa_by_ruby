@@ -195,6 +195,9 @@ class ScriptCompiler
   #フラグ設定（未実装）
   impl_with_option_command :flag,            :LayoutContainer
 
+  #コントロールの削除
+  impl_with_option_command :dispose,       :LayoutContainer
+
   #文字レンダラの指定
   #これはtext_layer内に動作を限定できないか？
   def char_renderer(&block)

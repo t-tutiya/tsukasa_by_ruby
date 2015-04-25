@@ -175,7 +175,7 @@ wait_flag "3"
 #EVAL "pp 'post_wait'"
 
 image_change "./sozai/button_out.png", target_control: :BG
-
+dispose target_control: :button1
 text "てｓｔ"
 
 =begin

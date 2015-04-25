@@ -305,7 +305,9 @@ class Control
     end
 
     #コマンドを取り出す
-    command,options  = @script_storage.shift
+    temp = @script_storage.shift
+    command = temp[0]     #コマンド名（シンボル）
+    options = temp[1].dup #オプションは状態を持ちうるので複製する
 
     #コマンドがプロシージャーリストに登録されている場合
     if @@procedure_list.key?(command)
@@ -493,20 +495,6 @@ class Control
     @script_storage = block.dup
   end
 
-  #繰り返し
-  def command_while(options)
-    #evalで評価した条件式が真の場合
-    if eval(options[:while])
-      #whileコマンドをスタックする
-      send_command_interrupt(:while, options)
-      #現在のコマンドセットをコールスタックにプッシュ
-      @call_stack.push(@command_list)
-      #then節を新たなコマンドセットとする
-      @command_list = options[:commands].dup
-    end
-    return false #フレーム続行
-  end
-
   #イベントコマンドの登録
   def command_event(options)
     #TODO：コマンドは追加にする
@@ -516,46 +504,22 @@ class Control
 
   #イベントの実行
   def command_fire(options)
-    pp "fire"
     #キーが登録されていないなら終了
     return false if !@event_list[options[:fire]]
 
-    eval_block(@event_list[options[:fire]])
+    #コマンド列を格納する
+    #TODO:厳密には配列を逆順にパースしてインタラプトすべき
+    @command_list = @event_list[options[:fire]] + @command_list
 
     return false #フレーム続行
   end
 
   #繰り返し
-  def command_while2(options)
+  def command_while(options)
     #条件式が非成立であればループを終了する
-    return false if !eval(options[:while2])
-
-    #一時変数の初期化
-    if !options[:rag_command] or options[:rag_command].empty?
-      options[:rag_command] = options[:commands].shift
-      options[:commands].push(options[:rag_command].dup)
-    end
+    return false if !eval(options[:while])
     
-    inner_command = options[:rag_command][0]
-    inner_options = options[:rag_command][1].dup
-    options[:rag_command] = nil
-
-    #キープの中のコマンドを実行する
-    idol, end_parse, inner_command = send("command_" + inner_command.to_s, inner_options)
-
-    #コマンドが返ってきたらそれをキープに保存する
-    options[:rag_command] = inner_command if inner_command
-
-    #ループ自体を返す
-    return idol, end_parse, [:while2, options] #コマンド探査続行
-  end
-
-  #繰り返し
-  def command_while3(options)
-    #条件式が非成立であればループを終了する
-    return false if !eval(options[:while3])
-    
-    eval_block([[:while3, options]])
+    eval_block([[:while, options]])
     eval_block(options[:commands])
 
     send_command_interrupt(:take_token, {})

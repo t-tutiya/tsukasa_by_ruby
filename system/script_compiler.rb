@@ -239,7 +239,7 @@ class ScriptCompiler
   end
 
   def WHILE(option, sub_options)
-    impl(:while3, :LayoutContainer, option, sub_options) do
+    impl(:while, :LayoutContainer, option, sub_options) do
       yield
     end
   end

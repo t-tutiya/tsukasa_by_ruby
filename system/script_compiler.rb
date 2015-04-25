@@ -153,7 +153,6 @@ class ScriptCompiler
 
   impl_with_one_option_command :wait_flag,        :LayoutContainer
 
-
   #次に読み込むスクリプトファイルの指定
   impl_with_one_option_command :next_scenario,         :LayoutContainer
 
@@ -182,6 +181,11 @@ class ScriptCompiler
   impl_with_block :char_renderer,       :CharContainer
   #レンダリング済みフォントの登録
   impl_with_block :map_image_font,      :CharContainer
+
+  #画像の差し替え
+  def image_change(option, sub_options)
+    impl(:image_change, :ImageControl, option, sub_options)
+  end
 
   #移動
   impl_with_option_command :move,            :LayoutContainer

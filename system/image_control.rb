@@ -60,4 +60,10 @@ class ImageControl < Control
     @entity.dispose
     super
   end
+  
+  def command_image_change(options)
+    #保持オブジェクトの初期化
+    @entity = @@image_cache[options[:image_change]]
+    return false
+  end
 end

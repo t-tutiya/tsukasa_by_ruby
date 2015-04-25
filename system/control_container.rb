@@ -408,11 +408,8 @@ class Control
   end
 
   def command_wait_flag(options)
-    pp "wait flag"
     flag = @@global_flag[("user_" + options[:wait_flag].to_s).to_sym]
-    #pp @command_list
     if flag
-      pp "go"
       return false #コマンド探査の続行
     else
       return true, true, [:wait_flag, options]#コマンド探査の終了
@@ -465,8 +462,6 @@ class Control
     @skip_mode = false
 
     return true, false, [:take_token, nil]  #コマンド探査続行
-
-    #return true #リスト探査続行
   end
 
   #############################################################################
@@ -563,7 +558,6 @@ class Control
 
   #フラグを設定する
   def command_flag(options)
-    raise
     #ユーザー定義フラグを更新する
     @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
     return false #リスト探査続行

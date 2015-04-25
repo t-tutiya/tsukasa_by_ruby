@@ -38,8 +38,6 @@ procedure :log,
 EOS
 
 #log file_path: "./sozai/bg_sample.png"
-
-
 create :ImageControl ,
        file_path: "./sozai/bg_sample.png", x_po: 0, y_pos: 0, 
        id: :BG do
@@ -134,19 +132,6 @@ create :ButtonControl, :x_pos => 0, :y_pos => 0, :id=>:button1 do
         normal
 end
 
-event :key_up do
-  next_frame
-  next_frame
-  next_frame
-  next_frame
-end
-
-event :key_down do
-  next_frame
-end
-
-next_frame
-
 WHILE "true", target_control: :button1 do
   move_line x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
   wait_command :move_line
@@ -157,18 +142,6 @@ WHILE "true", target_control: :button1 do
   move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 0,   start_y: 300
   wait_command :move_line
 end
-
-=begin
-update :key_up, visible: true
-update :normal, visible: false
-=end
-
-
-
-
-
-
-
 
 create :LayoutContainer,
   x_pos: 128,
@@ -197,17 +170,11 @@ create :LayoutContainer,
     end
 end
 
-next_frame
-
-#wait_flag "3"
-#next_frame
-#stop
+#EVAL "pp 'pre_wait'"
+wait_flag "3"
+#EVAL "pp 'post_wait'"
 
 text "てｓｔ"
-
-#next_scenario "./scenario/scenario04b.rb"
-
-#next_frame
 
 =begin
 text "ＡＤＶエンジン「司（Tsukasa）」のα１バージョンを"
@@ -216,8 +183,6 @@ text "ひとまず公開します。testA"
 pause
 flash
 =end
-#pause #これがあるとスクリプトファイルが二回読み込まれる
-#pause #これがあるとスクリプトファイルが二回読み込まれる
 
 IF "false" do
   THEN do
@@ -235,11 +200,8 @@ IF "true" do
   end
   ELSE do
     EVAL "pp 'test 1_d'"
-    #text "test"
   end
 end
-#wait_flag 1
-#pause
 
 IF "false" do
   THEN do
@@ -251,10 +213,7 @@ IF "false" do
   end
 end
 
-
-EVAL "pp 'YESYES2'"
-
-IF "@@global_flag[:user_1] != 1" do
+IF "@@global_flag[:user_1] == 1" do
   THEN do
     EVAL "pp 'YES'"
     next_scenario "./scenario/scenario04b.rb"

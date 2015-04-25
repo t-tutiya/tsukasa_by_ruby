@@ -507,9 +507,13 @@ class Control
     #キーが登録されていないなら終了
     return false if !@event_list[options[:fire]]
 
-    #コマンド列を格納する
-    #TODO:厳密には配列を逆順にパースしてインタラプトすべき
-    @command_list = @event_list[options[:fire]] + @command_list
+    #コマンド列を格納する（インタラプトなので逆順にsendする）
+    @event_list[options[:fire]].reverse_each do |command|
+      send_command_interrupt(command[0], command[1])
+    end
+
+    #TODO上のコードで問題無く動くかどうかを確認
+    #@command_list = @event_list[options[:fire]] + @command_list
 
     return false #フレーム続行
   end

@@ -275,12 +275,6 @@ class Control
     return false  #フレーム続行
   end
 
-  #コントロールの可視設定
-  def command_visible(options)
-    @visible = options[:visible]
-    return false  #フレーム続行
-  end
-
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
   def command_take_token(options)
     #コマンドストレージが空の場合

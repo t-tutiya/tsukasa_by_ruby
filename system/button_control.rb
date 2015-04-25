@@ -64,7 +64,7 @@ class ButtonControl  < Control
       return true, false, [:over, {}]  #コマンド探査終了
     else
       #normalを維持
-      return true, false, [:normal, {}]  #コマンド探査終了
+      return false, false, [:normal, {}]  #コマンド探査終了
     end
   end
 

@@ -550,6 +550,19 @@ class Control
     return idol, end_parse, [:while2, options] #コマンド探査続行
   end
 
+  #繰り返し
+  def command_while3(options)
+    #条件式が非成立であればループを終了する
+    return false if !eval(options[:while3])
+    
+    eval_block([[:while3, options]])
+    eval_block(options[:commands])
+
+    send_command_interrupt(:take_token, {})
+    return false
+  end
+
+
   #############################################################################
   #スタック操作関連
   #############################################################################

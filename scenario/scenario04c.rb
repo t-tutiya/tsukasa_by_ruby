@@ -21,3 +21,4 @@ next_scenario "./scenario/scenario04c.rb"
 
 pause
 flash
+sleep_frame

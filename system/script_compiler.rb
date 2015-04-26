@@ -140,7 +140,7 @@ class ScriptCompiler
   #次フレームに送る
   imple_non_option :next_frame, :Rag
   #キー入力待ち
-  imple_non_option :pause,      :LayoutContainer
+  imple_non_option :pause,      :CharContainer
 
   #改行
   imple_non_option :line_feed,  :CharContainer

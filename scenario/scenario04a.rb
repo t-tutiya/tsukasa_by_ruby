@@ -178,13 +178,11 @@ image_change "./sozai/button_out.png", target_control: :BG
 dispose :button1
 text "てｓｔ"
 
-=begin
 text "ＡＤＶエンジン「司（Tsukasa）」のα１バージョンを"
 line_feed
 text "ひとまず公開します。testA"
 pause
 flash
-=end
 
 IF "false" do
   THEN do
@@ -227,3 +225,4 @@ IF "@@global_flag[:user_3] == 3" do
 end
 
 pause
+sleep_frame

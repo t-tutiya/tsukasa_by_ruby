@@ -365,6 +365,18 @@ class Control
     end
   end
 
+  def command_pause(options)
+    #※ページスキップ的な機能が実装されたら、このへんでその処理を行う筈
+    #rootクラスをスリープさせる
+    send_command_interrupt(:sleep, nil)
+    #アイドル待機、キー入力待機のコマンドを逆順にスタックする
+    send_command(:wait_child_controls_idol, nil, :default_text_layer)
+    send_command(:wait_input_key, nil, :default_text_layer)
+
+    return false #, true #コマンド探査の終了
+  end
+
+
   #キー入力を待つ
   def command_wait(options)
     #スキップモードであれば直ちに終了し、フレームを続行する
@@ -444,7 +456,7 @@ class Control
     @sleep_mode = :wake
     @skip_mode = false
 
-    return true, false, [:take_token, nil]  #コマンド探査続行
+    return true, false #コマンド探査続行
   end
 
   #############################################################################

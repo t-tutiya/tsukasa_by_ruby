@@ -224,4 +224,3 @@ end
 
 pause
 flash
-sleep_frame

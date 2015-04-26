@@ -700,17 +700,6 @@ class CharContainer < Control
     return false #フレーム続行
   end
 
-  def command_pause(options)
-    #※ページスキップ的な機能が実装されたら、このへんでその処理を行う筈
-  
-    #rootクラスをスリープさせる
-    @@root.send_command_interrupt(:sleep, nil)
-    #アイドル待機、キー入力待機のコマンドを逆順にスタックする
-    send_command_interrupt(:wait_input_key, nil)
-    send_command_interrupt(:wait_child_controls_idol, nil)
-    return true, true #コマンド探査の終了
-  end
-
   #############################################################################
   #内部メソッド
   #############################################################################

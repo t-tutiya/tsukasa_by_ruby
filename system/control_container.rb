@@ -352,17 +352,6 @@ class Control
     return true, true #コマンド探査の終了
   end
 
-  def command_pause(options)
-    #※ページスキップ的な機能が実装されたら、このへんでその処理を行う筈
-  
-    #rootクラスをスリープさせる
-    @@root.send_command_interrupt(:sleep, nil)
-    #アイドル待機、キー入力待機のコマンドを逆順にスタックする
-    send_command_interrupt(:wait_input_key, nil)
-    send_command_interrupt(:wait_child_controls_idol, nil)
-    return true, true #コマンド探査の終了
-  end
-
   #wait_commandコマンド
   #特定のコマンドが自身より前に存在し続ける限り待機を続ける
   def command_wait_command(options)

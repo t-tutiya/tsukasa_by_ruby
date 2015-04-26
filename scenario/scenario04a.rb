@@ -181,8 +181,6 @@ text "てｓｔ"
 text "ＡＤＶエンジン「司（Tsukasa）」のα１バージョンを"
 line_feed
 text "ひとまず公開します。testA"
-pause
-flash
 
 IF "false" do
   THEN do
@@ -225,4 +223,5 @@ IF "@@global_flag[:user_3] == 3" do
 end
 
 pause
+flash
 sleep_frame

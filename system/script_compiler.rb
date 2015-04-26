@@ -89,26 +89,39 @@ class ScriptCompiler
     @option[@key_name].push([command_name, sub_options])
   end
 
-  def self.imple_non_option_command(command_name, default_control)
+  #オプション無し
+  def self.imple_non_option(command_name, default_control)
     define_method(command_name) do
       impl(command_name, default_control, nil)
     end
   end
 
-  def self.impl_with_one_option_command(command_name, default_control)
+  #名前なしオプション（１個）
+  def self.impl_one_option(command_name, default_control)
     define_method(command_name) do |option|
       impl(command_name, default_control, option)
     end
   end
 
-  def self.impl_with_option_command(command_name, default_control)
+  #名前付きオプション群
+  def self.impl_options(command_name, default_control)
     define_method(command_name) do |sub_options|
       impl(command_name, default_control, nil, sub_options)
     end
   end
 
-  def self.impl_with_block(command_name, default_control)
-    define_method(command_name) do |option, sub, &block|
+  #ブロック
+  def self.impl_block(command_name, default_control)
+    define_method(command_name) do |&block|
+      impl(command_name, default_control, nil) do
+        @key_name = :commands; block.call ;
+      end
+    end
+  end
+
+  #名前無しオプション（１個）＆名前付オプション群＆ブロック
+  def self.impl_option_options_block(command_name, default_control)
+    define_method(command_name) do |option, sub = {}, &block|
       impl(command_name, default_control, option, sub )do
         if block; @key_name = :commands; block.call ; end
       end
@@ -124,87 +137,85 @@ class ScriptCompiler
     @option[@key_name].push([method, args[0]])
   end
 
-  imple_non_option_command :next_frame, :Rag
+  #次フレームに送る
+  imple_non_option :next_frame, :Rag
+  #キー入力待ち
+  imple_non_option :pause,      :LayoutContainer
 
-  #オプションを持たないコマンド
-  imple_non_option_command :halt,       :LayoutContainer
-
-  imple_non_option_command :pause,      :LayoutContainer
-  imple_non_option_command :line_feed,  :CharContainer
-  imple_non_option_command :flash,      :CharContainer
-
-  #スクリプトストレージのパースを強制的に終了する
-  imple_non_option_command :stop,      :CharContainer
+  #改行
+  imple_non_option :line_feed,  :CharContainer
+  #改ページ
+  imple_non_option :flash,      :CharContainer
 
   #ボタン制御コマンド群
   #TODOこれホントに必要？
-  imple_non_option_command :normal,      :ButtonControl
-
-  #特定コマンドの終了を待つ
-  impl_with_one_option_command :wait_command, :LayoutContainer
+  imple_non_option :normal,      :ButtonControl
 
   #単一オプションを持つコマンド
-  impl_with_one_option_command :text,         :CharContainer
-  impl_with_one_option_command :char,         :CharContainer
-  impl_with_one_option_command :wait,         :CharContainer
-  impl_with_one_option_command :indent,       :CharContainer
-  #文字描画速度の設定
-  impl_with_one_option_command :delay,        :CharContainer
-
-  impl_with_one_option_command :wait_flag,        :LayoutContainer
-
+  #特定コマンドの終了を待つ
+  impl_one_option :wait_command,  :LayoutContainer
+  #特定フラグの更新を待つ（現状では予めnilが入ってないと機能しない）
+  impl_one_option :wait_flag,     :LayoutContainer
   #次に読み込むスクリプトファイルの指定
-  impl_with_one_option_command :next_scenario,         :LayoutContainer
-
-  #サブオプションを持つコマンド
-  impl_with_block :create,              :LayoutContainer
-
-  #画像スタック
-  impl_with_block :graph,               :CharContainer
-  #ルビ文字の出力
-  impl_with_block :rubi_char,           :CharContainer
-  #複数ルビ文字列の割り付け
-  impl_with_block :rubi,                :CharContainer
-  #デフォルト
-  impl_with_block :default_font_config, :CharContainer
-  #現在値
-  impl_with_block :font_config,         :CharContainer
-  #現在値をリセット
-  impl_with_block :reset_font_config,   :CharContainer
-  #デフォルト
-  impl_with_block :default_style_config,:CharContainer
-  #現在値
-  impl_with_block :style_config,        :CharContainer
-  #現在値をリセット
-  impl_with_block :reset_style_config,  :CharContainer
-  #文字レンダラの設定
-  impl_with_block :char_renderer,       :CharContainer
-  #レンダリング済みフォントの登録
-  impl_with_block :map_image_font,      :CharContainer
-
-  #画像の差し替え
-  def image_change(option, sub_options)
-    impl(:image_change, :ImageControl, option, sub_options)
-  end
-
-  #移動
-  impl_with_option_command :move,            :LayoutContainer
-  impl_with_option_command :move_line,            :LayoutContainer
-  #移動
-  impl_with_option_command :transition_fade, :LayoutContainer
-  #フラグ設定（未実装）
-  impl_with_option_command :flag,            :LayoutContainer
-
+  impl_one_option :next_scenario, :LayoutContainer
   #コントロールの削除
-  impl_with_one_option_command :dispose,       :LayoutContainer
+  impl_one_option :dispose,       :LayoutContainer
+
+  #文字列
+  impl_one_option :text,         :CharContainer
+  #文字
+  impl_one_option :char,         :CharContainer
+  #指定フレーム待つ
+  impl_one_option :wait,         :CharContainer
+  #インデント設定
+  impl_one_option :indent,       :CharContainer
+  #文字描画速度の設定
+  impl_one_option :delay,        :CharContainer
+
+  #移動
+  impl_options :move,            :LayoutContainer
+  impl_options :move_line,       :LayoutContainer
+  #フェードトランジション
+  impl_options :transition_fade, :LayoutContainer
+  #フラグ設定
+  impl_options :flag,            :LayoutContainer
+
+  #ブロックを持つコマンド
 
   #文字レンダラの指定
-  #これはtext_layer内に動作を限定できないか？
-  def char_renderer(&block)
-      impl(:char_renderer, :LayoutContainer, nil)do
-        if block; @key_name = :commands; block.call; end
-      end
-  end
+  #TODO:これはtext_layer内に動作を限定できないか？
+  impl_block :char_renderer,     :LayoutContainer
+
+  #オプション／サブオプション（省略可）／ブロックを持つコマンド
+
+  #コントロールの生成
+  impl_option_options_block :create,              :LayoutContainer
+  #コントロール単位でイベント駆動するコマンド群を格納する
+  impl_option_options_block :event,               :LayoutContainer
+
+  #画像スタック
+  impl_option_options_block :graph,               :CharContainer
+  #ルビ文字の出力
+  impl_option_options_block :rubi_char,           :CharContainer
+  #複数ルビ文字列の割り付け
+  impl_option_options_block :rubi,                :CharContainer
+  #デフォルト
+  impl_option_options_block :default_font_config, :CharContainer
+  #現在値
+  impl_option_options_block :font_config,         :CharContainer
+  #現在値をリセット
+  impl_option_options_block :reset_font_config,   :CharContainer
+  #デフォルト
+  impl_option_options_block :default_style_config,:CharContainer
+  #現在値
+  impl_option_options_block :style_config,        :CharContainer
+  #現在値をリセット
+  impl_option_options_block :reset_style_config,  :CharContainer
+  #レンダリング済みフォントの登録
+  impl_option_options_block :map_image_font,      :CharContainer
+
+  #画像の差し替え
+  impl_option_options_block :image_change, :ImageControl
 
   #プロシージャー宣言
   #TODOプロシージャーリストへの追加処理を足す
@@ -221,43 +232,44 @@ class ScriptCompiler
     @ailias_list.push(command_name)
   end
 
-  #コントロール単位でイベント駆動するコマンド群を格納する
-  def event(command_name, &block)
-    impl(:event, :LayoutContainer, command_name)do
-      if block; @key_name = :commands; block.call; end
-    end
-  end
-
   #制御構造関連
+  #if（予約語の為メソッド名差し替え）
   def IF(option)
     impl(:if, :LayoutContainer, option) do
       yield
     end
   end
 
+  #then（予約語の為メソッド名差し替え）
   def THEN() 
     @key_name = :then
     yield
   end
 
+  #else（予約語の為メソッド名差し替え）
   def ELSE()
     @key_name = :else
     yield
   end
 
+  #while（予約語の為メソッド名差し替え）
   def WHILE(option, sub_options)
     impl(:while, :LayoutContainer, option, sub_options) do
       yield
     end
   end
 
+  #eval（予約語の為メソッド名差し替え）
   def EVAL(option)
     impl(:eval,  :Rag, option)
   end
 
+  #sleep（予約語の為メソッド名差し替え）
   def sleep_frame
     impl(:sleep, :Rag, nil)
   end
+
+  #ヘルパーメソッド群
 
   def shift()
     return @script_storage.shift

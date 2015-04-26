@@ -215,7 +215,7 @@ IF "false" do
   end
 end
 
-IF "@@global_flag[:user_1] == 1" do
+IF "@@global_flag[:user_3] == 3" do
   THEN do
     EVAL "pp 'YES'"
     next_scenario "./scenario/scenario04b.rb"

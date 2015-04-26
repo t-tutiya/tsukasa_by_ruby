@@ -9,4 +9,3 @@ text "に開発しているＡＤＶエンジンです。"
 next_scenario "./scenario/scenario04c.rb"
 
 pause
-sleep_frame

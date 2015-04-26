@@ -563,9 +563,17 @@ class Control
     return false #リスト探査続行
   end
 
+  #disposeコマンド
+  #コントロールを削除する
   def command_dispose(options)
-    #削除フラグを立てる
-    dispose()
+    #自身が指定されたコントロールの場合
+    if options[:dispose] == @id
+      #削除フラグを立てる
+      dispose()
+    else
+      #子コントロールにdisposeコマンドを送信
+      send_command_interrupt(:dispose, options, options[:dispose])
+    end
     return false #リスト探査続行
   end
 

@@ -129,7 +129,7 @@ class ScriptCompiler
   #オプションを持たないコマンド
   imple_non_option_command :halt,       :LayoutContainer
 
-  imple_non_option_command :pause,      :CharContainer
+  imple_non_option_command :pause,      :LayoutContainer
   imple_non_option_command :line_feed,  :CharContainer
   imple_non_option_command :flash,      :CharContainer
 
@@ -196,7 +196,7 @@ class ScriptCompiler
   impl_with_option_command :flag,            :LayoutContainer
 
   #コントロールの削除
-  impl_with_option_command :dispose,       :LayoutContainer
+  impl_with_one_option_command :dispose,       :LayoutContainer
 
   #文字レンダラの指定
   #これはtext_layer内に動作を限定できないか？

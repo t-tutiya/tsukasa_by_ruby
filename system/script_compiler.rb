@@ -37,7 +37,8 @@ class ScriptCompiler
   @@control_default = {
     :CharContainer => :default_text_layer,
     :LayoutContainer => :default_layout_container,
-    :Rag => :default_layout_container
+    :Rag => :default_layout_container,
+    :ButtonControl => :button1
   }
 
   def initialize(file_path)

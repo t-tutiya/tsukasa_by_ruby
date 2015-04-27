@@ -75,7 +75,7 @@ class Control
     if options[:commands]
       options[:commands].each do |command, options|
         #TODO:optionsをdupしなくていいのか後で確認
-        send_command(command, options)
+        send_command(command, options, options[:target_control])
       end
     end
 

@@ -488,19 +488,6 @@ class Control
     return true, true #コマンド探査の終了
   end
 
-  #wait_commandコマンド
-  #特定のコマンドが自身より前に存在し続ける限り待機を続ける
-  def command_wait_command(options)
-    if @next_frame_commands.index{|command| 
-          command[0] == options[:wait_command]
-       }
-      #自分自身をスタックし、コマンド探査を終了する
-      return true, true, [:wait_command, options]
-    else
-      return false #コマンド探査の続行
-    end
-  end
-
   #キー入力待ち状態に移行
   def command_pause(options)
 
@@ -511,6 +498,15 @@ class Control
 
     #rootクラスをスリープさせる
     return true, true, [:sleep, nil] #, true #コマンド探査の終了
+  end
+
+  #sleepコマンド
+  #スリープ状態を開始する
+  def command_sleep(options)
+    #覚醒待機状態へ移行
+    send_command_interrupt(:wait_wake, nil)
+    @sleep_mode = :sleep #スリープ状態
+    return true #コマンド探査の続行
   end
 
   #キー入力を待つ
@@ -539,6 +535,19 @@ class Control
     return true #リスト探査続行
   end
 
+  #wait_commandコマンド
+  #特定のコマンドが自身より前に存在し続ける限り待機を続ける
+  def command_wait_command(options)
+    if @next_frame_commands.index{|command| 
+          command[0] == options[:wait_command]
+       }
+      #自分自身をスタックし、コマンド探査を終了する
+      return true, true, [:wait_command, options]
+    else
+      return false #コマンド探査の続行
+    end
+  end
+
   def command_wait_flag(options)
     flag = @@global_flag[("user_" + options[:wait_flag].to_s).to_sym]
     if flag
@@ -546,15 +555,6 @@ class Control
     else
       return true, true, [:wait_flag, options]#コマンド探査の終了
     end
-  end
-
-  #sleepコマンド
-  #スリープ状態を開始する
-  def command_sleep(options)
-    #覚醒待機状態へ移行
-    send_command_interrupt(:wait_wake, nil)
-    @sleep_mode = :sleep #スリープ状態
-    return true #コマンド探査の続行
   end
 
   #wait_wake

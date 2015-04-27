@@ -525,14 +525,15 @@ class Control
     end
 
     #待ちフレーム数を取得。設定されていない場合はコンフィグから初期値を取得する
-    wait_frame =  options[:wait_frame] == :unset_wait_frame ?
+    #TODO:@style_config[:wait_frame]はchar特有のプロパティ
+    wait_frame =  options[:wait] == :unset_wait_frame ?
                   @style_config[:wait_frame] :
-                  options[:wait_frame]
+                  options[:wait]
 
     #残りwaitフレーム数が０より大きい場合
     if 0 < wait_frame
       #残りwaitフレーム数をデクリメントし、:waitコマンドを再度スタックする
-      return true, true, [:wait, {:wait_frame => wait_frame - 1}] #リスト探査終了
+      return true, true, [:wait, {:wait => wait_frame - 1}] #リスト探査終了
     end
 
     return true #リスト探査続行

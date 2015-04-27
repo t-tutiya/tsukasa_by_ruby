@@ -43,14 +43,14 @@ class Control
     @y_pos = 0
     
     @script_storage = Array.new #スクリプトストレージ
-    @script_storage_call_stack = Array.new #コールスタック
+    @script_storage_stack = Array.new #コールスタック
     
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
 
     @command_list = Array.new #コマンドリスト
     @control_list = Array.new #コントロールリスト
-    @call_stack = Array.new #コールスタック
+    @command_list_stack = Array.new #コールスタック
 
     @event_list = Hash.new #イベントリスト
 
@@ -154,9 +154,9 @@ class Control
   #毎フレームコントロール更新処理
   def update
     #コマンドリストが空で、かつ、コールスタックが空でない場合
-    if @command_list.empty? and !@call_stack.empty?
+    if @command_list.empty? and !@command_list_stack.empty?
       #コールスタックからネスト元のコマンドセットを取得する
-      @command_list = @call_stack.pop
+      @command_list = @command_list_stack.pop
     end
 
     #待機モードを初期化
@@ -299,9 +299,9 @@ class Control
     #コマンドストレージが空の場合
     if @script_storage.empty?
       #コマンドストレージのコールスタックが存在する場合
-      if !@script_storage_call_stack.empty?
+      if !@script_storage_stack.empty?
         #コールスタックからコマンドストレージをポップする
-        @script_storage = @script_storage_call_stack.pop
+        @script_storage = @script_storage_stack.pop
       #次に読み込むスクリプトファイルが指定されている場合
       elsif @next_script_file_path
         #指定されたスクリプトファイルを読み込む
@@ -330,7 +330,7 @@ class Control
 
     #コマンドがエイリアスリストに登録されている場合
     if @@ailias_list.key?(command)
-      @script_storage_call_stack.push(@script_storage)
+      @script_storage_stack.push(@script_storage)
       #コマンドリストをクリアする
       @script_storage = @@ailias_list[command].dup
       #コマンドを取り出す
@@ -393,7 +393,7 @@ class Control
   #TODO：単体コマンドとして実装すべき？
   def eval_block(block)
     #現在のスクリプトストレージをコールスタックにプッシュ
-    @script_storage_call_stack.push(@script_storage) if !@script_storage.empty?
+    @script_storage_stack.push(@script_storage) if !@script_storage.empty?
     #コマンドリストをクリアする
     @script_storage = block.dup
   end
@@ -440,7 +440,7 @@ class Control
   #プロシージャーコールを実行する
   def command_call_procedure(options)
     #現在のコマンドリストをスタック
-    @call_stack.push(@command_list)
+    @command_list_stack.push(@command_list)
     #プロシージャの中身をevalでコマンドセット化してコマンドリストに登録する
     @command_list = eval(@@procedure_list[options[:procedure]])
     return false #リスト探査続行

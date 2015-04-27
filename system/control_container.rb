@@ -83,10 +83,10 @@ class Control
     if options[:script_path]
       #シナリオファイルの読み込み
       @script_storage = Tsukasa::ScriptCompiler.new(options[:script_path])
-      #初期コマンドの設定
-      send_command_interrupt(:take_token, nil)
     end
 
+    #初期コマンドの設定
+    send_command(:token, nil)
     #ルートクラスの設定
     @@root = self if !@@root
   end
@@ -295,7 +295,7 @@ class Control
   end
 
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
-  def command_take_token(options)
+  def command_token(options)
     #コマンドストレージが空の場合
     if @script_storage.empty?
       #コマンドストレージのコールスタックが存在する場合
@@ -309,11 +309,8 @@ class Control
         #予約スクリプトファイルパスの初期化
         @next_script_file_path = nil
       else 
-        #TODO:このブロックが冗長のように思える
-        #自コマンドをリスト末端に追加する
-        send_command(:take_token, nil)
         #ループを抜ける
-        return true, true
+        return true, false, [:token, nil]
       end
     end
 
@@ -351,7 +348,7 @@ class Control
     end
 
     #自コマンドをリスト末端に追加する
-    send_command(:take_token, nil)
+    send_command(:token, nil)
 
     return false  #コマンド探査続行
   end
@@ -383,11 +380,12 @@ class Control
   def command_while(options)
     #条件式が非成立であればループを終了する
     return false if !eval(options[:while])
-    
+
+    #while文全体をスクリプトストレージにスタック
     eval_block([[:while, options]])
+    #while文の中身をスクリプトストレージスタック
     eval_block(options[:commands])
 
-    send_command_interrupt(:take_token, {})
     return false
   end
 

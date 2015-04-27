@@ -126,6 +126,7 @@ create :ButtonControl, :x_pos => 0, :y_pos => 0, :id=>:button1 do
               :visible => false
 
         event :key_up do
+          EVAL "pp 'pre_wait'"
           flag :key=>3, :data=>2
           flag :key=>4, :data=>true
         end
@@ -174,8 +175,8 @@ end
 wait_flag "3"
 #EVAL "pp 'post_wait'"
 
-image_change "./sozai/button_out.png", target_control: :BG
-dispose :button1
+#image_change "./sozai/button_out.png", target_control: :BG
+#dispose :button1
 text "てｓｔ"
 
 text "ＡＤＶエンジン「司（Tsukasa）」のα１バージョンを"

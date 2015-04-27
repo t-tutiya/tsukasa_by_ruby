@@ -72,10 +72,12 @@ class Control
     @draw_option = {} #描画オプション
 
     #コマンドセットがあるなら登録する
-    options[:commands].each do |command|
-      command_options = command[1] ? command[1].dup : nil
-      send_command(command[0], command_options)
-    end if options[:commands]
+    if options[:commands]
+      options[:commands].each do |command, options|
+        #TODO:optionsをdupしなくていいのか後で確認
+        send_command(command, options)
+      end
+    end
 
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]

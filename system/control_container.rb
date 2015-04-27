@@ -257,7 +257,6 @@ class Control
       control.dispose
     end
   end
-
 end
 
 class Control
@@ -277,6 +276,20 @@ class Control
     #指定されたコントロールを生成してリストに連結する
     @control_list.push(Module.const_get(options[:create]).new(options))
     return false  #フレーム続行
+  end
+
+  #disposeコマンド
+  #コントロールを削除する
+  def command_dispose(options)
+    #自身が指定されたコントロールの場合
+    if options[:dispose] == @id
+      #削除フラグを立てる
+      dispose()
+    else
+      #子コントロールにdisposeコマンドを送信
+      send_command_interrupt(:dispose, options, options[:dispose])
+    end
+    return false #リスト探査続行
   end
 
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
@@ -384,6 +397,15 @@ class Control
     #コマンドリストをクリアする
     @script_storage = block.dup
   end
+end
+
+class Control
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
 
   #イベントコマンドの登録
   def command_event(options)
@@ -445,20 +467,6 @@ class Control
   #次に読み込むスクリプトファイルのパスを設定する
   def command_next_scenario(options)
     @next_script_file_path = options[:next_scenario]
-    return false #リスト探査続行
-  end
-
-  #disposeコマンド
-  #コントロールを削除する
-  def command_dispose(options)
-    #自身が指定されたコントロールの場合
-    if options[:dispose] == @id
-      #削除フラグを立てる
-      dispose()
-    else
-      #子コントロールにdisposeコマンドを送信
-      send_command_interrupt(:dispose, options, options[:dispose])
-    end
     return false #リスト探査続行
   end
 end

@@ -521,7 +521,7 @@ class Control
     #キー押下があればスキップモードに移行する
     if Input.key_push?(K_SPACE)
       @skip_mode = true
-      return true
+      return false
     end
 
     #待ちフレーム数を取得。設定されていない場合はコンフィグから初期値を取得する

@@ -258,6 +258,10 @@ class Control
     end
   end
 
+end
+
+class Control
+
   #############################################################################
   #非公開インターフェイス
   #############################################################################
@@ -342,6 +346,130 @@ class Control
     eval(options[:eval])
     return false #フレーム続行
   end
+
+  #############################################################################
+  #制御構文コマンド
+  #############################################################################
+
+  #条件分岐
+  #TODO:コードが冗長
+  def command_if(options)
+    #evalで評価した条件式が真の場合
+    if eval(options[:if])
+      eval_block(options[:then])
+    #else節がある場合
+    elsif options[:else]
+      eval_block(options[:else])
+    end
+    return false #フレーム続行
+  end
+
+  #繰り返し
+  def command_while(options)
+    #条件式が非成立であればループを終了する
+    return false if !eval(options[:while])
+    
+    eval_block([[:while, options]])
+    eval_block(options[:commands])
+
+    send_command_interrupt(:take_token, {})
+    return false
+  end
+
+  #ブロック文の実行
+  #TODO：単体コマンドとして実装すべき？
+  def eval_block(block)
+    #現在のスクリプトストレージをコールスタックにプッシュ
+    @script_storage_call_stack.push(@script_storage) if !@script_storage.empty?
+    #コマンドリストをクリアする
+    @script_storage = block.dup
+  end
+
+  #イベントコマンドの登録
+  def command_event(options)
+    #TODO：コマンドは追加にする
+    @event_list[options[:event]] = options[:commands]
+    return false #フレーム続行
+  end
+
+  #イベントの実行
+  def command_fire(options)
+    #キーが登録されていないなら終了
+    return false if !@event_list[options[:fire]]
+
+    #コマンド列を格納する（インタラプトなので逆順にsendする）
+    @event_list[options[:fire]].reverse_each do |command|
+      send_command_interrupt(command[0], command[1])
+    end
+
+    return false #フレーム続行
+  end
+
+  #############################################################################
+  #スタック操作関連
+  #############################################################################
+
+  #プロシージャーを登録する
+  def command_procedure(options)
+    @@procedure_list[options[:procedure]] = options[:impl]
+    return false #リスト探査続行
+  end
+
+  #プロシージャーコールを実行する
+  def command_call_procedure(options)
+    #現在のコマンドリストをスタック
+    @call_stack.push(@command_list)
+    #プロシージャの中身をevalでコマンドセット化してコマンドリストに登録する
+    @command_list = eval(@@procedure_list[options[:procedure]])
+    return false #リスト探査続行
+  end
+
+  #プロシージャーを登録する
+  def command_ailias(options)
+    @@ailias_list[options[:ailias]] = options[:commands]
+
+    return false #リスト探査続行
+  end
+
+  #############################################################################
+  #分類未決定
+  #############################################################################
+
+  #フラグを設定する
+  def command_flag(options)
+    #ユーザー定義フラグを更新する
+    @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
+    return false #リスト探査続行
+  end
+
+  #次に読み込むスクリプトファイルのパスを設定する
+  def command_next_scenario(options)
+    @next_script_file_path = options[:next_scenario]
+    return false #リスト探査続行
+  end
+
+  #disposeコマンド
+  #コントロールを削除する
+  def command_dispose(options)
+    #自身が指定されたコントロールの場合
+    if options[:dispose] == @id
+      #削除フラグを立てる
+      dispose()
+    else
+      #子コントロールにdisposeコマンドを送信
+      send_command_interrupt(:dispose, options, options[:dispose])
+    end
+    return false #リスト探査続行
+  end
+end
+
+class Control
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
 
   #############################################################################
   #タイミング制御コマンド
@@ -458,125 +586,15 @@ class Control
 
     return true, false #コマンド探査続行
   end
+end
+
+class Control
 
   #############################################################################
-  #制御構文コマンド
+  #非公開インターフェイス
   #############################################################################
 
-  #条件分岐
-  #TODO:コードが冗長
-  def command_if(options)
-    #evalで評価した条件式が真の場合
-    if eval(options[:if])
-      eval_block(options[:then])
-    #else節がある場合
-    elsif options[:else]
-      eval_block(options[:else])
-    end
-    return false #フレーム続行
-  end
-
-  #ブロック文の実行
-  #TODO：単体コマンドとして実装すべき？
-  def eval_block(block)
-    #現在のスクリプトストレージをコールスタックにプッシュ
-    @script_storage_call_stack.push(@script_storage) if !@script_storage.empty?
-    #コマンドリストをクリアする
-    @script_storage = block.dup
-  end
-
-  #イベントコマンドの登録
-  def command_event(options)
-    #TODO：コマンドは追加にする
-    @event_list[options[:event]] = options[:commands]
-    return false #フレーム続行
-  end
-
-  #イベントの実行
-  def command_fire(options)
-    #キーが登録されていないなら終了
-    return false if !@event_list[options[:fire]]
-
-    #コマンド列を格納する（インタラプトなので逆順にsendする）
-    @event_list[options[:fire]].reverse_each do |command|
-      send_command_interrupt(command[0], command[1])
-    end
-
-    #TODO上のコードで問題無く動くかどうかを確認
-    #@command_list = @event_list[options[:fire]] + @command_list
-
-    return false #フレーム続行
-  end
-
-  #繰り返し
-  def command_while(options)
-    #条件式が非成立であればループを終了する
-    return false if !eval(options[:while])
-    
-    eval_block([[:while, options]])
-    eval_block(options[:commands])
-
-    send_command_interrupt(:take_token, {})
-    return false
-  end
-
-
-  #############################################################################
-  #スタック操作関連
-  #############################################################################
-
-  #プロシージャーを登録する
-  def command_procedure(options)
-    @@procedure_list[options[:procedure]] = options[:impl]
-    return false #リスト探査続行
-  end
-
-  #プロシージャーコールを実行する
-  def command_call_procedure(options)
-    #現在のコマンドリストをスタック
-    @call_stack.push(@command_list)
-    #プロシージャの中身をevalでコマンドセット化してコマンドリストに登録する
-    @command_list = eval(@@procedure_list[options[:procedure]])
-    return false #リスト探査続行
-  end
-
-  #プロシージャーを登録する
-  def command_ailias(options)
-    @@ailias_list[options[:ailias]] = options[:commands]
-
-    return false #リスト探査続行
-  end
-
-  #############################################################################
-  #分類未決定
-  #############################################################################
-
-  #フラグを設定する
-  def command_flag(options)
-    #ユーザー定義フラグを更新する
-    @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
-    return false #リスト探査続行
-  end
-
-  #次に読み込むスクリプトファイルのパスを設定する
-  def command_next_scenario(options)
-    @next_script_file_path = options[:next_scenario]
-    return false #リスト探査続行
-  end
-
-  #disposeコマンド
-  #コントロールを削除する
-  def command_dispose(options)
-    #自身が指定されたコントロールの場合
-    if options[:dispose] == @id
-      #削除フラグを立てる
-      dispose()
-    else
-      #子コントロールにdisposeコマンドを送信
-      send_command_interrupt(:dispose, options, options[:dispose])
-    end
-    return false #リスト探査続行
-  end
+  private
 
   #############################################################################
   #ヘルパーメソッド

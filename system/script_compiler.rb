@@ -92,7 +92,7 @@ class ScriptCompiler
   end
 
   #オプション無し
-  def self.imple_non_option(command_name, default_control)
+  def self.impl_non_option(command_name, default_control)
     define_method(command_name) do
       impl(command_name, default_control, nil)
     end
@@ -140,18 +140,18 @@ class ScriptCompiler
   end
 
   #次フレームに送る
-  imple_non_option :next_frame, :Rag
+  impl_non_option :next_frame, :Rag
   #キー入力待ち
-  imple_non_option :pause,      :LayoutContainer
+  impl_non_option :pause,      :LayoutContainer
 
   #改行
-  imple_non_option :line_feed,  :CharContainer
+  impl_non_option :line_feed,  :CharContainer
   #改ページ
-  imple_non_option :flash,      :CharContainer
+  impl_non_option :flash,      :CharContainer
 
   #ボタン制御コマンド群
   #TODOこれホントに必要？
-  imple_non_option :normal,      :ButtonControl
+  impl_non_option :normal,      :ButtonControl
 
   #単一オプションを持つコマンド
   #特定コマンドの終了を待つ
@@ -162,6 +162,8 @@ class ScriptCompiler
   impl_one_option :next_scenario, :LayoutContainer
   #コントロールの削除
   impl_one_option :dispose,       :LayoutContainer
+
+  impl_non_option :wait_child_controls_idol,  :Anonymous
 
   #文字列
   impl_one_option :text,         :CharContainer

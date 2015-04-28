@@ -100,6 +100,7 @@ class Control
     if @id == id or id == :anonymous
       #コマンドをスタックの末端に挿入する
       @command_list.push([command, options])
+      @idol_mode = false
       return true #コマンドをスタックした
     end
 
@@ -352,13 +353,13 @@ class Control
     #自コマンドをリスト末端に追加する
     send_command(:token, nil)
 
-    return false  #コマンド探査続行
+    return true  #コマンド探査続行
   end
 
   #文字列を評価する（デバッグ用）
   def command_eval(options)
     eval(options[:eval])
-    return false #フレーム続行
+    return true #フレーム続行
   end
 
   #############################################################################
@@ -534,7 +535,7 @@ class Control
       return true, true, [:wait, {:wait => wait_frame - 1}] #リスト探査終了
     end
 
-    return true #リスト探査続行
+    return false #リスト探査続行
   end
 
   #wait_commandコマンド
@@ -571,9 +572,12 @@ class Control
   #wait_child_controls_idolコマンド
   #子要素のコントロールが全てアイドルになるまで待機
   def command_wait_child_controls_idol(options)
+    pp "run wait_child_controls_idol"
     if !all_controls_idol?
+      pp "not idol"
       return true, true, [:wait_child_controls_idol, nil] #リスト探査終了
     end
+    pp "idol"
     return true #リスト探査続行
   end
 

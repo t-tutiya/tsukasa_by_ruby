@@ -149,6 +149,11 @@ class CharContainer < Control
     super(options)
   end
 
+  def update
+#    pp @command_list
+    super
+  end
+
   #############################################################################
   #公開インターフェイス
   #############################################################################
@@ -180,6 +185,7 @@ class CharContainer < Control
   #charコマンド
   #指定文字（群）を描画チェインに連結する
   def command_char(options)
+    #pp options
     #レンダリング済みフォントを使用中か否かで分岐
     if !@font_config[:use_image_font]
       #文字レンダラオブジェクトを生成する
@@ -220,7 +226,7 @@ class CharContainer < Control
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
     send_command_interrupt(:wait, {:wait => :unset_wait_frame})
 
-    return true #フレーム続行
+    return false #フレーム続行
   end
 
   #textコマンド
@@ -240,7 +246,7 @@ class CharContainer < Control
     #一時スタックしたコマンドをスタックの先頭に挿入する
     @command_list = commands + @command_list
 
-    return true #フレーム続行
+    return false #フレーム続行
   end
 
   #graphコマンド
@@ -284,6 +290,7 @@ class CharContainer < Control
   #line_feedコマンド
   #改行処理（CR＋LF）
   def command_line_feed(options)
+    pp "line_feed"
     #Ｘ座標をリセット（インデント設定があればその分を加算）
     @next_char_x = @indent_offset
     #行間サイズ＋行間ピッチ分Ｙ座標を送る

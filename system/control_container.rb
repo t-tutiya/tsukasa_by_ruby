@@ -39,18 +39,22 @@ class Control
   @@ailias_list =  Hash.new #エイリアスのリスト
 
   def initialize(options)
+    #ルートクラスの設定
+    @@root = self if !@@root
+
     @x_pos = 0
     @y_pos = 0
-    
-    @script_storage = Array.new #スクリプトストレージ
-    @script_storage_stack = Array.new #コールスタック
-    
+
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
 
-    @command_list = Array.new #コマンドリスト
-    @control_list = Array.new #コントロールリスト
+    @script_storage       = Array.new #スクリプトストレージ
+    @script_storage_stack = Array.new #コールスタック
+
+    @command_list       = Array.new #コマンドリスト
     @command_list_stack = Array.new #コールスタック
+
+    @control_list = Array.new #コントロールリスト
 
     @event_list = Hash.new #イベントリスト
 
@@ -71,31 +75,29 @@ class Control
     
     @draw_option = {} #描画オプション
 
-    #コマンドセットがあるなら登録する
-    if options[:commands]
-      options[:commands].each do |command, options|
-        #TODO:optionsをdupしなくていいのか後で確認
-        send_command(command, options, options[:target_control])
-      end
-    end
-
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]
       #シナリオファイルの読み込み
       @script_storage = Tsukasa::ScriptCompiler.new(options[:script_path])
     end
 
+    #コマンドセットがあるなら登録する
+    if options[:commands]
+      eval_block(options[:commands]) 
+    end
+
     #初期コマンドの設定
     send_command(:token, nil)
-    #ルートクラスの設定
-    @@root = self if !@@root
+
+    #初期ブロックを実行する
+    update()
   end
 
   #コマンドをスタックに格納する
   def send_command(command, options, id = @id)
     #自身が送信対象として指定されている場合
     #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
-    if @id == id or id == :default_layout_container
+    if @id == id or id == :anonymous
       #コマンドをスタックの末端に挿入する
       @command_list.push([command, options])
       return true #コマンドをスタックした
@@ -114,7 +116,7 @@ class Control
   def send_command_interrupt(command, options, id = @id)
     #自身が送信対象として指定されている場合
     #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
-    if @id == id or id == :default_layout_container
+    if @id == id or id == :anonymous
       #コマンドをスタックの先頭に挿入する
       @command_list.unshift([command, options])
       return true #コマンドをスタックした
@@ -340,10 +342,10 @@ class Control
     #コマンドをコントロールに登録する
     if !send_command(command,options,options[:target_control]) then
       pp "error"
-      pp options[:target_control]
+      pp command
       pp options
 #      pp @control_list
-      pp command.to_s + " commandは、伝搬先が見つかりませんでした"
+      pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
       raise
     end
 

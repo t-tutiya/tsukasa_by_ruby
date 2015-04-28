@@ -42,15 +42,12 @@ class ButtonControl  < Control
     options[:draw_to_entity] = false
     super(options)
 
-    @button_controls = Hash.new
-    
     #TODO；本来はここでnormalの初期化が必要なように思える
     @entity = nil
   end
 
   #ボタンのノーマル状態
   def command_normal(options)
-    #send_command_interrupt(:fire, {:fire => :normal})
     #マウスカーソル座標を取得
     x = Input.mouse_pos_x
     y = Input.mouse_pos_y

@@ -78,12 +78,11 @@ class CharContainer < Control
   include Drawable #描画関連モジュール
 
   def initialize(options, control = nil)
-    super(options)
+    @char_renderer_commands = {}
 
     #文字レンダラクラスと文字レンダラオプションの保存
     @char_renderer = options[:char_renderer] || CharControl
     #コマンドの初期化
-    @char_renderer_commands = {}
 #    @char_renderer_options[:commands] =[] if !@char_renderer_options[:commands]
 
     @margin_x = options[:margin_x] || 0
@@ -147,6 +146,7 @@ class CharContainer < Control
     #次に描画する文字の『下限』Ｙ座標をリセット
     @next_char_y = 0
 
+    super(options)
   end
 
   #############################################################################
@@ -191,7 +191,8 @@ class CharContainer < Control
                      :font => @font,
                      :font_config => @font_config,
                      :skip_mode =>  @skip_mode,
-                     :graph => false}
+                     :graph => false,
+                     :commands =>@char_renderer_commands}
                    )
     else
       #文字レンダラオブジェクトを生成する
@@ -203,14 +204,10 @@ class CharContainer < Control
                      :font => @font,
                      :font_config => @font_config,
                      :skip_mode =>  @skip_mode,
-                     :graph => true},
+                     :graph => true,
+                     :commands =>@char_renderer_commands},
                    @font.glyph(options[:char].to_s)
                    )
-    end
-
-    #フェードコマンドを発行
-    @char_renderer_commands.each do |command|
-      control.send_command(command[0], command[1].dup)
     end
 
     #描画チェインに連結する
@@ -317,7 +314,7 @@ class CharContainer < Control
   #############################################################################
   #ルビ関連コマンド
   #############################################################################
-
+=begin
   #rubi_charコマンド
   #ルビを出力する
   #オフセットがあればそのＸ座標から、なければ文字の中心から計算して出力する
@@ -357,7 +354,7 @@ class CharContainer < Control
 
     return false #フレーム続行
   end
-
+=end
   #rubiコマンド
   #ルビを出力する（rubi_charの補助メソッド）
   #char:ルビ文字列

@@ -36,7 +36,7 @@ procedure :log,
       :y_pos =>     0, 
       :id =>       :test}]]
 EOS
-
+=begin
 #log file_path: "./sozai/bg_sample.png"
 create :ImageControl ,
        file_path: "./sozai/bg_sample.png", x_po: 0, y_pos: 0, 
@@ -49,7 +49,7 @@ create :ImageControl ,
   wait_command :move_line
   move offset_x: -100, offset_y: 0, frame: 60, offset: true
 end
-
+=end
 =begin
 create :LayoutContainer,
   x_pos: 0,
@@ -161,12 +161,14 @@ create :LayoutContainer,
           count: 0,
           start: 0,
           last: 255
+=begin
         sleep_frame
         transition_fade frame: 60,
           count: 0,
           start: 255,
           skip: 255,
           last:128
+=end
       end
     end
 end
@@ -176,7 +178,7 @@ wait_flag "3"
 #EVAL "pp 'post_wait'"
 
 #image_change "./sozai/button_out.png", target_control: :BG
-#dispose :button1
+dispose :button1
 text "てｓｔ"
 
 text "ＡＤＶエンジン「司（Tsukasa）」のα１バージョンを"

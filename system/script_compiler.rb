@@ -38,7 +38,8 @@ class ScriptCompiler
     :CharContainer => :default_text_layer,
     :LayoutContainer => :default_layout_container,
     :Rag => :default_layout_container,
-    :ButtonControl => :button1
+    :ButtonControl => :button1,
+    :Anonymous => :anonymous
   }
 
   def initialize(file_path)
@@ -154,7 +155,7 @@ class ScriptCompiler
 
   #単一オプションを持つコマンド
   #特定コマンドの終了を待つ
-  impl_one_option :wait_command,  :LayoutContainer
+  impl_one_option :wait_command,  :Anonymous
   #特定フラグの更新を待つ（現状では予めnilが入ってないと機能しない）
   impl_one_option :wait_flag,     :LayoutContainer
   #次に読み込むスクリプトファイルの指定
@@ -167,17 +168,17 @@ class ScriptCompiler
   #文字
   impl_one_option :char,         :CharContainer
   #指定フレーム待つ
-  impl_one_option :wait,         :CharContainer
+  impl_one_option :wait,         :Anonymous
   #インデント設定
   impl_one_option :indent,       :CharContainer
   #文字描画速度の設定
   impl_one_option :delay,        :CharContainer
 
   #移動
-  impl_options :move,            :LayoutContainer
-  impl_options :move_line,       :LayoutContainer
+  impl_options :move,            :Anonymous
+  impl_options :move_line,       :Anonymous
   #フェードトランジション
-  impl_options :transition_fade, :LayoutContainer
+  impl_options :transition_fade, :Anonymous
   #フラグ設定
   impl_options :flag,            :LayoutContainer
 
@@ -185,14 +186,14 @@ class ScriptCompiler
 
   #文字レンダラの指定
   #TODO:これはtext_layer内に動作を限定できないか？
-  impl_block :char_renderer,     :LayoutContainer
+  impl_block :char_renderer,     :CharContainer
 
   #オプション／サブオプション（省略可）／ブロックを持つコマンド
 
   #コントロールの生成
-  impl_option_options_block :create,              :LayoutContainer
+  impl_option_options_block :create,              :Anonymous
   #コントロール単位でイベント駆動するコマンド群を格納する
-  impl_option_options_block :event,               :LayoutContainer
+  impl_option_options_block :event,               :Anonymous
 
   #画像スタック
   impl_option_options_block :graph,               :CharContainer
@@ -262,12 +263,12 @@ class ScriptCompiler
 
   #eval（予約語の為メソッド名差し替え）
   def EVAL(option)
-    impl(:eval,  :Rag, option)
+    impl(:eval,  :Anonymous, option)
   end
 
   #sleep（予約語の為メソッド名差し替え）
   def sleep_frame
-    impl(:sleep, :Rag, nil)
+    impl(:sleep, :Anonymous, nil)
   end
 
   #ヘルパーメソッド群

@@ -36,7 +36,7 @@ procedure :log,
       :y_pos =>     0, 
       :id =>       :test}]]
 EOS
-=begin
+
 #log file_path: "./sozai/bg_sample.png"
 create :ImageControl ,
        file_path: "./sozai/bg_sample.png", x_po: 0, y_pos: 0, 
@@ -49,7 +49,7 @@ create :ImageControl ,
   wait_command :move_line
   move offset_x: -100, offset_y: 0, frame: 60, offset: true
 end
-=end
+
 =begin
 create :LayoutContainer,
   x_pos: 0,

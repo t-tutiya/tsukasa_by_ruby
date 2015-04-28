@@ -100,7 +100,8 @@ class Control
     if @id == id or id == :anonymous
       #コマンドをスタックの末端に挿入する
       @command_list.push([command, options])
-      @idol_mode = false
+      #pp "@id[" + @id.to_s + "]" + command.to_s
+      #@idol_mode = false
       return true #コマンドをスタックした
     end
 
@@ -156,6 +157,9 @@ class Control
 
   #毎フレームコントロール更新処理
   def update
+    #次フレコマンド列クリア
+    @next_frame_commands = []
+
     #コマンドリストが空で、かつ、コールスタックが空でない場合
     if @command_list.empty? and !@command_list_stack.empty?
       #コールスタックからネスト元のコマンドセットを取得する
@@ -164,8 +168,6 @@ class Control
 
     #待機モードを初期化
     @idol_mode = true
-
-    @next_frame_commands = []
 
     #コマンドリストが空になるまで走査し、コマンドを実行する
     while !@command_list.empty?
@@ -572,12 +574,16 @@ class Control
   #wait_child_controls_idolコマンド
   #子要素のコントロールが全てアイドルになるまで待機
   def command_wait_child_controls_idol(options)
-    pp "run wait_child_controls_idol"
+    #pp "id[" + @id.to_s + "]run wait_child_controls_idol"
     if !all_controls_idol?
-      pp "not idol"
+    #pp @control_list
+    #pp @idol_mode
       return true, true, [:wait_child_controls_idol, nil] #リスト探査終了
     end
-    pp "idol"
+
+    #pp @control_list
+    #pp @idol_mode
+    #raise
     return true #リスト探査続行
   end
 

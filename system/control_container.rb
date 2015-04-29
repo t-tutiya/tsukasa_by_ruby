@@ -86,9 +86,6 @@ class Control
       eval_block(options[:commands]) 
     end
 
-    #初期コマンドの設定
-    send_command(:token, nil)
-
     #初期ブロックを実行する
     update()
   end
@@ -159,15 +156,17 @@ class Control
   def update
     #次フレコマンド列クリア
     @next_frame_commands = []
-
+=begin
     #コマンドリストが空で、かつ、コールスタックが空でない場合
     if @command_list.empty? and !@command_list_stack.empty?
       #コールスタックからネスト元のコマンドセットを取得する
       @command_list = @command_list_stack.pop
     end
-
+=end
     #待機モードを初期化
     @idol_mode = true
+
+    send_command(:token, nil)
 
     #コマンドリストが空になるまで走査し、コマンドを実行する
     while !@command_list.empty?
@@ -301,11 +300,11 @@ class Control
 
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
   def command_token(options)
-    #コマンドストレージが空の場合
+    #トークンの取得対象であるスクリプトストレージが空の場合
     if @script_storage.empty?
-      #コマンドストレージのコールスタックが存在する場合
+      #スクリプトストレージのコールスタックが存在する場合
       if !@script_storage_stack.empty?
-        #コールスタックからコマンドストレージをポップする
+        #コールスタックからスクリプトストレージをポップする
         @script_storage = @script_storage_stack.pop
       #次に読み込むスクリプトファイルが指定されている場合
       elsif @next_script_file_path
@@ -315,7 +314,7 @@ class Control
         @next_script_file_path = nil
       else 
         #ループを抜ける
-        return true, false, [:token, nil]
+        return true
       end
     end
 
@@ -352,8 +351,9 @@ class Control
       raise
     end
 
-    #自コマンドをリスト末端に追加する
-    send_command(:token, nil)
+    #コマンドリストが空でなければ自身をリスト末端に追加する
+    #TODO：もうちょっと上手いロジックがあるように思う
+    send_command(:token, nil) if !@command_list.empty?
 
     return true  #コマンド探査続行
   end
@@ -581,9 +581,6 @@ class Control
       return true, true, [:wait_child_controls_idol, nil] #リスト探査終了
     end
 
-    #pp @control_list
-    #pp @idol_mode
-    #raise
     return true #リスト探査続行
   end
 

@@ -158,10 +158,11 @@ create :LayoutContainer,
                      :face => "ＭＳＰ ゴシック"},
       style_config: { :wait_frame => 2,} do
       char_renderer do
-      	transition_fade frame: 30,
+        transition_fade frame: 30,
           count: 0,
           start: 0,
           last: 255
+        check_key_push
 =begin
         sleep_frame
         transition_fade frame: 60,

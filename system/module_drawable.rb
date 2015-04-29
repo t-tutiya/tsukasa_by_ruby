@@ -112,8 +112,8 @@ module Drawable
   #start:開始α値
   #last:終了α値
   def command_transition_fade(options) 
-    #キー押下があれば最終値を設定し、フレーム内処理を続行する
-    if Input.key_push?(K_SPACE) or @skip_mode
+    #スキップモードであれば最終値を設定し、フレーム内処理を続行する
+    if @skip_mode
       if options[:skip]
         @draw_option[:alpha] = options[:skip]
       else

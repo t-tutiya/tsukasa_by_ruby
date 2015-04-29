@@ -383,15 +383,15 @@ class Control
 
   #繰り返し
   def command_while(options)
-    #条件式が非成立であればループを終了する
-    return false if !eval(options[:while])
+    #条件式が非成立であれば繰り返し構文を終了する
+    return true if !eval(options[:while]) #アイドル
 
     #while文全体をスクリプトストレージにスタック
     eval_block([[:while, options]])
     #while文の中身をスクリプトストレージスタック
     eval_block(options[:commands])
 
-    return false
+    return true #アイドル
   end
 
   #ブロック文の実行
@@ -549,7 +549,7 @@ class Control
       #自分自身をスタックし、コマンド探査を終了する
       return true, true, [:wait_command, options]
     else
-      return false #コマンド探査の続行
+      return true #アイドル
     end
   end
 
@@ -597,6 +597,16 @@ class Control
     else
       #ポーズ状態を続行する
       return true, true, [:wait_input_key, options] #リスト探査終了
+    end
+  end
+
+  def command_check_key_push(options)
+    if Input.key_push?(K_SPACE)
+      @skip_mode = true
+      return true#フレーム終了
+    else
+      #ポーズ状態を続行する
+      return true, false, [:check_key_push, nil] #リスト探査終了
     end
   end
 

@@ -165,6 +165,8 @@ class ScriptCompiler
 
   impl_non_option :wait_child_controls_idol,  :Anonymous
 
+  impl_non_option :check_key_push,  :Anonymous
+
   #文字列
   impl_one_option :text,         :CharContainer
   #文字

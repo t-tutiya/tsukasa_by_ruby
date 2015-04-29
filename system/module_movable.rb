@@ -69,7 +69,7 @@ module Movable
     if @skip_mode
       @x_pos = options[:x]
       @y_pos = options[:y]
-      return false #フレーム続行
+      return true #アイドル
     end
 
     #移動先座標の決定
@@ -83,7 +83,7 @@ module Movable
       #:move_lineコマンドをスタックし直す
       return false, false, [:move_line, options] #フレーム終了
     else
-      return false #フレーム続行
+      return true #アイドル
     end
   end
 end

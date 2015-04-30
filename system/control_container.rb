@@ -86,6 +86,8 @@ class Control
       eval_block(options[:commands]) 
     end
 
+    send_command(:token, nil)
+
     #初期ブロックを実行する
     update()
   end
@@ -93,7 +95,6 @@ class Control
   #コマンドをスタックに格納する
   def send_command(command, options, id = @id)
     #自身が送信対象として指定されている場合
-    #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
     if @id == id or id == :anonymous
       #コマンドをスタックの末端に挿入する
       @command_list.push([command, options])
@@ -165,8 +166,6 @@ class Control
 =end
     #待機モードを初期化
     @idol_mode = true
-
-    send_command(:token, nil)
 
     #コマンドリストが空になるまで走査し、コマンドを実行する
     while !@command_list.empty?
@@ -245,6 +244,14 @@ class Control
 
   #全てのコントロールが待機モードになっているかを返す。
   def all_controls_idol?
+=begin
+    result = true
+    @control_list.each do |control|
+      result &= control.all_controls_idol?
+    end
+    result &= @idol_mode
+    return result
+=end
     return @idol_mode
   end
 
@@ -314,7 +321,7 @@ class Control
         @next_script_file_path = nil
       else 
         #ループを抜ける
-        return true
+        return true, false, [:token, nil]
       end
     end
 
@@ -355,7 +362,7 @@ class Control
     #TODO：もうちょっと上手いロジックがあるように思う
     send_command(:token, nil) if !@command_list.empty?
 
-    return true  #コマンド探査続行
+    return true #コマンド探査続行
   end
 
   #文字列を評価する（デバッグ用）
@@ -543,6 +550,14 @@ class Control
   #wait_commandコマンド
   #特定のコマンドが自身より前に存在し続ける限り待機を続ける
   def command_wait_command(options)
+    #キーが押された場合
+    if Input.key_push?(K_SPACE)
+      @skip_mode = true
+      #キー入力が伝搬すると不味いので次フレームに進める
+      return true, true
+    end
+
+    #指定されたコマンドが次フレ用に積まれている場合
     if @next_frame_commands.index{|command| 
           command[0] == options[:wait_command]
        }
@@ -574,13 +589,9 @@ class Control
   #wait_child_controls_idolコマンド
   #子要素のコントロールが全てアイドルになるまで待機
   def command_wait_child_controls_idol(options)
-    #pp "id[" + @id.to_s + "]run wait_child_controls_idol"
     if !all_controls_idol?
-    #pp @control_list
-    #pp @idol_mode
       return true, true, [:wait_child_controls_idol, nil] #リスト探査終了
     end
-
     return true #リスト探査続行
   end
 
@@ -603,7 +614,7 @@ class Control
       return true#フレーム終了
     else
       #ポーズ状態を続行する
-      return true, false, [:check_key_push, nil] #リスト探査終了
+      return true, true, [:check_key_push, nil] #リスト探査終了
     end
   end
 

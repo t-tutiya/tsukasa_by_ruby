@@ -27,7 +27,7 @@
 #
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
-
+=begin
 procedure :log,
   impl: <<"EOS"
     [[:create, {:create => :ImageControl,
@@ -50,7 +50,7 @@ create :ImageControl ,
   wait_command :move_line
   move offset_x: -100, offset_y: 0, frame: 60, offset: true
 end
-
+=end
 =begin
 create :LayoutContainer,
   x_pos: 0,
@@ -184,6 +184,8 @@ dispose :button1
 text "てｓｔ"
 
 text "ＡＤＶエンジン「司（Tsukasa）」のα１バージョンを"
+line_feed
+text "ひとまず公開します。testA"
 line_feed
 text "ひとまず公開します。testA"
 

@@ -36,12 +36,12 @@ create :ImageControl ,
                   count: 0,
                   start: 0,
                   last: 255
-  check_key_push
   wait_command :move_line
   move offset_x: -300, offset_y: 0, frame: 60, offset: true
+  wait_command :move_line
 end
 
-
+=begin
 #ボタンコントロール
 create :ButtonControl, 
         :x_pos => 0, 
@@ -74,7 +74,8 @@ create :ButtonControl,
   end
   normal
 end
-
+=end
+=begin
 WHILE "true", target_control: :button1 do
   move_line x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
   wait_command :move_line
@@ -85,9 +86,9 @@ WHILE "true", target_control: :button1 do
   move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 0,   start_y: 300
   wait_command :move_line
 end
-
 wait_flag "3"
 
 dispose :button1
 
 pause
+=end

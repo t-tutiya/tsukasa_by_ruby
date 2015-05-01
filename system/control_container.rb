@@ -359,10 +359,14 @@ class Control
     end
 
     #コマンドリストが空でなければ自身をリスト末端に追加する
-    #TODO：もうちょっと上手いロジックがあるように思う
-    send_command(:token, nil) if !@command_list.empty?
-
-    return true #コマンド探査続行
+    #TODO：ここでリスト末端の識別をしているのは明らかにおかしい。後で直す
+    if @command_list.empty?
+      #ループを抜ける
+      return true, false, [:token, nil]
+    else
+      send_command(:token, nil)
+      return true
+    end
   end
 
   #文字列を評価する（デバッグ用）
@@ -550,6 +554,18 @@ class Control
   #wait_commandコマンド
   #特定のコマンドが自身より前に存在し続ける限り待機を続ける
   def command_wait_command(options)
+    #指定されたコマンドが次フレ用に積まれている場合
+    if @next_frame_commands.index{|command| 
+          command[0] == options[:wait_command]
+       }
+      #自分自身をスタックし、コマンド探査を終了する
+      return true, true, [:wait_command, options]
+    else
+      return true #アイドル
+    end
+  end
+
+  def command_wait_command_with_key_push(options)
     #キーが押された場合
     if Input.key_push?(K_SPACE)
       @skip_mode = true
@@ -559,10 +575,10 @@ class Control
 
     #指定されたコマンドが次フレ用に積まれている場合
     if @next_frame_commands.index{|command| 
-          command[0] == options[:wait_command]
+          command[0] == options[:wait_command_with_key_push]
        }
       #自分自身をスタックし、コマンド探査を終了する
-      return true, true, [:wait_command, options]
+      return true, true, [:wait_command_with_key_push, options]
     else
       return true #アイドル
     end
@@ -607,8 +623,15 @@ class Control
       return true, true, [:wait_input_key, options] #リスト探査終了
     end
   end
-
+=begin
   def command_check_key_push(options)
+    if !@next_frame_commands.index{|command| 
+        command[0] == options[:wait_command]
+     }
+      #キー入力が伝搬すると不味いので次フレームに進める
+      return true #フレーム終了
+    end
+
     if Input.key_push?(K_SPACE)
       @skip_mode = true
       return true#フレーム終了
@@ -617,11 +640,14 @@ class Control
       return true, true, [:check_key_push, nil] #リスト探査終了
     end
   end
-
+=end
   def command_wake(options)
-    #スリープ状態を解除
-    @sleep_mode = :wake
-    @skip_mode = false
+    #スリープモードの場合
+    if @sleep_mode == :sleep
+      #スリープ状態を解除
+      @sleep_mode = :wake
+      @skip_mode = false
+    end
 
     return true, false #コマンド探査続行
   end

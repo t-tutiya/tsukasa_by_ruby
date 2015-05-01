@@ -36,12 +36,12 @@ create :ImageControl ,
                   count: 0,
                   start: 0,
                   last: 255
-  wait_command :move_line
+  wait_command_with_key_push  :move_line
   move offset_x: -300, offset_y: 0, frame: 60, offset: true
-  wait_command :move_line
+  wait_command_with_key_push  :move_line
 end
 
-=begin
+
 #ボタンコントロール
 create :ButtonControl, 
         :x_pos => 0, 
@@ -74,8 +74,8 @@ create :ButtonControl,
   end
   normal
 end
-=end
-=begin
+
+
 WHILE "true", target_control: :button1 do
   move_line x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
   wait_command :move_line
@@ -86,9 +86,49 @@ WHILE "true", target_control: :button1 do
   move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 0,   start_y: 300
   wait_command :move_line
 end
-wait_flag "3"
+
+
+create :LayoutContainer,
+  x_pos: 128,
+  y_pos: 528,
+  width: 1024,
+  height: 600,
+  id: :main_text_layer do
+    #メッセージウィンドウ
+    create :CharContainer, 
+      id: :default_text_layer,
+      font_config: { :size => 32, 
+                     :face => "ＭＳＰ ゴシック"},
+      style_config: { :wait_frame => 2,} do
+      char_renderer do
+        transition_fade frame: 30,
+          count: 0,
+          start: 0,
+          last: 255
+        #wait_command_with_key_push  :transition_fade
+=begin
+        sleep_frame
+        transition_fade frame: 60,
+          count: 0,
+          start: 255,
+          skip: 255,
+          last:128
+=end
+      end
+    end
+end
+
+pause
 
 dispose :button1
 
+text "ＡＤＶエンジン「司（Tsukasa）」のα１バージョンを"
+line_feed
+text "ひとまず公開します。testA"
+line_feed
+text "ひとまず公開します。testA"
+
+next_scenario "./scenario/scenario04b.rb"
+
 pause
-=end
+flash

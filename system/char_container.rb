@@ -232,6 +232,7 @@ class CharContainer < Control
   #textコマンド
   #指定文字列を描画チェインに連結する
   def command_text(options)
+    #pp "text"
     #必須属性値チェック
     return false if check_exist(options, :text)
     
@@ -290,7 +291,6 @@ class CharContainer < Control
   #line_feedコマンド
   #改行処理（CR＋LF）
   def command_line_feed(options)
-    pp "line_feed"
     #Ｘ座標をリセット（インデント設定があればその分を加算）
     @next_char_x = @indent_offset
     #行間サイズ＋行間ピッチ分Ｙ座標を送る

@@ -114,11 +114,7 @@ module Drawable
   def command_transition_fade(options) 
     #スキップモードであれば最終値を設定し、フレーム内処理を続行する
     if @skip_mode
-      if options[:skip]
-        @draw_option[:alpha] = options[:skip]
-      else
-        @draw_option[:alpha] = options[:last]
-      end
+      @draw_option[:alpha] = options[:last]
       return true #アイドル状態でタスク探査続行
     end
 

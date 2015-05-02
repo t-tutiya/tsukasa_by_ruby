@@ -243,16 +243,15 @@ class Control
   end
 
   #全てのコントロールが待機モードになっているかを返す。
+  #TODO：現状毎フレここで実行しているのだけど、コストが高すぎるので本当はupdateの戻り値の集計ですませたい。なんとかできないか考える。
   def all_controls_idol?
-=begin
     result = true
+
     @control_list.each do |control|
       result &= control.all_controls_idol?
     end
-    result &= @idol_mode
-    return result
-=end
-    return @idol_mode
+
+    return ( result and @idol_mode )
   end
 
   #コントロールを削除して良いかどうか

@@ -598,7 +598,7 @@ class CharContainer < Control
   #char_redererタグ
   #文字レンダラの設定
   def command_char_renderer(options)
-    @char_renderer_commands = options[:commands]
+    @char_renderer_commands = options[:commands].dup
     return true #フレーム続行
   end
 

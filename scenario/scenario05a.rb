@@ -108,6 +108,7 @@ create :LayoutContainer,
         wait_command_with_key_push  :transition_fade
         sleep_mode :sleep
         wait_wake
+        next_frame
         skip_mode false
         transition_fade frame: 60,
           count: 0,

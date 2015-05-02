@@ -140,7 +140,7 @@ class ScriptCompiler
   end
 
   #次フレームに送る
-  impl_non_option :next_frame, :Rag
+  impl_non_option :next_frame, :Anonymous
   #キー入力待ち
   impl_non_option :pause,      :Anonymous
 

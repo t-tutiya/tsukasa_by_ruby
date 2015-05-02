@@ -56,7 +56,7 @@ class ScriptCompiler
   def impl(command_name, default_control, option, sub_options = {}, &block)
 
     #キー名無しオプションがある場合はコマンド名をキーに設定する
-    sub_options[command_name] = option if option
+    sub_options[command_name] = option if option != nil
 
     #送信先コントロールのデフォルトを設定する
     if !sub_options[:target_control]
@@ -144,6 +144,9 @@ class ScriptCompiler
   #キー入力待ち
   impl_non_option :pause,      :Anonymous
 
+  impl_non_option :wait_wake,      :Anonymous
+  impl_non_option :wait_input_key,      :Anonymous
+
   #改行
   impl_non_option :line_feed,  :CharContainer
   #改ページ
@@ -169,7 +172,7 @@ class ScriptCompiler
   impl_one_option :wait_command_with_key_push,  :Anonymous
 
   #スリープモードの更新
-  #impl_one_option :sleep_mode,  :Anonymous
+  impl_one_option :sleep_mode,  :Anonymous
   #スキップモードの更新
   impl_one_option :skip_mode,  :Anonymous
 

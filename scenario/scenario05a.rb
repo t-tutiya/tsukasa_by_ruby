@@ -106,16 +106,18 @@ create :LayoutContainer,
           start: 0,
           last: 255
         wait_command_with_key_push  :transition_fade
-        pause
+        sleep_mode :sleep
+        wait_wake
         skip_mode false
         transition_fade frame: 60,
           count: 0,
           start: 255,
           skip: 255,
           last:128
+        wait_command_with_key_push  :transition_fade
       end
     end
-end
+  end
 
 pause
 
@@ -127,11 +129,15 @@ text"asa）」のα１バージョンを"
 line_feed
 text "ひとまず"
 pause
+text"asa）」のα１バージョンを"
+line_feed
+text "ひとまず"
+pause
 text"公開します。testA"
 line_feed
 text "ひとまず公開します。testA"
 
-next_scenario "./scenario/scenario04b.rb"
+#next_scenario "./scenario/scenario04b.rb"
 
-pause
-flash
+#pause
+#flash

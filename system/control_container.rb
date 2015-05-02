@@ -579,7 +579,7 @@ class Control
     if Input.key_push?(K_SPACE)
       @skip_mode = true
       #キー入力が伝搬すると不味いので次フレームに進める
-      return true, true
+      return true#, true
     end
 
     #指定されたコマンドが次フレ用に積まれている場合
@@ -608,7 +608,7 @@ class Control
     if @sleep_mode == :sleep
       return true, true, [:wait_wake, nil] #リスト探査終了
     end
-    return true, true #リスト探査続行
+    return true#, true #リスト探査続行
   end
 
   #wait_child_controls_idolコマンド

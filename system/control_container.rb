@@ -579,7 +579,7 @@ class Control
     if Input.key_push?(K_SPACE)
       @skip_mode = true
       #キー入力が伝搬すると不味いので次フレームに進める
-      return true#, true
+      return true, true
     end
 
     #指定されたコマンドが次フレ用に積まれている場合
@@ -589,7 +589,7 @@ class Control
       #自分自身をスタックし、コマンド探査を終了する
       return true, true, [:wait_command_with_key_push, options]
     else
-      return true #アイドル
+      return true, true #アイドル
     end
   end
 
@@ -608,7 +608,8 @@ class Control
     if @sleep_mode == :sleep
       return true, true, [:wait_wake, nil] #リスト探査終了
     end
-    return true#, true #リスト探査続行
+    #伝搬を切る為にフレームを終了する
+    return true, true #アイドル／フレーム終了
   end
 
   #wait_child_controls_idolコマンド

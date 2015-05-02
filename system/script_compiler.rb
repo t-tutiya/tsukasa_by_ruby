@@ -142,7 +142,7 @@ class ScriptCompiler
   #次フレームに送る
   impl_non_option :next_frame, :Rag
   #キー入力待ち
-  impl_non_option :pause,      :LayoutContainer
+  impl_non_option :pause,      :Anonymous
 
   #改行
   impl_non_option :line_feed,  :CharContainer
@@ -167,6 +167,11 @@ class ScriptCompiler
 
   impl_non_option :check_key_push,  :Anonymous
   impl_one_option :wait_command_with_key_push,  :Anonymous
+
+  #スリープモードの更新
+  #impl_one_option :sleep_mode,  :Anonymous
+  #スキップモードの更新
+  impl_one_option :skip_mode,  :Anonymous
 
   #文字列
   impl_one_option :text,         :CharContainer

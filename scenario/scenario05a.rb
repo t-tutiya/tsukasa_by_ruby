@@ -106,14 +106,13 @@ create :LayoutContainer,
           start: 0,
           last: 255
         wait_command_with_key_push  :transition_fade
-=begin
-        sleep_frame
+        pause
+        skip_mode false
         transition_fade frame: 60,
           count: 0,
           start: 255,
           skip: 255,
           last:128
-=end
       end
     end
 end

@@ -504,6 +504,22 @@ class Control
     return true, true #コマンド探査の終了
   end
 
+  #skip_modeコマンド
+  #スキップモードの更新
+  def command_skip_mode(options)
+    #スキップモードの更新
+    @skip_mode = options[:skip_mode]
+    return true #アイドル
+  end
+
+  #sleep_modeコマンド
+  #スリープモードの更新
+  def command_sleep_mode(options)
+    #スリープ状態を更新
+    @sleep_mode = options[:sleep_mode] 
+    return true #アイドル
+  end
+
   #キー入力待ち状態に移行
   def command_pause(options)
 
@@ -512,17 +528,11 @@ class Control
     send_command(:wait_child_controls_idol, nil, :default_text_layer)
     send_command(:wait_input_key,           nil, :default_text_layer)
 
-    #rootクラスをスリープさせる
-    return true, true, [:sleep, nil] #, true #コマンド探査の終了
-  end
+    send_command(:skip_mode, {:skip_mode => false}, :default_text_layer)
+    send_command(:wait_wake, nil)
 
-  #sleepコマンド
-  #スリープ状態を開始する
-  def command_sleep(options)
-    #覚醒待機状態へ移行
-    send_command_interrupt(:wait_wake, nil)
-    @sleep_mode = :sleep #スリープ状態
-    return true #コマンド探査の続行
+    #rootクラスをスリープさせる
+    return true, true, [:sleep_mode, {:sleep_mode => :sleep}] #, true #コマンド探査の終了
   end
 
   #キー入力を待つ
@@ -615,41 +625,13 @@ class Control
     #子要素のコントロールが全てアイドル状態の時にキーが押された場合
     if Input.key_push?(K_SPACE)
       #スリープモードを解除する
-      @@root.send_command_interrupt_to_all(:wake, nil)
+      @@root.send_command_interrupt_to_all(:sleep_mode, {:sleep_mode => :wake})
       #キー入力が伝搬すると不味いので次フレームに進める
       return true, true #フレーム終了
     else
       #ポーズ状態を続行する
       return true, true, [:wait_input_key, options] #リスト探査終了
     end
-  end
-=begin
-  def command_check_key_push(options)
-    if !@next_frame_commands.index{|command| 
-        command[0] == options[:wait_command]
-     }
-      #キー入力が伝搬すると不味いので次フレームに進める
-      return true #フレーム終了
-    end
-
-    if Input.key_push?(K_SPACE)
-      @skip_mode = true
-      return true#フレーム終了
-    else
-      #ポーズ状態を続行する
-      return true, true, [:check_key_push, nil] #リスト探査終了
-    end
-  end
-=end
-  def command_wake(options)
-    #スリープモードの場合
-    if @sleep_mode == :sleep
-      #スリープ状態を解除
-      @sleep_mode = :wake
-      @skip_mode = false
-    end
-
-    return true, false #コマンド探査続行
   end
 end
 

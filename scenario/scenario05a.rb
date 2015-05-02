@@ -105,7 +105,7 @@ create :LayoutContainer,
           count: 0,
           start: 0,
           last: 255
-        #wait_command_with_key_push  :transition_fade
+        wait_command_with_key_push  :transition_fade
 =begin
         sleep_frame
         transition_fade frame: 60,
@@ -122,9 +122,13 @@ pause
 
 dispose :button1
 
-text "ＡＤＶエンジン「司（Tsukasa）」のα１バージョンを"
+text "ＡＤＶエンジン「司（Tsuk"
+pause
+text"asa）」のα１バージョンを"
 line_feed
-text "ひとまず公開します。testA"
+text "ひとまず"
+pause
+text"公開します。testA"
 line_feed
 text "ひとまず公開します。testA"
 

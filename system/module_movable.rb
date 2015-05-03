@@ -52,7 +52,7 @@ module Movable
     if @skip_mode
       @x_pos = control_options[:x]
       @y_pos = control_options[:y]
-      return false #フレーム続行
+      return false, :continue #フレーム続行
     end
 
     control_options[:start_x] = @x_pos
@@ -61,7 +61,7 @@ module Movable
     control_options[:frame] = options[:frame]
 
     send_command_interrupt(:move_line, control_options)
-    return false#フレーム続行
+    return false, :continue#フレーム続行
   end
 
   def command_move_line(options)
@@ -69,7 +69,7 @@ module Movable
     if @skip_mode
       @x_pos = options[:x]
       @y_pos = options[:y]
-      return true #アイドル
+      return true, :continue #アイドル
     end
 
     #移動先座標の決定
@@ -81,9 +81,9 @@ module Movable
     #カウントが指定フレーム以下の場合
     if options[:count] <= options[:frame]
       #:move_lineコマンドをスタックし直す
-      return false, false, [:move_line, options] #フレーム終了
+      return false, :continue, [:move_line, options] #フレーム終了
     else
-      return true #アイドル
+      return true, :continue #アイドル
     end
   end
 end

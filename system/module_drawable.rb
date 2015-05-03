@@ -57,7 +57,7 @@ module Drawable
   #可視設定
   def command_visible(options)
     @visible = options[:visible]
-    return false #フレーム続行
+    return false, :continue #フレーム続行
   end
 
   #トランジションコマンド
@@ -76,7 +76,7 @@ module Drawable
     #トランジション実行コマンドを発行
     #TODO send_commandではなくinterrupt_command_allなのは、この時点でcontrolには匿名ＩＤ(:anonymous_control)が設定されている為。匿名ＩＤ自体を直接指定しても良いが、ひとまずこうしておく。
     control.send_command(:transition_crossfade, options)
-    return false
+    return false, :continue
   end
 
   def command_transition_crossfade(options)
@@ -86,7 +86,7 @@ module Drawable
       @draw_option[:alpha] = 0
 
       dispose() #リソースの解放
-      return false #フレーム続行
+      return false, :continue #フレーム続行
     end
 
     #透明度の決定
@@ -98,7 +98,7 @@ module Drawable
     if options[:count] <= options[:frame]
       #:transition_crossfadeコマンドをスタックし直す
       send_command_interrupt(:transition_crossfade, options)
-      return true #フレーム終了
+      return true, :continue #フレーム終了
     else
 
       dispose() #リソースの解放
@@ -115,7 +115,7 @@ module Drawable
     #スキップモードであれば最終値を設定し、フレーム内処理を続行する
     if @skip_mode
       @draw_option[:alpha] = options[:last]
-      return true #アイドル状態でタスク探査続行
+      return true, :continue #アイドル状態でタスク探査続行
     end
 
     #透明度の決定
@@ -128,9 +128,9 @@ module Drawable
     #カウントが指定フレーム以下の場合
     if options[:count] <= options[:frame]
       #:transition_crossfadeコマンドをスタックし直す
-      return false, false, [:transition_fade, options] #非アイドル状態でタスク探査続行
+      return false, :continue, [:transition_fade, options] #非アイドル状態でタスク探査続行
     else
-      return true #アイドル状態でタスク探査続行
+      return true, :continue #アイドル状態でタスク探査続行
     end
   end
 end

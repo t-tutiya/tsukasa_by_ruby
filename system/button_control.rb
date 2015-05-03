@@ -58,10 +58,10 @@ class ButtonControl  < Control
       #描画コントロールをoverに切り替え
       send_command(:visible, {:visible => false}, :normal)
       send_command(:visible, {:visible => true}, :over)
-      return true, false, [:over, {}]  #コマンド探査終了
+      return true, :continue, [:over, {}]  #コマンド探査終了
     else
       #normalを維持
-      return true, false, [:normal, {}]  #コマンド探査終了
+      return true, :continue, [:normal, {}]  #コマンド探査終了
     end
   end
 
@@ -78,7 +78,7 @@ class ButtonControl  < Control
       #描画コントロールをoutに切り替え
       send_command(:visible, {:visible => false}, :over)
       send_command(:visible, {:visible => true}, :out)
-      return true, false, [:out, {}]  #コマンド探査終了
+      return true, :continue, [:out, {}]  #コマンド探査終了
     end
 
     #マウスボタンが押された場合
@@ -86,10 +86,10 @@ class ButtonControl  < Control
       #描画コントロールをkey_downに切り替え
       send_command(:visible, {:visible => false}, :over)
       send_command(:visible, {:visible => true}, :key_down)
-      return true, false, [:key_down, {}]  #フレーム終了
+      return true, :continue, [:key_down, {}]  #フレーム終了
     else
       #overを維持
-      return true, false, [:over, {}]  #コマンド探査終了
+      return true, :continue, [:over, {}]  #コマンド探査終了
     end
   end
 
@@ -106,7 +106,7 @@ class ButtonControl  < Control
       #描画コントロールをoutに切り替え
       send_command(:visible, {:visible => false}, :key_down)
       send_command(:visible, {:visible => true}, :out)
-      return true, false, [:out, {}] #コマンド探査終了
+      return true, :continue, [:out, {}] #コマンド探査終了
     end
 
     #マウスボタン押下が解除された場合
@@ -115,10 +115,10 @@ class ButtonControl  < Control
       send_command(:visible, {:visible => false}, :key_down)
       send_command(:visible, {:visible => true}, :key_up)
       #イベント実行
-      return true, false, [:key_up, {}] #コマンド探査終了
+      return true, :continue, [:key_up, {}] #コマンド探査終了
     else
       #key_downを維持
-      return true, false, [:key_down, {}] #コマンド探査終了
+      return true, :continue, [:key_down, {}] #コマンド探査終了
     end
   end
 
@@ -130,7 +130,7 @@ class ButtonControl  < Control
     #描画コントロールをoverに切り替え
     send_command(:visible, {:visible => false}, :key_up)
     send_command(:visible, {:visible => true}, :over)
-    return true, false, [:over, {}] #コマンド探査終了
+    return true, :continue, [:over, {}] #コマンド探査終了
   end
 
   #マウスカーソルが範囲外に出た後の状態
@@ -139,6 +139,6 @@ class ButtonControl  < Control
     #描画コントロールをnormalに切り替え
     send_command(:visible, {:visible => false}, :out)
     send_command(:visible, {:visible => true}, :normal)
-    return true, false, [:normal, {}] #コマンド探査終了
+    return true, :continue, [:normal, {}] #コマンド探査終了
   end
 end

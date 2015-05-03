@@ -179,7 +179,17 @@ class Control
       #次フレームに実行するコマンドがある場合、一時的にスタックする
       @next_frame_commands.push(command) if command
       #コマンド探査を終了する場合はループを抜ける
-      break if end_parse
+      
+      #現在のフレームを終了するかどうかを識別する
+      #フレーム終了指示がなくても、command_list/script_storage共に空なら終了する
+      case end_parse
+      when :end_frame
+        break
+      when :continue
+        next
+      else
+        raise
+      end
     end
 
     #一時的にスタックしていたコマンドをコマンドリストに移す
@@ -286,7 +296,7 @@ class Control
   def command_create(options)
     #指定されたコントロールを生成してリストに連結する
     @control_list.push(Module.const_get(options[:create]).new(options))
-    return true  #フレーム続行
+    return true, :continue  #フレーム続行
   end
 
   #disposeコマンド
@@ -300,7 +310,7 @@ class Control
       #子コントロールにdisposeコマンドを送信
       send_command_interrupt(:dispose, options, options[:dispose])
     end
-    return true #リスト探査続行
+    return true, :continue #リスト探査続行
   end
 
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
@@ -319,7 +329,7 @@ class Control
         @next_script_file_path = nil
       else 
         #ループを抜ける
-        return true, false, [:token, nil]
+        return true, :continue, [:token, nil]
       end
     end
 
@@ -357,13 +367,13 @@ class Control
     end
 
     send_command(:token, nil)
-    return true
+    return true, :continue
   end
 
   #文字列を評価する（デバッグ用）
   def command_eval(options)
     eval(options[:eval])
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #############################################################################
@@ -380,20 +390,20 @@ class Control
     elsif options[:else]
       eval_block(options[:else])
     end
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #繰り返し
   def command_while(options)
     #条件式が非成立であれば繰り返し構文を終了する
-    return true if !eval(options[:while]) #アイドル
+    return true, :continue if !eval(options[:while]) #アイドル
 
     #while文全体をスクリプトストレージにスタック
     eval_block([[:while, options]])
     #while文の中身をスクリプトストレージスタック
     eval_block(options[:commands])
 
-    return true #アイドル
+    return true, :continue #アイドル
   end
 
   #ブロック文の実行
@@ -418,20 +428,20 @@ class Control
   def command_event(options)
     #TODO：コマンドは追加にする
     @event_list[options[:event]] = options[:commands]
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #イベントの実行
   def command_fire(options)
     #キーが登録されていないなら終了
-    return true if !@event_list[options[:fire]]
+    return true, :continue if !@event_list[options[:fire]]
 
     #コマンド列を格納する（インタラプトなので逆順にsendする）
     @event_list[options[:fire]].reverse_each do |command|
       send_command_interrupt(command[0], command[1])
     end
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #############################################################################
@@ -441,7 +451,7 @@ class Control
   #プロシージャーを登録する
   def command_procedure(options)
     @@procedure_list[options[:procedure]] = options[:impl]
-    return true #リスト探査続行
+    return true, :continue #リスト探査続行
   end
 
   #プロシージャーコールを実行する
@@ -450,14 +460,14 @@ class Control
     @command_list_stack.push(@command_list)
     #プロシージャの中身をevalでコマンドセット化してコマンドリストに登録する
     @command_list = eval(@@procedure_list[options[:procedure]])
-    return true #リスト探査続行
+    return true, :continue #リスト探査続行
   end
 
   #プロシージャーを登録する
   def command_ailias(options)
     @@ailias_list[options[:ailias]] = options[:commands]
 
-    return true #リスト探査続行
+    return true, :continue #リスト探査続行
   end
 
   #############################################################################
@@ -468,13 +478,13 @@ class Control
   def command_flag(options)
     #ユーザー定義フラグを更新する
     @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
-    return true #リスト探査続行
+    return true, :continue #リスト探査続行
   end
 
   #次に読み込むスクリプトファイルのパスを設定する
   def command_next_scenario(options)
     @next_script_file_path = options[:next_scenario]
-    return true #リスト探査続行
+    return true, :continue #リスト探査続行
   end
 end
 
@@ -492,7 +502,7 @@ class Control
 
   #強制的に１フレーム進めるコマンド
   def command_next_frame(options)
-    return true, true #コマンド探査の終了
+    return true, :end_frame #コマンド探査の終了
   end
 
   #skip_modeコマンド
@@ -500,7 +510,7 @@ class Control
   def command_skip_mode(options)
     #スキップモードの更新
     @skip_mode = options[:skip_mode]
-    return true #アイドル
+    return true, :continue #アイドル
   end
 
   #sleep_modeコマンド
@@ -508,7 +518,7 @@ class Control
   def command_sleep_mode(options)
     #スリープ状態を更新
     @sleep_mode = options[:sleep_mode] 
-    return true #アイドル
+    return true, :continue #アイドル
   end
 
   #キー入力待ち状態に移行
@@ -523,18 +533,18 @@ class Control
     send_command(:wait_wake, nil)
 
     #rootクラスをスリープさせる
-    return true, true, [:sleep_mode, {:sleep_mode => :sleep}] #, true #コマンド探査の終了
+    return true, :end_frame, [:sleep_mode, {:sleep_mode => :sleep}] #, true #コマンド探査の終了
   end
 
   #キー入力を待つ
   def command_wait(options)
     #スキップモードであれば直ちに終了し、フレームを続行する
-    return true if @skip_mode
+    return true, :continue if @skip_mode
 
     #キー押下があればスキップモードに移行する
     if Input.key_push?(K_SPACE)
       @skip_mode = true
-      return true
+      return true, :continue
     end
 
     #待ちフレーム数を取得。設定されていない場合はコンフィグから初期値を取得する
@@ -546,10 +556,10 @@ class Control
     #残りwaitフレーム数が０より大きい場合
     if 0 < wait_frame
       #残りwaitフレーム数をデクリメントし、:waitコマンドを再度スタックする
-      return true, true, [:wait, {:wait => wait_frame - 1}] #リスト探査終了
+      return true, :end_frame, [:wait, {:wait => wait_frame - 1}] #リスト探査終了
     end
 
-    return true #リスト探査続行
+    return true, :continue #リスト探査続行
   end
 
   #wait_commandコマンド
@@ -560,9 +570,9 @@ class Control
           command[0] == options[:wait_command]
        }
       #自分自身をスタックし、コマンド探査を終了する
-      return true, true, [:wait_command, options]
+      return true, :end_frame, [:wait_command, options]
     else
-      return true #アイドル
+      return true, :continue #アイドル
     end
   end
 
@@ -571,7 +581,7 @@ class Control
     if Input.key_push?(K_SPACE)
       @skip_mode = true
       #キー入力が伝搬すると不味いので次フレームに進める
-      return true
+      return true, :continue
     end
 
     #指定されたコマンドが次フレ用に積まれている場合
@@ -579,28 +589,28 @@ class Control
           command[0] == options[:wait_command_with_key_push]
        }
       #自分自身をスタックし、コマンド探査を終了する
-      return true, true, [:wait_command_with_key_push, options]
+      return true, :end_frame, [:wait_command_with_key_push, options]
     else
-      return true #アイドル
+      return true, :continue #アイドル
     end
   end
 
   def command_wait_flag(options)
     flag = @@global_flag[("user_" + options[:wait_flag].to_s).to_sym]
     if flag == nil
-      return true, true, [:wait_flag, options]#コマンド探査の終了
+      return true, :end_frame, [:wait_flag, options]#コマンド探査の終了
     else
-      return true #コマンド探査の続行
+      return true, :continue #コマンド探査の続行
     end
   end
 
   def command_wait_flag_with_skip(options)
-    return true if @skip_mode
+    return true, :continue if @skip_mode
     flag = @@global_flag[("user_" + options[:wait_flag_with_skip].to_s).to_sym]
     if flag == nil
-      return true, true, [:wait_flag_with_skip, options]#コマンド探査の終了
+      return true, :end_frame, [:wait_flag_with_skip, options]#コマンド探査の終了
     else
-      return true #コマンド探査の続行
+      return true, :continue #コマンド探査の続行
     end
   end
 
@@ -608,19 +618,19 @@ class Control
   #覚醒待機状態
   def command_wait_wake(options)
     if @sleep_mode == :sleep
-      return true, true, [:wait_wake, nil] #リスト探査終了
+      return true, :end_frame, [:wait_wake, nil] #リスト探査終了
     end
     #伝搬を切る為にフレームを終了する
-    return true #アイドル／フレーム終了
+    return true, :continue #アイドル／フレーム終了
   end
 
   #wait_child_controls_idolコマンド
   #子要素のコントロールが全てアイドルになるまで待機
   def command_wait_child_controls_idol(options)
     if !all_controls_idol?
-      return true, true, [:wait_child_controls_idol, nil] #リスト探査終了
+      return true, :end_frame, [:wait_child_controls_idol, nil] #リスト探査終了
     end
-    return true #リスト探査続行
+    return true, :continue #リスト探査続行
   end
 
   def command_test1(options)
@@ -629,9 +639,9 @@ class Control
     end
     @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
     if all_controls_idol? or @skip_mode
-      return true #リスト探査続行
+      return true, :continue #リスト探査続行
     else
-      return true, true, [:test1, nil] #リスト探査終了
+      return true, :end_frame, [:test1, nil] #リスト探査終了
     end
   end
 
@@ -641,10 +651,10 @@ class Control
       #スリープモードを解除する
       @@root.send_command_interrupt_to_all(:sleep_mode, {:sleep_mode => :wake})
       #キー入力が伝搬すると不味いので次フレームに進める
-      return true, true #フレーム終了
+      return true, :end_frame #フレーム終了
     else
       #ポーズ状態を続行する
-      return true, true, [:wait_input_key, options] #リスト探査終了
+      return true, :end_frame, [:wait_input_key, options] #リスト探査終了
     end
   end
 end

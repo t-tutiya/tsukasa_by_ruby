@@ -225,7 +225,7 @@ class CharContainer < Control
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
     send_command_interrupt(:wait, {:wait => :unset_wait_frame})
 
-    return true #アイドル
+    return true, :continue #アイドル
   end
 
   #textコマンド
@@ -245,7 +245,7 @@ class CharContainer < Control
     #一時スタックしたコマンドをスタックの先頭に挿入する
     @command_list = commands + @command_list
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #graphコマンド
@@ -283,7 +283,7 @@ class CharContainer < Control
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
     send_command_interrupt(:wait, {:wait => :unset_wait_frame})
 
-    return true #フレーム続行
+    return true , :continue#フレーム続行
   end
 
   #line_feedコマンド
@@ -298,7 +298,7 @@ class CharContainer < Control
     #改行時のwaitを設定する
     send_command_interrupt(:wait, {:wait => @style_config[:line_feed_wait_frame]})
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #flashコマンド
@@ -313,7 +313,7 @@ class CharContainer < Control
     @next_char_y = 0 
     @height = @font_config[:size]
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #############################################################################
@@ -367,7 +367,7 @@ class CharContainer < Control
   #align: expand（デフォルト）/center/left/rightから選ぶ
   def command_rubi(options)
     #必須属性値チェック
-    return false if check_exist(options, :text, :char)
+    return false, :continue if check_exist(options, :text, :char)
 
     #ルビ文字列を取得
     rubi_texts = options[:char]
@@ -409,7 +409,7 @@ class CharContainer < Control
     else
       #使用されていないハッシュ。エラー。
       puts "オプション#{align}は未定義です"
-      return true #フレーム続行
+      return true, :continue #フレーム続行
     end
 
     rubi_counter = 0
@@ -451,7 +451,7 @@ class CharContainer < Control
     #生成したコマンド群をスタックに追加
     @command_list = commands + @command_list
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #############################################################################
@@ -469,7 +469,7 @@ class CharContainer < Control
     #※ここではfontを再生成しない
     #変更を反映するにはreset_font_configを実行しなければならない
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #font_configコマンド
@@ -485,7 +485,7 @@ class CharContainer < Control
     #fontオブジェクトを再生成する
     reset_font()
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #フォントのコンフィグ値を更新する
@@ -586,7 +586,7 @@ class CharContainer < Control
     #fontオブジェクトを再生成する
     reset_font()
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #############################################################################
@@ -597,7 +597,7 @@ class CharContainer < Control
   #文字レンダラの設定
   def command_char_renderer(options)
     @char_renderer_commands = options[:commands].dup
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #############################################################################
@@ -612,7 +612,7 @@ class CharContainer < Control
     #レンダリング済みフォントデータファイルを任意フォント名で登録
     Image_font.regist(options[:font_name].to_s, options[:file_path].to_s)
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #############################################################################
@@ -627,7 +627,7 @@ class CharContainer < Control
      update_style_config(@default_style_config, key, value)
     end
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #style_configタグ
@@ -640,7 +640,7 @@ class CharContainer < Control
       update_style_config(@style_config, key, value)
     end
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #スタイルのコンフィグ値を更新する
@@ -668,7 +668,7 @@ class CharContainer < Control
     #styleの設定をデフォルト設定で上書きする
     @style_config = @default_style_config.clone
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #############################################################################
@@ -685,7 +685,7 @@ class CharContainer < Control
     #インデント開始Ｘ座標を設定もしくはクリアする
     @indent_offset = object_to_boolean(options[:indent]) ? @next_char_x : 0
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #############################################################################
@@ -695,11 +695,11 @@ class CharContainer < Control
   #描画速度指定
   def command_delay(options)
     #必須属性値チェック
-    return true if check_exist(options, :delay)
+    return true, :continue if check_exist(options, :delay)
 
     update_wait_frame(options[:delay].to_i)
 
-    return true #フレーム続行
+    return true, :continue #フレーム続行
   end
 
   #############################################################################

@@ -629,11 +629,11 @@ class Control
     if @skip_mode
       @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
     end
-    @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
     if all_controls_idol? or @skip_mode
+      @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
       return :continue #リスト探査続行
     else
-      return :end_frame, [:test1, nil] #リスト探査終了
+      return :end_frame, [:test1, options] #リスト探査終了
     end
   end
 

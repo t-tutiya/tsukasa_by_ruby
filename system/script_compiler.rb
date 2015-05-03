@@ -145,6 +145,8 @@ class ScriptCompiler
   impl_non_option :pause,      :Anonymous
 
   impl_non_option :wait_wake,      :Anonymous
+
+  impl_options :wake,      :Anonymous
   impl_non_option :wait_input_key,      :Anonymous
 
   #改行
@@ -160,7 +162,8 @@ class ScriptCompiler
   #特定コマンドの終了を待つ
   impl_one_option :wait_command,  :Anonymous
   #特定フラグの更新を待つ（現状では予めnilが入ってないと機能しない）
-  impl_one_option :wait_flag,     :LayoutContainer
+  impl_one_option :wait_flag,     :Anonymous
+  impl_one_option :wait_flag_with_skip,     :Anonymous
   #次に読み込むスクリプトファイルの指定
   impl_one_option :next_scenario, :LayoutContainer
   #コントロールの削除
@@ -193,7 +196,8 @@ class ScriptCompiler
   #フェードトランジション
   impl_options :transition_fade, :Anonymous
   #フラグ設定
-  impl_options :flag,            :LayoutContainer
+  impl_options :flag,            :Anonymous
+  impl_options :test1,            :Anonymous
 
   #ブロックを持つコマンド
 

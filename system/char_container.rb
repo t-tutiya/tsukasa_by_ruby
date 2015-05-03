@@ -185,7 +185,6 @@ class CharContainer < Control
   #charコマンド
   #指定文字（群）を描画チェインに連結する
   def command_char(options)
-    #pp options
     #レンダリング済みフォントを使用中か否かで分岐
     if !@font_config[:use_image_font]
       #文字レンダラオブジェクトを生成する
@@ -232,7 +231,6 @@ class CharContainer < Control
   #textコマンド
   #指定文字列を描画チェインに連結する
   def command_text(options)
-    #pp "text"
     #必須属性値チェック
     raise if check_exist(options, :text)
     

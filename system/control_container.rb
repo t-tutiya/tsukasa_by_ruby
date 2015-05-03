@@ -99,7 +99,6 @@ class Control
       #コマンドをスタックの末端に挿入する
       @command_list.push([command, options])
       #pp "@id[" + @id.to_s + "]" + command.to_s
-      #@idol_mode = false
       return true #コマンドをスタックした
     end
 
@@ -357,15 +356,8 @@ class Control
       raise
     end
 
-    #コマンドリストが空でなければ自身をリスト末端に追加する
-    #TODO：ここでリスト末端の識別をしているのは明らかにおかしい。後で直す
-    if @command_list.empty?
-      #ループを抜ける
-      return true, false, [:token, nil]
-    else
-      send_command(:token, nil)
-      return true
-    end
+    send_command(:token, nil)
+    return true
   end
 
   #文字列を評価する（デバッグ用）
@@ -595,10 +587,20 @@ class Control
 
   def command_wait_flag(options)
     flag = @@global_flag[("user_" + options[:wait_flag].to_s).to_sym]
-    if flag
-      return true #コマンド探査の続行
-    else
+    if flag == nil
       return true, true, [:wait_flag, options]#コマンド探査の終了
+    else
+      return true #コマンド探査の続行
+    end
+  end
+
+  def command_wait_flag_with_skip(options)
+    return true if @skip_mode
+    flag = @@global_flag[("user_" + options[:wait_flag_with_skip].to_s).to_sym]
+    if flag == nil
+      return true, true, [:wait_flag_with_skip, options]#コマンド探査の終了
+    else
+      return true #コマンド探査の続行
     end
   end
 
@@ -619,6 +621,18 @@ class Control
       return true, true, [:wait_child_controls_idol, nil] #リスト探査終了
     end
     return true #リスト探査続行
+  end
+
+  def command_test1(options)
+    if @skip_mode
+      @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
+    end
+    @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
+    if all_controls_idol? or @skip_mode
+      return true #リスト探査続行
+    else
+      return true, true, [:test1, nil] #リスト探査終了
+    end
   end
 
   def command_wait_input_key(options)

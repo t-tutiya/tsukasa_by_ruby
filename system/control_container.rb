@@ -96,8 +96,6 @@ class Control
   def send_command(command, options, id = @id)
     #自身が送信対象として指定されている場合
     if @id == id or id == :anonymous
-      #待機モードを初期化
-      @idol_mode = false
       #コマンドをスタックの末端に挿入する
       @command_list.push([command, options])
       #pp "@id[" + @id.to_s + "]" + command.to_s
@@ -118,8 +116,6 @@ class Control
     #自身が送信対象として指定されている場合
     #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
     if @id == id or id == :anonymous
-      #待機モードを初期化
-      @idol_mode = false
       #コマンドをスタックの先頭に挿入する
       @command_list.unshift([command, options])
       return true #コマンドをスタックした
@@ -198,16 +194,13 @@ class Control
 
     @control_list.each do |control|
       #各コントロールを更新し、待機モードかどうかの真偽値をANDで集計する
-      @idol_mode &= control.update
+      control.update
     end
 
     #削除フラグが立っているコントロールをリストから削除する
     @control_list.delete_if do |control|
       control.delete?
     end
-
-    #待機モードの状態をツリー最上位まで伝搬させる
-    return @idol_mode 
   end
 
   #描画
@@ -255,13 +248,11 @@ class Control
   #全てのコントロールが待機モードになっているかを返す。
   #TODO：現状毎フレここで実行しているのだけど、コストが高すぎるので本当はupdateの戻り値の集計ですませたい。なんとかできないか考える。
   def all_controls_idol?
-    result = true
-
     @control_list.each do |control|
-      result &= control.all_controls_idol?
+      @idol_mode &= control.all_controls_idol?
     end
 
-    return ( result and @idol_mode )
+    return @idol_mode
   end
 
   #コントロールを削除して良いかどうか

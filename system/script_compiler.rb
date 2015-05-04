@@ -158,6 +158,8 @@ class ScriptCompiler
   #TODOこれホントに必要？
   impl_non_option :normal,      :ButtonControl
 
+  impl_non_option :check_key_push_to_skip,      :Anonymous
+
   #単一オプションを持つコマンド
   #特定コマンドの終了を待つ
   impl_one_option :wait_command,  :Anonymous
@@ -193,8 +195,12 @@ class ScriptCompiler
   #移動
   impl_options :move,            :Anonymous
   impl_options :move_line,       :Anonymous
+
+  impl_options :move_line_with_skip,      :Anonymous
+
   #フェードトランジション
   impl_options :transition_fade, :Anonymous
+  impl_options :transition_fade_with_skip, :Anonymous
   #フラグ設定
   impl_options :flag,            :Anonymous
   impl_options :test1,            :Anonymous

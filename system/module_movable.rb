@@ -35,7 +35,7 @@ module Movable
   def initialize(options)
     super(options)
   end
-
+=begin
   def command_move(options)
 
     control_options = {}
@@ -67,15 +67,8 @@ module Movable
 
     return :continue#フレーム続行
   end
-
-  def command_move_line(options)
-    #スキップモードであれば最終値を設定し、フレーム内処理を続行する
-    if @skip_mode
-      @x_pos = options[:x]
-      @y_pos = options[:y]
-      return :continue #アイドル
-    end
-
+=end
+  def command_move_line(options, command_name = :move_line)
     #移動先座標の決定
     @x_pos = (options[:start_x] + (options[:x] - options[:start_x]).to_f / options[:frame] * options[:count]).to_i
     @y_pos = (options[:start_y] + (options[:y] - options[:start_y]).to_f / options[:frame] * options[:count]).to_i
@@ -87,9 +80,20 @@ module Movable
       #待機モードを初期化
       @idol_mode = false
       #:move_lineコマンドをスタックし直す
-      return :continue, [:move_line, options] #フレーム終了
+      return :continue, [command_name, options] #フレーム終了
     else
       return :continue #アイドル
     end
+  end
+
+  def command_move_line_with_skip(options)
+    #スキップモードであれば最終値を設定し、フレーム内処理を続行する
+    if @skip_mode
+      @x_pos = options[:x]
+      @y_pos = options[:y]
+      return :continue
+    end
+    
+    return command_move_line(options, :move_line_with_skip)
   end
 end

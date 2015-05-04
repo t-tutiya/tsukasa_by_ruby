@@ -31,14 +31,16 @@
 create :ImageControl ,
        file_path: "./sozai/bg_sample.png", x_po: 0, y_pos: 0, 
        id: :BG do
-  move offset_x: 300,offset_y: 0, frame: 60, offset: true
-  transition_fade frame: 200,
+  move_line_with_skip x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
+  transition_fade_with_skip frame: 200,
                   count: 0,
                   start: 0,
                   last: 255
-  wait_command_with_key_push  :move_line
-  move offset_x: -300, offset_y: 0, frame: 60, offset: true
-  wait_command_with_key_push  :move_line
+  check_key_push_to_skip
+  wait_command :move_line_with_skip
+  move_line_with_skip x: 0, y: 0,   count:0, frame: 60, start_x: 300,   start_y: 0
+  check_key_push_to_skip
+  wait_command :move_line_with_skip
 end
 
 
@@ -101,27 +103,29 @@ create :LayoutContainer,
                      :face => "ＭＳＰ ゴシック"},
       style_config: { :wait_frame => 2,} do
       char_renderer do
-        transition_fade frame: 30,
+        transition_fade_with_skip frame: 30,
           count: 0,
           start: 0,
           last: 255
-        wait_command_with_key_push  :transition_fade
+        check_key_push_to_skip
+        wait_command :transition_fade_with_skip
         sleep_mode :sleep
         wait_wake
         next_frame
         skip_mode false
-        transition_fade frame: 60,
+        transition_fade_with_skip frame: 60,
           count: 0,
           start: 255,
           last:128
-        wait_command_with_key_push  :transition_fade
+        check_key_push_to_skip
+        wait_command :transition_fade_with_skip
       end
     end
   end
 
 pause
 
-dispose :button1
+#dispose :button1
 
 text "ＡＤＶエンジン「司（Tsuk"
 pause

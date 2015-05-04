@@ -59,7 +59,7 @@ module Drawable
     @visible = options[:visible]
     return :continue #フレーム続行
   end
-
+=begin
   #トランジションコマンド
   def command_transition(options) 
     #一時サーフェイスを生成
@@ -107,19 +107,13 @@ module Drawable
       return :continue#フレーム続行
     end
   end
-
+=end
   #フェードインコマンド
   #count:現在カウント
   #frame:フレーム数
   #start:開始α値
   #last:終了α値
-  def command_transition_fade(options) 
-    #スキップモードであれば最終値を設定し、フレーム内処理を続行する
-    if @skip_mode
-      @draw_option[:alpha] = options[:last]
-      return :continue #アイドル状態でタスク探査続行
-    end
-
+  def command_transition_fade(options, command_name = :transition_fade) 
     #透明度の決定
     @draw_option[:alpha] = options[:start] + 
                           (((options[:last] - options[:start]).to_f / options[:frame]) * options[:count]).to_i
@@ -132,9 +126,19 @@ module Drawable
       #待機モードを初期化
       @idol_mode = false
       #:transition_crossfadeコマンドをスタックし直す
-      return :continue, [:transition_fade, options] #非アイドル状態でタスク探査続行
+      return :continue, [command_name, options] #非アイドル状態でタスク探査続行
     else
       return :continue #アイドル状態でタスク探査続行
     end
+  end
+  
+  def command_transition_fade_with_skip(options) 
+    #スキップモードであれば最終値を設定し、フレーム内処理を続行する
+    if @skip_mode
+      @draw_option[:alpha] = options[:last]
+      return :continue
+    end
+
+    return command_transition_fade(options, :transition_fade_with_skip)
   end
 end

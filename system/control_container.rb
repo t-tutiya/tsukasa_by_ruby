@@ -185,6 +185,7 @@ class Control
       when :continue
         next
       else
+        pp end_parse
         raise
       end
     end
@@ -524,8 +525,8 @@ class Control
     send_command(:skip_mode, {:skip_mode => false}, :default_text_layer)
     send_command(:wait_wake, nil)
 
-    #rootクラスをスリープさせる
-    return :end_frame, [:sleep_mode, {:sleep_mode => :sleep}] #, true #コマンド探査の終了
+    #rootクラスをスリープさせる(ここはend_frameでＯＫ)
+    return :end_frame, [:sleep_mode, {:sleep_mode => :sleep}] 
   end
 
   #キー入力を待つ
@@ -563,25 +564,6 @@ class Control
        }
       #自分自身をスタックし、コマンド探査を終了する
       return :end_frame, [:wait_command, options]
-    else
-      return :continue #アイドル
-    end
-  end
-
-  def command_wait_command_with_key_push(options)
-    #キーが押された場合
-    if Input.key_push?(K_SPACE)
-      @skip_mode = true
-      #キー入力が伝搬すると不味いので次フレームに進める
-      return :continue
-    end
-
-    #指定されたコマンドが次フレ用に積まれている場合
-    if @next_frame_commands.index{|command| 
-          command[0] == options[:wait_command_with_key_push]
-       }
-      #自分自身をスタックし、コマンド探査を終了する
-      return :end_frame, [:wait_command_with_key_push, options]
     else
       return :continue #アイドル
     end
@@ -647,6 +629,16 @@ class Control
     else
       #ポーズ状態を続行する
       return :end_frame, [:wait_input_key, options] #リスト探査終了
+    end
+  end
+
+  def command_check_key_push_to_skip(options)
+    #子要素のコントロールが全てアイドル状態の時にキーが押された場合
+    if Input.key_push?(K_SPACE)
+      @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
+      return :continue
+    else
+      return :continue, [:check_key_push_to_skip, nil]
     end
   end
 end

@@ -80,9 +80,9 @@ module Movable
       #待機モードを初期化
       @idol_mode = false
       #:move_lineコマンドをスタックし直す
-      return :continue, [command_name, options] #フレーム終了
+      return :continue, [command_name, options]
     else
-      return :continue #アイドル
+      return :continue
     end
   end
 

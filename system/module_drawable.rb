@@ -57,7 +57,7 @@ module Drawable
   #可視設定
   def command_visible(options)
     @visible = options[:visible]
-    return :continue #フレーム続行
+    return :continue
   end
 =begin
   #トランジションコマンド
@@ -128,7 +128,7 @@ module Drawable
       #:transition_crossfadeコマンドをスタックし直す
       return :continue, [command_name, options] #非アイドル状態でタスク探査続行
     else
-      return :continue #アイドル状態でタスク探査続行
+      return :continue
     end
   end
   

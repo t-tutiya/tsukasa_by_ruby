@@ -633,6 +633,8 @@ class Control
   end
 
   def command_check_key_push_to_skip(options)
+    return :continue if all_controls_idol?
+
     #子要素のコントロールが全てアイドル状態の時にキーが押された場合
     if Input.key_push?(K_SPACE)
       @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})

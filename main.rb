@@ -9,8 +9,8 @@ Window.resize(1280, 720)
 
 rag = Rag.new({ :width => 1280,
                 :height => 720,
-#                :script_path => "./test/senario_sms_01.rb",
-                :script_path => "./scenario/scenario05a.rb",
+                :script_path => "./test/senario_sms_01.rb",
+#                :script_path => "./scenario/scenario05a.rb",
 #                :script_path => "./scenario/scenario04a.rb",
                 :id => :default_layout_container
                 })

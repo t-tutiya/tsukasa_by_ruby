@@ -176,6 +176,8 @@ class ScriptCompiler
   impl_non_option :check_key_push,  :Anonymous
   impl_one_option :wait_command_with_key_push,  :Anonymous
 
+  impl_non_option :test1,            :Anonymous
+
   #スリープモードの更新
   impl_one_option :sleep_mode,  :Anonymous
   #スキップモードの更新
@@ -203,7 +205,6 @@ class ScriptCompiler
   impl_options :transition_fade_with_skip, :Anonymous
   #フラグ設定
   impl_options :flag,            :Anonymous
-  impl_options :test1,            :Anonymous
 
   #ブロックを持つコマンド
 

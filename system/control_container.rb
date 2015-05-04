@@ -417,78 +417,6 @@ class Control
 
   private
 
-  #イベントコマンドの登録
-  def command_event(options)
-    #TODO：コマンドは追加にする
-    @event_list[options[:event]] = options[:commands]
-    return :continue
-  end
-
-  #イベントの実行
-  def command_fire(options)
-    #キーが登録されていないなら終了
-    return :continue if !@event_list[options[:fire]]
-
-    #コマンド列を格納する（インタラプトなので逆順にsendする）
-    @event_list[options[:fire]].reverse_each do |command|
-      send_command_interrupt(command[0], command[1])
-    end
-
-    return :continue
-  end
-
-  #############################################################################
-  #スタック操作関連
-  #############################################################################
-
-  #プロシージャーを登録する
-  def command_procedure(options)
-    @@procedure_list[options[:procedure]] = options[:impl]
-    return :continue
-  end
-
-  #プロシージャーコールを実行する
-  def command_call_procedure(options)
-    #現在のコマンドリストをスタック
-    @command_list_stack.push(@command_list)
-    #プロシージャの中身をevalでコマンドセット化してコマンドリストに登録する
-    @command_list = eval(@@procedure_list[options[:procedure]])
-    return :continue
-  end
-
-  #プロシージャーを登録する
-  def command_ailias(options)
-    @@ailias_list[options[:ailias]] = options[:commands]
-
-    return :continue
-  end
-
-  #############################################################################
-  #分類未決定
-  #############################################################################
-
-  #フラグを設定する
-  def command_flag(options)
-    #ユーザー定義フラグを更新する
-    @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
-    return :continue
-  end
-
-  #次に読み込むスクリプトファイルのパスを設定する
-  def command_next_scenario(options)
-    @next_script_file_path = options[:next_scenario]
-    return :continue
-  end
-end
-
-class Control
-
-  #############################################################################
-  #非公開インターフェイス
-  #############################################################################
-
-  private
-
   #############################################################################
   #タイミング制御コマンド
   #############################################################################
@@ -514,6 +442,14 @@ class Control
     return :continue
   end
 
+  #sleep_modeコマンド
+  #スリープモードの更新
+  def command_sleep_mode_all(options)
+    #スリープ状態を更新
+    @@root.send_command_interrupt_to_all(:sleep_mode, {:sleep_mode => options[:sleep_mode_all]})
+    return :continue
+  end
+
   #キー入力待ち状態に移行
   def command_pause(options)
 
@@ -530,6 +466,38 @@ class Control
 
     return :continue
   end
+
+  def command_test1(options)
+    @sleep_mode = :sleep if !@skip_mode
+
+    send_command(:check_key_push_to_skip, nil, :default_text_layer)
+    send_command(:wait_test1, nil, :default_text_layer)
+    send_command(:sleep_mode_all, {:sleep_mode_all => :wake}, :default_text_layer)
+    send_command(:wait_wake, nil)
+
+    return :continue
+  end
+
+  def command_wait_test1(options)
+    if @skip_mode
+      @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
+    end
+    if all_controls_idol? or @skip_mode
+      return :continue
+    else
+      return :end_frame, [:wait_test1, options]
+    end
+  end
+
+end
+
+class Control
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
 
   #キー入力を待つ
   def command_wait(options)
@@ -603,21 +571,9 @@ class Control
   #子要素のコントロールが全てアイドルになるまで待機
   def command_wait_child_controls_idol(options)
     if !all_controls_idol?
-      return :end_frame, [:wait_child_controls_idol, nil] #リスト探査終了
+      return :end_frame, [:wait_child_controls_idol, nil]
     end
     return :continue
-  end
-
-  def command_test1(options)
-    if @skip_mode
-      @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
-    end
-    if all_controls_idol? or @skip_mode
-      @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
-      return :continue
-    else
-      return :end_frame, [:test1, options]
-    end
   end
 
   def command_wait_input_key(options)
@@ -628,7 +584,7 @@ class Control
       return :continue
     else
       #ポーズ状態を続行する
-      return :end_frame, [:wait_input_key, options] #リスト探査終了
+      return :end_frame, [:wait_input_key, options]
     end
   end
 
@@ -644,6 +600,79 @@ class Control
     end
   end
 end
+
+class Control
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
+
+  #イベントコマンドの登録
+  def command_event(options)
+    #TODO：コマンドは追加にする
+    @event_list[options[:event]] = options[:commands]
+    return :continue
+  end
+
+  #イベントの実行
+  def command_fire(options)
+    #キーが登録されていないなら終了
+    return :continue if !@event_list[options[:fire]]
+
+    #コマンド列を格納する（インタラプトなので逆順にsendする）
+    @event_list[options[:fire]].reverse_each do |command|
+      send_command_interrupt(command[0], command[1])
+    end
+
+    return :continue
+  end
+
+  #############################################################################
+  #スタック操作関連
+  #############################################################################
+
+  #プロシージャーを登録する
+  def command_procedure(options)
+    @@procedure_list[options[:procedure]] = options[:impl]
+    return :continue
+  end
+
+  #プロシージャーコールを実行する
+  def command_call_procedure(options)
+    #現在のコマンドリストをスタック
+    @command_list_stack.push(@command_list)
+    #プロシージャの中身をevalでコマンドセット化してコマンドリストに登録する
+    @command_list = eval(@@procedure_list[options[:procedure]])
+    return :continue
+  end
+
+  #プロシージャーを登録する
+  def command_ailias(options)
+    @@ailias_list[options[:ailias]] = options[:commands]
+
+    return :continue
+  end
+
+  #############################################################################
+  #分類未決定
+  #############################################################################
+
+  #フラグを設定する
+  def command_flag(options)
+    #ユーザー定義フラグを更新する
+    @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
+    return :continue
+  end
+
+  #次に読み込むスクリプトファイルのパスを設定する
+  def command_next_scenario(options)
+    @next_script_file_path = options[:next_scenario]
+    return :continue
+  end
+end
+
 
 class Control
 

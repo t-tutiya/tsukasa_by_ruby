@@ -434,6 +434,13 @@ class Control
     return :continue
   end
 
+  def command_skip_mode_all(options)
+    #スリープモードを解除する
+    @@root.send_command_interrupt_to_all(:skip_mode, 
+                                        {:skip_mode => options[:skip_mode_all]})
+    return :continue
+  end
+
   #sleep_modeコマンド
   #スリープモードの更新
   def command_sleep_mode(options)
@@ -442,11 +449,10 @@ class Control
     return :continue
   end
 
-  #sleep_modeコマンド
-  #スリープモードの更新
   def command_sleep_mode_all(options)
-    #スリープ状態を更新
-    @@root.send_command_interrupt_to_all(:sleep_mode, {:sleep_mode => options[:sleep_mode_all]})
+    #スリープモードを解除する
+    @@root.send_command_interrupt_to_all(:sleep_mode, 
+                                        {:sleep_mode => options[:sleep_mode_all]})
     return :continue
   end
 
@@ -455,38 +461,30 @@ class Control
 
     #TODO:※ページスキップ的な機能が実装されたら、このへんでその処理を行う筈
 
-    @sleep_mode = :sleep
-
-    send_command(:wait_child_controls_idol, nil, :default_text_layer)
-    send_command(:wait_input_key,           nil, :default_text_layer)
+    send_command(:wait_idol, nil, :default_text_layer)
+    send_command(:check_input_key,           nil, :default_text_layer)
+    send_command(:wait_idol, nil, :default_text_layer)
+    send_command(:sleep_mode_all, {:sleep_mode_all => :wake}, :default_text_layer)
     send_command(:next_frame,               nil, :default_text_layer)
-
     send_command(:skip_mode, {:skip_mode => false}, :default_text_layer)
+
+    send_command(:skip_mode, {:skip_mode => false})
+    send_command(:sleep_mode, {:sleep_mode => :sleep})
     send_command(:wait_wake, nil)
 
     return :continue
   end
 
   def command_test1(options)
-    @sleep_mode = :sleep if !@skip_mode
-
+    send_command(:wait_idol, nil, :default_text_layer)
     send_command(:check_key_push_to_skip, nil, :default_text_layer)
-    send_command(:wait_test1, nil, :default_text_layer)
+    #send_command(:skip_mode_all, {:skip_mode_all => :true}, :default_text_layer)
     send_command(:sleep_mode_all, {:sleep_mode_all => :wake}, :default_text_layer)
+    
+    send_command(:check_skip_to_sleep, {:check_skip_to_sleep => false})
     send_command(:wait_wake, nil)
 
     return :continue
-  end
-
-  def command_wait_test1(options)
-    if @skip_mode
-      @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
-    end
-    if all_controls_idol? or @skip_mode
-      return :continue
-    else
-      return :end_frame, [:wait_test1, options]
-    end
   end
 
 end
@@ -567,37 +565,49 @@ class Control
     return :continue
   end
 
-  #wait_child_controls_idolコマンド
+  #wait_idolコマンド
   #子要素のコントロールが全てアイドルになるまで待機
-  def command_wait_child_controls_idol(options)
+  def command_wait_idol(options)
+    #return :continue if @skip_mode
     if !all_controls_idol?
-      return :end_frame, [:wait_child_controls_idol, nil]
+      return :end_frame, [:wait_idol, nil]
     end
     return :continue
   end
 
-  def command_wait_input_key(options)
+  def command_wait_idol_with_skip(options)
+    return :continue if @skip_mode
+    if !all_controls_idol?
+      return :end_frame, [:wait_idol, nil]
+    end
+    return :continue
+  end
+
+  def command_check_input_key(options)
     #子要素のコントロールが全てアイドル状態の時にキーが押された場合
     if Input.key_push?(K_SPACE)
-      #スリープモードを解除する
-      @@root.send_command_interrupt_to_all(:sleep_mode, {:sleep_mode => :wake})
       return :continue
     else
+      @idol_mode = false
       #ポーズ状態を続行する
-      return :end_frame, [:wait_input_key, options]
+      return :end_frame, [:check_input_key, options]
     end
   end
 
   def command_check_key_push_to_skip(options)
-    #自／子コントロールが全てアイドル状態の場合
-    return :continue if all_controls_idol?
-
     if Input.key_push?(K_SPACE)
       @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
       return :continue
     else
       return :continue, [:check_key_push_to_skip, nil]
     end
+  end
+
+  def command_check_skip_to_sleep(options)
+    if @skip_mode == options[:check_skip_to_sleep]
+      @sleep_mode = :sleep
+    end
+    return :continue
   end
 end
 

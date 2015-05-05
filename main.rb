@@ -16,7 +16,7 @@ rag = Rag.new({ :width => 1280,
                 })
 #ゲームループ
 Window.loop do
-  #pp "frame"
+  pp "frame"
   #Ragエンジン処理
   rag.update
   #Ragエンジン描画

@@ -464,7 +464,9 @@ class Control
     send_command(:wait_idol, nil, :default_text_layer)
     send_command(:check_input_key,           nil, :default_text_layer)
     send_command(:wait_idol, nil, :default_text_layer)
+    send_command(:skip_mode_all, {:skip_mode_all => true}, :default_text_layer)
     send_command(:sleep_mode_all, {:sleep_mode_all => :wake}, :default_text_layer)
+ 
     send_command(:next_frame,               nil, :default_text_layer)
     send_command(:skip_mode, {:skip_mode => false}, :default_text_layer)
 
@@ -475,18 +477,18 @@ class Control
     return :continue
   end
 
-  def command_test1(options)
+  def command_pause2(options)
+    return :continue if @skip_mode  #TODO:このロジックはプロシージャーで対応する
     send_command(:wait_idol, nil, :default_text_layer)
-    send_command(:check_key_push_to_skip, nil, :default_text_layer)
-    #send_command(:skip_mode_all, {:skip_mode_all => :true}, :default_text_layer)
+    send_command(:check_input_key_with_idol, nil, :default_text_layer)
     send_command(:sleep_mode_all, {:sleep_mode_all => :wake}, :default_text_layer)
-    
-    send_command(:check_skip_to_sleep, {:check_skip_to_sleep => false})
+
+    send_command(:skip_mode, {:skip_mode => false})
+    send_command(:sleep_mode, {:sleep_mode => :sleep})
     send_command(:wait_wake, nil)
 
     return :continue
   end
-
 end
 
 class Control
@@ -499,14 +501,11 @@ class Control
 
   #キー入力を待つ
   def command_wait(options)
-    #スキップモードであれば直ちに終了し、フレームを続行する
+    #スキップモードであれば終了
     return :continue if @skip_mode
 
-    #キー押下があればスキップモードに移行する
-    if Input.key_push?(K_SPACE)
-      @skip_mode = true
-      return :continue
-    end
+    #キー押下があれば終了
+    return :continue if Input.key_push?(K_SPACE)
 
     #待ちフレーム数を取得。設定されていない場合はコンフィグから初期値を取得する
     #TODO:@style_config[:wait_frame]はchar特有のプロパティ
@@ -590,7 +589,18 @@ class Control
     else
       @idol_mode = false
       #ポーズ状態を続行する
-      return :end_frame, [:check_input_key, options]
+      return :continue, [:check_input_key, options]
+    end
+  end
+
+  def command_check_input_key_with_idol(options)
+    #子要素のコントロールが全てアイドル状態の時にキーが押された場合
+    if Input.key_push?(K_SPACE) or @idol_mode
+      return :continue
+    else
+      @idol_mode = false
+      #ポーズ状態を続行する
+      return :continue, [:check_input_key_with_idol, options]
     end
   end
 
@@ -601,13 +611,6 @@ class Control
     else
       return :continue, [:check_key_push_to_skip, nil]
     end
-  end
-
-  def command_check_skip_to_sleep(options)
-    if @skip_mode == options[:check_skip_to_sleep]
-      @sleep_mode = :sleep
-    end
-    return :continue
   end
 end
 

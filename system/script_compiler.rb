@@ -143,6 +143,7 @@ class ScriptCompiler
   impl_non_option :next_frame, :Anonymous
   #キー入力待ち
   impl_non_option :pause,      :Anonymous
+  impl_non_option :pause2,            :Anonymous
 
   impl_non_option :wait_wake,      :Anonymous
 
@@ -175,8 +176,6 @@ class ScriptCompiler
 
   impl_non_option :check_key_push,  :Anonymous
   impl_one_option :wait_command_with_key_push,  :Anonymous
-
-  impl_non_option :test1,            :Anonymous
 
   #スリープモードの更新
   impl_one_option :sleep_mode,  :Anonymous

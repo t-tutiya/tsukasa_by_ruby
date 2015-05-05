@@ -566,42 +566,33 @@ class Control
 
   #wait_idolコマンド
   #子要素のコントロールが全てアイドルになるまで待機
-  def command_wait_idol(options)
-    #return :continue if @skip_mode
+  def command_wait_idol(options, command_name = :wait_idol)
     if !all_controls_idol?
-      return :end_frame, [:wait_idol, nil]
+      return :end_frame, [command_name, nil]
     end
     return :continue
   end
 
+=begin
   def command_wait_idol_with_skip(options)
     return :continue if @skip_mode
-    if !all_controls_idol?
-      return :end_frame, [:wait_idol, nil]
-    end
-    return :continue
+    return command_wait_idol(options, :wait_idol_with_skip)
   end
-
-  def command_check_input_key(options)
+=end
+  def command_check_input_key(options, command_name = :check_input_key)
     #子要素のコントロールが全てアイドル状態の時にキーが押された場合
     if Input.key_push?(K_SPACE)
       return :continue
     else
       @idol_mode = false
       #ポーズ状態を続行する
-      return :continue, [:check_input_key, options]
+      return :continue, [command_name, options]
     end
   end
 
   def command_check_input_key_with_idol(options)
-    #子要素のコントロールが全てアイドル状態の時にキーが押された場合
-    if Input.key_push?(K_SPACE) or @idol_mode
-      return :continue
-    else
-      @idol_mode = false
-      #ポーズ状態を続行する
-      return :continue, [:check_input_key_with_idol, options]
-    end
+    return :continue if all_controls_idol?
+    return command_check_input_key(options, :check_input_key_with_idol)
   end
 
   def command_check_key_push_to_skip(options)

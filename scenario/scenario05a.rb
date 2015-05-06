@@ -27,7 +27,7 @@
 #
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
-
+=begin
 create :ImageControl ,
        file_path: "./sozai/bg_sample.png", x_po: 0, y_pos: 0, 
        id: :BG do
@@ -36,13 +36,13 @@ create :ImageControl ,
                   count: 0,
                   start: 0,
                   last: 255
-  check_key_push_to_skip
+  #check_key_push_to_skip
   wait_command :move_line_with_skip
   move_line_with_skip x: 0, y: 0,   count:0, frame: 60, start_x: 300,   start_y: 0
-  check_key_push_to_skip
+  #check_key_push_to_skip
   wait_command :move_line_with_skip
 end
-
+=end
 
 #ボタンコントロール
 create :ButtonControl, 
@@ -103,11 +103,12 @@ create :LayoutContainer,
                      :face => "ＭＳＰ ゴシック"},
       style_config: { :wait_frame => 2,} do
       char_renderer do
-        transition_fade_with_skip frame: 30,
+        transition_fade_with_skip frame: 90,
           count: 0,
           start: 0,
           last: 255
-        check_key_push_to_skip
+=begin
+        #check_key_push_to_skip
         wait_command :transition_fade_with_skip
         sleep_mode :sleep
         wait_wake
@@ -117,29 +118,36 @@ create :LayoutContainer,
           count: 0,
           start: 255,
           last:128
-        check_key_push_to_skip
+        #check_key_push_to_skip
         wait_command :transition_fade_with_skip
+=end
       end
     end
   end
 
-pause
+#pause
 
 #dispose :button1
 
-text "ＡＤＶエンジン「司（Tsuk"
+text "ＡＤＶエンジン「司（Tsuksisssssssssss"
+line_feed
 pause
 text"asa）」のα１バージョンを"
 line_feed
 text "ひとまず"
 pause
 text"asa）」のα１バージョンを"
-line_feed
 text "ひとまず"
+line_feed
 pause
 text"公開します。testA"
+pause
 line_feed
 text "ひとまず公開します。testA"
+pause
+text"asa）」のα１バージョンを"
+line_feed
+text "ひとまず"
 
 #next_scenario "./scenario/scenario04b.rb"
 

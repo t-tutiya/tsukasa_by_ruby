@@ -133,6 +133,10 @@ module Drawable
   end
   
   def command_transition_fade_with_skip(options) 
+    #pp @skip_mode
+    #pp "D"
+    #pp @id
+    #pp @command_list
     #スキップモードであれば最終値を設定し、フレーム内処理を続行する
     if @skip_mode
       @draw_option[:alpha] = options[:last]

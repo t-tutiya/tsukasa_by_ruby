@@ -159,14 +159,12 @@ class ScriptCompiler
   #TODOこれホントに必要？
   impl_non_option :normal,      :ButtonControl
 
-  impl_non_option :check_key_push_to_skip,      :Anonymous
-
   #単一オプションを持つコマンド
   #特定コマンドの終了を待つ
   impl_one_option :wait_command,  :Anonymous
   #特定フラグの更新を待つ（現状では予めnilが入ってないと機能しない）
   impl_one_option :wait_flag,     :Anonymous
-  impl_one_option :wait_flag_with_skip,     :Anonymous
+
   #次に読み込むスクリプトファイルの指定
   impl_one_option :next_scenario, :LayoutContainer
   #コントロールの削除

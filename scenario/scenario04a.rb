@@ -46,7 +46,6 @@ create :ImageControl ,
                   count: 0,
                   start: 0,
                   last: 255
-  check_key_push
   wait_command :move_line
   move offset_x: -100, offset_y: 0, frame: 60, offset: true
 end
@@ -162,7 +161,6 @@ create :LayoutContainer,
           count: 0,
           start: 0,
           last: 255
-        check_key_push
 =begin
         sleep_frame
         transition_fade frame: 60,

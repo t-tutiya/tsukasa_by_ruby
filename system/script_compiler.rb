@@ -180,8 +180,6 @@ class ScriptCompiler
   #スキップモードの更新
   impl_one_option :skip_mode,  :Anonymous
 
-  #文字列
-  impl_one_option :text,         :CharContainer
   #文字
   impl_one_option :char,         :CharContainer
   #指定フレーム待つ
@@ -210,6 +208,9 @@ class ScriptCompiler
   impl_block :char_renderer,     :CharContainer
 
   #オプション／サブオプション（省略可）／ブロックを持つコマンド
+
+  #文字列
+  impl_option_options_block :text,         :CharContainer
 
   #コントロールの生成
   impl_option_options_block :create,              :Anonymous

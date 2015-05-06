@@ -492,28 +492,6 @@ class Control
 
     return :continue
   end
-
-  def command_pause2(options)
-    return :continue if @skip_mode  #TODO:このロジックはプロシージャーで対応する
-    #■ルートの待機処理
-
-    #スリープモードを設定
-    send_command(:sleep_mode, {:sleep_mode => :sleep})
-    #ウェイク待ち
-    send_command(:wait_wake, nil)
-
-    #■行表示中スキップ処理
-
-    #idolになるかキー入力を待つ
-    #※wait中にキーが押された場合、waitはスキップモードフラグを立てる
-    send_command(:wait_key_push_with_idol, nil, :default_text_layer)
-
-    #ルートにウェイクを送る
-    #TODO：本来rootにのみ通知できれば良い筈
-    send_command(:sleep_mode_all, {:sleep_mode_all => :wake}, :default_text_layer)
-
-    return :continue
-  end
 end
 
 class Control

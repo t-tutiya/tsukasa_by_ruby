@@ -205,9 +205,7 @@ class Control
   end
 
   #描画
-#  def render(offset_x, offset_y, target, parent_x_end, parent_y_end)
   def render(offset_x, offset_y, target)
-
     return offset_x, offset_y if !@visible
 
     #子要素のコントロールの描画
@@ -235,7 +233,7 @@ class Control
     offset_x += @width if @join_right
     offset_y += @height if @join_bottom
 
-    return offset_x, offset_y#target #引数を返値に伝搬する
+    return offset_x + @x_pos, offset_y + @y_pos #引数を返値に伝搬する
   end
 
   def get_child(id)

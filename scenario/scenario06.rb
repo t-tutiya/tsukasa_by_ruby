@@ -29,16 +29,21 @@
 ###############################################################################
 
 create :ImageControl ,
-       file_path: "./sozai/button_normal.png", x_po: 0, y_pos: 0, 
+       file_path: "./sozai/button_normal.png", x_pos: 100, y_pos: 100, 
        id: :BG1, join_right: true
 create :ImageControl ,
-       file_path: "./sozai/button_normal.png", x_po: 0, y_pos: 0, 
+       file_path: "./sozai/button_normal.png", y_pos: 100, 
        id: :BG2, join_bottom: true
+=begin
 create :ImageControl ,
-       file_path: "./sozai/button_normal.png", x_po: 0, y_pos: 0, 
+       file_path: "./sozai/button_normal.png", 
        id: :BG2, join_right: true
 create :ImageControl ,
-       file_path: "./sozai/button_normal.png", x_po: 0, y_pos: 0, 
+       file_path: "./sozai/button_normal.png", 
+       id: :BG3
+=end
+create :ImageControl ,
+       file_path: "./sozai/button_normal.png", x_pos: 0, y_pos: 0, 
        id: :BG3
 
 =begin

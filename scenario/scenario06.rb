@@ -30,10 +30,10 @@
 
 create :ImageControl ,
        file_path: "./sozai/button_normal.png", x_pos: 100, y_pos: 100, 
-       id: :BG1, join_right: true
+       id: :BG1, float_mode: :right
 create :ImageControl ,
-       file_path: "./sozai/button_normal.png", y_pos: 100, 
-       id: :BG2, join_bottom: true
+       file_path: "./sozai/button_normal.png", x_pos: 50, 
+       id: :BG2, float_mode: :none
 =begin
 create :ImageControl ,
        file_path: "./sozai/button_normal.png", 
@@ -43,7 +43,7 @@ create :ImageControl ,
        id: :BG3
 =end
 create :ImageControl ,
-       file_path: "./sozai/button_normal.png", x_pos: 0, y_pos: 0, 
+       file_path: "./sozai/button_normal.png", x_pos: 800, y_pos: 0, 
        id: :BG3
 
 =begin

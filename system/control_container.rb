@@ -42,8 +42,11 @@ class Control
     #ルートクラスの設定
     @@root = self if !@@root
 
+    #描画関連
+    #TODO;モジュールに全部送れないか検討
     @x_pos = 0
     @y_pos = 0
+    @float_mode = options[:float_mode] || :none
 
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
@@ -229,11 +232,25 @@ class Control
                       @draw_option) 
     end
 
-    #連結フラグが設定されているなら親コントロールの座標を追加する
-    offset_x += @width if @join_right
-    offset_y += @height if @join_bottom
+    #連結指定チェック
+    case @float_mode
+    #右連結
+    when :right
+      result_x = offset_x + @width + @x_pos
+      result_y = offset_y + @y_pos
+    #下連結
+    when :bottom
+      result_x = offset_x + @x_pos
+      result_y = offset_y + @height + @y_pos
+    #連結解除
+    when :none
+      result_x = @x_pos
+      result_y = @y_pos
+    else
+      raise
+    end
 
-    return offset_x + @x_pos, offset_y + @y_pos #引数を返値に伝搬する
+    return result_x, result_y #引数を返値に伝搬する
   end
 
   def get_child(id)

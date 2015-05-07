@@ -49,9 +49,6 @@ module Drawable
     #TODO：いらない気がする
     @width  = options[:width] || 0  #横幅
     @height = options[:height] || 0 #縦幅
-
-    @join_right  = options[:join_right] || false #親Controlの右側に接続するか
-    @join_bottom = options[:join_bottom] || false #親Controlの下側に接続するか
   end
 
   #可視設定

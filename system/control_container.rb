@@ -271,6 +271,15 @@ class Control
       control.dispose
     end
   end
+  
+    #ブロック文の実行
+  #TODO：単体コマンドとして実装すべき？
+  def eval_block(block)
+    #現在のスクリプトストレージをコールスタックにプッシュ
+    @script_storage_stack.push(@script_storage) if !@script_storage.empty?
+    #コマンドリストをクリアする
+    @script_storage = block.dup
+  end
 end
 
 class Control
@@ -354,6 +363,7 @@ class Control
       pp "error"
       pp command
       pp options
+      pp @id
 #      pp @control_list
       pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
       raise
@@ -397,15 +407,6 @@ class Control
     eval_block(options[:commands])
 
     return :continue
-  end
-
-  #ブロック文の実行
-  #TODO：単体コマンドとして実装すべき？
-  def eval_block(block)
-    #現在のスクリプトストレージをコールスタックにプッシュ
-    @script_storage_stack.push(@script_storage) if !@script_storage.empty?
-    #コマンドリストをクリアする
-    @script_storage = block.dup
   end
 end
 

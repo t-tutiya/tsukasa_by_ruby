@@ -39,7 +39,8 @@ class ScriptCompiler
     :LayoutContainer => :default_layout_container,
     :Rag => :default_layout_container,
     :ButtonControl => :button1,
-    :Anonymous => :anonymous
+    :Anonymous => :anonymous,
+    :VariableTextLayer => :VariableTextLayer,
   }
 
   def initialize(file_path)
@@ -211,6 +212,7 @@ class ScriptCompiler
 
   #文字列
   impl_option_options_block :text,         :CharContainer
+  impl_option_options_block :text2,         :VariableTextLayer
 
   #コントロールの生成
   impl_option_options_block :create,              :Anonymous

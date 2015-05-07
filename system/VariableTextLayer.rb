@@ -32,7 +32,7 @@ require_relative './control_container.rb'
 #
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
-
+=begin
 class VariableCharContainer < CharContainer
   def initialize(options, control = nil)
     options[:draw_to_entity] = true
@@ -103,14 +103,15 @@ class VariableCharContainer < CharContainer
     return true
   end
 end
-
+=end
 #可変長テキストレイヤ
 class VariableTextLayer < Control
   include Drawable #描画関連モジュール
 
   def initialize(options, control = nil)
-    super(options)
-
+  
+    options[:height] = 272
+  
     #文字列を描画するコントロールを生成
     @body =  RenderTarget.new( options[:width], 
                                options[:height], 
@@ -132,7 +133,12 @@ class VariableTextLayer < Control
     @bg_image = [Image.load(options[:bg_path])]
     @move_offset_y = 0
     @text_layer_height = options[:height]
+    
+    #TODO：いらない気がする
+    @width  = options[:width] || 0  #横幅
+    @height = options[:height] || 0 #縦幅
 
+    super(options)
   end
 
   #描画
@@ -204,26 +210,56 @@ class VariableTextLayer < Control
   end
 =end
 
-  def command_text(options)
-    
-    send_command(:eval, {:eval => "pp 'test'"})
+  def command_text2(options)
+    options[:text] = options[:text2]
+
     send_command(:text, options, :default_text_layer)
     send_command(:line_feed, nil, :default_text_layer)
-    send_command(:pause2, nil)
-    
+
+    eval_block([
+      [:eval, {:eval => "pp 'test'",:target_control => @id}],
+      [:pause2, {:target_control => @id}]
+    ])
+
+#    if options[:last]
+#      send_command(:resize, nil)
+#    end
+
+    return :continue 
+  end
+
+  def command_resize(options)
+    @text_layer_height = @height += 18
+
+    #文字列を描画するコントロールを生成
+    @body =  RenderTarget.new( @width, 
+                              @height, 
+                               [0, 0, 0, 0])
+
+    @body_target =  RenderTarget.new( @width, 
+                                       @height, 
+                                      [0, 0, 0, 0])
+
+    @entity = RenderTarget.new( 
+                      @width, 
+                      @height + @header.height + @footer.height ,
+                      [0,0,0,0])
+
     return :continue 
   end
 
   def command_pause2(options)
-  
-
     return :continue if @skip_mode  #TODO:このロジックはプロシージャーで対応する
     #■ルートの待機処理
 
-    #スリープモードを設定
-    send_command(:sleep_mode, {:sleep_mode => :sleep})
-    #ウェイク待ち
-    send_command(:wait_wake, nil)
+    eval_block([
+      #スリープモードを設定
+      [:sleep_mode, {:sleep_mode => :sleep,:target_control => @id}],
+      #ウェイク待ち
+      [:wait_wake, {:target_control => @id}],
+      #描画レイヤのサイズを更新する
+      [:resize, {:target_control => @id}]
+    ])
 
     #■行表示中スキップ処理
 

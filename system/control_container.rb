@@ -219,13 +219,8 @@ class Control
       else
         #子要素をターゲットに直接描画
         offset_x,offset_y = entity.render(offset_x + @x_pos, offset_y + @y_pos, target)
-        pp offset_x,offset_y
       end
     end
-
-    #連結フラグが設定されているなら親コントロールの座標を追加する
-#    offset_x += parent_x_end if @join_right
-#    offset_y += parent_y_end if @join_bottom
 
     #自コントロールが描画要素を持っている場合
     if @entity
@@ -236,6 +231,7 @@ class Control
                       @draw_option) 
     end
 
+    #連結フラグが設定されているなら親コントロールの座標を追加する
     offset_x += @width if @join_right
     offset_y += @height if @join_bottom
 

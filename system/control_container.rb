@@ -205,32 +205,41 @@ class Control
   end
 
   #描画
-  def render(offset_x, offset_y, target, parent_x_end, parent_y_end)
+#  def render(offset_x, offset_y, target, parent_x_end, parent_y_end)
+  def render(offset_x, offset_y, target)
 
-    return target if !@visible
+    return offset_x, offset_y if !@visible
 
     #子要素のコントロールの描画
     @control_list.each do |entity|
       #所持コントロール自身に描画する場合
       if @draw_to_entity
-        #
-        entity.render(offset_x, offset_y, @entity, @width, @height)
+        #子要素を自コントロールが持つターゲットに一時描画
+        offset_x,offset_y = entity.render(offset_x, offset_y, @entity)
       else
-        entity.render(offset_x + @x_pos, offset_y + @y_pos, target, @width, @height)
+        #子要素をターゲットに直接描画
+        offset_x,offset_y = entity.render(offset_x + @x_pos, offset_y + @y_pos, target)
+        pp offset_x,offset_y
       end
     end
 
     #連結フラグが設定されているなら親コントロールの座標を追加する
-    offset_x += parent_x_end if @join_right
-    offset_y += parent_y_end if @join_bottom
+#    offset_x += parent_x_end if @join_right
+#    offset_y += parent_y_end if @join_bottom
 
-    #自身が描画要素を持っていれば描画
-    target.draw_ex( offset_x + @x_pos, 
-                    offset_y + @y_pos, 
-                    @entity, 
-                    @draw_option) if @entity
+    #自コントロールが描画要素を持っている場合
+    if @entity
+      #ターゲットに描画
+      target.draw_ex( offset_x + @x_pos, 
+                      offset_y + @y_pos, 
+                      @entity, 
+                      @draw_option) 
+    end
 
-    return target #引数を返値に伝搬する
+    offset_x += @width if @join_right
+    offset_y += @height if @join_bottom
+
+    return offset_x, offset_y#target #引数を返値に伝搬する
   end
 
   def get_child(id)
@@ -457,7 +466,8 @@ class Control
     return :continue
   end
 
-  #キー入力待ち状態に移行
+  #puaseコマンド
+  #スキップ待機とキー入力待機
   def command_pause(options)
     #TODO:※ページスキップ的な機能が実装されたら、このへんでその処理を行う筈
 
@@ -488,7 +498,8 @@ class Control
     #TODO：本来rootにのみ通知できれば良い筈
     send_command(:sleep_mode_all, {:sleep_mode_all => :wake}, :default_text_layer)
     #スキップフラグを下ろす
-    send_command(:skip_mode_all, {:skip_mode_all => false}, :default_text_layer)    #スキップフラグ伝搬が正しく行われるように１フレ送る
+    send_command(:skip_mode_all, {:skip_mode_all => false},:default_text_layer)
+    #スキップフラグ伝搬が正しく行われるように１フレ送る
     send_command(:next_frame, nil, :default_text_layer)
 
     return :continue

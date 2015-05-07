@@ -119,7 +119,7 @@ create :LayoutContainer,
     end
   end
 
-#pause
+pause
 
 dispose :button1
 

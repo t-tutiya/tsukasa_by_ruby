@@ -32,237 +32,61 @@ require_relative './control_container.rb'
 #
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
-=begin
-class VariableCharContainer < CharContainer
-  def initialize(options, control = nil)
-    options[:draw_to_entity] = true
-    super(options)
-
-    #文字列を描画するコントロールを生成
-    @text_layer = RenderTarget.new(options[:width], 
-                                   options[:height], 
-                                   [0, 0, 0, 0])
-
-    @entity     = RenderTarget.new(options[:width], 
-                                   options[:height], 
-                                   [0, 0, 0, 0])
-
-    #ＢＧオブジェクトの初期化
-    @bg_image = [Image.load(options[:bg_path])]
-
-    @move_offset_y = 0
-    @text_layer_height = options[:height]
-  end
-
-  #描画
-  def render(x_pos, y_pos, target, parent_x_end, parent_y_end)
-    #背景画像をタイルとして一時表示
-    @text_layer.draw_tile( nil, nil, [[0]], @bg_image, nil, nil, nil, nil, 0)
-    #テキストレイヤを一時描画
-    @control_list.each do |entity|
-      entity.draw(x_pos, y_pos, @text_layer, @width, @height)
-    end
-    #一時描画をトリミングする
-    @entity.draw_ex(0, @move_offset_y, @text_layer, @draw_option)
-
-    #連結フラグが設定されているなら親コントロールの座標を追加する
-    x_pos += parent_x_end if @join_right
-    y_pos += parent_y_end if @join_bottom
-
-    #描画
-    target.draw_ex( x_pos + @x_pos, 
-                    y_pos + @y_pos, 
-                    @entity, 
-                    @draw_option)
-  end
-
-  #resizeタグ
-  #RenderTargetを再作成する
-  def command_resize(options)
-
-    @text_layer   = RenderTarget.new(@width, @height  + 8, [0,0,0,0])
-    @entity = RenderTarget.new(@width, @height + 8 , [0,0,0,0])
-
-    #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    @y_pos -= 17
-    @move_offset_y = 16
-    send_command(:test_command, {:count => 16}, @id, true)
-
-    return false #フレーム続行
-  end
-
-  def command_test_command(options)
-
-    @y_pos += 1
-    @move_offset_y = options[:count]
-
-    return false if options[:count] == 0
-      
-    #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    send_command(:test_command, {:count => options[:count] - 1}, @id, true)
-    return true
-  end
-end
-=end
 #可変長テキストレイヤ
 class VariableTextLayer < Control
   include Drawable #描画関連モジュール
 
-  def initialize(options, control = nil)
-  
-    options[:height] = 272
-  
-    #文字列を描画するコントロールを生成
-    @body =  RenderTarget.new( options[:width], 
-                               options[:height], 
-                               [0, 0, 0, 0])
-    @body_target =  RenderTarget.new( options[:width], 
-                                      options[:height], 
-                                      [0, 0, 0, 0])
+  def initialize(options)
+    options[:draw_to_entity] = true
+    #保持オブジェクトの初期化
+    @entity = RenderTarget.new( options[:width], 
+                                            options[:height], 
+                                            [0, 0, 0, 0])
 
-    @header = Image.load(options[:header])
-    @footer = Image.load(options[:footer])
-
-    @entity = RenderTarget.new( 
-                          options[:width], 
-                          options[:height] + @header.height + @footer.height ,
-                          [0,0,0,0])
-
-
-    #ＢＧオブジェクトの初期化
-    @bg_image = [Image.load(options[:bg_path])]
-    @move_offset_y = 0
-    @text_layer_height = options[:height]
-    
-    #TODO：いらない気がする
-    @width  = options[:width] || 0  #横幅
-    @height = options[:height] || 0 #縦幅
-
+    @width  = @entity.width
+    @height = @entity.height
     super(options)
   end
 
-  #描画
-  def render(x_pos, y_pos, target, parent_x_end, parent_y_end)
-    #pp "===="
-    #pp @move_offset_y
-    #pp @header.height - @move_offset_y
-    #pp @text_layer_height
-
-    #背景画像をタイルとして一時表示
-    @body.draw_tile( nil, nil, [[0]], @bg_image, nil, nil, nil, nil, 0)
-    #テキストレイヤを一時描画
-    @control_list[0].render(0, 0, @body, parent_x_end, parent_y_end)
-    #一時描画をトリミングする
-    @body_target.draw_ex(0, @move_offset_y, @body, @draw_option)
-    #描画
-    @entity.draw_ex(0, 
-                    @header.height - @move_offset_y, 
-                    @body_target, 
-                    @draw_option)
-
-    #ヘッダーを描画
-    @entity.draw_ex(0, 0, @header, @draw_option)
-    #フッターを描画
-    @entity.draw_ex(0, 
-                    @header.height - @move_offset_y + @text_layer_height,
-                    @footer, 
-                    @draw_option)
-
-    #コントロールをサーフェエスに描画
-    target.draw_ex(x_pos + @x_pos, y_pos + @y_pos, @entity, @draw_option) if @visible
-
-    return target #引数を返値に伝搬する
-  end
-=begin
-  #line_feedコマンド
-  def command_test_command(options)
-
-    @y_pos -= 1
-    @move_offset_y = options[:count]
-
-    return false if options[:count] == 0
-      
-    #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    send_command(:test_command, {:count => options[:count] - 1}, @id, true)
-    return true
-  end
-
-  def command_check_height(options)
-    #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    send_command(:check_height, {}, @id)
-
-    return true if @text_layer_height == @control_list[0].height
-
-    #pp @control_list[0].height
-    if @text_layer_height != @control_list[0].height
-      @text_layer_height = @control_list[0].height
-      #レンダーターゲットを再生成する
-      @body   = RenderTarget.new(@width, @text_layer_height , [0,0,0,0])
-      @body_target = RenderTarget.new(@width, @text_layer_height , [0,0,0,0])
-      @entity = RenderTarget.new( 
-                       @width, 
-                       @text_layer_height + @header.height + @footer.height,
-                       [0,0,0,0])
-      #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-      send_command(:test_command, {:count => 16}, @id, true)
-      return false
-    end
-  end
-=end
-
-  def command_text2(options)
-    options[:text] = options[:text2]
-
-    send_command(:text, options, :default_text_layer)
+  def command_line_feed(options)
     send_command(:line_feed, nil, :default_text_layer)
-
     eval_block([
       [:eval, {:eval => "pp 'test'",:target_control => @id}],
-      [:pause2, {:target_control => @id}]
+      [:pause, {:target_control => @id, :last => options[:last]}],
+      [:resize, {:target_control => @id}],
     ])
+    return :continue 
+  end
 
-#    if options[:last]
-#      send_command(:resize, nil)
-#    end
-
+  #TODO:これ書かずに済ませられないものか
+  def command_text(options)
+    send_command(:text, options, :default_text_layer)
     return :continue 
   end
 
   def command_resize(options)
-    @text_layer_height = @height += 18
-
-    #文字列を描画するコントロールを生成
-    @body =  RenderTarget.new( @width, 
-                              @height, 
-                               [0, 0, 0, 0])
-
-    @body_target =  RenderTarget.new( @width, 
-                                       @height, 
-                                      [0, 0, 0, 0])
+    @height += 18
 
     @entity = RenderTarget.new( 
                       @width, 
-                      @height + @header.height + @footer.height ,
+                      @height ,
                       [0,0,0,0])
 
     return :continue 
   end
 
-  def command_pause2(options)
-    return :continue if @skip_mode  #TODO:このロジックはプロシージャーで対応する
-    #■ルートの待機処理
+  def command_pause(options)
+      return :continue if @skip_mode
 
+    #■ルートの待機処理
     eval_block([
-      #スリープモードを設定
-      [:sleep_mode, {:sleep_mode => :sleep,:target_control => @id}],
-      #ウェイク待ち
-      [:wait_wake, {:target_control => @id}],
-      #描画レイヤのサイズを更新する
-      [:resize, {:target_control => @id}]
-    ])
+        #スリープモードを設定
+        [:sleep_mode, {:sleep_mode => :sleep,:target_control => @id}],
+        #ウェイク待ち
+        [:wait_wake, {:target_control => @id}],
+      ])
 
     #■行表示中スキップ処理
-
     #idolになるかキー入力を待つ
     #※wait中にキーが押された場合、waitはスキップモードフラグを立てる
     send_command(:wait_key_push_with_idol, nil, :default_text_layer)

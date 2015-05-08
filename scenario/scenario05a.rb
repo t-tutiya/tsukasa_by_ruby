@@ -96,6 +96,8 @@ create :LayoutContainer,
   id: :main_text_layer do
     #メッセージウィンドウ
     create :CharContainer, 
+      x_pos: 2,
+      y_pos: 2,
       id: :default_text_layer,
       font_config: { :size => 32, 
                      :face => "ＭＳＰ ゴシック"},

@@ -143,8 +143,8 @@ class ScriptCompiler
   #次フレームに送る
   impl_non_option :next_frame, :Anonymous
   #キー入力待ち
-  impl_non_option :pause,      :Anonymous
-  impl_non_option :pause2,            :Anonymous
+  impl_options :pause,      :Anonymous
+#  impl_non_option :pause2,            :Anonymous
 
   impl_non_option :wait_wake,      :Anonymous
 
@@ -152,7 +152,8 @@ class ScriptCompiler
   impl_non_option :wait_input_key,      :Anonymous
 
   #改行
-  impl_non_option :line_feed,  :CharContainer
+#  impl_non_option :line_feed,  :CharContainer
+  impl_options :line_feed,  :CharContainer
   #改ページ
   impl_non_option :flash,      :CharContainer
 

@@ -211,13 +211,17 @@ class Control
   def render(offset_x, offset_y, target)
     base_offset_x = offset_x
     base_offset_y = offset_y
+
+    child_offset_x = 0
+    child_offset_y = 0
     
     #子要素のコントロールの描画
+    #TODO:内部でif分岐してるのはおかしい
     @control_list.each do |entity|
       #所持コントロール自身に描画する場合
       if @draw_to_entity
         #子要素を自ターゲットに一時描画
-        entity.render(offset_x, offset_y, @entity)
+        child_offset_x,child_offset_y = entity.render(child_offset_x, child_offset_y, @entity)
       else
         #子要素を親ターゲットに直接描画
         offset_x,offset_y = entity.render(offset_x + @x_pos, offset_y + @y_pos, target) if entity.visible

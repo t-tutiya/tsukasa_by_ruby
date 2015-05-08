@@ -80,11 +80,6 @@ class CharContainer < Control
   def initialize(options, control = nil)
     @char_renderer_commands = {}
 
-    #文字レンダラクラスと文字レンダラオプションの保存
-    @char_renderer = options[:char_renderer] || CharControl
-    #コマンドの初期化
-#    @char_renderer_options[:commands] =[] if !@char_renderer_options[:commands]
-
     @margin_x = options[:margin_x] || 0
     @margin_y = options[:margin_y] || 0
 
@@ -189,7 +184,7 @@ class CharContainer < Control
     if !@font_config[:use_image_font]
       #文字レンダラオブジェクトを生成する
       #TODO:本来はcreate_childコマンドで生成されるべきか？
-      control = @char_renderer.new(
+      control = CharControl.new(
                     {:x_pos => @next_char_x + @margin_x,
                      :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
                      :char => options[:char].to_s,
@@ -202,7 +197,7 @@ class CharContainer < Control
     else
       #文字レンダラオブジェクトを生成する
       #TODO:本来はcreate_childコマンドで生成されるべきか？
-      control = @char_renderer.new(
+      control = CharControl.new(
                     {:x_pos => @next_char_x + @margin_x,
                      :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
                      :char => "",
@@ -267,7 +262,7 @@ class CharContainer < Control
     end
     #文字レンダラオブジェクトを生成し、描画チェインに連結する
     #TODO：こっち未修正
-    @control_list.push(@char_renderer.new(
+    @control_list.push(CharControl.new(
                     {:x_pos => @next_char_x + @margin_x,
                      :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
                      :char => "",
@@ -343,7 +338,7 @@ class CharContainer < Control
     texts.each_char do |ch|
       #文字レンダラオブジェクトを生成し、描画チェインに連結する
       #TODO:RAG2015版への移行作業まだ
-      @control_list.push(@char_renderer.new(
+      @control_list.push(CharControl.new(
                     @next_char_x + x + @margin_x,
                     @next_char_y + @margin_y - @rubi_font.size - @font_config[:rubi_pitch],
                     ch,

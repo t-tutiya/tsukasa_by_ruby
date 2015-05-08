@@ -211,15 +211,22 @@ class Control
   def render(offset_x, offset_y, target)
     return offset_x, offset_y if !@visible
 
+    base_offset_x = offset_x
+    base_offset_y = offset_y
+    
     #子要素のコントロールの描画
     @control_list.each do |entity|
       #所持コントロール自身に描画する場合
       if @draw_to_entity
-        #子要素を自コントロールが持つターゲットに一時描画
-        offset_x,offset_y = entity.render(offset_x, offset_y, @entity)
+        #子要素を自ターゲットに一時描画
+        entity.render(offset_x, offset_y, @entity)
       else
-        #子要素をターゲットに直接描画
+        #子要素を親ターゲットに直接描画
         offset_x,offset_y = entity.render(offset_x + @x_pos, offset_y + @y_pos, target)
+        if offset_x == :base and offset_y == :base
+          offset_x = base_offset_x
+          offset_y = base_offset_y
+        end
       end
     end
 
@@ -244,8 +251,8 @@ class Control
       result_y = offset_y + @height + @y_pos
     #連結解除
     when :none
-      result_x = @x_pos
-      result_y = @y_pos
+      result_x = :base
+      result_y = :base
     else
       raise
     end

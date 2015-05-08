@@ -39,6 +39,8 @@ module Drawable
   attr_reader :y_pos
   attr_reader :width
   attr_reader :height
+  
+  attr_reader :visible
 
   def initialize(options, control = nil)
     super(options)

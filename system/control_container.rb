@@ -209,8 +209,6 @@ class Control
 
   #描画
   def render(offset_x, offset_y, target)
-    return offset_x, offset_y if !@visible
-
     base_offset_x = offset_x
     base_offset_y = offset_y
     
@@ -222,7 +220,7 @@ class Control
         entity.render(offset_x, offset_y, @entity)
       else
         #子要素を親ターゲットに直接描画
-        offset_x,offset_y = entity.render(offset_x + @x_pos, offset_y + @y_pos, target)
+        offset_x,offset_y = entity.render(offset_x + @x_pos, offset_y + @y_pos, target) if entity.visible
         if offset_x == :base and offset_y == :base
           offset_x = base_offset_x
           offset_y = base_offset_y

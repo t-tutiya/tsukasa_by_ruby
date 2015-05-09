@@ -81,7 +81,7 @@ create :ButtonControl,
 end
 
 
-WHILE "true", target_control: :button1 do
+WHILE "true", target: :button1 do
   move_line x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
   wait_command :move_line
   move_line x: 300, y: 300, count:0, frame: 60, start_x: 300, start_y: 0

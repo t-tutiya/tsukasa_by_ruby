@@ -54,13 +54,13 @@ class ScriptCompiler
     @script_storage = eval(File.open(file_path, "r:UTF-8").read)
   end
 
-  def impl(command_name, default_control, target_control, option, sub_options = {}, &block)
+  def impl(command_name, default_control, target, option, sub_options = {}, &block)
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
 
     #送信先コントロールのデフォルトを設定する
-    if !target_control
-      target_control = @@control_default[default_control]
+    if !target
+      target = @@control_default[default_control]
     end
 
     #ブロックが存在する場合、ブロックを１オプションとして登録する
@@ -88,34 +88,34 @@ class ScriptCompiler
     #存在していないキーの場合は配列として初期化する
     @option[@key_name] = [] if !@option[@key_name]
     #コマンドを登録する
-    return @option[@key_name].push([command_name, sub_options, target_control])
+    return @option[@key_name].push([command_name, sub_options, target])
   end
 
   #オプション無し
   def self.impl_non_option(command_name, default_control = :Anonymous)
-    define_method(command_name) do |target_control: nil|
-      impl(command_name, default_control, target_control, nil, {})
+    define_method(command_name) do |target: nil|
+      impl(command_name, default_control, target, nil, {})
     end
   end
 
   #名前なしオプション（１個）
   def self.impl_one_option(command_name, default_control = :Anonymous)
-    define_method(command_name) do |option, target_control: nil|
-      impl(command_name, default_control, target_control, option, {})
+    define_method(command_name) do |option, target: nil|
+      impl(command_name, default_control, target, option, {})
     end
   end
 
   #名前付きオプション群
   def self.impl_options(command_name, default_control = :Anonymous)
-    define_method(command_name) do |target_control: nil, **options |
-      impl(command_name, default_control, target_control, nil, options)
+    define_method(command_name) do |target: nil, **options |
+      impl(command_name, default_control, target, nil, options)
     end
   end
 
   #ブロック
   def self.impl_block(command_name, default_control = :Anonymous)
-    define_method(command_name) do |target_control: nil,&block|
-      impl(command_name, default_control, target_control, nil) do
+    define_method(command_name) do |target: nil,&block|
+      impl(command_name, default_control, target, nil) do
         @key_name = :commands; block.call ;
       end
     end
@@ -123,8 +123,8 @@ class ScriptCompiler
 
   #名前無しオプション（１個）＆名前付オプション群＆ブロック
   def self.impl_option_options_block(command_name, default_control = :Anonymous)
-    define_method(command_name) do |option , target_control: nil,**options, &block|
-      impl(command_name, default_control, target_control, option, options )do
+    define_method(command_name) do |option , target: nil,**options, &block|
+      impl(command_name, default_control, target, option, options )do
         if block; @key_name = :commands; block.call ; end
       end
     end
@@ -242,14 +242,14 @@ class ScriptCompiler
 
   #プロシージャー宣言
   #TODOプロシージャーリストへの追加処理を足す
-  def procedure(command_name,target_control: nil , **sub)
-    impl(:procedure, :LayoutContainer,target_control, command_name, sub)
+  def procedure(command_name,target: nil , **sub)
+    impl(:procedure, :LayoutContainer,target, command_name, sub)
     @ailias_list.push(command_name)
   end
 
   #コマンド群に別名を設定する
-  def ailias(command_name,target_control: nil , &block)
-    impl(:ailias, :LayoutContainer,target_control , command_name)do
+  def ailias(command_name,target: nil , &block)
+    impl(:ailias, :LayoutContainer,target , command_name)do
       if block; @key_name = :commands; block.call; end
     end
     @ailias_list.push(command_name)
@@ -257,8 +257,8 @@ class ScriptCompiler
 
   #制御構造関連
   #if（予約語の為メソッド名差し替え）
-  def IF(option,target_control: nil )
-    impl(:if, :LayoutContainer,target_control , option) do
+  def IF(option,target: nil )
+    impl(:if, :LayoutContainer,target , option) do
       yield
     end
   end
@@ -276,15 +276,15 @@ class ScriptCompiler
   end
 
   #while（予約語の為メソッド名差し替え）
-  def WHILE(option,target_control: nil , **sub_options)
-    impl(:while, :LayoutContainer,target_control , option, sub_options) do
+  def WHILE(option,target: nil , **sub_options)
+    impl(:while, :LayoutContainer,target , option, sub_options) do
       yield
     end
   end
 
   #eval（予約語の為メソッド名差し替え）
-  def EVAL(option, target_control: nil)
-    impl(:eval,  :Anonymous,target_control , option)
+  def EVAL(option, target: nil)
+    impl(:eval,  :Anonymous,target , option)
   end
 
   #sleep（予約語の為メソッド名差し替え）

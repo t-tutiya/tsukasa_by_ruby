@@ -374,7 +374,7 @@ class Control
     if @@procedure_list.key?(command)
       #プロシージャー名をオプションに格納する
       options[:procedure] = command
-      options[:target_control] = @id
+      target = @id
       #発行するコマンドをプロシージャー呼び出しに差し替える
       command = :call_procedure
     end

@@ -27,7 +27,6 @@
 #
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
-
 create :ImageControl ,
        file_path: "./sozai/bg_sample.png", x_po: 0, y_pos: 0, 
        id: :BG do
@@ -121,6 +120,7 @@ create :LayoutContainer,
 
 pause
 
+
 dispose :button1
 
 text "ＡＤＶエンジン「司（Tsuksisssssssssss"
@@ -147,3 +147,4 @@ text "ひとまず"
 
 #pause
 #flash
+

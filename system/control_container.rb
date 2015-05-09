@@ -96,11 +96,13 @@ class Control
   end
 
   #コマンドをスタックに格納する
-  def send_command(command, options, id = @id)
+  def send_command(command, options, id = @id, base_control = self)
     #自身が送信対象として指定されている場合
     if @id == id or id == :anonymous
       #コマンドをスタックの末端に挿入する
-      @command_list.push([command, options])
+      options = {} if !options
+      options[:base_control] = base_control
+      @command_list.push([command, options, base_control])
       #pp "@id[" + @id.to_s + "]" + command.to_s
       return true #コマンドをスタックした
     end
@@ -108,26 +110,28 @@ class Control
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.send_command(command, options, id)
+      return true if control.send_command(command, options, id, base_control)
     end
 
     return false #コマンドをスタックしなかった
   end
 
   #コマンドをスタックに格納する
-  def send_command_interrupt(command, options, id = @id)
+  def send_command_interrupt(command, options, id = @id, base_control = self)
     #自身が送信対象として指定されている場合
     #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
     if @id == id or id == :anonymous
       #コマンドをスタックの先頭に挿入する
-      @command_list.unshift([command, options])
+      options = {} if !options
+      options[:base_control] = base_control
+      @command_list.unshift([command, options, base_control])
       return true #コマンドをスタックした
     end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.send_command_interrupt(command, options, id)
+      return true if control.send_command_interrupt(command, options, id,base_control)
     end
 
     return false #コマンドをスタックしなかった
@@ -468,7 +472,7 @@ class Control
 
   def command_skip_mode_all(options)
     #スリープモードを解除する
-    @@root.send_command_interrupt_to_all(:skip_mode, 
+    options[:base_control].send_command_interrupt_to_all(:skip_mode, 
                                         {:skip_mode => options[:skip_mode_all]})
     return :continue
   end
@@ -483,7 +487,7 @@ class Control
 
   def command_sleep_mode_all(options)
     #スリープモードを解除する
-    @@root.send_command_interrupt_to_all(:sleep_mode, 
+   options[:base_control].send_command_interrupt_to_all(:sleep_mode, 
                                         {:sleep_mode => options[:sleep_mode_all]})
     return :continue
   end
@@ -596,16 +600,6 @@ class Control
   #wait_idolコマンド
   #子要素のコントロールが全てアイドルになるまで待機
   def command_wait_idol(options, command_name = :wait_idol)
-=begin
-    if options and options[:control]
-      target = get_child(options[:control])
-    else
-      target = self
-    end
-    return :continue if target.all_controls_idol?
-
-    if !target.all_controls_idol?
-=end
     if !all_controls_idol?
       return :end_frame, [command_name, options]
     end

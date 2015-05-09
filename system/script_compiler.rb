@@ -55,7 +55,6 @@ class ScriptCompiler
   end
 
   def impl(command_name, default_control, option, sub_options = {}, &block)
-
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
 
@@ -89,7 +88,7 @@ class ScriptCompiler
     #存在していないキーの場合は配列として初期化する
     @option[@key_name] = [] if !@option[@key_name]
     #コマンドを登録する
-    @option[@key_name].push([command_name, sub_options])
+    return @option[@key_name].push([command_name, sub_options, sub_options[:target_control]])
   end
 
   #オプション無し
@@ -108,7 +107,7 @@ class ScriptCompiler
 
   #名前付きオプション群
   def self.impl_options(command_name, default_control)
-    define_method(command_name) do |sub_options|
+    define_method(command_name) do |sub_options = {}|
       impl(command_name, default_control, nil, sub_options)
     end
   end
@@ -124,7 +123,7 @@ class ScriptCompiler
 
   #名前無しオプション（１個）＆名前付オプション群＆ブロック
   def self.impl_option_options_block(command_name, default_control)
-    define_method(command_name) do |option, sub = {}, &block|
+    define_method(command_name) do |option = nil, sub = {}, &block|
       impl(command_name, default_control, option, sub )do
         if block; @key_name = :commands; block.call ; end
       end

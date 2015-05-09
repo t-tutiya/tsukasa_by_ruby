@@ -172,7 +172,7 @@ class Control
     #コマンドリストが空になるまで走査し、コマンドを実行する
     while !@command_list.empty?
       #コマンドリストの先頭要素を取得
-      command, options = @command_list.shift
+      command, options, target = @command_list.shift
 
       #コマンドを実行
       end_parse, command = send("command_" + command.to_s, options)
@@ -368,7 +368,8 @@ class Control
     temp = @script_storage.shift
     command = temp[0]     #コマンド名（シンボル）
     options = temp[1].dup #オプションは状態を持ちうるので複製する
-
+    target = temp[2]
+    
     #コマンドがプロシージャーリストに登録されている場合
     if @@procedure_list.key?(command)
       #プロシージャー名をオプションに格納する
@@ -388,7 +389,7 @@ class Control
     end
 
     #コマンドをコントロールに登録する
-    if !send_command(command,options,options[:target_control]) then
+    if !send_command(command,options,target) then
       pp "error"
       pp command
       pp options
@@ -431,7 +432,7 @@ class Control
     return :continue if !eval(options[:while]) #アイドル
 
     #while文全体をスクリプトストレージにスタック
-    eval_block([[:while, options]])
+    eval_block([[:while, options, @id]])
     #while文の中身をスクリプトストレージスタック
     eval_block(options[:commands])
 

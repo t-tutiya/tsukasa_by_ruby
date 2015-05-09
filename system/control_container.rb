@@ -394,6 +394,7 @@ class Control
       pp command
       pp options
       pp @id
+      pp target
 #      pp @control_list
       pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
       raise

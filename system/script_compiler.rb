@@ -54,13 +54,13 @@ class ScriptCompiler
     @script_storage = eval(File.open(file_path, "r:UTF-8").read)
   end
 
-  def impl(command_name, default_control, option, sub_options = {}, &block)
+  def impl(command_name, default_control, target_control, option, sub_options = {}, &block)
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
 
     #送信先コントロールのデフォルトを設定する
-    if !sub_options[:target_control]
-      sub_options[:target_control] = @@control_default[default_control]
+    if !target_control
+      target_control = @@control_default[default_control]
     end
 
     #ブロックが存在する場合、ブロックを１オプションとして登録する
@@ -88,43 +88,43 @@ class ScriptCompiler
     #存在していないキーの場合は配列として初期化する
     @option[@key_name] = [] if !@option[@key_name]
     #コマンドを登録する
-    return @option[@key_name].push([command_name, sub_options, sub_options[:target_control]])
+    return @option[@key_name].push([command_name, sub_options, target_control])
   end
 
   #オプション無し
-  def self.impl_non_option(command_name, default_control)
-    define_method(command_name) do
-      impl(command_name, default_control, nil)
+  def self.impl_non_option(command_name, default_control = :Anonymous)
+    define_method(command_name) do |target_control: nil|
+      impl(command_name, default_control, target_control, nil, {})
     end
   end
 
   #名前なしオプション（１個）
-  def self.impl_one_option(command_name, default_control)
-    define_method(command_name) do |option|
-      impl(command_name, default_control, option)
+  def self.impl_one_option(command_name, default_control = :Anonymous)
+    define_method(command_name) do |option, target_control: nil|
+      impl(command_name, default_control, target_control, option, {})
     end
   end
 
   #名前付きオプション群
-  def self.impl_options(command_name, default_control)
-    define_method(command_name) do |sub_options = {}|
-      impl(command_name, default_control, nil, sub_options)
+  def self.impl_options(command_name, default_control = :Anonymous)
+    define_method(command_name) do |target_control: nil, **options |
+      impl(command_name, default_control, target_control, nil, options)
     end
   end
 
   #ブロック
-  def self.impl_block(command_name, default_control)
-    define_method(command_name) do |&block|
-      impl(command_name, default_control, nil) do
+  def self.impl_block(command_name, default_control = :Anonymous)
+    define_method(command_name) do |target_control: nil,&block|
+      impl(command_name, default_control, target_control, nil) do
         @key_name = :commands; block.call ;
       end
     end
   end
 
   #名前無しオプション（１個）＆名前付オプション群＆ブロック
-  def self.impl_option_options_block(command_name, default_control)
-    define_method(command_name) do |option = nil, sub = {}, &block|
-      impl(command_name, default_control, option, sub )do
+  def self.impl_option_options_block(command_name, default_control = :Anonymous)
+    define_method(command_name) do |option , target_control: nil,**options, &block|
+      impl(command_name, default_control, target_control, option, options )do
         if block; @key_name = :commands; block.call ; end
       end
     end
@@ -140,19 +140,17 @@ class ScriptCompiler
   end
 
   #次フレームに送る
-  impl_non_option :next_frame, :Anonymous
+  impl_non_option :next_frame
   #キー入力待ち
-  impl_options :pause,      :Anonymous
-#  impl_non_option :pause2,            :Anonymous
+  impl_non_option :pause
 
-  impl_non_option :wait_wake,      :Anonymous
+  impl_non_option :wait_wake
 
-  impl_options :wake,      :Anonymous
-  impl_non_option :wait_input_key,      :Anonymous
+  impl_options :wake
+  impl_non_option :wait_input_key
 
   #改行
-#  impl_non_option :line_feed,  :CharContainer
-  impl_options :line_feed,  :CharContainer
+  impl_non_option :line_feed,  :CharContainer
   #改ページ
   impl_non_option :flash,      :CharContainer
 
@@ -162,46 +160,45 @@ class ScriptCompiler
 
   #単一オプションを持つコマンド
   #特定コマンドの終了を待つ
-  impl_one_option :wait_command,  :Anonymous
+  impl_one_option :wait_command
   #特定フラグの更新を待つ（現状では予めnilが入ってないと機能しない）
-  impl_one_option :wait_flag,     :Anonymous
+  impl_one_option :wait_flag
 
   #次に読み込むスクリプトファイルの指定
   impl_one_option :next_scenario, :LayoutContainer
   #コントロールの削除
   impl_one_option :dispose,       :LayoutContainer
 
-  impl_non_option :wait_child_controls_idol,  :Anonymous
+  impl_non_option :wait_child_controls_idol
 
-  impl_non_option :check_key_push,  :Anonymous
-  impl_one_option :wait_command_with_key_push,  :Anonymous
+  impl_non_option :check_key_push
+  impl_one_option :wait_command_with_key_push
 
   #スリープモードの更新
-  impl_one_option :sleep_mode,  :Anonymous
+  impl_one_option :sleep_mode
   #スキップモードの更新
-  impl_one_option :skip_mode,  :Anonymous
+  impl_one_option :skip_mode
 
   #文字
   impl_one_option :char,         :CharContainer
   #指定フレーム待つ
-  impl_one_option :wait,         :Anonymous
+  impl_one_option :wait
   #インデント設定
   impl_one_option :indent,       :CharContainer
   #文字描画速度の設定
   impl_one_option :delay,        :CharContainer
 
   #移動
-  impl_options :move,            :Anonymous
-  impl_options :move_line,       :Anonymous
+  impl_options :move
+  impl_options :move_line
 
-  impl_options :move_line_with_skip,      :Anonymous
+  impl_options :move_line_with_skip
 
   #フェードトランジション
-  impl_options :transition_fade, :Anonymous
-  impl_options :transition_fade_with_skip, :Anonymous
+  impl_options :transition_fade
+  impl_options :transition_fade_with_skip
   #フラグ設定
-  impl_options :flag,            :Anonymous
-
+  impl_options :flag
   #ブロックを持つコマンド
 
   #文字レンダラの指定
@@ -211,13 +208,13 @@ class ScriptCompiler
   #オプション／サブオプション（省略可）／ブロックを持つコマンド
 
   #文字列
-  impl_option_options_block :text,         :CharContainer
-  impl_option_options_block :text2,         :VariableTextLayer
+  impl_one_option :text,         :CharContainer
+  impl_one_option :text2,         :VariableTextLayer
 
   #コントロールの生成
-  impl_option_options_block :create,              :Anonymous
+  impl_option_options_block :create
   #コントロール単位でイベント駆動するコマンド群を格納する
-  impl_option_options_block :event,               :Anonymous
+  impl_option_options_block :event
 
   #画像スタック
   impl_option_options_block :graph,               :CharContainer
@@ -245,14 +242,14 @@ class ScriptCompiler
 
   #プロシージャー宣言
   #TODOプロシージャーリストへの追加処理を足す
-  def procedure(command_name, sub)
-    impl(:procedure, :LayoutContainer, command_name, sub)
+  def procedure(command_name,target_control: nil , **sub)
+    impl(:procedure, :LayoutContainer,target_control, command_name, sub)
     @ailias_list.push(command_name)
   end
 
   #コマンド群に別名を設定する
-  def ailias(command_name, &block)
-    impl(:ailias, :LayoutContainer, command_name)do
+  def ailias(command_name,target_control: nil , &block)
+    impl(:ailias, :LayoutContainer,target_control , command_name)do
       if block; @key_name = :commands; block.call; end
     end
     @ailias_list.push(command_name)
@@ -260,8 +257,8 @@ class ScriptCompiler
 
   #制御構造関連
   #if（予約語の為メソッド名差し替え）
-  def IF(option)
-    impl(:if, :LayoutContainer, option) do
+  def IF(option,target_control: nil )
+    impl(:if, :LayoutContainer,target_control , option) do
       yield
     end
   end
@@ -279,15 +276,15 @@ class ScriptCompiler
   end
 
   #while（予約語の為メソッド名差し替え）
-  def WHILE(option, sub_options)
-    impl(:while, :LayoutContainer, option, sub_options) do
+  def WHILE(option,target_control: nil , **sub_options)
+    impl(:while, :LayoutContainer,target_control , option, sub_options) do
       yield
     end
   end
 
   #eval（予約語の為メソッド名差し替え）
-  def EVAL(option)
-    impl(:eval,  :Anonymous, option)
+  def EVAL(option, target_control: nil)
+    impl(:eval,  :Anonymous,target_control , option)
   end
 
   #sleep（予約語の為メソッド名差し替え）

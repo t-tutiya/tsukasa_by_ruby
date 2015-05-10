@@ -33,15 +33,11 @@ require_relative './module_drawable.rb'
 ###############################################################################
 
 class Control
-  @@root = nil        #コントロールツリーのルート
   @@global_flag = {}  #グローバルフラグ
   @@procedure_list = Hash.new #プロシージャーのリスト
   @@ailias_list =  Hash.new #エイリアスのリスト
 
   def initialize(options)
-    #ルートクラスの設定
-    @@root = self if !@@root
-
     #描画関連
     #TODO;モジュールに全部送れないか検討
     @x_pos = 0
@@ -469,7 +465,7 @@ class Control
   def command_skip_mode_all(options, target)
     #スリープモードを解除する
     target.send_command_interrupt_to_all(:skip_mode, 
-                                        {:skip_mode => options[:skip_mode_all]}, targe)
+                                        {:skip_mode => options[:skip_mode_all]})
     return :continue
   end
 
@@ -608,12 +604,12 @@ class Control
     #子要素のコントロールが全てアイドル状態の時にキーが押された場合
     if Input.key_push?(K_SPACE)
       #スキップフラグを立てる
-      @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
+      target.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
       return :continue
     else
       @idol_mode = false
       #ポーズ状態を続行する
-      return :end_frame, [:wait_key_push_with_idol, options]
+      return :end_frame, [:wait_key_push_with_idol, options, target]
     end
   end
 

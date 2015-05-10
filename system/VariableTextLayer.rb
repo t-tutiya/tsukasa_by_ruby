@@ -48,7 +48,7 @@ class VariableTextLayer < Control
     super(options)
   end
 
-  def command_line_feed(options)
+  def command_line_feed(options, target)
     send_command(:line_feed, nil, :default_text_layer)
     eval_block([
       [:eval, {:eval => "pp 'test'",:target => @id}, @id],
@@ -59,12 +59,12 @@ class VariableTextLayer < Control
   end
 
   #TODO:これ書かずに済ませられないものか
-  def command_text(options)
+  def command_text(options, target)
     send_command(:text, options, :default_text_layer)
     return :continue 
   end
 
-  def command_resize(options)
+  def command_resize(options, target)
     @height += 18
 
     @entity = RenderTarget.new( 
@@ -75,7 +75,7 @@ class VariableTextLayer < Control
     return :continue 
   end
 
-  def command_pause(options)
+  def command_pause(options, target)
       return :continue if @skip_mode
 
     #■ルートの待機処理

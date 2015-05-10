@@ -54,13 +54,13 @@ module Drawable
   end
 
   #可視設定
-  def command_visible(options)
+  def command_visible(options, target)
     @visible = options[:visible]
     return :continue
   end
 =begin
   #トランジションコマンド
-  def command_transition(options) 
+  def command_transition(options, target) 
     #一時サーフェイスを生成
     target = RenderTarget.new(@width, @height, [0, 0, 0, 0])
     #一時サーフェイスに子要素を描画
@@ -78,7 +78,7 @@ module Drawable
     return :continue
   end
 
-  def command_transition_crossfade(options)
+  def command_transition_crossfade(options, target)
 
     #スキップモードであれば最終値を設定し、フレーム内処理を続行する
     if @skip_mode
@@ -112,7 +112,7 @@ module Drawable
   #frame:フレーム数
   #start:開始α値
   #last:終了α値
-  def command_transition_fade(options, command_name = :transition_fade) 
+  def command_transition_fade(options, target, command_name = :transition_fade) 
     #透明度の決定
     @draw_option[:alpha] = options[:start] + 
                           (((options[:last] - options[:start]).to_f / options[:frame]) * options[:count]).to_i
@@ -131,7 +131,7 @@ module Drawable
     end
   end
   
-  def command_transition_fade_with_skip(options) 
+  def command_transition_fade_with_skip(options, target) 
     #pp @skip_mode
     #pp "D"
     #pp @id
@@ -142,6 +142,6 @@ module Drawable
       return :continue
     end
 
-    return command_transition_fade(options, :transition_fade_with_skip)
+    return command_transition_fade(options, target, :transition_fade_with_skip)
   end
 end

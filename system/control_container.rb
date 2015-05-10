@@ -100,8 +100,6 @@ class Control
     #自身が送信対象として指定されている場合
     if @id == id or id == :anonymous
       #コマンドをスタックの末端に挿入する
-      options = {} if !options
-      options[:base_control] = base_control
       @command_list.push([command, options, base_control])
       #pp "@id[" + @id.to_s + "]" + command.to_s
       return true #コマンドをスタックした
@@ -122,8 +120,6 @@ class Control
     #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
     if @id == id or id == :anonymous
       #コマンドをスタックの先頭に挿入する
-      options = {} if !options
-      options[:base_control] = base_control
       @command_list.unshift([command, options, base_control])
       return true #コマンドをスタックした
     end
@@ -179,7 +175,7 @@ class Control
       command, options, target = @command_list.shift
 
       #コマンドを実行
-      end_parse, command = send("command_" + command.to_s, options)
+      end_parse, command = send("command_" + command.to_s, options, target)
 
       #次フレームに実行するコマンドがある場合、一時的にスタックする
       @next_frame_commands.push(command) if command
@@ -328,7 +324,7 @@ class Control
   #############################################################################
 
   #コントロールをリストに登録する
-  def command_create(options)
+  def command_create(options, target)
     #指定されたコントロールを生成してリストに連結する
     @control_list.push(Module.const_get(options[:create]).new(options))
     return :continue
@@ -336,7 +332,7 @@ class Control
 
   #disposeコマンド
   #コントロールを削除する
-  def command_dispose(options)
+  def command_dispose(options, target)
     #自身が指定されたコントロールの場合
     if options[:dispose] == @id
       #削除フラグを立てる
@@ -349,7 +345,7 @@ class Control
   end
 
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
-  def command_token(options)
+  def command_token(options, target)
     #トークンの取得対象であるスクリプトストレージが空の場合
     if @script_storage.empty?
       #スクリプトストレージのコールスタックが存在する場合
@@ -409,7 +405,7 @@ class Control
   end
 
   #文字列を評価する（デバッグ用）
-  def command_eval(options)
+  def command_eval(options, target)
     eval(options[:eval])
     return :continue
   end
@@ -420,7 +416,7 @@ class Control
 
   #条件分岐
   #TODO:コードが冗長
-  def command_if(options)
+  def command_if(options, target)
     #evalで評価した条件式が真の場合
     if eval(options[:if])
       eval_block(options[:then])
@@ -432,7 +428,7 @@ class Control
   end
 
   #繰り返し
-  def command_while(options)
+  def command_while(options, target)
     #条件式が非成立であれば繰り返し構文を終了する
     return :continue if !eval(options[:while]) #アイドル
 
@@ -458,43 +454,43 @@ class Control
   #############################################################################
 
   #強制的に１フレーム進めるコマンド
-  def command_next_frame(options)
+  def command_next_frame(options, target)
     return :end_frame
   end
 
   #skip_modeコマンド
   #スキップモードの更新
-  def command_skip_mode(options)
+  def command_skip_mode(options, target)
     #スキップモードの更新
     @skip_mode = options[:skip_mode]
     return :continue
   end
 
-  def command_skip_mode_all(options)
+  def command_skip_mode_all(options, target)
     #スリープモードを解除する
-    options[:base_control].send_command_interrupt_to_all(:skip_mode, 
+    target.send_command_interrupt_to_all(:skip_mode, 
                                         {:skip_mode => options[:skip_mode_all]})
     return :continue
   end
 
   #sleep_modeコマンド
   #スリープモードの更新
-  def command_sleep_mode(options)
+  def command_sleep_mode(options, target)
     #スリープ状態を更新
     @sleep_mode = options[:sleep_mode] 
     return :continue
   end
 
-  def command_sleep_mode_all(options)
+  def command_sleep_mode_all(options, target)
     #スリープモードを解除する
-   options[:base_control].send_command_interrupt_to_all(:sleep_mode, 
+   target.send_command_interrupt_to_all(:sleep_mode, 
                                         {:sleep_mode => options[:sleep_mode_all]})
     return :continue
   end
 
   #puaseコマンド
   #スキップ待機とキー入力待機
-  def command_pause(options)
+  def command_pause(options, target)
     #TODO:※ページスキップ的な機能が実装されたら、このへんでその処理を行う筈
 
     #■ルートの待機処理
@@ -541,7 +537,7 @@ class Control
   private
 
   #キー入力を待つ
-  def command_wait(options)
+  def command_wait(options, target)
     #スキップモードであれば終了
     return :continue if @skip_mode
 
@@ -567,7 +563,7 @@ class Control
 
   #wait_commandコマンド
   #特定のコマンドが自身より前に存在し続ける限り待機を続ける
-  def command_wait_command(options)
+  def command_wait_command(options, target)
     #指定されたコマンドが次フレ用に積まれている場合
     if @next_frame_commands.index{|command| 
           command[0] == options[:wait_command]
@@ -590,7 +586,7 @@ class Control
 
   #wait_wake
   #覚醒待機状態
-  def command_wait_wake(options)
+  def command_wait_wake(options, target)
     if @sleep_mode == :sleep
       return :end_frame, [:wait_wake, nil]
     end
@@ -599,15 +595,15 @@ class Control
 
   #wait_idolコマンド
   #子要素のコントロールが全てアイドルになるまで待機
-  def command_wait_idol(options, command_name = :wait_idol)
+  def command_wait_idol(options, target)
     if !all_controls_idol?
-      return :end_frame, [command_name, options]
+      return :end_frame, [:wait_idol, options]
     end
 
     return :continue
   end
 
-  def command_wait_key_push_with_idol(options)
+  def command_wait_key_push_with_idol(options, target)
     return :continue if all_controls_idol?
     #子要素のコントロールが全てアイドル状態の時にキーが押された場合
     if Input.key_push?(K_SPACE)
@@ -621,14 +617,14 @@ class Control
     end
   end
 
-  def command_check_key_push(options, command_name = :check_key_push)
+  def command_check_key_push(options, target)
     #子要素のコントロールが全てアイドル状態の時にキーが押された場合
     if Input.key_push?(K_SPACE)
       return :continue
     else
       @idol_mode = false
       #ポーズ状態を続行する
-      return :continue, [command_name, options]
+      return :continue, [:check_key_push, options]
     end
   end
 end
@@ -642,14 +638,14 @@ class Control
   private
 
   #イベントコマンドの登録
-  def command_event(options)
+  def command_event(options, target)
     #TODO：コマンドは追加にする
     @event_list[options[:event]] = options[:commands]
     return :continue
   end
 
   #イベントの実行
-  def command_fire(options)
+  def command_fire(options, target)
     #キーが登録されていないなら終了
     return :continue if !@event_list[options[:fire]]
 
@@ -666,13 +662,13 @@ class Control
   #############################################################################
 
   #プロシージャーを登録する
-  def command_procedure(options)
+  def command_procedure(options, target)
     @@procedure_list[options[:procedure]] = options[:impl]
     return :continue
   end
 
   #プロシージャーコールを実行する
-  def command_call_procedure(options)
+  def command_call_procedure(options, target)
     #現在のコマンドリストをスタック
     @command_list_stack.push(@command_list)
     #プロシージャの中身をevalでコマンドセット化してコマンドリストに登録する
@@ -681,7 +677,7 @@ class Control
   end
 
   #プロシージャーを登録する
-  def command_ailias(options)
+  def command_ailias(options, target)
     @@ailias_list[options[:ailias]] = options[:commands]
 
     return :continue
@@ -692,14 +688,14 @@ class Control
   #############################################################################
 
   #フラグを設定する
-  def command_flag(options)
+  def command_flag(options, target)
     #ユーザー定義フラグを更新する
     @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
     return :continue
   end
 
   #次に読み込むスクリプトファイルのパスを設定する
-  def command_next_scenario(options)
+  def command_next_scenario(options, target)
     @next_script_file_path = options[:next_scenario]
     return :continue
   end

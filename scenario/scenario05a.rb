@@ -40,7 +40,6 @@ create :ImageControl ,
   wait_command :move_line_with_skip
 end
 
-
 #ボタンコントロール
 create :ButtonControl, 
         :x_pos => 0, 

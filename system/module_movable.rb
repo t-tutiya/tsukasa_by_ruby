@@ -68,7 +68,7 @@ module Movable
     return :continue#フレーム続行
   end
 =end
-  def command_move_line(options, command_name = :move_line)
+  def command_move_line(options, target, command_name = :move_line)
     #移動先座標の決定
     @x_pos = (options[:start_x] + (options[:x] - options[:start_x]).to_f / options[:frame] * options[:count]).to_i
     @y_pos = (options[:start_y] + (options[:y] - options[:start_y]).to_f / options[:frame] * options[:count]).to_i
@@ -86,7 +86,7 @@ module Movable
     end
   end
 
-  def command_move_line_with_skip(options)
+  def command_move_line_with_skip(options, target)
     #スキップモードであれば最終値を設定し、フレーム内処理を続行する
     if @skip_mode
       @x_pos = options[:x]
@@ -94,6 +94,6 @@ module Movable
       return :continue
     end
     
-    return command_move_line(options, :move_line_with_skip)
+    return command_move_line(options, target, :move_line_with_skip)
   end
 end

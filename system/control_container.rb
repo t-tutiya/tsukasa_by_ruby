@@ -96,11 +96,11 @@ class Control
   end
 
   #コマンドをスタックに格納する
-  def send_command(command, options, id = @id, base_control = self)
+  def send_command(command, options, target_id = @id, invoker_control = self)
     #自身が送信対象として指定されている場合
-    if @id == id or id == :anonymous
+    if @id == target_id or target_id == :anonymous
       #コマンドをスタックの末端に挿入する
-      @command_list.push([command, options, base_control])
+      @command_list.push([command, options, invoker_control])
       #pp "@id[" + @id.to_s + "]" + command.to_s
       return true #コマンドをスタックした
     end
@@ -108,26 +108,26 @@ class Control
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.send_command(command, options, id, base_control)
+      return true if control.send_command(command, options, target_id, invoker_control)
     end
 
     return false #コマンドをスタックしなかった
   end
 
   #コマンドをスタックに格納する
-  def send_command_interrupt(command, options, id = @id, base_control = self)
+  def send_command_interrupt(command, options, target_id = @id, invoker_control = self)
     #自身が送信対象として指定されている場合
     #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
-    if @id == id or id == :anonymous
+    if @id == target_id or target_id == :anonymous
       #コマンドをスタックの先頭に挿入する
-      @command_list.unshift([command, options, base_control])
+      @command_list.unshift([command, options, invoker_control])
       return true #コマンドをスタックした
     end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.send_command_interrupt(command, options, id,base_control)
+      return true if control.send_command_interrupt(command, options, target_id,invoker_control)
     end
 
     return false #コマンドをスタックしなかった
@@ -469,7 +469,7 @@ class Control
   def command_skip_mode_all(options, target)
     #スリープモードを解除する
     target.send_command_interrupt_to_all(:skip_mode, 
-                                        {:skip_mode => options[:skip_mode_all]})
+                                        {:skip_mode => options[:skip_mode_all]}, targe)
     return :continue
   end
 

@@ -49,7 +49,7 @@ class ScriptCompiler
     @key_name = :commands
     @key_name_stack = []
     
-    @ailias_list = []
+    @alias_list = []
     
     @script_storage = eval(File.open(file_path, "r:UTF-8").read)
   end
@@ -134,7 +134,7 @@ class ScriptCompiler
   def method_missing(method, *args)
     #メソッド名が識別子リストに登録されていない場合
     #親クラスに伝搬し、syntax errorとする
-    return super if !@ailias_list.include?(method)
+    return super if !@alias_list.include?(method)
     #コマンドとして登録する
     @option[@key_name].push([method, args[0]])
   end
@@ -244,15 +244,15 @@ class ScriptCompiler
   #TODOプロシージャーリストへの追加処理を足す
   def procedure(command_name,target: nil , **sub)
     impl(:procedure, :LayoutContainer,target, command_name, sub)
-    @ailias_list.push(command_name)
+    @alias_list.push(command_name)
   end
 
   #コマンド群に別名を設定する
-  def ailias(command_name,target: nil , &block)
-    impl(:ailias, :LayoutContainer,target , command_name)do
+  def alias(command_name,target: nil , &block)
+    impl(:alias, :LayoutContainer,target , command_name)do
       if block; @key_name = :commands; block.call; end
     end
-    @ailias_list.push(command_name)
+    @alias_list.push(command_name)
   end
 
   #制御構造関連

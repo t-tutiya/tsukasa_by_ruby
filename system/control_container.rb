@@ -35,7 +35,7 @@ require_relative './module_drawable.rb'
 class Control
   @@global_flag = {}  #グローバルフラグ
   @@procedure_list = Hash.new #プロシージャーのリスト
-  @@ailias_list =  Hash.new #エイリアスのリスト
+  @@alias_list =  Hash.new #エイリアスのリスト
 
   def initialize(options)
     #描画関連
@@ -376,10 +376,10 @@ class Control
     end
 
     #コマンドがエイリアスリストに登録されている場合
-    if @@ailias_list.key?(command)
+    if @@alias_list.key?(command)
       @script_storage_stack.push(@script_storage)
       #コマンドリストをクリアする
-      @script_storage = @@ailias_list[command].dup
+      @script_storage = @@alias_list[command].dup
       #コマンドを取り出す
       command,options  = @script_storage.shift
     end
@@ -673,8 +673,8 @@ class Control
   end
 
   #プロシージャーを登録する
-  def command_ailias(options, target)
-    @@ailias_list[options[:ailias]] = options[:commands]
+  def command_alias(options, target)
+    @@alias_list[options[:alias]] = options[:commands]
 
     return :continue
   end

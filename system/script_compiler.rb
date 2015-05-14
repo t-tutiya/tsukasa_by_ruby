@@ -131,12 +131,13 @@ class ScriptCompiler
   end
 
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
-  def method_missing(method, *args)
+  def method_missing(command_name, *options, &block)
     #メソッド名が識別子リストに登録されていない場合
     #親クラスに伝搬し、syntax errorとする
-    return super if !@alias_list.include?(method)
-    #コマンドとして登録する
-    @option[@key_name].push([method, args[0]])
+    return super if !@alias_list.include?(command_name)
+    impl(command_name, nil, nil, nil, {} )do
+      if block; @key_name = :commands; block.call ; end
+    end
   end
 
   #次フレームに送る
@@ -248,7 +249,7 @@ class ScriptCompiler
   end
 
   #コマンド群に別名を設定する
-  def alias(command_name,target: nil , &block)
+  def ALIAS(command_name,target: nil , &block)
     impl(:alias, :LayoutContainer,target , command_name)do
       if block; @key_name = :commands; block.call; end
     end

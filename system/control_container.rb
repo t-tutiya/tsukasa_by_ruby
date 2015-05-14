@@ -365,7 +365,7 @@ class Control
     command = temp[0]     #コマンド名（シンボル）
     options = temp[1].dup #オプションは状態を持ちうるので複製する
     target = temp[2]
-    
+=begin
     #コマンドがプロシージャーリストに登録されている場合
     if @@procedure_list.key?(command)
       #プロシージャー名をオプションに格納する
@@ -374,14 +374,18 @@ class Control
       #発行するコマンドをプロシージャー呼び出しに差し替える
       command = :call_procedure
     end
-
+=end
     #コマンドがエイリアスリストに登録されている場合
     if @@alias_list.key?(command)
-      @script_storage_stack.push(@script_storage)
-      #コマンドリストをクリアする
-      @script_storage = @@alias_list[command].dup
-      #コマンドを取り出す
-      command,options  = @script_storage.shift
+      #エイリアスから対応するコマンドリストを取り出す
+      alias_commands = @@alias_list[command].dup
+      #エイリアス実行時に設定されたブロックを適用する
+      #TODO：ブロック以外のオプションも適用したい
+      alias_commands[0][1][:commands] += options[:commands]
+      #コマンドリストをスタックする
+      eval_block(alias_commands)
+      send_command(:token, nil)
+      return :continue
     end
 
     #コマンドをコントロールに登録する

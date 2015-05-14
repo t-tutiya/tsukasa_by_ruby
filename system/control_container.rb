@@ -375,18 +375,6 @@ class Control
       command = :call_procedure
     end
 =end
-    #コマンドがエイリアスリストに登録されている場合
-    if @@alias_list.key?(command)
-      #エイリアスから対応するコマンドリストを取り出す
-      alias_commands = @@alias_list[command].dup
-      #エイリアス実行時に設定されたブロックを適用する
-      #TODO：ブロック以外のオプションも適用したい
-      alias_commands[0][1][:commands] += options[:commands]
-      #コマンドリストをスタックする
-      eval_block(alias_commands)
-      send_command(:token, nil)
-      return :continue
-    end
 
     #コマンドをコントロールに登録する
     if !send_command(command,options,target) then
@@ -676,10 +664,23 @@ class Control
     return :continue
   end
 
-  #プロシージャーを登録する
+  #エイリアスを登録する
   def command_alias(options, target)
     @@alias_list[options[:alias]] = options[:commands]
 
+    return :continue
+  end
+
+  #エイリアスを実行する
+  def command_call_alias(options, target)
+    #エイリアスから対応するコマンドリストを取り出す
+    alias_commands = @@alias_list[options[:__alias_name]].dup
+    #エイリアス実行時に設定されたブロックを適用する
+    #TODO：ブロック以外のオプションも適用したい
+    #TODO：このおかしな添え字番号指定なんとかならんものか
+    alias_commands[0][1][:commands] += options[:commands]
+    #コマンドリストをスタックする
+    eval_block(alias_commands)
     return :continue
   end
 

@@ -131,11 +131,16 @@ class ScriptCompiler
   end
 
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
-  def method_missing(command_name, *options, &block)
+  def method_missing(command_name, target: nil, **options, &block)
     #メソッド名が識別子リストに登録されていない場合
     #親クラスに伝搬し、syntax errorとする
     return super if !@alias_list.include?(command_name)
-    impl(command_name, nil, nil, nil, {} )do
+    
+    #call_aliasコマンドとして登録
+    #TODO:一時的にprocedureの機能を停止（aliasと機能を使い分ける方法を再考）
+    #TODO:現状ブロックのみでoptionsは対応していない。optionも受け取らない（最終的には全部反映したい）
+    options[:__alias_name] = command_name
+    impl(:call_alias, :Anonymous, target, nil, options )do
       if block; @key_name = :commands; block.call ; end
     end
   end
@@ -240,14 +245,15 @@ class ScriptCompiler
 
   #画像の差し替え
   impl_option_options_block :image_change, :ImageControl
-
+=begin
+  #TODO：一時的にprocedureの機能を停止する
   #プロシージャー宣言
   #TODOプロシージャーリストへの追加処理を足す
   def procedure(command_name,target: nil , **sub)
     impl(:procedure, :LayoutContainer,target, command_name, sub)
     @alias_list.push(command_name)
   end
-
+=end
   #コマンド群に別名を設定する
   def ALIAS(command_name,target: nil , &block)
     impl(:alias, :LayoutContainer,target , command_name)do

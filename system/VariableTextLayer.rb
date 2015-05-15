@@ -51,9 +51,9 @@ class VariableTextLayer < Control
   def command_line_feed(options, target)
     send_command(:line_feed, nil, :default_text_layer)
     eval_block([
-      [:eval, {:eval => "pp 'test'",:target => @id}, @id],
-      [:pause, {:target => @id, :last => options[:last]}, @id],
-      [:resize, {:target => @id}, @id],
+      [:eval, {:eval => "pp 'test'"}, {:target_id => @id}],
+      [:pause, {:last => options[:last]}, {:target_id => @id}],
+      [:resize, {}, {:target_id => @id}],
     ])
     return :continue 
   end
@@ -76,14 +76,14 @@ class VariableTextLayer < Control
   end
 
   def command_pause(options, target)
-      return :continue if @skip_mode
+    return :continue if @skip_mode
 
     #■ルートの待機処理
     eval_block([
         #スリープモードを設定
-        [:sleep_mode, {:sleep_mode => :sleep,:target => @id}, @id],
+        [:sleep_mode, {:sleep_mode => :sleep}, {:target_id => @id}],
         #ウェイク待ち
-        [:wait_wake, {:target => @id}, @id],
+        [:wait_wake, {}, {:target_id => @id}],
       ])
 
     #■行表示中スキップ処理

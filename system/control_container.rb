@@ -371,7 +371,7 @@ class Control
     #コマンドを取り出す
     temp = @script_storage.shift
     command = temp[0]     #コマンド名（シンボル）
-    
+
     #TODO：このdupが本当に必要なのか良く分からない
     options = temp[1].dup #オプション群。状態を持ちうるので複製する
     sysytem_options = temp[2] #システムで使用するオプション群
@@ -696,13 +696,19 @@ class Control
   #エイリアスを実行する
   def command_call_alias(options, target)
     #エイリアスから対応するコマンドリストを取り出す
+    #TODO:名前重複が有り得るので、本来はコマンドの第３要素に入れたいのだけど、値がここまで伝搬しないため第２要素に入れている
     alias_commands = @@alias_list[options[:__alias_name]].dup
     #エイリアス実行時に設定されたブロックを適用する
-    #TODO：ブロック以外のオプションも適用したい
-    #TODO：このおかしな添え字番号指定なんとかならんものか
-    alias_commands[0][1][:commands] += options[:commands]
+    eval_block(options[:commands])
     #コマンドリストをスタックする
     eval_block(alias_commands)
+    return :continue
+  end
+
+  #ブロックを実行する
+  def command_block(options, target)
+    #コマンドリストをスタックする
+    eval_block(options[:commands])
     return :continue
   end
 
@@ -716,6 +722,13 @@ class Control
     @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
     return :continue
   end
+
+  #コマンド送信先ターゲットのデフォルトを変更する
+  def command_change_default_target(options, target)
+    @control_default[options[:change_default_target]] = options[:id]
+    return :continue
+  end
+
 
   #次に読み込むスクリプトファイルのパスを設定する
   def command_next_scenario(options, target)

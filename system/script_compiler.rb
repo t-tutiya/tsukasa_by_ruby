@@ -205,7 +205,8 @@ class ScriptCompiler
 
   #文字列
   impl_one_option :text,         :CharContainer
-  impl_one_option :text2,         :VariableTextLayer
+
+  impl_option_options_block :change_default_target
 
   #コントロールの生成
   impl_option_options_block :create
@@ -235,6 +236,9 @@ class ScriptCompiler
 
   #画像の差し替え
   impl_option_options_block :image_change, :ImageControl
+
+  impl_block :block
+
 =begin
   #TODO：一時的にprocedureの機能を停止する
   #プロシージャー宣言

@@ -69,6 +69,13 @@ class Control
     #Controlの可視フラグ
     @visible = options[:visible] == false ? false : true
 
+    #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
+    @control_default = {
+      :CharContainer => :default_text_layer,
+      :LayoutContainer => :default_layout_container,
+      :Anonymous => :anonymous,
+    }
+
     #子コントロールをentityに描画するかどうか
     @draw_to_entity = options[:draw_to_entity]
     
@@ -342,6 +349,7 @@ class Control
 
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
   def command_token(options, target)
+    #TODO:この部分もうちょっと見通し良くならない物か
     #トークンの取得対象であるスクリプトストレージが空の場合
     if @script_storage.empty?
       #スクリプトストレージのコールスタックが存在する場合
@@ -363,9 +371,23 @@ class Control
     #コマンドを取り出す
     temp = @script_storage.shift
     command = temp[0]     #コマンド名（シンボル）
-    options = temp[1].dup #オプションは状態を持ちうるので複製する
-    target = temp[2]
+    
+    #TODO：このdupが本当に必要なのか良く分からない
+    options = temp[1].dup #オプション群。状態を持ちうるので複製する
+    sysytem_options = temp[2] #システムで使用するオプション群
+    
+    #送信先ターゲットIDが設定されていない場合
+    if sysytem_options[:target_id] == nil
+      #デフォルトクラス名からIDを取得する
+      target = @control_default[sysytem_options[:default_class]]
+    else
+      #スクリプトで設定されたターゲットIDを使用する
+      target = sysytem_options[:target_id]
+    end
+
 =begin
+    #TODO:現行仕様に合致しない為一時的に機能を停止する。
+    #TODO:token内で処理せず、コマンドの機能にする
     #コマンドがプロシージャーリストに登録されている場合
     if @@procedure_list.key?(command)
       #プロシージャー名をオプションに格納する

@@ -34,15 +34,6 @@ module Tsukasa
 
 class ScriptCompiler
 
-  @@control_default = {
-    :CharContainer => :default_text_layer,
-    :LayoutContainer => :default_layout_container,
-    :Rag => :default_layout_container,
-    :ButtonControl => :button1,
-    :Anonymous => :anonymous,
-    :VariableTextLayer => :VariableTextLayer,
-  }
-
   def initialize(file_path)
     @option = {}
     @option_stack = []
@@ -54,14 +45,9 @@ class ScriptCompiler
     @script_storage = eval(File.open(file_path, "r:UTF-8").read)
   end
 
-  def impl(command_name, default_control, target, option, sub_options = {}, &block)
+  def impl(command_name, default_class, target, option, sub_options = {}, &block)
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
-
-    #送信先コントロールのデフォルトを設定する
-    if !target
-      target = @@control_default[default_control]
-    end
 
     #ブロックが存在する場合、ブロックを１オプションとして登録する
     if block
@@ -87,44 +73,48 @@ class ScriptCompiler
 
     #存在していないキーの場合は配列として初期化する
     @option[@key_name] = [] if !@option[@key_name]
+    
     #コマンドを登録する
-    return @option[@key_name].push([command_name, sub_options, target])
+    return @option[@key_name].push([ command_name,
+                                     sub_options, 
+                                     {:target_id => target,
+                                      :default_class => default_class}])
   end
 
   #オプション無し
-  def self.impl_non_option(command_name, default_control = :Anonymous)
+  def self.impl_non_option(command_name, default_class = :Anonymous)
     define_method(command_name) do |target: nil|
-      impl(command_name, default_control, target, nil, {})
+      impl(command_name, default_class, target, nil, {})
     end
   end
 
   #名前なしオプション（１個）
-  def self.impl_one_option(command_name, default_control = :Anonymous)
+  def self.impl_one_option(command_name, default_class = :Anonymous)
     define_method(command_name) do |option, target: nil|
-      impl(command_name, default_control, target, option, {})
+      impl(command_name, default_class, target, option, {})
     end
   end
 
   #名前付きオプション群
-  def self.impl_options(command_name, default_control = :Anonymous)
+  def self.impl_options(command_name, default_class = :Anonymous)
     define_method(command_name) do |target: nil, **options |
-      impl(command_name, default_control, target, nil, options)
+      impl(command_name, default_class, target, nil, options)
     end
   end
 
   #ブロック
-  def self.impl_block(command_name, default_control = :Anonymous)
+  def self.impl_block(command_name, default_class = :Anonymous)
     define_method(command_name) do |target: nil,&block|
-      impl(command_name, default_control, target, nil) do
+      impl(command_name, default_class, target, nil) do
         @key_name = :commands; block.call ;
       end
     end
   end
 
   #名前無しオプション（１個）＆名前付オプション群＆ブロック
-  def self.impl_option_options_block(command_name, default_control = :Anonymous)
+  def self.impl_option_options_block(command_name, default_class = :Anonymous)
     define_method(command_name) do |option , target: nil,**options, &block|
-      impl(command_name, default_control, target, option, options )do
+      impl(command_name, default_class, target, option, options )do
         if block; @key_name = :commands; block.call ; end
       end
     end
@@ -161,8 +151,8 @@ class ScriptCompiler
   impl_non_option :flash,      :CharContainer
 
   #ボタン制御コマンド群
-  #TODOこれホントに必要？
-  impl_non_option :normal,      :ButtonControl
+  #TODO:これは無くても動いて欲しいが、現状だとscript_compilerを通す為に必要
+  impl_non_option :normal
 
   #単一オプションを持つコマンド
   #特定コマンドの終了を待つ

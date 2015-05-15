@@ -698,8 +698,16 @@ class Control
     #エイリアスから対応するコマンドリストを取り出す
     #TODO:名前重複が有り得るので、本来はコマンドの第３要素に入れたいのだけど、値がここまで伝搬しないため第２要素に入れている
     alias_commands = @@alias_list[options[:__alias_name]].dup
+
+    #aliasに付与されたブロックを送信するコントロールを決定する
+    target = options[:command_target] ? options[:command_target] : @id
+
     #エイリアス実行時に設定されたブロックを適用する
-    eval_block(options[:commands])
+    eval_block([[ 
+                  :block, 
+                  {:commands => options[:commands]}, 
+                  {:target_id => target}
+               ]])
     #コマンドリストをスタックする
     eval_block(alias_commands)
     return :continue

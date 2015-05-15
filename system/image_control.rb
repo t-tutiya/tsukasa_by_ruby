@@ -62,10 +62,12 @@ class ImageControl < Control
     super
   end
   
-  def command_image_change(options)
+  def command_image_change(options, target)
     #保持オブジェクトの初期化
     @entity = @@image_cache[options[:image_change]]
-    return false
+    @width  = @entity.width
+    @height = @entity.height
+    return :continue
   end
 end
 

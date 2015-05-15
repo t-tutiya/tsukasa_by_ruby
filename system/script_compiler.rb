@@ -165,7 +165,7 @@ class ScriptCompiler
   #コントロールの削除
   impl_one_option :dispose,       :LayoutContainer
 
-  impl_non_option :wait_child_controls_idol
+  impl_non_option :wait_child_controls_idle
 
   impl_non_option :check_key_push
   impl_one_option :wait_command_with_key_push

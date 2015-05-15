@@ -87,9 +87,9 @@ class VariableTextLayer < Control
       ])
 
     #■行表示中スキップ処理
-    #idolになるかキー入力を待つ
+    #idleになるかキー入力を待つ
     #※wait中にキーが押された場合、waitはスキップモードフラグを立てる
-    send_command(:wait_key_push_with_idol, nil, :default_text_layer)
+    send_command(:wait_key_push_with_idle, nil, :default_text_layer)
 
     #ルートにウェイクを送る
     #TODO：本来rootにのみ通知できれば良い筈

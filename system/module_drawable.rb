@@ -98,7 +98,7 @@ module Drawable
       #:transition_crossfadeコマンドをスタックし直す
       send_command_interrupt(:transition_crossfade, options)
       #待機モードを初期化
-      @idol_mode = false
+      @idle_mode = false
       return :continue #フレーム終了
     else
 
@@ -123,7 +123,7 @@ module Drawable
     #カウントが指定フレーム以下の場合
     if options[:count] <= options[:frame]
       #待機モードを初期化
-      @idol_mode = false
+      @idle_mode = false
       #:transition_crossfadeコマンドをスタックし直す
       return :continue, [command_name, options] #非アイドル状態でタスク探査続行
     else

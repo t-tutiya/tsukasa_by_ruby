@@ -281,9 +281,7 @@ class Control
   #全てのコントロールが待機モードになっているかを返す。
   #TODO：現状毎フレここで実行しているのだけど、コストが高すぎるので本当はupdateの戻り値の集計ですませたい。なんとかできないか考える。
   def all_controls_idle?
-    @control_list.each do |control|
-      @idle_mode &= control.all_controls_idle?
-    end
+    @idle_mode &&= @control_list.all?(&:all_controls_idle?)
 
     return @idle_mode
   end
@@ -443,7 +441,7 @@ class Control
     return :continue if !eval(options[:while]) #アイドル
 
     #while文全体をスクリプトストレージにスタック
-    eval_block([[:while, options, @id]])
+    eval_block([[:while, options, {target_id: @id}]])
     #while文の中身をスクリプトストレージスタック
     eval_block(options[:commands])
 

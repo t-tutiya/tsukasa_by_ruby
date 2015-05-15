@@ -58,9 +58,12 @@ class VariableTextLayer < Control
     return :continue 
   end
 
-  #TODO:これ書かずに済ませられないものか
+  #改行をセットにしたヘルパーメソッド
+  #TODO:本来はこれだと最終改行をカットできない
+  #TODO:このコマンド自体を省略できる気もするけど今はいいや
   def command_text(options, target)
     send_command(:text, options, :default_text_layer)
+    send_command_interrupt(:line_feed, options, @id)
     return :continue 
   end
 

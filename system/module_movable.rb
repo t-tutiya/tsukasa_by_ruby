@@ -63,7 +63,7 @@ module Movable
     send_command_interrupt(:move_line, control_options)
 
     #待機モードを初期化
-    @idol_mode = false
+    @idle_mode = false
 
     return :continue#フレーム続行
   end
@@ -78,7 +78,7 @@ module Movable
     #カウントが指定フレーム以下の場合
     if options[:count] <= options[:frame]
       #待機モードを初期化
-      @idol_mode = false
+      @idle_mode = false
       #:move_lineコマンドをスタックし直す
       return :continue, [command_name, options]
     else

@@ -60,7 +60,7 @@ class Control
     @next_frame_commands =  Array.new  #一時コマンドリスト
 
     @skip_mode = false #スキップモードの初期化
-    @idol_mode = true #待機モードの初期化
+    @idle_mode = true #待機モードの初期化
 
     @sleep_mode = :wake #スリープの初期状態を設定する
 
@@ -170,7 +170,7 @@ class Control
     end
 =end
     #待機モードを初期化
-    @idol_mode = true
+    @idle_mode = true
 
     #コマンドリストが空になるまで走査し、コマンドを実行する
     while !@command_list.empty?
@@ -280,12 +280,12 @@ class Control
 
   #全てのコントロールが待機モードになっているかを返す。
   #TODO：現状毎フレここで実行しているのだけど、コストが高すぎるので本当はupdateの戻り値の集計ですませたい。なんとかできないか考える。
-  def all_controls_idol?
+  def all_controls_idle?
     @control_list.each do |control|
-      @idol_mode &= control.all_controls_idol?
+      @idle_mode &= control.all_controls_idle?
     end
 
-    return @idol_mode
+    return @idle_mode
   end
 
   #コントロールを削除して良いかどうか
@@ -512,9 +512,9 @@ class Control
 
     #■行表示中スキップ処理
 
-    #idolになるかキー入力を待つ
+    #idleになるかキー入力を待つ
     #※wait中にキーが押された場合、waitはスキップモードフラグを立てる
-    send_command(:wait_key_push_with_idol, nil, :default_text_layer)
+    send_command(:wait_key_push_with_idle, nil, :default_text_layer)
     #キー入力伝搬を止める為に１フレ送る
     send_command(:next_frame, nil, :default_text_layer)
 
@@ -522,7 +522,7 @@ class Control
 
     #キー入力があるまで待機
     send_command(:check_key_push,           nil, :default_text_layer)
-    send_command(:wait_idol, nil, :default_text_layer)
+    send_command(:wait_idle, nil, :default_text_layer)
     
     #■ポーズ終了処理
     
@@ -603,27 +603,27 @@ class Control
     return :continue
   end
 
-  #wait_idolコマンド
+  #wait_idleコマンド
   #子要素のコントロールが全てアイドルになるまで待機
-  def command_wait_idol(options, target)
-    if !all_controls_idol?
-      return :end_frame, [:wait_idol, options]
+  def command_wait_idle(options, target)
+    if !all_controls_idle?
+      return :end_frame, [:wait_idle, options]
     end
 
     return :continue
   end
 
-  def command_wait_key_push_with_idol(options, target)
-    return :continue if all_controls_idol?
+  def command_wait_key_push_with_idle(options, target)
+    return :continue if all_controls_idle?
     #子要素のコントロールが全てアイドル状態の時にキーが押された場合
     if Input.key_push?(K_SPACE)
       #スキップフラグを立てる
       target.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
       return :continue
     else
-      @idol_mode = false
+      @idle_mode = false
       #ポーズ状態を続行する
-      return :end_frame, [:wait_key_push_with_idol, options, target]
+      return :end_frame, [:wait_key_push_with_idle, options, target]
     end
   end
 
@@ -632,7 +632,7 @@ class Control
     if Input.key_push?(K_SPACE)
       return :continue
     else
-      @idol_mode = false
+      @idle_mode = false
       #ポーズ状態を続行する
       return :continue, [:check_key_push, options]
     end

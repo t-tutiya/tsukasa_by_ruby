@@ -52,7 +52,7 @@ class VariableTextLayer < Control
     send_command(:line_feed, nil, :default_text_layer)
     eval_block([
       [:eval, {:eval => "pp 'test'"}, {:target_id => @id}],
-      [:pause, {:last => options[:last]}, {:target_id => @id}],
+      [:pause, {}, {:target_id => @id}],
       [:resize, {}, {:target_id => @id}],
     ])
     return :continue 

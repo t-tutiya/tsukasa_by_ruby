@@ -702,12 +702,14 @@ class Control
     #aliasに付与されたブロックを送信するコントロールを決定する
     target = options[:command_target] ? options[:command_target] : @id
 
-    #エイリアス実行時に設定されたブロックを適用する
-    eval_block([[ 
-                  :block, 
-                  {:commands => options[:commands]}, 
-                  {:target_id => target}
-               ]])
+    if options[:commands] and !options[:commands].empty?
+      #エイリアス実行時に設定されたブロックを適用する
+      eval_block([[ 
+                    :block, 
+                    {:commands => options[:commands]}, 
+                    {:target_id => target}
+                 ]])
+    end
     #コマンドリストをスタックする
     eval_block(alias_commands)
     return :continue

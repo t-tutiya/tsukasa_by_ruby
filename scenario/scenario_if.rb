@@ -27,7 +27,7 @@ create :ButtonControl,
   normal
 end
 
-block target: :button1 do
+about :button1 do
   IF -> {false} do
     move_line x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
     wait_command :move_line

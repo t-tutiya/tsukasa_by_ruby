@@ -237,7 +237,12 @@ class ScriptCompiler
   #画像の差し替え
   impl_option_options_block :image_change, :ImageControl
 
-  impl_block :block
+  #他の部分でblockという変数を使っているので一応の為変更
+  #スクリプト上でもこちらの方が分かりやすいかも
+  #impl_block :about  #↓
+  def about(target, &block)
+    impl(:block, :Anonymous, target, nil, &block)
+  end
 
 =begin
     #TODO：一時的にprocedureの機能を停止する
@@ -281,10 +286,12 @@ class ScriptCompiler
     impl(:eval,  :Anonymous, target, option)
   end
 
+=begin
   #sleep（予約語の為メソッド名差し替え）
   def sleep_frame
-    impl(:sleep, :Anonymous, nil)
+    impl(:sleep, :Anonymous, nil, nil)
   end
+=end
 
   #ヘルパーメソッド群
 

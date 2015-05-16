@@ -72,7 +72,7 @@ class ScriptCompiler
     end
 
     #存在していないキーの場合は配列として初期化する
-    @option[@key_name] = [] if !@option[@key_name]
+    @option[@key_name] ||= []
     
     #コマンドを登録する
     return @option[@key_name].push([ command_name,
@@ -260,27 +260,20 @@ class ScriptCompiler
   #if（予約語の為メソッド名差し替え）
   def IF(option,target: nil )
     impl(:if, :LayoutContainer,target , option) do
+      @key_name = :then
       yield
     end
-  end
-
-  #then（予約語の為メソッド名差し替え）
-  def THEN() 
-    @key_name = :then
-    yield
   end
 
   #else（予約語の為メソッド名差し替え）
   def ELSE()
+    raise if @key_name != :then
     @key_name = :else
-    yield
   end
 
   #while（予約語の為メソッド名差し替え）
-  def WHILE(option,target: nil , **sub_options)
-    impl(:while, :LayoutContainer,target , option, sub_options) do
-      yield
-    end
+  def WHILE(option,target: nil , **sub_options, &block)
+    impl(:while, :LayoutContainer,target , option, sub_options, &block)
   end
 
   #eval（予約語の為メソッド名差し替え）

@@ -372,15 +372,15 @@ class Control
 
     #TODO：このdupが本当に必要なのか良く分からない
     options = temp[1].dup #オプション群。状態を持ちうるので複製する
-    sysytem_options = temp[2] #システムで使用するオプション群
+    system_options = temp[2] #システムで使用するオプション群
     
     #送信先ターゲットIDが設定されていない場合
-    if sysytem_options[:target_id] == nil
+    if system_options[:target_id] == nil
       #デフォルトクラス名からIDを取得する
-      target = @control_default[sysytem_options[:default_class]]
+      target = @control_default[system_options[:default_class]]
     else
       #スクリプトで設定されたターゲットIDを使用する
-      target = sysytem_options[:target_id]
+      target = system_options[:target_id]
     end
 
 =begin

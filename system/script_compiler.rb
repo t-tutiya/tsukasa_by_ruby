@@ -34,15 +34,20 @@ module Tsukasa
 
 class ScriptCompiler
 
-  def initialize(file_path)
+  def initialize(argument = nil, &block)
     @option = {}
     @option_stack = []
     @key_name = :commands
     @key_name_stack = []
-    
-    @alias_list = []
-    
-    @script_storage = eval(File.open(file_path, "r:UTF-8", &:read))
+
+    @function_list = []
+
+    if block
+      self.instance_exec(argument, &block)
+    else
+      eval(File.read(argument, encoding: "UTF-8"))
+    end
+    @script_storage = @option[@key_name] || []
   end
 
   def impl(command_name, default_class, target, option, sub_options = {}, &block)
@@ -72,13 +77,13 @@ class ScriptCompiler
     end
 
     #存在していないキーの場合は配列として初期化する
-    @option[@key_name] = [] if !@option[@key_name]
-    
+    @option[@key_name] ||= []
+
     #コマンドを登録する
-    return @option[@key_name].push([ command_name,
-                                     sub_options, 
-                                     {:target_id => target,
-                                      :default_class => default_class}])
+    @option[@key_name].push([ command_name,
+                            sub_options, 
+                            {:target_id => target,
+                            :default_class => default_class}])
   end
 
   #オプション無し
@@ -106,7 +111,7 @@ class ScriptCompiler
   def self.impl_block(command_name, default_class = :Anonymous)
     define_method(command_name) do |target: nil,&block|
       impl(command_name, default_class, target, nil) do
-        @key_name = :commands; block.call ;
+        @key_name = :commands; block.call
       end
     end
   end
@@ -115,24 +120,14 @@ class ScriptCompiler
   def self.impl_option_options_block(command_name, default_class = :Anonymous)
     define_method(command_name) do |option , target: nil,**options, &block|
       impl(command_name, default_class, target, option, options )do
-        if block; @key_name = :commands; block.call ; end
+        if block; @key_name = :commands; block.call; end
       end
     end
   end
 
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
-  def method_missing(command_name, target: nil, **options, &block)
-    #メソッド名が識別子リストに登録されていない場合
-    #親クラスに伝搬し、syntax errorとする
-    return super if !@alias_list.include?(command_name)
-    
-    #call_aliasコマンドとして登録
-    #TODO:一時的にprocedureの機能を停止（aliasと機能を使い分ける方法を再考）
-    #TODO:現状ブロックのみでoptionsは対応していない。optionも受け取らない（最終的には全部反映したい）
-    options[:__alias_name] = command_name
-    impl(:call_alias, :Anonymous, target, nil, options )do
-      if block; @key_name = :commands; block.call ; end
-    end
+  def method_missing(command_name, target: nil, **options)
+    impl(:call_function, :Anonymous, target, command_name, options)
   end
 
   #次フレームに送る
@@ -187,7 +182,6 @@ class ScriptCompiler
   #移動
   impl_options :move
   impl_options :move_line
-
   impl_options :move_line_with_skip
 
   #フェードトランジション
@@ -237,68 +231,58 @@ class ScriptCompiler
   #画像の差し替え
   impl_option_options_block :image_change, :ImageControl
 
-  impl_block :block
-
-=begin
-  #TODO：一時的にprocedureの機能を停止する
-  #プロシージャー宣言
-  #TODOプロシージャーリストへの追加処理を足す
-  def procedure(command_name,target: nil , **sub)
-    impl(:procedure, :LayoutContainer,target, command_name, sub)
-    @alias_list.push(command_name)
+  #他の部分でblockという変数を使っているので一応の為変更
+  #スクリプト上でもこちらの方が分かりやすいかも
+  #impl_block :about  #↓
+  def about(target, &block)
+    impl(:block, :Anonymous, target, nil, &block)
   end
-=end
-  #コマンド群に別名を設定する
-  def ALIAS(command_name,target: nil , &block)
-    impl(:alias, :LayoutContainer,target , command_name)do
-      if block; @key_name = :commands; block.call; end
-    end
-    @alias_list.push(command_name)
+
+  #TODO:製作者「仕様変更も歓迎です」
+  #target変更は受け付けない(定義した時に扱っているコントロールに登録)
+  #自分の子コントロール内ならaboutすればいい
+  def define(command_name, &block)
+    impl(:define, :Anonymous, nil, command_name, {block: block})
   end
 
   #制御構造関連
   #if（予約語の為メソッド名差し替え）
   def IF(option,target: nil )
-    impl(:if, :LayoutContainer,target , option) do
+    impl(:if, :Anonymous, target, option) do
+      @key_name = :then
       yield
     end
-  end
-
-  #then（予約語の為メソッド名差し替え）
-  def THEN() 
-    @key_name = :then
-    yield
   end
 
   #else（予約語の為メソッド名差し替え）
   def ELSE()
+    raise if @key_name != :then
     @key_name = :else
-    yield
   end
 
   #while（予約語の為メソッド名差し替え）
-  def WHILE(option,target: nil , **sub_options)
-    impl(:while, :LayoutContainer,target , option, sub_options) do
-      yield
-    end
+  def WHILE(option, target: nil, **sub_options, &block)
+    impl(:while, :Anonymous, target, option, sub_options, &block)
   end
 
   #eval（予約語の為メソッド名差し替え）
   def EVAL(option, target: nil)
-    impl(:eval,  :Anonymous,target , option)
+    impl(:eval,  :Anonymous, target, option)
   end
 
+=begin
   #sleep（予約語の為メソッド名差し替え）
   def sleep_frame
-    impl(:sleep, :Anonymous, nil)
+    impl(:sleep, :Anonymous, nil, nil)
   end
+=end
 
   #ヘルパーメソッド群
 
   def shift()
     return @script_storage.shift
   end
-  
+
   def empty?
     return @script_storage.empty?
   end

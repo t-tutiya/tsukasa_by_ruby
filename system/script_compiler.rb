@@ -40,8 +40,6 @@ class ScriptCompiler
     @key_name = :commands
     @key_name_stack = []
     
-    @alias_list = []
-    
     eval(File.read(file_path, encoding: "UTF-8"))
     @script_storage = @option[@key_name] || []
   end
@@ -118,21 +116,6 @@ class ScriptCompiler
       impl(command_name, default_class, target, option, options )do
         if block; @key_name = :commands; block.call; end
       end
-    end
-  end
-
-  #プロシージャー登録されたコマンドが宣言された場合にここで受ける
-  def method_missing(command_name, target: nil, **options, &block)
-    #メソッド名が識別子リストに登録されていない場合
-    #親クラスに伝搬し、syntax errorとする
-    return super if !@alias_list.include?(command_name)
-    
-    #call_aliasコマンドとして登録
-    #TODO:一時的にprocedureの機能を停止（aliasと機能を使い分ける方法を再考）
-    #TODO:現状ブロックのみでoptionsは対応していない。optionも受け取らない（最終的には全部反映したい）
-    options[:__alias_name] = command_name
-    impl(:call_alias, :Anonymous, target, nil, options)do
-      if block; @key_name = :commands; block.call; end
     end
   end
 
@@ -242,23 +225,6 @@ class ScriptCompiler
   #impl_block :about  #↓
   def about(target, &block)
     impl(:block, :Anonymous, target, nil, &block)
-  end
-
-=begin
-  #TODO：一時的にprocedureの機能を停止する
-  #プロシージャー宣言
-  #TODOプロシージャーリストへの追加処理を足す
-  def procedure(command_name, target: nil, **sub)
-    impl(:procedure, :LayoutContainer, target, command_name, sub)
-    @alias_list.push(command_name)
-  end
-=end
-  #コマンド群に別名を設定する
-  def ALIAS(command_name, target: nil, &block)
-    impl(:alias, :LayoutContainer, target, command_name)do
-      if block; @key_name = :commands; block.call; end
-    end
-    @alias_list.push(command_name)
   end
 
   #制御構造関連

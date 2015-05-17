@@ -42,7 +42,8 @@ class ScriptCompiler
     
     @alias_list = []
     
-    @script_storage = eval(File.read(file_path, encoding: "UTF-8"))
+    eval(File.read(file_path, encoding: "UTF-8"))
+    @script_storage = @option[@key_name] || []
   end
 
   def impl(command_name, default_class, target, option, sub_options = {}, &block)
@@ -75,10 +76,10 @@ class ScriptCompiler
     @option[@key_name] ||= []
 
     #コマンドを登録する
-    return @option[@key_name].push([ command_name,
-                                     sub_options, 
-                                     {:target_id => target,
-                                      :default_class => default_class}])
+    @option[@key_name].push([ command_name,
+                              sub_options, 
+                              {:target_id => target,
+                               :default_class => default_class}])
   end
 
   #オプション無し

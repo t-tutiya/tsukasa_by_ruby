@@ -46,8 +46,17 @@ about :button1 do
       wait_command :move_line
       move_line x: 300,   y: 0, count:0, frame: 60, start_x: 300, start_y: 300
       wait_command :move_line
-      move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 300,   start_y: 0
-      wait_command :move_line
+      
+      IF -> {4 ** 4 < 300} do
+        THEN do
+          move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 300,   start_y: 0
+          wait_command :move_line
+        end
+        ELSE do
+          move_line x: 0,   y: 300,   count:0, frame: 60, start_x: 300,   start_y: 0
+          wait_command :move_line
+        end
+      end
     end
   end
 end

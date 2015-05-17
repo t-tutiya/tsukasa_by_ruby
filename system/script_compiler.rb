@@ -246,7 +246,7 @@ class ScriptCompiler
   #制御構造関連
   #if（予約語の為メソッド名差し替え）
   def IF(option, target: nil, &block)
-    impl(:if, :LayoutContainer, target, option, &block)
+    impl(:if, :Anonymous, target, option, &block)
   end
 
   #then（予約語の為メソッド名差し替え）
@@ -263,7 +263,7 @@ class ScriptCompiler
 
   #while（予約語の為メソッド名差し替え）
   def WHILE(option, target: nil, **sub_options, &block)
-    impl(:while, :LayoutContainer, target, option, sub_options, &block)
+    impl(:while, :Anonymous, target, option, sub_options, &block)
   end
 
   #eval（予約語の為メソッド名差し替え）

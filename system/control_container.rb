@@ -310,6 +310,15 @@ class Control
     #コマンドリストをクリアする
     @script_storage = block.dup
   end
+
+  #IFやWHILEなどで渡されたlambdaを実行する
+  def eval_lambda(lambda, options)
+    if lambda.arity == 0
+      return lambda.call
+    else
+      return lambda.call(options)
+    end
+  end
 end
 
 class Control
@@ -426,7 +435,7 @@ class Control
   #TODO:コードが冗長
   def command_if(options, target)
     #evalで評価した条件式が真の場合
-    if eval(options[:if])
+    if eval_lambda(options[:if], options)
       eval_block(options[:then]) if options[:then] #then節の中に何も無かった場合はスルー
     #else節がある場合
     elsif options[:else]
@@ -438,7 +447,7 @@ class Control
   #繰り返し
   def command_while(options, target)
     #条件式が非成立であれば繰り返し構文を終了する
-    return :continue if !eval(options[:while]) #アイドル
+    return :continue if !eval_lambda(options[:while], options) #アイドル
 
     #while文全体をスクリプトストレージにスタック
     eval_block([[:while, options, {target_id: @id}]])

@@ -123,6 +123,11 @@ class ScriptCompiler
     end
   end
 
+  #プロシージャー登録されたコマンドが宣言された場合にここで受ける
+  def method_missing(command_name, target: nil, **options)
+    impl(:call_function, :Anonymous, target, command_name, options)
+  end
+
   #次フレームに送る
   impl_non_option :next_frame
   #キー入力待ち
@@ -229,6 +234,13 @@ class ScriptCompiler
   #impl_block :about  #↓
   def about(target, &block)
     impl(:block, :Anonymous, target, nil, &block)
+  end
+
+  #TODO:製作者「仕様変更も歓迎です」
+  #target変更は受け付けない(定義した時に扱っているコントロールに登録)
+  #自分の子コントロール内ならaboutすればいい
+  def define(command_name, &block)
+    impl(:define, :Anonymous, nil, command_name, {block: block})
   end
 
   #制御構造関連

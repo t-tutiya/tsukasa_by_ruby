@@ -53,7 +53,8 @@ class Control
 
     @control_list = Array.new #コントロールリスト
 
-    @event_list = Hash.new #イベントリスト
+    @function_list = Hash.new
+    @event_list    = Hash.new #イベントリスト
 
     @next_frame_commands =  Array.new  #一時コマンドリスト
 
@@ -653,6 +654,18 @@ class Control
   #############################################################################
   #スタック操作関連
   #############################################################################
+
+  #関数を定義する
+  def command_define(options, target)
+    @function_list[options[:define]] = options[:block]
+    return :continue
+  end
+
+  def command_call_function(options, target)
+    raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{target}" unless @function_list.key?(options[:call_function])
+    eval_block(Tsukasa::ScriptCompiler.new(options, &@function_list[options[:call_function]]))
+    return :continue
+  end
 
   #ブロックを実行する
   def command_block(options, target)

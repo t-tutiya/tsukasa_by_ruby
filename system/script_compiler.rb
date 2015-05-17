@@ -290,7 +290,7 @@ class ScriptCompiler
 
   #sleep（予約語の為メソッド名差し替え）
   def sleep_frame
-    impl(:sleep, :Anonymous, nil)
+    impl(:sleep, :Anonymous, nil, nil)
   end
 
   #ヘルパーメソッド群

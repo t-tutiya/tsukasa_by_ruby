@@ -423,10 +423,16 @@ class Control
     #evalで評価した条件式が真の場合
     if eval_lambda(options[:if], options)
       eval_block(options[:then]) if options[:then] #then節の中に何も無かった場合はスルー
+      
+    #elsif節がある場合
+    elsif options[:elsif] && tmp = options[:elsif].find{|cmd| eval_lambda(cmd[1][:elsif], options)}[1]
+      eval_block(tmp[:block]) if tmp[:block] #elsif節の中に何も無かった場合はスルー
+      
     #else節がある場合
     elsif options[:else]
       eval_block(options[:else]) if options[:else] #else節の中に何も無かった場合はスルー
     end
+    
     return :continue
   end
 

@@ -253,12 +253,23 @@ class ScriptCompiler
   def THEN()
     @key_name = :then
     yield
+    @key_name = :commands #THEN節の外のコマンドがTHENに入らないように
+  end
+
+  def ELSIF(option)
+    @key_name = :elsif
+    impl(:elsif, :Anonymous, nil, option) do
+      @key_name = :block
+      yield
+    end
+    @key_name = :commands #ELSIF節の外のコマンドがELSIFに入らないように
   end
 
   #else（予約語の為メソッド名差し替え）
   def ELSE()
     @key_name = :else
     yield
+    @key_name = :commands #ELSE節の外のコマンドがELSEに入らないように
   end
 
   #while（予約語の為メソッド名差し替え）

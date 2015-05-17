@@ -42,7 +42,7 @@ class ScriptCompiler
     
     @alias_list = []
     
-    @script_storage = eval(File.open(file_path, "r:UTF-8", &:read))
+    @script_storage = eval(File.open(file_path, "r:UTF-8", &:read)) || []
   end
 
   def impl(command_name, default_class, target, option, sub_options = {}, &block)

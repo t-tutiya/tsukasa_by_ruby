@@ -427,7 +427,7 @@ class Control
   def command_if(options, target)
     #evalで評価した条件式が真の場合
     if eval(options[:if])
-      eval_block(options[:then])
+      eval_block(options[:then]) if options[:then] #then節の中に何も無かった場合はスルー
     #else節がある場合
     elsif options[:else]
       eval_block(options[:else])

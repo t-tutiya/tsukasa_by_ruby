@@ -430,7 +430,7 @@ class Control
       eval_block(options[:then])
     #else節がある場合
     elsif options[:else]
-      eval_block(options[:else])
+      eval_block(options[:else]) if options[:else] #else節の中に何も無かった場合はスルー
     end
     return :continue
   end

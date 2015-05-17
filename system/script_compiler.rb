@@ -283,10 +283,13 @@ class ScriptCompiler
     impl(:eval,  :Anonymous, target, option)
   end
 
+=begin
+  #command_sleepが無いのでコメントに入れた
   #sleep（予約語の為メソッド名差し替え）
   def sleep_frame
     impl(:sleep, :Anonymous, nil, nil)
   end
+=end
 
   #ヘルパーメソッド群
 

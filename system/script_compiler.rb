@@ -34,13 +34,17 @@ module Tsukasa
 
 class ScriptCompiler
 
-  def initialize(file_path)
+  def initialize(argument = nil, &block)
     @option = {}
     @option_stack = []
     @key_name = :commands
     @key_name_stack = []
-    
-    eval(File.read(file_path, encoding: "UTF-8"))
+
+    if block
+      self.instance_exec(argument, &block)
+    else
+      eval(File.read(argument, encoding: "UTF-8"))
+    end
     @script_storage = @option[@key_name] || []
   end
 

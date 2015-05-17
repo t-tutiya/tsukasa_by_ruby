@@ -34,8 +34,6 @@ require_relative './module_drawable.rb'
 
 class Control
   @@global_flag = {}  #グローバルフラグ
-  @@procedure_list = Hash.new #プロシージャーのリスト
-  @@alias_list =  Hash.new #エイリアスのリスト
 
   def initialize(options)
     #描画関連
@@ -55,7 +53,8 @@ class Control
 
     @control_list = Array.new #コントロールリスト
 
-    @event_list = Hash.new #イベントリスト
+    @function_list = Hash.new
+    @event_list    = Hash.new #イベントリスト
 
     @next_frame_commands =  Array.new  #一時コマンドリスト
 
@@ -383,19 +382,6 @@ class Control
       target = system_options[:target_id]
     end
 
-=begin
-    #TODO:現行仕様に合致しない為一時的に機能を停止する。
-    #TODO:token内で処理せず、コマンドの機能にする
-    #コマンドがプロシージャーリストに登録されている場合
-    if @@procedure_list.key?(command)
-      #プロシージャー名をオプションに格納する
-      options[:procedure] = command
-      target = @id
-      #発行するコマンドをプロシージャー呼び出しに差し替える
-      command = :call_procedure
-    end
-=end
-
     #コマンドをコントロールに登録する
     if !send_command(command,options,target) then
       pp "error"
@@ -669,47 +655,15 @@ class Control
   #スタック操作関連
   #############################################################################
 
-  #プロシージャーを登録する
-  def command_procedure(options, target)
-    @@procedure_list[options[:procedure]] = options[:impl]
+  #関数を定義する
+  def command_define(options, target)
+    @function_list[options[:define]] = options[:block]
     return :continue
   end
 
-  #プロシージャーコールを実行する
-  def command_call_procedure(options, target)
-    #現在のコマンドリストをスタック
-    @command_list_stack.push(@command_list)
-    #プロシージャの中身をevalでコマンドセット化してコマンドリストに登録する
-    @command_list = eval(@@procedure_list[options[:procedure]])
-    return :continue
-  end
-
-  #エイリアスを登録する
-  def command_alias(options, target)
-    @@alias_list[options[:alias]] = options[:commands]
-
-    return :continue
-  end
-
-  #エイリアスを実行する
-  def command_call_alias(options, target)
-    #エイリアスから対応するコマンドリストを取り出す
-    #TODO:名前重複が有り得るので、本来はコマンドの第３要素に入れたいのだけど、値がここまで伝搬しないため第２要素に入れている
-    alias_commands = @@alias_list[options[:__alias_name]].dup
-
-    #aliasに付与されたブロックを送信するコントロールを決定する
-    target = options[:command_target] ? options[:command_target] : @id
-
-    if options[:commands] and !options[:commands].empty?
-      #エイリアス実行時に設定されたブロックを適用する
-      eval_block([[ 
-                    :block, 
-                    {:commands => options[:commands]}, 
-                    {:target_id => target}
-                 ]])
-    end
-    #コマンドリストをスタックする
-    eval_block(alias_commands)
+  def command_call_function(options, target)
+    raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{target}" unless @function_list.key?(options[:call_function])
+    eval_block(Tsukasa::ScriptCompiler.new(options, &@function_list[options[:call_function]]))
     return :continue
   end
 

@@ -36,7 +36,7 @@ class Control
   @@global_flag = {}  #グローバルフラグ
   @@function_list = Hash.new #functionのリスト（procで保存される）
 
-  def initialize(options)
+  def initialize(options, &block)
     #描画関連
     #TODO;モジュールに全部送れないか検討
     @x_pos = 0
@@ -84,6 +84,11 @@ class Control
     if options[:script_path]
       #シナリオファイルの読み込み
       @script_storage = Tsukasa::ScriptCompiler.new(options[:script_path]).commands
+    end
+
+    #ブロックが付与されているなら読み込んで登録する
+    if block
+      @script_storage = Tsukasa::ScriptCompiler.new(nil, &block).commands
     end
 
     #コマンドセットがあるなら登録する
@@ -693,13 +698,13 @@ class Control
   def command_call_function(options, target)
     #定義されていないfunctionが呼びだされたら例外を送出
     raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{target}" unless @@function_list.key?(options[:call_function])
-    
+
     #functionを実行時評価しコマンド列を生成する。
     commands = Tsukasa::ScriptCompiler.new(options, &@@function_list[options[:call_function]]).commands
-    #funtion呼び出し時にブロックで付与されたコマンド列を連結する
-    commands += options[:commands] if options[:commands]
+
     #FunctionControlを生成し、一連のコマンドを委譲する。
-    @control_list.push(FunctionControl.new({:commands =>commands}))
+    #funtion呼び出し時にブロックで付与されたコマンドがあるならそれも付ける
+    @control_list.push(FunctionControl.new({:commands =>commands}, &options[:block]))
     
     return :continue
   end

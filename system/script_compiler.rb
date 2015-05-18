@@ -125,9 +125,10 @@ class ScriptCompiler
 
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
   def method_missing(command_name, target: nil, **options, &block)
-    impl(:call_function, :Anonymous, target, command_name, options)do
-      if block; @key_name = :commands; block.call; end
+    if block
+      options[:block] = block
     end
+    impl(:call_function, :Anonymous, target, command_name, options)
   end
 
   #次フレームに送る
@@ -235,9 +236,7 @@ class ScriptCompiler
   #スクリプト上でもこちらの方が分かりやすいかも
   #impl_block :about  #↓
   def about(target, &block)
-    impl(:block, :Anonymous, target, nil)do
-      if block; @key_name = :commands; block.call; end
-    end
+    impl(:block, :Anonymous, target, nil, &block)
   end
 
   #TODO:製作者「仕様変更も歓迎です」

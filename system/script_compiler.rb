@@ -264,6 +264,7 @@ class ScriptCompiler
     @key_name = :after_then
   end
 
+  #elsif（予約語の為メソッド名差し替え）
   def ELSIF(option)
     raise if @key_name != :after_then
     @key_name = :elsif
@@ -274,9 +275,28 @@ class ScriptCompiler
     @key_name = :after_then
   end
 
+  #case（予約語の為メソッド名差し替え）
+  def CASE(option, target: nil)
+    impl(:case, :Anonymous, target, option) do
+      @key_name = :after_case
+      yield
+    end
+  end
+
+  #when（予約語の為メソッド名差し替え）
+  def WHEN(*option)
+    raise if @key_name != :after_case
+    @key_name = :when
+    impl(:when, :Anonymous, nil, option) do
+      @key_name = :block
+      yield
+    end
+    @key_name = :after_case
+  end
+
   #else（予約語の為メソッド名差し替え）
   def ELSE()
-    raise if @key_name != :after_then
+    raise if @key_name != :after_then && @key_name != :after_case
     @key_name = :else
     yield
     @key_name = :after_else

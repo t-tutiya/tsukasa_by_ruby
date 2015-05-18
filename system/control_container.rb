@@ -425,8 +425,22 @@ class Control
       eval_block(options[:then]) if options[:then] #then節の中に何も無かった場合はスルー
       
     #elsif節がある場合
-    elsif options[:elsif] && tmp = options[:elsif].find{|cmd| eval_lambda(cmd[1][:elsif], options)}[1]
-      eval_block(tmp[:block]) if tmp[:block] #elsif節の中に何も無かった場合はスルー
+    elsif options[:elsif] && tmp = options[:elsif].find{|cmd| eval_lambda(cmd[1][:elsif], options)}
+      eval_block(tmp[1][:block]) if tmp[1][:block] #elsif節の中に何も無かった場合はスルー
+      
+    #else節がある場合
+    elsif options[:else]
+      eval_block(options[:else]) if options[:else] #else節の中に何も無かった場合はスルー
+    end
+    
+    return :continue
+  end
+
+  def command_case(options, target)
+    value = eval_lambda(options[:case], options) #比較されるオブジェクト
+    
+    if options[:when] && tmp = options[:when].find{|cmd| cmd[1][:when].any?{|pr| value === eval_lambda(pr, options)}}
+      eval_block(tmp[1][:block]) if tmp[1][:block] #when節の中に何も無かった場合はスルー
       
     #else節がある場合
     elsif options[:else]

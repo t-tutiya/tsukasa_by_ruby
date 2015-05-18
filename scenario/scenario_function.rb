@@ -47,3 +47,17 @@ about :button1 do
   #渡せるのは名前付きオプションのみ(targetは自動で渡される)
   func y: 150
 end
+
+define :func2 do
+  create :ImageControl, 
+         :file_path=>"./sozai/button_normal.png", 
+         :id=>:normal2
+end
+
+#functionを実行後、ブロック内のコマンドを実行する
+#TODO：aboutではなく、func2の引数で送信先を指定できないものか
+func2 do
+  about :normal2 do
+    move_line x: 600, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
+  end
+end

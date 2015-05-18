@@ -678,6 +678,10 @@ class Control
 
   def command_call_function(options, target)
     raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{target}" unless @function_list.key?(options[:call_function])
+    #function呼び出し時にブロックが付与されていればスタックする
+    #TODO::func_commandsという名称はどうなのか。そもそもこの格納方法で良いのか？
+    eval_block(options[:func_commands]) if options[:func_commands]
+    #functionを実行時評価しスタックする。引数も反映する。
     eval_block(Tsukasa::ScriptCompiler.new(options, &@function_list[options[:call_function]]))
     return :continue
   end

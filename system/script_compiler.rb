@@ -249,31 +249,37 @@ class ScriptCompiler
 
   #制御構造関連
   #if（予約語の為メソッド名差し替え）
-  def IF(option, target: nil, &block)
-    impl(:if, :Anonymous, target, option, &block)
+  def IF(option, target: nil)
+    impl(:if, :Anonymous, target, option) do
+      @key_name = :before_then
+      yield
+    end
   end
 
   #then（予約語の為メソッド名差し替え）
   def THEN()
+    raise if @key_name != :before_then
     @key_name = :then
     yield
-    @key_name = :commands #THEN節の外のコマンドがTHENに入らないように
+    @key_name = :after_then
   end
 
   def ELSIF(option)
+    raise if @key_name != :after_then
     @key_name = :elsif
     impl(:elsif, :Anonymous, nil, option) do
       @key_name = :block
       yield
     end
-    @key_name = :commands #ELSIF節の外のコマンドがELSIFに入らないように
+    @key_name = :after_then
   end
 
   #else（予約語の為メソッド名差し替え）
   def ELSE()
+    raise if @key_name != :after_then
     @key_name = :else
     yield
-    @key_name = :commands #ELSE節の外のコマンドがELSEに入らないように
+    @key_name = :after_else
   end
 
   #while（予約語の為メソッド名差し替え）

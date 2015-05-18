@@ -83,7 +83,7 @@ class Control
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]
       #シナリオファイルの読み込み
-      @script_storage = Tsukasa::ScriptCompiler.new(options[:script_path])
+      @script_storage = Tsukasa::ScriptCompiler.new(options[:script_path]).commands
     end
 
     #コマンドセットがあるなら登録する
@@ -365,7 +365,7 @@ class Control
       #次に読み込むスクリプトファイルが指定されている場合
       elsif @next_script_file_path
         #指定されたスクリプトファイルを読み込む
-        @script_storage = Tsukasa::ScriptCompiler.new(@next_script_file_path)
+        @script_storage = Tsukasa::ScriptCompiler.new(@next_script_file_path).commands
         #予約スクリプトファイルパスの初期化
         @next_script_file_path = nil
       else 
@@ -692,11 +692,8 @@ class Control
 
   def command_call_function(options, target)
     raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{target}" unless @function_list.key?(options[:call_function])
-    #function呼び出し時にブロックが付与されていればスタックする
-    #TODO::func_commandsという名称はどうなのか。そもそもこの格納方法で良いのか？
-    eval_block(options[:func_commands]) if options[:func_commands]
     #functionを実行時評価しスタックする。引数も反映する。
-    eval_block(Tsukasa::ScriptCompiler.new(options, &@function_list[options[:call_function]]))
+    eval_block(Tsukasa::ScriptCompiler.new(options, &@function_list[options[:call_function]]).commands)
     return :continue
   end
 

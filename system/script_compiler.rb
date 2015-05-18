@@ -126,7 +126,7 @@ class ScriptCompiler
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
   def method_missing(command_name, target: nil, **options, &block)
     impl(:call_function, :Anonymous, target, command_name, options)do
-      if block; @key_name = :func_commands; block.call; end
+      if block; @key_name = :commands; block.call; end
     end
   end
 
@@ -312,22 +312,10 @@ class ScriptCompiler
     impl(:eval,  :Anonymous, target, option)
   end
 
-=begin
-  #command_sleepが無いのでコメントに入れた
-  #sleep（予約語の為メソッド名差し替え）
-  def sleep_frame
-    impl(:sleep, :Anonymous, nil, nil)
-  end
-=end
-
   #ヘルパーメソッド群
 
-  def shift()
-    return @script_storage.shift
-  end
-
-  def empty?
-    return @script_storage.empty?
+  def commands()
+    return @script_storage
   end
 end
 end

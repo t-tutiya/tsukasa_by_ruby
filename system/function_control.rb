@@ -1,5 +1,7 @@
 #! ruby -E utf-8
-# coding: utf-8
+
+require 'dxruby'
+require_relative './control_container.rb'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -29,24 +31,14 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require 'dxruby'
-require_relative './module_movable.rb'
-require_relative './module_drawable.rb'
-
-require_relative './control_container.rb'
-require_relative './image_control.rb'
-require_relative './button_control.rb'
-require_relative './se_control.rb'
-
-require_relative './layout_container.rb'
-require_relative './char_container.rb'
-require_relative './log_container.rb'
-
-require_relative './VariableTextLayer.rb'
-
-require_relative './script_compiler.rb'
-require_relative './function_control.rb'
-
-#TODO：モジュールであるべきか？
-class Rag < Control
+#functionが制限されたスコープを持つ為の実験実装
+class FunctionControl < Control
+  def initialize(options)
+    super(options)
+  end
+  
+  #TODO本来はこれいらない筈
+  def visible
+    return true
+  end
 end

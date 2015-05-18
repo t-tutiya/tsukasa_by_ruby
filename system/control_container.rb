@@ -34,6 +34,7 @@ require_relative './module_drawable.rb'
 
 class Control
   @@global_flag = {}  #グローバルフラグ
+  @@function_list = Hash.new #functionのリスト（procで保存される）
 
   def initialize(options)
     #描画関連
@@ -53,7 +54,6 @@ class Control
 
     @control_list = Array.new #コントロールリスト
 
-    @function_list = Hash.new
     @event_list    = Hash.new #イベントリスト
 
     @next_frame_commands =  Array.new  #一時コマンドリスト
@@ -686,14 +686,21 @@ class Control
 
   #関数を定義する
   def command_define(options, target)
-    @function_list[options[:define]] = options[:block]
+    @@function_list[options[:define]] = options[:block]
     return :continue
   end
 
   def command_call_function(options, target)
-    raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{target}" unless @function_list.key?(options[:call_function])
-    #functionを実行時評価しスタックする。引数も反映する。
-    eval_block(Tsukasa::ScriptCompiler.new(options, &@function_list[options[:call_function]]).commands)
+    #定義されていないfunctionが呼びだされたら例外を送出
+    raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{target}" unless @@function_list.key?(options[:call_function])
+    
+    #functionを実行時評価しコマンド列を生成する。
+    commands = Tsukasa::ScriptCompiler.new(options, &@@function_list[options[:call_function]]).commands
+    #funtion呼び出し時にブロックで付与されたコマンド列を連結する
+    commands += options[:commands] if options[:commands]
+    #FunctionControlを生成し、一連のコマンドを委譲する。
+    @control_list.push(FunctionControl.new({:commands =>commands}))
+    
     return :continue
   end
 

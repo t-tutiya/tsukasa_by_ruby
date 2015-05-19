@@ -50,7 +50,6 @@ class Control
     @script_storage_stack = Array.new #コールスタック
 
     @command_list       = Array.new #コマンドリスト
-    @command_list_stack = Array.new #コールスタック
 
     @control_list = Array.new #コントロールリスト
 
@@ -166,13 +165,7 @@ class Control
   def update
     #次フレコマンド列クリア
     @next_frame_commands = []
-=begin
-    #コマンドリストが空で、かつ、コールスタックが空でない場合
-    if @command_list.empty? and !@command_list_stack.empty?
-      #コールスタックからネスト元のコマンドセットを取得する
-      @command_list = @command_list_stack.pop
-    end
-=end
+
     #待機モードを初期化
     @idle_mode = true
 

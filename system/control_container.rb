@@ -702,8 +702,9 @@ class Control
     return :continue
   end
 
-  #ブロックを実行する
-  def command_block(options, target)
+  #ブロック内のコマンド列を実行する
+  #TODO：ブロックは例外なくprocで保持しても良いかも？
+  def command_about(options, target)
     #コマンドリストをスタックする
     eval_block(options[:commands])
     return :continue

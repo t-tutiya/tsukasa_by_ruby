@@ -196,6 +196,9 @@ class ScriptCompiler
   #TODO:これはtext_layer内に動作を限定できないか？
   impl_block :char_renderer,     :CharContainer
 
+  #コマンド列のブロック化
+  impl_block :about
+
   #オプション／サブオプション（省略可）／ブロックを持つコマンド
 
   #文字列
@@ -231,13 +234,6 @@ class ScriptCompiler
 
   #画像の差し替え
   impl_option_options_block :image_change, :ImageControl
-
-  #他の部分でblockという変数を使っているので一応の為変更
-  #スクリプト上でもこちらの方が分かりやすいかも
-  #impl_block :about  #↓
-  def about(target, &block)
-    impl(:block, :Anonymous, target, nil, &block)
-  end
 
   #TODO:製作者「仕様変更も歓迎です」
   #target変更は受け付けない(定義した時に扱っているコントロールに登録)

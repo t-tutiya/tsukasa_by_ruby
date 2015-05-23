@@ -43,7 +43,6 @@ class ScriptCompiler
     if block
       self.instance_exec(argument, &block)
     else
-      eval(File.read(argument, encoding: "UTF-8"))
     end
     @script_storage = @option[@key_name] || []
   end

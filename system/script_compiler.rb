@@ -86,28 +86,28 @@ class ScriptCompiler
 
   #オプション無し
   def self.impl_non_option(command_name, default_class = :Anonymous)
-    define_method(command_name) do |target: nil|
+    define_method(command_name) do |target = nil|
       impl(command_name, default_class, target, nil, {})
     end
   end
 
   #名前なしオプション（１個）
   def self.impl_one_option(command_name, default_class = :Anonymous)
-    define_method(command_name) do |option, target: nil|
+    define_method(command_name) do |option, target = nil|
       impl(command_name, default_class, target, option, {})
     end
   end
 
   #名前付きオプション群
   def self.impl_options(command_name, default_class = :Anonymous)
-    define_method(command_name) do |target: nil, **options |
+    define_method(command_name) do |target = nil, **options |
       impl(command_name, default_class, target, nil, options)
     end
   end
 
   #ブロック
   def self.impl_block(command_name, default_class = :Anonymous)
-    define_method(command_name) do |target: nil,&block|
+    define_method(command_name) do |target = nil,&block|
       impl(command_name, default_class, target, nil) do
         @key_name = :commands; block.call
       end
@@ -116,7 +116,7 @@ class ScriptCompiler
 
   #名前無しオプション（１個）＆名前付オプション群＆ブロック
   def self.impl_option_options_block(command_name, default_class = :Anonymous)
-    define_method(command_name) do |option , target: nil,**options, &block|
+    define_method(command_name) do |option , target = nil,**options, &block|
       impl(command_name, default_class, target, option, options )do
         if block; @key_name = :commands; block.call; end
       end
@@ -124,7 +124,7 @@ class ScriptCompiler
   end
 
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
-  def method_missing(command_name, target: nil, **options, &block)
+  def method_missing(command_name, target = nil, **options, &block)
     if block
       options[:block] = block
     end
@@ -244,7 +244,7 @@ class ScriptCompiler
 
   #制御構造関連
   #if（予約語の為メソッド名差し替え）
-  def IF(option, target: nil)
+  def IF(option, target = nil)
     impl(:if, :Anonymous, target, option) do
       @key_name = :before_then
       yield
@@ -271,7 +271,7 @@ class ScriptCompiler
   end
 
   #case（予約語の為メソッド名差し替え）
-  def CASE(option, target: nil)
+  def CASE(option, target = nil)
     impl(:case, :Anonymous, target, option) do
       @key_name = :after_case
       yield
@@ -298,12 +298,12 @@ class ScriptCompiler
   end
 
   #while（予約語の為メソッド名差し替え）
-  def WHILE(option, target: nil, **sub_options, &block)
+  def WHILE(option, target = nil, **sub_options, &block)
     impl(:while, :Anonymous, target, option, sub_options, &block)
   end
 
   #eval（予約語の為メソッド名差し替え）
-  def EVAL(option, target: nil)
+  def EVAL(option, target = nil)
     impl(:eval,  :Anonymous, target, option)
   end
 

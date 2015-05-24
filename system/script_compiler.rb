@@ -236,8 +236,7 @@ class ScriptCompiler
   impl_option_options_block :image_change, :ImageControl
 
   #TODO:製作者「仕様変更も歓迎です」
-  #target変更は受け付けない(定義した時に扱っているコントロールに登録)
-  #自分の子コントロール内ならaboutすればいい
+  #target変更は受け付けない(Controlクラスに登録)
   def define(command_name, &block)
     impl(:define, :Anonymous, nil, command_name, {block: block})
   end

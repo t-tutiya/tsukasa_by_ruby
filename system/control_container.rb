@@ -33,8 +33,8 @@ require_relative './module_drawable.rb'
 ###############################################################################
 
 class Control
-  @@global_flag = {}  #グローバルフラグ
-  @@function_list = Hash.new #functionのリスト（procで保存される）
+  @@global_flag = {}   #グローバルフラグ
+  @@function_list = {} #functionのリスト（procで保存される）
 
   def initialize(options, &block)
     #描画関連
@@ -46,24 +46,24 @@ class Control
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
 
-    @script_storage       = Array.new #スクリプトストレージ
-    @script_storage_stack = Array.new #コールスタック
+    @script_storage       = [] #スクリプトストレージ
+    @script_storage_stack = [] #コールスタック
 
-    @command_list       = Array.new #コマンドリスト
+    @command_list         = [] #コマンドリスト
 
-    @control_list = Array.new #コントロールリスト
+    @control_list         = [] #コントロールリスト
 
-    @event_list    = Hash.new #イベントリスト
+    @event_list           = {} #イベントリスト
 
-    @next_frame_commands =  Array.new  #一時コマンドリスト
+    @next_frame_commands  = [] #一時コマンドリスト
 
-    @skip_mode = false #スキップモードの初期化
-    @idle_mode = true #待機モードの初期化
+    @skip_mode = false         #スキップモードの初期化
+    @idle_mode = true          #待機モードの初期化
 
-    @sleep_mode = :wake #スリープの初期状態を設定する
+    @sleep_mode = :wake        #スリープの初期状態を設定する
 
-    @delete_flag = false #削除フラグの初期化
-    
+    @delete_flag = false       #削除フラグの初期化
+
     #Controlの可視フラグ
     @visible = options[:visible] == false ? false : true
 
@@ -76,8 +76,8 @@ class Control
 
     #子コントロールをentityに描画するかどうか
     @draw_to_entity = options[:draw_to_entity]
-    
-    @draw_option = {} #描画オプション
+
+    @draw_option = {}          #描画オプション
 
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]
@@ -107,7 +107,6 @@ class Control
     if @id == target_id or target_id == :anonymous
       #コマンドをスタックの末端に挿入する
       @command_list.push([command, options, invoker_control])
-      #pp "@id[" + @id.to_s + "]" + command.to_s
       return true #コマンドをスタックした
     end
 

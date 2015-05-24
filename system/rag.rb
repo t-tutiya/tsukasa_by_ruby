@@ -45,7 +45,6 @@ require_relative './log_container.rb'
 require_relative './VariableTextLayer.rb'
 
 require_relative './script_compiler.rb'
-require_relative './function_control.rb'
 
 #TODO：モジュールであるべきか？
 class Rag < Control

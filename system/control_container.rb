@@ -692,12 +692,8 @@ class Control
     raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{target}" unless @@function_list.key?(options[:call_function])
 
     #functionを実行時評価しコマンド列を生成する。
-    commands = Tsukasa::ScriptCompiler.new(options, &@@function_list[options[:call_function]]).commands
+    eval_block(Tsukasa::ScriptCompiler.new(options, &@@function_list[options[:call_function]]).commands)
 
-    #FunctionControlを生成し、一連のコマンドを委譲する。
-    #funtion呼び出し時にブロックで付与されたコマンドがあるならそれも付ける
-    @control_list.push(FunctionControl.new({:commands =>commands}, &options[:block]))
-    
     return :continue
   end
 

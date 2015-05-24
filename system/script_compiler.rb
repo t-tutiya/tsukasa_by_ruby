@@ -41,7 +41,8 @@ class ScriptCompiler
     @key_name_stack = []
 
     if block
-      self.instance_exec(argument, &block)
+      @arg_block = argument[:block]
+      self.instance_exec(**argument, &block)
     else
       eval(File.read(argument, encoding: "UTF-8"), binding, File.expand_path(argument))
     end
@@ -125,9 +126,7 @@ class ScriptCompiler
 
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
   def method_missing(command_name, target = nil, **options, &block)
-    if block
-      options[:block] = block
-    end
+    options[:block] = block if block
     impl(:call_function, :Anonymous, target, command_name, options)
   end
 
@@ -239,6 +238,14 @@ class ScriptCompiler
   #target変更は受け付けない(Controlクラスに登録)
   def define(command_name, &block)
     impl(:define, :Anonymous, nil, command_name, {block: block})
+  end
+
+  def _YIELD_(target = nil, **options)
+    raise LocalJumpError, 'no block given (YIELD)' unless @arg_block
+    
+    about target do
+      self.instance_exec(**options, &@arg_block)
+    end
   end
 
   #制御構造関連

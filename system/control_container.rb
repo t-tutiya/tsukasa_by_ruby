@@ -91,9 +91,7 @@ class Control
     end
 
     #コマンドセットがあるなら登録する
-    if options[:commands]
-      eval_block(options[:commands]) 
-    end
+    eval_block(options[:commands]) 
 
     send_command(:token, nil)
 
@@ -301,6 +299,8 @@ class Control
     #ブロック文の実行
   #TODO：単体コマンドとして実装すべき？
   def eval_block(block)
+    return unless block
+    
     #現在のスクリプトストレージをコールスタックにプッシュ
     @script_storage_stack.push(@script_storage) if !@script_storage.empty?
     #コマンドリストをクリアする
@@ -419,15 +419,15 @@ class Control
   def command_if(options, target)
     #evalで評価した条件式が真の場合
     if eval_lambda(options[:if], options)
-      eval_block(options[:then]) if options[:then] #then節の中に何も無かった場合はスルー
+      eval_block(options[:then])
       
     #elsif節がある場合
     elsif options[:elsif] && tmp = options[:elsif].find{|cmd| eval_lambda(cmd[1][:elsif], options)}
-      eval_block(tmp[1][:block]) if tmp[1][:block] #elsif節の中に何も無かった場合はスルー
+      eval_block(tmp[1][:block])
       
     #else節がある場合
     elsif options[:else]
-      eval_block(options[:else]) if options[:else] #else節の中に何も無かった場合はスルー
+      eval_block(options[:else])
     end
     
     return :continue
@@ -437,11 +437,11 @@ class Control
     value = eval_lambda(options[:case], options) #比較されるオブジェクト
     
     if options[:when] && tmp = options[:when].find{|cmd| cmd[1][:when].any?{|pr| value === eval_lambda(pr, options)}}
-      eval_block(tmp[1][:block]) if tmp[1][:block] #when節の中に何も無かった場合はスルー
+      eval_block(tmp[1][:block])
       
     #else節がある場合
     elsif options[:else]
-      eval_block(options[:else]) if options[:else] #else節の中に何も無かった場合はスルー
+      eval_block(options[:else])
     end
     
     return :continue

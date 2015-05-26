@@ -333,6 +333,9 @@ class Control
   def command_create(options, target)
     #指定されたコントロールを生成してリストに連結する
     @control_list.push(Module.const_get(options[:create]).new(options))
+    
+    eval_block(Tsukasa::ScriptCompiler.new(options, &options[:block]).commands) if options[:block]
+
     return :continue
   end
 

@@ -53,6 +53,9 @@ class ScriptCompiler
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
 
+    sub_options[:block] = block if block
+
+=begin
     #ブロックが存在する場合、ブロックを１オプションとして登録する
     if block
       #ネスト用のスタックプッシュ
@@ -74,7 +77,7 @@ class ScriptCompiler
       @key_name = @key_name_stack.pop #ブロックのオプション名
       @option = @option_stack.pop #オプション
     end
-
+=end
     #存在していないキーの場合は配列として初期化する
     @option[@key_name] ||= []
 
@@ -109,18 +112,20 @@ class ScriptCompiler
   #ブロック
   def self.impl_block(command_name, default_class = :Anonymous)
     define_method(command_name) do |target = nil,&block|
-      impl(command_name, default_class, target, nil) do
-        @key_name = :commands; block.call
-      end
+      impl(command_name, default_class, target, nil, &block)
+#      impl(command_name, default_class, target, nil) do
+#        @key_name = :commands; block.call
+#      end
     end
   end
 
   #名前無しオプション（１個）＆名前付オプション群＆ブロック
   def self.impl_option_options_block(command_name, default_class = :Anonymous)
     define_method(command_name) do |option , target = nil,**options, &block|
-      impl(command_name, default_class, target, option, options )do
-        if block; @key_name = :commands; block.call; end
-      end
+      impl(command_name, default_class, target, option, options, &block )
+#      impl(command_name, default_class, target, option, options )do
+#        if block; @key_name = :commands; block.call; end
+#      end
     end
   end
 

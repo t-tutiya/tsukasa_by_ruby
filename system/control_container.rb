@@ -333,9 +333,12 @@ class Control
   def command_create(options, target)
     #指定されたコントロールを生成してリストに連結する
     @control_list.push(Module.const_get(options[:create]).new(options))
-    
-    eval_block(Tsukasa::ScriptCompiler.new(options, &options[:block]).commands) if options[:block]
 
+    #ブロックが付与されていたらそのブロックを送信する
+    if options[:block]
+      @control_list.last.send_command_interrupt(
+        :about, {:block => options[:block]}) 
+    end
     return :continue
   end
 
@@ -701,10 +704,9 @@ class Control
   end
 
   #ブロック内のコマンド列を実行する
-  #TODO：ブロックは例外なくprocで保持しても良いかも？
   def command_about(options, target)
     #コマンドリストをスタックする
-    eval_block(options[:commands])
+    eval_block(Tsukasa::ScriptCompiler.new(options, &options[:block]).commands)
     return :continue
   end
 

@@ -79,6 +79,8 @@ class Control
 
     @draw_option = {}          #描画オプション
 
+    #TODO：ここ統合できる筈。
+
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]
       #シナリオファイルの読み込み
@@ -87,7 +89,7 @@ class Control
 
     #ブロックが付与されているなら読み込んで登録する
     if block
-      @script_storage = Tsukasa::ScriptCompiler.new(nil, &block).commands
+      @script_storage = Tsukasa::ScriptCompiler.new({}, &block).commands
     end
 
     #コマンドセットがあるなら登録する

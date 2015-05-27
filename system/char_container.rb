@@ -78,7 +78,7 @@ class CharContainer < Control
   include Drawable #描画関連モジュール
 
   def initialize(options, control = nil)
-    @char_renderer_commands = {}
+    @char_renderer_block = nil
 
     @margin_x = options[:margin_x] || 0
     @margin_y = options[:margin_y] || 0
@@ -183,7 +183,7 @@ class CharContainer < Control
     #レンダリング済みフォントを使用中か否かで分岐
     if !@font_config[:use_image_font]
       #文字レンダラオブジェクトを生成する
-      #TODO:本来はcreate_childコマンドで生成されるべきか？
+      #TODO:本来はcreateコマンドで生成されるべきか？
       control = CharControl.new(
                     {:x_pos => @next_char_x + @margin_x,
                      :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
@@ -192,9 +192,12 @@ class CharContainer < Control
                      :font_config => @font_config,
                      :skip_mode =>  @skip_mode,
                      :graph => false,
-                     :commands =>@char_renderer_commands}
+                     }, &@char_renderer_block
                    )
     else
+      raise
+#TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
+=begin
       #文字レンダラオブジェクトを生成する
       #TODO:本来はcreate_childコマンドで生成されるべきか？
       control = CharControl.new(
@@ -205,9 +208,10 @@ class CharContainer < Control
                      :font_config => @font_config,
                      :skip_mode =>  @skip_mode,
                      :graph => true,
-                     :commands =>@char_renderer_commands},
-                   @font.glyph(options[:char].to_s)
+                     }, &@char_renderer_block,
+#                   @font.glyph(options[:char].to_s)
                    )
+=end
     end
 
     #描画チェインに連結する
@@ -591,7 +595,7 @@ class CharContainer < Control
   #char_redererタグ
   #文字レンダラの設定
   def command_char_renderer(options, target)
-    @char_renderer_commands = options[:commands].dup
+    @char_renderer_block = options[:block]
     return :continue #フレーム続行
   end
 

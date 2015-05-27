@@ -57,6 +57,9 @@ class CharControl < Control
     #保持オブジェクトの初期化
     #画像が指定されている場合
     if control
+      raise
+#TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
+=begin
       if options[:graph]
         @entity = control.effect_image_font(options[:font_config])
       else
@@ -66,6 +69,7 @@ class CharControl < Control
       @width = @entity.width
       @height = @entity.height
       
+=end
     else
       #文字用のimageを作成
       @entity = Image.new(@width, @height, [0, 0, 0, 0]) 

@@ -113,9 +113,6 @@ class ScriptCompiler
   def self.impl_block(command_name, default_class = :Anonymous)
     define_method(command_name) do |target = nil,&block|
       impl(command_name, default_class, target, nil, &block)
-#      impl(command_name, default_class, target, nil) do
-#        @key_name = :commands; block.call
-#      end
     end
   end
 
@@ -123,9 +120,6 @@ class ScriptCompiler
   def self.impl_option_options_block(command_name, default_class = :Anonymous)
     define_method(command_name) do |option , target = nil,**options, &block|
       impl(command_name, default_class, target, option, options, &block )
-#      impl(command_name, default_class, target, option, options )do
-#        if block; @key_name = :commands; block.call; end
-#      end
     end
   end
 

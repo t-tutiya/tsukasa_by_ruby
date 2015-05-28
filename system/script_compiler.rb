@@ -34,22 +34,27 @@ module Tsukasa
 
 class ScriptCompiler
 
-  def initialize(argument = nil, &block)
+  def initialize(argument, &block)
     @option = {}
     @option_stack = []
     @key_name = :commands
     @key_name_stack = []
     @yield_block = nil
 
-    if block
-      #TODO：第１引数が文字列の場合とハッシュの場合があり、これは統一したい（ハッシュに統一しよう））
-      @yield_block = argument[:block]
-      self.instance_exec(**argument, &block)
+    if argument[:script_path]
+      #評価対象がスクリプトファイルの場合の場合
+      eval( File.read(argument[:script_path], encoding: "UTF-8"), 
+            binding, 
+            File.expand_path(argument[:script_path]))
     else
-      if argument.class == Hash
-        self.instance_exec(**argument, &argument[:block])
+      if block
+        #yieldブロックが設定されている場合
+        #TODO：なんか変にねじれてる気がする……
+        @yield_block = argument[:block]
+        self.instance_exec(**argument, &block)
       else
-        eval(File.read(argument, encoding: "UTF-8"), binding, File.expand_path(argument))
+        #評価対象がブロックの場合
+        self.instance_exec(**argument, &argument[:block])
       end
     end
     @script_storage = @option[@key_name] || []

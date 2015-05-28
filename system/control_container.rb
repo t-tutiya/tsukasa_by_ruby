@@ -84,7 +84,7 @@ class Control
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]
       #シナリオファイルの読み込み
-      @script_storage = Tsukasa::ScriptCompiler.new(options[:script_path]).commands
+      @script_storage = Tsukasa::ScriptCompiler.new({:script_path => options[:script_path]}).commands
     end
 
     #ブロックが付与されているなら読み込んで登録する

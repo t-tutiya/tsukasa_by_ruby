@@ -1,6 +1,13 @@
 #! ruby -E utf-8
 
-=begin
+#TODO:関数が定義されるタイミングが変更されため、ここに置かないと正常に動かない
+define :func do |val|
+  about :button1 do
+    move_line x: 0, y: val[:y],   count:0, frame: 60, start_x: 0,   start_y: 0
+    wait_command :move_line
+  end
+end
+
 #ボタンコントロール
 create :ButtonControl, 
         :x_pos => 0, 
@@ -27,12 +34,6 @@ create :ButtonControl,
         :visible => false
   normal
   
-  define :func do |val|
-    about :button1 do
-      move_line x: 0, y: val[:y],   count:0, frame: 60, start_x: 0,   start_y: 0
-      wait_command :move_line
-    end
-  end
 end
 
 about :button1 do
@@ -48,7 +49,6 @@ about :button1 do
   #渡せるのは名前付きオプションのみ(targetは自動で渡される)
   func y: 150
 end
-=end
 
 define :func2 do |arg_block|
   create :ImageControl, 

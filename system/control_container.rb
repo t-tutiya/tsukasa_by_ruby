@@ -308,10 +308,9 @@ class Control
     @script_storage = commands.dup
   end
 
-  #rubyブロックのコマンド列を展開してスクリプトストレージに積む
-  def eval_block(block)
-    return unless block
-
+  #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
+  #TODO:blockがnilでもoptions[:block]があれば動くのだけど、どうにも設計が歪んでいる気がする
+  def eval_block(options, block)
     eval_commands(Tsukasa::ScriptCompiler.new(options, &block).commands)
   end
 
@@ -475,7 +474,7 @@ class Control
     #while文全体をスクリプトストレージにスタック
     eval_commands([[:while, options, {target_id: @id}]])
     #ブロックを実行時評価しコマンド列を生成する。
-    eval_block(options[:block])
+    eval_block(options, options[:block])
 
     return :continue
   end
@@ -712,7 +711,7 @@ class Control
     raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{target}" unless @@function_list.key?(options[:call_function])
 
     #functionを実行時評価しコマンド列を生成する。
-    eval_block(@@function_list[options[:call_function]])
+    eval_block(options, @@function_list[options[:call_function]])
 
     return :continue
   end
@@ -723,7 +722,7 @@ class Control
     call_block = options[:block]
     options[:block] = yield_block
     #コマンドリストをスタックする
-    eval_block(call_block)
+    eval_block(options, call_block)
     return :continue
   end
 

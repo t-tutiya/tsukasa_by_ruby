@@ -468,8 +468,8 @@ class Control
 
     #while文全体をスクリプトストレージにスタック
     eval_block([[:while, options, {target_id: @id}]])
-    #while文の中身をスクリプトストレージスタック
-    eval_block(options[:commands])
+    #ブロックを実行時評価しコマンド列を生成する。
+    eval_block(Tsukasa::ScriptCompiler.new(options, &options[:block]).commands)
 
     return :continue
   end

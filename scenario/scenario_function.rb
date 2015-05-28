@@ -53,10 +53,9 @@ end
 define :func2 do |arg_block|
   create :ImageControl, 
          :file_path=>"./sozai/button_normal.png", 
-         :id=>:normal2,
-         :yield_block => arg_block[:yield_block] do |arg_block|
+         :id=>:normal2 do
    
-   _YIELD_ &arg_block[:yield_block]
+   _YIELD_
    
   end
 end

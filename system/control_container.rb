@@ -102,37 +102,37 @@ class Control
   end
 
   #コマンドをスタックに格納する
-  def send_command(command, options, target_id = @id, invoker_control = self)
+  def send_command(command, options, target_id = @id, invoker_control = self, &yield_block)
     #自身が送信対象として指定されている場合
     if @id == target_id or target_id == :anonymous
       #コマンドをスタックの末端に挿入する
-      @command_list.push([command, options, invoker_control])
+      @command_list.push([command, options, invoker_control, yield_block])
       return true #コマンドをスタックした
     end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.send_command(command, options, target_id, invoker_control)
+      return true if control.send_command(command, options, target_id, invoker_control, &yield_block)
     end
 
     return false #コマンドをスタックしなかった
   end
 
   #コマンドをスタックに格納する
-  def send_command_interrupt(command, options, target_id = @id, invoker_control = self)
+  def send_command_interrupt(command, options, target_id = @id, invoker_control = self, &yield_block)
     #自身が送信対象として指定されている場合
     #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
     if @id == target_id or target_id == :anonymous
       #コマンドをスタックの先頭に挿入する
-      @command_list.unshift([command, options, invoker_control])
+      @command_list.unshift([command, options, invoker_control, yield_block])
       return true #コマンドをスタックした
     end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.send_command_interrupt(command, options, target_id,invoker_control)
+      return true if control.send_command_interrupt(command, options, target_id,invoker_control, &yield_block)
     end
 
     return false #コマンドをスタックしなかった
@@ -171,10 +171,10 @@ class Control
     #コマンドリストが空になるまで走査し、コマンドを実行する
     while !@command_list.empty?
       #コマンドリストの先頭要素を取得
-      command, options, target = @command_list.shift
+      command, options, target, yield_block = @command_list.shift
 
       #コマンドを実行
-      end_parse, command = send("command_" + command.to_s, options, target)
+      end_parse, command = send("command_" + command.to_s, options, target, &yield_block)
 
       #次フレームに実行するコマンドがある場合、一時的にスタックする
       @next_frame_commands.push(command) if command
@@ -332,7 +332,7 @@ class Control
   #############################################################################
 
   #コントロールをリストに登録する
-  def command_create(options, target)
+  def command_create(options, target, &yield_block)
     #指定されたコントロールを生成してリストに連結する
     @control_list.push(Module.const_get(options[:create]).new(options))
 
@@ -342,8 +342,7 @@ class Control
       @control_list.last.send_command_interrupt(:about, 
                                         {
                                          :block => options[:block],
-                                         :yield_block => options[:yield_block],
-                                        }) 
+                                        }, &yield_block) 
     end
     return :continue
   end
@@ -401,7 +400,10 @@ class Control
     end
 
     #コマンドをコントロールに登録する
-    if !send_command(command,options,target) then
+    if !send_command( command, 
+                      options, 
+                      target, 
+                      &system_options[:yield_block]) then
       pp "error"
       pp command
       pp options
@@ -709,15 +711,13 @@ class Control
     return :continue
   end
 
-  def command_yield(options, target)
-    eval_block(Tsukasa::ScriptCompiler.new(options, &options[:block]).commands)
-    return :continue
-  end
-
   #ブロック内のコマンド列を実行する
-  def command_about(options, target)
+  def command_about(options, target, &yield_block)
+    #TODO:本来、この&blockは、aboutが保持しているブロックであるべきおうな気もする
+    call_block = options[:block]
+    options[:block] = yield_block
     #コマンドリストをスタックする
-    eval_block(Tsukasa::ScriptCompiler.new(options, &options[:block]).commands)
+    eval_block(Tsukasa::ScriptCompiler.new( options, &call_block).commands)
     return :continue
   end
 

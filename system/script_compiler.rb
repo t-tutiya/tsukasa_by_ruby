@@ -39,13 +39,18 @@ class ScriptCompiler
     @option_stack = []
     @key_name = :commands
     @key_name_stack = []
+    @yield_block = nil
 
-    #ブロックを持っている場合、argument[:block]を持っていることを前提としているが、これはcall_functionでのみ起きる事なので、汎用化したい。
     if block
-      #@arg_block = argument[:block]
+      #TODO：第１引数が文字列の場合とハッシュの場合があり、これは統一したい（ハッシュに統一しよう））
+      @yield_block = argument[:block]
       self.instance_exec(**argument, &block)
     else
-      eval(File.read(argument, encoding: "UTF-8"), binding, File.expand_path(argument))
+      if argument.class == Hash
+        self.instance_exec(**argument, &argument[:block])
+      else
+        eval(File.read(argument, encoding: "UTF-8"), binding, File.expand_path(argument))
+      end
     end
     @script_storage = @option[@key_name] || []
   end
@@ -86,7 +91,9 @@ class ScriptCompiler
     @option[@key_name].push([ command_name,
                               sub_options, 
                               {:target_id => target,
-                               :default_class => default_class}])
+                               :default_class => default_class,
+                               :yield_block => @yield_block},
+                              ])
   end
 
   #オプション無し
@@ -126,8 +133,8 @@ class ScriptCompiler
 
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
   def method_missing(command_name, target = nil, **options, &block)
-    options[:yield_block] = block if block
-    impl(:call_function, :Anonymous, target, command_name, options)
+    #TODO：存在しないメソッドが実行される問題について要検討
+    impl(:call_function, :Anonymous, target, command_name, options, &block)
   end
 
   #次フレームに送る
@@ -248,8 +255,8 @@ class ScriptCompiler
 #    end
 #  end
 
-  def _YIELD_(target = nil, **options, &block)
-    impl(:about, :Anonymous, nil, **options, &block)
+  def _YIELD_(target = nil, **options)
+    impl(:about, :Anonymous, nil, **options)
   end
 
   #制御構造関連

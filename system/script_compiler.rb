@@ -40,8 +40,9 @@ class ScriptCompiler
     @key_name = :commands
     @key_name_stack = []
 
+    #ブロックを持っている場合、argument[:block]を持っていることを前提としているが、これはcall_functionでのみ起きる事なので、汎用化したい。
     if block
-      @arg_block = argument[:block]
+      #@arg_block = argument[:block]
       self.instance_exec(**argument, &block)
     else
       eval(File.read(argument, encoding: "UTF-8"), binding, File.expand_path(argument))
@@ -125,7 +126,7 @@ class ScriptCompiler
 
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
   def method_missing(command_name, target = nil, **options, &block)
-    options[:block] = block if block
+    options[:yield_block] = block if block
     impl(:call_function, :Anonymous, target, command_name, options)
   end
 
@@ -239,12 +240,16 @@ class ScriptCompiler
     impl(:define, :Anonymous, nil, command_name, {block: block})
   end
 
-  def _YIELD_(target = nil, **options)
-    raise LocalJumpError, 'no block given (YIELD)' unless @arg_block
-    
-    about target do
-      self.instance_exec(**options, &@arg_block)
-    end
+#  def _YIELD_(target = nil, **options)
+#    raise LocalJumpError, 'no block given (YIELD)' unless @arg_block
+#    
+#    about target do
+#      self.instance_exec(**options, &@arg_block)
+#    end
+#  end
+
+  def _YIELD_(target = nil, **options, &block)
+    impl(:about, :Anonymous, nil, **options, &block)
   end
 
   #制御構造関連

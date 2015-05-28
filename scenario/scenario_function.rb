@@ -1,5 +1,6 @@
 #! ruby -E utf-8
 
+=begin
 #ボタンコントロール
 create :ButtonControl, 
         :x_pos => 0, 
@@ -47,13 +48,15 @@ about :button1 do
   #渡せるのは名前付きオプションのみ(targetは自動で渡される)
   func y: 150
 end
+=end
 
-define :func2 do
+define :func2 do |arg_block|
   create :ImageControl, 
          :file_path=>"./sozai/button_normal.png", 
-         :id=>:normal2 do
+         :id=>:normal2,
+         :yield_block => arg_block[:yield_block] do |arg_block|
    
-   _YIELD_
+   _YIELD_ &arg_block[:yield_block]
    
   end
 end

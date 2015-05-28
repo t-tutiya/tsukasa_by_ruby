@@ -336,10 +336,14 @@ class Control
     #指定されたコントロールを生成してリストに連結する
     @control_list.push(Module.const_get(options[:create]).new(options))
 
-    #ブロックが付与されていたらそのブロックを送信する
+    #ブロックが付与されている場合
     if options[:block]
-      @control_list.last.send_command_interrupt(
-        :about, {:block => options[:block]}) 
+      #生成したコントロールにブロックと（存在していれば）yieldブロックを送信する
+      @control_list.last.send_command_interrupt(:about, 
+                                        {
+                                         :block => options[:block],
+                                         :yield_block => options[:yield_block],
+                                        }) 
     end
     return :continue
   end
@@ -702,6 +706,11 @@ class Control
     #functionを実行時評価しコマンド列を生成する。
     eval_block(Tsukasa::ScriptCompiler.new(options, &@@function_list[options[:call_function]]).commands)
 
+    return :continue
+  end
+
+  def command_yield(options, target)
+    eval_block(Tsukasa::ScriptCompiler.new(options, &options[:block]).commands)
     return :continue
   end
 

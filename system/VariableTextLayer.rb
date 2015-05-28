@@ -50,7 +50,7 @@ class VariableTextLayer < Control
 
   def command_line_feed(options, target)
     send_command(:line_feed, nil, :default_text_layer)
-    eval_block([
+    eval_commands([
       [:eval, {:eval => "pp 'test'"}, {:target_id => @id}],
       [:pause, {}, {:target_id => @id}],
       [:resize, {}, {:target_id => @id}],
@@ -82,7 +82,7 @@ class VariableTextLayer < Control
     return :continue if @skip_mode
 
     #■ルートの待機処理
-    eval_block([
+    eval_commands([
         #スリープモードを設定
         [:sleep_mode, {:sleep_mode => :sleep}, {:target_id => @id}],
         #ウェイク待ち

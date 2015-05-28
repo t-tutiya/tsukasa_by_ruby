@@ -93,7 +93,7 @@ class Control
     end
 
     #コマンドセットがあるなら登録する
-    eval_block(options[:commands]) 
+    eval_commands(options[:commands]) 
 
     send_command(:token, nil)
 
@@ -298,15 +298,21 @@ class Control
     end
   end
   
-    #ブロック文の実行
-  #TODO：単体コマンドとして実装すべき？
-  def eval_block(block)
-    return unless block
+  #配列のコマンド列をスクリプトストレージに積む
+  def eval_commands(commands)
+    return unless commands
     
     #現在のスクリプトストレージをコールスタックにプッシュ
     @script_storage_stack.push(@script_storage) if !@script_storage.empty?
     #コマンドリストをクリアする
-    @script_storage = block.dup
+    @script_storage = commands.dup
+  end
+
+  #rubyブロックのコマンド列を展開してスクリプトストレージに積む
+  def eval_block(block)
+    return unless block
+
+    eval_commands(Tsukasa::ScriptCompiler.new(options, &block).commands)
   end
 
   #IFやWHILEなどで渡されたlambdaを実行する
@@ -433,15 +439,15 @@ class Control
   def command_if(options, target)
     #evalで評価した条件式が真の場合
     if eval_lambda(options[:if], options)
-      eval_block(options[:then])
+      eval_commands(options[:then])
       
     #elsif節がある場合
     elsif options[:elsif] && tmp = options[:elsif].find{|cmd| eval_lambda(cmd[1][:elsif], options)}
-      eval_block(tmp[1][:block])
+      eval_commands(tmp[1][:block])
       
     #else節がある場合
     elsif options[:else]
-      eval_block(options[:else])
+      eval_commands(options[:else])
     end
     
     return :continue
@@ -451,11 +457,11 @@ class Control
     value = eval_lambda(options[:case], options) #比較されるオブジェクト
     
     if options[:when] && tmp = options[:when].find{|cmd| cmd[1][:when].any?{|pr| value === eval_lambda(pr, options)}}
-      eval_block(tmp[1][:block])
+      eval_commands(tmp[1][:block])
       
     #else節がある場合
     elsif options[:else]
-      eval_block(options[:else])
+      eval_commands(options[:else])
     end
     
     return :continue
@@ -467,9 +473,9 @@ class Control
     return :continue if !eval_lambda(options[:while], options) #アイドル
 
     #while文全体をスクリプトストレージにスタック
-    eval_block([[:while, options, {target_id: @id}]])
+    eval_commands([[:while, options, {target_id: @id}]])
     #ブロックを実行時評価しコマンド列を生成する。
-    eval_block(Tsukasa::ScriptCompiler.new(options, &options[:block]).commands)
+    eval_block(options[:block])
 
     return :continue
   end
@@ -706,7 +712,7 @@ class Control
     raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{target}" unless @@function_list.key?(options[:call_function])
 
     #functionを実行時評価しコマンド列を生成する。
-    eval_block(Tsukasa::ScriptCompiler.new(options, &@@function_list[options[:call_function]]).commands)
+    eval_block(@@function_list[options[:call_function]])
 
     return :continue
   end
@@ -717,7 +723,7 @@ class Control
     call_block = options[:block]
     options[:block] = yield_block
     #コマンドリストをスタックする
-    eval_block(Tsukasa::ScriptCompiler.new( options, &call_block).commands)
+    eval_block(call_block)
     return :continue
   end
 

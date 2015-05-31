@@ -790,3 +790,47 @@ class Control
     return false
   end
 end
+
+#新仕様対応if文実装テスト
+class Control
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
+
+  def command_test_if(options, target)
+    @test_if_result = :pre_start #できればコマンド内で値を取り回したい
+
+    eval_block(options, options[:block])
+
+    return :continue
+  end
+
+  def command_test_exp(options, target)
+    if eval_lambda(options[:block], options)
+      @test_if_result = :then
+    else
+      @test_if_result = :else
+    end
+    return :continue
+  end
+
+  def command_test_then(options, target)
+    if @test_if_result == :then
+      eval_block(options, options[:block])
+      return :end_frame
+    else
+      return :continue
+    end
+  end
+
+  def command_test_else(options, target)
+    if @test_if_result == :else
+      eval_block(options, options[:block])
+    end
+    return :end_frame
+  end
+
+end

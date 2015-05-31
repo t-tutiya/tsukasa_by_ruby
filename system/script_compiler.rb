@@ -246,6 +246,12 @@ class ScriptCompiler
   #画像の差し替え
   impl_option_options_block :image_change, :ImageControl
 
+  #新仕様if文実装テスト
+  impl_block :test_if
+  impl_block :test_exp
+  impl_block :test_then
+  impl_block :test_else
+
   #TODO:製作者「仕様変更も歓迎です」
   #target変更は受け付けない(Controlクラスに登録)
   def define(command_name, &block)

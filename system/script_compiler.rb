@@ -252,7 +252,6 @@ class ScriptCompiler
   impl_block :test_then
   impl_block :test_else
 
-  #TODO:製作者「仕様変更も歓迎です」
   #target変更は受け付けない(Controlクラスに登録)
   def define(command_name, &block)
     impl(:define, :Anonymous, nil, command_name, {block: block})

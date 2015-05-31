@@ -820,17 +820,15 @@ class Control
   def command_test_then(options, target)
     if @test_if_result == :then
       eval_block(options, options[:block])
-      return :end_frame
-    else
-      return :continue
     end
+    return :continue
   end
 
   def command_test_else(options, target)
     if @test_if_result == :else
       eval_block(options, options[:block])
     end
-    return :end_frame
+    return :continue
   end
 
 end

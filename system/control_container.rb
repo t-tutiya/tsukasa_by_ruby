@@ -682,8 +682,7 @@ class Control
 
   #イベントコマンドの登録
   def command_event(options, target)
-    #TODO：コマンドは追加にする
-    @event_list[options[:event]] = options[:commands]
+    @event_list[options[:event]] = options[:block]
     return :continue
   end
 
@@ -692,10 +691,7 @@ class Control
     #キーが登録されていないなら終了
     return :continue if !@event_list[options[:fire]]
 
-    #コマンド列を格納する（インタラプトなので逆順にsendする）
-    @event_list[options[:fire]].reverse_each do |command|
-      send_command_interrupt(command[0], command[1])
-    end
+    eval_block(options, @event_list[options[:fire]])
 
     return :continue
   end

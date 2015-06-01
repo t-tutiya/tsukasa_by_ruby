@@ -45,16 +45,24 @@ class SEControl  < Control
     @control.loop_count = options[:loop] ? -1 : 0
   end
 
+  def render(offset_x, offset_y, target)
+    return offset_x, offset_y
+  end
+
   #ＳＥの再生
-  def command_se_play(options)
+  def command_se_play(options, target)
     @control.play
-    return false #フレーム続行
+    return :continue #フレーム続行
   end
 
   #ＳＥの停止
-  def command_se_stop(options)
+  def command_se_stop(options, target)
     @control.stop
-    return false #フレーム続行
+    return :continue #フレーム続行
+  end
+
+  def visible
+    false
   end
 
 end

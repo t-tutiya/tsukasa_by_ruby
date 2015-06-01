@@ -220,7 +220,7 @@ class Control
       #所持コントロール自身に描画する場合
       if @draw_to_entity
         #子要素を自ターゲットに一時描画
-        child_offset_x,child_offset_y = entity.render(child_offset_x, child_offset_y, @entity)
+        child_offset_x,child_offset_y = entity.render(child_offset_x, child_offset_y, @entity) if entity.visible
       else
         #子要素を親ターゲットに直接描画
         offset_x,offset_y = entity.render(offset_x + @x_pos, offset_y + @y_pos, target) if entity.visible

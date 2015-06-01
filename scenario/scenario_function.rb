@@ -1,13 +1,5 @@
 #! ruby -E utf-8
 
-#TODO:関数が定義されるタイミングが変更されため、ここに置かないと正常に動かない
-define :func do |val|
-  about :button1 do
-    move_line x: 0, y: val[:y],   count:0, frame: 60, start_x: 0,   start_y: 0
-    wait_command :move_line
-  end
-end
-
 #ボタンコントロール
 create :ButtonControl, 
         :x_pos => 0, 
@@ -34,7 +26,16 @@ create :ButtonControl,
         :visible => false
   normal
   
+  #内部関数の定義
+  #TODO：ただし、現状@@function_listはクラス変数なので、スコープは一致しない。これも再検討したい。
+  define :func do |val|
+    move_line x: 0, y: val[:y],   count:0, frame: 60, start_x: 0,   start_y: 0
+    wait_command :move_line
+  end
 end
+
+#TODO:funcの定義を先に終わらせるために、ここで１フレ挟まなければならない
+next_frame
 
 about :button1 do
   move_line x: 0, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0

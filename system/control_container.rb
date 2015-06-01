@@ -706,7 +706,7 @@ class Control
 
   #関数を定義する
   def command_define(options, target)
-    @@function_list[options[:define]] = options[:impl]
+    @@function_list[options[:define]] = options[:block]
     return :continue
   end
 

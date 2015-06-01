@@ -810,34 +810,73 @@ class Control
   
   def command_test_if(options, target)
     #条件式を評価し、結果をoptionsに再格納する
-    #TODO：optionsに際格納する積極的な理由はないが、将来的にはoptionsを通じて上位から情報が伝搬されてくる気がする
     if eval_lambda(options[:test_if], options)
-      options[:test_if_result] = :then
+      exp_result = :then
     else
-      options[:test_if_result] = :else
+      exp_result = :else
     end
 
     #if文の中身を実行する
     eval_block(options, options[:block])
 
-    return :continue
+    return :continue, [:test_exp_result, { :test_if_result => exp_result}]
   end
 
   #thenコマンド
   def command_test_then(options, target)
-    #条件式が真であれば自身のブロックを実行する
-    if options[:test_if_result] == :then
+    #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
+    result = @next_frame_commands.rindex{|command|
+      command[0] == :test_exp_result
+    }
+    
+    #結果がthenの場合
+    if result and @next_frame_commands[result][1][:test_if_result] == :then
+      #コマンドブロックを実行する
       eval_block(options, options[:block])
     end
+
+    return :continue
+  end
+
+  #elseコマンド
+  def command_test_elsif(options, target)
+    #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
+    result = @next_frame_commands.rindex{|command|
+      command[0] == :test_exp_result
+    }
+
+    #結果がelseの場合
+    if result and @next_frame_commands[result][1][:test_if_result] == :else
+      #ラムダ式が真の場合
+      if eval_lambda(options[:test_elsif], options)
+        #コマンドブロックを実行する
+        eval_block(options, options[:block])
+        #処理がこれ以上伝搬しないように評価結果をクリアする
+        #TODO：コマンド自体を削除した方が確実
+        @next_frame_commands[result][1][:test_if_result] = nil
+      end
+    end
+    
     return :continue
   end
 
   #elseコマンド
   def command_test_else(options, target)
-    #条件式が偽であれば自身のブロックを実行する
-    if options[:test_if_result] == :else
+    #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
+    result = @next_frame_commands.rindex{|command|
+      command[0] == :test_exp_result
+    }
+
+    #結果がelseの場合
+    if result and @next_frame_commands[result][1][:test_if_result] == :else
+      #コマンドブロックを実行する
       eval_block(options, options[:block])
     end
+    return :continue
+  end
+
+  #１フレ分のみifの結果をコマンドリスト上に格納する
+  def command_test_exp_result(options, target)
     return :continue
   end
 

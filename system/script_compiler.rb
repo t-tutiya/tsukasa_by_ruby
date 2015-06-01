@@ -41,9 +41,6 @@ class ScriptCompiler
     @key_name_stack = []
     @yield_block = nil
 
-    #新仕様ifテスト中
-    @test_if_result = nil
-
     if argument[:script_path]
       #評価対象がスクリプトファイルの場合の場合
       eval( File.read(argument[:script_path], encoding: "UTF-8"), 
@@ -105,8 +102,7 @@ class ScriptCompiler
                               sub_options, 
                               {:target_id => target,
                                :default_class => default_class,
-                               :yield_block => @yield_block,
-                               :test_if_result => @test_if_result},
+                               :yield_block => @yield_block},
                               ])
   end
 
@@ -260,6 +256,7 @@ class ScriptCompiler
   impl_block :test_exp
   impl_block :test_then
   impl_block :test_else
+  impl_option_options_block :test_elsif
 
   #target変更は受け付けない(Controlクラスに登録)
   def define(command_name, &block)

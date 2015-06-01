@@ -876,4 +876,16 @@ class Control
     return :continue
   end
 
+  def command_visible(options, target)
+    @visible = options[:visible]
+    return :continue
+  end
+
+
+  def command_visible(options, target)
+    @visible = options[:visible]
+    return :continue
+  end
+
+
 end

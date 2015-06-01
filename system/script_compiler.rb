@@ -253,6 +253,10 @@ class ScriptCompiler
   impl_block :test_else
   impl_option_options_block :test_elsif
 
+  impl_one_option :visible
+  impl_non_option :se_play
+  impl_non_option :se_stop
+
   #target変更は受け付けない(Controlクラスに登録)
   def define(command_name, &block)
     impl(:define, :Anonymous, nil, command_name, &block)

@@ -117,6 +117,8 @@ create :LayoutContainer,
     end
   end
 
+#TODO：１フレ送らないとdefault_text_layerが生成されない。要検討
+next_frame
 pause
 
 

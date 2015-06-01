@@ -255,7 +255,7 @@ class ScriptCompiler
 
   #target変更は受け付けない(Controlクラスに登録)
   def define(command_name, &block)
-    impl(:define, :Anonymous, nil, command_name, {block: block})
+    impl(:define, :Anonymous, nil, command_name, {impl: block})
   end
 
 #  def _YIELD_(target = nil, **options)

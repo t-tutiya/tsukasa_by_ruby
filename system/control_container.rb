@@ -404,6 +404,10 @@ class Control
       target = system_options[:target_id]
     end
 
+    #上位からif条件式の評価結果を受け取る
+    #TODO：yield_blockの受け取り方と互換性が無い。今後上位から情報が伝搬されてくることもありそうなので、統一の仕様を考えたい。
+    options[:test_if_result] = system_options[:test_if_result]
+
     #コマンドをコントロールに登録する
     if !send_command( command, 
                       options, 
@@ -800,32 +804,38 @@ class Control
 
   private
 
+  #ifコマンド
+  
+  #TODO：構造上elsifが実装できない（ただし、elsifはそもそもifの入れ子のシンタックスシュガーなので、間違って無いとも言えるかも？）
+  
   def command_test_if(options, target)
-    @test_if_result = :pre_start #できればコマンド内で値を取り回したい
+    #条件式を評価し、結果をoptionsに再格納する
+    #TODO：optionsに際格納する積極的な理由はないが、将来的にはoptionsを通じて上位から情報が伝搬されてくる気がする
+    if eval_lambda(options[:test_if], options)
+      options[:test_if_result] = :then
+    else
+      options[:test_if_result] = :else
+    end
 
+    #if文の中身を実行する
     eval_block(options, options[:block])
 
     return :continue
   end
 
-  def command_test_exp(options, target)
-    if eval_lambda(options[:block], options)
-      @test_if_result = :then
-    else
-      @test_if_result = :else
-    end
-    return :continue
-  end
-
+  #thenコマンド
   def command_test_then(options, target)
-    if @test_if_result == :then
+    #条件式が真であれば自身のブロックを実行する
+    if options[:test_if_result] == :then
       eval_block(options, options[:block])
     end
     return :continue
   end
 
+  #elseコマンド
   def command_test_else(options, target)
-    if @test_if_result == :else
+    #条件式が偽であれば自身のブロックを実行する
+    if options[:test_if_result] == :else
       eval_block(options, options[:block])
     end
     return :continue

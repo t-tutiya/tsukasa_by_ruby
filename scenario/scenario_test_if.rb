@@ -1,9 +1,6 @@
 #! ruby -E utf-8
 
-test_if do
-  test_exp do
-    true
-  end
+test_if ->{true} do
   test_then do
     define :func do
       pp "func then"
@@ -18,18 +15,24 @@ end
 
 func
 
-test_if do
-  test_exp do
-    false
-  end
+test_if ->{false} do
   test_then do
     define :func2 do
       pp "func2 then"
     end
   end
   test_else do
-    define :func2 do
-      pp "func2 else"
+    test_if ->{true} do
+      test_then do
+        define :func2 do
+          pp "func2 else then"
+        end
+      end
+      test_else do
+        define :func2 do
+          pp "func2 else else"
+        end
+      end
     end
   end
 end

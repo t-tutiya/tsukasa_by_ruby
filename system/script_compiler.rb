@@ -41,6 +41,9 @@ class ScriptCompiler
     @key_name_stack = []
     @yield_block = nil
 
+    #新仕様ifテスト中
+    @test_if_result = nil
+
     if argument[:script_path]
       #評価対象がスクリプトファイルの場合の場合
       eval( File.read(argument[:script_path], encoding: "UTF-8"), 
@@ -51,6 +54,11 @@ class ScriptCompiler
         #yieldブロックが設定されている場合
         #TODO：なんか変にねじれてる気がする……
         @yield_block = argument[:block]
+
+        #上位からif条件式の評価結果を受け取る
+        #TODO：yield_blockの受け取り方と互換性が無い。今後上位から情報が伝搬されてくることもありそうなので、統一の仕様を考えたい。
+        @test_if_result = argument[:test_if_result]
+
         self.instance_exec(**argument, &block)
       else
         #評価対象がブロックの場合
@@ -97,7 +105,8 @@ class ScriptCompiler
                               sub_options, 
                               {:target_id => target,
                                :default_class => default_class,
-                               :yield_block => @yield_block},
+                               :yield_block => @yield_block,
+                               :test_if_result => @test_if_result},
                               ])
   end
 
@@ -247,7 +256,7 @@ class ScriptCompiler
   impl_option_options_block :image_change, :ImageControl
 
   #新仕様if文実装テスト
-  impl_block :test_if
+  impl_option_options_block :test_if
   impl_block :test_exp
   impl_block :test_then
   impl_block :test_else

@@ -89,7 +89,7 @@ class Control
 
     #ブロックが付与されているなら読み込んで登録する
     if block
-      @script_storage = Tsukasa::ScriptCompiler.new({}, &block).commands
+      @script_storage = Tsukasa::ScriptCompiler.new(options, &block).commands
     end
 
     #コマンドセットがあるなら登録する
@@ -338,17 +338,17 @@ class Control
 
   #コントロールをリストに登録する
   def command_create(options, target, &yield_block)
-    #指定されたコントロールを生成してリストに連結する
-    @control_list.push(Module.const_get(options[:create]).new(options))
-
     #ブロックが付与されている場合
     if options[:block]
-      #生成したコントロールにブロックと（存在していれば）yieldブロックを送信する
-      @control_list.last.send_command_interrupt(:about, 
-                                        {
-                                         :block => options[:block],
-                                        }, &yield_block) 
+      #コマンドブロックと関数ブロックを入れ替える
+      #TODO：この処理絶対おかしい。
+      block = options[:block]
+      options[:block] = yield_block
     end
+
+    #コントロールを生成して子要素として登録する
+    @control_list.push(Module.const_get(options[:create]).new(options, &block))
+
     return :continue
   end
 

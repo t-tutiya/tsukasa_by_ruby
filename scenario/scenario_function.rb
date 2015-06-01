@@ -34,9 +34,6 @@ create :ButtonControl,
   end
 end
 
-#TODO:funcの定義を先に終わらせるために、ここで１フレ挟まなければならない
-next_frame
-
 about :button1 do
   move_line x: 0, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
   wait_command :move_line
@@ -51,12 +48,12 @@ about :button1 do
   func y: 150
 end
 
-define :func2 do |arg_block|
+define :func2 do
   create :ImageControl, 
          :file_path=>"./sozai/button_normal.png", 
          :id=>:normal2 do
    
-   _YIELD_
+    _YIELD_
    
   end
 end

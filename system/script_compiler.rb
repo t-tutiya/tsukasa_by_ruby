@@ -51,11 +51,6 @@ class ScriptCompiler
         #yieldブロックが設定されている場合
         #TODO：なんか変にねじれてる気がする……
         @yield_block = argument[:block]
-
-        #上位からif条件式の評価結果を受け取る
-        #TODO：yield_blockの受け取り方と互換性が無い。今後上位から情報が伝搬されてくることもありそうなので、統一の仕様を考えたい。
-        @test_if_result = argument[:test_if_result]
-
         self.instance_exec(**argument, &block)
       else
         #評価対象がブロックの場合

@@ -309,7 +309,6 @@ class Control
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
-  #TODO:blockがnilでもoptions[:block]があれば動くのだけど、どうにも設計が歪んでいる気がする
   def eval_block(options, block)
     eval_commands(Tsukasa::ScriptCompiler.new(options, &block).commands)
   end

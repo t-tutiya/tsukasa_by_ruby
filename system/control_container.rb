@@ -102,37 +102,37 @@ class Control
   end
 
   #コマンドをスタックに格納する
-  def send_command(command, options, target_id = @id, invoker_control = self, &yield_block)
+  def send_command(command, options, target_id = @id, invoker_control = self)
     #自身が送信対象として指定されている場合
     if @id == target_id or target_id == :anonymous
       #コマンドをスタックの末端に挿入する
-      @command_list.push([command, options, invoker_control, yield_block])
+      @command_list.push([command, options, invoker_control])
       return true #コマンドをスタックした
     end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.send_command(command, options, target_id, invoker_control, &yield_block)
+      return true if control.send_command(command, options, target_id, invoker_control)
     end
 
     return false #コマンドをスタックしなかった
   end
 
   #コマンドをスタックに格納する
-  def send_command_interrupt(command, options, target_id = @id, invoker_control = self, &yield_block)
+  def send_command_interrupt(command, options, target_id = @id, invoker_control = self)
     #自身が送信対象として指定されている場合
     #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
     if @id == target_id or target_id == :anonymous
       #コマンドをスタックの先頭に挿入する
-      @command_list.unshift([command, options, invoker_control, yield_block])
+      @command_list.unshift([command, options, invoker_control])
       return true #コマンドをスタックした
     end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.send_command_interrupt(command, options, target_id,invoker_control, &yield_block)
+      return true if control.send_command_interrupt(command, options, target_id,invoker_control)
     end
 
     return false #コマンドをスタックしなかった
@@ -171,10 +171,10 @@ class Control
     #コマンドリストが空になるまで走査し、コマンドを実行する
     while !@command_list.empty?
       #コマンドリストの先頭要素を取得
-      command, options, target, yield_block = @command_list.shift
+      command, options, target = @command_list.shift
 
       #コマンドを実行
-      end_parse, command = send("command_" + command.to_s, options, target, &yield_block)
+      end_parse, command = send("command_" + command.to_s, options, target)
 
       #次フレームに実行するコマンドがある場合、一時的にスタックする
       @next_frame_commands.push(command) if command
@@ -337,17 +337,10 @@ class Control
   #############################################################################
 
   #コントロールをリストに登録する
-  def command_create(options, target, &yield_block)
-    #ブロックが付与されている場合
-    if options[:block]
-      #コマンドブロックと関数ブロックを入れ替える
-      #TODO：この処理絶対おかしい。
-      block = options[:block]
-      options[:block] = yield_block
-    end
+  def command_create(options, target)
 
     #コントロールを生成して子要素として登録する
-    @control_list.push(Module.const_get(options[:create]).new(options, &block))
+    @control_list.push(Module.const_get(options[:create]).new(options, &options[:block]))
 
     return :continue
   end
@@ -404,15 +397,14 @@ class Control
       target = system_options[:target_id]
     end
 
-    #上位からif条件式の評価結果を受け取る
-    #TODO：yield_blockの受け取り方と互換性が無い。今後上位から情報が伝搬されてくることもありそうなので、統一の仕様を考えたい。
-    options[:test_if_result] = system_options[:test_if_result]
+    #yield_blockが存在する場合、それをオプション引数に格納する
+    #TODO:ユーザー定義引数名との衝突回避方法検討
+    options[:yield_block] = system_options[:yield_block]
 
     #コマンドをコントロールに登録する
     if !send_command( command, 
                       options, 
-                      target, 
-                      &system_options[:yield_block]) then
+                      target) then
       pp "error"
       pp command
       pp options
@@ -691,6 +683,11 @@ class Control
     #定義されていないfunctionが呼びだされたら例外を送出
     raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{target}" unless @@function_list.key?(options[:call_function])
 
+    #関数ブロックを引数に登録する
+    options[:yield_block] = options[:block]
+    #不要なコマンドブロックを削除
+    options[:block] = nil
+
     #functionを実行時評価しコマンド列を生成する。
     eval_block(options, @@function_list[options[:call_function]])
 
@@ -698,12 +695,9 @@ class Control
   end
 
   #ブロック内のコマンド列を実行する
-  def command_about(options, target, &yield_block)
-    #TODO:本来、この&blockは、aboutが保持しているブロックであるべきおうな気もする
-    call_block = options[:block]
-    options[:block] = yield_block
+  def command_about(options, target)
     #コマンドリストをスタックする
-    eval_block(options, call_block)
+    eval_block(options, options[:block])
     return :continue
   end
 
@@ -865,6 +859,13 @@ class Control
   def command_exp_result(options, target)
     return :continue
   end
+
+  #関数ブロックを実行する
+  def command_YIELD(options, target)
+    eval_block(options, options[:yield_block])
+    return :continue
+  end
+
 
 end
 

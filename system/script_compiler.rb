@@ -47,15 +47,12 @@ class ScriptCompiler
             binding, 
             File.expand_path(argument[:script_path]))
     else
-      if block
-        #yieldブロックが設定されている場合
-        #TODO：なんか変にねじれてる気がする……
-        @yield_block = argument[:block]
-        self.instance_exec(**argument, &block)
-      else
-        #評価対象がブロックの場合
-        self.instance_exec(**argument, &argument[:block])
-      end
+      raise if !block
+
+      #yieldブロックが設定されている場合
+      @yield_block = argument[:yield_block]
+
+      self.instance_exec(**argument, &block)
     end
     @script_storage = @option[@key_name] || []
   end
@@ -242,7 +239,8 @@ class ScriptCompiler
   end
 
   def _YIELD_(target = nil, **options)
-    impl(:about, :Anonymous, nil, **options)
+    options[:yield_block] = @yield_block
+    impl(:YIELD, :Anonymous, nil, nil, **options)
   end
 
   #case（予約語の為メソッド名差し替え）

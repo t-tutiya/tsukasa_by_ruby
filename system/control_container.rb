@@ -437,25 +437,6 @@ class Control
   #制御構文コマンド
   #############################################################################
 
-  #条件分岐
-  #TODO:コードが冗長
-  def command_if(options, target)
-    #evalで評価した条件式が真の場合
-    if eval_lambda(options[:if], options)
-      eval_commands(options[:then])
-      
-    #elsif節がある場合
-    elsif options[:elsif] && tmp = options[:elsif].find{|cmd| eval_lambda(cmd[1][:elsif], options)}
-      eval_commands(tmp[1][:block])
-      
-    #else節がある場合
-    elsif options[:else]
-      eval_commands(options[:else])
-    end
-    
-    return :continue
-  end
-
   def command_case(options, target)
     value = eval_lambda(options[:case], options) #比較されるオブジェクト
     
@@ -800,7 +781,7 @@ class Control
   end
 end
 
-#新仕様対応if文実装テスト
+#制御構文
 class Control
 
   #############################################################################
@@ -813,9 +794,9 @@ class Control
   
   #TODO：構造上elsifが実装できない（ただし、elsifはそもそもifの入れ子のシンタックスシュガーなので、間違って無いとも言えるかも？）
   
-  def command_test_if(options, target)
+  def command_IF(options, target)
     #条件式を評価し、結果をoptionsに再格納する
-    if eval_lambda(options[:test_if], options)
+    if eval_lambda(options[:IF], options)
       exp_result = :then
     else
       exp_result = :else
@@ -824,18 +805,18 @@ class Control
     #if文の中身を実行する
     eval_block(options, options[:block])
 
-    return :continue, [:test_exp_result, { :test_if_result => exp_result}]
+    return :continue, [:exp_result, { :if_result => exp_result}]
   end
 
   #thenコマンド
-  def command_test_then(options, target)
+  def command_THEN(options, target)
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
-      command[0] == :test_exp_result
+      command[0] == :exp_result
     }
     
     #結果がthenの場合
-    if result and @next_frame_commands[result][1][:test_if_result] == :then
+    if result and @next_frame_commands[result][1][:if_result] == :then
       #コマンドブロックを実行する
       eval_block(options, options[:block])
     end
@@ -844,21 +825,21 @@ class Control
   end
 
   #elseコマンド
-  def command_test_elsif(options, target)
+  def command_ELSIF(options, target)
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
-      command[0] == :test_exp_result
+      command[0] == :exp_result
     }
 
     #結果がelseの場合
-    if result and @next_frame_commands[result][1][:test_if_result] == :else
+    if result and @next_frame_commands[result][1][:if_result] == :else
       #ラムダ式が真の場合
-      if eval_lambda(options[:test_elsif], options)
+      if eval_lambda(options[:ELSIF], options)
         #コマンドブロックを実行する
         eval_block(options, options[:block])
         #処理がこれ以上伝搬しないように評価結果をクリアする
         #TODO：コマンド自体を削除した方が確実
-        @next_frame_commands[result][1][:test_if_result] = nil
+        @next_frame_commands[result][1][:if_result] = nil
       end
     end
     
@@ -866,14 +847,14 @@ class Control
   end
 
   #elseコマンド
-  def command_test_else(options, target)
+  def command_ELSE(options, target)
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
-      command[0] == :test_exp_result
+      command[0] == :exp_result
     }
 
     #結果がelseの場合
-    if result and @next_frame_commands[result][1][:test_if_result] == :else
+    if result and @next_frame_commands[result][1][:if_result] == :else
       #コマンドブロックを実行する
       eval_block(options, options[:block])
     end
@@ -881,9 +862,14 @@ class Control
   end
 
   #１フレ分のみifの結果をコマンドリスト上に格納する
-  def command_test_exp_result(options, target)
+  def command_exp_result(options, target)
     return :continue
   end
+
+end
+
+#未分類
+class Control
 
   def command_visible(options, target)
     @visible = options[:visible]

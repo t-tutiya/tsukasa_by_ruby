@@ -66,29 +66,6 @@ class ScriptCompiler
 
     sub_options[:block] = block if block
 
-=begin
-    #ブロックが存在する場合、ブロックを１オプションとして登録する
-    if block
-      #ネスト用のスタックプッシュ
-      @option_stack.push(@option)
-      @key_name_stack.push(@key_name)
-
-      #ネスト用の初期化
-      @option = {}
-
-      yield
-
-      #ここまでに@optionに:command/:then/:elseなどのハッシュが戻って来ている
-      #ex. {:command => [[:text,nil]]}
-
-      #ブロックオプションをオプションリストに追加する
-      sub_options.update(@option)
-
-      #スタックポップ
-      @key_name = @key_name_stack.pop #ブロックのオプション名
-      @option = @option_stack.pop #オプション
-    end
-=end
     #存在していないキーの場合は配列として初期化する
     @option[@key_name] ||= []
 
@@ -248,12 +225,12 @@ class ScriptCompiler
   #画像の差し替え
   impl_option_options_block :image_change, :ImageControl
 
-  #新仕様if文実装テスト
-  impl_option_options_block :test_if
-  impl_block :test_exp
-  impl_block :test_then
-  impl_block :test_else
-  impl_option_options_block :test_elsif
+  #制御構文 if系
+  impl_option_options_block :IF
+  impl_block :EXP
+  impl_block :THEN
+  impl_block :ELSE
+  impl_option_options_block :ELSIF
 
   impl_one_option :visible
   impl_non_option :se_play
@@ -264,44 +241,8 @@ class ScriptCompiler
     impl(:define, :Anonymous, nil, command_name, &block)
   end
 
-#  def _YIELD_(target = nil, **options)
-#    raise LocalJumpError, 'no block given (YIELD)' unless @arg_block
-#    
-#    about target do
-#      self.instance_exec(**options, &@arg_block)
-#    end
-#  end
-
   def _YIELD_(target = nil, **options)
     impl(:about, :Anonymous, nil, **options)
-  end
-
-  #制御構造関連
-  #if（予約語の為メソッド名差し替え）
-  def IF(option, target = nil)
-    impl(:if, :Anonymous, target, option) do
-      @key_name = :before_then
-      yield
-    end
-  end
-
-  #then（予約語の為メソッド名差し替え）
-  def THEN()
-    raise if @key_name != :before_then
-    @key_name = :then
-    yield
-    @key_name = :after_then
-  end
-
-  #elsif（予約語の為メソッド名差し替え）
-  def ELSIF(option)
-    raise if @key_name != :after_then
-    @key_name = :elsif
-    impl(:elsif, :Anonymous, nil, option) do
-      @key_name = :block
-      yield
-    end
-    @key_name = :after_then
   end
 
   #case（予約語の為メソッド名差し替え）
@@ -321,14 +262,6 @@ class ScriptCompiler
       yield
     end
     @key_name = :after_case
-  end
-
-  #else（予約語の為メソッド名差し替え）
-  def ELSE()
-    raise if @key_name != :after_then && @key_name != :after_case
-    @key_name = :else
-    yield
-    @key_name = :after_else
   end
 
   #while（予約語の為メソッド名差し替え）

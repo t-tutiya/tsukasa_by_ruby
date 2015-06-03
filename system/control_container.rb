@@ -749,6 +749,15 @@ class Control
     @next_script_file_path = options[:next_scenario]
     return :continue
   end
+  
+  #スクリプトファイルの読み込み
+  def command_load_script(options, target)
+    #指定されたスクリプトファイルを直接読み込む
+    #TODO：@script_storageに上書きするのか、追記するのかはオプションで指定できた方が良いか？　その
+    @script_storage = Tsukasa::ScriptCompiler.new({:script_path => options[:load_script]}).commands
+    return :continue
+  end
+  
 end
 
 

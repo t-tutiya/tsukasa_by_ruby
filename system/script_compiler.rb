@@ -169,6 +169,8 @@ class ScriptCompiler
 
   #次に読み込むスクリプトファイルの指定
   impl_one_option :next_scenario, :LayoutContainer
+  impl_one_option :load_script, :LayoutContainer
+
   #コントロールの削除
   impl_one_option :dispose,       :LayoutContainer
 

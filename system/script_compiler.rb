@@ -33,6 +33,7 @@ require 'dxruby'
 module Tsukasa
 
 class ScriptCompiler
+  include Resource
 
   def initialize(argument, &block)
     @option = {}

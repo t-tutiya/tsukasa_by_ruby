@@ -34,6 +34,7 @@ require_relative './module_drawable.rb'
 
 class Control
   @@global_flag = {}   #グローバルフラグ
+class Control
   @@function_list = {} #functionのリスト（procで保存される）
 
   def initialize(options, &block)

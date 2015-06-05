@@ -862,6 +862,7 @@ class Control
 
   #関数ブロックを実行する
   def command_YIELD(options, target)
+    return :continue if !options[:yield_block]
     eval_block(options, options[:yield_block])
     return :continue
   end

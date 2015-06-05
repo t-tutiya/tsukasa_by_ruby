@@ -39,8 +39,10 @@ end
 class Control
   include Resource
   @@function_list = {} #functionのリスト（procで保存される）
+  @@root = nil
 
   def initialize(options, &block)
+    @@root = self if !@@root #ルートコントロールを登録
     #描画関連
     #TODO;モジュールに全部送れないか検討
     @x_pos = 0
@@ -487,7 +489,7 @@ class Control
 
   def command_skip_mode_all(options, target)
     #スリープモードを解除する
-    target.send_command_interrupt_to_all(:skip_mode, 
+    @@root.send_command_interrupt_to_all(:skip_mode, 
                                         {:skip_mode => options[:skip_mode_all]})
     return :continue
   end
@@ -502,7 +504,7 @@ class Control
 
   def command_sleep_mode_all(options, target)
     #スリープモードを解除する
-   target.send_command_interrupt_to_all(:sleep_mode, 
+    @@root.send_command_interrupt_to_all(:sleep_mode, 
                                         {:sleep_mode => options[:sleep_mode_all]})
     return :continue
   end
@@ -627,7 +629,7 @@ class Control
     #子要素のコントロールが全てアイドル状態の時にキーが押された場合
     if Input.key_push?(K_SPACE)
       #スキップフラグを立てる
-      target.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
+      @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
       return :continue
     else
       @idle_mode = false

@@ -32,9 +32,12 @@ require_relative './module_drawable.rb'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class Control
+module Resource
   @@global_flag = {}   #グローバルフラグ
+end
+
 class Control
+  include Resource
   @@function_list = {} #functionのリスト（procで保存される）
 
   def initialize(options, &block)

@@ -47,5 +47,6 @@ require_relative './VariableTextLayer.rb'
 require_relative './script_compiler.rb'
 
 #TODO：モジュールであるべきか？
+#TODO：Ragの名称もそろそろ変える
 class Rag < Control
 end

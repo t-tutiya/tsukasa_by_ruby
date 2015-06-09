@@ -39,7 +39,6 @@ class ScriptCompiler
     @option = {}
     @option_stack = []
     @key_name = :commands
-    @key_name_stack = []
     @yield_block = nil
 
     if argument[:script_path]

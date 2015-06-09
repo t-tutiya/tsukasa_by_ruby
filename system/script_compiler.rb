@@ -225,13 +225,13 @@ class ScriptCompiler
   impl_option_options_block :image_change, :ImageControl
 
   #制御構文 if系
-  impl_option_options_block :IF
+  impl_option_options_block :IF  #本来はoption_block
   impl_block :EXP
   impl_block :THEN
   impl_block :ELSE
   impl_option_options_block :ELSIF
 
-  impl_option_options_block :WHILE
+  impl_option_options_block :WHILE  #本来はoption_block
 
   impl_one_option :visible
   impl_non_option :se_play
@@ -247,24 +247,10 @@ class ScriptCompiler
     impl(:YIELD, :Anonymous, nil, nil, **options)
   end
 
-  #case（予約語の為メソッド名差し替え）
-  def CASE(option, target = nil)
-    impl(:case, :Anonymous, target, option) do
-      @key_name = :after_case
-      yield
-    end
-  end
-
-  #when（予約語の為メソッド名差し替え）
-  def WHEN(*option)
-    raise if @key_name != :after_case
-    @key_name = :when
-    impl(:when, :Anonymous, nil, option) do
-      @key_name = :block
-      yield
-    end
-    @key_name = :after_case
-  end
+  impl_option_options_block :CASE #本来はoption_block
+  #TODO：現状では受け取れる式は１個のみとする
+  #TODO：複数取れるべきだが、現仕様では他のコマンドと整合しない
+  impl_option_options_block :WHEN #本来はoption_block
 
   #eval（予約語の為メソッド名差し替え）
   def EVAL(option, target = nil)

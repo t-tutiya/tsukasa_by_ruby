@@ -430,24 +430,6 @@ class Control
     return :continue
   end
 
-  #############################################################################
-  #制御構文コマンド
-  #############################################################################
-
-  def command_case(options, target)
-    value = eval_lambda(options[:case], options) #比較されるオブジェクト
-    
-    if options[:when] && tmp = options[:when].find{|cmd| cmd[1][:when].any?{|pr| value === eval_lambda(pr, options)}}
-      eval_commands(tmp[1][:block])
-      
-    #else節がある場合
-    elsif options[:else]
-      eval_commands(options[:else])
-    end
-    
-    return :continue
-  end
-
 end
 
 class Control
@@ -768,6 +750,10 @@ class Control
   end
 end
 
+#############################################################################
+#制御構文コマンド
+#############################################################################
+
 class Control #制御構文
 
   #############################################################################
@@ -869,7 +855,38 @@ class Control #制御構文
     return :continue
   end
 
+  def command_CASE(options, target)
+    #比較元のオブジェクトを評価する
+    value = eval_lambda(options[:CASE], options)
+
+    #case文の中身を実行する
+    eval_block(options, options[:block])
+
+    return :continue, [:exp_result, { :result => :else,
+                                      :case_value => value}]
+  end
+
+  def command_WHEN(options, target)
+    #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
+    result = @next_frame_commands.rindex{|command|
+      command[0] == :exp_result
+    }
+
+    #評価結果が存在しなければ処理を終了する
+    return :continue unless result
+
+    exp_result = @next_frame_commands[result][1]
+
+    if exp_result[:case_value] == eval_lambda(options[:WHEN], options)
+      #コマンドブロックを実行する
+      eval_block(options, options[:block])
+    end
+
+    return :continue
+  end
 end
+
+
 
 #未分類
 class Control

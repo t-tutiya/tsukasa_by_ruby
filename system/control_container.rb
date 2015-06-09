@@ -777,21 +777,18 @@ class Control #制御構文
   private
 
   #ifコマンド
-  
-  #TODO：構造上elsifが実装できない（ただし、elsifはそもそもifの入れ子のシンタックスシュガーなので、間違って無いとも言えるかも？）
-  
   def command_IF(options, target)
     #条件式を評価し、結果をoptionsに再格納する
     if eval_lambda(options[:IF], options)
-      exp_result = :then
+      result = :then
     else
-      exp_result = :else
+      result = :else
     end
 
     #if文の中身を実行する
     eval_block(options, options[:block])
 
-    return :continue, [:exp_result, { :if_result => exp_result}]
+    return :continue, [:exp_result, { :result => result}]
   end
 
   #thenコマンド
@@ -802,7 +799,7 @@ class Control #制御構文
     }
     
     #結果がthenの場合
-    if result and @next_frame_commands[result][1][:if_result] == :then
+    if result and @next_frame_commands[result][1][:result] == :then
       #コマンドブロックを実行する
       eval_block(options, options[:block])
     end
@@ -818,14 +815,14 @@ class Control #制御構文
     }
 
     #結果がelseの場合
-    if result and @next_frame_commands[result][1][:if_result] == :else
+    if result and @next_frame_commands[result][1][:result] == :else
       #ラムダ式が真の場合
       if eval_lambda(options[:ELSIF], options)
         #コマンドブロックを実行する
         eval_block(options, options[:block])
         #処理がこれ以上伝搬しないように評価結果をクリアする
         #TODO：コマンド自体を削除した方が確実
-        @next_frame_commands[result][1][:if_result] = nil
+        @next_frame_commands[result][1][:result] = nil
       end
     end
     
@@ -840,7 +837,7 @@ class Control #制御構文
     }
 
     #結果がelseの場合
-    if result and @next_frame_commands[result][1][:if_result] == :else
+    if result and @next_frame_commands[result][1][:result] == :else
       #コマンドブロックを実行する
       eval_block(options, options[:block])
     end

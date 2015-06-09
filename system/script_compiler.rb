@@ -231,6 +231,8 @@ class ScriptCompiler
   impl_block :ELSE
   impl_option_options_block :ELSIF
 
+  impl_option_options_block :WHILE
+
   impl_one_option :visible
   impl_non_option :se_play
   impl_non_option :se_stop
@@ -262,11 +264,6 @@ class ScriptCompiler
       yield
     end
     @key_name = :after_case
-  end
-
-  #while（予約語の為メソッド名差し替え）
-  def WHILE(option, target = nil, **sub_options, &block)
-    impl(:while, :Anonymous, target, option, sub_options, &block)
   end
 
   #eval（予約語の為メソッド名差し替え）

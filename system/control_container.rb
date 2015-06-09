@@ -448,18 +448,6 @@ class Control
     return :continue
   end
 
-  #繰り返し
-  def command_while(options, target)
-    #条件式が非成立であれば繰り返し構文を終了する
-    return :continue if !eval_lambda(options[:while], options) #アイドル
-
-    #while文全体をスクリプトストレージにスタック
-    eval_commands([[:while, options, {target_id: @id}]])
-    #ブロックを実行時評価しコマンド列を生成する。
-    eval_block(options, options[:block])
-
-    return :continue
-  end
 end
 
 class Control
@@ -780,8 +768,7 @@ class Control
   end
 end
 
-#制御構文
-class Control
+class Control #制御構文
 
   #############################################################################
   #非公開インターフェイス
@@ -872,6 +859,18 @@ class Control
     return :continue
   end
 
+  #繰り返し
+  def command_WHILE(options, target)
+    #条件式が非成立であれば繰り返し構文を終了する
+    return :continue if !eval_lambda(options[:WHILE], options) #アイドル
+
+    #while文全体をスクリプトストレージにスタック
+    eval_commands([[:WHILE, options, {target_id: @id}]])
+    #ブロックを実行時評価しコマンド列を生成する。
+    eval_block(options, options[:block])
+
+    return :continue
+  end
 
 end
 

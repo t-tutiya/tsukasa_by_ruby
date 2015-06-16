@@ -112,8 +112,6 @@ class ScriptCompiler
 
   #次フレームに送る
   impl_define :next_frame,                []
-  #キー入力待ち
-  impl_define :pause,                     []
 
   impl_define :wait_wake,                 []
 

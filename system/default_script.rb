@@ -1,5 +1,6 @@
 #! ruby -E utf-8
-# coding: utf-8
+
+require 'dxruby'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -29,29 +30,39 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require 'dxruby'
-require_relative './module_movable.rb'
-require_relative './module_drawable.rb'
+#標準ポーズコマンド
+define :pause do
+  #■行表示中スキップ処理
+  about :default_text_layer do
+    #idleになるかキー入力を待つ
+    #※wait中にキーが押された場合、waitはスキップモードフラグを立てる
+    wait_key_push_with_idle 
+    #キー入力伝搬を止める為に１フレ送る
+    next_frame 
 
-require_relative './control_container.rb'
-require_relative './image_control.rb'
-require_relative './button_control.rb'
-require_relative './se_control.rb'
+    #■行末待機処理
 
-require_relative './layout_container.rb'
-require_relative './char_container.rb'
-require_relative './log_container.rb'
+    #キー入力があるまで待機
+    check_key_push
+    
+    _YIELD_
+    
+    wait_idle
 
-require_relative './VariableTextLayer.rb'
+    #■ポーズ終了処理
 
-require_relative './script_compiler.rb'
-
-#TODO：モジュールであるべきか？
-#TODO：Ragの名称もそろそろ変える
-class Tsukasa < Control
-
-  def initialize(options)
-    options[:default_script_path] = "./system/default_script.rb"
-    super(options)
+    #ルートにウェイクを送る
+    #TODO：本来rootにのみ通知できれば良い筈
+    sleep_mode_all :wake
+    #スキップフラグを下ろす
+    skip_mode_all false
+    #スキップフラグ伝搬が正しく行われるように１フレ送る
+    next_frame
   end
+
+  #■ルートの待機処理
+  #スリープモードを設定
+  sleep_mode :sleep
+  #ウェイク待ち
+  wait_wake
 end

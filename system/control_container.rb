@@ -87,10 +87,15 @@ class Control
 
     #TODO：ここ統合できる筈。
 
+    if options[:default_script_path]
+      #デフォルトスクリプトの読み込み
+      @script_storage += ScriptCompiler.new({:script_path => options[:default_script_path]}).commands
+    end
+
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]
       #シナリオファイルの読み込み
-      @script_storage = ScriptCompiler.new({:script_path => options[:script_path]}).commands
+      @script_storage += ScriptCompiler.new({:script_path => options[:script_path]}).commands
     end
 
     #ブロックが付与されているなら読み込んで登録する
@@ -476,45 +481,6 @@ class Control
     #スリープモードを解除する
     @@root.send_command_interrupt_to_all(:sleep_mode, 
                                         {:sleep_mode => options[:sleep_mode_all]})
-    return :continue
-  end
-
-  #puaseコマンド
-  #スキップ待機とキー入力待機
-  def command_pause(options, target)
-    #TODO:※ページスキップ的な機能が実装されたら、このへんでその処理を行う筈
-
-    #■ルートの待機処理
-
-    #スリープモードを設定
-    send_command(:sleep_mode, {:sleep_mode => :sleep})
-    #ウェイク待ち
-    send_command(:wait_wake, nil)
-
-    #■行表示中スキップ処理
-
-    #idleになるかキー入力を待つ
-    #※wait中にキーが押された場合、waitはスキップモードフラグを立てる
-    send_command(:wait_key_push_with_idle, nil, :default_text_layer)
-    #キー入力伝搬を止める為に１フレ送る
-    send_command(:next_frame, nil, :default_text_layer)
-
-    #■行末待機処理
-
-    #キー入力があるまで待機
-    send_command(:check_key_push,           nil, :default_text_layer)
-    send_command(:wait_idle, nil, :default_text_layer)
-    
-    #■ポーズ終了処理
-    
-    #ルートにウェイクを送る
-    #TODO：本来rootにのみ通知できれば良い筈
-    send_command(:sleep_mode_all, {:sleep_mode_all => :wake}, :default_text_layer)
-    #スキップフラグを下ろす
-    send_command(:skip_mode_all, {:skip_mode_all => false},:default_text_layer)
-    #スキップフラグ伝搬が正しく行われるように１フレ送る
-    send_command(:next_frame, nil, :default_text_layer)
-
     return :continue
   end
 end

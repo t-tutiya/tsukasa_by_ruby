@@ -130,6 +130,10 @@ class ScriptCompiler
   impl_define :wait_key_push_with_idle,   []
   impl_define :wait_idle,                 []
 
+  #ＳＥの再生と停止（暫定）
+  impl_define :se_play, []
+  impl_define :se_stop, []
+
   #単一オプションを持つコマンド
   #特定コマンドの終了を待つ
   impl_define :wait_command,                [:option]
@@ -232,9 +236,6 @@ class ScriptCompiler
   impl_define :about, [:block]
 
   impl_define :visible, [:option]
-
-  impl_define :se_play, [:option]
-  impl_define :se_stop, [:option]
 
   impl_define :sleep_mode_all, [:option]
   impl_define :skip_mode_all, [:option]

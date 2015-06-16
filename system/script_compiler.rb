@@ -113,25 +113,40 @@ class ScriptCompiler
   end
 
   #次フレームに送る
-  impl_define :next_frame, []
+  impl_define :next_frame,                []
   #キー入力待ち
-  impl_define :pause, []
+  impl_define :pause,                     []
 
-  impl_define :wait_wake, []
+  impl_define :wait_wake,                 []
 
-  impl_define :wake, [:option_hash]
-
-  impl_define :wait_input_key, []
+  impl_define :wait_input_key,            []
 
   #ボタン制御コマンド群
   #TODO:これは無くても動いて欲しいが、現状だとscript_compilerを通す為に必要
-  impl_define :normal, []
+  impl_define :normal,                    []
+
+  impl_define :wait_child_controls_idle,  []
+
+  impl_define :check_key_push,            []
+
+  impl_define :wait_key_push_with_idle,   []
+  impl_define :wait_idle,                 []
 
   #単一オプションを持つコマンド
   #特定コマンドの終了を待つ
-  impl_define :wait_command, [:option]
+  impl_define :wait_command,                [:option]
   #特定フラグの更新を待つ（現状では予めnilが入ってないと機能しない）
-  impl_define :wait_flag, [:option]
+  impl_define :wait_flag,                   [:option]
+
+  impl_define :wait_command_with_key_push,  [:option]
+
+  #スリープモードの更新
+  impl_define :sleep_mode,                  [:option]
+  #スキップモードの更新
+  impl_define :skip_mode,                   [:option]
+
+  #指定フレーム待つ
+  impl_define :wait,                        [:option]
 
   #次に読み込むスクリプトファイルの指定
   impl_define :next_scenario, :LayoutContainer, [:option]
@@ -140,36 +155,27 @@ class ScriptCompiler
   #コントロールの削除
   impl_define :dispose,       :LayoutContainer, [:option]
 
-  impl_define :wait_child_controls_idle, []
-
-  impl_define :check_key_push, []
-
-  impl_define :wait_command_with_key_push, [:option]
-
-  #スリープモードの更新
-  impl_define :sleep_mode, [:option]
-  #スキップモードの更新
-  impl_define :skip_mode, [:option]
-
-  #指定フレーム待つ
-  impl_define :wait, [:option]
+  impl_define :wake,                      [:option_hash]
   #移動
-  impl_define :move, [:option_hash]
-  impl_define :move_line, [:option_hash]
-  impl_define :move_line_with_skip, [:option_hash]
+  impl_define :move,                      [:option_hash]
+  impl_define :move_line,                 [:option_hash]
+  impl_define :move_line_with_skip,       [:option_hash]
+  #フラグ設定
+  impl_define :flag,                      [:option_hash]
 
   #フェードトランジション
-  impl_define :transition_fade, [:option_hash]
+  impl_define :transition_fade,           [:option_hash]
   impl_define :transition_fade_with_skip, [:option_hash]
-  #フラグ設定
-  impl_define :flag, [:option_hash]
 
   impl_define :change_default_target, [:all]
 
   #コントロールの生成
-  impl_define :create, [:all]
+  impl_define :create,                [:all]
   #コントロール単位でイベント駆動するコマンド群を格納する
-  impl_define :event, [:all]
+  impl_define :event,                 [:all]
+
+  #画像の差し替え
+  impl_define :image_change, :ImageControl, [:all]
 
   #文字レンダラの指定
   #TODO:これはtext_layer内に動作を限定できないか？
@@ -207,25 +213,22 @@ class ScriptCompiler
   #レンダリング済みフォントの登録
   impl_define :map_image_font,        :CharContainer, [:all]
 
-  #画像の差し替え
-  impl_define :image_change, :ImageControl, [:all]
-
   #制御構文 if系
-  impl_define :IF, [:option, :block]
-  impl_define :THEN, [:block]
-  impl_define :ELSE, [:block]
+  impl_define :IF,    [:option, :block]
+  impl_define :THEN,  [:block]
+  impl_define :ELSE,  [:block]
   impl_define :ELSIF, [:option, :block]
 
   #case-when文
   #TODO：現状では受け取れる式は１個のみとする
   #TODO：複数取れるべきだが、現仕様では他のコマンドと整合しない
-  impl_define :CASE, [:option, :block]
-  impl_define :WHEN, [:option, :block]
+  impl_define :CASE,  [:option, :block]
+  impl_define :WHEN,  [:option, :block]
 
   #while文
   impl_define :WHILE, [:option, :block]
 
-  impl_define :EXP, [:block]
+  impl_define :EXP,   [:block]
 
   #コマンド列のブロック化
   impl_define :about, [:block]
@@ -234,9 +237,6 @@ class ScriptCompiler
 
   impl_define :se_play, [:option]
   impl_define :se_stop, [:option]
-
-  impl_define :wait_key_push_with_idle, []
-  impl_define :wait_idle, []
 
   impl_define :sleep_mode_all, [:option]
   impl_define :skip_mode_all, [:option]
@@ -257,7 +257,6 @@ class ScriptCompiler
   end
 
   #ヘルパーメソッド群
-
   def commands()
     return @script_storage
   end

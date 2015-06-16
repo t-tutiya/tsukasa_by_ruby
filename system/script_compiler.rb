@@ -75,38 +75,33 @@ class ScriptCompiler
                               ])
   end
 
-  #オプション無し
-  def self.impl_non_option(command_name, default_class = :Anonymous)
-    define_method(command_name) do |target = nil|
-      impl(command_name, default_class, target, nil, {})
-    end
-  end
+  #コマンドに対応するメソッドを生成する。
+  def self.impl_define(command_name, 
+                       default_class = :Anonymous, 
+                       args_format)
+    define_method(command_name) do |option = nil, 
+                                    target = nil,
+                                    **option_hash, 
+                                    &block|
+      #引数のチェック。:allならチェックしない
+      if !args_format.index(:all)
+        #無名引数が定義されておらず、かつ呼び出し時に設定されている場合
+        if !args_format.index(:option) and option
+          #ターゲットも設定されている場合は書式エラーとして例外
+          raise if target
+          
+          #構文上のミスなので中身をスライドさせる
+          #TODO：もうちょっと上手い実装は無いものか
+          target = option
+          option = nil
+        end
 
-  #名前なしオプション（１個）
-  def self.impl_one_option(command_name, default_class = :Anonymous)
-    define_method(command_name) do |option, target = nil|
-      impl(command_name, default_class, target, option, {})
-    end
-  end
-
-  #名前付きオプション群
-  def self.impl_options(command_name, default_class = :Anonymous)
-    define_method(command_name) do |target = nil, **options |
-      impl(command_name, default_class, target, nil, options)
-    end
-  end
-
-  #ブロック
-  def self.impl_block(command_name, default_class = :Anonymous)
-    define_method(command_name) do |target = nil,&block|
-      impl(command_name, default_class, target, nil, &block)
-    end
-  end
-
-  #名前無しオプション（１個）＆名前付オプション群＆ブロック
-  def self.impl_option_options_block(command_name, default_class = :Anonymous)
-    define_method(command_name) do |option , target = nil,**options, &block|
-      impl(command_name, default_class, target, option, options, &block )
+        #ハッシュが定義されておらず、かつ呼び出し時に設定されている場合例外
+        raise if !args_format.index(:option_hash) and !option_hash.empty?
+        #ブロックが定義されておらず、かつ呼び出し時に設定されている場合例外
+        raise if !args_format.index(:block)       and block
+      end
+      impl(command_name, default_class, target, option, option_hash, &block)
     end
   end
 
@@ -118,123 +113,133 @@ class ScriptCompiler
   end
 
   #次フレームに送る
-  impl_non_option :next_frame
+  impl_define :next_frame, []
   #キー入力待ち
-  impl_non_option :pause
+  impl_define :pause, []
 
-  impl_non_option :wait_wake
+  impl_define :wait_wake, []
 
-  impl_options :wake
-  impl_non_option :wait_input_key
+  impl_define :wake, [:option_hash]
 
-  #改行
-  impl_non_option :line_feed,  :CharContainer
-  #改ページ
-  impl_non_option :flash,      :CharContainer
+  impl_define :wait_input_key, []
 
   #ボタン制御コマンド群
   #TODO:これは無くても動いて欲しいが、現状だとscript_compilerを通す為に必要
-  impl_non_option :normal
+  impl_define :normal, []
 
   #単一オプションを持つコマンド
   #特定コマンドの終了を待つ
-  impl_one_option :wait_command
+  impl_define :wait_command, [:option]
   #特定フラグの更新を待つ（現状では予めnilが入ってないと機能しない）
-  impl_one_option :wait_flag
+  impl_define :wait_flag, [:option]
 
   #次に読み込むスクリプトファイルの指定
-  impl_one_option :next_scenario, :LayoutContainer
-  impl_one_option :load_script, :LayoutContainer
+  impl_define :next_scenario, :LayoutContainer, [:option]
+  impl_define :load_script,   :LayoutContainer, [:option]
 
   #コントロールの削除
-  impl_one_option :dispose,       :LayoutContainer
+  impl_define :dispose,       :LayoutContainer, [:option]
 
-  impl_non_option :wait_child_controls_idle
+  impl_define :wait_child_controls_idle, []
 
-  impl_non_option :check_key_push
-  impl_one_option :wait_command_with_key_push
+  impl_define :check_key_push, []
+
+  impl_define :wait_command_with_key_push, [:option]
 
   #スリープモードの更新
-  impl_one_option :sleep_mode
+  impl_define :sleep_mode, [:option]
   #スキップモードの更新
-  impl_one_option :skip_mode
+  impl_define :skip_mode, [:option]
 
-  #文字
-  impl_one_option :char,         :CharContainer
   #指定フレーム待つ
-  impl_one_option :wait
-  #インデント設定
-  impl_one_option :indent,       :CharContainer
-  #文字描画速度の設定
-  impl_one_option :delay,        :CharContainer
-
+  impl_define :wait, [:option]
   #移動
-  impl_options :move
-  impl_options :move_line
-  impl_options :move_line_with_skip
+  impl_define :move, [:option_hash]
+  impl_define :move_line, [:option_hash]
+  impl_define :move_line_with_skip, [:option_hash]
 
   #フェードトランジション
-  impl_options :transition_fade
-  impl_options :transition_fade_with_skip
+  impl_define :transition_fade, [:option_hash]
+  impl_define :transition_fade_with_skip, [:option_hash]
   #フラグ設定
-  impl_options :flag
-  #ブロックを持つコマンド
+  impl_define :flag, [:option_hash]
+
+  impl_define :change_default_target, [:all]
+
+  #コントロールの生成
+  impl_define :create, [:all]
+  #コントロール単位でイベント駆動するコマンド群を格納する
+  impl_define :event, [:all]
 
   #文字レンダラの指定
   #TODO:これはtext_layer内に動作を限定できないか？
-  impl_block :char_renderer,     :CharContainer
-
-  #コマンド列のブロック化
-  impl_block :about
-
-  #オプション／サブオプション（省略可）／ブロックを持つコマンド
-
+  impl_define :char_renderer,         :CharContainer, [:block]
+  #文字
+  impl_define :char,                  :CharContainer, [:option]
   #文字列
-  impl_one_option :text,         :CharContainer
-
-  impl_option_options_block :change_default_target
-
-  #コントロールの生成
-  impl_option_options_block :create
-  #コントロール単位でイベント駆動するコマンド群を格納する
-  impl_option_options_block :event
-
+  impl_define :text,                  :CharContainer, [:option]
+  #インデント設定
+  impl_define :indent,                :CharContainer, [:option]
+  #文字描画速度の設定
+  impl_define :delay,                 :CharContainer, [:option]
+  #改行
+  impl_define :line_feed,             :CharContainer, []
+  #改ページ
+  impl_define :flash,                 :CharContainer, []
   #画像スタック
-  impl_option_options_block :graph,               :CharContainer
+  impl_define :graph,                 :CharContainer, [:all]
   #ルビ文字の出力
-  impl_option_options_block :rubi_char,           :CharContainer
+  impl_define :rubi_char,             :CharContainer, [:all]
   #複数ルビ文字列の割り付け
-  impl_option_options_block :rubi,                :CharContainer
+  impl_define :rubi,                  :CharContainer, [:all]
   #デフォルト
-  impl_option_options_block :default_font_config, :CharContainer
+  impl_define :default_font_config,   :CharContainer, [:all]
   #現在値
-  impl_option_options_block :font_config,         :CharContainer
+  impl_define :font_config,           :CharContainer, [:all]
   #現在値をリセット
-  impl_option_options_block :reset_font_config,   :CharContainer
+  impl_define :reset_font_config,     :CharContainer, [:all]
   #デフォルト
-  impl_option_options_block :default_style_config,:CharContainer
+  impl_define :default_style_config,  :CharContainer, [:all]
   #現在値
-  impl_option_options_block :style_config,        :CharContainer
+  impl_define :style_config,          :CharContainer, [:all]
   #現在値をリセット
-  impl_option_options_block :reset_style_config,  :CharContainer
+  impl_define :reset_style_config,    :CharContainer, [:all]
   #レンダリング済みフォントの登録
-  impl_option_options_block :map_image_font,      :CharContainer
+  impl_define :map_image_font,        :CharContainer, [:all]
 
   #画像の差し替え
-  impl_option_options_block :image_change, :ImageControl
+  impl_define :image_change, :ImageControl, [:all]
 
   #制御構文 if系
-  impl_option_options_block :IF  #本来はoption_block
-  impl_block :EXP
-  impl_block :THEN
-  impl_block :ELSE
-  impl_option_options_block :ELSIF
+  impl_define :IF, [:option, :block]
+  impl_define :THEN, [:block]
+  impl_define :ELSE, [:block]
+  impl_define :ELSIF, [:option, :block]
 
-  impl_option_options_block :WHILE  #本来はoption_block
+  #case-when文
+  #TODO：現状では受け取れる式は１個のみとする
+  #TODO：複数取れるべきだが、現仕様では他のコマンドと整合しない
+  impl_define :CASE, [:option, :block]
+  impl_define :WHEN, [:option, :block]
 
-  impl_one_option :visible
-  impl_non_option :se_play
-  impl_non_option :se_stop
+  #while文
+  impl_define :WHILE, [:option, :block]
+
+  impl_define :EXP, [:block]
+
+  #コマンド列のブロック化
+  impl_define :about, [:block]
+
+  impl_define :visible, [:option]
+
+  impl_define :se_play, [:option]
+  impl_define :se_stop, [:option]
+
+  impl_define :wait_key_push_with_idle, []
+  impl_define :wait_idle, []
+
+  impl_define :sleep_mode_all, [:option]
+  impl_define :skip_mode_all, [:option]
 
   #target変更は受け付けない(Controlクラスに登録)
   def define(command_name, &block)
@@ -245,11 +250,6 @@ class ScriptCompiler
     options[:yield_block] = @yield_block
     impl(:YIELD, :Anonymous, nil, nil, **options)
   end
-
-  impl_option_options_block :CASE #本来はoption_block
-  #TODO：現状では受け取れる式は１個のみとする
-  #TODO：複数取れるべきだが、現仕様では他のコマンドと整合しない
-  impl_option_options_block :WHEN #本来はoption_block
 
   #eval（予約語の為メソッド名差し替え）
   def EVAL(option, target = nil)

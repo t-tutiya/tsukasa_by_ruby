@@ -2,27 +2,26 @@
 
 require 'dxruby'
 require 'pp'
-require './system/rag.rb'
+require './system/tsukasa.rb'
 
 #初期化
 Window.resize(1280, 720)
 
-rag = Rag.new({ :width => 1280,
+tsukasa = Tsukasa.new({ :width => 1280,
                 :height => 720,
-                :script_path => "./test/senario_sms_03.rb",
-#                :script_path => "./scenario/scenario05a.rb",
-                :script_path => "./scenario/scenario_function.rb",
-                :script_path => "./scenario/scenario_test_if.rb",
+                :script_path => "./test/scenario_sms_04.rb",
+#                :script_path => "./scenario/scenario_function.rb",
+#                :script_path => "./scenario/scenario_if.rb",
+#                :script_path => "./scenario/scenario_case_when.rb",
 #                :script_path => "./scenario/scenario_while.rb",
-#                :script_path => "./scenario/scenario06.rb",
                 :id => :default_layout_container
                 })
 #ゲームループ
 Window.loop do
+  #pp "frame"
   #Ragエンジン処理
-  rag.update
+  tsukasa.update
   #Ragエンジン描画
 #  rag.render(0, 0, Window, 1280, 720)
-  rag.render(0, 0, Window)
-  #pp "next_frane"
+  tsukasa.render(0, 0, Window)
 end

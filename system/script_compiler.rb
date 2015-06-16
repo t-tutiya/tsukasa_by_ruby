@@ -30,8 +30,6 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-module Tsukasa
-
 class ScriptCompiler
   include Resource
 
@@ -260,5 +258,4 @@ class ScriptCompiler
   def commands()
     return @script_storage
   end
-end
 end

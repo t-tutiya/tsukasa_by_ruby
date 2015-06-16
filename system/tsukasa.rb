@@ -48,5 +48,5 @@ require_relative './script_compiler.rb'
 
 #TODO：モジュールであるべきか？
 #TODO：Ragの名称もそろそろ変える
-class Rag < Control
+class Tsukasa < Control
 end

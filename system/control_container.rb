@@ -528,6 +528,8 @@ class Control
       when :key_push
         #キー押下があれば終了
         if Input.key_push?(K_SPACE)
+          @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
+
           return :continue 
         else
           @idle_mode = false

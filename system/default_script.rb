@@ -67,3 +67,16 @@ define :pause do
   #ウェイク待ち
   wait [:wake]
 end
+
+#指定フレーム数ウェイト
+#ex. wait_count 60
+define :wait_count do |options|
+  wait [:count], count: options[:wait_count]
+end
+
+#指定コマンドウェイト
+#ex. wait_command :move_line
+define :wait_command do |options|
+  wait [:command], command: options[:wait_command]
+end
+

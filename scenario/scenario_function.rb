@@ -30,19 +30,19 @@ create :ButtonControl,
   #TODO：ただし、現状@@function_listはクラス変数なので、スコープは一致しない。これも再検討したい。
   define :func do |val|
     move_line x: 0, y: val[:y],   count:0, frame: 60, start_x: 0,   start_y: 0
-    wait [:command], command: :move_line
+    wait_command :move_line
   end
 end
 
 about :button1 do
   move_line x: 0, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
-  wait [:command], command: :move_line
+  wait_command :move_line
   move_line x: 300, y: 300, count:0, frame: 60, start_x: 0, start_y: 300
-  wait [:command], command: :move_line
+  wait_command :move_line
   move_line x: 300,   y: 0, count:0, frame: 60, start_x: 300, start_y: 300
-  wait [:command], command: :move_line
+  wait_command :move_line
   move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 300,   start_y: 0
-  wait [:command], command: :move_line
+  wait_command :move_line
   #渡せるのは名前付きオプションのみ(targetは自動で渡される)
   func y: 150
 end

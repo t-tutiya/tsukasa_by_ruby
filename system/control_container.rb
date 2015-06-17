@@ -494,7 +494,6 @@ class Control
   private
 
   def command_wait(options, target)
-
     options[:wait].each do |condition|
       case condition
       when :wake

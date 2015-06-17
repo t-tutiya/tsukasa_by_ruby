@@ -36,7 +36,8 @@ define :pause do
   about :default_text_layer do
     #idleになるかキー入力を待つ
     #※wait中にキーが押された場合、waitはスキップモードフラグを立てる
-    wait_key_push_with_idle 
+    wait [:keypush, :idol]
+    
     #キー入力伝搬を止める為に１フレ送る
     next_frame 
 
@@ -47,7 +48,7 @@ define :pause do
     
     _YIELD_
     
-    wait_idle
+    wait [:idol]
 
     #■ポーズ終了処理
 
@@ -64,5 +65,5 @@ define :pause do
   #スリープモードを設定
   sleep_mode :sleep
   #ウェイク待ち
-  wait_wake
+  wait [:wake]
 end

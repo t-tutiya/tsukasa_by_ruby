@@ -44,7 +44,6 @@ require_relative './char_control'
   :text => :command_text,                           #文字列スタック
 
   :graph => :command_graph,                         #画像スタック
-  :wait => :command_wait,                           #フレーム待機
   :line_feed => :command_line_feed,                 #改行
   :flash => :command_flash,   #ページのリセット
   :locate => :command_locate, #次の文字の描画座標を直接指定する
@@ -222,7 +221,9 @@ class CharContainer < Control
                     @style_config[:charactor_pitch]
 
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    send_command_interrupt(:wait, {:wait => :unset_wait_frame})
+    send_command_interrupt(:wait, 
+                          {:wait => [:count, :skip, :key_push],
+                           :count => :unset_wait_frame})
 
     return :continue #アイドル
   end
@@ -280,7 +281,9 @@ class CharContainer < Control
     @next_char_x += image.width + @style_config[:charactor_pitch]
 
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    send_command_interrupt(:wait, {:wait => :unset_wait_frame})
+    send_command_interrupt(:wait, 
+                          {:wait => [:count, :skip, :key_push],
+                           :count => :unset_wait_frame})
 
     return :continue#フレーム続行
   end
@@ -295,7 +298,9 @@ class CharContainer < Control
     @height = @next_char_y + @font_config[:size]
 
     #改行時のwaitを設定する
-    send_command_interrupt(:wait, {:wait => @style_config[:line_feed_wait_frame]})
+    send_command_interrupt(:wait, 
+                          {:wait => [:count, :skip, :key_push],
+                           :count => @style_config[:line_feed_wait_frame]})
 
     return :continue #フレーム続行
   end

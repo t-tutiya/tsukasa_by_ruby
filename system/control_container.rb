@@ -493,85 +493,53 @@ class Control
 
   private
 
-  #キー入力を待つ
   def command_wait(options, target)
-    #スキップモードであれば終了
-    return :continue if @skip_mode
 
-    #キー押下があれば終了
-    if Input.key_push?(K_SPACE)
-      return :continue 
+    options[:wait].each do |condition|
+      case condition
+      when :wake
+        return :continue if @sleep_mode != :sleep
+
+      when :idol
+        return :continue if all_controls_idle?
+
+      when :count
+        #待ちフレーム数を取得。
+        #設定されていない場合はコンフィグから初期値を取得する
+        #TODO:@style_config[:wait_frame]はchar特有のプロパティ
+        wait_frame =  options[:count] == :unset_wait_frame ?
+                      @style_config[:wait_frame] :
+                      options[:count]
+        #残りwaitフレーム数が０より大きい場合
+        return :continue if wait_frame <= 0
+        options[:count] = wait_frame - 1
+
+      when :command
+        unless @next_frame_commands.index{|command|
+          command[0]==options[:command]}
+          return :continue
+        end
+
+      when :flag
+        unless @@global_flag[("user_" + options[:flag].to_s).to_sym]
+          return :continue
+        end
+
+      when :key_push
+        #キー押下があれば終了
+        if Input.key_push?(K_SPACE)
+          return :continue 
+        else
+          @idle_mode = false
+        end
+
+      when :skip
+        #スキップモードであれば終了
+        return :continue if @skip_mode
+      end
     end
 
-    #待ちフレーム数を取得。設定されていない場合はコンフィグから初期値を取得する
-    #TODO:@style_config[:wait_frame]はchar特有のプロパティ
-    wait_frame =  options[:wait] == :unset_wait_frame ?
-                  @style_config[:wait_frame] :
-                  options[:wait]
-
-    #残りwaitフレーム数が０より大きい場合
-    if 0 < wait_frame
-      #残りwaitフレーム数をデクリメントし、:waitコマンドを再度スタックする
-      return :end_frame, [:wait, {:wait => wait_frame - 1}]
-    end
-
-    return :continue
-  end
-
-  #wait_commandコマンド
-  #特定のコマンドが自身より前に存在し続ける限り待機を続ける
-  def command_wait_command(options, target)
-    #指定されたコマンドが次フレ用に積まれている場合
-    if @next_frame_commands.index{|command| 
-          command[0] == options[:wait_command]
-       }
-      #自分自身をスタックし、コマンド探査を終了する
-      return :end_frame, [:wait_command, options]
-    else
-      return :continue
-    end
-  end
-
-  def command_wait_flag(options)
-    flag = @@global_flag[("user_" + options[:wait_flag].to_s).to_sym]
-    if flag == nil
-      return :end_frame, [:wait_flag, options]
-    else
-      return :continue
-    end
-  end
-
-  #wait_wake
-  #覚醒待機状態
-  def command_wait_wake(options, target)
-    if @sleep_mode == :sleep
-      return :end_frame, [:wait_wake, nil]
-    end
-    return :continue
-  end
-
-  #wait_idleコマンド
-  #子要素のコントロールが全てアイドルになるまで待機
-  def command_wait_idle(options, target)
-    if !all_controls_idle?
-      return :end_frame, [:wait_idle, options]
-    end
-
-    return :continue
-  end
-
-  def command_wait_key_push_with_idle(options, target)
-    return :continue if all_controls_idle?
-    #子要素のコントロールが全てアイドル状態の時にキーが押された場合
-    if Input.key_push?(K_SPACE)
-      #スキップフラグを立てる
-      @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode => true})
-      return :continue
-    else
-      @idle_mode = false
-      #ポーズ状態を続行する
-      return :end_frame, [:wait_key_push_with_idle, options, target]
-    end
+    return :end_frame, [:wait, options]
   end
 
   def command_check_key_push(options, target)

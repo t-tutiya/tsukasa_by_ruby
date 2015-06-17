@@ -113,40 +113,23 @@ class ScriptCompiler
   #次フレームに送る
   impl_define :next_frame,                []
 
-  impl_define :wait_wake,                 []
-
-  impl_define :wait_input_key,            []
-
   #ボタン制御コマンド群
   #TODO:これは無くても動いて欲しいが、現状だとscript_compilerを通す為に必要
   impl_define :normal,                    []
 
-  impl_define :wait_child_controls_idle,  []
-
   impl_define :check_key_push,            []
-
-  impl_define :wait_key_push_with_idle,   []
-  impl_define :wait_idle,                 []
 
   #ＳＥの再生と停止（暫定）
   impl_define :se_play, []
   impl_define :se_stop, []
 
-  #単一オプションを持つコマンド
-  #特定コマンドの終了を待つ
-  impl_define :wait_command,                [:option]
-  #特定フラグの更新を待つ（現状では予めnilが入ってないと機能しない）
-  impl_define :wait_flag,                   [:option]
-
-  impl_define :wait_command_with_key_push,  [:option]
+  #各種ウェイト処理
+  impl_define :wait,                        [:option, :option_hash]
 
   #スリープモードの更新
   impl_define :sleep_mode,                  [:option]
   #スキップモードの更新
   impl_define :skip_mode,                   [:option]
-
-  #指定フレーム待つ
-  impl_define :wait,                        [:option]
 
   #次に読み込むスクリプトファイルの指定
   impl_define :next_scenario, :LayoutContainer, [:option]

@@ -221,53 +221,51 @@ class Control
 
   #描画
   def render(offset_x, offset_y, target)
-    base_offset = offset = {:x => offset_x, :y => offset_y}
-    child_offset = {:x => 0, :y => 0}
+
+    if @draw_to_entity
+      offset_x = offset_y = 0
+    end
 
     #子要素のコントロールの描画
     #TODO:内部でif分岐してるのはおかしい
     @control_list.each do |entity|
+      next unless entity.visible
       #所持コントロール自身に描画する場合
       if @draw_to_entity
         #子要素を自ターゲットに一時描画
-        child_offset = entity.render(child_offset[:x], child_offset[:y], @entity) if entity.visible
+        offset_x, offset_y = entity.render( offset_x, offset_y, @entity) 
       else
         #子要素を親ターゲットに直接描画
-        offset = entity.render(offset[:x] + @x_pos, offset[:y] + @y_pos, target) if entity.visible
-        
-        offset = base_offset unless offset
+        offset_x, offset_y = entity.render( offset_x + @x_pos, 
+                                            offset_y + @y_pos, target)
       end
     end
 
-    offset = {:x => 0, :y => 0} unless offset
+    dx = offset_x + @x_pos
+    dy = offset_y + @y_pos
 
     #自コントロールが描画要素を持っている場合
     if @entity
       #ターゲットに描画
-      target.draw_ex( offset[:x] + @x_pos, 
-                      offset[:y] + @y_pos, 
-                      @entity, 
-                      @draw_option) 
+      target.draw_ex(dx, dy, @entity, @draw_option) 
     end
 
     #連結指定チェック
     case @float_mode
     #右連結
     when :right
-      result = {:x => offset[:x] + @width + @x_pos,
-                :y => offset[:y] + @y_pos}
+      return  dx + @width, 
+              dy
     #下連結
     when :bottom
-      result = {:x => offset[:x] + @x_pos,
-                :y => offset[:y] + @height + @y_pos}
+      return  dx,
+              dy + @height
     #連結解除
     when :none
-      result = nil
-    else
-      raise
+      return 0, 0
     end
 
-    return result
+    raise
   end
 
   def get_child(id)

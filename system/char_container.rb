@@ -143,18 +143,19 @@ class CharContainer < Control
     super(options)
   end
 
-  def update
-#    pp @command_list
-    super
+  #############################################################################
+  #ヘルパーメソッド
+  #############################################################################
+
+  #"RRGGBB"の１６進数６桁カラー指定を、[R,G,B]の配列に変換
+  def hex_to_rgb(target)
+    return target if target.class == Array
+    [target[0, 2].hex, target[2, 2].hex, target[4, 2].hex]
   end
 
   #############################################################################
   #公開インターフェイス
   #############################################################################
-
-  def dispose()
-    super
-  end
 
   #TODO：多分いらない
   def width
@@ -231,9 +232,6 @@ class CharContainer < Control
   #textコマンド
   #指定文字列を描画チェインに連結する
   def command_text(options, target)
-    #必須属性値チェック
-    raise if check_exist(options, :text)
-    
     commands = Array.new
     
     #文字列を分解してcharコマンドに変換する
@@ -251,9 +249,6 @@ class CharContainer < Control
   #graphコマンド
   #指定画像を描画チェインに連結する
   def command_graph(options, target)
-    #必須属性値チェック
-    raise if check_exist(options, :file_path)
-
     #:is_charが省略されている場合初期値を設定する
     options[:is_char] = true if !options.key?(:is_char)
 
@@ -274,7 +269,7 @@ class CharContainer < Control
                      :font => @font,
                      :font_config => @font_config,
                      :skip_mode =>  @skip_mode,
-                     :graph => object_to_boolean(options[:is_char])},
+                     :graph => options[:is_char]},
                     image
                   ))
     #描画座標を画像横幅＋文字ピッチ分進める
@@ -328,8 +323,6 @@ class CharContainer < Control
   #ルビを出力する
   #オフセットがあればそのＸ座標から、なければ文字の中心から計算して出力する
   def command_rubi_char(options, target)
-    #必須属性値チェック
-    return false if check_exist(options, :char)
 
     #ルビ文字列を取得
     texts = options[:char].to_s
@@ -370,9 +363,6 @@ class CharContainer < Control
   #text:ルビを割り当てるベースの文字列
   #align: expand（デフォルト）/center/left/rightから選ぶ
   def command_rubi(options, target)
-    #必須属性値チェック
-    return :continue if check_exist(options, :text, :char)
-
     #ルビ文字列を取得
     rubi_texts = options[:char]
     #ルビの文字数を取得
@@ -523,13 +513,13 @@ class CharContainer < Control
 
     #太字／イタリック
     when :bold
-      target[:bold] = object_to_boolean(value)
+      target[:bold] = value
     when :italic
-      target[:italic] = object_to_boolean(value)
+      target[:italic] = value
 
     #袋文字関連
     when :edge  #袋文字を描画するかどうかをtrue/falseで指定します。
-      target[:edge] = object_to_boolean(value)
+      target[:edge] = value
     when :edge_color  #袋文字の枠色を指定します。配列で[R, G, B]それぞれ0～255
       target[:edge_color] = hex_to_rgb(value)
     when :edge_width  #袋文字の枠の幅を0～の数値で指定します。1で1ピクセル
@@ -539,9 +529,9 @@ class CharContainer < Control
 
     #影文字関連
     when :shadow  #影を描画するかどうかをtrue/falseで指定します
-      target[:shadow] = object_to_boolean(value)
+      target[:shadow] = value
     when :shadow_edge #edgeがtrueの場合に、枠の部分に対して影を付けるかどうかをtrue/falseで指定します。trueで枠の影が描かれます
-      target[:shadow_edge] = object_to_boolean(value)
+      target[:shadow_edge] = value
     when :shadow_color  #影の色を指定します。配列で[R, G, B]、それぞれ0～255
       target[:shadow_color] = hex_to_rgb(value)
     when :shadow_x  #影の位置を相対座標で指定します。+1は1ピクセル右になります
@@ -574,7 +564,7 @@ class CharContainer < Control
       target[:z] = value.to_i
 
     when :aa  #アンチエイリアスのオンオフ
-      target[:aa] = object_to_boolean(value)
+      target[:aa] = value
 
     else
       #使用されていないハッシュ。エラー。
@@ -610,9 +600,6 @@ class CharContainer < Control
 
   #レンダリング済みフォントデータファイルを登録する
   def command_map_image_font(options, target)
-    #必須属性値チェック
-    raise if check_exist(options, :font_name, :file_path)
-
     #レンダリング済みフォントデータファイルを任意フォント名で登録
     Image_font.regist(options[:font_name].to_s, options[:file_path].to_s)
 
@@ -683,11 +670,8 @@ class CharContainer < Control
   #インデントはネストしないので注意
   #TODO:微妙な仕様だな……
   def command_indent(options, target)
-    #必須属性値チェック
-    raise if check_exist(options, :indent)
-
     #インデント開始Ｘ座標を設定もしくはクリアする
-    @indent_offset = object_to_boolean(options[:indent]) ? @next_char_x : 0
+    @indent_offset = options[:indent] ? @next_char_x : 0
 
     return :continue #フレーム続行
   end
@@ -698,9 +682,6 @@ class CharContainer < Control
 
   #描画速度指定
   def command_delay(options, target)
-    #必須属性値チェック
-    return :continue if check_exist(options, :delay)
-
     update_wait_frame(options[:delay].to_i)
 
     return :continue #フレーム続行

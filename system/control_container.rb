@@ -639,46 +639,6 @@ class Control
   
 end
 
-
-class Control #旧仕様。廃棄予定
-
-  #############################################################################
-  #非公開インターフェイス
-  #############################################################################
-
-  private
-
-  #############################################################################
-  #ヘルパーメソッド
-  #############################################################################
-
-  #文字列をbool型に変換
-  def object_to_boolean(value)
-    return [true, "true", 1, "1", "T", "t"].include?(value.class == String ? value.downcase : value)
-  end
-
-  #"RRGGBB"の１６進数６桁カラー指定を、[R,G,B]の配列に変換
-  def hex_to_rgb(target)
-    return target if target.class == Array
-    [target[0, 2].hex, target[2, 2].hex, target[4, 2].hex]
-  end
-
-  #タグの必須属性の有無をチェックし、無ければtrueを返す
-  def check_exist(target, *attributes)
-    if !target
-      puts "オプションが空です"
-      return true
-    end
-    attributes.each do |attribute|
-      if !target.key?(attribute)
-        puts "属性値\"#{attribute.to_s}\"は必須です"
-        return true
-      end
-    end
-    return false
-  end
-end
-
 #############################################################################
 #制御構文コマンド
 #############################################################################

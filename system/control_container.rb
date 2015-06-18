@@ -222,14 +222,13 @@ class Control
   #描画
   def render(offset_x, offset_y, target)
 
-    if @draw_to_entity
-      offset_x = offset_y = 0
-    end
+    return offset_x, offset_y unless @visible
+
+    offset_x = offset_y = 0 if @draw_to_entity
 
     #子要素のコントロールの描画
     #TODO:内部でif分岐してるのはおかしい
     @control_list.each do |entity|
-      next unless entity.visible
       #所持コントロール自身に描画する場合
       if @draw_to_entity
         #子要素を自ターゲットに一時描画
@@ -244,22 +243,19 @@ class Control
     dx = offset_x + @x_pos
     dy = offset_y + @y_pos
 
-    #自コントロールが描画要素を持っている場合
-    if @entity
-      #ターゲットに描画
-      target.draw_ex(dx, dy, @entity, @draw_option) 
-    end
+    #自コントロールが描画要素を持っている場合ターゲットに描画
+    target.draw_ex(dx, dy, @entity, @draw_option) if @entity
 
     #連結指定チェック
     case @float_mode
     #右連結
     when :right
-      return  dx + @width, 
-              dy
+      return dx + @width, 
+             dy
     #下連結
     when :bottom
-      return  dx,
-              dy + @height
+      return dx,
+             dy + @height
     #連結解除
     when :none
       return 0, 0

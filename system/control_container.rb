@@ -306,7 +306,17 @@ class Control
       control.dispose
     end
   end
-  
+
+end
+
+class Control
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
+
   #配列のコマンド列をスクリプトストレージに積む
   def eval_commands(commands)
     return unless commands
@@ -481,15 +491,6 @@ class Control
                                         {:sleep_mode => options[:sleep_mode_all]})
     return :continue
   end
-end
-
-class Control
-
-  #############################################################################
-  #非公開インターフェイス
-  #############################################################################
-
-  private
 
   def command_wait(options, target)
     options[:wait].each do |condition|
@@ -644,7 +645,7 @@ class Control
 end
 
 
-class Control
+class Control #旧仕様。廃棄予定
 
   #############################################################################
   #非公開インターフェイス

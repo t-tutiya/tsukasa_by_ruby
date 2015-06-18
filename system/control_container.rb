@@ -250,18 +250,18 @@ class Control
     case @float_mode
     #右連結
     when :right
-      return dx + @width, 
-             dy
+      dx += @width
     #下連結
     when :bottom
-      return dx,
-             dy + @height
+      dy += @height
     #連結解除
     when :none
-      return 0, 0
+      dx = dy =  0
+    else
+      raise
     end
 
-    raise
+    return dx, dy
   end
 
   def get_child(id)

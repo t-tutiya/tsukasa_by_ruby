@@ -221,34 +221,31 @@ class Control
 
   #描画
   def render(offset_x, offset_y, target)
-    base_offset_x = offset_x
-    base_offset_y = offset_y
+    base_offset = offset = {:x => offset_x, :y => offset_y}
+    child_offset = {:x => 0, :y => 0}
 
-    child_offset_x = 0
-    child_offset_y = 0
-    
     #子要素のコントロールの描画
     #TODO:内部でif分岐してるのはおかしい
     @control_list.each do |entity|
       #所持コントロール自身に描画する場合
       if @draw_to_entity
         #子要素を自ターゲットに一時描画
-        child_offset_x,child_offset_y = entity.render(child_offset_x, child_offset_y, @entity) if entity.visible
+        child_offset = entity.render(child_offset[:x], child_offset[:y], @entity) if entity.visible
       else
         #子要素を親ターゲットに直接描画
-        offset_x,offset_y = entity.render(offset_x + @x_pos, offset_y + @y_pos, target) if entity.visible
-        if offset_x == :base and offset_y == :base
-          offset_x = base_offset_x
-          offset_y = base_offset_y
-        end
+        offset = entity.render(offset[:x] + @x_pos, offset[:y] + @y_pos, target) if entity.visible
+        
+        offset = base_offset unless offset
       end
     end
+
+    offset = {:x => 0, :y => 0} unless offset
 
     #自コントロールが描画要素を持っている場合
     if @entity
       #ターゲットに描画
-      target.draw_ex( offset_x + @x_pos, 
-                      offset_y + @y_pos, 
+      target.draw_ex( offset[:x] + @x_pos, 
+                      offset[:y] + @y_pos, 
                       @entity, 
                       @draw_option) 
     end
@@ -257,21 +254,20 @@ class Control
     case @float_mode
     #右連結
     when :right
-      result_x = offset_x + @width + @x_pos
-      result_y = offset_y + @y_pos
+      result = {:x => offset[:x] + @width + @x_pos,
+                :y => offset[:y] + @y_pos}
     #下連結
     when :bottom
-      result_x = offset_x + @x_pos
-      result_y = offset_y + @height + @y_pos
+      result = {:x => offset[:x] + @x_pos,
+                :y => offset[:y] + @height + @y_pos}
     #連結解除
     when :none
-      result_x = :base
-      result_y = :base
+      result = nil
     else
       raise
     end
 
-    return result_x, result_y #引数を返値に伝搬する
+    return result
   end
 
   def get_child(id)

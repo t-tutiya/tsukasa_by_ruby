@@ -224,16 +224,17 @@ class Control
 
     return offset_x, offset_y unless @visible
 
-    offset_x = offset_y = 0 if @draw_to_entity
-
-    #子要素のコントロールの描画
-    #TODO:内部でif分岐してるのはおかしい
-    @control_list.each do |entity|
-      #所持コントロール自身に描画する場合
-      if @draw_to_entity
+    #所持コントロール自身に描画する場合
+    if @draw_to_entity
+      offset_x = offset_y = 0
+      #子要素のコントロールの描画
+      @control_list.each do |entity|
         #子要素を自ターゲットに一時描画
         offset_x, offset_y = entity.render( offset_x, offset_y, @entity) 
-      else
+      end
+    else
+      #子要素のコントロールの描画
+      @control_list.each do |entity|
         #子要素を親ターゲットに直接描画
         offset_x, offset_y = entity.render( offset_x + @x_pos, 
                                             offset_y + @y_pos, target)

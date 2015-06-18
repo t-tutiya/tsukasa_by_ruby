@@ -80,3 +80,37 @@ define :wait_command do |options|
   wait [:command], command: options[:wait_command]
 end
 
+#標準テキストウィンドウ
+#TODOデバッグ用なので各種数字は暫定
+create :LayoutContainer,
+  x_pos: 128,
+  y_pos: 528,
+  width: 1024,
+  height: 600,
+  index: 1000000, #描画順序
+  id: :main_text_layer do
+    #メッセージウィンドウ
+    create :CharContainer, 
+      x_pos: 2,
+      y_pos: 2,
+      id: :default_text_layer,
+      font_config: { :size => 32, 
+                     :face => "ＭＳＰ ゴシック"},
+      style_config: { :wait_frame => 2,} do
+      char_renderer do
+        transition_fade_with_skip frame: 15,
+          count: 0,
+          start: 0,
+          last: 255
+        wait [:command, :skip], command: :transition_fade_with_skip
+        sleep_mode :sleep
+        wait [:wake]
+        skip_mode false
+        transition_fade_with_skip frame: 60,
+          count: 0,
+          start: 255,
+          last:128
+        wait [:command, :skip], command: :transition_fade_with_skip
+      end
+    end
+  end

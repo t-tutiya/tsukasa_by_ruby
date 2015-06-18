@@ -85,6 +85,8 @@ class Control
 
     @draw_option = {}          #描画オプション
 
+    @draw_option[:z] = options[:index] || 0 #重ね合わせ順序
+
     #TODO：ここ統合できる筈。
 
     if options[:default_script_path]

@@ -289,6 +289,7 @@ class Control
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
   def eval_block(options, block)
+    return unless block
     eval_commands(ScriptCompiler.new(options, &block).commands)
   end
 

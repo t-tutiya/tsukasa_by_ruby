@@ -500,6 +500,9 @@ class Control
       end
     end
 
+    #waitにブロックが付与されているならそれを実行する
+    eval_block(options, options[:block])
+
     return :end_frame, [:wait, options]
   end
 

@@ -45,9 +45,7 @@ define :pause do
 
     #キー入力があるまで待機
     check_key_push
-    
-    _YIELD_
-    
+
     wait [:idol]
 
     #■ポーズ終了処理
@@ -65,7 +63,9 @@ define :pause do
   #スリープモードを設定
   sleep_mode :sleep
   #ウェイク待ち
-  wait [:wake]
+  wait [:wake] do
+    _YIELD_
+  end
 end
 
 #指定フレーム数ウェイト

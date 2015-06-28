@@ -123,9 +123,6 @@ class ScriptCompiler
   impl_define :se_play, []
   impl_define :se_stop, []
 
-  #各種ウェイト処理
-  impl_define :wait,                        [:option, :option_hash]
-
   #スリープモードの更新
   impl_define :sleep_mode,                  [:option]
   #スキップモードの更新
@@ -156,6 +153,9 @@ class ScriptCompiler
   impl_define :create,                [:all]
   #コントロール単位でイベント駆動するコマンド群を格納する
   impl_define :event,                 [:all]
+
+  #各種ウェイト処理
+  impl_define :wait,                  [:all]
 
   #画像の差し替え
   impl_define :image_change, :ImageControl, [:all]

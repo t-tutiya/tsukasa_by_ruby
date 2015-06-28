@@ -38,7 +38,7 @@ class LayoutContainer < Control
   include Drawable #描画関連モジュール
 
   def initialize(options)
-    options[:draw_to_entity] = true
+    options[:child_controls_draw_to_entity] = true
     super(options)
 
     #保持オブジェクトの初期化

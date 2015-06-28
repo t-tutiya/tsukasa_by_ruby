@@ -49,7 +49,7 @@ module Drawable
     @visible = options[:visible] == false ? false : true
 
     #子コントロールを自エンティティに描画するかどうか
-    @draw_to_entity = options[:draw_to_entity]
+    @child_controls_draw_to_entity = options[:child_controls_draw_to_entity]
 
     @draw_option = {} #描画オプション
     @draw_option[:z] = options[:index] || 0 #重ね合わせ順序
@@ -75,7 +75,7 @@ module Drawable
     return offset_x, offset_y unless @visible
 
     #下位エンティティを自エンティティに描画する場合
-    if @draw_to_entity
+    if @child_controls_draw_to_entity
       #下位エンティティを自エンティティに描画
       super(offset_x, offset_x, @entity)
       #自エンティティを上位ターゲットに描画

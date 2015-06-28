@@ -37,7 +37,7 @@ class VariableTextLayer < Control
   include Drawable #描画関連モジュール
 
   def initialize(options)
-    options[:draw_to_entity] = true
+    options[:child_controls_draw_to_entity] = true
     #保持オブジェクトの初期化
     @entity = RenderTarget.new( options[:width], 
                                             options[:height], 

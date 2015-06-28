@@ -32,8 +32,11 @@ create :ImageControl ,
        file_path: "./sozai/button_normal.png", x_pos: 100, y_pos: 100, 
        id: :BG1, float_mode: :right
 create :ImageControl ,
-       file_path: "./sozai/button_normal.png", x_pos: 0, 
-       id: :BG2, float_mode: :none
+       file_path: "./sozai/button_normal.png",
+       id: :BG2, float_mode: :bottom
+create :ImageControl ,
+       file_path: "./sozai/button_normal.png",
+       id: :BG3, float_mode: :none
 =begin
 create :ImageControl ,
        file_path: "./sozai/button_normal.png", 
@@ -42,54 +45,23 @@ create :ImageControl ,
        file_path: "./sozai/button_normal.png", 
        id: :BG3
 =end
+=begin
 create :ImageControl ,
        file_path: "./sozai/button_normal.png", x_pos: 0, y_pos: 0, 
        id: :BG3
-
-=begin
-#ボタンコントロール
-create :ButtonControl, 
-        :x_pos => 0, 
-        :y_pos => 0, 
-        :id=>:button1 do
-  create :ImageControl, 
-         :file_path=>"./sozai/button_normal.png", 
-         :id=>:normal
-  create :ImageControl, 
-        :file_path=>"./sozai/button_over.png", 
-        :id=>:over,
-        :visible => false
-  create :ImageControl, 
-        :file_path=>"./sozai/button_key_down.png", 
-        :id=>:key_down,
-        :visible => false
-  create :ImageControl, 
-        :file_path=>"./sozai/button_key_up.png", 
-        :id=>:key_up,
-        :visible => false
-  create :ImageControl, 
-        :file_path=>"./sozai/button_out.png", 
-        :id=>:out,
-        :visible => false
-
-  event :key_up do
-    EVAL "pp 'pre_wait'"
-    flag :key=>3, :data=>2
-    flag :key=>4, :data=>true
-  end
-  normal
-end
-
-
-WHILE -> {true}, :button1 do
-  move_line x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
-  wait_command :move_line
-  move_line x: 300, y: 300, count:0, frame: 60, start_x: 300, start_y: 0
-  wait_command :move_line
-  move_line x: 0,   y: 300, count:0, frame: 60, start_x: 300, start_y: 300
-  wait_command :move_line
-  move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 0,   start_y: 300
-  wait_command :move_line
-end
-
 =end
+
+pp "test1"
+wait [:key_push]
+
+set :BG1, x_pos: 200
+
+next_frame
+wait [:key_push]
+
+set :BG2, x_pos: 200
+
+next_frame
+wait [:key_push]
+
+set :BG3, x_pos: 200

@@ -149,6 +149,8 @@ class ScriptCompiler
 
   impl_define :change_default_target, [:all]
 
+  impl_define :set,                [:option_hash]
+
   #コントロールの生成
   impl_define :create,                [:all]
   #コントロール単位でイベント駆動するコマンド群を格納する

@@ -321,6 +321,19 @@ class Control
     return :continue
   end
 
+  #コントロールのプロパティを更新する
+  def command_set(options, target)
+    #オプション全探査
+    options.each do |key, val|
+      #yieldを無視
+      #TODO:システムオプションは第２引数に移動させる
+      next if key == :yield_block
+      send(key.to_s + "=", val)
+    end
+
+    return :continue
+  end
+
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
   def command_token(options, target)
     #TODO:この部分もうちょっと見通し良くならない物か

@@ -219,50 +219,15 @@ class Control
     end
   end
 
-  #描画
+  #下位コントロールを描画する
   def render(offset_x, offset_y, target)
-
-    return offset_x, offset_y unless @visible
-
-    #所持コントロール自身に描画する場合
-    if @draw_to_entity
-      offset_x = offset_y = 0
-      #子要素のコントロールの描画
-      @control_list.each do |entity|
-        #子要素を自ターゲットに一時描画
-        offset_x, offset_y = entity.render( offset_x, offset_y, @entity) 
+      #下位コントロール巡回
+      @control_list.each do |child_control|
+        #下位コントロールを上位ターゲットに直接描画
+        offset_x, offset_y = child_control.render(offset_x, offset_y, target)
       end
-    else
-      #子要素のコントロールの描画
-      @control_list.each do |entity|
-        #子要素を親ターゲットに直接描画
-        offset_x, offset_y = entity.render( offset_x + @x_pos, 
-                                            offset_y + @y_pos, target)
-      end
-    end
-
-    dx = offset_x + @x_pos
-    dy = offset_y + @y_pos
-
-    #自コントロールが描画要素を持っている場合ターゲットに描画
-    target.draw_ex(dx, dy, @entity, @draw_option) if @entity
-
-    #連結指定チェック
-    case @float_mode
-    #右連結
-    when :right
-      dx += @width
-    #下連結
-    when :bottom
-      dy += @height
-    #連結解除
-    when :none
-      dx = dy =  0
-    else
-      raise
-    end
-
-    return dx, dy
+      #オフセット値を返す
+      return offset_x, offset_y
   end
 
   def get_child(id)

@@ -77,6 +77,7 @@ class CharContainer < Control
   include Drawable #描画関連モジュール
 
   def initialize(options, control = nil)
+    @draw_to_entity = false
     @char_renderer_block = nil
 
     @margin_x = options[:margin_x] || 0

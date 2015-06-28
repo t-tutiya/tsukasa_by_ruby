@@ -58,6 +58,46 @@ module Drawable
     @visible = options[:visible]
     return :continue
   end
+  
+  #描画
+  def render(offset_x, offset_y, target)
+    return offset_x, offset_y unless @visible
+
+    #下位エンティティを自エンティティに描画する場合
+    if @draw_to_entity
+      #下位エンティティを自エンティティに描画
+      super(offset_x, offset_x, @entity)
+      #自エンティティを上位ターゲットに描画
+      target.draw_ex(@x_pos, @y_pos, @entity, @draw_option)
+    else
+      #エンティティを持っているなら自エンティティを上位ターゲットに描画
+      target.draw_ex(offset_x + @x_pos, offset_y + @y_pos, @entity, @draw_option) if @entity
+      #下位エンティティを上位ターゲットに描画
+      super(offset_x + @x_pos, offset_y + @y_pos, target)
+    end
+    
+    dx = offset_x + @x_pos
+    dy = offset_y + @y_pos
+
+    #連結指定チェック
+    case @float_mode
+    #右連結
+    when :right
+      dx += @width
+    #下連結
+    when :bottom
+      dy += @height
+    #連結解除
+    when :none
+      dx = dy =  0
+    else
+      raise
+    end
+
+    return dx, dy
+  end
+
+
 =begin
   #トランジションコマンド
   def command_transition(options, target) 

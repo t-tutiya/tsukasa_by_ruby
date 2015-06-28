@@ -43,11 +43,6 @@ class Control
 
   def initialize(options, &block)
     @@root = self if !@@root #ルートコントロールを登録
-    #描画関連
-    #TODO;モジュールに全部送れないか検討
-    @x_pos = 0
-    @y_pos = 0
-    @float_mode = options[:float_mode] || :none
 
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
@@ -70,24 +65,12 @@ class Control
 
     @delete_flag = false       #削除フラグの初期化
 
-    #Controlの可視フラグ
-    @visible = options[:visible] == false ? false : true
-
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @control_default = {
       :CharContainer => :default_text_layer,
       :LayoutContainer => :default_layout_container,
       :Anonymous => :anonymous,
     }
-
-    #子コントロールをentityに描画するかどうか
-    @draw_to_entity = options[:draw_to_entity]
-
-    @draw_option = {}          #描画オプション
-
-    @draw_option[:z] = options[:index] || 0 #重ね合わせ順序
-
-    #TODO：ここ統合できる筈。
 
     if options[:default_script_path]
       #デフォルトスクリプトの読み込み

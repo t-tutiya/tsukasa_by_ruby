@@ -33,20 +33,31 @@ require 'dxruby'
 #TODO:Controlクラスに統合する
 #TODO:コマンドはカテゴリーごとにファイルを分ける
 module Drawable
-
-  #TODO:いらない気がする
-  attr_reader :x_pos
-  attr_reader :y_pos
-  attr_reader :width
-  attr_reader :height
+  #プロパティ
+  attr_accessor  :x_pos
+  attr_accessor  :y_pos
+  attr_accessor  :width
+  attr_accessor  :height
   
-  attr_reader :visible
+  attr_accessor  :visible
 
   def initialize(options, control = nil)
-    super(options)
-
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
     @y_pos = options[:y_pos] || 0 #描画Ｙ座標
+
+    #可視フラグ（省略時はtrue）
+    @visible = options[:visible] == false ? false : true
+
+    #子コントロールを自エンティティに描画するかどうか
+    @draw_to_entity = options[:draw_to_entity]
+
+    @draw_option = {} #描画オプション
+    @draw_option[:z] = options[:index] || 0 #重ね合わせ順序
+
+    super(options)
+
+    #回り込み指定（省略時は:none）
+    @float_mode = options[:float_mode] || :none
 
     #TODO：いらない気がする
     @width  = options[:width] || 0  #横幅

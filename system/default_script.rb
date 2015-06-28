@@ -36,10 +36,11 @@ define :pause do
   about :default_text_layer do
     #idleになるかキー入力を待つ
     #※wait中にキーが押された場合、waitはスキップモードフラグを立てる
-    wait [:keypush, :idol]
+    wait [:key_push, :idol]
     
     #キー入力伝搬を止める為に１フレ送る
-    next_frame 
+    #現仕様では不要なので試験的にコメントアウト
+    #next_frame 
 
     #■行末待機処理
 

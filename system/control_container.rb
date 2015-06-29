@@ -171,6 +171,10 @@ class Control
     while !@command_list.empty?
       #コマンドリストの先頭要素を取得
       command, options, system_options = @command_list.shift
+      
+      #システムオプションが空であれば初期化
+      #TODO：必ず初期化されている物としたい
+      system_options = {} unless system_options
 
       #コマンドを実行
       end_parse, command = send("command_" + command.to_s, options, system_options)
@@ -495,7 +499,7 @@ class Control
     #waitにブロックが付与されているならそれを実行する
     eval_block(options, system_options[:block])
 
-    return :end_frame, [:wait, options]
+    return :end_frame, [:wait, options, system_options]
   end
 
   def command_check_key_push(options, system_options)

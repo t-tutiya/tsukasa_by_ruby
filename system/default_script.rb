@@ -90,6 +90,12 @@ define :visible do |options|
   set options
 end
 
+#単機能キー入力待ち
+define :wait_push do
+  wait [:key_push]
+  next_frame
+end
+
 #標準テキストウィンドウ
 #TODOデバッグ用なので各種数字は暫定
 create :LayoutContainer,

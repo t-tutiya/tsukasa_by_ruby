@@ -40,16 +40,14 @@ create :ImageControl ,
 set :BG1, file_path: "./sozai/button_normal.png", x_pos: 100, y_pos: 100, 
           float_mode: :right
 
-wait [:key_push]
+wait_push
 
 set :BG1, x_pos: 200, file_path: "./sozai/button_key_down.png"
 
-next_frame
-wait [:key_push]
+wait_push
 
 set :BG2, x_pos: 200, file_path: "./sozai/button_key_up.png"
 
-next_frame
-wait [:key_push]
+wait_push
 
 set :BG3, x_pos: 200, file_path: "./sozai/button_over.png"

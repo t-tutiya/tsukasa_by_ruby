@@ -54,14 +54,14 @@ create :ImageControl ,
 pp "test1"
 wait [:key_push]
 
-set :BG1, x_pos: 200
+set :BG1, x_pos: 200, file_path: "./sozai/button_key_down.png"
 
 next_frame
 wait [:key_push]
 
-set :BG2, x_pos: 200
+set :BG2, x_pos: 200, file_path: "./sozai/button_key_up.png"
 
 next_frame
 wait [:key_push]
 
-set :BG3, x_pos: 200
+set :BG3, x_pos: 200, file_path: "./sozai/button_over.png"

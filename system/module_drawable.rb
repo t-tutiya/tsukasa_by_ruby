@@ -36,11 +36,13 @@ module Drawable
   #プロパティ
   attr_accessor  :x_pos
   attr_accessor  :y_pos
+  attr_accessor  :visible
+
+  attr_accessor  :float_mode
+  attr_accessor  :z
 
   attr_reader  :width
   attr_reader  :height
-
-  attr_accessor  :visible
 
   def initialize(options, control = nil)
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標

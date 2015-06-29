@@ -29,29 +29,17 @@
 ###############################################################################
 
 create :ImageControl ,
-       file_path: "./sozai/button_normal.png", x_pos: 100, y_pos: 100, 
-       id: :BG1, float_mode: :right
+       id: :BG1
 create :ImageControl ,
        file_path: "./sozai/button_normal.png",
        id: :BG2, float_mode: :bottom
 create :ImageControl ,
        file_path: "./sozai/button_normal.png",
        id: :BG3, float_mode: :none
-=begin
-create :ImageControl ,
-       file_path: "./sozai/button_normal.png", 
-       id: :BG2, join_right: true
-create :ImageControl ,
-       file_path: "./sozai/button_normal.png", 
-       id: :BG3
-=end
-=begin
-create :ImageControl ,
-       file_path: "./sozai/button_normal.png", x_pos: 0, y_pos: 0, 
-       id: :BG3
-=end
 
-pp "test1"
+set :BG1, file_path: "./sozai/button_normal.png", x_pos: 100, y_pos: 100, 
+          float_mode: :right
+
 wait [:key_push]
 
 set :BG1, x_pos: 200, file_path: "./sozai/button_key_down.png"

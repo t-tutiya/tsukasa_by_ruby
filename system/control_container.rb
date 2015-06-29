@@ -67,9 +67,9 @@ class Control
 
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @control_default = {
-      :CharContainer => :default_text_layer,
+      :CharContainer   => :default_char_container,
       :LayoutContainer => :default_layout_container,
-      :Anonymous => :anonymous,
+      :Anonymous       => :anonymous,
     }
 
     if options[:default_script_path]

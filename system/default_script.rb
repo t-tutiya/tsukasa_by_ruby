@@ -33,7 +33,7 @@ require 'dxruby'
 #標準ポーズコマンド
 define :pause do
   #■行表示中スキップ処理
-  about :default_text_layer do
+  about :default_char_container do
     #idleになるかキー入力を待つ
     #※wait中にキーが押された場合、waitはスキップモードフラグを立てる
     wait [:key_push, :idol]
@@ -94,7 +94,7 @@ create :LayoutContainer,
     create :CharContainer, 
       x_pos: 2,
       y_pos: 2,
-      id: :default_text_layer,
+      id: :default_char_container,
       font_config: { :size => 32, 
                      :face => "ＭＳＰ ゴシック"},
       style_config: { :wait_frame => 2,} do

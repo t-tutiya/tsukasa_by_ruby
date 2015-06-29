@@ -125,8 +125,6 @@ class ScriptCompiler
 
   #スリープモードの更新
   impl_define :sleep_mode,                  [:option]
-  #スキップモードの更新
-  impl_define :skip_mode,                   [:option]
 
   #次に読み込むスクリプトファイルの指定
   impl_define :next_scenario, :LayoutContainer, [:option]

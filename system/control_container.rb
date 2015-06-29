@@ -41,6 +41,9 @@ class Control
   @@function_list = {} #functionのリスト（procで保存される）
   @@root = nil
 
+  #プロパティ
+  attr_accessor  :skip_mode #スキップモード
+
   def initialize(options, &block)
     @@root = self if !@@root #ルートコントロールを登録
 
@@ -325,10 +328,14 @@ class Control
   def command_set(options, target)
     #オプション全探査
     options.each do |key, val|
-      #yieldを無視
-      #TODO:システムオプションは第２引数に移動させる
-      next if key == :yield_block
-      send(key.to_s + "=", val)
+      method_name = key.to_s + "="
+      if self.class.method_defined?(method_name)
+        send(method_name, val)
+      else
+        #yieldを無視
+        #TODO:システムオプションは第２引数に移動させる
+        #pp "クラス[" + self.class.to_s + "]：メソッド[" + method_name + "]は存在しません"
+      end
     end
 
     return :continue

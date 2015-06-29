@@ -81,6 +81,11 @@ define :wait_command do |options|
   wait [:command], command: options[:wait_command]
 end
 
+#スキップモードの設定
+define :skip_mode do |options|
+  set options
+end
+
 #標準テキストウィンドウ
 #TODOデバッグ用なので各種数字は暫定
 create :LayoutContainer,

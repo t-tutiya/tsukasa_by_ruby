@@ -33,7 +33,7 @@ require 'dxruby'
 class ScriptCompiler
   include Resource
 
-  def initialize(argument, &block)
+  def initialize(argument, system_options = {}, &block)
     @option = {}
     @option_stack = []
     @key_name = :commands
@@ -48,7 +48,7 @@ class ScriptCompiler
       raise if !block
 
       #yieldブロックが設定されている場合
-      @yield_block = argument[:yield_block]
+      @yield_block = system_options[:yield_block]
 
       self.instance_exec(**argument, &block)
     end

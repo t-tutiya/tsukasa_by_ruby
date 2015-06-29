@@ -303,9 +303,9 @@ class Control
 
   #コントロールをリストに登録する
   def command_create(options, system_options)
-
     #コントロールを生成して子要素として登録する
-    @control_list.push(Module.const_get(options[:create]).new(options, &options[:block]))
+    @control_list.push(
+      Module.const_get(options[:create]).new(options, &system_options[:block]))
 
     return :continue
   end
@@ -493,7 +493,7 @@ class Control
     end
 
     #waitにブロックが付与されているならそれを実行する
-    eval_block(options, options[:block])
+    eval_block(options, system_options[:block])
 
     return :end_frame, [:wait, options]
   end
@@ -520,7 +520,7 @@ class Control
 
   #イベントコマンドの登録
   def command_event(options, system_options)
-    @event_list[options[:event]] = options[:block]
+    @event_list[options[:event]] = system_options[:block]
     return :continue
   end
 
@@ -540,7 +540,7 @@ class Control
 
   #関数を定義する
   def command_define(options, system_options)
-    @@function_list[options[:define]] = options[:block]
+    @@function_list[options[:define]] = system_options[:block]
     return :continue
   end
 
@@ -550,12 +550,11 @@ class Control
     raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{system_options}" unless @@function_list.key?(options[:call_function])
 
     #関数ブロックを引数に登録する
-    system_options[:yield_block] = options[:block]
+    system_options[:yield_block] = system_options[:block]
+    system_options.delete(:block) #削除
     #関数名に対応する関数ブロックを取得する
     function_block = @@function_list[options[:call_function]]
-    #不要なオプションを削除
-    options.delete(:block)
-    options.delete(:call_function)
+    options.delete(:call_function) #削除
 
     #functionを実行時評価しコマンド列を生成する。
     eval_block(options, function_block, system_options)
@@ -566,7 +565,7 @@ class Control
   #ブロック内のコマンド列を実行する
   def command_about(options, system_options)
     #コマンドリストをスタックする
-    eval_block(options, options[:block])
+    eval_block(options, system_options[:block])
     return :continue
   end
 
@@ -626,7 +625,7 @@ class Control #制御構文
     end
 
     #if文の中身を実行する
-    eval_block(options, options[:block])
+    eval_block(options, system_options[:block])
 
     return :continue, [:exp_result, { :result => result}]
   end
@@ -641,7 +640,7 @@ class Control #制御構文
     #結果がthenの場合
     if result and @next_frame_commands[result][1][:result] == :then
       #コマンドブロックを実行する
-      eval_block(options, options[:block])
+      eval_block(options, system_options[:block])
     end
 
     return :continue
@@ -659,7 +658,7 @@ class Control #制御構文
       #ラムダ式が真の場合
       if eval_lambda(options[:ELSIF], options)
         #コマンドブロックを実行する
-        eval_block(options, options[:block])
+        eval_block(options, system_options[:block])
         #処理がこれ以上伝搬しないように評価結果をクリアする
         #TODO：コマンド自体を削除した方が確実
         @next_frame_commands[result][1][:result] = nil
@@ -679,7 +678,7 @@ class Control #制御構文
     #結果がelseの場合
     if result and @next_frame_commands[result][1][:result] == :else
       #コマンドブロックを実行する
-      eval_block(options, options[:block])
+      eval_block(options, system_options[:block])
     end
     return :continue
   end
@@ -704,7 +703,7 @@ class Control #制御構文
     #while文全体をスクリプトストレージにスタック
     eval_commands([[:WHILE, options, {:target_id => @id}]])
     #ブロックを実行時評価しコマンド列を生成する。
-    eval_block(options, options[:block])
+    eval_block(options, system_options[:block])
 
     return :continue
   end
@@ -714,7 +713,7 @@ class Control #制御構文
     value = eval_lambda(options[:CASE], options)
 
     #case文の中身を実行する
-    eval_block(options, options[:block])
+    eval_block(options, system_options[:block])
 
     return :continue, [:exp_result, { :result => :else,
                                       :case_value => value}]
@@ -733,7 +732,7 @@ class Control #制御構文
 
     if exp_result[:case_value] == eval_lambda(options[:WHEN], options)
       #コマンドブロックを実行する
-      eval_block(options, options[:block])
+      eval_block(options, system_options[:block])
     end
 
     return :continue

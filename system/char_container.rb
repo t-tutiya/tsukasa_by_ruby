@@ -180,7 +180,7 @@ class CharContainer < Control
 
   #charコマンド
   #指定文字（群）を描画チェインに連結する
-  def command_char(options, target)
+  def command_char(options, system_options)
     #レンダリング済みフォントを使用中か否かで分岐
     if !@font_config[:use_image_font]
       #文字レンダラオブジェクトを生成する
@@ -232,7 +232,7 @@ class CharContainer < Control
 
   #textコマンド
   #指定文字列を描画チェインに連結する
-  def command_text(options, target)
+  def command_text(options, system_options)
     commands = Array.new
     
     #文字列を分解してcharコマンドに変換する
@@ -249,7 +249,7 @@ class CharContainer < Control
 
   #graphコマンド
   #指定画像を描画チェインに連結する
-  def command_graph(options, target)
+  def command_graph(options, system_options)
     #:is_charが省略されている場合初期値を設定する
     options[:is_char] = true if !options.key?(:is_char)
 
@@ -286,7 +286,7 @@ class CharContainer < Control
 
   #line_feedコマンド
   #改行処理（CR＋LF）
-  def command_line_feed(options, target)
+  def command_line_feed(options, system_options)
     #Ｘ座標をリセット（インデント設定があればその分を加算）
     @next_char_x = @indent_offset
     #行間サイズ＋行間ピッチ分Ｙ座標を送る
@@ -303,7 +303,7 @@ class CharContainer < Control
 
   #flashコマンド
   #メッセージレイヤの消去
-  def command_flash(options, target)
+  def command_flash(options, system_options)
     #文字列をクリア
     @control_list.clear
 
@@ -323,7 +323,7 @@ class CharContainer < Control
   #rubi_charコマンド
   #ルビを出力する
   #オフセットがあればそのＸ座標から、なければ文字の中心から計算して出力する
-  def command_rubi_char(options, target)
+  def command_rubi_char(options, system_options)
 
     #ルビ文字列を取得
     texts = options[:char].to_s
@@ -363,7 +363,7 @@ class CharContainer < Control
   #char:ルビ文字列
   #text:ルビを割り当てるベースの文字列
   #align: expand（デフォルト）/center/left/rightから選ぶ
-  def command_rubi(options, target)
+  def command_rubi(options, system_options)
     #ルビ文字列を取得
     rubi_texts = options[:char]
     #ルビの文字数を取得
@@ -455,7 +455,7 @@ class CharContainer < Control
 
   #default_font_configコマンド
   #デフォルトの文字属性設定
-  def command_default_font_config(options, target)
+  def command_default_font_config(options, system_options)
     options.each do |key, value|
       #コンフィグ設定を更新する
       update_font_config(@default_font_config, key, value)
@@ -469,7 +469,7 @@ class CharContainer < Control
 
   #font_configコマンド
   #現在の文字属性設定
-  def command_font_config(options, target)
+  def command_font_config(options, system_options)
     options.each do |key, value|
       #"default"が設定されていればvalueをdefault値で更新
       value = @default_font_config[key] if value == "default"
@@ -575,7 +575,7 @@ class CharContainer < Control
 
   #reset_font_configタグ
   #文字属性をデフォルトに戻す
-  def command_reset_font_config(options, target)
+  def command_reset_font_config(options, system_options)
     #fontの設定をデフォルト設定で上書きする
     @font_config = @default_font_config.clone
     #fontオブジェクトを再生成する
@@ -590,8 +590,8 @@ class CharContainer < Control
 
   #char_redererタグ
   #文字レンダラの設定
-  def command_char_renderer(options, target)
-    @char_renderer_block = options[:block]
+  def command_char_renderer(options, system_options)
+    @char_renderer_block = system_options[:block]
     return :continue #フレーム続行
   end
 
@@ -600,7 +600,7 @@ class CharContainer < Control
   #############################################################################
 
   #レンダリング済みフォントデータファイルを登録する
-  def command_map_image_font(options, target)
+  def command_map_image_font(options, system_options)
     #レンダリング済みフォントデータファイルを任意フォント名で登録
     Image_font.regist(options[:font_name].to_s, options[:file_path].to_s)
 
@@ -613,7 +613,7 @@ class CharContainer < Control
 
   #default_style_configタグ
   #デフォルトのスタイルの設定
-  def command_default_style_config(options, target)
+  def command_default_style_config(options, system_options)
     options.each do |key, value|
      #コンフィグ設定を更新する
      update_style_config(@default_style_config, key, value)
@@ -624,7 +624,7 @@ class CharContainer < Control
 
   #style_configタグ
   #スタイルの設定
-  def command_style_config(options, target)
+  def command_style_config(options, system_options)
     options.each do |key, value|
       #"default"が設定されていればvalueをdefault値で更新
       value = @default_style_config[key] if value == "default"
@@ -656,7 +656,7 @@ class CharContainer < Control
 
   #reset_styleタグ
   #スタイルをデフォルトに戻す
-  def command_reset_style_config(options, target)
+  def command_reset_style_config(options, system_options)
     #styleの設定をデフォルト設定で上書きする
     @style_config = @default_style_config.clone
 
@@ -670,7 +670,7 @@ class CharContainer < Control
   #インデントの設定/解除
   #インデントはネストしないので注意
   #TODO:微妙な仕様だな……
-  def command_indent(options, target)
+  def command_indent(options, system_options)
     #インデント開始Ｘ座標を設定もしくはクリアする
     @indent_offset = options[:indent] ? @next_char_x : 0
 
@@ -682,7 +682,7 @@ class CharContainer < Control
   #############################################################################
 
   #描画速度指定
-  def command_delay(options, target)
+  def command_delay(options, system_options)
     update_wait_frame(options[:delay].to_i)
 
     return :continue #フレーム続行

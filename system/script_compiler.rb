@@ -59,17 +59,19 @@ class ScriptCompiler
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
 
-    sub_options[:block] = block if block
-
     #存在していないキーの場合は配列として初期化する
     @option[@key_name] ||= []
+
+    system_options ={:target_id =>     target,
+                     :default_class => default_class,
+                     :yield_block =>   @yield_block}
+
+    system_options[:block] = block if block
 
     #コマンドを登録する
     @option[@key_name].push([ command_name,
                               sub_options, 
-                              {:target_id => target,
-                               :default_class => default_class,
-                               :yield_block => @yield_block},
+                              system_options,
                               ])
   end
 

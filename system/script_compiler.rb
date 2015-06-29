@@ -159,9 +159,6 @@ class ScriptCompiler
   #各種ウェイト処理
   impl_define :wait,                  [:all]
 
-  #画像の差し替え
-  impl_define :image_change, :ImageControl, [:all]
-
   #文字レンダラの指定
   #TODO:これはtext_layer内に動作を限定できないか？
   impl_define :char_renderer,         :CharContainer, [:block]

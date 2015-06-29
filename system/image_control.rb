@@ -72,14 +72,6 @@ class ImageControl < Control
     #@entity.dispose
     super
   end
-  
-  def command_image_change(options, target)
-    #保持オブジェクトの初期化
-    @entity = @@image_cache[options[:image_change]]
-    @width  = @entity.width
-    @height = @entity.height
-    return :continue
-  end
 end
 
 #マップコントロール

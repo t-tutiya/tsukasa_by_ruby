@@ -39,7 +39,6 @@ define :pause do
     wait [:key_push, :idol]
     
     #キー入力伝搬を止める為に１フレ送る
-    #現仕様では不要なので試験的にコメントアウト
     next_frame 
 
     #■行末待機処理

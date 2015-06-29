@@ -36,9 +36,10 @@ module Drawable
   #プロパティ
   attr_accessor  :x_pos
   attr_accessor  :y_pos
-  attr_accessor  :width
-  attr_accessor  :height
-  
+
+  attr_reader  :width
+  attr_reader  :height
+
   attr_accessor  :visible
 
   def initialize(options, control = nil)

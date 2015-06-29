@@ -49,9 +49,20 @@ class ImageControl < Control
 
   def initialize(options)
     super(options)
-    #保持オブジェクトの初期化
-    @entity = @@image_cache[options[:file_path]]
+    self.file_path = options[:file_path]
+  end
 
+  def file_path=(file_path)
+    #同じファイルパスが指定された場合は処理を行わない
+    return if @file_path == file_path
+
+    #ファイルパスの格納
+    @file_path = file_path
+
+    #保持オブジェクトの初期化
+    @entity = @@image_cache[@file_path]
+
+    #縦横幅の更新
     @width  = @entity.width
     @height = @entity.height
   end

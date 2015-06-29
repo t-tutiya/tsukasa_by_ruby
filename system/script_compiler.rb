@@ -215,8 +215,6 @@ class ScriptCompiler
   #コマンド列のブロック化
   impl_define :about, [:block]
 
-  impl_define :visible, [:option]
-
   impl_define :sleep_mode_all, [:option]
   impl_define :skip_mode_all, [:option]
 

@@ -94,7 +94,7 @@ class Control
     #コマンドセットがあるなら登録する
     eval_commands(options[:commands]) 
 
-    send_command(:token, nil)
+    @command_list.push([:token, nil, {}])
 
     #初期ブロックを実行する
     update()
@@ -105,7 +105,7 @@ class Control
     #自身が送信対象として指定されている場合
     if @id == system_options[:target_id] or system_options[:target_id] == :anonymous
       #コマンドをスタックの末端に挿入する
-      @command_list.push([command, options, system_options])
+      @script_storage.push([command, options, system_options])
       return true #コマンドをスタックした
     end
 
@@ -378,8 +378,11 @@ class Control
       system_options[:target_id] = @control_default[system_options[:default_class]]
     end
 
-    #コマンドをコントロールに登録する
-    if !send_command( command, 
+    #自身が送信対象として指定されている場合
+    if @id == system_options[:target_id] or system_options[:target_id] == :anonymous
+      #コマンドtをスタックの末端に挿入する
+      @command_list.push([command, options, system_options])
+    elsif !send_command( command, 
                       options, 
                       system_options) then
       pp "error"
@@ -390,7 +393,7 @@ class Control
       raise
     end
 
-    send_command(:token, nil)
+    @command_list.push([:token, nil, {}])
     return :continue
   end
 
@@ -741,17 +744,4 @@ class Control #制御構文
 
     return :continue
   end
-end
-
-
-
-#未分類
-class Control
-
-  def command_visible(options, system_options)
-    @visible = options[:visible]
-    return :continue
-  end
-
-
 end

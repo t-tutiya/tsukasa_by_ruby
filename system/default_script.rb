@@ -40,7 +40,7 @@ define :pause do
     
     #キー入力伝搬を止める為に１フレ送る
     #現仕様では不要なので試験的にコメントアウト
-    #next_frame 
+    next_frame 
 
     #■行末待機処理
 
@@ -83,6 +83,11 @@ end
 
 #スキップモードの設定
 define :skip_mode do |options|
+  set options
+end
+
+#可視設定
+define :visible do |options|
   set options
 end
 

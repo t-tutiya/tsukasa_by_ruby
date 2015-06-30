@@ -2,6 +2,7 @@
 
 require 'dxruby'
 
+require_relative './script_compiler.rb'
 require_relative './Image_font_maker'
 require_relative './char_control'
 
@@ -71,6 +72,45 @@ require_relative './char_control'
   :map_image_font => :command_map_image_font, #レンダリング済みフォントの登録
 }
 =end
+
+#コマンド宣言
+class ScriptCompiler
+  #文字レンダラの指定
+  #TODO:これはtext_layer内に動作を限定できないか？
+  impl_define :char_renderer,         :CharContainer, [:block]
+  #文字
+  impl_define :char,                  :CharContainer, [:option]
+  #文字列
+  impl_define :text,                  :CharContainer, [:option]
+  #インデント設定
+  impl_define :indent,                :CharContainer, [:option]
+  #文字描画速度の設定
+  impl_define :delay,                 :CharContainer, [:option]
+  #改行
+  impl_define :line_feed,             :CharContainer, []
+  #改ページ
+  impl_define :flash,                 :CharContainer, []
+  #画像スタック
+  impl_define :graph,                 :CharContainer, [:all]
+  #ルビ文字の出力
+  impl_define :rubi_char,             :CharContainer, [:all]
+  #複数ルビ文字列の割り付け
+  impl_define :rubi,                  :CharContainer, [:all]
+  #デフォルト
+  impl_define :default_font_config,   :CharContainer, [:all]
+  #現在値
+  impl_define :font_config,           :CharContainer, [:all]
+  #現在値をリセット
+  impl_define :reset_font_config,     :CharContainer, [:all]
+  #デフォルト
+  impl_define :default_style_config,  :CharContainer, [:all]
+  #現在値
+  impl_define :style_config,          :CharContainer, [:all]
+  #現在値をリセット
+  impl_define :reset_style_config,    :CharContainer, [:all]
+  #レンダリング済みフォントの登録
+  impl_define :map_image_font,        :CharContainer, [:all]
+end
 
 class CharContainer < Control
   include Movable #移動関連モジュール

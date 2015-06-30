@@ -1,6 +1,7 @@
 #! ruby -E utf-8
 
 require 'dxruby'
+require_relative './script_compiler.rb'
 require_relative './module_movable.rb'
 require_relative './module_drawable.rb'
 require_relative './control_container.rb'
@@ -33,6 +34,14 @@ require_relative './image_control.rb'
 #
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
+
+#コマンド宣言
+class ScriptCompiler
+  #ボタン制御コマンド群
+  #TODO:これは無くても動いて欲しいが、現状だとscript_compilerを通す為に必要
+  impl_define :normal,                    []
+end
+
 #ボタンコントロール
 class ButtonControl  < Control
   include Drawable

@@ -39,7 +39,7 @@ define :pause do
     wait [:key_push, :idol]
     
     #キー入力伝搬を止める為に１フレ送る
-    next_frame 
+    end_frame 
 
     #■行末待機処理
 
@@ -56,7 +56,7 @@ define :pause do
     #スキップフラグを下ろす
     skip_mode_all false
     #スキップフラグ伝搬が正しく行われるように１フレ送る
-    next_frame
+    end_frame
   end
 
   #■ルートの待機処理
@@ -93,7 +93,7 @@ end
 #単機能キー入力待ち
 define :wait_push do
   wait [:key_push]
-  next_frame
+  end_frame
 end
 
 #標準テキストウィンドウ

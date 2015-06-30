@@ -106,7 +106,7 @@ create :LayoutContainer,
         wait_command :transition_fade_with_skip
         sleep_mode :sleep
         wait_wake
-        next_frame
+        end_frame
         skip_mode false
         transition_fade_with_skip frame: 60,
           count: 0,

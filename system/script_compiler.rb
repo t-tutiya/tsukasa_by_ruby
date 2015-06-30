@@ -112,8 +112,8 @@ class ScriptCompiler
     impl(:call_function, :Anonymous, target, command_name, options, &block)
   end
 
-  #次フレームに送る
-  impl_define :next_frame,                []
+  #今フレームを終了する
+  impl_define :end_frame,                []
 
   impl_define :check_key_push,            []
 

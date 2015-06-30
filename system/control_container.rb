@@ -417,8 +417,8 @@ class Control
   #タイミング制御コマンド
   #############################################################################
 
-  #強制的に１フレーム進めるコマンド
-  def command_next_frame(options, system_options)
+  #現在のフレームを終了する
+  def command_end_frame(options, system_options)
     return :end_frame
   end
 

@@ -365,13 +365,18 @@ class Control
     end
 
     #コマンドを取り出す
+    command, options, system_options = @script_storage.shift
+=begin
+    #TODO：付与ブロックが実行時評価になり、実質的に毎回複製されるため、下記のロジックが必要なくなった。エンバグが起きていないか判断できるまで、コメントアウトで残す。
+
+    #コマンドを取り出す
     temp = @script_storage.shift
     command = temp[0]     #コマンド名（シンボル）
 
     #TODO：このdupが本当に必要なのか良く分からない
     options = temp[1].dup #オプション群。状態を持ちうるので複製する
     system_options = temp[2] #システムで使用するオプション群
-
+=end
     #送信先ターゲットIDが設定されていない場合
     unless system_options[:target_id]
       #デフォルトクラス名からIDを取得する

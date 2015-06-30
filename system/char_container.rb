@@ -37,77 +37,54 @@ require_relative './char_control'
 ###############################################################################
 #汎用テキストマネージャクラス
 ###############################################################################
-=begin
-#コマンドと内部メソッドとの対応テーブル
-@command_dispatch = {
-  #テキスト関連
-  :char => :command_char,                           #文字スタック
-  :text => :command_text,                           #文字列スタック
-
-  :graph => :command_graph,                         #画像スタック
-  :line_feed => :command_line_feed,                 #改行
-  :flash => :command_flash,   #ページのリセット
-  :locate => :command_locate, #次の文字の描画座標を直接指定する
-  :indent => :command_indent, #インデントをＯＮ／ＯＦＦする
-
-  #描画速度の制御
-  :delay => :command_delay, #文字描画速度の設定
-
-  #ルビ文字の制御
-  :rubi_char => :command_rubi_char, #ルビ文字の出力
-  :rubi => :command_rubi,           #複数ルビ文字列の割り付け
-
-  #フォント設定の更新
-  :default_font_config => :command_default_font_config, #デフォルト
-  :font_config => :command_font_config,                 #現在値
-  :reset_font_config => :command_reset_font_config,     #現在値をリセット
-
-  #スタイル設定の更新
-  :default_style_config => :command_default_style_config, #デフォルト
-  :style_config => :command_style_config,                 #現在値
-  :reset_style_config => :command_reset_style_config,     #現在値をリセット
-
-  #その他制御系
-  :char_renderer => :command_char_renderer,   #文字レンダラの設定
-  :map_image_font => :command_map_image_font, #レンダリング済みフォントの登録
-}
-=end
 
 #コマンド宣言
 class ScriptCompiler
-  #文字レンダラの指定
-  #TODO:これはtext_layer内に動作を限定できないか？
-  impl_define :char_renderer,         :CharContainer, [:block]
+  #TODO:これらはtext_layer内に動作を限定できないか？
+
+  #テキスト関連
+
   #文字
   impl_define :char,                  :CharContainer, [:option]
   #文字列
   impl_define :text,                  :CharContainer, [:option]
+
   #インデント設定
   impl_define :indent,                :CharContainer, [:option]
-  #文字描画速度の設定
-  impl_define :delay,                 :CharContainer, [:option]
   #改行
   impl_define :line_feed,             :CharContainer, []
   #改ページ
   impl_define :flash,                 :CharContainer, []
   #画像スタック
   impl_define :graph,                 :CharContainer, [:all]
+
+  #文字描画速度の設定
+  impl_define :delay,                 :CharContainer, [:option]
+
   #ルビ文字の出力
   impl_define :rubi_char,             :CharContainer, [:all]
   #複数ルビ文字列の割り付け
   impl_define :rubi,                  :CharContainer, [:all]
+
+  #フォント設定の更新
   #デフォルト
   impl_define :default_font_config,   :CharContainer, [:all]
   #現在値
   impl_define :font_config,           :CharContainer, [:all]
   #現在値をリセット
   impl_define :reset_font_config,     :CharContainer, [:all]
+
+  #スタイル設定の更新
   #デフォルト
   impl_define :default_style_config,  :CharContainer, [:all]
   #現在値
   impl_define :style_config,          :CharContainer, [:all]
   #現在値をリセット
   impl_define :reset_style_config,    :CharContainer, [:all]
+
+  #その他制御系
+  #文字レンダラの指定
+  impl_define :char_renderer,         :CharContainer, [:block]
   #レンダリング済みフォントの登録
   impl_define :map_image_font,        :CharContainer, [:all]
 end

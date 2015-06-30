@@ -705,7 +705,7 @@ class Control #制御構文
     return :continue if !eval_lambda(options[:WHILE], options) #アイドル
 
     #while文全体をスクリプトストレージにスタック
-    eval_commands([[:WHILE, options, {:target_id => @id}]])
+    eval_commands([[:WHILE, options, system_options]])
     #ブロックを実行時評価しコマンド列を生成する。
     eval_block(options, system_options[:block])
 

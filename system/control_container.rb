@@ -584,9 +584,12 @@ class Control
 
     #関数ブロックを引数に登録する
     system_options[:yield_block] = system_options[:block]
-    system_options.delete(:block) #削除
+    #下位伝搬を防ぐ為に要素を削除
+    system_options.delete(:block)
     #関数名に対応する関数ブロックを取得する
     function_block = @@function_list[options[:call_function]]
+    #下位伝搬を防ぐ為に要素を削除
+    options.delete(:call_function)
 
     #functionを実行時評価しコマンド列を生成する。
     eval_block(options, system_options, function_block)

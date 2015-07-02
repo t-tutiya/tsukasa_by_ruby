@@ -279,7 +279,7 @@ class Control
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
-  def eval_block(options, block, system_options = {:target_id => @id})
+  def eval_block(options, block, system_options = {})
     return unless block
     eval_commands(ScriptCompiler.new(options, system_options, &block).commands)
   end
@@ -728,8 +728,7 @@ class Control #制御構文
 
   #関数ブロックを実行する
   def command_YIELD(options, system_options)
-    return :continue if !options[:yield_block]
-    eval_block(options, options[:yield_block])
+    eval_block(options, system_options[:yield_block])
     return :continue
   end
 

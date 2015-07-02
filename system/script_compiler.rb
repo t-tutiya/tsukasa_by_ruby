@@ -204,7 +204,6 @@ class ScriptCompiler
   end
 
   def _YIELD_(target = nil, **options)
-    options[:yield_block] = @yield_block
     impl(:YIELD, :Anonymous, nil, nil, **options)
   end
 

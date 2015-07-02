@@ -68,6 +68,13 @@ class ScriptCompiler
 
     system_options[:block] = block if block
 
+    #組み込みコマンドリストに含まれていない場合
+    unless @@builtin_command_list.include?(command_name)
+      #ALIASされているのでコマンドを差し替える
+      sub_options[:call_builtin_command] = command_name
+      command_name = :call_builtin_command
+    end
+
     #コマンドを登録する
     @option[@key_name].push([ command_name,
                               sub_options, 
@@ -79,6 +86,9 @@ class ScriptCompiler
   def self.impl_define(command_name, 
                        default_class = :Anonymous, 
                        args_format)
+    #組み込みコマンド名としてリストに追加する
+    @@builtin_command_list.push(command_name)
+
     define_method(command_name) do |option = nil, 
                                     target = nil,
                                     **option_hash, 
@@ -177,6 +187,16 @@ class ScriptCompiler
 
   impl_define :sleep_mode_all, [:option]
   impl_define :skip_mode_all, [:option]
+
+  impl_define :ALIAS_ ,   [:option, :option_hash]
+
+  #これブロックが継承されないかも
+  impl_define :call_function,                  [:all]
+  impl_define :call_builtin_command,                  [:all]
+
+  @@builtin_command_list.push(:define)
+  @@builtin_command_list.push(:YIELD)
+  @@builtin_command_list.push(:EVAL)
 
   #target変更は受け付けない(Controlクラスに登録)
   def define(command_name, &block)

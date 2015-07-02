@@ -34,14 +34,16 @@ create :ButtonControl,
   end
 end
 
+ALIAS_ :move_line2 , command_name: :move_line
+
 about :button1 do
-  move_line x: 0, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
+  move_line2 x: 0, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
   wait_command :move_line
-  move_line x: 300, y: 300, count:0, frame: 60, start_x: 0, start_y: 300
+  move_line2 x: 300, y: 300, count:0, frame: 60, start_x: 0, start_y: 300
   wait_command :move_line
-  move_line x: 300,   y: 0, count:0, frame: 60, start_x: 300, start_y: 300
+  move_line2 x: 300,   y: 0, count:0, frame: 60, start_x: 300, start_y: 300
   wait_command :move_line
-  move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 300,   start_y: 0
+  move_line2 x: 0,   y: 0,   count:0, frame: 60, start_x: 300,   start_y: 0
   wait_command :move_line
   #渡せるのは名前付きオプションのみ(targetは自動で渡される)
   func y: 150
@@ -62,3 +64,5 @@ end
 func2 do
   move_line x: 600, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
 end
+
+

@@ -34,6 +34,7 @@ require_relative './module_drawable.rb'
 
 module Resource
   @@global_flag = {}   #グローバルフラグ
+  @@builtin_command_list = Array.new #組み込みコマンドリスト
 end
 
 class Control
@@ -547,9 +548,30 @@ class Control
   #スタック操作関連
   #############################################################################
 
-  #関数を定義する
+  #ユーザー定義コマンドを定義する
   def command_define(options, system_options)
     @@function_list[options[:define]] = system_options[:block]
+    return :continue
+  end
+
+  #コマンドを再定義する
+  def command_ALIAS_(options, system_options)
+    #元コマンドが組み込みコマンドの場合
+    if @@builtin_command_list.include?(options[:command_name])
+      #元コマンドをcall_builtin_commandで呼びだすブロックを設定する
+      @@function_list[options[:ALIAS_]] = Proc.new{|command_options|
+        call_builtin_command(options[:command_name], command_options)
+      }
+
+      #コマンドを組み込みコマンドリストから削除する
+      @@builtin_command_list.delete_if{ |command_name|
+        command_name == options[:command_name]
+      }
+    else
+      #新しいコマンド名に元のコマンドのブロックを設定する
+      @@function_list[options[:ALIAS_]] = @@function_list[options[:command_name]]
+    end
+
     return :continue
   end
 
@@ -569,6 +591,12 @@ class Control
     eval_block(options, function_block, system_options)
 
     return :continue
+  end
+
+  def command_call_builtin_command(options, system_options)
+    command_name = options[:call_builtin_command]
+    options.delete(:call_builtin_command) #削除
+    return send("command_" + command_name.to_s, options, system_options)
   end
 
   #ブロック内のコマンド列を実行する

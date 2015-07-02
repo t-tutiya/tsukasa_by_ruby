@@ -279,7 +279,7 @@ class Control
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
-  def eval_block(options, block, system_options = {})
+  def eval_block(options, system_options = {}, block)
     return unless block
     eval_commands(ScriptCompiler.new(options, system_options, &block).commands)
   end
@@ -589,7 +589,7 @@ class Control
     function_block = @@function_list[options[:call_function]]
 
     #functionを実行時評価しコマンド列を生成する。
-    eval_block(options, function_block, system_options)
+    eval_block(options, system_options, function_block)
 
     return :continue
   end

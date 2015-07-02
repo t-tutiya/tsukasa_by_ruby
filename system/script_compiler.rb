@@ -188,29 +188,18 @@ class ScriptCompiler
   impl_define :sleep_mode_all, [:option]
   impl_define :skip_mode_all, [:option]
 
-  impl_define :ALIAS_ ,   [:option, :option_hash]
-
   #これブロックが継承されないかも
   impl_define :call_function,                  [:all]
   impl_define :call_builtin_command,                  [:all]
 
-  @@builtin_command_list.push(:define)
-  @@builtin_command_list.push(:YIELD)
-  @@builtin_command_list.push(:EVAL)
-
-  #target変更は受け付けない(Controlクラスに登録)
-  def define(command_name, &block)
-    impl(:define, :Anonymous, nil, command_name, &block)
-  end
-
-  def _YIELD_(target = nil, **options)
-    impl(:YIELD, :Anonymous, nil, nil, **options)
-  end
-
-  #eval（予約語の為メソッド名差し替え）
-  def EVAL(option, target = nil)
-    impl(:eval,  :Anonymous, target, option)
-  end
+  #実行時評価
+  impl_define :_EVAL, [:option]
+  #ユーザー定義コマンドの宣言
+  impl_define :define, [:option, :block]
+  #コマンド名の再定義
+  impl_define :_ALIAS ,   [:option, :option_hash]
+  #コルーチン呼び出し
+  impl_define :_YIELD, [:option_hash]
 
   #ヘルパーメソッド群
   def commands()

@@ -406,8 +406,8 @@ class Control
   end
 
   #文字列を評価する（デバッグ用）
-  def command_eval(options, system_options)
-    eval(options[:eval])
+  def command__EVAL(options, system_options)
+    eval(options[:_EVAL])
     return :continue
   end
 
@@ -557,11 +557,11 @@ class Control
   end
 
   #コマンドを再定義する
-  def command_ALIAS_(options, system_options)
+  def command__ALIAS(options, system_options)
     #元コマンドが組み込みコマンドの場合
     if @@builtin_command_list.include?(options[:command_name])
       #元コマンドをcall_builtin_commandで呼びだすブロックを設定する
-      @@function_list[options[:ALIAS_]] = Proc.new{|command_options|
+      @@function_list[options[:_ALIAS]] = Proc.new{|command_options|
         call_builtin_command(options[:command_name], command_options)
       }
 
@@ -571,7 +571,7 @@ class Control
       }
     else
       #新しいコマンド名に元のコマンドのブロックを設定する
-      @@function_list[options[:ALIAS_]] = @@function_list[options[:command_name]]
+      @@function_list[options[:_ALIAS]] = @@function_list[options[:command_name]]
     end
 
     return :continue
@@ -730,7 +730,7 @@ class Control #制御構文
   end
 
   #関数ブロックを実行する
-  def command_YIELD(options, system_options)
+  def command__YIELD(options, system_options)
     eval_block(options, system_options[:yield_block])
     return :continue
   end

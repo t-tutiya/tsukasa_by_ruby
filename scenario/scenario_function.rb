@@ -34,7 +34,7 @@ create :ButtonControl,
   end
 end
 
-ALIAS_ :move_line2 , command_name: :move_line
+_ALIAS :move_line2 , command_name: :move_line
 
 about :button1 do
   move_line2 x: 0, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
@@ -54,7 +54,7 @@ define :func2 do
          :file_path=>"./sozai/button_normal.png", 
          :id=>:normal2 do
    
-    _YIELD_
+    _YIELD
    
   end
 end
@@ -62,6 +62,8 @@ end
 #functionを実行後、ブロック内のコマンドを実行する
 #TODO：aboutではなく、func2の引数で送信先を指定できないものか
 func2 do
+  _EVAL "pp 'test'"
+  pp "func2"
   move_line x: 600, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
 end
 

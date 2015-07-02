@@ -47,9 +47,9 @@ class ButtonControl  < Control
   include Drawable
   include Movable
 
-  def initialize(options)
+  def initialize(options, system_options)
     options[:child_controls_draw_to_entity] = false
-    super(options)
+    super
 
     #TODO；本来はここでnormalの初期化が必要なように思える
     @entity = nil

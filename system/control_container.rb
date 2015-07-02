@@ -45,7 +45,7 @@ class Control
   #プロパティ
   attr_accessor  :skip_mode #スキップモード
 
-  def initialize(options, &block)
+  def initialize(options, system_options = {}, &block)
     @@root = self if !@@root #ルートコントロールを登録
 
     #コントロールのID(省略時は自身のクラス名とする)
@@ -88,8 +88,8 @@ class Control
     end
 
     #ブロックが付与されているなら読み込んで登録する
-    if block
-      @script_storage = ScriptCompiler.new(options, &block).commands
+    if system_options[:block]
+      @script_storage = ScriptCompiler.new(options, system_options, &block).commands
     end
 
     #コマンドセットがあるなら登録する
@@ -310,7 +310,9 @@ class Control
   def command_create(options, system_options)
     #コントロールを生成して子要素として登録する
     @control_list.push(
-      Module.const_get(options[:create]).new(options, &system_options[:block]))
+      Module.const_get(options[:create]).new( options, 
+                                              system_options, 
+                                              &system_options[:block]))
 
     return :continue
   end
@@ -585,7 +587,6 @@ class Control
     system_options.delete(:block) #削除
     #関数名に対応する関数ブロックを取得する
     function_block = @@function_list[options[:call_function]]
-    options.delete(:call_function) #削除
 
     #functionを実行時評価しコマンド列を生成する。
     eval_block(options, function_block, system_options)

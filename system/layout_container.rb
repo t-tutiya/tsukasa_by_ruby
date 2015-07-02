@@ -37,9 +37,9 @@ class LayoutContainer < Control
   include Movable #移動関連モジュール
   include Drawable #描画関連モジュール
 
-  def initialize(options)
+  def initialize(options, system_options)
     options[:child_controls_draw_to_entity] = true
-    super(options)
+    super
 
     #保持オブジェクトの初期化
     @entity = RenderTarget.new( options[:width], 

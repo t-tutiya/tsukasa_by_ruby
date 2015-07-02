@@ -44,7 +44,7 @@ module Drawable
   attr_reader  :width
   attr_reader  :height
 
-  def initialize(options, control = nil)
+  def initialize(options, system_options)
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
     @y_pos = options[:y_pos] || 0 #描画Ｙ座標
 
@@ -57,7 +57,7 @@ module Drawable
     @draw_option = {} #描画オプション
     @draw_option[:z] = options[:index] || 0 #重ね合わせ順序
 
-    super(options)
+    super
 
     #回り込み指定（省略時は:none）
     @float_mode = options[:float_mode] || :none

@@ -93,7 +93,7 @@ class CharContainer < Control
   include Movable #移動関連モジュール
   include Drawable #描画関連モジュール
 
-  def initialize(options, control = nil)
+  def initialize(options, system_options)
     @child_controls_draw_to_entity = false
     @char_renderer_block = nil
 
@@ -158,7 +158,7 @@ class CharContainer < Control
     #次に描画する文字の『下限』Ｙ座標をリセット
     @next_char_y = 0
 
-    super(options)
+    super
   end
 
   #############################################################################

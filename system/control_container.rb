@@ -78,13 +78,13 @@ class Control
 
     if options[:default_script_path]
       #デフォルトスクリプトの読み込み
-      @script_storage += ScriptCompiler.new({:script_path => options[:default_script_path]}, {:target_id => @id}).commands
+      @script_storage += ScriptCompiler.new({:script_path => options[:default_script_path]}, system_options).commands
     end
 
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]
       #シナリオファイルの読み込み
-      @script_storage += ScriptCompiler.new({:script_path => options[:script_path]}, {:target_id => @id}).commands
+      @script_storage += ScriptCompiler.new({:script_path => options[:script_path]}, system_options).commands
     end
 
     #ブロックが付与されているなら読み込んで登録する

@@ -50,7 +50,7 @@ require_relative './script_compiler.rb'
 #TODO：Ragの名称もそろそろ変える
 class Tsukasa < Control
 
-  def initialize(options, system_options = {:taget_id => :root})
+  def initialize(options, system_options = {})
     options[:default_script_path] = "./system/default_script.rb"
     super
   end

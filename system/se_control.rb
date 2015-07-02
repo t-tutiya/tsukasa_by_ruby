@@ -36,8 +36,8 @@ require_relative './control_container.rb'
 #ＳＥコントロール
 class SEControl  < Control
 
-  def initialize(options)
-    super(options)
+  def initialize(options, system_options)
+    super
 
     #イメージの読み込み
     @control = Sound.new(options[:file_path])

@@ -210,7 +210,9 @@ class CharContainer < Control
                      :font_config => @font_config,
                      :skip_mode =>  @skip_mode,
                      :graph => false,
-                     }, &@char_renderer_block
+                     }, 
+                     {:block => @char_renderer_block},
+                     &@char_renderer_block
                    )
     else
       raise

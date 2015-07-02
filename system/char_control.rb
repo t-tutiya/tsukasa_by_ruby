@@ -40,9 +40,9 @@ class CharControl < Control
   include Movable
   include Drawable
 
-  def initialize(options, control = nil)
+  def initialize(options, system_options, &char_renderer_block)
 
-    super(options)
+    super
 
     #Image生成に必要な各種座標を生成する
     @width, @height, offset_x, offset_y = normalize_image(
@@ -54,12 +54,11 @@ class CharControl < Control
     @x_pos = @x_pos - offset_x
     @y_pos = @y_pos - offset_y
 
+#TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
+=begin
     #保持オブジェクトの初期化
     #画像が指定されている場合
     if control
-      raise
-#TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
-=begin
       if options[:graph]
         @entity = control.effect_image_font(options[:font_config])
       else
@@ -69,8 +68,8 @@ class CharControl < Control
       @width = @entity.width
       @height = @entity.height
       
-=end
     else
+=end
       #文字用のimageを作成
       @entity = Image.new(@width, @height, [0, 0, 0, 0]) 
       #フォントを描画
@@ -79,7 +78,7 @@ class CharControl < Control
                             options[:char], 
                             options[:font], 
                             options[:font_config])
-    end
+#    end
     
     @skip_mode = options[:skip_mode] #スキップモード初期化
   end

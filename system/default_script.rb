@@ -64,7 +64,7 @@ define :pause do
   sleep_mode :sleep
   #ウェイク待ち
   wait [:wake] do
-    _YIELD
+    _YIELD_
   end
 end
 

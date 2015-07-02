@@ -165,21 +165,6 @@ class ScriptCompiler
   #各種ウェイト処理
   impl_define :wait,                  [:all]
 
-  #制御構文 if系
-  impl_define :IF,    [:option, :block]
-  impl_define :THEN,  [:block]
-  impl_define :ELSE,  [:block]
-  impl_define :ELSIF, [:option, :block]
-
-  #case-when文
-  #TODO：現状では受け取れる式は１個のみとする
-  #TODO：複数取れるべきだが、現仕様では他のコマンドと整合しない
-  impl_define :CASE,  [:option, :block]
-  impl_define :WHEN,  [:option, :block]
-
-  #while文
-  impl_define :WHILE, [:option, :block]
-
   impl_define :EXP,   [:block]
 
   #コマンド列のブロック化
@@ -192,14 +177,30 @@ class ScriptCompiler
   impl_define :call_function,                  [:all]
   impl_define :call_builtin_command,                  [:all]
 
+  #制御構文 if系
+  impl_define :_IF_,    [:option, :block]
+  impl_define :_THEN_,  [:block]
+  impl_define :_ELSE_,  [:block]
+  impl_define :_ELSIF_, [:option, :block]
+
+  #case-when文
+  #TODO：現状では受け取れる式は１個のみとする
+  #TODO：複数取れるべきだが、現仕様では他のコマンドと整合しない
+  impl_define :_CASE_,  [:option, :block]
+  impl_define :_WHEN_,  [:option, :block]
+
+  #while文
+  impl_define :_WHILE_, [:option, :block]
+
+  #コマンド名の再定義
+  impl_define :_ALIAS_,   [:option, :option_hash]
+  #コルーチン呼び出し
+  impl_define :_YIELD_, [:option_hash]
+
   #実行時評価
-  impl_define :_EVAL, [:option]
+  impl_define :_EVAL_, [:option]
   #ユーザー定義コマンドの宣言
   impl_define :define, [:option, :block]
-  #コマンド名の再定義
-  impl_define :_ALIAS ,   [:option, :option_hash]
-  #コルーチン呼び出し
-  impl_define :_YIELD, [:option_hash]
 
   #ヘルパーメソッド群
   def commands()

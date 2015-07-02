@@ -404,13 +404,6 @@ class Control
     @command_list.push([:token, nil, {}])
     return :continue
   end
-
-  #文字列を評価する（デバッグ用）
-  def command__EVAL(options, system_options)
-    eval(options[:_EVAL])
-    return :continue
-  end
-
 end
 
 class Control
@@ -556,27 +549,6 @@ class Control
     return :continue
   end
 
-  #コマンドを再定義する
-  def command__ALIAS(options, system_options)
-    #元コマンドが組み込みコマンドの場合
-    if @@builtin_command_list.include?(options[:command_name])
-      #元コマンドをcall_builtin_commandで呼びだすブロックを設定する
-      @@function_list[options[:_ALIAS]] = Proc.new{|command_options|
-        call_builtin_command(options[:command_name], command_options)
-      }
-
-      #コマンドを組み込みコマンドリストから削除する
-      @@builtin_command_list.delete_if{ |command_name|
-        command_name == options[:command_name]
-      }
-    else
-      #新しいコマンド名に元のコマンドのブロックを設定する
-      @@function_list[options[:_ALIAS]] = @@function_list[options[:command_name]]
-    end
-
-    return :continue
-  end
-
   #関数呼び出し
   def command_call_function(options, system_options)
     #定義されていないfunctionが呼びだされたら例外を送出
@@ -657,9 +629,9 @@ class Control #制御構文
   private
 
   #ifコマンド
-  def command_IF(options, system_options)
+  def command__IF_(options, system_options)
     #条件式を評価し、結果をoptionsに再格納する
-    if eval_lambda(options[:IF], options)
+    if eval_lambda(options[:_IF_], options)
       result = :then
     else
       result = :else
@@ -672,7 +644,7 @@ class Control #制御構文
   end
 
   #thenコマンド
-  def command_THEN(options, system_options)
+  def command__THEN_(options, system_options)
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
       command[0] == :exp_result
@@ -688,7 +660,7 @@ class Control #制御構文
   end
 
   #elseコマンド
-  def command_ELSIF(options, system_options)
+  def command__ELSIF_(options, system_options)
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
       command[0] == :exp_result
@@ -697,7 +669,7 @@ class Control #制御構文
     #結果がelseの場合
     if result and @next_frame_commands[result][1][:result] == :else
       #ラムダ式が真の場合
-      if eval_lambda(options[:ELSIF], options)
+      if eval_lambda(options[:_ELSIF_], options)
         #コマンドブロックを実行する
         eval_block(options, system_options[:block])
         #処理がこれ以上伝搬しないように評価結果をクリアする
@@ -710,7 +682,7 @@ class Control #制御構文
   end
 
   #elseコマンド
-  def command_ELSE(options, system_options)
+  def command__ELSE_(options, system_options)
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
       command[0] == :exp_result
@@ -724,33 +696,22 @@ class Control #制御構文
     return :continue
   end
 
-  #１フレ分のみifの結果をコマンドリスト上に格納する
-  def command_exp_result(options, system_options)
-    return :continue
-  end
-
-  #関数ブロックを実行する
-  def command__YIELD(options, system_options)
-    eval_block(options, system_options[:yield_block])
-    return :continue
-  end
-
   #繰り返し
-  def command_WHILE(options, system_options)
+  def command__WHILE_(options, system_options)
     #条件式が非成立であれば繰り返し構文を終了する
-    return :continue if !eval_lambda(options[:WHILE], options) #アイドル
+    return :continue if !eval_lambda(options[:_WHILE_], options) #アイドル
 
     #while文全体をスクリプトストレージにスタック
-    eval_commands([[:WHILE, options, system_options]])
+    eval_commands([[:_WHILE_, options, system_options]])
     #ブロックを実行時評価しコマンド列を生成する。
     eval_block(options, system_options[:block])
 
     return :continue
   end
 
-  def command_CASE(options, system_options)
+  def command__CASE_(options, system_options)
     #比較元のオブジェクトを評価する
-    value = eval_lambda(options[:CASE], options)
+    value = eval_lambda(options[:_CASE_], options)
 
     #case文の中身を実行する
     eval_block(options, system_options[:block])
@@ -759,7 +720,7 @@ class Control #制御構文
                                       :case_value => value}]
   end
 
-  def command_WHEN(options, system_options)
+  def command__WHEN_(options, system_options)
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
       command[0] == :exp_result
@@ -770,11 +731,50 @@ class Control #制御構文
 
     exp_result = @next_frame_commands[result][1]
 
-    if exp_result[:case_value] == eval_lambda(options[:WHEN], options)
+    if exp_result[:case_value] == eval_lambda(options[:_WHEN_], options)
       #コマンドブロックを実行する
       eval_block(options, system_options[:block])
     end
 
+    return :continue
+  end
+
+  #関数ブロックを実行する
+  def command__YIELD_(options, system_options)
+    eval_block(options, system_options[:yield_block])
+    return :continue
+  end
+
+  #コマンドを再定義する
+  def command__ALIAS_(options, system_options)
+    #元コマンドが組み込みコマンドの場合
+    if @@builtin_command_list.include?(options[:command_name])
+      #元コマンドをcall_builtin_commandで呼びだすブロックを設定する
+      @@function_list[options[:_ALIAS_]] = Proc.new{|command_options|
+        call_builtin_command(options[:command_name], command_options)
+      }
+
+      #コマンドを組み込みコマンドリストから削除する
+      @@builtin_command_list.delete_if{ |command_name|
+        command_name == options[:command_name]
+      }
+    else
+      #新しいコマンド名に元のコマンドのブロックを設定する
+      @@function_list[options[:_ALIAS_]] = @@function_list[options[:command_name]]
+    end
+
+    return :continue
+  end
+
+  #文字列を評価する（デバッグ用）
+  def command__EVAL_(options, system_options)
+    eval(options[:_EVAL_])
+    return :continue
+  end
+
+
+  #１フレ分のみifの結果をコマンドリスト上に格納する
+  def command_exp_result(options, system_options)
     return :continue
   end
 end

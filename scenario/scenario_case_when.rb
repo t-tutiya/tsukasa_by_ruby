@@ -28,8 +28,8 @@ create :ButtonControl,
 end
 
 about :button1 do
-  CASE -> {true} do
-    WHEN -> {3 ** 3 == 30} do
+  _CASE_ -> {true} do
+    _WHEN_ -> {3 ** 3 == 30} do
       move_line x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
       wait_command :move_line
       move_line x: 300, y: 300, count:0, frame: 60, start_x: 300, start_y: 0
@@ -39,7 +39,7 @@ about :button1 do
       move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 0,   start_y: 300
       wait_command :move_line
     end
-    WHEN -> {2 ** 2 != 4} do
+    _WHEN_ -> {2 ** 2 != 4} do
       move_line x: 300, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
       wait_command :move_line
       move_line x: 300, y: 0, count:0, frame: 60, start_x: 300, start_y: 300
@@ -49,7 +49,7 @@ about :button1 do
       move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 0,   start_y: 300
       wait_command :move_line
     end
-    ELSE do
+    _ELSE_ do
       move_line x: 0, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
       wait_command :move_line
       move_line x: 300, y: 300, count:0, frame: 60, start_x: 0, start_y: 300
@@ -57,12 +57,12 @@ about :button1 do
       move_line x: 300,   y: 0, count:0, frame: 60, start_x: 300, start_y: 300
       wait_command :move_line
       
-      IF -> {4 ** 4 < 300} do
-        THEN do
+      _IF_ -> {4 ** 4 < 300} do
+        _THEN_ do
           move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 300,   start_y: 0
           wait_command :move_line
         end
-        ELSE do
+        _ELSE_ do
           move_line x: 0,   y: 300,   count:0, frame: 60, start_x: 300,   start_y: 0
           wait_command :move_line
         end

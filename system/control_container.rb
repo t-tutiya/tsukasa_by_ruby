@@ -45,7 +45,7 @@ class Control
   #プロパティ
   attr_accessor  :skip_mode #スキップモード
 
-  def initialize(options, system_options, &block)
+  def initialize(options, system_options)
     @@root = self if !@@root #ルートコントロールを登録
 
     #コントロールのID(省略時は自身のクラス名とする)
@@ -89,7 +89,7 @@ class Control
 
     #ブロックが付与されているなら読み込んで登録する
     if system_options[:block]
-      @script_storage = ScriptCompiler.new(options, system_options, &block).commands
+      @script_storage = ScriptCompiler.new(options, system_options, &system_options[:block]).commands
     end
 
     #コマンドセットがあるなら登録する

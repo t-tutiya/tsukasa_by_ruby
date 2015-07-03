@@ -211,8 +211,7 @@ class CharContainer < Control
                      :skip_mode =>  @skip_mode,
                      :graph => false,
                      }, 
-                     {:block => @char_renderer_block},
-                     &@char_renderer_block
+                     {:block => @char_renderer_block}
                    )
     else
       raise

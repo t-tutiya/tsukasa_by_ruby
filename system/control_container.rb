@@ -102,7 +102,7 @@ class Control
   end
 
   #コマンドをスタックに格納する
-  def send_command(command, options, system_options = {:target_id => @id})
+  def send_script(command, options, system_options = {:target_id => @id})
     #自身が送信対象として指定されている場合
     if @id == system_options[:target_id] or system_options[:target_id] == :anonymous
       #コマンドをスタックの末端に挿入する
@@ -113,14 +113,14 @@ class Control
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.send_command(command, options, system_options)
+      return true if control.send_script(command, options, system_options)
     end
 
     return false #コマンドをスタックしなかった
   end
 
   #コマンドをスタックに格納する
-  def send_command_interrupt(command, options, system_options = {:target_id => @id})
+  def interrupt_command(command, options, system_options = {:target_id => @id})
     #自身が送信対象として指定されている場合
     #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
     if @id == system_options[:target_id] or system_options[:target_id] == :anonymous
@@ -132,31 +132,31 @@ class Control
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.send_command_interrupt(command, options, system_options)
+      return true if control.interrupt_command(command, options, system_options)
     end
 
     return false #コマンドをスタックしなかった
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def send_command_to_all(command, options)
+  def send_script_to_all(command, options)
     #自身のidを設定してコマンドを送信する
-    send_command(command, options)
+    send_script(command, options)
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
-      control.send_command_to_all(command, options)
+      control.send_script_to_all(command, options)
     end
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def send_command_interrupt_to_all(command, options)
+  def interrupt_command_to_all(command, options)
     #自身のidを設定してコマンドを送信する
-    send_command_interrupt(command, options)
+    interrupt_command(command, options)
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
-      control.send_command_interrupt_to_all(command, options)
+      control.interrupt_command_to_all(command, options)
     end
   end
 
@@ -326,7 +326,7 @@ class Control
       dispose()
     else
       #子コントロールにdisposeコマンドを送信
-      send_command_interrupt(:dispose, options, options[:dispose])
+      interrupt_command(:dispose, options, options[:dispose])
     end
     return :continue
   end
@@ -390,9 +390,9 @@ class Control
     if @id == system_options[:target_id] or system_options[:target_id] == :anonymous
       #コマンドtをスタックの末端に挿入する
       @command_list.push([command, options, system_options])
-    elsif !send_command( command, 
-                      options, 
-                      system_options) then
+    elsif !send_script( command, 
+                        options, 
+                        system_options) then
       pp "error"
       pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
       pp @id
@@ -433,7 +433,7 @@ class Control
 
   def command_skip_mode_all(options, system_options)
     #スリープモードを解除する
-    @@root.send_command_interrupt_to_all(:skip_mode, 
+    @@root.interrupt_command_to_all(:skip_mode, 
                                         {:skip_mode => options[:skip_mode_all]})
     return :continue
   end
@@ -448,7 +448,7 @@ class Control
 
   def command_sleep_mode_all(options, system_options)
     #スリープモードを解除する
-    @@root.send_command_interrupt_to_all(:sleep_mode, 
+    @@root.interrupt_command_to_all(:sleep_mode, 
                                         {:sleep_mode => options[:sleep_mode_all]})
     return :continue
   end
@@ -487,7 +487,7 @@ class Control
       when :key_push
         #キー押下があれば終了
         if Input.key_push?(K_SPACE)
-          @@root.send_command_interrupt_to_all(:skip_mode, {:skip_mode =>true})
+          @@root.interrupt_command_to_all(:skip_mode, {:skip_mode =>true})
           return :continue 
         end
 

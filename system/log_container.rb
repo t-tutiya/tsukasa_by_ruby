@@ -110,7 +110,7 @@ class LogContainer < Control
 
     #所持している全コントロールにmove_lineコマンドを発行
     raise #下記メソッドは未検証
-    send_command_to_all(:move, options)
+    send_script_to_all(:move, options)
 
     return false #フレーム続行
   end

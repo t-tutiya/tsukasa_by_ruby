@@ -60,7 +60,7 @@ module Movable
     control_options[:count] = 0
     control_options[:frame] = options[:frame]
 
-    send_command_interrupt(:move_line, control_options)
+    interrupt_command(:move_line, control_options)
 
     #待機モードを初期化
     @idle_mode = false

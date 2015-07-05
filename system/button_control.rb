@@ -71,8 +71,8 @@ class ButtonControl  < Control
     if @x_pos < x  and x < @x_pos + @control_list[0].width and
        @y_pos < y  and y < @y_pos + @control_list[0].height
       #描画コントロールをoverに切り替え
-      send_command(:visible, {:visible => false}, {:target_id => :normal})
-      send_command(:visible, {:visible => true}, {:target_id => :over})
+      send_script(:visible, {:visible => false}, {:target_id => :normal})
+      send_script(:visible, {:visible => true}, {:target_id => :over})
       return :continue, [:over, {}]  #コマンド探査終了
     else
       #normalを維持
@@ -82,7 +82,6 @@ class ButtonControl  < Control
 
   #マウスカーソルが範囲内に入っている
   def command_over(options, target)
-    #send_command_interrupt(:fire, {:fire => :over})
     #マウスカーソル座標を取得
     x = Input.mouse_pos_x
     y = Input.mouse_pos_y
@@ -91,16 +90,16 @@ class ButtonControl  < Control
     if !(@x_pos < x  and x < @x_pos + @control_list[0].width and
          @y_pos < y  and y < @y_pos + @control_list[0].height)
       #描画コントロールをoutに切り替え
-      send_command(:visible, {:visible => false}, {:target_id => :over})
-      send_command(:visible, {:visible => true}, {:target_id => :out})
+      send_script(:visible, {:visible => false}, {:target_id => :over})
+      send_script(:visible, {:visible => true}, {:target_id => :out})
       return :continue, [:out, {}]  #コマンド探査終了
     end
 
     #マウスボタンが押された場合
     if Input.mouse_push?( M_LBUTTON )
       #描画コントロールをkey_downに切り替え
-      send_command(:visible, {:visible => false}, {:target_id => :over})
-      send_command(:visible, {:visible => true}, {:target_id => :key_down})
+      send_script(:visible, {:visible => false}, {:target_id => :over})
+      send_script(:visible, {:visible => true}, {:target_id => :key_down})
       return :continue, [:key_down, {}]  #フレーム終了
     else
       #overを維持
@@ -110,7 +109,6 @@ class ButtonControl  < Control
 
   #ボタンが押下されている状態
   def command_key_down(options, target)
-    #send_command_interrupt(:fire, {:fire => :down})
     #マウスカーソル座標を取得
     x = Input.mouse_pos_x
     y = Input.mouse_pos_y
@@ -119,16 +117,16 @@ class ButtonControl  < Control
     if !(@x_pos < x  and x < @x_pos + @control_list[0].width and
          @y_pos < y  and y < @y_pos + @control_list[0].height)
       #描画コントロールをoutに切り替え
-      send_command(:visible, {:visible => false}, {:target_id => :key_down})
-      send_command(:visible, {:visible => true}, {:target_id => :out})
+      send_script(:visible, {:visible => false}, {:target_id => :key_down})
+      send_script(:visible, {:visible => true}, {:target_id => :out})
       return :continue, [:out, {}] #コマンド探査終了
     end
 
     #マウスボタン押下が解除された場合
     if Input.mouse_release?( M_LBUTTON )
       #描画コントロールをkey_upに切り替え
-      send_command(:visible, {:visible => false}, {:target_id => :key_down})
-      send_command(:visible, {:visible => true}, {:target_id => :key_up})
+      send_script(:visible, {:visible => false}, {:target_id => :key_down})
+      send_script(:visible, {:visible => true}, {:target_id => :key_up})
       #イベント実行
       return :continue, [:key_up, {}] #コマンド探査終了
     else
@@ -140,20 +138,19 @@ class ButtonControl  < Control
   #ボタンから指が離れた後の状態
   def command_key_up(options, target)
     #イベントを実行
-    send_command_interrupt(:fire, {:fire => :key_up})
+    interrupt_command(:fire, {:fire => :key_up})
 
     #描画コントロールをoverに切り替え
-    send_command(:visible, {:visible => false}, {:target_id => :key_up})
-    send_command(:visible, {:visible => true}, {:target_id => :over})
+    send_script(:visible, {:visible => false}, {:target_id => :key_up})
+    send_script(:visible, {:visible => true}, {:target_id => :over})
     return :continue, [:over, {}] #コマンド探査終了
   end
 
   #マウスカーソルが範囲外に出た後の状態
   def command_out(options, target)
-    #send_command_interrupt(:fire, {:fire => :out})
     #描画コントロールをnormalに切り替え
-    send_command(:visible, {:visible => false}, {:target_id => :out})
-    send_command(:visible, {:visible => true}, {:target_id => :normal})
+    send_script(:visible, {:visible => false}, {:target_id => :out})
+    send_script(:visible, {:visible => true}, {:target_id => :normal})
     return :continue, [:normal, {}] #コマンド探査終了
   end
 end

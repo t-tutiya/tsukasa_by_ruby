@@ -241,7 +241,7 @@ class CharContainer < Control
                     @style_config[:charactor_pitch]
 
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    send_command_interrupt(:wait, 
+    interrupt_command(:wait, 
                           {:wait => [:count, :skip, :key_push],
                            :count => :unset_wait_frame})
 
@@ -295,7 +295,7 @@ class CharContainer < Control
     @next_char_x += image.width + @style_config[:charactor_pitch]
 
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    send_command_interrupt(:wait, 
+    interrupt_command(:wait, 
                           {:wait => [:count, :skip, :key_push],
                            :count => :unset_wait_frame})
 
@@ -312,7 +312,7 @@ class CharContainer < Control
     @height = @next_char_y + @font_config[:size]
 
     #改行時のwaitを設定する
-    send_command_interrupt(:wait, 
+    interrupt_command(:wait, 
                           {:wait => [:count, :skip, :key_push],
                            :count => @style_config[:line_feed_wait_frame]})
 

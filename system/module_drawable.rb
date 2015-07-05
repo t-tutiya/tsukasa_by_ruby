@@ -128,7 +128,7 @@ module Drawable
 
     #トランジション実行コマンドを発行
     #TODO send_commandではなくinterrupt_command_allなのは、この時点でcontrolには匿名ＩＤ(:anonymous_control)が設定されている為。匿名ＩＤ自体を直接指定しても良いが、ひとまずこうしておく。
-    control.send_command(:transition_crossfade, options)
+    control.send_script(:transition_crossfade, options)
     return :continue
   end
 
@@ -150,7 +150,7 @@ module Drawable
     #カウントが指定フレーム以下の場合
     if options[:count] <= options[:frame]
       #:transition_crossfadeコマンドをスタックし直す
-      send_command_interrupt(:transition_crossfade, options)
+      interrupt_command(:transition_crossfade, options)
       #待機モードを初期化
       @idle_mode = false
       return :continue #フレーム終了

@@ -198,52 +198,54 @@ class CharContainer < Control
   #charコマンド
   #指定文字（群）を描画チェインに連結する
   def command_char(options, system_options)
+    #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
+    interrupt_command(:wait, 
+                          {:wait => [:count, :skip, :key_push],
+                           :count => :unset_wait_frame})
+
     #レンダリング済みフォントを使用中か否かで分岐
     if !@font_config[:use_image_font]
-      #文字レンダラオブジェクトを生成する
-      #TODO:本来はcreateコマンドで生成されるべきか？
-      control = CharControl.new(
-                    {:x_pos => @next_char_x + @margin_x,
-                     :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
+      #子コントロールにdisposeコマンドを送信
+      interrupt_command(:create, {
+                      :create => :CharControl, 
+                      :x_pos => @next_char_x + @margin_x,
+                      :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
                      :char => options[:char].to_s,
                      :font => @font,
                      :font_config => @font_config,
                      :skip_mode =>  @skip_mode,
                      :graph => false,
                      }, 
-                     {:block => @char_renderer_block}
-                   )
+                     {:target_id => @id,
+                      :block => @char_renderer_block}
+                    )
+
     else
       raise
+#以下旧仕様なので動作しない
 #TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
 =begin
       #文字レンダラオブジェクトを生成する
-      #TODO:本来はcreate_childコマンドで生成されるべきか？
-      control = CharControl.new(
-                    {:x_pos => @next_char_x + @margin_x,
+      interrupt_command(:create, {
+                      :create => :CharControl, 
+                     :x_pos => @next_char_x + @margin_x,
                      :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
                      :char => "",
                      :font => @font,
                      :font_config => @font_config,
                      :skip_mode =>  @skip_mode,
                      :graph => true,
-                     }, &@char_renderer_block,
+                     },
+                     {:target_id => @id,
+                      :block => @char_renderer_block},
 #                   @font.glyph(options[:char].to_s)
                    )
 =end
     end
 
-    #描画チェインに連結する
-    @control_list.push(control)
-
     #描画座標を１文字＋文字ピッチ分進める
     @next_char_x += @font.get_width(options[:char].to_s) + 
                     @style_config[:charactor_pitch]
-
-    #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    interrupt_command(:wait, 
-                          {:wait => [:count, :skip, :key_push],
-                           :count => :unset_wait_frame})
 
     return :continue #アイドル
   end
@@ -268,6 +270,8 @@ class CharContainer < Control
   #graphコマンド
   #指定画像を描画チェインに連結する
   def command_graph(options, system_options)
+    #以下旧仕様で動かない
+    raise
     #:is_charが省略されている場合初期値を設定する
     options[:is_char] = true if !options.key?(:is_char)
 

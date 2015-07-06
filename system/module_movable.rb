@@ -32,9 +32,6 @@ require 'dxruby'
 
 module Movable
 
-  def initialize(options, system_options)
-    super
-  end
 =begin
   def command_move(options)
 

@@ -36,7 +36,7 @@ require_relative './control_container.rb'
 #ＳＥコントロール
 class SEControl  < Control
 
-  def initialize(options, system_options)
+  def initialize(options, system_options, system_property)
     super
 
     #イメージの読み込み

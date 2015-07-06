@@ -47,7 +47,7 @@ class ImageControl < Control
     hsh[key] = Image.load(key)
   }
 
-  def initialize(options, system_options)
+  def initialize(options, system_options, system_property)
     super
     self.file_path = options[:file_path]
   end

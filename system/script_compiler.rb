@@ -35,8 +35,7 @@ class ScriptCompiler
 
   #ヘルパーメソッド群
   def commands(argument, system_options = {}, system_property = {}, &block)
-    @option = {}
-    @key_name = :commands
+    @option = []
     @yield_block = nil
 
     if argument[:script_path]
@@ -52,15 +51,12 @@ class ScriptCompiler
 
       self.instance_exec(**argument, &block)
     end
-    return  @option[@key_name] || []
+    return  @option || []
   end
 
   def impl(command_name, default_class, target, option, sub_options = {}, &block)
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
-
-    #存在していないキーの場合は配列として初期化する
-    @option[@key_name] ||= []
 
     system_options ={:target_id =>     target,
                      :default_class => default_class,
@@ -76,10 +72,10 @@ class ScriptCompiler
     end
 
     #コマンドを登録する
-    @option[@key_name].push([ command_name,
-                              sub_options, 
-                              system_options,
-                              ])
+    @option.push([command_name,
+                  sub_options, 
+                  system_options,
+                  ])
   end
 
   #コマンドに対応するメソッドを生成する。

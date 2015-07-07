@@ -33,9 +33,9 @@ require 'dxruby'
 class ScriptCompiler
   include Resource
 
-  def initialize(argument, system_options = {}, system_property = {}, &block)
+  #ヘルパーメソッド群
+  def commands(argument, system_options = {}, system_property = {}, &block)
     @option = {}
-    @option_stack = []
     @key_name = :commands
     @yield_block = nil
 
@@ -52,7 +52,7 @@ class ScriptCompiler
 
       self.instance_exec(**argument, &block)
     end
-    @script_storage = @option[@key_name] || []
+    return  @option[@key_name] || []
   end
 
   def impl(command_name, default_class, target, option, sub_options = {}, &block)
@@ -201,9 +201,4 @@ class ScriptCompiler
   impl_define :_EVAL_, [:option]
   #ユーザー定義コマンドの宣言
   impl_define :define, [:option, :block]
-
-  #ヘルパーメソッド群
-  def commands()
-    return @script_storage
-  end
 end

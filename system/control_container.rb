@@ -52,6 +52,8 @@ class Control
       :builtin_command_list => system_property[:builtin_command_list] || @@builtin_command_list
     }
 
+    @script_compiler = ScriptCompiler.new
+
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
 
@@ -82,28 +84,28 @@ class Control
 
     if options[:default_script_path]
       #デフォルトスクリプトの読み込み
-      @script_storage += ScriptCompiler.new(
+      @script_storage += @script_compiler.commands(
                           {:script_path => options[:default_script_path]}, 
                           system_options, 
-                          @system_property).commands
+                          @system_property)
     end
 
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]
       #シナリオファイルの読み込み
-      @script_storage += ScriptCompiler.new(
+      @script_storage += @script_compiler.commands(
                           {:script_path => options[:script_path]}, 
                           system_options, 
-                          @system_property).commands
+                          @system_property)
     end
 
     #ブロックが付与されているなら読み込んで登録する
     if system_options[:block]
-      @script_storage = ScriptCompiler.new(
+      @script_storage = @script_compiler.commands(
                           options, 
                           system_options, 
                           @system_property, 
-                          &system_options[:block]).commands
+                          &system_options[:block])
     end
 
     #コマンドセットがあるなら登録する
@@ -295,7 +297,10 @@ class Control
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
   def eval_block(options, system_options = {}, block)
     return unless block
-    eval_commands(ScriptCompiler.new(options, system_options, @system_property, &block).commands)
+    eval_commands(@script_compiler.commands(options, 
+                                            system_options, 
+                                            @system_property, 
+                                            &block))
   end
 
   #IFやWHILEなどで渡されたlambdaを実行する
@@ -375,7 +380,7 @@ class Control
       #次に読み込むスクリプトファイルが指定されている場合
       elsif @next_script_file_path
         #指定されたスクリプトファイルを読み込む
-        @script_storage = ScriptCompiler.new(@next_script_file_path).commands
+        @script_storage = @script_compiler.commands(@next_script_file_path)
         #予約スクリプトファイルパスの初期化
         @next_script_file_path = nil
       else 
@@ -627,7 +632,7 @@ class Control
   def command_load_script(options, system_options)
     #指定されたスクリプトファイルを直接読み込む
     #TODO：@script_storageに上書きするのか、追記するのかはオプションで指定できた方が良いか？　その
-    @script_storage = ScriptCompiler.new({:script_path => options[:load_script]}).commands
+    @script_storage = @script_compiler.commands({:script_path => options[:load_script]})
     return :continue
   end
   

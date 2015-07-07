@@ -48,7 +48,8 @@ class Control
       #functionのリスト（procで保存される）
       :function_list => system_property[:function_list] || {},
       #ルートコントロールを登録
-      :root => system_property[:root] || self
+      :root => system_property[:root] || self,
+      :builtin_command_list => system_property[:builtin_command_list] || @@builtin_command_list
     }
 
     #コントロールのID(省略時は自身のクラス名とする)
@@ -81,18 +82,28 @@ class Control
 
     if options[:default_script_path]
       #デフォルトスクリプトの読み込み
-      @script_storage += ScriptCompiler.new({:script_path => options[:default_script_path]}, system_options).commands
+      @script_storage += ScriptCompiler.new(
+                          {:script_path => options[:default_script_path]}, 
+                          system_options, 
+                          @system_property).commands
     end
 
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]
       #シナリオファイルの読み込み
-      @script_storage += ScriptCompiler.new({:script_path => options[:script_path]}, system_options).commands
+      @script_storage += ScriptCompiler.new(
+                          {:script_path => options[:script_path]}, 
+                          system_options, 
+                          @system_property).commands
     end
 
     #ブロックが付与されているなら読み込んで登録する
     if system_options[:block]
-      @script_storage = ScriptCompiler.new(options, system_options, &system_options[:block]).commands
+      @script_storage = ScriptCompiler.new(
+                          options, 
+                          system_options, 
+                          @system_property, 
+                          &system_options[:block]).commands
     end
 
     #コマンドセットがあるなら登録する
@@ -284,7 +295,7 @@ class Control
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
   def eval_block(options, system_options = {}, block)
     return unless block
-    eval_commands(ScriptCompiler.new(options, system_options, &block).commands)
+    eval_commands(ScriptCompiler.new(options, system_options, @system_property, &block).commands)
   end
 
   #IFやWHILEなどで渡されたlambdaを実行する
@@ -754,14 +765,14 @@ class Control #制御構文
   #コマンドを再定義する
   def command__ALIAS_(options, system_options)
     #元コマンドが組み込みコマンドの場合
-    if @@builtin_command_list.include?(options[:command_name])
+    if @system_property[:builtin_command_list].include?(options[:command_name])
       #元コマンドをcall_builtin_commandで呼びだすブロックを設定する
       @system_property[:function_list][options[:_ALIAS_]] = Proc.new{|command_options|
         call_builtin_command(options[:command_name], command_options)
       }
 
       #コマンドを組み込みコマンドリストから削除する
-      @@builtin_command_list.delete_if{ |command_name|
+      @system_property[:builtin_command_list].delete_if{ |command_name|
         command_name == options[:command_name]
       }
     else

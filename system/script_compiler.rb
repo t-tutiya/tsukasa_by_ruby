@@ -33,7 +33,7 @@ require 'dxruby'
 class ScriptCompiler
   include Resource
 
-  def initialize(argument, system_options = {}, &block)
+  def initialize(argument, system_options = {}, system_property = {}, &block)
     @option = {}
     @option_stack = []
     @key_name = :commands

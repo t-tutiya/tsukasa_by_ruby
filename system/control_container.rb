@@ -39,7 +39,6 @@ end
 
 class Control
   include Resource
-  @@function_list = {} 
 
   #プロパティ
   attr_accessor  :skip_mode #スキップモード
@@ -47,7 +46,7 @@ class Control
   def initialize(options, system_options, system_property = {})
     @system_property = {
       #functionのリスト（procで保存される）
-      :function_list => @@function_list,
+      :function_list => system_property[:function_list] || {},
       #ルートコントロールを登録
       :root => system_property[:root] || self
     }

@@ -33,6 +33,12 @@ require 'dxruby'
 class ScriptCompiler
   include Resource
 
+  @@builtin_command_list = Array.new #組み込みコマンドリスト
+
+  def builtin_command_list
+    @@builtin_command_list
+  end
+
   #ヘルパーメソッド群
   def commands(argument, system_options = {}, system_property = {}, &block)
     @option = []

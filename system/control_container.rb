@@ -34,7 +34,6 @@ require_relative './module_drawable.rb'
 
 module Resource
   @@global_flag = {}   #グローバルフラグ
-  @@builtin_command_list = Array.new #組み込みコマンドリスト
 end
 
 class Control
@@ -49,7 +48,6 @@ class Control
       :function_list => system_property[:function_list] || {},
       #ルートコントロールを登録
       :root => system_property[:root] || self,
-      :builtin_command_list => system_property[:builtin_command_list] || @@builtin_command_list
     }
 
     @script_compiler = ScriptCompiler.new
@@ -770,14 +768,14 @@ class Control #制御構文
   #コマンドを再定義する
   def command__ALIAS_(options, system_options)
     #元コマンドが組み込みコマンドの場合
-    if @system_property[:builtin_command_list].include?(options[:command_name])
+    if @script_compiler.builtin_command_list.include?(options[:command_name])
       #元コマンドをcall_builtin_commandで呼びだすブロックを設定する
       @system_property[:function_list][options[:_ALIAS_]] = Proc.new{|command_options|
         call_builtin_command(options[:command_name], command_options)
       }
 
       #コマンドを組み込みコマンドリストから削除する
-      @system_property[:builtin_command_list].delete_if{ |command_name|
+      @script_compiler.builtin_command_list.delete_if{ |command_name|
         command_name == options[:command_name]
       }
     else

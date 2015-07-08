@@ -52,8 +52,6 @@ class Control
       @system_property = {
         #functionのリスト（procで保存される）
         :function_list => {},
-        #ルートコントロールを登録
-        :root => self,
       }
     end
 
@@ -457,7 +455,7 @@ class Control
 
   def command_skip_mode_all(options, system_options)
     #スリープモードを解除する
-    @root_control.system_property[:root].interrupt_command_to_all(:skip_mode, 
+    @root_control.interrupt_command_to_all(:skip_mode, 
                                         {:skip_mode => options[:skip_mode_all]})
     return :continue
   end
@@ -472,7 +470,7 @@ class Control
 
   def command_sleep_mode_all(options, system_options)
     #スリープモードを解除する
-    @root_control.system_property[:root].interrupt_command_to_all(:sleep_mode, 
+    @root_control.interrupt_command_to_all(:sleep_mode, 
                                         {:sleep_mode => options[:sleep_mode_all]})
     return :continue
   end
@@ -511,7 +509,7 @@ class Control
       when :key_push
         #キー押下があれば終了
         if Input.key_push?(K_SPACE)
-          @root_control.system_property[:root].interrupt_command_to_all(:skip_mode, {:skip_mode =>true})
+          @root_control.interrupt_command_to_all(:skip_mode, {:skip_mode =>true})
           return :continue 
         end
 

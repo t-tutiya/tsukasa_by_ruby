@@ -1,8 +1,6 @@
 #! ruby -E utf-8
 
 require 'dxruby'
-require_relative './module_movable.rb'
-require_relative './module_drawable.rb'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -571,10 +569,12 @@ class Control
     #定義されていないfunctionが呼びだされたら例外を送出
     raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{system_options}" unless @root_control.system_property[:function_list].key?(options[:call_function])
 
+    system_options[:yield_block] = Array.new unless system_options[:yield_block]
     #関数ブロックを引数に登録する
-    system_options[:yield_block] = system_options[:block]
+    system_options[:yield_block].push(system_options[:block])
     #下位伝搬を防ぐ為に要素を削除
     system_options.delete(:block)
+
     #関数名に対応する関数ブロックを取得する
     function_block = @root_control.system_property[:function_list][options[:call_function]]
     #下位伝搬を防ぐ為に要素を削除
@@ -758,7 +758,9 @@ class Control #制御構文
 
   #関数ブロックを実行する
   def command__YIELD_(options, system_options)
-    eval_block(options, system_options[:yield_block])
+    return :continue unless system_options[:yield_block]
+    
+    eval_block(options, system_options, system_options[:yield_block].pop)
     return :continue
   end
 

@@ -96,6 +96,12 @@ define :wait_push do
   end_frame
 end
 
+define :image do |options|
+  create :ImageControl , options do
+    _YIELD_
+  end
+end
+
 #標準テキストウィンドウ
 #TODOデバッグ用なので各種数字は暫定
 create :LayoutContainer,

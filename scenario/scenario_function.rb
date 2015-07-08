@@ -5,23 +5,18 @@ create :ButtonControl,
         :x_pos => 0, 
         :y_pos => 0, 
         :id=>:button1 do
-  create :ImageControl, 
-         :file_path=>"./sozai/button_normal.png", 
-         :id=>:normal
-  create :ImageControl, 
-        :file_path=>"./sozai/button_over.png", 
+  image :file_path=>"./sozai/button_normal.png", 
+        :id=>:normal
+  image :file_path=>"./sozai/button_over.png", 
         :id=>:over,
         :visible => false
-  create :ImageControl, 
-        :file_path=>"./sozai/button_key_down.png", 
+  image :file_path=>"./sozai/button_key_down.png", 
         :id=>:key_down,
         :visible => false
-  create :ImageControl, 
-        :file_path=>"./sozai/button_key_up.png", 
+  image :file_path=>"./sozai/button_key_up.png", 
         :id=>:key_up,
         :visible => false
-  create :ImageControl, 
-        :file_path=>"./sozai/button_out.png", 
+  image :file_path=>"./sozai/button_out.png", 
         :id=>:out,
         :visible => false
   normal
@@ -50,9 +45,8 @@ about :button1 do
 end
 
 define :func2 do
-  create :ImageControl, 
-         :file_path=>"./sozai/button_normal.png", 
-         :id=>:normal2 do
+  image :file_path=>"./sozai/button_normal.png", 
+       :id=>:normal2 do
    
     _YIELD_
    

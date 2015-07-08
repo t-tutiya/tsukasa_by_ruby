@@ -31,8 +31,6 @@ require 'dxruby'
 ###############################################################################
 
 class ScriptCompiler
-  include Resource
-
   @@builtin_command_list = Array.new #組み込みコマンドリスト
 
   def builtin_command_list
@@ -43,6 +41,9 @@ class ScriptCompiler
   def commands(argument, system_options = {}, system_property = {}, &block)
     @option = []
     @yield_block = nil
+
+    @system_property = system_property
+    @global_flag = @system_property[:global_flag]
 
     if argument[:script_path]
       #評価対象がスクリプトファイルの場合の場合

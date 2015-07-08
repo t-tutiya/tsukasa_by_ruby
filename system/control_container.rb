@@ -32,13 +32,7 @@ require_relative './module_drawable.rb'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-module Resource
-  @@global_flag = {}   #グローバルフラグ
-end
-
 class Control
-  include Resource
-
   #プロパティ
   attr_accessor  :skip_mode #スキップモード
 
@@ -52,6 +46,7 @@ class Control
       @system_property = {
         #functionのリスト（procで保存される）
         :function_list => {},
+        :global_flag => {},
       }
     end
 
@@ -502,7 +497,7 @@ class Control
         end
 
       when :flag
-        unless @@global_flag[("user_" + options[:flag].to_s).to_sym]
+        unless @root_control.system_property[:global_flag][("user_" + options[:flag].to_s).to_sym]
           return :continue
         end
 
@@ -611,7 +606,7 @@ class Control
   #フラグを設定する
   def command_flag(options, system_options)
     #ユーザー定義フラグを更新する
-    @@global_flag[("user_" + options[:key].to_s).to_sym] = options[:data]
+    @root_control.system_property[:global_flag][("user_" + options[:key].to_s).to_sym] = options[:data]
     return :continue
   end
 

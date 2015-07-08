@@ -42,13 +42,20 @@ class Control
   #プロパティ
   attr_accessor  :skip_mode #スキップモード
 
-  def initialize(options, system_options, system_property = {})
-    @system_property = {
-      #functionのリスト（procで保存される）
-      :function_list => system_property[:function_list] || {},
-      #ルートコントロールを登録
-      :root => system_property[:root] || self,
-    }
+  attr_reader  :system_property
+
+  def initialize(options, system_options, root_control = nil)
+    if root_control
+      @root_control = root_control
+    else
+      @root_control = self
+      @system_property = {
+        #functionのリスト（procで保存される）
+        :function_list => {},
+        #ルートコントロールを登録
+        :root => self,
+      }
+    end
 
     @script_compiler = ScriptCompiler.new
 
@@ -85,7 +92,7 @@ class Control
       @script_storage += @script_compiler.commands(
                           {:script_path => options[:default_script_path]}, 
                           system_options, 
-                          @system_property)
+                          @root_control.system_property)
     end
 
     #スクリプトパスが設定されているなら読み込んで登録する
@@ -94,7 +101,7 @@ class Control
       @script_storage += @script_compiler.commands(
                           {:script_path => options[:script_path]}, 
                           system_options, 
-                          @system_property)
+                          @root_control.system_property)
     end
 
     #ブロックが付与されているなら読み込んで登録する
@@ -102,7 +109,7 @@ class Control
       @script_storage = @script_compiler.commands(
                           options, 
                           system_options, 
-                          @system_property, 
+                          @root_control.system_property, 
                           &system_options[:block])
     end
 
@@ -297,7 +304,7 @@ class Control
     return unless block
     eval_commands(@script_compiler.commands(options, 
                                             system_options, 
-                                            @system_property, 
+                                            @root_control.system_property, 
                                             &block))
   end
 
@@ -329,11 +336,8 @@ class Control
     @control_list.push(
       Module.const_get(options[:create]).new( options, 
                                               system_options, 
-                                              @system_property
+                                              @root_control
                                               ))
-#                                              , 
-#                                              &system_options[:block]))
-
     return :continue
   end
 
@@ -453,7 +457,7 @@ class Control
 
   def command_skip_mode_all(options, system_options)
     #スリープモードを解除する
-    @system_property[:root].interrupt_command_to_all(:skip_mode, 
+    @root_control.system_property[:root].interrupt_command_to_all(:skip_mode, 
                                         {:skip_mode => options[:skip_mode_all]})
     return :continue
   end
@@ -468,7 +472,7 @@ class Control
 
   def command_sleep_mode_all(options, system_options)
     #スリープモードを解除する
-    @system_property[:root].interrupt_command_to_all(:sleep_mode, 
+    @root_control.system_property[:root].interrupt_command_to_all(:sleep_mode, 
                                         {:sleep_mode => options[:sleep_mode_all]})
     return :continue
   end
@@ -507,7 +511,7 @@ class Control
       when :key_push
         #キー押下があれば終了
         if Input.key_push?(K_SPACE)
-          @system_property[:root].interrupt_command_to_all(:skip_mode, {:skip_mode =>true})
+          @root_control.system_property[:root].interrupt_command_to_all(:skip_mode, {:skip_mode =>true})
           return :continue 
         end
 
@@ -565,21 +569,21 @@ class Control
 
   #ユーザー定義コマンドを定義する
   def command_define(options, system_options)
-    @system_property[:function_list][options[:define]] = system_options[:block]
+    @root_control.system_property[:function_list][options[:define]] = system_options[:block]
     return :continue
   end
 
   #関数呼び出し
   def command_call_function(options, system_options)
     #定義されていないfunctionが呼びだされたら例外を送出
-    raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{system_options}" unless @system_property[:function_list].key?(options[:call_function])
+    raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{system_options}" unless @root_control.system_property[:function_list].key?(options[:call_function])
 
     #関数ブロックを引数に登録する
     system_options[:yield_block] = system_options[:block]
     #下位伝搬を防ぐ為に要素を削除
     system_options.delete(:block)
     #関数名に対応する関数ブロックを取得する
-    function_block = @system_property[:function_list][options[:call_function]]
+    function_block = @root_control.system_property[:function_list][options[:call_function]]
     #下位伝搬を防ぐ為に要素を削除
     options.delete(:call_function)
 
@@ -770,7 +774,7 @@ class Control #制御構文
     #元コマンドが組み込みコマンドの場合
     if @script_compiler.builtin_command_list.include?(options[:command_name])
       #元コマンドをcall_builtin_commandで呼びだすブロックを設定する
-      @system_property[:function_list][options[:_ALIAS_]] = Proc.new{|command_options|
+      @root_control.system_property[:function_list][options[:_ALIAS_]] = Proc.new{|command_options|
         call_builtin_command(options[:command_name], command_options)
       }
 
@@ -780,7 +784,7 @@ class Control #制御構文
       }
     else
       #新しいコマンド名に元のコマンドのブロックを設定する
-      @system_property[:function_list][options[:_ALIAS_]] = @system_property[:function_list][options[:command_name]]
+      @root_control.system_property[:function_list][options[:_ALIAS_]] = @root_control.system_property[:function_list][options[:command_name]]
     end
 
     return :continue

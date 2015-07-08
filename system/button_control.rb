@@ -47,7 +47,7 @@ class ButtonControl  < Control
   include Drawable
   include Movable
 
-  def initialize(options, system_options, system_property)
+  def initialize(options, system_options, root_control)
     options[:child_controls_draw_to_entity] = false
     super
 

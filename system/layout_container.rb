@@ -37,7 +37,7 @@ class LayoutContainer < Control
   include Movable #移動関連モジュール
   include Drawable #描画関連モジュール
 
-  def initialize(options, system_options, root_control)
+  def initialize(options, inner_options, root_control)
     options[:child_controls_draw_to_entity] = true
     super
 

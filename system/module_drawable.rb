@@ -44,7 +44,7 @@ module Drawable
   attr_reader  :width
   attr_reader  :height
 
-  def initialize(options, system_options, root_control)
+  def initialize(options, inner_options, root_control)
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
     @y_pos = options[:y_pos] || 0 #描画Ｙ座標
 

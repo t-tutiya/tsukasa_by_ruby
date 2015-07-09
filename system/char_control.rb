@@ -40,7 +40,7 @@ class CharControl < Control
   include Movable
   include Drawable
 
-  def initialize(options, system_options, root_control)
+  def initialize(options, inner_options, root_control)
 
     super
 

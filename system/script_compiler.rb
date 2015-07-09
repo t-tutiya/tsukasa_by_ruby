@@ -38,7 +38,7 @@ class ScriptCompiler
   end
 
   #ヘルパーメソッド群
-  def commands(argument, inner_options = {}, system_property = {}, &block)
+  def commands(argument, system_options = {}, system_property = {}, &block)
     @option = []
     @yield_block = nil
 
@@ -54,7 +54,7 @@ class ScriptCompiler
       raise if !block
 
       #yieldブロックが設定されている場合
-      @yield_block = inner_options[:yield_block]
+      @block_stack = system_options[:block_stack]
 
       self.instance_exec(**argument, &block)
     end
@@ -65,11 +65,11 @@ class ScriptCompiler
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
 
-    inner_options ={:target_id =>     target,
+    system_options ={:target_id =>     target,
                      :default_class => default_class,
-                     :yield_block =>   @yield_block}
+                     :block_stack =>   @block_stack}
 
-    inner_options[:block] = block if block
+    system_options[:block] = block if block
 
     #組み込みコマンドリストに含まれていない場合
     unless @@builtin_command_list.include?(command_name)
@@ -81,7 +81,7 @@ class ScriptCompiler
     #コマンドを登録する
     @option.push([command_name,
                   sub_options, 
-                  inner_options,
+                  system_options,
                   ])
   end
 

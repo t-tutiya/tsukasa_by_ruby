@@ -63,6 +63,9 @@ class Control
     @event_list           = {} #イベントリスト
 
     @next_frame_commands  = [] #一時コマンドリスト
+    
+    @child_update = true #updateを子コントロールに伝搬するか
+    @child_render = true #renderを子コントロールに伝搬するか
 
     @skip_mode = false         #スキップモードの初期化
     @idle_mode = true          #待機モードの初期化
@@ -211,8 +214,11 @@ class Control
     #一時的にスタックしていたコマンドをコマンドリストに移す
     @command_list = @next_frame_commands + @command_list
 
+    #子コントロール伝搬しないなら終了する
+    return unless @child_update
+
+    #子コントロールを巡回してupdateを実行
     @control_list.each do |control|
-      #各コントロールを更新し、待機モードかどうかの真偽値をANDで集計する
       control.update
     end
 
@@ -224,13 +230,17 @@ class Control
 
   #下位コントロールを描画する
   def render(offset_x, offset_y, target)
-      #下位コントロール巡回
-      @control_list.each do |child_control|
-        #下位コントロールを上位ターゲットに直接描画
-        offset_x, offset_y = child_control.render(offset_x, offset_y, target)
-      end
-      #オフセット値を返す
-      return offset_x, offset_y
+    #子コントロール伝搬しないなら終了する
+    return offset_x, offset_y unless @child_render
+
+    #下位コントロール巡回
+    @control_list.each do |child_control|
+      #下位コントロールを上位ターゲットに直接描画
+      offset_x, offset_y = child_control.render(offset_x, offset_y, target)
+    end
+
+    #オフセット値を返す
+    return offset_x, offset_y
   end
 
   def get_child(id)

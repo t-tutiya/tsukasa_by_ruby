@@ -122,7 +122,7 @@ class Control
     #全てのコントロールへ伝搬する場合
     if inner_options[:all]
       inner_options.delete(:all)
-      return send_script_to_all(:set, options, inner_options)
+      return send_script_to_all(command, options, inner_options)
     end
 
     #自身が送信対象として指定されている場合
@@ -146,7 +146,7 @@ class Control
     #全てのコントロールへ伝搬する場合
     if inner_options[:all]
       inner_options.delete(:all)
-      return interrupt_command_to_all(:set, options, inner_options)
+      return interrupt_command_to_all(command, options, inner_options)
     end
 
     #自身が送信対象として指定されている場合
@@ -167,24 +167,28 @@ class Control
 
   #強制的に全てのコントロールにコマンドを設定する
   def send_script_to_all(command, options, inner_options)
-    #自身のidを設定してコマンドを送信する
-    send_script(command, options, inner_options)
+    #コマンドをスタックの末端に挿入する
+    @script_storage.push([command, options, inner_options])
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
       control.send_script_to_all(command, options, inner_options)
     end
+    
+    return true
   end
 
   #強制的に全てのコントロールにコマンドを設定する
   def interrupt_command_to_all(command, options, inner_options)
-    #自身のidを設定してコマンドを送信する
-    interrupt_command(command, options, inner_options)
+    #コマンドをスタックの先頭に挿入する
+    @command_list.unshift([command, options, inner_options])
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
       control.interrupt_command_to_all(command, options, inner_options)
     end
+
+    return true
   end
 
   #毎フレームコントロール更新処理
@@ -411,17 +415,7 @@ class Control
 
     #コマンドを取り出す
     command, options, inner_options = @script_storage.shift
-=begin
-    #TODO：付与ブロックが実行時評価になり、実質的に毎回複製されるため、下記のロジックが必要なくなった。エンバグが起きていないか判断できるまで、コメントアウトで残す。
 
-    #コマンドを取り出す
-    temp = @script_storage.shift
-    command = temp[0]     #コマンド名（シンボル）
-
-    #TODO：このdupが本当に必要なのか良く分からない
-    options = temp[1].dup #オプション群。状態を持ちうるので複製する
-    inner_options = temp[2] #システムで使用するオプション群
-=end
     #送信先ターゲットIDが設定されていない場合
     unless inner_options[:target_id]
       #デフォルトクラス名からIDを取得する
@@ -434,6 +428,7 @@ class Control
       #コマンドtをスタックの末端に挿入する
       @command_list.push([command, options, inner_options])
       result = true
+
     #ルートコントロールが送信対象として指定されている場合
     elsif inner_options[:target_id] == :root
       #対象コントロール名を差し替える
@@ -442,6 +437,7 @@ class Control
       result = @root_control.interrupt_command( command, 
                         options, 
                         inner_options)
+
     else
       #コマンドの送信
       result = send_script( command, 

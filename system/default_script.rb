@@ -85,6 +85,11 @@ define :skip_mode do |options|
   set options
 end
 
+define :sleep_mode do |options|
+  set options
+end
+
+
 #可視設定
 define :visible do |options|
   set options

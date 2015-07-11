@@ -134,9 +134,6 @@ class ScriptCompiler
   impl_define :se_play, []
   impl_define :se_stop, []
 
-  #スリープモードの更新
-  impl_define :sleep_mode,                  [:option]
-
   #次に読み込むスクリプトファイルの指定
   impl_define :next_scenario, :LayoutContainer, [:option]
   impl_define :load_script,   :LayoutContainer, [:option]

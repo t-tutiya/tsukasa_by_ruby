@@ -33,6 +33,7 @@ require 'dxruby'
 class Control
   #プロパティ
   attr_accessor  :skip_mode #スキップモード
+  attr_accessor  :sleep_mode #スリープモード
 
   attr_reader  :system_property
 
@@ -448,32 +449,16 @@ class Control
     return :end_frame
   end
 
-  #skip_modeコマンド
-  #スキップモードの更新
-  def command_skip_mode(options, system_options)
-    #スキップモードの更新
-    @skip_mode = options[:skip_mode]
-    return :continue
-  end
-
   def command_skip_mode_all(options, system_options)
     #スリープモードを解除する
-    @root_control.interrupt_command_to_all(:skip_mode, 
+    @root_control.interrupt_command_to_all(:set, 
                                         {:skip_mode => options[:skip_mode_all]})
-    return :continue
-  end
-
-  #sleep_modeコマンド
-  #スリープモードの更新
-  def command_sleep_mode(options, system_options)
-    #スリープ状態を更新
-    @sleep_mode = options[:sleep_mode] 
     return :continue
   end
 
   def command_sleep_mode_all(options, system_options)
     #スリープモードを解除する
-    @root_control.interrupt_command_to_all(:sleep_mode, 
+    @root_control.interrupt_command_to_all(:set, 
                                         {:sleep_mode => options[:sleep_mode_all]})
     return :continue
   end
@@ -512,7 +497,7 @@ class Control
       when :key_push
         #キー押下があれば終了
         if Input.key_push?(K_SPACE)
-          @root_control.interrupt_command_to_all(:skip_mode, {:skip_mode =>true})
+          @root_control.interrupt_command_to_all(:set, {:skip_mode =>true})
           return :continue 
         end
 

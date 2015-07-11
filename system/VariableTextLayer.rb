@@ -77,14 +77,14 @@ class VariableTextLayer < Control
 
     return :continue 
   end
-
+=begin
   def command_pause(options, target)
     return :continue if @skip_mode
 
     #■ルートの待機処理
     eval_commands([
         #スリープモードを設定
-        [:sleep_mode, {:sleep_mode => :sleep}, {:target_id => @id}],
+        [:set, {:sleep_mode => :sleep}, {:target_id => @id}],
         #ウェイク待ち
         [:wait_wake, {}, {:target_id => @id}],
       ])
@@ -100,5 +100,5 @@ class VariableTextLayer < Control
 
     return :continue
   end
-
+=end
 end

@@ -203,17 +203,9 @@ class Control
     while !@command_list.empty?
       #コマンドリストの先頭要素を取得
       command, options, inner_options = @command_list.shift
-      
-      #システムオプションが空であれば初期化
-      #TODO：必ず初期化されている物としたい
-      inner_options = {} unless inner_options
 
       #コマンドを実行
       end_parse, next_frame_command = send("command_" + command.to_s, options, inner_options)
-      
-      if command == :text
-        #pp @command_list
-      end
 
       #次フレームに実行するコマンドがある場合、一時的にスタックする
       @next_frame_commands.push(next_frame_command) if next_frame_command

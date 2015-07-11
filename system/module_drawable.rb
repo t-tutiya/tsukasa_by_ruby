@@ -1,6 +1,7 @@
 #! ruby -E utf-8
 
 require 'dxruby'
+require_relative './script_compiler.rb'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -29,6 +30,14 @@ require 'dxruby'
 #
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
+
+#コマンド宣言
+class ScriptCompiler
+  impl_define :on_mouse_over,                    [:block]
+  impl_define :on_mouse_out,                    [:block]
+  impl_define :on_key_down,                    [:block]
+  impl_define :on_key_up,                    [:block]
+end
 
 #TODO:Controlクラスに統合する
 #TODO:コマンドはカテゴリーごとにファイルを分ける
@@ -65,6 +74,9 @@ module Drawable
     #TODO：いらない気がする
     @width  = options[:width] || 0  #横幅
     @height = options[:height] || 0 #縦幅
+
+    @over_status = :out
+    @key_down_status = :up
   end
 
   #可視設定
@@ -197,5 +209,61 @@ module Drawable
     end
 
     return command_transition_fade(options, target, :transition_fade_with_skip)
+  end
+
+  def command_on_mouse_over(options, inner_options)
+    #マウスカーソル座標を取得
+    x = Input.mouse_pos_x
+    y = Input.mouse_pos_y
+
+    if  @over_status == :out and
+        @x_pos < x  and x < @x_pos + @width and
+        @y_pos < y  and y < @y_pos + @height
+      @over_status = :over
+      eval_block(options, inner_options, inner_options[:block])
+    end
+
+    return :continue, [:on_mouse_over, options, inner_options]
+  end
+  
+  def command_on_mouse_out(options, inner_options)
+    #マウスカーソル座標を取得
+    x = Input.mouse_pos_x
+    y = Input.mouse_pos_y
+
+    if  @over_status == :over and
+      !(@x_pos < x  and x < @x_pos + @width and
+        @y_pos < y  and y < @y_pos + @height)
+      @over_status = :out
+      eval_block(options, inner_options, inner_options[:block])
+    end
+
+    return :continue, [:on_mouse_out, options, inner_options]
+  end
+
+  def command_on_key_down(options, inner_options)
+
+    #マウスボタン押下された場合
+    if  @over_status == :over and @key_down_status == :up and
+        Input.mouse_push?( M_LBUTTON )
+
+        @key_down_status = :down
+        eval_block(options, inner_options, inner_options[:block])
+    end
+
+    return :continue, [:on_key_down, options, inner_options]
+  end
+
+  def command_on_key_up(options, inner_options)
+
+    #マウスボタン押下が解除された場合
+    if  @over_status == :over and  @key_down_status == :down and
+        Input.mouse_release?( M_LBUTTON )
+
+        @key_down_status = :up
+        eval_block(options, inner_options, inner_options[:block])
+    end
+
+    return :continue, [:on_key_up, options, inner_options]
   end
 end

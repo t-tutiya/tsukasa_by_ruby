@@ -61,13 +61,15 @@ class ScriptCompiler
     return  @option || []
   end
 
-  def impl(command_name, default_class, target, option, sub_options = {}, &block)
+  def impl(command_name, default_class, target, option, all: false, **sub_options, &block)
+  
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
 
     system_options ={:target_id =>     target,
                      :default_class => default_class,
-                     :block_stack =>   @block_stack}
+                     :block_stack =>   @block_stack,
+                     :all => all}
 
     system_options[:block] = block if block
 

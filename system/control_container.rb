@@ -119,6 +119,12 @@ class Control
 
   #コマンドをスタックに格納する
   def send_script(command, options, system_options = {:target_id => @id})
+    #全てのコントロールへ伝搬する場合
+    if system_options[:all]
+      system_options.delete(:all)
+      return send_script_to_all(:set, options, system_options)
+    end
+
     #自身が送信対象として指定されている場合
     if [@id, :anonymous].include?(system_options[:target_id])
       #コマンドをスタックの末端に挿入する
@@ -137,9 +143,15 @@ class Control
 
   #コマンドをスタックに格納する
   def interrupt_command(command, options, system_options = {:target_id => @id})
+    #全てのコントロールへ伝搬する場合
+    if system_options[:all]
+      system_options.delete(:all)
+      return interrupt_command_to_all(:set, options, system_options)
+    end
+
     #自身が送信対象として指定されている場合
-    #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
     if [@id, :anonymous].include?(system_options[:target_id])
+      system_options[:target_id] = system_options[:second_target]
       #コマンドをスタックの先頭に挿入する
       @command_list.unshift([command, options, system_options])
       return true #コマンドをスタックした
@@ -155,7 +167,7 @@ class Control
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def send_script_to_all(command, options)
+  def send_script_to_all(command, options, system_options = {:target_id => @id})
     #自身のidを設定してコマンドを送信する
     send_script(command, options)
 
@@ -166,7 +178,7 @@ class Control
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def interrupt_command_to_all(command, options)
+  def interrupt_command_to_all(command, options, system_options = {:target_id => @id})
     #自身のidを設定してコマンドを送信する
     interrupt_command(command, options)
 
@@ -412,19 +424,33 @@ class Control
       system_options[:target_id] = @control_default[system_options[:default_class]]
     end
 
-    #自身が送信対象として指定されている場合
+    #送信対象として自身が指定されている場合
     if [@id, :anonymous].include?(system_options[:target_id])
       #コマンドtをスタックの末端に挿入する
       @command_list.push([command, options, system_options])
-    elsif !send_script( command, 
+      result = true
+    #ルートコントロールが送信対象として指定されている場合
+    elsif system_options[:target_id] == :root
+      #対象コントロール名を差し替える
+      system_options[:target_id] = :anonymous
+      #コマンドの送信
+      result = @root_control.interrupt_command( command, 
                         options, 
-                        system_options) then
-      pp "error"
-      pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
-      pp @id
-      pp options
-      pp system_options
-      raise
+                        system_options)
+    else
+      #コマンドの送信
+      result = send_script( command, 
+                        options, 
+                        system_options)
+    end
+    
+    unless result
+        pp "error"
+        pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
+        pp @id
+        pp options
+        pp system_options
+        raise
     end
 
     @command_list.push([:token, nil, {}])
@@ -447,20 +473,6 @@ class Control
   #現在のフレームを終了する
   def command_end_frame(options, system_options)
     return :end_frame
-  end
-
-  def command_skip_mode_all(options, system_options)
-    #スリープモードを解除する
-    @root_control.interrupt_command_to_all(:set, 
-                                        {:skip_mode => options[:skip_mode_all]})
-    return :continue
-  end
-
-  def command_sleep_mode_all(options, system_options)
-    #スリープモードを解除する
-    @root_control.interrupt_command_to_all(:set, 
-                                        {:sleep_mode => options[:sleep_mode_all]})
-    return :continue
   end
 
   def command_wait(options, system_options)

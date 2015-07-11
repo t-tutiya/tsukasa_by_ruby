@@ -51,10 +51,13 @@ define :pause do
     #■ポーズ終了処理
 
     #ルートにウェイクを送る
-    #TODO：本来rootにのみ通知できれば良い筈
-    sleep_mode_all :wake
+    set :root, sleep_mode: :wake , all: true
+    #sleep_mode_all :wake
+
     #スキップフラグを下ろす
-    skip_mode_all false
+    set :root, skip_mode: false , all: true
+    #skip_mode_all false
+
     #スキップフラグ伝搬が正しく行われるように１フレ送る
     end_frame
   end

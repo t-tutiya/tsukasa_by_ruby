@@ -56,7 +56,7 @@ class ButtonControl  < Control
   end
 
   #ボタンのノーマル状態
-  def command_normal(options, system_options)
+  def command_normal(options, inner_options)
     #マウスカーソル座標を取得
     x = Input.mouse_pos_x
     y = Input.mouse_pos_y
@@ -73,15 +73,15 @@ class ButtonControl  < Control
       #描画コントロールをoverに切り替え
       send_script(:visible, {:visible => false}, {:target_id => :normal})
       send_script(:visible, {:visible => true}, {:target_id => :over})
-      return :continue, [:over, {}]  #コマンド探査終了
+      return :continue, [:over, {}, inner_options]
     else
       #normalを維持
-      return :continue, [:normal, {}]  #コマンド探査終了
+      return :continue, [:normal, {}, inner_options]
     end
   end
 
   #マウスカーソルが範囲内に入っている
-  def command_over(options, system_options)
+  def command_over(options, inner_options)
     #マウスカーソル座標を取得
     x = Input.mouse_pos_x
     y = Input.mouse_pos_y
@@ -92,7 +92,7 @@ class ButtonControl  < Control
       #描画コントロールをoutに切り替え
       send_script(:visible, {:visible => false}, {:target_id => :over})
       send_script(:visible, {:visible => true}, {:target_id => :out})
-      return :continue, [:out, {}]  #コマンド探査終了
+      return :continue, [:out, {}, inner_options]
     end
 
     #マウスボタンが押された場合
@@ -100,15 +100,15 @@ class ButtonControl  < Control
       #描画コントロールをkey_downに切り替え
       send_script(:visible, {:visible => false}, {:target_id => :over})
       send_script(:visible, {:visible => true}, {:target_id => :key_down})
-      return :continue, [:key_down, {}]  #フレーム終了
+      return :continue, [:key_down, {}, inner_options]
     else
       #overを維持
-      return :continue, [:over, {}]  #コマンド探査終了
+      return :continue, [:over, {}, inner_options]
     end
   end
 
   #ボタンが押下されている状態
-  def command_key_down(options, system_options)
+  def command_key_down(options, inner_options)
     #マウスカーソル座標を取得
     x = Input.mouse_pos_x
     y = Input.mouse_pos_y
@@ -119,7 +119,7 @@ class ButtonControl  < Control
       #描画コントロールをoutに切り替え
       send_script(:visible, {:visible => false}, {:target_id => :key_down})
       send_script(:visible, {:visible => true}, {:target_id => :out})
-      return :continue, [:out, {}] #コマンド探査終了
+      return :continue, [:out, {}, inner_options]
     end
 
     #マウスボタン押下が解除された場合
@@ -128,29 +128,29 @@ class ButtonControl  < Control
       send_script(:visible, {:visible => false}, {:target_id => :key_down})
       send_script(:visible, {:visible => true}, {:target_id => :key_up})
       #イベント実行
-      return :continue, [:key_up, {}] #コマンド探査終了
+      return :continue, [:key_up, {}, inner_options]
     else
       #key_downを維持
-      return :continue, [:key_down, {}] #コマンド探査終了
+      return :continue, [:key_down, {}, inner_options]
     end
   end
 
   #ボタンから指が離れた後の状態
-  def command_key_up(options, system_options)
+  def command_key_up(options, inner_options)
     #イベントを実行
-    interrupt_command(:fire, {:fire => :key_up}, system_options)
+    interrupt_command(:fire, {:fire => :key_up}, inner_options)
 
     #描画コントロールをoverに切り替え
     send_script(:visible, {:visible => false}, {:target_id => :key_up})
     send_script(:visible, {:visible => true}, {:target_id => :over})
-    return :continue, [:over, {}] #コマンド探査終了
+    return :continue, [:over, {}, inner_options]
   end
 
   #マウスカーソルが範囲外に出た後の状態
-  def command_out(options, system_options)
+  def command_out(options, inner_options)
     #描画コントロールをnormalに切り替え
     send_script(:visible, {:visible => false}, {:target_id => :out})
     send_script(:visible, {:visible => true}, {:target_id => :normal})
-    return :continue, [:normal, {}] #コマンド探査終了
+    return :continue, [:normal, {}, inner_options]
   end
 end

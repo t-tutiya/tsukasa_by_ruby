@@ -37,7 +37,7 @@ class Control
 
   attr_reader  :system_property
 
-  def initialize(options, system_options, root_control = nil)
+  def initialize(options, inner_options, root_control = nil)
     if root_control
       @root_control = root_control
     else
@@ -86,7 +86,7 @@ class Control
       #デフォルトスクリプトの読み込み
       @script_storage += @script_compiler.commands(
                           {:script_path => options[:default_script_path]}, 
-                          system_options, 
+                          inner_options, 
                           @root_control.system_property)
     end
 
@@ -95,17 +95,17 @@ class Control
       #シナリオファイルの読み込み
       @script_storage += @script_compiler.commands(
                           {:script_path => options[:script_path]}, 
-                          system_options, 
+                          inner_options, 
                           @root_control.system_property)
     end
 
     #ブロックが付与されているなら読み込んで登録する
-    if system_options[:block]
+    if inner_options[:block]
       @script_storage = @script_compiler.commands(
                           options, 
-                          system_options, 
+                          inner_options, 
                           @root_control.system_property, 
-                          &system_options[:block])
+                          &inner_options[:block])
     end
 
     #コマンドセットがあるなら登録する
@@ -118,55 +118,55 @@ class Control
   end
 
   #コマンドをスタックに格納する
-  def send_script(command, options, system_options = {:target_id => @id})
+  def send_script(command, options, inner_options = {:target_id => @id})
     #全てのコントロールへ伝搬する場合
-    if system_options[:all]
-      system_options.delete(:all)
-      return send_script_to_all(:set, options, system_options)
+    if inner_options[:all]
+      inner_options.delete(:all)
+      return send_script_to_all(:set, options, inner_options)
     end
 
     #自身が送信対象として指定されている場合
-    if [@id, :anonymous].include?(system_options[:target_id])
+    if [@id, :anonymous].include?(inner_options[:target_id])
       #コマンドをスタックの末端に挿入する
-      @script_storage.push([command, options, system_options])
+      @script_storage.push([command, options, inner_options])
       return true #コマンドをスタックした
     end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.send_script(command, options, system_options)
+      return true if control.send_script(command, options, inner_options)
     end
 
     return false #コマンドをスタックしなかった
   end
 
   #コマンドをスタックに格納する
-  def interrupt_command(command, options, system_options = {:target_id => @id})
+  def interrupt_command(command, options, inner_options = {:target_id => @id})
     #全てのコントロールへ伝搬する場合
-    if system_options[:all]
-      system_options.delete(:all)
+    if inner_options[:all]
+      inner_options.delete(:all)
       return interrupt_command_to_all(:set, options)
     end
 
     #自身が送信対象として指定されている場合
-    if [@id, :anonymous].include?(system_options[:target_id])
+    if [@id, :anonymous].include?(inner_options[:target_id])
       #コマンドをスタックの先頭に挿入する
-      @command_list.unshift([command, options, system_options])
+      @command_list.unshift([command, options, inner_options])
       return true #コマンドをスタックした
     end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.interrupt_command(command, options, system_options)
+      return true if control.interrupt_command(command, options, inner_options)
     end
 
     return false #コマンドをスタックしなかった
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def send_script_to_all(command, options, system_options = {})
+  def send_script_to_all(command, options, inner_options = {})
     #自身のidを設定してコマンドを送信する
     send_script(command, options)
 
@@ -177,7 +177,7 @@ class Control
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def interrupt_command_to_all(command, options, system_options = {})
+  def interrupt_command_to_all(command, options, inner_options = {})
     #自身のidを設定してコマンドを送信する
     interrupt_command(command, options)
 
@@ -198,14 +198,14 @@ class Control
     #コマンドリストが空になるまで走査し、コマンドを実行する
     while !@command_list.empty?
       #コマンドリストの先頭要素を取得
-      command, options, system_options = @command_list.shift
+      command, options, inner_options = @command_list.shift
       
       #システムオプションが空であれば初期化
       #TODO：必ず初期化されている物としたい
-      system_options = {} unless system_options
+      inner_options = {} unless inner_options
 
       #コマンドを実行
-      end_parse, next_frame_command = send("command_" + command.to_s, options, system_options)
+      end_parse, next_frame_command = send("command_" + command.to_s, options, inner_options)
       
       if command == :text
         #pp @command_list
@@ -317,10 +317,10 @@ class Control
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
-  def eval_block(options, system_options = {}, block)
+  def eval_block(options, inner_options = {}, block)
     return unless block
     eval_commands(@script_compiler.commands(options, 
-                                            system_options, 
+                                            inner_options, 
                                             @root_control.system_property, 
                                             &block))
   end
@@ -348,11 +348,11 @@ class Control
   #############################################################################
 
   #コントロールをリストに登録する
-  def command_create(options, system_options)
+  def command_create(options, inner_options)
     #コントロールを生成して子要素として登録する
     @control_list.push(
       Module.const_get(options[:create]).new( options, 
-                                              system_options, 
+                                              inner_options, 
                                               @root_control
                                               ))
     return :continue
@@ -360,7 +360,7 @@ class Control
 
   #disposeコマンド
   #コントロールを削除する
-  def command_dispose(options, system_options)
+  def command_dispose(options, inner_options)
     raise
     #自身が指定されたコントロールの場合
     if options[:dispose] == @id
@@ -374,7 +374,7 @@ class Control
   end
 
   #コントロールのプロパティを更新する
-  def command_set(options, system_options)
+  def command_set(options, inner_options)
     #オプション全探査
     options.each do |key, val|
       method_name = key.to_s + "="
@@ -389,7 +389,7 @@ class Control
   end
 
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
-  def command_token(options, system_options)
+  def command_token(options, inner_options)
     #TODO:この部分もうちょっと見通し良くならない物か
     #トークンの取得対象であるスクリプトストレージが空の場合
     if @script_storage.empty?
@@ -410,7 +410,7 @@ class Control
     end
 
     #コマンドを取り出す
-    command, options, system_options = @script_storage.shift
+    command, options, inner_options = @script_storage.shift
 =begin
     #TODO：付与ブロックが実行時評価になり、実質的に毎回複製されるため、下記のロジックが必要なくなった。エンバグが起きていないか判断できるまで、コメントアウトで残す。
 
@@ -420,32 +420,32 @@ class Control
 
     #TODO：このdupが本当に必要なのか良く分からない
     options = temp[1].dup #オプション群。状態を持ちうるので複製する
-    system_options = temp[2] #システムで使用するオプション群
+    inner_options = temp[2] #システムで使用するオプション群
 =end
     #送信先ターゲットIDが設定されていない場合
-    unless system_options[:target_id]
+    unless inner_options[:target_id]
       #デフォルトクラス名からIDを取得する
-      system_options[:target_id] = @control_default[system_options[:default_class]]
+      inner_options[:target_id] = @control_default[inner_options[:default_class]]
     end
 
     #送信対象として自身が指定されている場合
-    if [@id, :anonymous].include?(system_options[:target_id])
+    if [@id, :anonymous].include?(inner_options[:target_id])
       #コマンドtをスタックの末端に挿入する
-      @command_list.push([command, options, system_options])
+      @command_list.push([command, options, inner_options])
       result = true
     #ルートコントロールが送信対象として指定されている場合
-    elsif system_options[:target_id] == :root
+    elsif inner_options[:target_id] == :root
       #対象コントロール名を差し替える
-      system_options[:target_id] = :anonymous
+      inner_options[:target_id] = :anonymous
       #コマンドの送信
       result = @root_control.interrupt_command( command, 
                         options, 
-                        system_options)
+                        inner_options)
     else
       #コマンドの送信
       result = send_script( command, 
                         options, 
-                        system_options)
+                        inner_options)
     end
     
     unless result
@@ -453,7 +453,7 @@ class Control
         pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
         pp @id
         pp options
-        pp system_options
+        pp inner_options
         raise
     end
 
@@ -462,7 +462,7 @@ class Control
   end
 
   #現在のフレームを終了する
-  def command_end_frame(options, system_options)
+  def command_end_frame(options, inner_options)
     return :end_frame
   end
 end
@@ -479,7 +479,7 @@ class Control
   #タイミング制御コマンド
   #############################################################################
 
-  def command_wait(options, system_options)
+  def command_wait(options, inner_options)
     options[:wait].each do |condition|
       case condition
       when :wake
@@ -525,12 +525,12 @@ class Control
     end
 
     #waitにブロックが付与されているならそれを実行する
-    eval_block(options, system_options[:block])
+    eval_block(options, inner_options[:block])
 
-    return :end_frame, [:wait, options, system_options]
+    return :end_frame, [:wait, options, inner_options]
   end
 
-  def command_check_key_push(options, system_options)
+  def command_check_key_push(options, inner_options)
     #TODO:checkは内部的にはwaitと同じ処理になる筈
     #キーが押された場合
     if Input.key_push?(K_SPACE)
@@ -552,13 +552,13 @@ class Control
   private
 
   #イベントコマンドの登録
-  def command_event(options, system_options)
-    @event_list[options[:event]] = system_options[:block]
+  def command_event(options, inner_options)
+    @event_list[options[:event]] = inner_options[:block]
     return :continue
   end
 
   #イベントの実行
-  def command_fire(options, system_options)
+  def command_fire(options, inner_options)
     #キーが登録されていないなら終了
     return :continue if !@event_list[options[:fire]]
 
@@ -572,21 +572,21 @@ class Control
   #############################################################################
 
   #ユーザー定義コマンドを定義する
-  def command_define(options, system_options)
-    @root_control.system_property[:function_list][options[:define]] = system_options[:block]
+  def command_define(options, inner_options)
+    @root_control.system_property[:function_list][options[:define]] = inner_options[:block]
     return :continue
   end
 
   #関数呼び出し
-  def command_call_function(options, system_options)
+  def command_call_function(options, inner_options)
     #定義されていないfunctionが呼びだされたら例外を送出
-    raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{system_options}" unless @root_control.system_property[:function_list].key?(options[:call_function])
+    raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{inner_options}" unless @root_control.system_property[:function_list].key?(options[:call_function])
 
-    system_options[:block_stack] = Array.new unless system_options[:block_stack]
+    inner_options[:block_stack] = Array.new unless inner_options[:block_stack]
     #関数ブロックを引数に登録する
-    system_options[:block_stack].push(system_options[:block])
+    inner_options[:block_stack].push(inner_options[:block])
     #下位伝搬を防ぐ為に要素を削除
-    system_options.delete(:block)
+    inner_options.delete(:block)
 
     #関数名に対応する関数ブロックを取得する
     function_block = @root_control.system_property[:function_list][options[:call_function]]
@@ -594,21 +594,21 @@ class Control
     options.delete(:call_function)
 
     #functionを実行時評価しコマンド列を生成する。
-    eval_block(options, system_options, function_block)
+    eval_block(options, inner_options, function_block)
 
     return :continue
   end
 
-  def command_call_builtin_command(options, system_options)
+  def command_call_builtin_command(options, inner_options)
     command_name = options[:call_builtin_command]
     options.delete(:call_builtin_command) #削除
-    return send("command_" + command_name.to_s, options, system_options)
+    return send("command_" + command_name.to_s, options, inner_options)
   end
 
   #ブロック内のコマンド列を実行する
-  def command_about(options, system_options)
+  def command_about(options, inner_options)
     #コマンドリストをスタックする
-    eval_block(options, system_options[:block])
+    eval_block(options, inner_options[:block])
     return :continue
   end
 
@@ -617,27 +617,27 @@ class Control
   #############################################################################
 
   #フラグを設定する
-  def command_flag(options, system_options)
+  def command_flag(options, inner_options)
     #ユーザー定義フラグを更新する
     @root_control.system_property[:global_flag][("user_" + options[:key].to_s).to_sym] = options[:data]
     return :continue
   end
 
   #コマンド送信先ターゲットのデフォルトを変更する
-  def command_change_default_target(options, system_options)
+  def command_change_default_target(options, inner_options)
     @control_default[options[:change_default_target]] = options[:id]
     return :continue
   end
 
 
   #次に読み込むスクリプトファイルのパスを設定する
-  def command_next_scenario(options, system_options)
+  def command_next_scenario(options, inner_options)
     @next_script_file_path = options[:next_scenario]
     return :continue
   end
   
   #スクリプトファイルの読み込み
-  def command_load_script(options, system_options)
+  def command_load_script(options, inner_options)
     #指定されたスクリプトファイルを直接読み込む
     #TODO：@script_storageに上書きするのか、追記するのかはオプションで指定できた方が良いか？　その
     @script_storage = @script_compiler.commands({:script_path => options[:load_script]})
@@ -659,7 +659,7 @@ class Control #制御構文
   private
 
   #ifコマンド
-  def command__IF_(options, system_options)
+  def command__IF_(options, inner_options)
     #条件式を評価し、結果をoptionsに再格納する
     if eval_lambda(options[:_IF_], options)
       result = :then
@@ -668,13 +668,13 @@ class Control #制御構文
     end
 
     #if文の中身を実行する
-    eval_block(options, system_options[:block])
+    eval_block(options, inner_options[:block])
 
     return :continue, [:exp_result, { :result => result}]
   end
 
   #thenコマンド
-  def command__THEN_(options, system_options)
+  def command__THEN_(options, inner_options)
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
       command[0] == :exp_result
@@ -683,14 +683,14 @@ class Control #制御構文
     #結果がthenの場合
     if result and @next_frame_commands[result][1][:result] == :then
       #コマンドブロックを実行する
-      eval_block(options, system_options[:block])
+      eval_block(options, inner_options[:block])
     end
 
     return :continue
   end
 
   #elseコマンド
-  def command__ELSIF_(options, system_options)
+  def command__ELSIF_(options, inner_options)
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
       command[0] == :exp_result
@@ -701,7 +701,7 @@ class Control #制御構文
       #ラムダ式が真の場合
       if eval_lambda(options[:_ELSIF_], options)
         #コマンドブロックを実行する
-        eval_block(options, system_options[:block])
+        eval_block(options, inner_options[:block])
         #処理がこれ以上伝搬しないように評価結果をクリアする
         #TODO：コマンド自体を削除した方が確実
         @next_frame_commands[result][1][:result] = nil
@@ -712,7 +712,7 @@ class Control #制御構文
   end
 
   #elseコマンド
-  def command__ELSE_(options, system_options)
+  def command__ELSE_(options, inner_options)
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
       command[0] == :exp_result
@@ -721,36 +721,36 @@ class Control #制御構文
     #結果がelseの場合
     if result and @next_frame_commands[result][1][:result] == :else
       #コマンドブロックを実行する
-      eval_block(options, system_options[:block])
+      eval_block(options, inner_options[:block])
     end
     return :continue
   end
 
   #繰り返し
-  def command__WHILE_(options, system_options)
+  def command__WHILE_(options, inner_options)
     #条件式が非成立であれば繰り返し構文を終了する
     return :continue if !eval_lambda(options[:_WHILE_], options) #アイドル
 
     #while文全体をスクリプトストレージにスタック
-    eval_commands([[:_WHILE_, options, system_options]])
+    eval_commands([[:_WHILE_, options, inner_options]])
     #ブロックを実行時評価しコマンド列を生成する。
-    eval_block(options, system_options[:block])
+    eval_block(options, inner_options[:block])
 
     return :continue
   end
 
-  def command__CASE_(options, system_options)
+  def command__CASE_(options, inner_options)
     #比較元のオブジェクトを評価する
     value = eval_lambda(options[:_CASE_], options)
 
     #case文の中身を実行する
-    eval_block(options, system_options[:block])
+    eval_block(options, inner_options[:block])
 
     return :continue, [:exp_result, { :result => :else,
                                       :case_value => value}]
   end
 
-  def command__WHEN_(options, system_options)
+  def command__WHEN_(options, inner_options)
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
       command[0] == :exp_result
@@ -763,22 +763,22 @@ class Control #制御構文
 
     if exp_result[:case_value] == eval_lambda(options[:_WHEN_], options)
       #コマンドブロックを実行する
-      eval_block(options, system_options[:block])
+      eval_block(options, inner_options[:block])
     end
 
     return :continue
   end
 
   #関数ブロックを実行する
-  def command__YIELD_(options, system_options)
-    return :continue unless system_options[:block_stack]
+  def command__YIELD_(options, inner_options)
+    return :continue unless inner_options[:block_stack]
     
-    eval_block(options, system_options, system_options[:block_stack].pop)
+    eval_block(options, inner_options, inner_options[:block_stack].pop)
     return :continue
   end
 
   #コマンドを再定義する
-  def command__ALIAS_(options, system_options)
+  def command__ALIAS_(options, inner_options)
     #元コマンドが組み込みコマンドの場合
     if @script_compiler.builtin_command_list.include?(options[:command_name])
       #元コマンドをcall_builtin_commandで呼びだすブロックを設定する
@@ -799,14 +799,14 @@ class Control #制御構文
   end
 
   #文字列を評価する（デバッグ用）
-  def command__EVAL_(options, system_options)
+  def command__EVAL_(options, inner_options)
     eval(options[:_EVAL_])
     return :continue
   end
 
 
   #１フレ分のみifの結果をコマンドリスト上に格納する
-  def command_exp_result(options, system_options)
+  def command_exp_result(options, inner_options)
     return :continue
   end
 end

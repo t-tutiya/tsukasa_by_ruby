@@ -201,7 +201,7 @@ class CharContainer < Control
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
     interrupt_command(:wait, 
                           {:wait => [:count, :skip, :key_push],
-                           :count => :unset_wait_frame})
+                           :count => :unset_wait_frame}, inner_options)
 
     #レンダリング済みフォントを使用中か否かで分岐
     if !@font_config[:use_image_font]
@@ -258,7 +258,7 @@ class CharContainer < Control
     #文字列を分解してcharコマンドに変換する
     options[:text].each_char do |ch|
       #コマンドを一時スタックする
-      commands.push([:char, {:char => ch}])
+      commands.push([:char, {:char => ch}, inner_options])
     end
 
     #一時スタックしたコマンドをスタックの先頭に挿入する
@@ -301,7 +301,7 @@ class CharContainer < Control
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
     interrupt_command(:wait, 
                           {:wait => [:count, :skip, :key_push],
-                           :count => :unset_wait_frame})
+                           :count => :unset_wait_frame}, inner_options)
 
     return :continue#フレーム続行
   end
@@ -317,8 +317,9 @@ class CharContainer < Control
 
     #改行時のwaitを設定する
     interrupt_command(:wait, 
-                          {:wait => [:count, :skip, :key_push],
-                           :count => @style_config[:line_feed_wait_frame]})
+                      {:wait => [:count, :skip, :key_push],
+                       :count => @style_config[:line_feed_wait_frame]}, 
+                       inner_options)
 
     return :continue #フレーム続行
   end

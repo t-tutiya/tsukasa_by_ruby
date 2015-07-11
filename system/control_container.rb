@@ -146,7 +146,7 @@ class Control
     #全てのコントロールへ伝搬する場合
     if system_options[:all]
       system_options.delete(:all)
-      return interrupt_command_to_all(:set, options, system_options)
+      return interrupt_command_to_all(:set, options)
     end
 
     #自身が送信対象として指定されている場合
@@ -166,7 +166,7 @@ class Control
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def send_script_to_all(command, options, system_options = {:target_id => @id})
+  def send_script_to_all(command, options, system_options = {})
     #自身のidを設定してコマンドを送信する
     send_script(command, options)
 
@@ -177,7 +177,7 @@ class Control
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def interrupt_command_to_all(command, options, system_options = {:target_id => @id})
+  def interrupt_command_to_all(command, options, system_options = {})
     #自身のidを設定してコマンドを送信する
     interrupt_command(command, options)
 

@@ -358,13 +358,14 @@ class Control
   #disposeコマンド
   #コントロールを削除する
   def command_dispose(options, system_options)
+    raise
     #自身が指定されたコントロールの場合
     if options[:dispose] == @id
       #削除フラグを立てる
       dispose()
     else
       #子コントロールにdisposeコマンドを送信
-      interrupt_command(:dispose, options, options[:dispose])
+      #interrupt_command(:dispose, options, options[:dispose])
     end
     return :continue
   end
@@ -456,6 +457,11 @@ class Control
     @command_list.push([:token, nil, {}])
     return :continue
   end
+
+  #現在のフレームを終了する
+  def command_end_frame(options, system_options)
+    return :end_frame
+  end
 end
 
 class Control
@@ -469,11 +475,6 @@ class Control
   #############################################################################
   #タイミング制御コマンド
   #############################################################################
-
-  #現在のフレームを終了する
-  def command_end_frame(options, system_options)
-    return :end_frame
-  end
 
   def command_wait(options, system_options)
     options[:wait].each do |condition|
@@ -508,6 +509,7 @@ class Control
 
       when :key_push
         #キー押下があれば終了
+        #TODO：明らかにここでやる処理ではない
         if Input.key_push?(K_SPACE)
           @root_control.interrupt_command_to_all(:set, {:skip_mode =>true})
           return :continue 
@@ -526,12 +528,13 @@ class Control
   end
 
   def command_check_key_push(options, system_options)
-    #子要素のコントロールが全てアイドル状態の時にキーが押された場合
+    #TODO:checkは内部的にはwaitと同じ処理になる筈
+    #キーが押された場合
     if Input.key_push?(K_SPACE)
+      #コマンドを終了する
       return :continue
     else
-      @idle_mode = false
-      #ポーズ状態を続行する
+      @idle_mode = false #非アイドル設定
       return :continue, [:check_key_push, options]
     end
   end

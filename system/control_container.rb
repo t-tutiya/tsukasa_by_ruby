@@ -151,7 +151,6 @@ class Control
 
     #自身が送信対象として指定されている場合
     if [@id, :anonymous].include?(system_options[:target_id])
-      system_options[:target_id] = system_options[:second_target]
       #コマンドをスタックの先頭に挿入する
       @command_list.unshift([command, options, system_options])
       return true #コマンドをスタックした
@@ -206,13 +205,17 @@ class Control
       system_options = {} unless system_options
 
       #コマンドを実行
-      end_parse, command = send("command_" + command.to_s, options, system_options)
+      end_parse, next_frame_command = send("command_" + command.to_s, options, system_options)
+      
+      if command == :text
+        #pp @command_list
+      end
 
       #次フレームに実行するコマンドがある場合、一時的にスタックする
-      @next_frame_commands.push(command) if command
+      @next_frame_commands.push(next_frame_command) if next_frame_command
 
       #現在のフレームを終了するかどうかを識別する
-      #フレーム終了指示がなくても、command_list/script_storage共に空なら終了する
+      #フレーム終了指示がなくてもcommand_list/script_storage共に空なら終了する
       case end_parse
       when :end_frame
         break

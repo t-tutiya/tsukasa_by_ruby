@@ -118,7 +118,7 @@ class Control
   end
 
   #コマンドをスタックに格納する
-  def send_script(command, options, inner_options = {:target_id => @id})
+  def send_script(command, options, inner_options)
     #全てのコントロールへ伝搬する場合
     if inner_options[:all]
       inner_options.delete(:all)
@@ -142,11 +142,11 @@ class Control
   end
 
   #コマンドをスタックに格納する
-  def interrupt_command(command, options, inner_options = {:target_id => @id})
+  def interrupt_command(command, options, inner_options)
     #全てのコントロールへ伝搬する場合
     if inner_options[:all]
       inner_options.delete(:all)
-      return interrupt_command_to_all(:set, options)
+      return interrupt_command_to_all(:set, options, inner_options)
     end
 
     #自身が送信対象として指定されている場合
@@ -166,24 +166,24 @@ class Control
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def send_script_to_all(command, options, inner_options = {})
+  def send_script_to_all(command, options, inner_options)
     #自身のidを設定してコマンドを送信する
-    send_script(command, options)
+    send_script(command, options, inner_options)
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
-      control.send_script_to_all(command, options)
+      control.send_script_to_all(command, options, inner_options)
     end
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def interrupt_command_to_all(command, options, inner_options = {})
+  def interrupt_command_to_all(command, options, inner_options)
     #自身のidを設定してコマンドを送信する
-    interrupt_command(command, options)
+    interrupt_command(command, options, inner_options)
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
-      control.interrupt_command_to_all(command, options)
+      control.interrupt_command_to_all(command, options, inner_options)
     end
   end
 
@@ -426,6 +426,7 @@ class Control
     unless inner_options[:target_id]
       #デフォルトクラス名からIDを取得する
       inner_options[:target_id] = @control_default[inner_options[:default_class]]
+      raise unless inner_options[:target_id]
     end
 
     #送信対象として自身が指定されている場合
@@ -514,7 +515,7 @@ class Control
         #キー押下があれば終了
         #TODO：明らかにここでやる処理ではない
         if Input.key_push?(K_SPACE)
-          @root_control.interrupt_command_to_all(:set, {:skip_mode =>true})
+          @root_control.interrupt_command_to_all(:set, {:skip_mode =>true}, inner_options)
           return :continue 
         end
 

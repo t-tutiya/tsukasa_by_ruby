@@ -119,7 +119,7 @@ class Control
   #コマンドをスタックに格納する
   def send_script(command, options, system_options = {:target_id => @id})
     #自身が送信対象として指定されている場合
-    if @id == system_options[:target_id] or system_options[:target_id] == :anonymous
+    if [@id, :anonymous].include?(system_options[:target_id])
       #コマンドをスタックの末端に挿入する
       @script_storage.push([command, options, system_options])
       return true #コマンドをスタックした
@@ -138,7 +138,7 @@ class Control
   def interrupt_command(command, options, system_options = {:target_id => @id})
     #自身が送信対象として指定されている場合
     #TODO：or以降がアリなのか（これがないと子コントロール化にブロックを送信できない）
-    if @id == system_options[:target_id] or system_options[:target_id] == :anonymous
+    if [@id, :anonymous].include?(system_options[:target_id])
       #コマンドをスタックの先頭に挿入する
       @command_list.unshift([command, options, system_options])
       return true #コマンドをスタックした
@@ -412,7 +412,7 @@ class Control
     end
 
     #自身が送信対象として指定されている場合
-    if @id == system_options[:target_id] or system_options[:target_id] == :anonymous
+    if [@id, :anonymous].include?(system_options[:target_id])
       #コマンドtをスタックの末端に挿入する
       @command_list.push([command, options, system_options])
     elsif !send_script( command, 

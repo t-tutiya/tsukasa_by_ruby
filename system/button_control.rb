@@ -2,10 +2,7 @@
 
 require 'dxruby'
 require_relative './script_compiler.rb'
-require_relative './module_movable.rb'
-require_relative './module_drawable.rb'
 require_relative './control_container.rb'
-require_relative './image_control.rb'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -44,7 +41,7 @@ end
 
 #ボタンコントロール
 class ButtonControl  < Control
-  include Drawable
+  include Clickable
   include Movable
 
   def initialize(options, inner_options, root_control)

@@ -32,9 +32,9 @@
 require 'dxruby'
 require_relative './module_movable.rb'
 require_relative './module_drawable.rb'
-require_relative './module_clickable.rb'
 
 require_relative './control_container.rb'
+require_relative './clickable_control.rb'
 require_relative './image_control.rb'
 require_relative './button_control.rb'
 require_relative './se_control.rb'

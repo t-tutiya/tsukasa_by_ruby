@@ -2,7 +2,7 @@
 
 require 'dxruby'
 require_relative './script_compiler.rb'
-require_relative './module_drawable.rb'
+require_relative './control_container.rb'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -42,8 +42,7 @@ end
 
 #TODO:Controlクラスに統合する
 #TODO:コマンドはカテゴリーごとにファイルを分ける
-module Clickable
-  include Drawable
+class ClickableControl < Control
 
   def initialize(options, inner_options, root_control)
     super

@@ -87,7 +87,7 @@ class ClickableControl < Control
 
     #マウスボタン押下された場合
     if  @over_status == :over and @key_down_status == :up and
-        Input.mouse_push?( M_LBUTTON )
+        Input.mouse_down?( M_LBUTTON )
 
         @key_down_status = :down
         eval_block(options, inner_options, inner_options[:block])

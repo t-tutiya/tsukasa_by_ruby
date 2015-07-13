@@ -12,10 +12,6 @@ create :ButtonControl,
         :id=>:over, :visible => false
   image :file_path=>"./sozai/button_key_down.png", 
         :id=>:key_down, :visible => false
-  image :file_path=>"./sozai/button_key_up.png", 
-        :id=>:key_up, :visible => false
-  image :file_path=>"./sozai/button_out.png", 
-        :id=>:out, :visible => false
   on_mouse_over do
     pp "over"
     set :normal, visible: false

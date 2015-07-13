@@ -34,14 +34,14 @@ require_relative './control_container.rb'
 
 #コマンド宣言
 class ScriptCompiler
-  impl_define :on_mouse_over,                    [:block]
-  impl_define :on_mouse_out,                    [:block]
-  impl_define :on_key_down,                    [:block]
-  impl_define :on_key_up,                    [:block]
+  impl_define :on_mouse_over, [:block]
+  impl_define :on_mouse_out,  [:block]
+  impl_define :on_key_down,   [:block]
+  impl_define :on_key_up,     [:block]
 end
 
-#TODO:Controlクラスに統合する
-#TODO:コマンドはカテゴリーごとにファイルを分ける
+#クリックイベントが発生するコントロールの基底クラス
+#TODO：将来的にはSpriteクラスを使い、任意形状でカーソルとの当たり判定が出来るようにする
 class ClickableControl < Control
 
   def initialize(options, inner_options, root_control)
@@ -59,6 +59,7 @@ class ClickableControl < Control
     if  @over_status == :out and
         @x_pos < x  and x < @x_pos + @width and
         @y_pos < y  and y < @y_pos + @height
+
       @over_status = :over
       eval_block(options, inner_options, inner_options[:block])
     end
@@ -74,6 +75,7 @@ class ClickableControl < Control
     if  @over_status == :over and
       !(@x_pos < x  and x < @x_pos + @width and
         @y_pos < y  and y < @y_pos + @height)
+
       @over_status = :out
       eval_block(options, inner_options, inner_options[:block])
     end

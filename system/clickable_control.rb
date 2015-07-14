@@ -56,53 +56,58 @@ class ClickableControl < Control
   end
 
   def update()
-    #マウスカーソル座標を取得
-    @x = Input.mouse_pos_x
-    @y = Input.mouse_pos_y
-
-    inner =(@x_pos < @x              and 
-            @x     < @x_pos + @width and
-            @y_pos < @y              and 
-            @y     < @y_pos + @height)
-
-    if  inner
-      @on_mouse_over = true unless @over
-      @over = true
-      @out =false
-    else
-      @on_mouse_out = true unless @out
-      @out = true
-      @over = false
-    end
-
-    if Input.mouse_push?( M_LBUTTON )
-      if inner
-        @on_key_down = true
-        @on_key_down_out = false
-      else
-        @on_key_down = false
-        @on_key_down_out = true
-      end
-    end
-
-    if Input.mouse_release?( M_LBUTTON )
-      if inner
-        @on_key_up = true
-        @on_key_up_out = false
-      else
-        @on_key_up = false
-        @on_key_up_out = true
-      end
-    end
-
-    super
-
     @on_mouse_over  = false
     @on_mouse_out   = false
     @on_key_down    = false
     @on_key_down_out= false
     @on_key_up      = false
     @on_key_up_out  = false
+
+    #マウスカーソル座標を取得
+    @x = Input.mouse_pos_x
+    @y = Input.mouse_pos_y
+
+    #描画範囲内かどうか
+    if (@x_pos < @x              and 
+        @x     < @x_pos + @width and
+        @y_pos < @y              and 
+        @y     < @y_pos + @height)
+      #イベント起動済みフラグクリア
+      @out = false
+
+      #イベント起動前であれば起動し、クリアフラグを立てる
+      @on_mouse_over = true unless @over
+      @over = true
+
+      #キー押下チェック
+      if Input.mouse_push?( M_LBUTTON )
+        @on_key_down = true
+      end
+
+      #キー解除チェック
+      if Input.mouse_release?( M_LBUTTON )
+        @on_key_up = true
+      end
+    else
+      #イベント起動済みフラグクリア
+      @over = false
+
+      #イベント起動前であれば起動し、クリアフラグを立てる
+      @on_mouse_out = true unless @out
+      @out = true
+
+      #キー押下チェック
+      if Input.mouse_push?( M_LBUTTON )
+        @on_key_down_out = true
+      end
+
+      #キー解除チェック
+      if Input.mouse_release?( M_LBUTTON )
+        @on_key_up_out = true
+      end
+    end
+
+    super
   end
 
   def command_on_mouse_over(options, inner_options)

@@ -2,7 +2,6 @@
 
 require 'dxruby'
 require_relative './script_compiler.rb'
-require_relative './clickable_control.rb'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１

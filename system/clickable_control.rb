@@ -64,12 +64,12 @@ class ClickableControl < Control
   end
 
   def command_on_mouse_over(options, inner_options)
+    #カーソルが指定範囲の中にある場合
     if  @x_pos < @x  and @x < @x_pos + @width and
         @y_pos < @y  and @y < @y_pos + @height
-      unless @over
-        @over = true
-        eval_block(options, inner_options, inner_options[:block])
-      end
+      #前フレームでイベントが実行されていないなら実行
+      eval_block(options, inner_options, inner_options[:block]) unless @over
+      @over = true
     else
       @over = false
     end
@@ -78,12 +78,12 @@ class ClickableControl < Control
   end
   
   def command_on_mouse_out(options, inner_options)
+    #カーソルが指定範囲の外にある場合
     unless  @x_pos < @x  and @x < @x_pos + @width and
             @y_pos < @y  and @y < @y_pos + @height
-      unless @out
-        @out = true
-        eval_block(options, inner_options, inner_options[:block])
-      end
+      #前フレームでイベントが実行されていないなら実行
+      eval_block(options, inner_options, inner_options[:block]) unless @out
+      @out = true
     else
       @out = false
     end
@@ -92,7 +92,7 @@ class ClickableControl < Control
   end
 
   def command_on_key_down(options, inner_options)
-    #マウスボタン押下された場合
+    #マウスボタンが押下された場合
     if  Input.mouse_push?( M_LBUTTON ) and
         @x_pos < @x  and @x < @x_pos + @width and
         @y_pos < @y  and @y < @y_pos + @height
@@ -104,7 +104,7 @@ class ClickableControl < Control
   end
 
   def command_on_key_down_out(options, inner_options)
-    #マウスボタン押下された場合
+    #マウスボタンが範囲外で押下された場合
     if  Input.mouse_push?( M_LBUTTON ) and
         !(@x_pos < @x  and @x < @x_pos + @width and
           @y_pos < @y  and @y < @y_pos + @height)
@@ -128,7 +128,7 @@ class ClickableControl < Control
   end
 
   def command_on_key_up_out(options, inner_options)
-    #マウスボタン押下が解除された場合
+    #マウスボタン押下が範囲外で解除された場合
     if  Input.mouse_release?( M_LBUTTON ) and
       !(@x_pos < @x  and @x < @x_pos + @width and
         @y_pos < @y  and @y < @y_pos + @height)

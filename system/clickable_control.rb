@@ -34,10 +34,12 @@ require_relative './control_container.rb'
 
 #コマンド宣言
 class ScriptCompiler
-  impl_define :on_mouse_over, [:block]
-  impl_define :on_mouse_out,  [:block]
-  impl_define :on_key_down,   [:block]
-  impl_define :on_key_up,     [:block]
+  impl_define :on_mouse_over,   [:block]
+  impl_define :on_mouse_out,    [:block]
+  impl_define :on_key_down,     [:block]
+  impl_define :on_key_down_out, [:block]
+  impl_define :on_key_up,       [:block]
+  impl_define :on_key_up_out,   [:block]
 end
 
 #クリックイベントが発生するコントロールの基底クラス
@@ -47,67 +49,93 @@ class ClickableControl < Control
 
   def initialize(options, inner_options, root_control)
     @child_controls_draw_to_entity = false
-    @over_status = :out
-    @key_down_status = :up
+    @over = false
+    @out = true
+
+    super
+  end
+
+  def update()
+    #マウスカーソル座標を取得
+    @x = Input.mouse_pos_x
+    @y = Input.mouse_pos_y
 
     super
   end
 
   def command_on_mouse_over(options, inner_options)
-    #マウスカーソル座標を取得
-    x = Input.mouse_pos_x
-    y = Input.mouse_pos_y
-
-    if  @over_status == :out and
-        @x_pos < x  and x < @x_pos + @width and
-        @y_pos < y  and y < @y_pos + @height
-
-      @over_status = :over
-      eval_block(options, inner_options, inner_options[:block])
+    if  @x_pos < @x  and @x < @x_pos + @width and
+        @y_pos < @y  and @y < @y_pos + @height
+      unless @over
+        @over = true
+        eval_block(options, inner_options, inner_options[:block])
+      end
+    else
+      @over = false
     end
 
     return :continue, [:on_mouse_over, options, inner_options]
   end
   
   def command_on_mouse_out(options, inner_options)
-    #マウスカーソル座標を取得
-    x = Input.mouse_pos_x
-    y = Input.mouse_pos_y
-
-    if  @over_status == :over and
-      !(@x_pos < x  and x < @x_pos + @width and
-        @y_pos < y  and y < @y_pos + @height)
-
-      @over_status = :out
-      eval_block(options, inner_options, inner_options[:block])
+    unless  @x_pos < @x  and @x < @x_pos + @width and
+            @y_pos < @y  and @y < @y_pos + @height
+      unless @out
+        @out = true
+        eval_block(options, inner_options, inner_options[:block])
+      end
+    else
+      @out = false
     end
 
     return :continue, [:on_mouse_out, options, inner_options]
   end
 
   def command_on_key_down(options, inner_options)
-
     #マウスボタン押下された場合
-    if  @over_status == :over and @key_down_status == :up and
-        Input.mouse_push?( M_LBUTTON )
+    if  Input.mouse_push?( M_LBUTTON ) and
+        @x_pos < @x  and @x < @x_pos + @width and
+        @y_pos < @y  and @y < @y_pos + @height
 
-        @key_down_status = :down
-        eval_block(options, inner_options, inner_options[:block])
+      eval_block(options, inner_options, inner_options[:block])
     end
 
     return :continue, [:on_key_down, options, inner_options]
   end
 
+  def command_on_key_down_out(options, inner_options)
+    #マウスボタン押下された場合
+    if  Input.mouse_push?( M_LBUTTON ) and
+        !(@x_pos < @x  and @x < @x_pos + @width and
+          @y_pos < @y  and @y < @y_pos + @height)
+
+      eval_block(options, inner_options, inner_options[:block])
+    end
+
+    return :continue, [:on_key_down_out, options, inner_options]
+  end
+
   def command_on_key_up(options, inner_options)
-
     #マウスボタン押下が解除された場合
-    if  @over_status == :over and  @key_down_status == :down and
-        Input.mouse_release?( M_LBUTTON )
+    if  Input.mouse_release?( M_LBUTTON ) and
+        @x_pos < @x  and @x < @x_pos + @width and
+        @y_pos < @y  and @y < @y_pos + @height
 
-        @key_down_status = :up
         eval_block(options, inner_options, inner_options[:block])
     end
 
     return :continue, [:on_key_up, options, inner_options]
+  end
+
+  def command_on_key_up_out(options, inner_options)
+    #マウスボタン押下が解除された場合
+    if  Input.mouse_release?( M_LBUTTON ) and
+      !(@x_pos < @x  and @x < @x_pos + @width and
+        @y_pos < @y  and @y < @y_pos + @height)
+
+        eval_block(options, inner_options, inner_options[:block])
+    end
+
+    return :continue, [:on_key_up_out, options, inner_options]
   end
 end

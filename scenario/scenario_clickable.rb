@@ -37,4 +37,11 @@ create :ClickableControl,
     set :normal, visible: false
     set :over,   visible: true
   end
+
+  on_key_down_out do
+    pp "key_down_out"
+  end
+  on_key_up_out do
+    pp "key_up_out"
+  end
 end

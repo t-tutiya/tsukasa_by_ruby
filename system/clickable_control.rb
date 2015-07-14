@@ -60,82 +60,96 @@ class ClickableControl < Control
     @x = Input.mouse_pos_x
     @y = Input.mouse_pos_y
 
-    super
-  end
+    inner =(@x_pos < @x              and 
+            @x     < @x_pos + @width and
+            @y_pos < @y              and 
+            @y     < @y_pos + @height)
 
-  def command_on_mouse_over(options, inner_options)
-    #カーソルが指定範囲の中にある場合
-    if  @x_pos < @x  and @x < @x_pos + @width and
-        @y_pos < @y  and @y < @y_pos + @height
-      #前フレームでイベントが実行されていないなら実行
-      eval_block(options, inner_options, inner_options[:block]) unless @over
+    if  inner
+      @on_mouse_over = true unless @over
       @over = true
+      @out =false
     else
+      @on_mouse_out = true unless @out
+      @out = true
       @over = false
     end
 
+    if Input.mouse_push?( M_LBUTTON )
+      if inner
+        @on_key_down = true
+        @on_key_down_out = false
+      else
+        @on_key_down = false
+        @on_key_down_out = true
+      end
+    end
+
+    if Input.mouse_release?( M_LBUTTON )
+      if inner
+        @on_key_up = true
+        @on_key_up_out = false
+      else
+        @on_key_up = false
+        @on_key_up_out = true
+      end
+    end
+
+    super
+
+    @on_mouse_over  = false
+    @on_mouse_out   = false
+    @on_key_down    = false
+    @on_key_down_out= false
+    @on_key_up      = false
+    @on_key_up_out  = false
+  end
+
+  def command_on_mouse_over(options, inner_options)
+    #カーソルが指定範囲に侵入した場合
+    if @on_mouse_over
+      eval_block(options, inner_options, inner_options[:block])
+    end
     return :continue, [:on_mouse_over, options, inner_options]
   end
   
   def command_on_mouse_out(options, inner_options)
-    #カーソルが指定範囲の外にある場合
-    unless  @x_pos < @x  and @x < @x_pos + @width and
-            @y_pos < @y  and @y < @y_pos + @height
-      #前フレームでイベントが実行されていないなら実行
-      eval_block(options, inner_options, inner_options[:block]) unless @out
-      @out = true
-    else
-      @out = false
+    #カーソルが指定範囲の外に移動した場合
+    if @on_mouse_out
+      eval_block(options, inner_options, inner_options[:block])
     end
-
     return :continue, [:on_mouse_out, options, inner_options]
   end
 
   def command_on_key_down(options, inner_options)
     #マウスボタンが押下された場合
-    if  Input.mouse_push?( M_LBUTTON ) and
-        @x_pos < @x  and @x < @x_pos + @width and
-        @y_pos < @y  and @y < @y_pos + @height
-
+    if @on_key_down
       eval_block(options, inner_options, inner_options[:block])
     end
-
     return :continue, [:on_key_down, options, inner_options]
   end
 
   def command_on_key_down_out(options, inner_options)
     #マウスボタンが範囲外で押下された場合
-    if  Input.mouse_push?( M_LBUTTON ) and
-        !(@x_pos < @x  and @x < @x_pos + @width and
-          @y_pos < @y  and @y < @y_pos + @height)
-
+    if @on_key_down_out
       eval_block(options, inner_options, inner_options[:block])
     end
-
     return :continue, [:on_key_down_out, options, inner_options]
   end
 
   def command_on_key_up(options, inner_options)
     #マウスボタン押下が解除された場合
-    if  Input.mouse_release?( M_LBUTTON ) and
-        @x_pos < @x  and @x < @x_pos + @width and
-        @y_pos < @y  and @y < @y_pos + @height
-
-        eval_block(options, inner_options, inner_options[:block])
+    if @on_key_up
+      eval_block(options, inner_options, inner_options[:block])
     end
-
     return :continue, [:on_key_up, options, inner_options]
   end
 
   def command_on_key_up_out(options, inner_options)
     #マウスボタン押下が範囲外で解除された場合
-    if  Input.mouse_release?( M_LBUTTON ) and
-      !(@x_pos < @x  and @x < @x_pos + @width and
-        @y_pos < @y  and @y < @y_pos + @height)
-
-        eval_block(options, inner_options, inner_options[:block])
+    if @on_key_up_out
+      eval_block(options, inner_options, inner_options[:block])
     end
-
     return :continue, [:on_key_up_out, options, inner_options]
   end
 end

@@ -25,7 +25,6 @@ create :ClickableControl,
     set :key_down, visible: false
   end
   on_key_down do
-    #TODO：現状の実装では、キーを押下したままout->overした場合、on_key_downイベントは再起動しない。適切な挙動を考える。
     pp "key_down"
     set :over,   visible: false
     set :normal, visible: false
@@ -38,10 +37,19 @@ create :ClickableControl,
     set :over,   visible: true
   end
 
+  #キー押下状態で判定範囲を超えた場合は、以下のイベントをフックして対応する
   on_key_down_out do
     pp "key_down_out"
   end
   on_key_up_out do
     pp "key_up_out"
+  end
+
+  #複数個のイベントを登録出来る
+  on_mouse_over do
+    pp "over 2nd"
+  end
+  on_key_down do
+    pp "key down 2nd"
   end
 end

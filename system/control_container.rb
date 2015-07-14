@@ -112,9 +112,6 @@ class Control
     eval_commands(options[:commands]) 
 
     @command_list.push([:token, nil, {}])
-
-    #初期ブロックを実行する
-    update()
   end
 
   #コマンドをスタックに格納する
@@ -346,11 +343,11 @@ class Control
   #コントロールをリストに登録する
   def command_create(options, inner_options)
     #コントロールを生成して子要素として登録する
-    @control_list.push(
-      Module.const_get(options[:create]).new( options, 
-                                              inner_options, 
-                                              @root_control
-                                              ))
+    @control_list.push(Module.const_get(options[:create]).new( options, 
+                                                               inner_options, 
+                                                               @root_control))
+    #付与ブロックを実行する
+    @control_list.last.update()
     return :continue
   end
 

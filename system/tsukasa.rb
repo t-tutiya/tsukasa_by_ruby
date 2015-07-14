@@ -48,7 +48,6 @@ require_relative './VariableTextLayer.rb'
 require_relative './script_compiler.rb'
 
 #TODO：モジュールであるべきか？
-#TODO：Ragの名称もそろそろ変える
 class Tsukasa < Control
 
   def initialize(options, inner_options = {})

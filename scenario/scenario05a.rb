@@ -42,35 +42,40 @@ end
 
 #ボタンコントロール
 create :ButtonControl, 
-        :x_pos => 0, 
-        :y_pos => 0, 
+        :x_pos => 150, 
+        :y_pos => 150, 
+        :width => 256,
+        :height => 256,
         :id=>:button1 do
-  create :ImageControl, 
-         :file_path=>"./sozai/button_normal.png", 
-         :id=>:normal
-  create :ImageControl, 
-        :file_path=>"./sozai/button_over.png", 
-        :id=>:over,
-        :visible => false
-  create :ImageControl, 
-        :file_path=>"./sozai/button_key_down.png", 
-        :id=>:key_down,
-        :visible => false
-  create :ImageControl, 
-        :file_path=>"./sozai/button_key_up.png", 
-        :id=>:key_up,
-        :visible => false
-  create :ImageControl, 
-        :file_path=>"./sozai/button_out.png", 
-        :id=>:out,
-        :visible => false
-
-  event :key_up do
+  image :file_path=>"./sozai/button_normal.png", 
+        :id=>:normal
+  image :file_path=>"./sozai/button_over.png", 
+        :id=>:over, :visible => false
+  image :file_path=>"./sozai/button_key_down.png", 
+        :id=>:key_down, :visible => false
+  on_mouse_over do
+    set :normal, visible: false
+    set :over,   visible: true
+    set :key_down, visible: false
+  end
+  on_mouse_out do
+    set :over,   visible: false
+    set :normal, visible: true
+    set :key_down, visible: false
+  end
+  on_key_down do
+    set :over,   visible: false
+    set :normal, visible: false
+    set :key_down, visible: true
+  end
+  on_key_up do
+    set :key_down, visible: false
+    set :normal, visible: false
+    set :over,   visible: true
     EVAL "pp 'pre_wait'"
     flag :key=>3, :data=>2
     flag :key=>4, :data=>true
   end
-  normal
 end
 
 WHILE ->{true}, :button1 do

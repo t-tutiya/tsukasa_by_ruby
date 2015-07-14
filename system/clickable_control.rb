@@ -44,10 +44,14 @@ end
 
 #クリックイベントが発生するコントロールの基底クラス
 #TODO：将来的にはSpriteクラスを使い、任意形状でカーソルとの当たり判定が出来るようにする
-class ClickableControl < Control
-  include Drawable
-
+module Clickable
   def initialize(options, inner_options, root_control)
+    @x_pos = options[:x_pos] || 0 #描画Ｘ座標
+    @y_pos = options[:y_pos] || 0 #描画Ｙ座標
+
+    @width  = options[:width]  || 0 #横幅
+    @height = options[:height] || 0 #縦幅
+
     @child_controls_draw_to_entity = false
     @over = false
     @out = true

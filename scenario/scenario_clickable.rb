@@ -1,6 +1,6 @@
 #! ruby -E utf-8
 
-create :ClickableControl, 
+create :ButtonControl, 
         :x_pos => 150, 
         :y_pos => 150, 
         :width => 256,

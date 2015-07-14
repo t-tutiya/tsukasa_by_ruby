@@ -43,10 +43,12 @@ end
 #クリックイベントが発生するコントロールの基底クラス
 #TODO：将来的にはSpriteクラスを使い、任意形状でカーソルとの当たり判定が出来るようにする
 class ClickableControl < Control
+  include Drawable
 
   def initialize(options, inner_options, root_control)
     super
 
+    @child_controls_draw_to_entity = false
     @over_status = :out
     @key_down_status = :up
   end
@@ -87,7 +89,7 @@ class ClickableControl < Control
 
     #マウスボタン押下された場合
     if  @over_status == :over and @key_down_status == :up and
-        Input.mouse_down?( M_LBUTTON )
+        Input.mouse_push?( M_LBUTTON )
 
         @key_down_status = :down
         eval_block(options, inner_options, inner_options[:block])

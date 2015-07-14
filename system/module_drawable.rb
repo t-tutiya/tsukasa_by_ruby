@@ -56,7 +56,6 @@ module Drawable
     @draw_option = {} #描画オプション
     @draw_option[:z] = options[:index] || 0 #重ね合わせ順序
 
-    super
 
     #回り込み指定（省略時は:none）
     @float_mode = options[:float_mode] || :none
@@ -67,6 +66,8 @@ module Drawable
 
     @over_status = :out
     @key_down_status = :up
+
+    super
   end
 
   #可視設定

@@ -46,11 +46,11 @@ class ClickableControl < Control
   include Drawable
 
   def initialize(options, inner_options, root_control)
-    super
-
     @child_controls_draw_to_entity = false
     @over_status = :out
     @key_down_status = :up
+
+    super
   end
 
   def command_on_mouse_over(options, inner_options)

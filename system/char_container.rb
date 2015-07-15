@@ -67,10 +67,6 @@ class ScriptCompiler
   impl_define :rubi,                  :CharContainer, [:all]
 
   #フォント設定の更新
-  #デフォルト
-  impl_define :default_font_config,   :CharContainer, [:all]
-  #現在値
-  impl_define :font_config,           :CharContainer, [:all]
   #現在値をリセット
   impl_define :reset_font_config,     :CharContainer, [:all]
 
@@ -92,6 +88,68 @@ end
 class CharContainer < Control
   include Movable #移動関連モジュール
   include Drawable #描画関連モジュール
+
+  #attr_accessor  :font_config #書式設定
+  def font_config=(hash)
+    @font_config.merge!(hash)
+    reset_font()
+  end
+  #attr_accessor  :default_font_config #デフォルト書式設定
+  def default_font_config=(hash)
+    @default_font_config.merge!(hash)
+  end
+    #基礎情報
+    # :size 文字サイズ
+    # :color 文字色
+    # :bold 太字（bool）
+    # :italic イタリック（bool）
+    # :z  #描画順指定（TODO：反映未確認）
+    #
+    #袋文字関連
+    # :edge  #袋文字を描画するかどうかをtrue/falseで指定します。
+    # :edge_color  #袋文字の枠色を指定します。配列で[R, G, B]それぞれ0～255
+    # :edge_width  #袋文字の枠の幅を0～の数値で指定します。1で1ピクセル
+    # :edge_level  #袋文字の枠の濃さを0～の数値で指定します。大きいほど濃くなりますが、幅が大きいほど薄くなります。値の制限はありませんが、目安としては一桁ぐらいが実用範囲でしょう。
+    #
+    #影文字関連
+    # :shadow  #影を描画するかどうかをtrue/falseで指定します
+    # :shadow_edge #edgeがtrueの場合に、枠の部分に対して影を付けるかどうかをtrue/falseで指定します。trueで枠の影が描かれます
+    # :shadow_color  #影の色を指定します。配列で[R, G, B]、それぞれ0～255
+    # :shadow_x  #影の位置を相対座標で指定します。+1は1ピクセル右になります
+    # :shadow_y  #影の位置を相対座標で指定します。+1は1ピクセル下になります
+    #
+    #スケール変換関連
+    #TODO：CharConrol#normarize_imageが処理をフックして、下記プロパティの中で反映されない物がありそう。スケールとか
+    # :scalex  #横の拡大率
+    # :scaley  #縦の拡大率
+    # :centerx  #回転、拡大の中心点。省略すると一番左になります。
+    # :centery  #回転、拡大の中心点。省略すると一番上になります。
+    # :alpha  #アルファ値(0～255)。省略すると255になります。
+    # :blend  #:alpha、:add、:add2、:sub、:sub2で合成方法を指定します。省略すると:alphaとなります。
+    #   :addはソースにアルファ値を、
+    #   :add2は背景に255-アルファ値を適用します。
+    #   :subはアルファ値を全ての色の合成に、
+    #   :sub2はRGBの色をそれぞれ別々に合成に適用します。
+    # :angle  #360度系で画像の回転角度を指定します。拡大率と同時に指定した場合は拡大率が先に適用されます。
+    # :aa  #アンチエイリアスのオンオフ
+
+    #TODO：以下はdxrubyのFont情報と無関係なので管理を分離する
+    # :face
+    #      #指定されたフォント名がレンダリング済みフォントとして登録されている場合
+    #      if Image_font.regist?(value.to_s)
+    #        #フォント名をイメージフォント名として設定
+    #        target[:image_face] = value.to_s
+    #        #イメージフォント使用中フラグを立てる
+    #        target[:use_image_font] = true
+    #      else
+    #        #フォント名を設定
+    #        target[:face] = value.to_s
+    #        #イメージフォント使用中フラグをクリア
+    #        target[:use_image_font] = false
+    #      end
+    #ルビ関連情報
+    # :rubi_size ルビサイズ
+    # :rubi_pitch ルビ幅
 
   def initialize(options, inner_options, root_control)
     @child_controls_draw_to_entity = false
@@ -133,7 +191,8 @@ class CharContainer < Control
     }
 
     #font_configのデフォルト値を更新
-    command_default_font_config(font_config, nil)
+    @default_font_config.merge!(font_config)
+
     #fong_configの初期化
     command_reset_font_config(nil, nil)
 
@@ -159,16 +218,6 @@ class CharContainer < Control
     @next_char_y = 0
 
     super
-  end
-
-  #############################################################################
-  #ヘルパーメソッド
-  #############################################################################
-
-  #"RRGGBB"の１６進数６桁カラー指定を、[R,G,B]の配列に変換
-  def hex_to_rgb(target)
-    return target if target.class == Array
-    [target[0, 2].hex, target[2, 2].hex, target[4, 2].hex]
   end
 
   #############################################################################
@@ -281,7 +330,7 @@ class CharContainer < Control
     #:color_keyオプションが設定されている場合
     if options.key?(:color_key)
       #抜き色を設定する
-      image.set_color_key(hex_to_rgb(options[:color_key]))
+      image.set_color_key(options[:color_key])
     end
     #文字レンダラオブジェクトを生成し、描画チェインに連結する
     #TODO：こっち未修正
@@ -475,126 +524,6 @@ class CharContainer < Control
   #############################################################################
   #フォント操作関連コマンド
   #############################################################################
-
-  #default_font_configコマンド
-  #デフォルトの文字属性設定
-  def command_default_font_config(options, inner_options)
-    options.each do |key, value|
-      #コンフィグ設定を更新する
-      update_font_config(@default_font_config, key, value)
-    end
-
-    #※ここではfontを再生成しない
-    #変更を反映するにはreset_font_configを実行しなければならない
-
-    return :continue #フレーム続行
-  end
-
-  #font_configコマンド
-  #現在の文字属性設定
-  def command_font_config(options, inner_options)
-    options.each do |key, value|
-      #"default"が設定されていればvalueをdefault値で更新
-      value = @default_font_config[key] if value == "default"
-      #コンフィグ設定を更新する
-      update_font_config(@font_config, key, value)
-    end
-
-    #fontオブジェクトを再生成する
-    reset_font()
-
-    return :continue #フレーム続行
-  end
-
-  #フォントのコンフィグ値を更新する
-  def update_font_config(target, key, value)
-    #値に応じた処理
-    case key
-    #基本情報
-    when :size
-      target[:size] = value.to_i
-    when :face
-      #指定されたフォント名が、レンダリング済みフォントとして登録されている場合
-      if Image_font.regist?(value.to_s)
-        #フォント名をイメージフォント名として設定
-        target[:image_face] = value.to_s
-        #イメージフォント使用中フラグを立てる
-        target[:use_image_font] = true
-      else
-        #フォント名を設定
-        target[:face] = value.to_s
-        #イメージフォント使用中フラグをクリア
-        target[:use_image_font] = false
-      end
-    when :color
-      target[:color] = hex_to_rgb(value)
-
-    #ルビ関連情報
-    when :rubi_size
-      target[:rubi_size] = value.to_i
-    when :rubi_pitch
-      target[:rubi_pitch] = value.to_i
-
-    #太字／イタリック
-    when :bold
-      target[:bold] = value
-    when :italic
-      target[:italic] = value
-
-    #袋文字関連
-    when :edge  #袋文字を描画するかどうかをtrue/falseで指定します。
-      target[:edge] = value
-    when :edge_color  #袋文字の枠色を指定します。配列で[R, G, B]それぞれ0～255
-      target[:edge_color] = hex_to_rgb(value)
-    when :edge_width  #袋文字の枠の幅を0～の数値で指定します。1で1ピクセル
-      target[:edge_width] = value.to_i
-    when :edge_level  #袋文字の枠の濃さを0～の数値で指定します。大きいほど濃くなりますが、幅が大きいほど薄くなります。値の制限はありませんが、目安としては一桁ぐらいが実用範囲でしょう。
-      target[:edge_level] = value.to_i
-
-    #影文字関連
-    when :shadow  #影を描画するかどうかをtrue/falseで指定します
-      target[:shadow] = value
-    when :shadow_edge #edgeがtrueの場合に、枠の部分に対して影を付けるかどうかをtrue/falseで指定します。trueで枠の影が描かれます
-      target[:shadow_edge] = value
-    when :shadow_color  #影の色を指定します。配列で[R, G, B]、それぞれ0～255
-      target[:shadow_color] = hex_to_rgb(value)
-    when :shadow_x  #影の位置を相対座標で指定します。+1は1ピクセル右になります
-      target[:shadow_x] = value.to_i
-    when :shadow_y  #影の位置を相対座標で指定します。+1は1ピクセル下になります
-      target[:shadow_y] = value.to_i
-
-    #スケール変換関連
-    #文字管理オブジェクトによっては機能しません。
-    when :scalex  #横の拡大率
-      target[:scalex] = value.to_f
-    when :scaley  #縦の拡大率
-      target[:scaley] = value.to_f
-    when :centerx  #回転、拡大の中心点。省略すると一番左になります。
-      target[:centerx] = value.to_i
-    when :centery  #回転、拡大の中心点。省略すると一番上になります。
-      target[:centery] = value.to_i
-    when :alpha  #アルファ値(0～255)。省略すると255になります。
-      target[:alpha] = value.to_i
-    when :blend  #:alpha、:add、:add2、:sub、:sub2で合成方法を指定します。省略すると:alphaとなります。
-                 #:addはソースにアルファ値を、
-                 #:add2は背景に255-アルファ値を適用します。
-                 #:subはアルファ値を全ての色の合成に、
-                 #:sub2はRGBの色をそれぞれ別々に合成に適用します。
-      target[:blend] = value.to_sym
-    when :angle  #360度系で画像の回転角度を指定します。拡大率と同時に指定した場合は拡大率が先に適用されます。
-      target[:angle] = value.to_f
-
-    when :z  #描画順指定（※現状実装では考慮していません）
-      target[:z] = value.to_i
-
-    when :aa  #アンチエイリアスのオンオフ
-      target[:aa] = value
-
-    else
-      #使用されていないハッシュ。エラー。
-      puts "オプション#{key}は未定義です"
-    end
-  end
 
   #reset_font_configタグ
   #文字属性をデフォルトに戻す

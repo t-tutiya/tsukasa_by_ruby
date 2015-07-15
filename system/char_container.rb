@@ -71,10 +71,6 @@ class ScriptCompiler
   impl_define :reset_font_config,     :CharContainer, [:all]
 
   #スタイル設定の更新
-  #デフォルト
-  impl_define :default_style_config,  :CharContainer, [:all]
-  #現在値
-  impl_define :style_config,          :CharContainer, [:all]
   #現在値をリセット
   impl_define :reset_style_config,    :CharContainer, [:all]
 
@@ -89,12 +85,12 @@ class CharContainer < Control
   include Movable #移動関連モジュール
   include Drawable #描画関連モジュール
 
-  #attr_accessor  :font_config #書式設定
+  #attr_accessor  :font_config #フォント設定
   def font_config=(hash)
     @font_config.merge!(hash)
     reset_font()
   end
-  #attr_accessor  :default_font_config #デフォルト書式設定
+  #attr_accessor  :default_font_config #デフォルトフォント設定
   def default_font_config=(hash)
     @default_font_config.merge!(hash)
   end
@@ -150,6 +146,20 @@ class CharContainer < Control
     #ルビ関連情報
     # :rubi_size ルビサイズ
     # :rubi_pitch ルビ幅
+
+  #attr_accessor  :style_config #書式設定
+  def style_config=(hash)
+    @style_config.merge!(hash)
+  end
+  #attr_accessor  :default_style_config #デフォルト書式設定
+  def default_style_config=(hash)
+    @default_style_config.merge!(hash)
+  end
+    # :line_spacing  #行間
+    # :charactor_pitch #文字間
+    # :line_height #行の高さ
+    # :wait_frame #一文字置きの待機フレーム
+    # :line_feed_wait_frame #改行時の待機フレーム
 
   def initialize(options, inner_options, root_control)
     @child_controls_draw_to_entity = false
@@ -208,7 +218,8 @@ class CharContainer < Control
     }
 
     #style_configのデフォルト値を更新
-    command_default_style_config(style_config, nil)
+    @default_style_config.merge!(style_config)
+
     #style_configの初期化
     command_reset_style_config(nil, nil)
 
@@ -536,6 +547,15 @@ class CharContainer < Control
     return :continue #フレーム続行
   end
 
+  #reset_styleタグ
+  #スタイルをデフォルトに戻す
+  def command_reset_style_config(options, inner_options)
+    #styleの設定をデフォルト設定で上書きする
+    @style_config = @default_style_config.clone
+
+    return :continue #フレーム続行
+  end
+
   #############################################################################
   #文字レンダラ設定コマンド
   #############################################################################
@@ -555,62 +575,6 @@ class CharContainer < Control
   def command_map_image_font(options, inner_options)
     #レンダリング済みフォントデータファイルを任意フォント名で登録
     Image_font.regist(options[:font_name].to_s, options[:file_path].to_s)
-
-    return :continue #フレーム続行
-  end
-
-  #############################################################################
-  #スタイル操作関連コマンド
-  #############################################################################
-
-  #default_style_configタグ
-  #デフォルトのスタイルの設定
-  def command_default_style_config(options, inner_options)
-    options.each do |key, value|
-     #コンフィグ設定を更新する
-     update_style_config(@default_style_config, key, value)
-    end
-
-    return :continue #フレーム続行
-  end
-
-  #style_configタグ
-  #スタイルの設定
-  def command_style_config(options, inner_options)
-    options.each do |key, value|
-      #"default"が設定されていればvalueをdefault値で更新
-      value = @default_style_config[key] if value == "default"
-      #コンフィグ設定を更新する
-      update_style_config(@style_config, key, value)
-    end
-
-    return :continue #フレーム続行
-  end
-
-  #スタイルのコンフィグ値を更新する
-  def update_style_config(target, key, value)
-    #値に応じた処理
-    case key
-    when :line_spacing
-      target[:line_spacing] = value.to_i
-    when :charactor_pitch
-      target[:charactor_pitch] =  value.to_i
-    when :line_height
-      target[:line_height] =  value.to_i
-    when :wait_frame
-      target[:wait_frame] =  value.to_i
-    when :line_feed_wait_frame
-      target[:line_feed_wait_frame] =  value.to_i
-    else
-      puts "オプション#{key}は未定義です"
-    end
-  end
-
-  #reset_styleタグ
-  #スタイルをデフォルトに戻す
-  def command_reset_style_config(options, inner_options)
-    #styleの設定をデフォルト設定で上書きする
-    @style_config = @default_style_config.clone
 
     return :continue #フレーム続行
   end

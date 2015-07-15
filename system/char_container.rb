@@ -85,6 +85,20 @@ class CharContainer < Control
   include Movable #移動関連モジュール
   include Drawable #描画関連モジュール
 
+  #############################################################################
+  #公開インターフェイス
+  #############################################################################
+
+  #TODO：多分いらない
+  def width
+    @next_char_x + @font_config[:size]
+  end
+
+  #TODO：多分いらない
+  def height
+    @next_char_y + @font_config[:size]
+  end
+
   #attr_accessor  :font_config #フォント設定
   def font_config=(hash)
     @font_config.merge!(hash)
@@ -229,20 +243,6 @@ class CharContainer < Control
     @next_char_y = 0
 
     super
-  end
-
-  #############################################################################
-  #公開インターフェイス
-  #############################################################################
-
-  #TODO：多分いらない
-  def width
-    @next_char_x + @font_config[:size]
-  end
-
-  #TODO：多分いらない
-  def height
-    @next_char_y + @font_config[:size]
   end
 
   #############################################################################
@@ -598,9 +598,10 @@ class CharContainer < Control
   #############################################################################
 
   #描画速度指定
+  #TODO：このコマンドの存在自体に問題がある
   def command_delay(options, inner_options)
-    update_wait_frame(options[:delay].to_i)
-
+    #デフォルト速度、現在速度を更新
+    @style_config[:wait_frame] = @default_style_config[:wait_frame] = options[:delay]
     return :continue #フレーム続行
   end
 
@@ -629,12 +630,6 @@ class CharContainer < Control
                            @font_config[:face],
                           {:weight => @font_config[:bold],
                            :italic => @font_config[:italic]})
-  end
-
-  #文字描画ウェイトフレーム数を更新する
-  def update_wait_frame(wait_frame)
-    #デフォルト速度、現在速度を更新
-    @style_config[:wait_frame] = @default_style_config[:wait_frame] = wait_frame
   end
 end
 

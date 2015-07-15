@@ -126,8 +126,8 @@ create :LayoutContainer,
       id: :default_char_container,
       font_config: { :size => 32, 
                      :face => "ＭＳＰ ゴシック"},
-      style_config: { :wait_frame => 2,} do
-      char_renderer do
+      style_config: { :wait_frame => 2,},
+      char_renderer: Proc.new{
         transition_fade_with_skip frame: 15,
           count: 0,
           start: 0,
@@ -141,6 +141,7 @@ create :LayoutContainer,
           start: 255,
           last:128
         wait [:command, :skip], command: :transition_fade_with_skip
-      end
+      } do
+      set font_config: {size: 32}
     end
   end

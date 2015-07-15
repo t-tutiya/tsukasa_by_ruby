@@ -75,8 +75,6 @@ class ScriptCompiler
   impl_define :reset_style_config,    :CharContainer, [:all]
 
   #その他制御系
-  #文字レンダラの指定
-  impl_define :char_renderer,         :CharContainer, [:block]
   #レンダリング済みフォントの登録
   impl_define :map_image_font,        :CharContainer, [:all]
 end
@@ -98,6 +96,8 @@ class CharContainer < Control
   def height
     @next_char_y + @font_config[:size]
   end
+
+  attr_accessor  :char_renderer #文字レンダラ
 
   #attr_accessor  :font_config #フォント設定
   def font_config=(hash)
@@ -177,7 +177,7 @@ class CharContainer < Control
 
   def initialize(options, inner_options, root_control)
     @child_controls_draw_to_entity = false
-    @char_renderer_block = nil
+    @char_renderer = options[:char_renderer]
 
     @margin_x = options[:margin_x] || 0
     @margin_y = options[:margin_y] || 0
@@ -277,7 +277,7 @@ class CharContainer < Control
                      :graph => false,
                      }, 
                      {:target_id => @id,
-                      :block => @char_renderer_block}
+                      :block => @char_renderer}
                     )
 
     else
@@ -297,7 +297,7 @@ class CharContainer < Control
                      :graph => true,
                      },
                      {:target_id => @id,
-                      :block => @char_renderer_block},
+                      :block => @char_renderer},
 #                   @font.glyph(options[:char].to_s)
                    )
 =end
@@ -553,17 +553,6 @@ class CharContainer < Control
     #styleの設定をデフォルト設定で上書きする
     @style_config = @default_style_config.clone
 
-    return :continue #フレーム続行
-  end
-
-  #############################################################################
-  #文字レンダラ設定コマンド
-  #############################################################################
-
-  #char_redererタグ
-  #文字レンダラの設定
-  def command_char_renderer(options, inner_options)
-    @char_renderer_block = inner_options[:block]
     return :continue #フレーム続行
   end
 

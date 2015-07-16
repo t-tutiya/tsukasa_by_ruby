@@ -258,51 +258,20 @@ class CharContainer < Control
   #charコマンド
   #指定文字（群）を描画チェインに連結する
   def command_char(options, inner_options)
-    #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    interrupt_command(:wait, 
-                          {:wait => [:count, :skip, :key_push],
-                           :count => :unset_wait_frame}, inner_options)
-
-    #レンダリング済みフォントを使用中か否かで分岐
-    if !@font_config[:use_image_font]
-      #子コントロールにdisposeコマンドを送信
-      interrupt_command(:create, {
-                      :create => :CharControl, 
-                      :x_pos => @next_char_x + @margin_x,
-                      :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
-                     :char => options[:char].to_s,
-                     :font => @font,
-                     :font_config => @font_config,
-                     :skip_mode =>  @skip_mode,
-                     :graph => false,
-                     }, 
-                     {:target_id => @id,
-                      :block => @char_renderer}
-                    )
-
-    else
-      raise
-#以下旧仕様なので動作しない
-#TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
-=begin
-      #文字レンダラオブジェクトを生成する
-      interrupt_command(:create, {
-                      :create => :CharControl, 
-                     :x_pos => @next_char_x + @margin_x,
-                     :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
-                     :char => "",
-                     :font => @font,
-                     :font_config => @font_config,
-                     :skip_mode =>  @skip_mode,
-                     :graph => true,
-                     },
-                     {:target_id => @id,
-                      :block => @char_renderer},
-#                   @font.glyph(options[:char].to_s)
-                   )
-=end
-    end
-
+    #文字コントロールを生成する
+    interrupt_command(:create, {
+                    :create => :CharControl, 
+                    :x_pos => @next_char_x + @margin_x,
+                    :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
+                   :char => options[:char].to_s,
+                   :font => @font,
+                   :font_config => @font_config,
+                   :skip_mode =>  @skip_mode,
+                   :graph => false,
+                   }, 
+                   {:target_id => @id,
+                    :block => @char_renderer}
+                  )
     #描画座標を１文字＋文字ピッチ分進める
     @next_char_x += @font.get_width(options[:char].to_s) + 
                     @style_config[:charactor_pitch]
@@ -310,19 +279,62 @@ class CharContainer < Control
     return :continue #アイドル
   end
 
+  #image_charコマンド
+  #指定文字（群）のレンダリング済みフォントを描画チェインに連結する
+  def command_image_char(options, inner_options)
+    raise
+#以下旧仕様なので動作しない
+#TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
+=begin
+    #文字コントロールを生成する
+    interrupt_command(:create, {
+                    :create => :CharControl, 
+                   :x_pos => @next_char_x + @margin_x,
+                   :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
+                   :char => "",
+                   :font => @font,
+                   :font_config => @font_config,
+                   :skip_mode =>  @skip_mode,
+                   :graph => true,
+                   },
+                   {:target_id => @id,
+                    :block => @char_renderer},
+#                   @font.glyph(options[:char].to_s)
+                 )
+
+    #描画座標を１文字＋文字ピッチ分進める
+    @next_char_x += @font.get_width(options[:char].to_s) + 
+                    @style_config[:charactor_pitch]
+=end
+
+    return :continue #アイドル
+  end
+
   #textコマンド
   #指定文字列を描画チェインに連結する
   def command_text(options, inner_options)
-    commands = Array.new
-    
+    command_list = Array.new
+
+    #イメージフォントを使うかどうか
+    if @font_config[:use_image_font]
+      char_command = :image_char
+    else
+      char_command = :char
+    end
+
     #文字列を分解してcharコマンドに変換する
     options[:text].each_char do |ch|
-      #コマンドを一時スタックする
-      commands.push([:char, {:char => ch}, inner_options])
+      #１文字分の出力コマンドをスタックする
+      command_list.push([char_command, {char_command => ch}, inner_options])
+      #:waitコマンドをスタックする。待ち時間は遅延評価とする
+      command_list.push([:wait, 
+                        {:wait => [:count, :skip, :key_push],
+                         :count => :unset_wait_frame}, 
+                         inner_options])
     end
 
     #一時スタックしたコマンドをスタックの先頭に挿入する
-    @command_list = commands + @command_list
+    @command_list = command_list + @command_list
 
     return :continue #フレーム続行
   end
@@ -332,6 +344,7 @@ class CharContainer < Control
   def command_graph(options, inner_options)
     #以下旧仕様で動かない
     raise
+=begin
     #:is_charが省略されている場合初期値を設定する
     options[:is_char] = true if !options.key?(:is_char)
 
@@ -362,7 +375,7 @@ class CharContainer < Control
     interrupt_command(:wait, 
                           {:wait => [:count, :skip, :key_push],
                            :count => :unset_wait_frame}, inner_options)
-
+=end
     return :continue#フレーム続行
   end
 

@@ -144,7 +144,7 @@ class CharContainer < Control
     # :aa  #アンチエイリアスのオンオフ
 
     #TODO：以下はdxrubyのFont情報と無関係なので管理を分離する
-    # :face
+    # :fontname
     #      #指定されたフォント名がレンダリング済みフォントとして登録されている場合
     #      if Image_font.regist?(value.to_s)
     #        #フォント名をイメージフォント名として設定
@@ -153,7 +153,7 @@ class CharContainer < Control
     #        target[:use_image_font] = true
     #      else
     #        #フォント名を設定
-    #        target[:face] = value.to_s
+    #        target[:fontname] = value.to_s
     #        #イメージフォント使用中フラグをクリア
     #        target[:use_image_font] = false
     #      end
@@ -188,7 +188,7 @@ class CharContainer < Control
     #フォントの初期設定
     @default_font_config = {
       :size => 24,                 #フォントサイズ
-      :face => "ＭＳ 明朝",        #フォント名
+      :fontname => "ＭＳ 明朝",        #フォント名
       :color => [255,255,255],     #色
 
       :rubi_size => 12,            #ルビ文字のフォントサイズ
@@ -263,7 +263,7 @@ class CharContainer < Control
                     :create => :CharControl, 
                     :x_pos => @next_char_x + @margin_x,
                     :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
-                   :char => options[:char].to_s,
+                   :char => options[:char],
                    :font => @font,
                    :font_config => @font_config,
                    :skip_mode =>  @skip_mode,
@@ -325,7 +325,9 @@ class CharContainer < Control
     #文字列を分解してcharコマンドに変換する
     options[:text].each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      command_list.push([char_command, {char_command => ch}, inner_options])
+      command_list.push([char_command, 
+                        {char_command => ch}, 
+                        inner_options])
       #:waitコマンドをスタックする。待ち時間は遅延評価とする
       command_list.push([:wait, 
                         {:wait => [:count, :skip, :key_push],
@@ -621,7 +623,7 @@ class CharContainer < Control
             Image_font.new(@font_config[:image_face]) :
             #フォントオブジェクト生成
             @font = Font.new(@font_config[:size], 
-                             @font_config[:face],
+                             @font_config[:fontname],
                             {:weight => @font_config[:bold],
                              :italic => @font_config[:italic]})
 
@@ -629,7 +631,7 @@ class CharContainer < Control
     @rubi_font.dispose if @rubi_font != nil 
     #ルビフォントオブジェクト生成
     @rubi_font = Font.new( @font_config[:rubi_size], 
-                           @font_config[:face],
+                           @font_config[:fontname],
                           {:weight => @font_config[:bold],
                            :italic => @font_config[:italic]})
   end

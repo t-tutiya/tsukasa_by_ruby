@@ -101,7 +101,7 @@ create :RenderTargetContainer,
       y_pos: 2,
       id: :default_text_layer,
       font_config: { :size => 32, 
-                     :face => "ＭＳＰ ゴシック"},
+                     :fontname => "ＭＳＰ ゴシック"},
       style_config: { :wait_frame => 2,} do
       char_renderer do
         transition_fade_with_skip frame: 15,

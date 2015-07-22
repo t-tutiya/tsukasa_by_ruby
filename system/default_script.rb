@@ -125,7 +125,7 @@ create :RenderTargetContainer,
       y_pos: 2,
       id: :default_char_container,
       font_config: { :size => 32, 
-                     :face => "ＭＳＰ ゴシック"},
+                     :fontname => "ＭＳＰ ゴシック"},
       style_config: { :wait_frame => 2,},
       char_renderer: Proc.new{
         transition_fade_with_skip frame: 15,

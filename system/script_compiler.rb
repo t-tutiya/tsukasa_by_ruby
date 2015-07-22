@@ -137,11 +137,11 @@ class ScriptCompiler
   impl_define :se_stop, []
 
   #次に読み込むスクリプトファイルの指定
-  impl_define :next_scenario, :LayoutContainer, [:option]
-  impl_define :load_script,   :LayoutContainer, [:option]
+  impl_define :next_scenario, :RenderTargetContainer, [:option]
+  impl_define :load_script,   :RenderTargetContainer, [:option]
 
   #コントロールの削除
-  impl_define :dispose,       :LayoutContainer, [:option]
+  impl_define :dispose,       :RenderTargetContainer, [:option]
 
   impl_define :wake,                      [:option_hash]
   #移動

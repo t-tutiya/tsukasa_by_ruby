@@ -89,7 +89,7 @@ WHILE ->{true}, :button1 do
   wait_command :move_line
 end
 
-create :LayoutContainer,
+create :RenderTargetContainer,
   x_pos: 128,
   y_pos: 528,
   width: 1024,

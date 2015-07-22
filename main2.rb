@@ -55,7 +55,7 @@ Window.resize(1280, 720)
 
 tsukasa = Tsukasa.new({ :width => 1280,
                         :height => 720,
-                        :id => :default_layout_container
+                        :id => :default_rendertarget_container
                         }) do
   #TestƒRƒ“ƒgƒ[ƒ‹‚Ì¶¬
   create :Test , file_path: "./sozai/button_normal.png", id: :BG1 do

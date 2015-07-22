@@ -112,7 +112,7 @@ end
 
 #標準テキストウィンドウ
 #TODOデバッグ用なので各種数字は暫定
-create :LayoutContainer,
+create :RenderTargetContainer,
   x_pos: 128,
   y_pos: 528,
   width: 1024,

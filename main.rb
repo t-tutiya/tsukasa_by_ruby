@@ -9,14 +9,14 @@ Window.resize(1280, 720)
 
 tsukasa = Tsukasa.new({ :width => 1280,
                 :height => 720,
-                :script_path => "./test/scenario_sms_04.rb",
 #                :script_path => "./scenario/scenario_function.rb",
-                :script_path => "./scenario/scenario_clickable.rb",
+#                :script_path => "./scenario/scenario_clickable.rb",
 #                :script_path => "./scenario/scenario_yield.rb",
 #                :script_path => "./scenario/scenario_if.rb",
 #                :script_path => "./scenario/scenario_case_when.rb",
 #                :script_path => "./scenario/scenario_while.rb",
-                :id => :default_layout_container
+                :script_path => "./scenario/scenario_text.rb",
+                :id => :default_rendertarget_container
                 })
 #ゲームループ
 Window.loop do

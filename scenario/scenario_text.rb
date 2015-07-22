@@ -1,8 +1,7 @@
 #! ruby -E utf-8
-# coding: utf-8
 
 ###############################################################################
-#TSUKASA for DXRuby  α１
+#TSUKASA for DXRuby α１
 #汎用ゲームエンジン「司（TSUKASA）」 for DXRuby
 #
 #Copyright (c) <2013-2015> <tsukasa TSUCHIYA>
@@ -29,29 +28,28 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require 'dxruby'
-require_relative './module_movable.rb'
-require_relative './module_drawable.rb'
-require_relative './module_clickable.rb'
 
-require_relative './control_container.rb'
-require_relative './image_control.rb'
-require_relative './button_control.rb'
-require_relative './se_control.rb'
-
-require_relative './rendertarget_container.rb'
-require_relative './char_container.rb'
-require_relative './log_container.rb'
-
-require_relative './VariableTextLayer.rb'
-
-require_relative './script_compiler.rb'
-
-#TODO：モジュールであるべきか？
-class Tsukasa < Control
-
-  def initialize(options, inner_options = {})
-    options[:default_script_path] = "./system/default_script.rb"
-    super
-  end
-end
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+pause
+flash
+text"asa）」のα１バージョンを"
+line_feed
+text "ひとまず"
+pause
+text"asa）」のα１バージョンを"
+text "ひとまず"
+line_feed
+pause
+text"公開します。testA"
+pause
+line_feed
+text "ひとまず公開します。testA"
+pause
+text"asa）」のα１バージョンを"
+line_feed
+text "ひとまず"

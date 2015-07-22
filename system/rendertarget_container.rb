@@ -33,7 +33,7 @@ require_relative './control_container.rb'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class LayoutContainer < Control
+class RenderTargetContainer < Control
   include Movable #移動関連モジュール
   include Drawable #描画関連モジュール
 

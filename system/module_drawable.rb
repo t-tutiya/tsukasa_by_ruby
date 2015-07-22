@@ -106,7 +106,8 @@ module Drawable
       dy += @height
     #連結解除
     when :none
-      dx = dy =  0
+      dx = offset_x
+      dy = offset_y
     else
       raise
     end

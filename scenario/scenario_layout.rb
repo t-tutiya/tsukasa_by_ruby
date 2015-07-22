@@ -1,8 +1,7 @@
 #! ruby -E utf-8
-# coding: utf-8
 
 ###############################################################################
-#TSUKASA for DXRuby  α１
+#TSUKASA for DXRuby α１
 #汎用ゲームエンジン「司（TSUKASA）」 for DXRuby
 #
 #Copyright (c) <2013-2015> <tsukasa TSUCHIYA>
@@ -29,30 +28,16 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require 'dxruby'
-require_relative './module_movable.rb'
-require_relative './module_drawable.rb'
-require_relative './module_clickable.rb'
-
-require_relative './control_container.rb'
-require_relative './image_control.rb'
-require_relative './button_control.rb'
-require_relative './se_control.rb'
-
-require_relative './rendertarget_container.rb'
-require_relative './layout_control.rb'
-require_relative './char_container.rb'
-require_relative './log_container.rb'
-
-require_relative './VariableTextLayer.rb'
-
-require_relative './script_compiler.rb'
-
-#TODO：モジュールであるべきか？
-class Tsukasa < Control
-
-  def initialize(options, inner_options = {})
-    options[:default_script_path] = "./system/default_script.rb"
-    super
-  end
+create :LayoutControl, 
+        :x_pos => 600, 
+        :y_pos => 150, 
+        :width => 256,
+        :height => 256 do
+  image :file_path=>"./sozai/button_normal.png", float_mode: :right,
+         :x_pos => 150,
+         :y_pos => 150
+  image :file_path=>"./sozai/button_normal.png", float_mode: :right#,
+         #:x_pos => 100,
+         #:y_pos => 100
+  #image :file_path=>"./sozai/button_normal.png"
 end

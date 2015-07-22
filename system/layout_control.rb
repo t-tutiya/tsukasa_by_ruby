@@ -1,5 +1,9 @@
 #! ruby -E utf-8
-# coding: utf-8
+
+require 'dxruby'
+require_relative './module_movable.rb'
+require_relative './module_drawable.rb'
+require_relative './control_container.rb'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -29,30 +33,17 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require 'dxruby'
-require_relative './module_movable.rb'
-require_relative './module_drawable.rb'
-require_relative './module_clickable.rb'
+class LayoutControl < Control
+  include Movable #移動関連モジュール
+  include Drawable #描画関連モジュール
 
-require_relative './control_container.rb'
-require_relative './image_control.rb'
-require_relative './button_control.rb'
-require_relative './se_control.rb'
-
-require_relative './rendertarget_container.rb'
-require_relative './layout_control.rb'
-require_relative './char_container.rb'
-require_relative './log_container.rb'
-
-require_relative './VariableTextLayer.rb'
-
-require_relative './script_compiler.rb'
-
-#TODO：モジュールであるべきか？
-class Tsukasa < Control
-
-  def initialize(options, inner_options = {})
-    options[:default_script_path] = "./system/default_script.rb"
+  def initialize(options, inner_options, root_control)
+    options[:child_controls_draw_to_entity] = false
     super
+
+    @width  = options[:width] || 0
+    @height = options[:height] || 0
+
   end
+
 end

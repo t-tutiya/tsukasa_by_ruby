@@ -486,6 +486,7 @@ class Control
         options[:count] = wait_frame - 1
 
       when :command
+        #コマンドがリスト上に存在しなければ終了
         unless @next_frame_commands.index{|command|
           command[0]==options[:command]}
           return :continue
@@ -498,9 +499,7 @@ class Control
 
       when :key_push
         #キー押下があれば終了
-        #TODO：明らかにここでやる処理ではない
         if Input.key_push?(K_SPACE)
-          @root_control.interrupt_command_to_all(:set, {:skip_mode =>true}, inner_options)
           return :continue 
         end
 

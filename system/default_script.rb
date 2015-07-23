@@ -35,11 +35,13 @@ define :pause do
   #■行表示中スキップ処理
   about :default_char_container do
     #idleになるかキー入力を待つ
-    #※wait中にキーが押された場合、waitはスキップモードフラグを立てる
     wait [:key_push, :idol]
     
     #キー入力伝搬を止める為に１フレ送る
     end_frame 
+
+    #スキップフラグを立てる
+    set :root, skip_mode: true , all: true
 
     #■行末待機処理
 

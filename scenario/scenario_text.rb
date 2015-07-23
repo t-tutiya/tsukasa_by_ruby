@@ -28,6 +28,14 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+pause
+flash
 
 text "■■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
@@ -37,6 +45,35 @@ text "■■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 pause
 flash
+
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+pause
+flash
+
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+pause
+flash
+
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+text "■■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+pause
+flash
+
+=begin
 text"asa）」のα１バージョンを"
 line_feed
 text "ひとまず"
@@ -53,3 +90,4 @@ pause
 text"asa）」のα１バージョンを"
 line_feed
 text "ひとまず"
+=end

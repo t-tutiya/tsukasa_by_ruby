@@ -44,24 +44,38 @@ class CharControl < Control
 
     super
 
-    #現状での縦幅、横幅を取得
-    @width = options[:font].get_width(options[:char])
-    @height = options[:font].size
-
     #Image生成に必要な各種座標を生成する
-    width, height, @offset_x, @offset_y = normalize_image(
-                                          @width, 
-                                          @height, 
+    @width, @height, @offset_x, @offset_y = normalize_image(
+                                          options[:char], 
+                                          options[:font], 
                                           options[:font_config])
-    #文字用のimageを作成
-    @entity = Image.new(width, height, [0, 0, 0, 0]) 
+
+#TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
+=begin
+    #保持オブジェクトの初期化
+    #画像が指定されている場合
+    if control
+      if options[:graph]
+        @entity = control.effect_image_font(options[:font_config])
+      else
+        @entity = control
+      end
+      
+      @width = @entity.width
+      @height = @entity.height
+      
+    else
+=end
+      #文字用のimageを作成
+      @entity = Image.new(@width, @height, [0, 0, 0, 0]) 
+      #フォントを描画
+      @entity.draw_font_ex(@offset_x, 
+                            @offset_y, 
+                            options[:char], 
+                            options[:font], 
+                            options[:font_config])
+#    end
     
-    #フォントを描画
-    @entity.draw_font_ex( @offset_x, 
-                          @offset_y, 
-                          options[:char], 
-                          options[:font], 
-                          options[:font_config])
     @skip_mode = options[:skip_mode] #スキップモード初期化
   end
 
@@ -76,7 +90,13 @@ class CharControl < Control
     super
   end
 
-  def normalize_image(width, height, font_config)
+  def normalize_image(char, font, font_config)
+    offset_x = offset_y = 0
+
+    #現状での縦幅、横幅を取得
+    width = font.get_width(char)
+    height = font.size
+
     #※ボールドの対応はしない
 
     #イタリックの場合、文字サイズの半分を横幅に追加する。
@@ -92,11 +112,8 @@ class CharControl < Control
     if font_config[:edge]
       width += font_config[:edge_width] * 2
       height += font_config[:edge_width] * 2
-      offset_x = font_config[:edge_width]
-      offset_y = font_config[:edge_width]
-    else
-      offset_x = 0
-      offset_y = 0
+      offset_x += font_config[:edge_width]
+      offset_y += font_config[:edge_width]
     end
 
     return width , height, offset_x, offset_y

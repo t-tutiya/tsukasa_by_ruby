@@ -120,7 +120,7 @@ create :RenderTargetContainer,
   index: 1000000, #描画順序
   id: :main_text_layer do
     #メッセージウィンドウ
-    create :TextPageControl, 
+    create :CharContainer, 
       x_pos: 2,
       y_pos: 2,
       id: :default_char_container,

@@ -261,14 +261,13 @@ class CharContainer < Control
     #文字コントロールを生成する
     interrupt_command(:create, {
                     :create => :CharControl, 
-                    :x_pos => 0 ,#@next_char_x + @margin_x,
+                    :x_pos => @next_char_x + @margin_x,
                     :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
                    :char => options[:char],
                    :font => @font,
                    :font_config => @font_config,
                    :skip_mode =>  @skip_mode,
                    :graph => false,
-                   :float_mode => :right
                    }, 
                    {:target_id => @id,
                     :block => @char_renderer}

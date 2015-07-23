@@ -77,7 +77,7 @@ class Control
 
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @control_default = {
-      :TextPageControl   => :default_char_container,
+      :CharContainer   => :default_char_container,
       :RenderTargetContainer => :default_RenderTarget_container,
       :Anonymous       => :anonymous,
     }

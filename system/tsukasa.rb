@@ -41,10 +41,7 @@ require_relative './se_control.rb'
 
 require_relative './rendertarget_container.rb'
 require_relative './layout_control.rb'
-
-require_relative './text_page_control.rb'
-
-#require_relative './char_container.rb'
+require_relative './char_container.rb'
 require_relative './log_container.rb'
 
 require_relative './VariableTextLayer.rb'

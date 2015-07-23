@@ -45,14 +45,10 @@ class CharControl < Control
     super
 
     #Image生成に必要な各種座標を生成する
-    @width, @height, offset_x, offset_y = normalize_image(
+    @width, @height, @offset_x, @offset_y = normalize_image(
                                           options[:char], 
                                           options[:font], 
                                           options[:font_config])
-
-    #描画座標をオフセット値を加味して設定
-    @x_pos = @x_pos - offset_x
-    @y_pos = @y_pos - offset_y
 
 #TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
 =begin
@@ -73,14 +69,20 @@ class CharControl < Control
       #文字用のimageを作成
       @entity = Image.new(@width, @height, [0, 0, 0, 0]) 
       #フォントを描画
-      @entity.draw_font_ex(offset_x, 
-                            offset_y, 
+      @entity.draw_font_ex(@offset_x, 
+                            @offset_y, 
                             options[:char], 
                             options[:font], 
                             options[:font_config])
 #    end
     
     @skip_mode = options[:skip_mode] #スキップモード初期化
+  end
+
+  def render(offset_x, offset_y, target)
+    dx , dy = super(offset_x - @offset_x, offset_y - @offset_y, target)
+    
+    return dx + @offset_x, dy + @offset_y
   end
 
   def dispose()

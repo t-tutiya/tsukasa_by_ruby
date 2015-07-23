@@ -109,6 +109,7 @@ module Drawable
       dx = offset_x
       dy = offset_y
     else
+      pp @float_mode
       raise
     end
 

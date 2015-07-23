@@ -45,41 +45,41 @@ class ScriptCompiler
   #テキスト関連
 
   #文字
-  impl_define :char,                  :CharContainer, [:option]
+  impl_define :char,                  :TextPageControl, [:option]
   #文字列
-  impl_define :text,                  :CharContainer, [:option]
+  impl_define :text,                  :TextPageControl, [:option]
 
   #インデント設定
-  impl_define :indent,                :CharContainer, [:option]
+  impl_define :indent,                :TextPageControl, [:option]
   #改行
-  impl_define :line_feed,             :CharContainer, []
+  impl_define :line_feed,             :TextPageControl, []
   #改ページ
-  impl_define :flash,                 :CharContainer, []
+  impl_define :flash,                 :TextPageControl, []
   #画像スタック
-  impl_define :graph,                 :CharContainer, [:all]
+  impl_define :graph,                 :TextPageControl, [:all]
 
   #文字描画速度の設定
-  impl_define :delay,                 :CharContainer, [:option]
+  impl_define :delay,                 :TextPageControl, [:option]
 
   #ルビ文字の出力
-  impl_define :rubi_char,             :CharContainer, [:all]
+  impl_define :rubi_char,             :TextPageControl, [:all]
   #複数ルビ文字列の割り付け
-  impl_define :rubi,                  :CharContainer, [:all]
+  impl_define :rubi,                  :TextPageControl, [:all]
 
   #フォント設定の更新
   #現在値をリセット
-  impl_define :reset_font_config,     :CharContainer, [:all]
+  impl_define :reset_font_config,     :TextPageControl, [:all]
 
   #スタイル設定の更新
   #現在値をリセット
-  impl_define :reset_style_config,    :CharContainer, [:all]
+  impl_define :reset_style_config,    :TextPageControl, [:all]
 
   #その他制御系
   #レンダリング済みフォントの登録
-  impl_define :map_image_font,        :CharContainer, [:all]
+  impl_define :map_image_font,        :TextPageControl, [:all]
 end
 
-class CharContainer < Control
+class TextPageControl < Control
   include Movable #移動関連モジュール
   include Drawable #描画関連モジュール
 
@@ -243,6 +243,19 @@ class CharContainer < Control
     @next_char_y = 0
 
     super
+
+    @active_line_control = Module.const_get(:LayoutControl).new({
+                :create => :LayoutControl, 
+                :x_pos => 0,
+                :y_pos => 0,
+                :width => options[:width],
+                :height => @default_font_config[:size],
+                :float_mode => :bottom}, 
+                {:target_id => @id}, 
+                @root_control)
+
+    @control_list.push(@active_line_control)
+
   end
 
   #############################################################################
@@ -258,24 +271,33 @@ class CharContainer < Control
   #charコマンド
   #指定文字（群）を描画チェインに連結する
   def command_char(options, inner_options)
+
     #文字コントロールを生成する
-    interrupt_command(:create, {
-                    :create => :CharControl, 
-                    :x_pos => 0 ,#@next_char_x + @margin_x,
-                    :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
-                   :char => options[:char],
-                   :font => @font,
-                   :font_config => @font_config,
-                   :skip_mode =>  @skip_mode,
-                   :graph => false,
-                   :float_mode => :right
-                   }, 
-                   {:target_id => @id,
-                    :block => @char_renderer}
+    @active_line_control.send_script(:create, {
+                :create => :CharControl, 
+                :x_pos => 0 ,
+                :y_pos => 0,
+                :char => options[:char],
+                :font => @font,
+                :font_config => @font_config,
+                :skip_mode =>  @skip_mode,
+                :float_mode => :right
+               }, 
+               {:target_id => :anonymous,
+                :block => @char_renderer}
                   )
-    #描画座標を１文字＋文字ピッチ分進める
-    @next_char_x += @font.get_width(options[:char].to_s) + 
-                    @style_config[:charactor_pitch]
+
+    @active_line_control.send_script(:create, 
+                {:create => :LayoutControl, 
+                :x_pos => 0,
+                :y_pos => 0,
+                :width => @style_config[:charactor_pitch],
+                :height => @style_config[:line_height],
+                :float_mode => :right}, 
+               {:target_id => :anonymous,
+                :block => @char_renderer}
+                  )
+
 
     return :continue #アイドル
   end
@@ -385,18 +407,39 @@ class CharContainer < Control
   #line_feedコマンド
   #改行処理（CR＋LF）
   def command_line_feed(options, inner_options)
+=begin
     #Ｘ座標をリセット（インデント設定があればその分を加算）
     @next_char_x = @indent_offset
-    #行間サイズ＋行間ピッチ分Ｙ座標を送る
-    @next_char_y += @style_config[:line_height] + @style_config[:line_spacing]
-    @height = @next_char_y + @font_config[:size]
+=end
+
+    #行間ピッチ分の無形コントロールを追加
+    @control_list.push(Module.const_get(:LayoutControl).new({
+                :create => :LayoutControl, 
+                :x_pos => 0,
+                :y_pos => 0,
+                :width => options[:width],
+                :height => @style_config[:line_spacing],
+                :float_mode => :bottom}, 
+                {:target_id => @id}, 
+                @root_control))
+
+    #次のアクティブ行コントロールを追加  
+    @active_line_control = Module.const_get(:LayoutControl).new({
+                :create => :LayoutControl, 
+                :x_pos => 0,
+                :y_pos => 0,
+                :width => options[:width],
+                :height => @style_config[:line_height],
+                :float_mode => :bottom}, 
+                {:target_id => @id}, 
+                @root_control)
+    @control_list.push(@active_line_control)
 
     #改行時のwaitを設定する
     interrupt_command(:wait, 
                       {:wait => [:count, :skip, :key_push],
                        :count => @style_config[:line_feed_wait_frame]}, 
                        inner_options)
-
     return :continue #フレーム続行
   end
 
@@ -557,6 +600,7 @@ class CharContainer < Control
   def command_reset_font_config(options, inner_options)
     #fontの設定をデフォルト設定で上書きする
     @font_config = @default_font_config.clone
+
     #fontオブジェクトを再生成する
     reset_font()
 
@@ -635,6 +679,7 @@ class CharContainer < Control
                            @font_config[:fontname],
                           {:weight => @font_config[:bold],
                            :italic => @font_config[:italic]})
+                           
   end
 end
 

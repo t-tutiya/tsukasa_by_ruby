@@ -27,9 +27,45 @@
 #
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
+create :ImageControl ,
+       id: :bg,
+       file_path: "./test/bg_sample.png", x_pos: 0, y_pos: 0
 
+=begin
+#標準テキストウィンドウ
+#TODOデバッグ用なので各種数字は暫定
+#メッセージウィンドウ
+create :TextPageControl, 
+  x_pos: 0,
+  y_pos: 0,
+  id: :default_char_container,
+  font_config: { :size => 32, 
+                 :fontname => "ＭＳＰ ゴシック"},
+  style_config: { :wait_frame => 2,},
+  char_renderer: Proc.new{
+    transition_fade_with_skip frame: 15,
+      count: 0,
+      start: 0,
+      last: 255
+    wait [:command, :skip], command: :transition_fade_with_skip
+    sleep_mode :sleep
+    wait [:wake]
+    skip_mode false
+    transition_fade_with_skip frame: 60,
+      count: 0,
+      start: 255,
+      last:128
+    wait [:command, :skip], command: :transition_fade_with_skip
+  } do
+  set font_config: {size: 32}
+end
 
+=end
+text "こんなの歪んでいる"
+
+line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■■"
+
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
@@ -37,6 +73,7 @@ text "■■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 pause
 flash
+=begin
 text"asa）」のα１バージョンを"
 line_feed
 text "ひとまず"
@@ -53,3 +90,4 @@ pause
 text"asa）」のα１バージョンを"
 line_feed
 text "ひとまず"
+=end

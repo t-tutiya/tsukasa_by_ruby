@@ -267,16 +267,14 @@ class TextPageControl < Control
   #charコマンド
   #指定文字（群）を描画チェインに連結する
   def command_char(options, inner_options)
-
     #文字コントロールを生成する
-    @control_list.last.send_script(:create, {
-                :create => :CharControl, 
+    @control_list.last.send_script(:create, 
+               {:create => :CharControl, 
                 :char => options[:char],
                 :font => @font,
                 :font_config => @font_config,
                 :skip_mode =>  @skip_mode,
-                :float_mode => :right
-               }, 
+                :float_mode => :right}, 
                {:target_id => :anonymous,
                 :block => @char_renderer})
 

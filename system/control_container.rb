@@ -277,13 +277,6 @@ class Control
   def delete?
     return @delete_flag
   end
-
-  #リソースを解放する
-  #継承先で必要に応じてオーバーライドする
-  def dispose
-    @delete_flag = true
-  end
-
 end
 
 class Control
@@ -293,6 +286,12 @@ class Control
   #############################################################################
 
   private
+
+  #リソースを解放する
+  #継承先で必要に応じてオーバーライドする
+  def dispose
+    @delete_flag = true
+  end
 
   #配列のコマンド列をスクリプトストレージに積む
   def eval_commands(commands)

@@ -41,3 +41,33 @@ create :LayoutControl,
          #:y_pos => 100
   #image :file_path=>"./sozai/button_normal.png"
 end
+
+create :LayoutControl, 
+        :x_pos => 0, 
+        :y_pos => 0, 
+        :width => 256,
+        :height => 256 do
+
+  image :file_path=>"./sozai/button_normal.png", 
+      :id=>0, :visible => true
+  image :file_path=>"./sozai/button_over.png", 
+      :id=>1, :visible => false
+  image :file_path=>"./sozai/button_key_down.png", 
+      :id=>2, :visible => false
+  image :file_path=>"./sozai/button_out.png", 
+      :id=>3, :visible => false
+  _WHILE_ ->{true} do
+      set 3, visible: false
+      set 0, visible: true
+  	wait [:count], count: 10
+      set 0, visible: false
+      set 1, visible: true
+  	wait [:count], count: 10
+      set 1, visible: false
+      set 2, visible: true
+  	wait [:count], count: 10
+      set 2, visible: false
+      set 3, visible: true
+  	wait [:count], count: 10
+  end
+end

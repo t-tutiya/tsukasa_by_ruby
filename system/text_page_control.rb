@@ -179,9 +179,6 @@ class TextPageControl < Control
     @child_controls_draw_to_entity = false
     @char_renderer = options[:char_renderer]
 
-    @margin_x = options[:margin_x] || 0
-    @margin_y = options[:margin_y] || 0
-
     font_config  = options[:font_config]  || {} #フォントコンフィグ
     style_config = options[:style_config] || {} #スタイルコンフィグ
 
@@ -238,9 +235,8 @@ class TextPageControl < Control
     command_reset_style_config(nil, nil)
 
     #次に描画する文字のＸ座標とインデントＸ座標オフセットをリセット
-    @next_char_x = @indent_offset = 0 
-    #次に描画する文字の『下限』Ｙ座標をリセット
-    @next_char_y = 0
+    #TODO：インデントは現在動かない
+    #@indent_offset = 0 
 
     super
 
@@ -625,6 +621,7 @@ class TextPageControl < Control
   #インデントはネストしないので注意
   #TODO:微妙な仕様だな……
   def command_indent(options, inner_options)
+    raise
     #インデント開始Ｘ座標を設定もしくはクリアする
     @indent_offset = options[:indent] ? @next_char_x : 0
 

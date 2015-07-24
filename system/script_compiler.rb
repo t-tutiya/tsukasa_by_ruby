@@ -140,8 +140,6 @@ class ScriptCompiler
   impl_define :next_scenario, :RenderTargetContainer, [:option]
   impl_define :load_script,   :RenderTargetContainer, [:option]
 
-  #コントロールの削除
-  impl_define :dispose,       :RenderTargetContainer, [:option]
 
   impl_define :wake,                      [:option_hash]
   #移動
@@ -160,7 +158,10 @@ class ScriptCompiler
   impl_define :set,                [:option_hash]
 
   #コントロールの生成
-  impl_define :create,                [:all]
+  impl_define :create,  [:all]
+  #コントロールの削除
+  impl_define :delete, []
+
   #コントロール単位でイベント駆動するコマンド群を格納する
   impl_define :event,                 [:all]
 

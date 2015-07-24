@@ -282,11 +282,6 @@ class Control
   #継承先で必要に応じてオーバーライドする
   def dispose
     @delete_flag = true
-
-    #子要素に処理を伝搬する
-    @control_list.each do |control|
-      control.dispose
-    end
   end
 
 end
@@ -353,16 +348,9 @@ class Control
 
   #disposeコマンド
   #コントロールを削除する
-  def command_dispose(options, inner_options)
-    raise
-    #自身が指定されたコントロールの場合
-    if options[:dispose] == @id
-      #削除フラグを立てる
-      dispose()
-    else
-      #子コントロールにdisposeコマンドを送信
-      #interrupt_command(:dispose, options, options[:dispose])
-    end
+  def command_delete(options, inner_options)
+    #削除フラグを立てる
+    dispose()
     return :continue
   end
 

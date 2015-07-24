@@ -431,10 +431,10 @@ class TextPageControl < Control
   #flashコマンド
   #メッセージレイヤの消去
   def command_flash(options, inner_options)
-    #TODO：全てのコントロールにdisposeを送信する
-
-    #コントロールをクリア
-    @control_list.clear
+    #子コントロールをクリア
+    @control_list.each do |control|
+      control.interrupt_command_to_all(:delete, options, inner_options)
+    end
 
     #次のアクティブ行コントロールを追加  
     interrupt_command(:create, 

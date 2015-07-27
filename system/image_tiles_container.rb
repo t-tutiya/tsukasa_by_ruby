@@ -34,40 +34,40 @@ require_relative './control_container.rb'
 ###############################################################################
 
 #イメージコントロール
-class ImageControl < Control
+class ImageTilesContainer < Control
   #移動関連モジュール読み込み
   include Movable
   include Drawable
 
   #Imageのキャッシュ機構の簡易実装
   #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
-  @@image_cache = Hash.new
+  @@image_tiles_cache = Hash.new
   #キャッシュされていない画像パスが指定されたら読み込む
-  @@image_cache.default_proc = ->(hsh, key) {
+  @@image_tiles_cache.default_proc = ->(hsh, key) {
     hsh[key] = Image.load(key)
   }
 
   def initialize(options, inner_options, root_control)
     super
-    #実体から初期化する
-    if options[:entity]
-      @file_path = nil
-      @entity = options[:entity]
+    @file_path = options[:file_path]
+    entity = @@image_tiles_cache[@file_path]
 
-    #ファイルパスから初期化する
-    elsif options[:file_path]
-      @file_path = options[:file_path]
-      @entity = @@image_cache[@file_path]
+    @x_count = options[:x_count] || 4
+    @y_count = options[:y_count] || 1
 
-    else
-      raise
+    entities = entity.slice_tiles(@x_count, @y_count)
+
+    entities.each.with_index(options[:start_index] || 0) do |image, index|
+      send_script(:create, 
+                  {
+                    :create => :ImageControl,
+                    :entity => image,
+                    :id => index
+                  }, inner_options)
     end
-
-    #縦横幅の更新
-    @width  = @entity.width
-    @height = @entity.height
   end
 
+=begin
   def file_path=(file_path)
     #同じファイルパスが指定された場合は処理を行わない
     return if @file_path == file_path
@@ -82,6 +82,7 @@ class ImageControl < Control
     @width  = @entity.width
     @height = @entity.height
   end
+=end
 
   def dispose()
     #TODO：キャッシュ機構が作り込まれてないのでここで削除できない
@@ -90,47 +91,3 @@ class ImageControl < Control
   end
 end
 
-#マップコントロール
-class TileControl < Control
-  #移動関連モジュール読み込み
-  include Movable
-  include Drawable
-
-  #Imageのキャッシュ機構の簡易実装
-  #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
-  @@image_cache = Hash.new
-  #キャッシュされていない画像パスが指定されたら読み込む
-  @@image_cache.default_proc = ->(hsh, key) {
-    hsh[key] = Image.load(key)
-  }
-
-  def initialize(options)
-    super(options)
-    #保持オブジェクトの初期化
-    @entity = @@image_cache[options[:file_path]]
-
-    @width  = @entity.width
-    @height = @entity.height
-  end
-
-  def dispose()
-    #TODO：キャッシュ機構が作り込まれてないのでここで削除できない
-    #@entity.dispose
-    super
-  end
-
-  #描画
-  def render(offset_x, offset_y, target)
-    #ターゲットに描画
-    target.draw_tile( nil, nil, [[0]], [@entity], nil, nil, nil, nil, 0) 
-
-    return offset_x, offset_y #引数を返値に伝搬する
-  end
-
-
-  def command_image_change(options)
-    #保持オブジェクトの初期化
-    @entity = @@image_cache[options[:image_change]]
-    return false
-  end
-end

@@ -27,7 +27,6 @@
 #
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
-
 define :page_icon do |options|
 
   create :LayoutControl, 
@@ -35,25 +34,12 @@ define :page_icon do |options|
           :y_pos => options[:y_pos], 
           :width => 24,
           :height => 24 do
-
-    image :file_path=>"./sozai/line_icon/line_icon_1.png", 
-        :id=>1, :visible => false
-    image :file_path=>"./sozai/line_icon/line_icon_2.png", 
-        :id=>2, :visible => false
-    image :file_path=>"./sozai/line_icon/line_icon_3.png", 
-        :id=>3, :visible => false
-    image :file_path=>"./sozai/line_icon/line_icon_4.png", 
-        :id=>4, :visible => false
-    image :file_path=>"./sozai/line_icon/line_icon_5.png", 
-        :id=>5, :visible => false
-    image :file_path=>"./sozai/line_icon/line_icon_6.png", 
-        :id=>6, :visible => false
-    image :file_path=>"./sozai/line_icon/line_icon_7.png", 
-        :id=>7, :visible => false
-    image :file_path=>"./sozai/line_icon/line_icon_8.png", 
-        :id=>8, :visible => false
+    create :ImageTilesContainer, :file_path=>"./sozai/icon_8_a.png", :id=>:test, :x_count => 4, :y_count => 2
     _WHILE_ ->{true} do
-      set 8, visible: false
+      set 7, visible: false
+      set 0, visible: true
+    	wait [:count], count: 5
+      set 0, visible: false
       set 1, visible: true
     	wait [:count], count: 5
       set 1, visible: false
@@ -74,22 +60,16 @@ define :page_icon do |options|
       set 6, visible: false
       set 7, visible: true
     	wait [:count], count: 30
-      set 7, visible: false
-      set 8, visible: true
-    	wait [:count], count: 15
     end
   end
-
 end
 
 page_icon x_pos: 100, y_pos: 100
 page_icon x_pos: 200, y_pos: 200
 page_icon x_pos: 300, y_pos: 300
 
-
-
-create :LayoutControl, x_pos: 0, y_pos: 0, x_count: 4, ycount: 1 do
-  create :ImageTilesContainer, :file_path=>"./sozai/icon_4_a.png", :id=>:test
+create :LayoutControl, x_pos: 0, y_pos: 0 do
+  create :ImageTilesContainer, :file_path=>"./sozai/icon_4_a.png", :id=>:test, :x_count => 4, :y_count => 1
   _WHILE_ ->{true} do
     set 3, visible: false
     set 0, visible: true

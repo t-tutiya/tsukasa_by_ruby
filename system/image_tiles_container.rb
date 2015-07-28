@@ -52,7 +52,7 @@ class ImageTilesContainer < Control
     @file_path = options[:file_path]
     entity = @@image_tiles_cache[@file_path]
 
-    @x_count = options[:x_count] || 4
+    @x_count = options[:x_count] || 1
     @y_count = options[:y_count] || 1
 
     entities = entity.slice_tiles(@x_count, @y_count)

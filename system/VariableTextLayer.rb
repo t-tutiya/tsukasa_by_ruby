@@ -55,7 +55,6 @@ class VariableTextLayer < Control
       [:pause, {}, {:target_id => @id}],
       [:resize, {}, {:target_id => @id}],
     ])
-    return
   end
 
   #改行をセットにしたヘルパーメソッド
@@ -64,7 +63,6 @@ class VariableTextLayer < Control
   def command_text(options, target)
     send_script(:text, options, :default_char_container)
     interrupt_command(:line_feed, options, @id)
-    return
   end
 
   def command_resize(options, target)
@@ -74,8 +72,6 @@ class VariableTextLayer < Control
                       @width, 
                       @height ,
                       [0,0,0,0])
-
-    return
   end
 =begin
   def command_pause(options, target)
@@ -98,7 +94,6 @@ class VariableTextLayer < Control
     #TODO：本来rootにのみ通知できれば良い筈
     send_script(:sleep_mode_all, {:sleep_mode_all => :wake}, :default_char_container)
 
-    return
   end
 =end
 end

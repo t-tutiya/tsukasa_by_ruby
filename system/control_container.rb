@@ -164,6 +164,11 @@ class Control
     return false #コマンドをスタックしなかった
   end
 
+  def push_command_to_next_frame(command, options, inner_options)
+    @next_frame_commands.push([command, options, inner_options])
+    return true
+  end
+
   #強制的に全てのコントロールにコマンドを設定する
   def send_script_to_all(command, options, inner_options)
     #コマンドをスタックの末端に挿入する
@@ -207,10 +212,7 @@ class Control
       break if command == :end_frame
 
       #コマンドを実行
-      next_frame_command = send("command_" + command.to_s, options, inner_options)
-
-      #次フレームに実行するコマンドがある場合、一時的にスタックする
-      @next_frame_commands.push(next_frame_command) if next_frame_command
+      send("command_" + command.to_s, options, inner_options)
     end
 
     #一時的にスタックしていたコマンドをコマンドリストに移す
@@ -335,7 +337,6 @@ class Control
                                                                @root_control))
     #付与ブロックを実行する
     @control_list.last.update()
-    return
   end
 
   #disposeコマンド
@@ -343,7 +344,6 @@ class Control
   def command_delete(options, inner_options)
     #削除フラグを立てる
     dispose()
-    return
   end
 
   #コントロールのプロパティを更新する
@@ -357,7 +357,6 @@ class Control
         pp "クラス[" + self.class.to_s + "]：メソッド[" + method_name + "]は存在しません"
       end
     end
-    return
   end
 
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
@@ -377,7 +376,8 @@ class Control
         @next_script_file_path = nil
       else 
         #ループを抜ける
-        return [:token, nil]
+        push_command_to_next_frame(:token, nil, nil)
+        return
       end
     end
 
@@ -427,7 +427,6 @@ class Control
     end
 
     @command_list.push([:token, nil, {}])
-    return
   end
 
 end
@@ -493,7 +492,7 @@ class Control
     #waitにブロックが付与されているならそれを実行する
     eval_block(options, inner_options, inner_options[:block])
 
-    return [:wait, options, inner_options]
+    push_command_to_next_frame(:wait, options, inner_options)
   end
 
   def command_check_key_push(options, inner_options)
@@ -501,10 +500,9 @@ class Control
     #キーが押された場合
     if Input.key_push?(K_SPACE)
       #コマンドを終了する
-      return
     else
       @idle_mode = false #非アイドル設定
-      return [:check_key_push, options]
+      push_command_to_next_frame(:check_key_push, options, inner_options)
     end
   end
 end
@@ -520,7 +518,6 @@ class Control
   #イベントコマンドの登録
   def command_event(options, inner_options)
     @event_list[options[:event]] = inner_options[:block]
-    return
   end
 
   #イベントの実行
@@ -529,8 +526,6 @@ class Control
     return if !@event_list[options[:fire]]
 
     eval_block(options, @event_list[options[:fire]])
-
-    return
   end
 
   #############################################################################
@@ -540,7 +535,6 @@ class Control
   #ユーザー定義コマンドを定義する
   def command_define(options, inner_options)
     @root_control.system_property[:function_list][options[:define]] = inner_options[:block]
-    return
   end
 
   #関数呼び出し
@@ -561,21 +555,18 @@ class Control
 
     #functionを実行時評価しコマンド列を生成する。
     eval_block(options, inner_options, function_block)
-
-    return
   end
 
   def command_call_builtin_command(options, inner_options)
     command_name = options[:call_builtin_command]
     options.delete(:call_builtin_command) #削除
-    return send("command_" + command_name.to_s, options, inner_options)
+    send("command_" + command_name.to_s, options, inner_options)
   end
 
   #ブロック内のコマンド列を実行する
   def command_about(options, inner_options)
     #コマンドリストをスタックする
     eval_block(options, inner_options[:block])
-    return
   end
 
   #############################################################################
@@ -586,20 +577,16 @@ class Control
   def command_flag(options, inner_options)
     #ユーザー定義フラグを更新する
     @root_control.system_property[:global_flag][("user_" + options[:key].to_s).to_sym] = options[:data]
-    return
   end
 
   #コマンド送信先ターゲットのデフォルトを変更する
   def command_change_default_target(options, inner_options)
     @control_default[options[:change_default_target]] = options[:id]
-    return
   end
-
 
   #次に読み込むスクリプトファイルのパスを設定する
   def command_next_scenario(options, inner_options)
     @next_script_file_path = options[:next_scenario]
-    return
   end
   
   #スクリプトファイルの読み込み
@@ -607,7 +594,6 @@ class Control
     #指定されたスクリプトファイルを直接読み込む
     #TODO：@script_storageに上書きするのか、追記するのかはオプションで指定できた方が良いか？　その
     @script_storage = @script_compiler.commands({:script_path => options[:load_script]})
-    return
   end
   
 end
@@ -636,7 +622,7 @@ class Control #制御構文
     #if文の中身を実行する
     eval_block(options, inner_options[:block])
 
-    return [:exp_result, { :result => result}]
+    push_command_to_next_frame(:exp_result, { :result => result}, nil)
   end
 
   #thenコマンド
@@ -651,8 +637,6 @@ class Control #制御構文
       #コマンドブロックを実行する
       eval_block(options, inner_options[:block])
     end
-
-    return
   end
 
   #elseコマンド
@@ -673,8 +657,6 @@ class Control #制御構文
         @next_frame_commands[result][1][:result] = nil
       end
     end
-    
-    return
   end
 
   #elseコマンド
@@ -689,7 +671,6 @@ class Control #制御構文
       #コマンドブロックを実行する
       eval_block(options, inner_options[:block])
     end
-    return
   end
 
   #繰り返し
@@ -701,8 +682,6 @@ class Control #制御構文
     eval_commands([[:_WHILE_, options, inner_options]])
     #ブロックを実行時評価しコマンド列を生成する。
     eval_block(options, inner_options[:block])
-
-    return
   end
 
   def command__CASE_(options, inner_options)
@@ -712,7 +691,9 @@ class Control #制御構文
     #case文の中身を実行する
     eval_block(options, inner_options[:block])
 
-    return [:exp_result, { :result => :else, :case_value => value}]
+    push_command_to_next_frame(:exp_result, 
+                              { :result => :else, :case_value => value}, 
+                              nil)
   end
 
   def command__WHEN_(options, inner_options)
@@ -730,8 +711,6 @@ class Control #制御構文
       #コマンドブロックを実行する
       eval_block(options, inner_options[:block])
     end
-
-    return
   end
 
   #関数ブロックを実行する
@@ -739,7 +718,6 @@ class Control #制御構文
     return unless inner_options[:block_stack]
     
     eval_block(options, inner_options, inner_options[:block_stack].pop)
-    return
   end
 
   #コマンドを再定義する
@@ -759,19 +737,14 @@ class Control #制御構文
       #新しいコマンド名に元のコマンドのブロックを設定する
       @root_control.system_property[:function_list][options[:_ALIAS_]] = @root_control.system_property[:function_list][options[:command_name]]
     end
-
-    return
   end
 
   #文字列を評価する（デバッグ用）
   def command__EVAL_(options, inner_options)
     eval(options[:_EVAL_])
-    return
   end
-
 
   #１フレ分のみifの結果をコマンドリスト上に格納する
   def command_exp_result(options, inner_options)
-    return
   end
 end

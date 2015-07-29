@@ -52,13 +52,11 @@ class SEControl  < Control
   #ＳＥの再生
   def command_se_play(options, target)
     @control.play
-    return
   end
 
   #ＳＥの停止
   def command_se_stop(options, target)
     @control.stop
-    return
   end
 
   def visible

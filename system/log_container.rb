@@ -79,8 +79,6 @@ class LogContainer < Control
 
     #コントロールをリストに連結する
     @control_list.push(new_image)
-    
-    return
   end
 
   def command_move_scroll(options)
@@ -111,8 +109,6 @@ class LogContainer < Control
     #所持している全コントロールにmove_lineコマンドを発行
     raise #下記メソッドは未検証
     send_script_to_all(:move, options)
-
-    return
   end
 
 end

@@ -73,7 +73,6 @@ module Drawable
   #可視設定
   def command_visible(options, target)
     @visible = options[:visible]
-    return
   end
   
   #描画
@@ -134,7 +133,6 @@ module Drawable
     #トランジション実行コマンドを発行
     #TODO send_commandではなくinterrupt_command_allなのは、この時点でcontrolには匿名ＩＤ(:anonymous_control)が設定されている為。匿名ＩＤ自体を直接指定しても良いが、ひとまずこうしておく。
     control.send_script(:transition_crossfade, options)
-    return :continue
   end
 
   def command_transition_crossfade(options, target)
@@ -144,7 +142,6 @@ module Drawable
       @draw_option[:alpha] = 0
 
       dispose() #リソースの解放
-      return :continue #フレーム続行
     end
 
     #透明度の決定
@@ -158,11 +155,9 @@ module Drawable
       interrupt_command(:transition_crossfade, options)
       #待機モードを初期化
       @idle_mode = false
-      return :continue #フレーム終了
     else
 
       dispose() #リソースの解放
-      return :continue#フレーム続行
     end
   end
 =end
@@ -190,9 +185,7 @@ module Drawable
     #カウントが指定フレーム以下の場合
     if options[:count] <= options[:frame]
       #:transition_crossfadeコマンドをスタックし直す
-      return [:transition_fade, options, inner_options]
-    else
-      return 
+      push_command_to_next_frame(:transition_fade, options, inner_options)
     end
   end
 end

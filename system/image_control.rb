@@ -131,6 +131,5 @@ class TileControl < Control
   def command_image_change(options)
     #保持オブジェクトの初期化
     @entity = @@image_cache[options[:image_change]]
-    return
   end
 end

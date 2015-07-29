@@ -61,11 +61,9 @@ module Movable
 
     #待機モードを初期化
     @idle_mode = false
-
-    return
   end
 =end
-  def command_move_line(options, target, command_name = :move_line)
+  def command_move_line(options, inner_options, command_name = :move_line)
     #移動先座標の決定
     @x_pos = (options[:start_x] + (options[:x] - options[:start_x]).to_f / options[:frame] * options[:count]).to_i
     @y_pos = (options[:start_y] + (options[:y] - options[:start_y]).to_f / options[:frame] * options[:count]).to_i
@@ -77,9 +75,7 @@ module Movable
       #待機モードを初期化
       @idle_mode = false
       #:move_lineコマンドをスタックし直す
-      return [command_name, options]
-    else
-      return
+      push_command_to_next_frame(command_name, options, inner_options)
     end
   end
 
@@ -91,6 +87,6 @@ module Movable
       return
     end
     
-    return command_move_line(options, target, :move_line_with_skip)
+    command_move_line(options, target, :move_line_with_skip)
   end
 end

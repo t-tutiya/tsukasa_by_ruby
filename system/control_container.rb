@@ -365,7 +365,6 @@ class Control
         pp "クラス[" + self.class.to_s + "]：メソッド[" + method_name + "]は存在しません"
       end
     end
-
     return :continue
   end
 
@@ -483,7 +482,6 @@ class Control
           command[0]==options[:command]}
           return :continue
         end
-
       when :flag
         unless @root_control.system_property[:global_flag][("user_" + options[:flag].to_s).to_sym]
           return :continue

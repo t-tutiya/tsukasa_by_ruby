@@ -141,7 +141,10 @@ create :RenderTargetContainer,
           count: 0,
           start: 0,
           last: 255
-        wait [:command, :skip], command: :transition_fade_with_skip
+        wait [:command, :skip], command: :transition_fade_with_skip do
+          #pp "idle"
+          #set idle_mode: false, interrupt: true
+        end
         sleep_mode :sleep
         wait [:wake]
         skip_mode false

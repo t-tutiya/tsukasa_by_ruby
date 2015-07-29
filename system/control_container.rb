@@ -487,14 +487,10 @@ class Control
       end
     end
 
-    #TODO:現状の仕様ではwaitの後にもコマンドがありえる為、この方法ではできない
-    #eval_commands([[:end_frame, {}, {:target_id => @id}]])
-
-    #TODO:こちらなら可能だが、この場合ブロックを実行できない
-    interrupt_command( :end_frame, options, inner_options)
+    #フレーム終了疑似コマンドをスタックする
+    eval_commands([[:end_frame, {}, {:target_id => @id}]])
 
     #waitにブロックが付与されているならそれを実行する
-    #TODO:現状機能していない
     eval_block(options, inner_options[:block])
 
     return [:wait, options, inner_options]

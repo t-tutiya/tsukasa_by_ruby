@@ -344,8 +344,8 @@ class TextPageControl < Control
                          inner_options])
     end
 
-    #一時スタックしたコマンドをスタックの先頭に挿入する
-    @command_list = command_list + @command_list
+    #展開したコマンドをスタックする
+    eval_commands(command_list)
 
     return
   end

@@ -60,12 +60,8 @@ define :pause do
     #ルートにウェイクを送る
     set :root, sleep_mode: :wake , all: true, interrupt: true
 
-    #sleep_mode_all :wake
-
     #スキップフラグを下ろす
     set :root, skip_mode: false , all: true, interrupt: true
-
-    #skip_mode_all false
 
     #スキップフラグ伝搬が正しく行われるように１フレ送る
     end_frame
@@ -137,18 +133,18 @@ create :RenderTargetContainer,
                      :fontname => "ＭＳＰ ゴシック"},
       style_config: { :wait_frame => 2,},
       char_renderer: Proc.new{
-        transition_fade_with_skip frame: 15,
+        transition_fade frame: 15,
           count: 0,
           start: 0,
           last: 255
         wait [:command, :skip], command: :transition_fade_with_skip do
           #pp "idle"
-          #set idle_mode: false, interrupt: true
+          set idle_mode: false, interrupt: true
         end
         sleep_mode :sleep
         wait [:wake]
         skip_mode false
-        transition_fade_with_skip frame: 60,
+        transition_fade frame: 60,
           count: 0,
           start: 255,
           last:128

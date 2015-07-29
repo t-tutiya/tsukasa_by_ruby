@@ -164,7 +164,6 @@ class ScriptCompiler
 
   #フェードトランジション
   impl_define :transition_fade,           [:option_hash]
-  impl_define :transition_fade_with_skip, [:option_hash]
 
   impl_define :change_default_target, [:all]
 

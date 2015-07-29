@@ -171,9 +171,15 @@ module Drawable
   #frame:フレーム数
   #start:開始α値
   #last:終了α値
+  
   def command_transition_fade(options, 
-                              inner_options, 
-                              command_name = :transition_fade) 
+                              inner_options) 
+    #スキップモードであれば最終値を設定し、フレーム内処理を続行する
+    if @skip_mode
+      @draw_option[:alpha] = options[:last]
+      return
+    end
+
     #透明度の決定
     @draw_option[:alpha] = options[:start] + 
                           (((options[:last] - options[:start]).to_f / options[:frame]) * options[:count]).to_i
@@ -183,26 +189,10 @@ module Drawable
 
     #カウントが指定フレーム以下の場合
     if options[:count] <= options[:frame]
-      #TODO：ここで処理するのはおかしいのかも。本来全部waitで委譲されるべきでは
-      #待機モードを初期化
-      @idle_mode = false
       #:transition_crossfadeコマンドをスタックし直す
-      return [command_name, options, inner_options] #非アイドル状態でタスク探査続行
+      return [:transition_fade, options, inner_options]
     else
       return 
     end
   end
-  
-  def command_transition_fade_with_skip(options, inner_options) 
-    #スキップモードであれば最終値を設定し、フレーム内処理を続行する
-    if @skip_mode
-      @draw_option[:alpha] = options[:last]
-      return
-    end
-
-    return command_transition_fade(options, 
-                                   inner_options, 
-                                   :transition_fade_with_skip)
-  end
-
 end

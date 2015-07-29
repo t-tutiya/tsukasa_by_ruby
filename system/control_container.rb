@@ -203,22 +203,14 @@ class Control
       #コマンドリストの先頭要素を取得
       command, options, inner_options = @command_list.shift
 
+      #今フレーム処理終了判定
+      break if command == :end_frame
+
       #コマンドを実行
       end_parse, next_frame_command = send("command_" + command.to_s, options, inner_options)
 
       #次フレームに実行するコマンドがある場合、一時的にスタックする
       @next_frame_commands.push(next_frame_command) if next_frame_command
-
-      #現在のフレームを終了するかどうかを識別する
-      case end_parse
-      when :end_frame
-        break
-      when :continue
-        next
-      else
-        pp end_parse
-        raise
-      end
     end
 
     #一時的にスタックしていたコマンドをコマンドリストに移す
@@ -438,10 +430,6 @@ class Control
     return :continue
   end
 
-  #現在のフレームを終了する
-  def command_end_frame(options, inner_options)
-    return :end_frame
-  end
 end
 
 class Control
@@ -499,10 +487,17 @@ class Control
       end
     end
 
+    #TODO:現状の仕様ではwaitの後にもコマンドがありえる為、この方法ではできない
+    #eval_commands([[:end_frame, {}, {:target_id => @id}]])
+
+    #TODO:こちらなら可能だが、この場合ブロックを実行できない
+    interrupt_command( :end_frame, options, inner_options)
+
     #waitにブロックが付与されているならそれを実行する
+    #TODO:現状機能していない
     eval_block(options, inner_options[:block])
 
-    return :end_frame, [:wait, options, inner_options]
+    return :continue, [:wait, options, inner_options]
   end
 
   def command_check_key_push(options, inner_options)

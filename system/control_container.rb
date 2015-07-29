@@ -207,7 +207,7 @@ class Control
       break if command == :end_frame
 
       #コマンドを実行
-      end_parse, next_frame_command = send("command_" + command.to_s, options, inner_options)
+      next_frame_command = send("command_" + command.to_s, options, inner_options)
 
       #次フレームに実行するコマンドがある場合、一時的にスタックする
       @next_frame_commands.push(next_frame_command) if next_frame_command
@@ -335,7 +335,7 @@ class Control
                                                                @root_control))
     #付与ブロックを実行する
     @control_list.last.update()
-    return :continue
+    return
   end
 
   #disposeコマンド
@@ -343,7 +343,7 @@ class Control
   def command_delete(options, inner_options)
     #削除フラグを立てる
     dispose()
-    return :continue
+    return
   end
 
   #コントロールのプロパティを更新する
@@ -357,7 +357,7 @@ class Control
         pp "クラス[" + self.class.to_s + "]：メソッド[" + method_name + "]は存在しません"
       end
     end
-    return :continue
+    return
   end
 
   #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
@@ -377,7 +377,7 @@ class Control
         @next_script_file_path = nil
       else 
         #ループを抜ける
-        return :continue, [:token, nil]
+        return [:token, nil]
       end
     end
 
@@ -396,7 +396,7 @@ class Control
       #コマンドtをスタックの末端に挿入する
       @command_list.push([command, options, inner_options])
       @command_list.push([:token, nil, {}])
-      return :continue
+      return
     end
 
     #ルートコントロールが送信対象として指定されている場合
@@ -427,7 +427,7 @@ class Control
     end
 
     @command_list.push([:token, nil, {}])
-    return :continue
+    return
   end
 
 end
@@ -448,10 +448,10 @@ class Control
     options[:wait].each do |condition|
       case condition
       when :wake
-        return :continue if @sleep_mode != :sleep
+        return if @sleep_mode != :sleep
 
       when :idol
-        return :continue if all_controls_idle?
+        return if all_controls_idle?
 
       when :count
         #待ちフレーム数を取得。
@@ -461,29 +461,29 @@ class Control
                       @style_config[:wait_frame] :
                       options[:count]
         #残りwaitフレーム数が０より大きい場合
-        return :continue if wait_frame <= 0
+        return if wait_frame <= 0
         options[:count] = wait_frame - 1
 
       when :command
         #コマンドがリスト上に存在しなければ終了
         unless @next_frame_commands.index{|command|
           command[0]==options[:command]}
-          return :continue
+          return
         end
       when :flag
         unless @root_control.system_property[:global_flag][("user_" + options[:flag].to_s).to_sym]
-          return :continue
+          return
         end
 
       when :key_push
         #キー押下があれば終了
         if Input.key_push?(K_SPACE)
-          return :continue 
+          return
         end
 
       when :skip
         #スキップモードであれば終了
-        return :continue if @skip_mode
+        return if @skip_mode
       end
     end
 
@@ -497,7 +497,7 @@ class Control
     #TODO:現状機能していない
     eval_block(options, inner_options[:block])
 
-    return :continue, [:wait, options, inner_options]
+    return [:wait, options, inner_options]
   end
 
   def command_check_key_push(options, inner_options)
@@ -505,10 +505,10 @@ class Control
     #キーが押された場合
     if Input.key_push?(K_SPACE)
       #コマンドを終了する
-      return :continue
+      return
     else
       @idle_mode = false #非アイドル設定
-      return :continue, [:check_key_push, options]
+      return [:check_key_push, options]
     end
   end
 end
@@ -524,17 +524,17 @@ class Control
   #イベントコマンドの登録
   def command_event(options, inner_options)
     @event_list[options[:event]] = inner_options[:block]
-    return :continue
+    return
   end
 
   #イベントの実行
   def command_fire(options, inner_options)
     #キーが登録されていないなら終了
-    return :continue if !@event_list[options[:fire]]
+    return if !@event_list[options[:fire]]
 
     eval_block(options, @event_list[options[:fire]])
 
-    return :continue
+    return
   end
 
   #############################################################################
@@ -544,7 +544,7 @@ class Control
   #ユーザー定義コマンドを定義する
   def command_define(options, inner_options)
     @root_control.system_property[:function_list][options[:define]] = inner_options[:block]
-    return :continue
+    return
   end
 
   #関数呼び出し
@@ -566,7 +566,7 @@ class Control
     #functionを実行時評価しコマンド列を生成する。
     eval_block(options, inner_options, function_block)
 
-    return :continue
+    return
   end
 
   def command_call_builtin_command(options, inner_options)
@@ -579,7 +579,7 @@ class Control
   def command_about(options, inner_options)
     #コマンドリストをスタックする
     eval_block(options, inner_options[:block])
-    return :continue
+    return
   end
 
   #############################################################################
@@ -590,20 +590,20 @@ class Control
   def command_flag(options, inner_options)
     #ユーザー定義フラグを更新する
     @root_control.system_property[:global_flag][("user_" + options[:key].to_s).to_sym] = options[:data]
-    return :continue
+    return
   end
 
   #コマンド送信先ターゲットのデフォルトを変更する
   def command_change_default_target(options, inner_options)
     @control_default[options[:change_default_target]] = options[:id]
-    return :continue
+    return
   end
 
 
   #次に読み込むスクリプトファイルのパスを設定する
   def command_next_scenario(options, inner_options)
     @next_script_file_path = options[:next_scenario]
-    return :continue
+    return
   end
   
   #スクリプトファイルの読み込み
@@ -611,7 +611,7 @@ class Control
     #指定されたスクリプトファイルを直接読み込む
     #TODO：@script_storageに上書きするのか、追記するのかはオプションで指定できた方が良いか？　その
     @script_storage = @script_compiler.commands({:script_path => options[:load_script]})
-    return :continue
+    return
   end
   
 end
@@ -640,7 +640,7 @@ class Control #制御構文
     #if文の中身を実行する
     eval_block(options, inner_options[:block])
 
-    return :continue, [:exp_result, { :result => result}]
+    return [:exp_result, { :result => result}]
   end
 
   #thenコマンド
@@ -656,7 +656,7 @@ class Control #制御構文
       eval_block(options, inner_options[:block])
     end
 
-    return :continue
+    return
   end
 
   #elseコマンド
@@ -678,7 +678,7 @@ class Control #制御構文
       end
     end
     
-    return :continue
+    return
   end
 
   #elseコマンド
@@ -693,20 +693,20 @@ class Control #制御構文
       #コマンドブロックを実行する
       eval_block(options, inner_options[:block])
     end
-    return :continue
+    return
   end
 
   #繰り返し
   def command__WHILE_(options, inner_options)
     #条件式が非成立であれば繰り返し構文を終了する
-    return :continue if !eval_lambda(options[:_WHILE_], options) #アイドル
+    return if !eval_lambda(options[:_WHILE_], options) #アイドル
 
     #while文全体をスクリプトストレージにスタック
     eval_commands([[:_WHILE_, options, inner_options]])
     #ブロックを実行時評価しコマンド列を生成する。
     eval_block(options, inner_options[:block])
 
-    return :continue
+    return
   end
 
   def command__CASE_(options, inner_options)
@@ -716,8 +716,7 @@ class Control #制御構文
     #case文の中身を実行する
     eval_block(options, inner_options[:block])
 
-    return :continue, [:exp_result, { :result => :else,
-                                      :case_value => value}]
+    return [:exp_result, { :result => :else, :case_value => value}]
   end
 
   def command__WHEN_(options, inner_options)
@@ -727,7 +726,7 @@ class Control #制御構文
     }
 
     #評価結果が存在しなければ処理を終了する
-    return :continue unless result
+    return unless result
 
     exp_result = @next_frame_commands[result][1]
 
@@ -736,15 +735,15 @@ class Control #制御構文
       eval_block(options, inner_options[:block])
     end
 
-    return :continue
+    return
   end
 
   #関数ブロックを実行する
   def command__YIELD_(options, inner_options)
-    return :continue unless inner_options[:block_stack]
+    return unless inner_options[:block_stack]
     
     eval_block(options, inner_options, inner_options[:block_stack].pop)
-    return :continue
+    return
   end
 
   #コマンドを再定義する
@@ -765,18 +764,18 @@ class Control #制御構文
       @root_control.system_property[:function_list][options[:_ALIAS_]] = @root_control.system_property[:function_list][options[:command_name]]
     end
 
-    return :continue
+    return
   end
 
   #文字列を評価する（デバッグ用）
   def command__EVAL_(options, inner_options)
     eval(options[:_EVAL_])
-    return :continue
+    return
   end
 
 
   #１フレ分のみifの結果をコマンドリスト上に格納する
   def command_exp_result(options, inner_options)
-    return :continue
+    return
   end
 end

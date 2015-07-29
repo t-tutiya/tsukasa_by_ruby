@@ -285,7 +285,7 @@ class TextPageControl < Control
                {:target_id => :anonymous,
                 :block => @char_renderer})
 
-    return :continue #アイドル
+    return
   end
 
   #image_charコマンド
@@ -316,7 +316,7 @@ class TextPageControl < Control
                     @style_config[:charactor_pitch]
 =end
 
-    return :continue #アイドル
+    return
   end
 
   #textコマンド
@@ -347,7 +347,7 @@ class TextPageControl < Control
     #一時スタックしたコマンドをスタックの先頭に挿入する
     @command_list = command_list + @command_list
 
-    return :continue #フレーム続行
+    return
   end
 
   #graphコマンド
@@ -387,7 +387,7 @@ class TextPageControl < Control
                           {:wait => [:count, :skip, :key_push],
                            :count => :unset_wait_frame}, inner_options)
 =end
-    return :continue#フレーム続行
+    return
   end
 
   #line_feedコマンド
@@ -423,7 +423,7 @@ class TextPageControl < Control
                       :float_mode => :bottom}, 
                       inner_options)
 
-    return :continue #フレーム続行
+    return
   end
 
   #flashコマンド
@@ -442,7 +442,7 @@ class TextPageControl < Control
                       :float_mode => :bottom}, 
                       inner_options)
 
-    return :continue #フレーム続行
+    return
   end
 
   #############################################################################
@@ -484,7 +484,7 @@ class TextPageControl < Control
       x += @font_config[:rubi_size]
     end
 
-    return false #フレーム続行
+    return
   end
 =end
   #rubiコマンド
@@ -533,7 +533,7 @@ class TextPageControl < Control
     else
       #使用されていないハッシュ。エラー。
       puts "オプション#{align}は未定義です"
-      return :continue #フレーム続行
+      return
     end
 
     rubi_counter = 0
@@ -575,7 +575,7 @@ class TextPageControl < Control
     #生成したコマンド群をスタックに追加
     @command_list = commands + @command_list
 
-    return :continue #フレーム続行
+    return
   end
 
   #############################################################################
@@ -591,7 +591,7 @@ class TextPageControl < Control
     #fontオブジェクトを再生成する
     reset_font()
 
-    return :continue #フレーム続行
+    return
   end
 
   #reset_styleタグ
@@ -600,7 +600,7 @@ class TextPageControl < Control
     #styleの設定をデフォルト設定で上書きする
     @style_config = @default_style_config.clone
 
-    return :continue #フレーム続行
+    return
   end
 
   #############################################################################
@@ -612,7 +612,7 @@ class TextPageControl < Control
     #レンダリング済みフォントデータファイルを任意フォント名で登録
     Image_font.regist(options[:font_name].to_s, options[:file_path].to_s)
 
-    return :continue #フレーム続行
+    return
   end
 
   #############################################################################
@@ -627,7 +627,7 @@ class TextPageControl < Control
     #インデント開始Ｘ座標を設定もしくはクリアする
     @indent_offset = options[:indent] ? @next_char_x : 0
 
-    return :continue #フレーム続行
+    return
   end
 
   #############################################################################
@@ -639,7 +639,7 @@ class TextPageControl < Control
   def command_delay(options, inner_options)
     #デフォルト速度、現在速度を更新
     @style_config[:wait_frame] = @default_style_config[:wait_frame] = options[:delay]
-    return :continue #フレーム続行
+    return
   end
 
   #############################################################################
@@ -674,7 +674,7 @@ class TextPageControl < Control
     options[:call_function] = :page_icon
     #文字コントロールを生成する
     @control_list.last.send_script(:call_function, options, {:target_id => :anonymous})
-    return :continue #フレーム続行
+    return
   end
 end
 

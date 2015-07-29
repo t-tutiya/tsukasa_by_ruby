@@ -73,7 +73,7 @@ module Drawable
   #可視設定
   def command_visible(options, target)
     @visible = options[:visible]
-    return :continue
+    return
   end
   
   #描画
@@ -187,9 +187,9 @@ module Drawable
       #待機モードを初期化
       @idle_mode = false
       #:transition_crossfadeコマンドをスタックし直す
-      return :continue, [command_name, options, inner_options] #非アイドル状態でタスク探査続行
+      return [command_name, options, inner_options] #非アイドル状態でタスク探査続行
     else
-      return :continue
+      return 
     end
   end
   
@@ -197,7 +197,7 @@ module Drawable
     #スキップモードであれば最終値を設定し、フレーム内処理を続行する
     if @skip_mode
       @draw_option[:alpha] = options[:last]
-      return :continue
+      return
     end
 
     return command_transition_fade(options, 

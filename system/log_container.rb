@@ -80,12 +80,12 @@ class LogContainer < Control
     #コントロールをリストに連結する
     @control_list.push(new_image)
     
-    return false
+    return
   end
 
   def command_move_scroll(options)
     #必須属性値チェック
-    return false if check_exist(options, :frame, :scroll)
+    return if check_exist(options, :frame, :scroll)
 
     options[:offset] = true
 
@@ -112,7 +112,7 @@ class LogContainer < Control
     raise #下記メソッドは未検証
     send_script_to_all(:move, options)
 
-    return false #フレーム続行
+    return
   end
 
 end

@@ -49,7 +49,7 @@ module Movable
     if @skip_mode
       @x_pos = control_options[:x]
       @y_pos = control_options[:y]
-      return :continue #フレーム続行
+      return
     end
 
     control_options[:start_x] = @x_pos
@@ -62,7 +62,7 @@ module Movable
     #待機モードを初期化
     @idle_mode = false
 
-    return :continue#フレーム続行
+    return
   end
 =end
   def command_move_line(options, target, command_name = :move_line)
@@ -77,9 +77,9 @@ module Movable
       #待機モードを初期化
       @idle_mode = false
       #:move_lineコマンドをスタックし直す
-      return :continue, [command_name, options]
+      return [command_name, options]
     else
-      return :continue
+      return
     end
   end
 
@@ -88,7 +88,7 @@ module Movable
     if @skip_mode
       @x_pos = options[:x]
       @y_pos = options[:y]
-      return :continue
+      return
     end
     
     return command_move_line(options, target, :move_line_with_skip)

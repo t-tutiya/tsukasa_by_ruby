@@ -119,7 +119,7 @@ module Clickable
     if @on_mouse_over
       eval_block(options, inner_options, inner_options[:block])
     end
-    return :continue, [:on_mouse_over, options, inner_options]
+    return [:on_mouse_over, options, inner_options]
   end
   
   def command_on_mouse_out(options, inner_options)
@@ -127,7 +127,7 @@ module Clickable
     if @on_mouse_out
       eval_block(options, inner_options, inner_options[:block])
     end
-    return :continue, [:on_mouse_out, options, inner_options]
+    return [:on_mouse_out, options, inner_options]
   end
 
   def command_on_key_down(options, inner_options)
@@ -135,7 +135,7 @@ module Clickable
     if @on_key_down
       eval_block(options, inner_options, inner_options[:block])
     end
-    return :continue, [:on_key_down, options, inner_options]
+    return [:on_key_down, options, inner_options]
   end
 
   def command_on_key_down_out(options, inner_options)
@@ -143,7 +143,7 @@ module Clickable
     if @on_key_down_out
       eval_block(options, inner_options, inner_options[:block])
     end
-    return :continue, [:on_key_down_out, options, inner_options]
+    return [:on_key_down_out, options, inner_options]
   end
 
   def command_on_key_up(options, inner_options)
@@ -151,7 +151,7 @@ module Clickable
     if @on_key_up
       eval_block(options, inner_options, inner_options[:block])
     end
-    return :continue, [:on_key_up, options, inner_options]
+    return [:on_key_up, options, inner_options]
   end
 
   def command_on_key_up_out(options, inner_options)
@@ -159,6 +159,6 @@ module Clickable
     if @on_key_up_out
       eval_block(options, inner_options, inner_options[:block])
     end
-    return :continue, [:on_key_up_out, options, inner_options]
+    return [:on_key_up_out, options, inner_options]
   end
 end

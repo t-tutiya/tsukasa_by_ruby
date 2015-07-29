@@ -137,7 +137,7 @@ create :RenderTargetContainer,
           count: 0,
           start: 0,
           last: 255
-        wait [:command, :skip], command: :transition_fade_with_skip do
+        wait [:command, :skip], command: :transition_fade do
           #pp "idle"
           set idle_mode: false, interrupt: true
         end
@@ -148,7 +148,7 @@ create :RenderTargetContainer,
           count: 0,
           start: 255,
           last:128
-        wait [:command, :skip], command: :transition_fade_with_skip
+        wait [:command, :skip], command: :transition_fade
       } do
       set font_config: {size: 32}
     end

@@ -491,7 +491,7 @@ class Control
     eval_commands([[:end_frame, {}, {:target_id => @id}]])
 
     #waitにブロックが付与されているならそれを実行する
-    eval_block(options, inner_options[:block])
+    eval_block(options, inner_options, inner_options[:block])
 
     return [:wait, options, inner_options]
   end

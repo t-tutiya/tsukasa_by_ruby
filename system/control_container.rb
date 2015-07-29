@@ -34,8 +34,10 @@ class Control
   #プロパティ
   attr_accessor  :skip_mode #スキップモード
   attr_accessor  :sleep_mode #スリープモード
-
+  attr_accessor  :idle_mode #アイドルモード
   attr_reader  :system_property
+
+  attr_accessor  :id
 
   def initialize(options, inner_options, root_control = nil)
     if root_control
@@ -208,7 +210,6 @@ class Control
       @next_frame_commands.push(next_frame_command) if next_frame_command
 
       #現在のフレームを終了するかどうかを識別する
-      #フレーム終了指示がなくてもcommand_list/script_storage共に空なら終了する
       case end_parse
       when :end_frame
         break

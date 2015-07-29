@@ -34,14 +34,18 @@ require 'dxruby'
 define :pause do
   #■行表示中スキップ処理
   about :default_char_container do
+    wait [:idol]
+
+    line_icon
+
     #idleになるかキー入力を待つ
     wait [:key_push, :idol]
-    
+
     #キー入力伝搬を止める為に１フレ送る
     end_frame 
 
     #スキップフラグを立てる
-    set :root, skip_mode: true , all: true
+    set :root, skip_mode: true , all: true, interrupt: true
 
     #■行末待機処理
 
@@ -50,14 +54,16 @@ define :pause do
 
     wait [:idol]
 
-    #■ポーズ終了処理
+    delete :page_icon_test, interrupt: true
 
     #ルートにウェイクを送る
-    set :root, sleep_mode: :wake , all: true
+    set :root, sleep_mode: :wake , all: true, interrupt: true
+
     #sleep_mode_all :wake
 
     #スキップフラグを下ろす
-    set :root, skip_mode: false , all: true
+    set :root, skip_mode: false , all: true, interrupt: true
+
     #skip_mode_all false
 
     #スキップフラグ伝搬が正しく行われるように１フレ送る
@@ -147,3 +153,48 @@ create :RenderTargetContainer,
       set font_config: {size: 32}
     end
   end
+
+
+define :page_icon do |options|
+
+  create :LayoutControl, 
+          :x_pos => 0, 
+          :y_pos => 0, 
+          :width => 24,
+          :height => 24,
+          :id => :page_icon_test,
+          :float_mode => :right do
+    create :ImageTilesContainer, 
+            :file_path=>"./sozai/icon_8_a.png", 
+            :id=>:test, 
+            :x_count => 4, 
+            :y_count => 2
+    _WHILE_ ->{true} do
+      set 7, visible: false
+      set 0, visible: true
+    	wait [:count], count: 5
+      set 0, visible: false
+      set 1, visible: true
+    	wait [:count], count: 5
+      set 1, visible: false
+      set 2, visible: true
+    	wait [:count], count: 5
+      set 2, visible: false
+      set 3, visible: true
+    	wait [:count], count: 5
+      set 3, visible: false
+      set 4, visible: true
+    	wait [:count], count: 5
+      set 4, visible: false
+      set 5, visible: true
+    	wait [:count], count: 5
+      set 5, visible: false
+      set 6, visible: true
+    	wait [:count], count: 5
+      set 6, visible: false
+      set 7, visible: true
+    	wait [:count], count: 30
+    end
+  end
+end
+

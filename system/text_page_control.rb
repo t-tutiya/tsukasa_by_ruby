@@ -77,6 +77,8 @@ class ScriptCompiler
   #その他制御系
   #レンダリング済みフォントの登録
   impl_define :map_image_font,        :TextPageControl, [:all]
+
+  impl_define :line_icon,        :TextPageControl, [:all]
 end
 
 class TextPageControl < Control
@@ -666,6 +668,13 @@ class TextPageControl < Control
                           {:weight => @font_config[:bold],
                            :italic => @font_config[:italic]})
                            
+  end
+  
+  def command_line_icon(options, inner_options)
+    options[:call_function] = :page_icon
+    #文字コントロールを生成する
+    @control_list.last.send_script(:call_function, options, {:target_id => :anonymous})
+    return :continue #フレーム続行
   end
 end
 

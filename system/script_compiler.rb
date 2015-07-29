@@ -61,7 +61,12 @@ class ScriptCompiler
     return  @option || []
   end
 
-  def impl(command_name, default_class, target, option, all: false, **sub_options, &block)
+  def impl(command_name, default_class, target, 
+            option, 
+            all: false, 
+            interrupt: false, 
+            **sub_options, 
+            &block)
   
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
@@ -69,7 +74,8 @@ class ScriptCompiler
     system_options ={:target_id =>     target,
                      :default_class => default_class,
                      :block_stack =>   @block_stack,
-                     :all => all}
+                     :all => all,
+                     :interrupt => interrupt}
 
     system_options[:block] = block if block
 
@@ -112,7 +118,14 @@ class ScriptCompiler
         end
 
         #ハッシュが定義されておらず、かつ呼び出し時に設定されている場合例外
-        raise if !args_format.index(:option_hash) and !option_hash.empty?
+        #TODO：この処理自体を再検討
+        if !args_format.index(:option_hash) and !option_hash.empty?
+          if option_hash[:all] or option_hash[:interrupt]
+            #nop
+          else
+            raise 
+          end
+        end
         #ブロックが定義されておらず、かつ呼び出し時に設定されている場合例外
         raise if !args_format.index(:block)       and block
       end

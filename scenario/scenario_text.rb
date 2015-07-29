@@ -28,47 +28,57 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-text "■■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■■■■■■■■■■■■■■■■■"
+pause
 line_feed
-text "■■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■■■■■■"
+pause
+text "■■■■■■■■■■■"
+pause
 line_feed
-text "■■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■■■■■■"
+pause
+text "■■■■■■■■■■■"
+pause
+line_feed
+text "■■■■■■■■■■■"
+pause
+text "■■■■■■■■■■■"
+pause
+flash
+
+text "■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+text "■■■■■■■■■■■■■■■■■■■■■■"
+line_feed
+text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 pause
 flash
 
-text "■■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
-text "■■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
-text "■■■■■■■■■■■■■■■■■■■■■■■"
-line_feed
-pause
-flash
-
-text "■■■■■■■■■■■■■■■■■■■■■■■"
-line_feed
-text "■■■■■■■■■■■■■■■■■■■■■■■"
-line_feed
-text "■■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 pause
 flash
 
-text "■■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
-text "■■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
-text "■■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 pause
 flash
 
-text "■■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
-text "■■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
-text "■■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 pause
 flash

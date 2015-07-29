@@ -403,22 +403,26 @@ class Control
     if [@id, :anonymous].include?(inner_options[:target_id])
       #コマンドtをスタックの末端に挿入する
       @command_list.push([command, options, inner_options])
-      result = true
+      @command_list.push([:token, nil, {}])
+      return :continue
+    end
 
     #ルートコントロールが送信対象として指定されている場合
-    elsif inner_options[:target_id] == :root
+    if inner_options[:target_id] == :root
       #対象コントロール名を差し替える
       inner_options[:target_id] = :anonymous
       #コマンドの送信
-      result = @root_control.interrupt_command( command, 
-                        options, 
-                        inner_options)
-
+      target = @root_control
     else
-      #コマンドの送信
-      result = send_script( command, 
-                        options, 
-                        inner_options)
+      target = self
+    end
+
+    if inner_options[:interrupt]
+      #コマンドの優先送信
+      result = target.interrupt_command( command, options, inner_options)
+    else
+      #コマンドのスタック送信
+      result = target.send_script( command, options, inner_options)
     end
     
     unless result

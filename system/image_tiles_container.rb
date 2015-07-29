@@ -62,7 +62,9 @@ class ImageTilesContainer < Control
                   {
                     :create => :ImageControl,
                     :entity => image,
-                    :id => index
+                    :id => index,
+                    :float_mode => options[:float_mode],
+                    :visible => false
                   }, inner_options)
     end
   end

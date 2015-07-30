@@ -331,6 +331,10 @@ class Control
 
   #コントロールをリストに登録する
   def command_create(options, inner_options)
+    #スキップモードの指定
+    #TODO：ここで入れるのは相当イマイチ。方法を考える
+    options[:skip_mode] = @skip_mode
+
     #コントロールを生成して子要素として登録する
     @control_list.push(Module.const_get(options[:create]).new( options, 
                                                                inner_options, 
@@ -499,10 +503,8 @@ class Control
     #TODO:checkは内部的にはwaitと同じ処理になる筈
     #キーが押された場合
     if Input.key_push?(K_SPACE)
-      #コマンドを終了する
-    else
-      @idle_mode = false #非アイドル設定
-      push_command_to_next_frame(:check_key_push, options, inner_options)
+      #waitにブロックが付与されているならそれを実行する
+      eval_block(options, inner_options, inner_options[:block])
     end
   end
 end

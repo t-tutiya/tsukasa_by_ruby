@@ -38,12 +38,14 @@ define :pause do
     wait [:key_push, :idol]
 
     line_icon
+    
+    check_key_push do
+      #スキップフラグを立てる
+      set :root, skip_mode: true , all: true, interrupt: true
+    end
 
     #キー入力伝搬を止める為に１フレ送る
     end_frame 
-
-    #スキップフラグを立てる
-    set :root, skip_mode: true , all: true, interrupt: true
 
     #■行末待機処理
 

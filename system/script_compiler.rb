@@ -143,7 +143,7 @@ class ScriptCompiler
   #今フレームを終了する
   impl_define :end_frame,                []
 
-  impl_define :check_key_push,            []
+  impl_define :check_key_push,            [:block]
 
   #ＳＥの再生と停止（暫定）
   impl_define :se_play, []

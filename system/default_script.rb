@@ -34,13 +34,10 @@ require 'dxruby'
 define :pause do
   #■行表示中スキップ処理
   about :default_char_container do
-    #idleになるかキー入力を待ち、アイコンを表示させる
+    #idleあるいはキー入力待機
     wait [:key_push, :idol]
 
     line_icon
-
-    #idleになるかキー入力を待ち、pauseを終了させる
-    wait [:key_push, :idol]
 
     #キー入力伝搬を止める為に１フレ送る
     end_frame 
@@ -50,10 +47,8 @@ define :pause do
 
     #■行末待機処理
 
-    #キー入力があるまで待機
-    check_key_push
-
-    wait [:idol]
+    #キー入力待機
+    wait [:key_push]
 
     delete :page_icon_test, interrupt: true
 

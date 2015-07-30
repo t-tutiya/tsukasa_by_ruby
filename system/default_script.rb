@@ -59,9 +59,6 @@ define :pause do
 
     #スキップフラグを下ろす
     set :root, skip_mode: false , all: true, interrupt: true
-
-    #スキップフラグ伝搬が正しく行われるように１フレ送る
-    end_frame
   end
 
   #■ルートの待機処理

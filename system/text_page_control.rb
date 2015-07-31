@@ -474,12 +474,14 @@ class TextPageControl < Control
     end
   end
 =end
+=begin
   #rubiコマンド
   #ルビを出力する（rubi_charの補助メソッド）
   #char:ルビ文字列
   #text:ルビを割り当てるベースの文字列
   #align: expand（デフォルト）/center/left/rightから選ぶ
   def command_rubi(options, inner_options)
+    raise #旧仕様なので機能しない
     #ルビ文字列を取得
     rubi_texts = options[:char]
     #ルビの文字数を取得
@@ -560,9 +562,10 @@ class TextPageControl < Control
     end
 
     #生成したコマンド群をスタックに追加
-    @command_list = commands + @command_list
+    #todo @command_listは廃止予定
+    #@command_list = commands + @command_list
   end
-
+=end
   #############################################################################
   #フォント操作関連コマンド
   #############################################################################

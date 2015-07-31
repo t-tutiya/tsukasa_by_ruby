@@ -56,9 +56,6 @@ class Control
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
 
-    @script_storage       = [] #スクリプトストレージ
-    @script_storage_stack = [] #コールスタック
-
     @command_list         = [] #コマンドリスト
 
     @control_list         = [] #コントロールリスト
@@ -86,7 +83,7 @@ class Control
 
     if options[:default_script_path]
       #デフォルトスクリプトの読み込み
-      @script_storage += @script_compiler.commands(
+      @command_list += @script_compiler.commands(
                           {:script_path => options[:default_script_path]}, 
                           inner_options, 
                           @root_control.system_property)
@@ -95,7 +92,7 @@ class Control
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]
       #シナリオファイルの読み込み
-      @script_storage += @script_compiler.commands(
+      @command_list += @script_compiler.commands(
                           {:script_path => options[:script_path]}, 
                           inner_options, 
                           @root_control.system_property)
@@ -103,7 +100,7 @@ class Control
 
     #ブロックが付与されているなら読み込んで登録する
     if inner_options[:block]
-      @script_storage = @script_compiler.commands(
+      @command_list = @script_compiler.commands(
                           options, 
                           inner_options, 
                           @root_control.system_property, 
@@ -112,8 +109,6 @@ class Control
 
     #コマンドセットがあるなら登録する
     eval_commands(options[:commands]) 
-
-    @command_list.push([:token, nil, {}])
   end
 
   #コマンドをスタックに格納する
@@ -127,7 +122,7 @@ class Control
     #自身が送信対象として指定されている場合
     if [@id, :anonymous].include?(inner_options[:target_id])
       #コマンドをスタックの末端に挿入する
-      @script_storage.push([command, options, inner_options])
+      @command_list.push([command, options, inner_options])
       return true #コマンドをスタックした
     end
 
@@ -172,7 +167,7 @@ class Control
   #強制的に全てのコントロールにコマンドを設定する
   def send_script_to_all(command, options, inner_options)
     #コマンドをスタックの末端に挿入する
-    @script_storage.push([command, options, inner_options])
+    @command_list.push([command, options, inner_options])
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
@@ -195,13 +190,24 @@ class Control
     return true
   end
 
-  #毎フレームコントロール更新処理
   def update
     #次フレコマンド列クリア
     @next_frame_commands = []
 
     #待機モードを初期化
     @idle_mode = true
+
+    #TODO:この部分もうちょっと見通し良くならない物か
+    #トークンの取得対象であるスクリプトストレージが空の場合
+    if @command_list.empty?
+      #次に読み込むスクリプトファイルが指定されている場合
+      if @next_script_file_path
+        #指定されたスクリプトファイルを読み込む
+        @command_list = @script_compiler.commands(@next_script_file_path)
+        #予約スクリプトファイルパスの初期化
+        @next_script_file_path = nil
+      end
+    end
 
     #コマンドリストが空になるまで走査し、コマンドを実行する
     while !@command_list.empty?
@@ -211,8 +217,46 @@ class Control
       #今フレーム処理終了判定
       break if command == :end_frame
 
-      #コマンドを実行
-      send("command_" + command.to_s, options, inner_options)
+      #送信先ターゲットIDが設定されていない場合
+      unless inner_options[:target_id]
+        #デフォルトクラス名からIDを取得する
+        inner_options[:target_id] = @control_default[inner_options[:default_class]]
+        raise unless inner_options[:target_id]
+      end
+
+      #送信対象として自身が指定されている場合
+      if [@id, :anonymous].include?(inner_options[:target_id])
+        #コマンドtをスタックの末端に挿入する
+        send("command_" + command.to_s, options, inner_options)
+      else
+
+        #ルートコントロールが送信対象として指定されている場合
+        if inner_options[:target_id] == :root
+          #対象コントロール名を差し替える
+          inner_options[:target_id] = :anonymous
+          #コマンドの送信
+          target = @root_control
+        else
+          target = self
+        end
+
+        if inner_options[:interrupt]
+          #コマンドの優先送信
+          result = target.interrupt_command( command, options, inner_options)
+        else
+          #コマンドのスタック送信
+          result = target.send_script( command, options, inner_options)
+        end
+        
+        unless result
+            pp "error"
+            pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
+            pp @id
+            pp options
+            pp inner_options
+            raise
+        end
+      end
     end
 
     #一時的にスタックしていたコマンドをコマンドリストに移す
@@ -291,11 +335,8 @@ class Control
   #配列のコマンド列をスクリプトストレージに積む
   def eval_commands(commands)
     return unless commands
-    
-    #現在のスクリプトストレージをコールスタックにプッシュ
-    @script_storage_stack.push(@script_storage) if !@script_storage.empty?
-    #コマンドリストをクリアする
-    @script_storage = commands.dup
+    #コマンドをリストにスタックする
+    @command_list = commands +  @command_list
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
@@ -362,77 +403,6 @@ class Control
       end
     end
   end
-
-  #スクリプトストレージから取得したコマンドをコントロールツリーに送信する
-  def command_token(options, inner_options)
-    #TODO:この部分もうちょっと見通し良くならない物か
-    #トークンの取得対象であるスクリプトストレージが空の場合
-    if @script_storage.empty?
-      #スクリプトストレージのコールスタックが存在する場合
-      if !@script_storage_stack.empty?
-        #コールスタックからスクリプトストレージをポップする
-        @script_storage = @script_storage_stack.pop
-      #次に読み込むスクリプトファイルが指定されている場合
-      elsif @next_script_file_path
-        #指定されたスクリプトファイルを読み込む
-        @script_storage = @script_compiler.commands(@next_script_file_path)
-        #予約スクリプトファイルパスの初期化
-        @next_script_file_path = nil
-      else 
-        #ループを抜ける
-        push_command_to_next_frame(:token, nil, nil)
-        return
-      end
-    end
-
-    #コマンドを取り出す
-    command, options, inner_options = @script_storage.shift
-
-    #送信先ターゲットIDが設定されていない場合
-    unless inner_options[:target_id]
-      #デフォルトクラス名からIDを取得する
-      inner_options[:target_id] = @control_default[inner_options[:default_class]]
-      raise unless inner_options[:target_id]
-    end
-
-    #送信対象として自身が指定されている場合
-    if [@id, :anonymous].include?(inner_options[:target_id])
-      #コマンドtをスタックの末端に挿入する
-      @command_list.push([command, options, inner_options])
-      @command_list.push([:token, nil, {}])
-      return
-    end
-
-    #ルートコントロールが送信対象として指定されている場合
-    if inner_options[:target_id] == :root
-      #対象コントロール名を差し替える
-      inner_options[:target_id] = :anonymous
-      #コマンドの送信
-      target = @root_control
-    else
-      target = self
-    end
-
-    if inner_options[:interrupt]
-      #コマンドの優先送信
-      result = target.interrupt_command( command, options, inner_options)
-    else
-      #コマンドのスタック送信
-      result = target.send_script( command, options, inner_options)
-    end
-    
-    unless result
-        pp "error"
-        pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
-        pp @id
-        pp options
-        pp inner_options
-        raise
-    end
-
-    @command_list.push([:token, nil, {}])
-  end
-
 end
 
 class Control
@@ -594,8 +564,8 @@ class Control
   #スクリプトファイルの読み込み
   def command_load_script(options, inner_options)
     #指定されたスクリプトファイルを直接読み込む
-    #TODO：@script_storageに上書きするのか、追記するのかはオプションで指定できた方が良いか？　その
-    @script_storage = @script_compiler.commands({:script_path => options[:load_script]})
+    #TODO：@command_listに上書きするのか、追記するのかはオプションで指定できた方が良いか？　その
+    @command_list = @script_compiler.commands({:script_path => options[:load_script]})
   end
   
 end
@@ -624,7 +594,7 @@ class Control #制御構文
     #if文の中身を実行する
     eval_block(options, inner_options[:block])
 
-    push_command_to_next_frame(:exp_result, { :result => result}, nil)
+    push_command_to_next_frame(:exp_result, {:result => result}, inner_options)
   end
 
   #thenコマンド

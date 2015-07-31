@@ -266,7 +266,7 @@ class TextPageControl < Control
   #指定文字（群）を描画チェインに連結する
   def command_char(options, inner_options)
     #文字コントロールを生成する
-    @control_list.last.send_script(:create, 
+    @control_list.last.push_command(:create, 
                {:create => :CharControl, 
                 :char => options[:char],
                 :font => @font,
@@ -277,7 +277,7 @@ class TextPageControl < Control
                 :block => @char_renderer})
 
     #文字幅スペーサーを生成する
-    @control_list.last.send_script(:create, 
+    @control_list.last.push_command(:create, 
                 {:create => :LayoutControl, 
                 :width => @style_config[:charactor_pitch],
                 :height => @style_config[:line_height],
@@ -654,7 +654,7 @@ class TextPageControl < Control
   def command_line_icon(options, inner_options)
     options[:call_function] = :page_icon
     #文字コントロールを生成する
-    @control_list.last.send_script(:call_function, options, {:target_id => :anonymous})
+    @control_list.last.push_command(:call_function, options, {:target_id => :anonymous})
   end
 end
 

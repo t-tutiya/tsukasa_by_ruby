@@ -112,7 +112,7 @@ class Control
   end
 
   #コマンドをスタックに格納する
-  def send_script(command, options, inner_options)
+  def push_command(command, options, inner_options)
     #自身が送信対象として指定されている場合
     if [@id, :anonymous].include?(inner_options[:target_id])
       #コマンドをスタックの末端に挿入する
@@ -123,7 +123,7 @@ class Control
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.send_script(command, options, inner_options)
+      return true if control.push_command(command, options, inner_options)
     end
 
     return false #コマンドをスタックしなかった
@@ -153,13 +153,13 @@ class Control
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def send_script_to_all(command, options, inner_options)
+  def push_command_to_all(command, options, inner_options)
     #コマンドをスタックの末端に挿入する
     @command_list.push([command, options, inner_options])
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
-      control.send_script_to_all(command, options, inner_options)
+      control.push_command_to_all(command, options, inner_options)
     end
   end
 
@@ -226,7 +226,7 @@ class Control
           target.interrupt_command_to_all( command, options, inner_options)
         else
           #コマンドのスタック送信
-          target.send_script_to_all( command, options, inner_options)
+          target.push_command_to_all( command, options, inner_options)
         end
         next
       end
@@ -238,7 +238,7 @@ class Control
           result = target.interrupt_command( command, options, inner_options)
         else
           #コマンドのスタック送信
-          result = target.send_script( command, options, inner_options)
+          result = target.push_command( command, options, inner_options)
         end
         unless result
             pp "error"

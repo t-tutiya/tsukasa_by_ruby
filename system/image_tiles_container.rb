@@ -58,7 +58,7 @@ class ImageTilesContainer < Control
     entities = entity.slice_tiles(@x_count, @y_count)
 
     entities.each.with_index(options[:start_index] || 0) do |image, index|
-      send_script(:create, 
+      push_command(:create, 
                   {
                     :create => :ImageControl,
                     :entity => image,

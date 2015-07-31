@@ -132,7 +132,7 @@ module Drawable
 
     #トランジション実行コマンドを発行
     #TODO send_commandではなくinterrupt_command_allなのは、この時点でcontrolには匿名ＩＤ(:anonymous_control)が設定されている為。匿名ＩＤ自体を直接指定しても良いが、ひとまずこうしておく。
-    control.send_script(:transition_crossfade, options)
+    control.push_command(:transition_crossfade, options)
   end
 
   def command_transition_crossfade(options, target)

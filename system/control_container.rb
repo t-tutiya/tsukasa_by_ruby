@@ -113,12 +113,6 @@ class Control
 
   #コマンドをスタックに格納する
   def send_script(command, options, inner_options)
-    #全てのコントロールへ伝搬する場合
-    if inner_options[:all]
-      inner_options.delete(:all)
-      return send_script_to_all(command, options, inner_options)
-    end
-
     #自身が送信対象として指定されている場合
     if [@id, :anonymous].include?(inner_options[:target_id])
       #コマンドをスタックの末端に挿入する
@@ -137,12 +131,6 @@ class Control
 
   #コマンドをスタックに格納する
   def interrupt_command(command, options, inner_options)
-    #全てのコントロールへ伝搬する場合
-    if inner_options[:all]
-      inner_options.delete(:all)
-      return interrupt_command_to_all(command, options, inner_options)
-    end
-
     #自身が送信対象として指定されている場合
     if [@id, :anonymous].include?(inner_options[:target_id])
       #コマンドをスタックの先頭に挿入する
@@ -197,7 +185,8 @@ class Control
     #待機モードを初期化
     @idle_mode = true
 
-    #TODO:この部分もうちょっと見通し良くならない物か
+=begin
+    #TODO：スクリプトの追加読み込みについては仕様検討中
     #トークンの取得対象であるスクリプトストレージが空の場合
     if @command_list.empty?
       #次に読み込むスクリプトファイルが指定されている場合
@@ -208,7 +197,7 @@ class Control
         @next_script_file_path = nil
       end
     end
-
+=end
     #コマンドリストが空になるまで走査し、コマンドを実行する
     while !@command_list.empty?
       #コマンドリストの先頭要素を取得
@@ -224,30 +213,25 @@ class Control
         raise unless inner_options[:target_id]
       end
 
-      #送信対象として自身が指定されている場合
-      if [@id, :anonymous].include?(inner_options[:target_id])
-        #コマンドtをスタックの末端に挿入する
-        send("command_" + command.to_s, options, inner_options)
+      #ルートコントロールが送信対象として指定されている場合
+      if inner_options[:root]
+        #対象コントロール名を差し替える
+        inner_options[:root] = false
+        #コマンドの送信
+        target = @root_control
       else
+        target = self
+      end
 
-        #ルートコントロールが送信対象として指定されている場合
-        if inner_options[:target_id] == :root
-          #対象コントロール名を差し替える
-          inner_options[:target_id] = :anonymous
-          #コマンドの送信
-          target = @root_control
-        else
-          target = self
-        end
-
+      if inner_options[:all]
+        inner_options.delete(:all)
         if inner_options[:interrupt]
           #コマンドの優先送信
-          result = target.interrupt_command( command, options, inner_options)
+          result = target.interrupt_command_to_all( command, options, inner_options)
         else
           #コマンドのスタック送信
-          result = target.send_script( command, options, inner_options)
+          result = target.send_script_to_all( command, options, inner_options)
         end
-        
         unless result
             pp "error"
             pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
@@ -256,7 +240,31 @@ class Control
             pp inner_options
             raise
         end
+        next
       end
+
+      #送信対象として自身が指定されている場合
+      unless [@id, :anonymous].include?(inner_options[:target_id])
+        if inner_options[:interrupt]
+          #コマンドの優先送信
+          result = target.interrupt_command( command, options, inner_options)
+        else
+          #コマンドのスタック送信
+          result = target.send_script( command, options, inner_options)
+        end
+        unless result
+            pp "error"
+            pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
+            pp @id
+            pp options
+            pp inner_options
+            raise
+        end
+        next
+      end
+
+      #コマンドを実行する
+      target.send("command_" + command.to_s, options, inner_options)
     end
 
     #一時的にスタックしていたコマンドをコマンドリストに移す

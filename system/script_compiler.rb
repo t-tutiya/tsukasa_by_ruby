@@ -65,6 +65,7 @@ class ScriptCompiler
             option, 
             all: false, 
             interrupt: false, 
+            root: false,
             **sub_options, 
             &block)
   
@@ -75,6 +76,7 @@ class ScriptCompiler
                      :default_class => default_class,
                      :block_stack =>   @block_stack,
                      :all => all,
+                     :root => root,
                      :interrupt => interrupt}
 
     system_options[:block] = block if block

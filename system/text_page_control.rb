@@ -422,7 +422,9 @@ class TextPageControl < Control
   def command_flash(options, inner_options)
     #子コントロールをクリア
     @control_list.each do |control|
-      control.interrupt_command_to_all(:delete, options, {:target_id => :anonymous})
+      control.interrupt_command(:delete, 
+                                options, 
+                                {:target_id => :anonymous, :all => true})
     end
 
     #次のアクティブ行コントロールを追加  

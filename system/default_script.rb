@@ -41,7 +41,7 @@ define :pause do
     
     check_key_push do
       #スキップフラグを立てる
-      set :root, skip_mode: true , all: true, interrupt: true
+      set :anonymous, skip_mode: true , root: true, all: true, interrupt: true
     end
 
     #キー入力伝搬を止める為に１フレ送る
@@ -55,10 +55,10 @@ define :pause do
     delete :page_icon_test, interrupt: true
 
     #ルートにウェイクを送る
-    set :root, sleep_mode: :wake , all: true, interrupt: true
+    set :anonymous, sleep_mode: :wake , root: true, all: true, interrupt: true
 
     #スキップフラグを下ろす
-    set :root, skip_mode: false , all: true, interrupt: true
+    set :anonymous, skip_mode: false , root: true, all: true, interrupt: true
   end
 
   #■ルートの待機処理

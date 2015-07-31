@@ -161,8 +161,6 @@ class Control
     @control_list.each do |control|
       control.send_script_to_all(command, options, inner_options)
     end
-    
-    return true
   end
 
   #強制的に全てのコントロールにコマンドを設定する
@@ -174,8 +172,6 @@ class Control
     @control_list.each do |control|
       control.interrupt_command_to_all(command, options, inner_options)
     end
-
-    return true
   end
 
   def update
@@ -227,18 +223,10 @@ class Control
         inner_options.delete(:all)
         if inner_options[:interrupt]
           #コマンドの優先送信
-          result = target.interrupt_command_to_all( command, options, inner_options)
+          target.interrupt_command_to_all( command, options, inner_options)
         else
           #コマンドのスタック送信
-          result = target.send_script_to_all( command, options, inner_options)
-        end
-        unless result
-            pp "error"
-            pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
-            pp @id
-            pp options
-            pp inner_options
-            raise
+          target.send_script_to_all( command, options, inner_options)
         end
         next
       end

@@ -153,7 +153,6 @@ class ScriptCompiler
   impl_define :next_scenario, :RenderTargetContainer, [:option]
   impl_define :load_script,   :RenderTargetContainer, [:option]
 
-
   impl_define :wake,                      [:option_hash]
 
   #移動

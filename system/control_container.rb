@@ -233,7 +233,7 @@ class Control
       end
 
       #送信対象として自身が指定されている場合
-      unless [@id, :anonymous].include?(inner_options[:target_id])
+      if [@id, :anonymous].include?(inner_options[:target_id])
         if inner_options[:interrupt]
           #コマンドの優先送信
           result = target.interrupt_command( command, options, inner_options)
@@ -242,12 +242,12 @@ class Control
           result = target.push_command( command, options, inner_options)
         end
         unless result
-            pp "error"
-            pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
-            pp @id
-            pp options
-            pp inner_options
-            raise
+          pp "error"
+          pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
+          pp @id
+          pp options
+          pp inner_options
+          raise
         end
         next #次のコマンドを読む
       end
@@ -415,45 +415,17 @@ class Control
   #############################################################################
 
   def command_wait(options, inner_options)
-    options[:wait].each do |condition|
-      case condition
-      when :wake
-        return if @sleep_mode == :wake
+    #待ちフレーム値が設定されていない場合はコンフィグから初期値を取得する
+    #TODO:@style_config[:wait_frame]はchar特有のプロパティ
+    if options[:count] and (options[:count] == :unset_wait_frame)
+      options[:count] = @style_config[:wait_frame]
+    end
 
-      when :idol
-        return if all_controls_idle?
+    #チェック条件を満たしたら終了する
+    return if check_imple(options[:wait], options)
 
-      when :count
-        #待ちフレーム数を取得。
-        #設定されていない場合はコンフィグから初期値を取得する
-        #TODO:@style_config[:wait_frame]はchar特有のプロパティ
-        wait_frame =  options[:count] == :unset_wait_frame ?
-                      @style_config[:wait_frame] :
-                      options[:count]
-        #残りwaitフレーム数が０より大きい場合
-        return if wait_frame <= 0
-        options[:count] = wait_frame - 1
-
-      when :command
-        #コマンドがリスト上に存在しなければ終了
-        unless @next_frame_commands.index{|command|
-          command[0]==options[:command]}
-          return
-        end
-
-      when :flag
-        unless @root_control.system_property[:global_flag][("user_" + options[:flag].to_s).to_sym]
-          return
-        end
-
-      when :key_push
-        #キー押下があれば終了
-        return if Input.key_push?(K_SPACE)
-
-      when :skip
-        #スキップモードであれば終了
-        return if @skip_mode
-      end
+    if options[:count]
+      options[:count] = options[:count] - 1
     end
 
     #フレーム終了疑似コマンドをスタックする
@@ -466,37 +438,49 @@ class Control
   end
 
   def command_check(options, inner_options)
-    options[:check].each do |condition|
+    #チェック条件を満たさない場合は終了する
+    return unless check_imple(options[:check], options)
+
+    #checkにブロックが付与されているならそれを実行する
+    eval_block(options, inner_options, inner_options[:block])
+  end
+
+  def check_imple(conditions, options)
+    conditions.each do |condition|
       case condition
       when :wake
-        break if @sleep_mode == :wake
+        return true if @sleep_mode == :wake
 
       when :idol
-        break if all_controls_idle?
+        return true if all_controls_idle?
+
+      when :count
+        #残りwaitフレーム数が０より大きい場合
+        return true if options[:count] <= 0
 
       when :command
         #コマンドがリスト上に存在しなければ終了
         unless @next_frame_commands.index{|command|
           command[0]==options[:command]}
-          break
+          return true 
         end
 
       when :flag
         unless @root_control.system_property[:global_flag][("user_" + options[:flag].to_s).to_sym]
-          break
+          return true 
         end
 
       when :key_push
-        break if Input.key_push?(K_SPACE)
+        #キー押下があれば終了
+        return true if Input.key_push?(K_SPACE)
 
       when :skip
-        break if @skip_mode
+        #スキップモードであれば終了
+        return true if @skip_mode
       end
-      return
     end
-
-    #checkにブロックが付与されているならそれを実行する
-    eval_block(options, inner_options, inner_options[:block])
+    
+    return false
   end
 end
 

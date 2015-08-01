@@ -152,8 +152,10 @@ class Control
 
   #強制的に全てのコントロールにコマンドを設定する
   def push_command_to_all(command, options, inner_options)
-    #コマンドをスタックの末端に挿入する
-    @command_list.push([command, options, inner_options])
+    if [@id, :anonymous].include?(inner_options[:target_id])
+      #コマンドをスタックの末端に挿入する
+      @command_list.push([command, options, inner_options])
+    end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
@@ -163,8 +165,10 @@ class Control
 
   #強制的に全てのコントロールにコマンドを設定する
   def interrupt_command_to_all(command, options, inner_options)
-    #コマンドをスタックの先頭に挿入する
-    @command_list.unshift([command, options, inner_options])
+    if [@id, :anonymous].include?(inner_options[:target_id])
+      #コマンドをスタックの先頭に挿入する
+      @command_list.unshift([command, options, inner_options])
+    end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|

@@ -39,7 +39,7 @@ define :pause do
 
     line_icon
     
-    check_key_push do
+    check [:key_push] do
       #スキップフラグを立てる
       set :anonymous, skip_mode: true, all: true, interrupt: true
     end

@@ -145,8 +145,6 @@ class ScriptCompiler
   #今フレームを終了する
   impl_define :end_frame,                []
 
-  impl_define :check_key_push,            [:block]
-
   #ＳＥの再生と停止（暫定）
   impl_define :se_play, []
   impl_define :se_stop, []
@@ -157,6 +155,7 @@ class ScriptCompiler
 
 
   impl_define :wake,                      [:option_hash]
+
   #移動
   impl_define :move,                      [:option_hash]
   impl_define :move_line,                 [:option_hash]
@@ -181,6 +180,7 @@ class ScriptCompiler
 
   #各種ウェイト処理
   impl_define :wait,                  [:all]
+  impl_define :check,            [:option, :block]
 
   impl_define :EXP,   [:block]
 

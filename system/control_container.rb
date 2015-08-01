@@ -57,19 +57,17 @@ class Control
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
 
     @command_list         = [] #コマンドリスト
+    @next_frame_commands  = [] #一時コマンドリスト
 
     @control_list         = [] #コントロールリスト
 
     @event_list           = {} #イベントリスト
 
-    @next_frame_commands  = [] #一時コマンドリスト
-    
     @child_update = true #updateを子コントロールに伝搬するか
     @child_render = true #renderを子コントロールに伝搬するか
 
     @skip_mode = false         #スキップモードの初期化
     @idle_mode = true          #待機モードの初期化
-
     @sleep_mode = :wake        #スリープの初期状態を設定する
 
     @delete_flag = false       #削除フラグの初期化
@@ -420,7 +418,7 @@ class Control
     options[:wait].each do |condition|
       case condition
       when :wake
-        return if @sleep_mode != :sleep
+        return if @sleep_mode == :wake
 
       when :idol
         return if all_controls_idle?
@@ -442,6 +440,7 @@ class Control
           command[0]==options[:command]}
           return
         end
+
       when :flag
         unless @root_control.system_property[:global_flag][("user_" + options[:flag].to_s).to_sym]
           return
@@ -449,9 +448,7 @@ class Control
 
       when :key_push
         #キー押下があれば終了
-        if Input.key_push?(K_SPACE)
-          return
-        end
+        return if Input.key_push?(K_SPACE)
 
       when :skip
         #スキップモードであれば終了
@@ -468,13 +465,38 @@ class Control
     push_command_to_next_frame(:wait, options, inner_options)
   end
 
-  def command_check_key_push(options, inner_options)
-    #TODO:checkは内部的にはwaitと同じ処理になる筈
-    #キーが押された場合
-    if Input.key_push?(K_SPACE)
-      #waitにブロックが付与されているならそれを実行する
-      eval_block(options, inner_options, inner_options[:block])
+  def command_check(options, inner_options)
+    options[:check].each do |condition|
+      case condition
+      when :wake
+        break if @sleep_mode == :wake
+
+      when :idol
+        break if all_controls_idle?
+
+      when :command
+        #コマンドがリスト上に存在しなければ終了
+        unless @next_frame_commands.index{|command|
+          command[0]==options[:command]}
+          break
+        end
+
+      when :flag
+        unless @root_control.system_property[:global_flag][("user_" + options[:flag].to_s).to_sym]
+          break
+        end
+
+      when :key_push
+        break if Input.key_push?(K_SPACE)
+
+      when :skip
+        break if @skip_mode
+      end
+      return
     end
+
+    #checkにブロックが付与されているならそれを実行する
+    eval_block(options, inner_options, inner_options[:block])
   end
 end
 

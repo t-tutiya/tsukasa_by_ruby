@@ -195,7 +195,7 @@ class Control
     end
 =end
     #コマンドリストが空になるまで走査し、コマンドを実行する
-    while !@command_list.empty?
+    until @command_list.empty?
       #コマンドリストの先頭要素を取得
       command, options, inner_options = @command_list.shift
 
@@ -211,16 +211,19 @@ class Control
 
       #ルートコントロールが送信対象として指定されている場合
       if inner_options[:root]
-        #対象コントロール名を差し替える
+        #rootフラグをクリア
         inner_options[:root] = false
-        #コマンドの送信
+        #rootを実行対象とする
         target = @root_control
       else
+        #このコントロールを実行対象とする
         target = self
       end
 
+      #コントロール配下の全コントロールが送信対象として指定されている場合
       if inner_options[:all]
-        inner_options.delete(:all)
+        #allフラグをクリア
+        inner_options[:all] = false
         if inner_options[:interrupt]
           #コマンドの優先送信
           target.interrupt_command_to_all( command, options, inner_options)
@@ -228,7 +231,7 @@ class Control
           #コマンドのスタック送信
           target.push_command_to_all( command, options, inner_options)
         end
-        next
+        next #次のコマンドを読む
       end
 
       #送信対象として自身が指定されている場合
@@ -248,7 +251,7 @@ class Control
             pp inner_options
             raise
         end
-        next
+        next #次のコマンドを読む
       end
 
       #コマンドを実行する

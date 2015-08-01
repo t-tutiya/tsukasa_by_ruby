@@ -233,7 +233,7 @@ class Control
       end
 
       #送信対象として自身が指定されている場合
-      if [@id, :anonymous].include?(inner_options[:target_id])
+      unless [@id, :anonymous].include?(inner_options[:target_id])
         if inner_options[:interrupt]
           #コマンドの優先送信
           result = target.interrupt_command( command, options, inner_options)

@@ -243,12 +243,12 @@ class TextPageControl < Control
     super
 
     #次のアクティブ行コントロールを追加  
-    interrupt_command(:create, 
+    interrupt_command([:create, 
                      {:create => :LayoutControl, 
                       :width => options[:width],
                       :height => @style_config[:line_height],
                       :float_mode => :bottom}, 
-                      {:target_id => @id})
+                      {:target_id => @id}])
 
   end
 
@@ -266,7 +266,7 @@ class TextPageControl < Control
   #指定文字（群）を描画チェインに連結する
   def command_char(options, inner_options)
     #文字コントロールを生成する
-    @control_list.last.push_command(:create, 
+    @control_list.last.push_command([:create, 
                {:create => :CharControl, 
                 :char => options[:char],
                 :font => @font,
@@ -274,16 +274,16 @@ class TextPageControl < Control
                 :skip_mode =>  @skip_mode,
                 :float_mode => :right}, 
                {:target_id => :anonymous,
-                :block => @char_renderer})
+                :block => @char_renderer}])
 
     #文字幅スペーサーを生成する
-    @control_list.last.push_command(:create, 
+    @control_list.last.push_command([:create, 
                 {:create => :LayoutControl, 
                 :width => @style_config[:charactor_pitch],
                 :height => @style_config[:line_height],
                 :float_mode => :right}, 
                {:target_id => :anonymous,
-                :block => @char_renderer})
+                :block => @char_renderer}])
   end
 
   #image_charコマンド
@@ -294,7 +294,7 @@ class TextPageControl < Control
 #TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
 =begin
     #文字コントロールを生成する
-    interrupt_command(:create, {
+    interrupt_command([:create, {
                     :create => :CharControl, 
                    :x_pos => @next_char_x + @margin_x,
                    :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
@@ -306,7 +306,7 @@ class TextPageControl < Control
                    },
                    {:target_id => @id,
                     :block => @char_renderer},
-#                   @font.glyph(options[:char].to_s)
+#                   @font.glyph(options[:char].to_s])
                  )
 
     #描画座標を１文字＋文字ピッチ分進める
@@ -377,9 +377,9 @@ class TextPageControl < Control
     @next_char_x += image.width + @style_config[:charactor_pitch]
 
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    interrupt_command(:wait, 
+    interrupt_command([:wait, 
                           {:wait => [:count, :skip, :key_push],
-                           :count => :unset_wait_frame}, inner_options)
+                           :count => :unset_wait_frame}, inner_options])
 =end
   end
 
@@ -395,26 +395,26 @@ class TextPageControl < Control
     #以下逆順に登録
 
     #改行時のwaitを設定する
-    interrupt_command(:wait, 
+    interrupt_command([:wait, 
                       {:wait => [:count, :skip, :key_push],
                        :count => @style_config[:line_feed_wait_frame]}, 
-                       inner_options)
+                       inner_options])
 
     #次のアクティブ行コントロールを追加  
-    interrupt_command(:create, 
+    interrupt_command([:create, 
                      {:create => :LayoutControl, 
                       :width => options[:width],
                       :height => @style_config[:line_height],
                       :float_mode => :bottom}, 
-                      inner_options)
+                      inner_options])
 
     #行間ピッチ分の無形コントロールを追加
-    interrupt_command(:create, 
+    interrupt_command([:create, 
                      {:create => :LayoutControl, 
                       :width => options[:width],
                       :height => @style_config[:line_spacing],
                       :float_mode => :bottom}, 
-                      inner_options)
+                      inner_options])
   end
 
   #flashコマンド
@@ -422,18 +422,18 @@ class TextPageControl < Control
   def command_flash(options, inner_options)
     #子コントロールをクリア
     @control_list.each do |control|
-      control.interrupt_command_to_all( :delete, 
+      control.interrupt_command_to_all([:delete, 
                                         options, 
-                                       {:target_id => :anonymous})
+                                       {:target_id => :anonymous}],:anonymous)
     end
 
     #次のアクティブ行コントロールを追加  
-    interrupt_command(:create, 
+    interrupt_command([:create, 
                      {:create => :LayoutControl, 
                       :width => options[:width],
                       :height => @style_config[:line_height],
                       :float_mode => :bottom}, 
-                      inner_options)
+                      inner_options])
   end
 
   #############################################################################
@@ -654,7 +654,7 @@ class TextPageControl < Control
   def command_line_icon(options, inner_options)
     options[:call_function] = :page_icon
     #文字コントロールを生成する
-    @control_list.last.push_command(:call_function, options, {:target_id => :anonymous})
+    @control_list.last.push_command([:call_function, options, {:target_id => :anonymous}])
   end
 end
 

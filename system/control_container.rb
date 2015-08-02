@@ -110,36 +110,36 @@ class Control
   end
 
   #コマンドをスタックに格納する
-  def push_command(command, options, inner_options)
+  def push_command(command, target_id = @id)
     #自身が送信対象として指定されている場合
-    if [@id, :anonymous].include?(inner_options[:target_id])
+    if [@id, :anonymous].include?(target_id)
       #コマンドをスタックの末端に挿入する
-      @command_list.push([command, options, inner_options])
+      @command_list.push(command)
       return true #コマンドをスタックした
     end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.push_command(command, options, inner_options)
+      return true if control.push_command(command, target_id)
     end
 
     return false #コマンドをスタックしなかった
   end
 
   #コマンドをスタックに格納する
-  def interrupt_command(command, options, inner_options)
+  def interrupt_command(command, target_id = @id)
     #自身が送信対象として指定されている場合
-    if [@id, :anonymous].include?(inner_options[:target_id])
+    if [@id, :anonymous].include?(target_id)
       #コマンドをスタックの先頭に挿入する
-      @command_list.unshift([command, options, inner_options])
+      @command_list.unshift(command)
       return true #コマンドをスタックした
     end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
       #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.interrupt_command(command, options, inner_options)
+      return true if control.interrupt_command(command, target_id)
     end
 
     return false #コマンドをスタックしなかった
@@ -151,35 +151,34 @@ class Control
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def push_command_to_all(command, options, inner_options)
-    if [@id, :anonymous].include?(inner_options[:target_id])
+  def push_command_to_all(command, target_id)
+    if [@id, :anonymous].include?(target_id)
       #コマンドをスタックの末端に挿入する
-      @command_list.push([command, options, inner_options])
+      @command_list.push(command)
     end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
-      control.push_command_to_all(command, options, inner_options)
+      control.push_command_to_all(command, target_id)
     end
   end
 
   #強制的に全てのコントロールにコマンドを設定する
-  def interrupt_command_to_all(command, options, inner_options)
-    if [@id, :anonymous].include?(inner_options[:target_id])
+  def interrupt_command_to_all(command, target_id)
+    if [@id, :anonymous].include?(target_id)
       #コマンドをスタックの先頭に挿入する
-      @command_list.unshift([command, options, inner_options])
+      @command_list.unshift(command)
     end
 
     #子要素に処理を伝搬する
     @control_list.each do |control|
-      control.interrupt_command_to_all(command, options, inner_options)
+      control.interrupt_command_to_all(command, target_id)
     end
   end
 
   def update
     #次フレコマンド列クリア
     @next_frame_commands = []
-
     #待機モードを初期化
     @idle_mode = true
 
@@ -199,16 +198,20 @@ class Control
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
-      command, options, inner_options = @command_list.shift
+      command = @command_list.shift
+      #コマンドを１時的に展開
+      command_name, options, inner_options = command
 
       #今フレーム処理終了判定
-      break if command == :end_frame
+      break if command_name == :end_frame
 
+      #送信先コントロールのＩＤを取得
+      target_id = inner_options[:target_id]
       #送信先ターゲットIDが設定されていない場合
-      unless inner_options[:target_id]
+      unless target_id
         #デフォルトクラス名からIDを取得する
-        inner_options[:target_id] = @control_default[inner_options[:default_class]]
-        raise unless inner_options[:target_id]
+        target_id = @control_default[inner_options[:default_class]]
+        raise unless target_id
       end
 
       #ルートコントロールが送信対象として指定されている場合
@@ -228,26 +231,26 @@ class Control
         inner_options[:all] = false
         if inner_options[:interrupt]
           #コマンドの優先送信
-          target.interrupt_command_to_all( command, options, inner_options)
+          target.interrupt_command_to_all(command, target_id)
         else
           #コマンドのスタック送信
-          target.push_command_to_all( command, options, inner_options)
+          target.push_command_to_all(command, target_id)
         end
         next #次のコマンドを読む
       end
 
-      #送信対象として自身が指定されている場合
-      unless [@id, :anonymous].include?(inner_options[:target_id])
+      #送信対象として自身が指定されていない場合
+      unless [@id, :anonymous].include?(target_id)
         if inner_options[:interrupt]
           #コマンドの優先送信
-          result = target.interrupt_command( command, options, inner_options)
+          result = target.interrupt_command(command, target_id)
         else
           #コマンドのスタック送信
-          result = target.push_command( command, options, inner_options)
+          result = target.push_command(command, target_id)
         end
         unless result
           pp "error"
-          pp command.to_s + "コマンドは伝搬先が見つかりませんでした"
+          pp command_name.to_s + "コマンドは伝搬先が見つかりませんでした"
           pp @id
           pp options
           pp inner_options
@@ -257,7 +260,7 @@ class Control
       end
 
       #コマンドを実行する
-      target.send("command_" + command.to_s, options, inner_options)
+      target.send("command_" + command_name.to_s, options, inner_options)
     end
 
     #一時的にスタックしていたコマンドをコマンドリストに移す

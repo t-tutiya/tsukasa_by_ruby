@@ -49,6 +49,7 @@ class VariableTextLayer < Control
   end
 
   def command_line_feed(options, target)
+    raise #旧仕様
     push_command(:line_feed, nil, :default_char_container)
     eval_commands([
       [:eval, {:eval => "pp 'test'"}, {:target_id => @id}],
@@ -61,6 +62,7 @@ class VariableTextLayer < Control
   #TODO:本来はこれだと最終改行をカットできない
   #TODO:このコマンド自体を省略できる気もするけど今はいいや
   def command_text(options, target)
+    raise #旧仕様
     push_command(:text, options, :default_char_container)
     interrupt_command(:line_feed, options, @id)
   end
@@ -88,10 +90,12 @@ class VariableTextLayer < Control
     #■行表示中スキップ処理
     #idleになるかキー入力を待つ
     #※wait中にキーが押された場合、waitはスキップモードフラグを立てる
+    raise #旧仕様
     push_command(:wait_key_push_with_idle, nil, :default_char_container)
 
     #ルートにウェイクを送る
     #TODO：本来rootにのみ通知できれば良い筈
+    raise #旧仕様
     push_command(:sleep_mode_all, {:sleep_mode_all => :wake}, :default_char_container)
 
   end

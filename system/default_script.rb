@@ -37,7 +37,7 @@ define :pause do
     #idleあるいはキー入力待機
     wait [:key_push, :idol]
 
-    line_icon
+    line_icon id: :line_icon_anime
     
     check [:key_push] do
       #スキップフラグを立てる
@@ -52,7 +52,7 @@ define :pause do
     #キー入力待機
     wait [:key_push]
 
-    delete :page_icon_test, interrupt: true
+    delete :line_icon_anime, interrupt: true
 
     #ルートにウェイクを送る
     set :anonymous, sleep_mode: :wake , root: true, all: true, interrupt: true
@@ -156,7 +156,7 @@ define :page_icon do |options|
           :y_pos => 0, 
           :width => 24,
           :height => 24,
-          :id => :page_icon_test,
+          :id => options[:id],
           :float_mode => :right do
     create :ImageTilesContainer, 
             :file_path=>"./sozai/icon_8_a.png", 

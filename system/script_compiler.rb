@@ -68,7 +68,7 @@ class ScriptCompiler
             root: false,
             **sub_options, 
             &block)
-  
+
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
 

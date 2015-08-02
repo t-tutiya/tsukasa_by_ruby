@@ -241,6 +241,17 @@ class Control
 
       #送信対象として自身が指定されていない場合
       unless [@id, :anonymous].include?(target_id)
+        case target_id
+        when :first
+          target = @control_list[0]
+          target_id = :anonymous
+          inner_options[:target_id] = :anonymous
+        when :last
+          target = @control_list.last
+          target_id = :anonymous
+          inner_options[:target_id] = :anonymous
+        end
+
         if inner_options[:interrupt]
           #コマンドの優先送信
           result = target.interrupt_command(command, target_id)

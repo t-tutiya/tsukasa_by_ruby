@@ -37,7 +37,7 @@ define :pause do
     #idleあるいはキー入力待機
     wait [:key_push, :idol]
 
-    line_icon id: :line_icon_anime
+    line_icon_func nil, :last, id: :line_icon
 
     check [:key_push] do
       #スキップフラグを立てる
@@ -52,7 +52,7 @@ define :pause do
     #キー入力待機
     wait [:key_push]
 
-    delete :line_icon_anime, interrupt: true
+    delete :line_icon, interrupt: true
 
     #ルートにウェイクを送る
     set :anonymous, sleep_mode: :wake , root: true, all: true, interrupt: true
@@ -149,7 +149,7 @@ create :RenderTargetContainer,
   end
 
 
-define :line_icon_anime do |options|
+define :line_icon_func do |options|
 
   create :LayoutControl, 
           :x_pos => 0, 

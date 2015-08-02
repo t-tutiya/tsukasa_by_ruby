@@ -38,7 +38,7 @@ define :pause do
     wait [:key_push, :idol]
 
     line_icon id: :line_icon_anime
-    
+
     check [:key_push] do
       #スキップフラグを立てる
       set :anonymous, skip_mode: true, all: true, interrupt: true
@@ -149,7 +149,7 @@ create :RenderTargetContainer,
   end
 
 
-define :page_icon do |options|
+define :line_icon_anime do |options|
 
   create :LayoutControl, 
           :x_pos => 0, 

@@ -652,7 +652,7 @@ class TextPageControl < Control
   end
   
   def command_line_icon(options, inner_options)
-    options[:call_function] = :page_icon
+    options[:call_function] = :line_icon_anime
     #文字コントロールを生成する
     @control_list.last.push_command([:call_function, options, {:target_id => :anonymous}])
   end

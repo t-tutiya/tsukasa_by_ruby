@@ -96,7 +96,7 @@ class VariableTextLayer < Control
     #ルートにウェイクを送る
     #TODO：本来rootにのみ通知できれば良い筈
     raise #旧仕様
-    push_command(:sleep_mode_all, {:sleep_mode_all => :wake}, :default_char_container)
+    push_command(:sleep_mode_ all, {:sleep_mode_ all => :wake}, :default_char_container)
 
   end
 =end

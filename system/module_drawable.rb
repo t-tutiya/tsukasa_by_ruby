@@ -131,7 +131,7 @@ module Drawable
     options[:count] = 0
 
     #トランジション実行コマンドを発行
-    #TODO send_commandではなくinterrupt_command_allなのは、この時点でcontrolには匿名ＩＤ(:anonymous_control)が設定されている為。匿名ＩＤ自体を直接指定しても良いが、ひとまずこうしておく。
+    #TODO send_commandではなくinterrupt_command_ allなのは、この時点でcontrolには匿名ＩＤ(:anonymous_control)が設定されている為。匿名ＩＤ自体を直接指定しても良いが、ひとまずこうしておく。
     raise #旧仕様
     control.push_command([:transition_crossfade, options, inner_options])
   end

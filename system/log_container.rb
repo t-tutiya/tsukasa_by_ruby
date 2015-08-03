@@ -108,7 +108,7 @@ class LogContainer < Control
 
     #所持している全コントロールにmove_lineコマンドを発行
     raise #下記メソッドは未検証
-    push_command_to_all(:move, options)
+    push_command_to_ all(:move, options)
   end
 
 end

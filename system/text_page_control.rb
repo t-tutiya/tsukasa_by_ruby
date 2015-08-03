@@ -263,8 +263,9 @@ class TextPageControl < Control
   #charコマンド
   #指定文字（群）を描画チェインに連結する
   def command_char(options, inner_options)
+    target = @control_list.last
     #文字コントロールを生成する
-    @control_list.last.push_command([:create, 
+    target.push_command([:create, 
                {:create => :CharControl, 
                 :char => options[:char],
                 :font => @font,
@@ -275,7 +276,7 @@ class TextPageControl < Control
                 :block => @char_renderer}])
 
     #文字幅スペーサーを生成する
-    @control_list.last.push_command([:create, 
+    target.push_command([:create, 
                 {:create => :LayoutControl, 
                 :width => @style_config[:charactor_pitch],
                 :height => @style_config[:line_height],
@@ -419,11 +420,10 @@ class TextPageControl < Control
   #メッセージレイヤの消去
   def command_flash(options, inner_options)
     #子コントロールをクリア
-    @control_list.each do |control|
-      control.interrupt_command_to_all([:delete, 
+    interrupt_command_to_all_children([:delete, 
                                         options, 
-                                       {:target_id => :anonymous}],:anonymous)
-    end
+                                       {:target_id => :anonymous}], 
+                                       :anonymous)
 
     #次のアクティブ行コントロールを追加  
     interrupt_command([:create, 

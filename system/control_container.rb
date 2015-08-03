@@ -176,6 +176,12 @@ class Control
     end
   end
 
+  def interrupt_command_to_all_children(command, target_id)
+    @control_list.each do |control|
+      control.interrupt_command_to_all(command, :anonymous)
+    end
+  end
+
   def update
     #次フレコマンド列クリア
     @next_frame_commands = []
@@ -244,12 +250,10 @@ class Control
         case target_id
         when :first
           target = @control_list[0]
-          target_id = :anonymous
-          inner_options[:target_id] = :anonymous
+          target_id = inner_options[:target_id] = :anonymous
         when :last
           target = @control_list.last
-          target_id = :anonymous
-          inner_options[:target_id] = :anonymous
+          target_id = inner_options[:target_id] = :anonymous
         end
 
         if inner_options[:interrupt]

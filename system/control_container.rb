@@ -256,19 +256,12 @@ class Control
 
         if inner_options[:interrupt]
           #コマンドの優先送信
-          result = target.interrupt_command(command, inner_options[:target_id])
+          target.interrupt_command(command, inner_options[:target_id])
         else
           #コマンドのスタック送信
-          result = target.push_command(command, inner_options[:target_id])
+          target.push_command(command, inner_options[:target_id])
         end
-        unless result
-          pp "error"
-          pp command_name.to_s + "コマンドは伝搬先が見つかりませんでした"
-          pp @id
-          pp options
-          pp inner_options
-          raise
-        end
+
         next #次のコマンドを読む
       end
 

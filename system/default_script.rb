@@ -54,9 +54,7 @@ define :pause do |options|
     #キー入力待機
     wait [:key_push]
 
-    if options[:icon]
-      delete :icon, interrupt: true
-    end
+    delete :icon, interrupt: true
 
     #ルートにウェイクを送る
     set :anonymous, sleep_mode: :wake , root: true, all: true, interrupt: true

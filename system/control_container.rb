@@ -243,8 +243,11 @@ class Control
         next #次のコマンドを読む
       end
 
+      if [@id, :anonymous].include?(inner_options[:target_id])
+        #コマンドを実行する
+        target.send("command_" + command_name.to_s, options, inner_options)
       #送信対象として自身が指定されていない場合
-      unless [@id, :anonymous].include?(inner_options[:target_id])
+      else 
         case inner_options[:target_id]
         when :first
           target = @control_list[0]
@@ -261,12 +264,7 @@ class Control
           #コマンドのスタック送信
           target.push_command(command, inner_options[:target_id])
         end
-
-        next #次のコマンドを読む
       end
-
-      #コマンドを実行する
-      target.send("command_" + command_name.to_s, options, inner_options)
     end
 
     #一時的にスタックしていたコマンドをコマンドリストに移す

@@ -211,13 +211,11 @@ class Control
       #今フレーム処理終了判定
       break if command_name == :end_frame
 
-      #送信先コントロールのＩＤを取得
-      target_id = inner_options[:target_id]
       #送信先ターゲットIDが設定されていない場合
-      unless target_id
+      unless inner_options[:target_id]
         #デフォルトクラス名からIDを取得する
-        target_id = @control_default[inner_options[:default_class]]
-        raise unless target_id
+        inner_options[:target_id] = @control_default[inner_options[:default_class]]
+        raise unless inner_options[:target_id]
       end
 
       #ルートコントロールが送信対象として指定されている場合
@@ -237,31 +235,31 @@ class Control
         inner_options[:all] = false
         if inner_options[:interrupt]
           #コマンドの優先送信
-          target.interrupt_command_to_all(command, target_id)
+          target.interrupt_command_to_all(command, inner_options[:target_id])
         else
           #コマンドのスタック送信
-          target.push_command_to_all(command, target_id)
+          target.push_command_to_all(command, inner_options[:target_id])
         end
         next #次のコマンドを読む
       end
 
       #送信対象として自身が指定されていない場合
-      unless [@id, :anonymous].include?(target_id)
-        case target_id
+      unless [@id, :anonymous].include?(inner_options[:target_id])
+        case inner_options[:target_id]
         when :first
           target = @control_list[0]
-          target_id = inner_options[:target_id] = :anonymous
+          inner_options[:target_id] = :anonymous
         when :last
           target = @control_list.last
-          target_id = inner_options[:target_id] = :anonymous
+          inner_options[:target_id] = :anonymous
         end
 
         if inner_options[:interrupt]
           #コマンドの優先送信
-          result = target.interrupt_command(command, target_id)
+          result = target.interrupt_command(command, inner_options[:target_id])
         else
           #コマンドのスタック送信
-          result = target.push_command(command, target_id)
+          result = target.push_command(command, inner_options[:target_id])
         end
         unless result
           pp "error"

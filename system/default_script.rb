@@ -37,11 +37,8 @@ define :pause do |options|
     #idleあるいはキー入力待機
     wait [:key_push, :idol]
 
-    case options[:icon]
-    when :line
-      line_icon_func nil, :last, id: :line_icon
-    when :page
-      page_icon_func nil, :last, id: :page_icon
+    if options[:icon]
+      call_function options[:icon], :last, id: :icon
     end
 
     check [:key_push] do
@@ -57,11 +54,8 @@ define :pause do |options|
     #キー入力待機
     wait [:key_push]
 
-    case options[:icon]
-    when :line
-      delete :line_icon, interrupt: true
-    when :page
-      delete :page_icon, interrupt: true
+    if options[:icon]
+      delete :icon, interrupt: true
     end
 
     #ルートにウェイクを送る

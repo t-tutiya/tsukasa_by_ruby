@@ -184,7 +184,7 @@ class ScriptCompiler
   impl_define :EXP,   [:block]
 
   #コマンド列のブロック化
-  impl_define :about, [:block]
+  impl_define :about, [:option_hash,:block]
 
   #これブロックが継承されないかも
   impl_define :call_function,                  [:all]

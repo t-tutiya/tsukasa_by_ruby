@@ -31,13 +31,18 @@ require 'dxruby'
 ###############################################################################
 
 #標準ポーズコマンド
-define :pause do
+define :pause do |options|
   #■行表示中スキップ処理
-  about :default_char_container do
+  about :default_char_container , icon: options[:icon] do |options|
     #idleあるいはキー入力待機
     wait [:key_push, :idol]
 
-    line_icon_func nil, :last, id: :line_icon
+    case options[:icon]
+    when :line
+      line_icon_func nil, :last, id: :line_icon
+    when :page
+      page_icon_func nil, :last, id: :page_icon
+    end
 
     check [:key_push] do
       #スキップフラグを立てる
@@ -52,7 +57,12 @@ define :pause do
     #キー入力待機
     wait [:key_push]
 
-    delete :line_icon, interrupt: true
+    case options[:icon]
+    when :line
+      delete :line_icon, interrupt: true
+    when :page
+      delete :page_icon, interrupt: true
+    end
 
     #ルートにウェイクを送る
     set :anonymous, sleep_mode: :wake , root: true, all: true, interrupt: true
@@ -188,6 +198,37 @@ define :line_icon_func do |options|
       set 6, visible: false
       set 7, visible: true
     	wait [:count], count: 30
+    end
+  end
+end
+
+define :page_icon_func do |options|
+
+  create :LayoutControl, 
+          :x_pos => 0, 
+          :y_pos => 0, 
+          :width => 24,
+          :height => 24,
+          :id => options[:id],
+          :float_mode => :right do
+    create :ImageTilesContainer, 
+            :file_path=>"./sozai/icon_4_a.png", 
+            :id=>:test, 
+            :x_count => 4, 
+            :y_count => 1
+    _WHILE_ ->{true} do
+      set 3, visible: false
+      set 0, visible: true
+    	wait [:count], count: 5
+      set 0, visible: false
+      set 1, visible: true
+    	wait [:count], count: 5
+      set 1, visible: false
+      set 2, visible: true
+    	wait [:count], count: 5
+      set 2, visible: false
+      set 3, visible: true
+    	wait [:count], count: 5
     end
   end
 end

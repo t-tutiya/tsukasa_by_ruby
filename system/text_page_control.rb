@@ -45,38 +45,40 @@ class ScriptCompiler
   #テキスト関連
 
   #文字
-  impl_define :char,                  :TextPageControl, [:option]
+  impl_define :char,                  :TextPageControl, :option
   #文字列
-  impl_define :text,                  :TextPageControl, [:option]
+  impl_define :text,                  :TextPageControl, :option
 
   #インデント設定
-  impl_define :indent,                :TextPageControl, [:option]
+  impl_define :indent,                :TextPageControl, :option
   #改行
-  impl_define :line_feed,             :TextPageControl, []
+  impl_define :line_feed,             :TextPageControl, :nop
   #改ページ
-  impl_define :flash,                 :TextPageControl, []
+  impl_define :flash,                 :TextPageControl, :nop
   #画像スタック
-  impl_define :graph,                 :TextPageControl, [:all]
+  impl_define :graph,                 :TextPageControl, :option
 
   #文字描画速度の設定
-  impl_define :delay,                 :TextPageControl, [:option]
+  impl_define :delay,                 :TextPageControl, :option
 
   #ルビ文字の出力
-  impl_define :rubi_char,             :TextPageControl, [:all]
+  impl_define :rubi_char,             :TextPageControl, :option
+
   #複数ルビ文字列の割り付け
-  impl_define :rubi,                  :TextPageControl, [:all]
+  impl_define :rubi,                  :TextPageControl, :option
 
   #フォント設定の更新
   #現在値をリセット
-  impl_define :reset_font_config,     :TextPageControl, [:all]
+  impl_define :reset_font_config,     :TextPageControl, :option
 
   #スタイル設定の更新
   #現在値をリセット
-  impl_define :reset_style_config,    :TextPageControl, [:all]
+  impl_define :reset_style_config,    :TextPageControl, :option
 
   #その他制御系
   #レンダリング済みフォントの登録
-  impl_define :map_image_font,        :TextPageControl, [:all]
+  impl_define :map_image_font,        :TextPageControl, :option
+
 end
 
 class TextPageControl < Control

@@ -48,7 +48,7 @@ define :pause do |options|
 
     check [:key_push] do
       #スキップフラグを立てる
-      set target: :anonymous, skip_mode: true, all: true, interrupt: true
+      set :anonymous, skip_mode: true, all: true, interrupt: true
     end
 
     #キー入力伝搬を止める為に１フレ送る
@@ -170,29 +170,29 @@ define :line_icon_func do |options|
             :x_count => 4, 
             :y_count => 2
     _WHILE_ ->{true} do
-      set target: 7, visible: false
-      set target: 0, visible: true
+      set  7, visible: false
+      set  0, visible: true
     	wait [:count], count: 5
-      set target: 0, visible: false
-      set target: 1, visible: true
+      set  0, visible: false
+      set  1, visible: true
     	wait [:count], count: 5
-      set target: 1, visible: false
-      set target: 2, visible: true
+      set 1, visible: false
+      set 2, visible: true
     	wait [:count], count: 5
-      set target: 2, visible: false
-      set target: 3, visible: true
+      set 2, visible: false
+      set 3, visible: true
     	wait [:count], count: 5
-      set target: 3, visible: false
-      set target: 4, visible: true
+      set 3, visible: false
+      set 4, visible: true
     	wait [:count], count: 5
-      set target: 4, visible: false
-      set target: 5, visible: true
+      set 4, visible: false
+      set 5, visible: true
     	wait [:count], count: 5
-      set target: 5, visible: false
-      set target: 6, visible: true
+      set 5, visible: false
+      set 6, visible: true
     	wait [:count], count: 5
-      set target: 6, visible: false
-      set target: 7, visible: true
+      set 6, visible: false
+      set 7, visible: true
     	wait [:count], count: 30
     end
   end
@@ -213,17 +213,17 @@ define :page_icon_func do |options|
             :x_count => 4, 
             :y_count => 1
     _WHILE_ ->{true} do
-      set target:3, visible: false
-      set target:0, visible: true
+      set 3, visible: false
+      set 0, visible: true
     	wait [:count], count: 5
-      set target:0, visible: false
-      set target:1, visible: true
+      set 0, visible: false
+      set 1, visible: true
     	wait [:count], count: 5
-      set target:1, visible: false
-      set target:2, visible: true
+      set 1, visible: false
+      set 2, visible: true
     	wait [:count], count: 5
-      set target:2, visible: false
-      set target:3, visible: true
+      set 2, visible: false
+      set 3, visible: true
     	wait [:count], count: 5
     end
   end

@@ -104,34 +104,24 @@ class ScriptCompiler
     @@builtin_command_list.push(command_name)
 
     define_method(command_name) do |option = nil, 
-                                    target = nil,
                                     **option_hash, 
                                     &block|
-      #引数のチェック。:allならチェックしない
-      if !args_format.index(:all)
-        #無名引数が定義されておらず、かつ呼び出し時に設定されている場合
-        if !args_format.index(:option) and option
-          #ターゲットも設定されている場合は書式エラーとして例外
-          raise if target
-          
-          #構文上のミスなので中身をスライドさせる
-          #TODO：もうちょっと上手い実装は無いものか
-          target = option
+                                    
+
+      case args_format
+      when :target_id #無名引数＝送信先ＩＤ（省略可）
+        if option
+          option_hash[:target] = option 
           option = nil
         end
-
-        #ハッシュが定義されておらず、かつ呼び出し時に設定されている場合例外
-        #TODO：この処理自体を再検討
-        if !args_format.index(:option_hash) and !option_hash.empty?
-          if option_hash[:all] or option_hash[:interrupt]
-            #nop
-          else
-            raise 
-          end
-        end
-        #ブロックが定義されておらず、かつ呼び出し時に設定されている場合例外
-        raise if !args_format.index(:block)       and block
+      when :option #無名引数必須
+        raise unless option
+      when :nop #無名引数禁止
+        raise if option
+      else
+        raise
       end
+
       impl(command_name, default_class, option, option_hash, &block)
     end
   end
@@ -144,72 +134,72 @@ class ScriptCompiler
   end
 
   #今フレームを終了する
-  impl_define :end_frame,                []
+  impl_define :end_frame,                :nop
 
   #ＳＥの再生と停止（暫定）
-  impl_define :se_play, []
-  impl_define :se_stop, []
+  impl_define :se_play, :nop
+  impl_define :se_stop, :nop
 
   #次に読み込むスクリプトファイルの指定
-  impl_define :next_scenario, :RenderTargetContainer, [:option]
-  impl_define :load_script,   :RenderTargetContainer, [:option]
+  impl_define :next_scenario, :RenderTargetContainer, :option
+  impl_define :load_script,   :RenderTargetContainer, :option
 
-  impl_define :wake,                      [:option_hash]
+  impl_define :wake,                      :nop
 
   #移動
-  impl_define :move,                      [:option_hash]
-  impl_define :move_line,                 [:option_hash]
-  impl_define :move_line_with_skip,       [:option_hash]
+  impl_define :move,                      :nop
+  impl_define :move_line,                 :nop
+  impl_define :move_line_with_skip,       :nop
   #フラグ設定
-  impl_define :flag,                      [:option_hash]
+  impl_define :flag,                      :nop
 
   #フェードトランジション
-  impl_define :transition_fade,           [:option_hash]
+  impl_define :transition_fade,           :nop
 
-  impl_define :change_default_target, [:all]
+  impl_define :change_default_target, :option
 
-  impl_define :set,                [:option_hash]
+  impl_define :set,                :target_id
 
   #コントロールの生成
-  impl_define :create,  [:all]
+  impl_define :create,  :option
   #コントロールの削除
-  impl_define :delete, []
+  impl_define :delete, :nop
 
   #コントロール単位でイベント駆動するコマンド群を格納する
-  impl_define :event,                 [:all]
+  impl_define :event,                 :option
 
   #各種ウェイト処理
-  impl_define :wait,                  [:all]
-  impl_define :check,            [:option, :block]
+  impl_define :wait,                 :option
+  impl_define :check,            :option
 
-  impl_define :EXP,   [:block]
+  impl_define :EXP,   :nop
 
   #これブロックが継承されないかも
-  impl_define :call_function,                  [:all]
-  impl_define :call_builtin_command,                  [:all]
+  impl_define :call_function,                  :option
+  impl_define :call_builtin_command,           :option
 
   #制御構文 if系
-  impl_define :_IF_,    [:option, :block]
-  impl_define :_THEN_,  [:block]
-  impl_define :_ELSE_,  [:block]
-  impl_define :_ELSIF_, [:option, :block]
+  impl_define :_IF_,    :option
+  impl_define :_THEN_,  :nop
+  impl_define :_ELSE_,  :nop
+  impl_define :_ELSIF_, :option
 
   #case-when文
   #TODO：現状では受け取れる式は１個のみとする
   #TODO：複数取れるべきだが、現仕様では他のコマンドと整合しない
-  impl_define :_CASE_,  [:option, :block]
-  impl_define :_WHEN_,  [:option, :block]
+  impl_define :_CASE_,  :option
+  impl_define :_WHEN_,  :option
 
   #while文
-  impl_define :_WHILE_, [:option, :block]
+  impl_define :_WHILE_, :option
 
   #コマンド名の再定義
-  impl_define :_ALIAS_,   [:option, :option_hash]
+  impl_define :_ALIAS_, :option
   #コルーチン呼び出し
-  impl_define :_YIELD_, [:option_hash]
+  impl_define :_YIELD_, :nop
 
   #実行時評価
-  impl_define :_EVAL_, [:option]
+  impl_define :_EVAL_, :option
   #ユーザー定義コマンドの宣言
-  impl_define :define, [:option, :block]
+  impl_define :define, :option
 end

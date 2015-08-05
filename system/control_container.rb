@@ -551,12 +551,6 @@ class Control
     send("command_" + command_name.to_s, options, inner_options)
   end
 
-  #ブロック内のコマンド列を実行する
-  def command_about(options, inner_options)
-    #コマンドリストをスタックする
-    eval_block(options, inner_options[:block])
-  end
-
   #############################################################################
   #分類未決定
   #############################################################################

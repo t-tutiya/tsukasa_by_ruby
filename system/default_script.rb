@@ -30,10 +30,15 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+#無面関数として機能する
+define :about do |options|
+  _YIELD_ options
+end
+
 #標準ポーズコマンド
 define :pause do |options|
   #■行表示中スキップ処理
-  about :default_char_container , icon: options[:icon] do |options|
+  about nil, :default_char_container , icon: options[:icon] do |options|
     #idleあるいはキー入力待機
     wait [:key_push, :idol]
 

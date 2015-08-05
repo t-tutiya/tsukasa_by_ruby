@@ -38,7 +38,7 @@ end
 #標準ポーズコマンド
 define :pause do |options|
   #■行表示中スキップ処理
-  about nil, :default_char_container , icon: options[:icon] do |options|
+  about :default_char_container , icon: options[:icon] do |options|
     #idleあるいはキー入力待機
     wait [:key_push, :idol]
 
@@ -70,7 +70,7 @@ define :pause do |options|
 
   #■ルートの待機処理
   #スリープモードを設定
-  sleep_mode :sleep
+  sleep_mode mode: :sleep
   #ウェイク待ち
   wait [:wake] do
     _YIELD_
@@ -91,11 +91,11 @@ end
 
 #スキップモードの設定
 define :skip_mode do |options|
-  set options
+  set skip_mode: options[:mode]
 end
 
 define :sleep_mode do |options|
-  set options
+  set sleep_mode: options[:mode]
 end
 
 
@@ -142,9 +142,9 @@ create :RenderTargetContainer,
           #pp "idle"
           set idle_mode: false, interrupt: true
         end
-        sleep_mode :sleep
+        sleep_mode mode: :sleep
         wait [:wake]
-        skip_mode false
+        skip_mode mode: false
         transition_fade frame: 60,
           count: 0,
           start: 255,

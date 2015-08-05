@@ -136,8 +136,8 @@ class ScriptCompiler
   end
 
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
-  def method_missing(command_name, option = nil, target = nil, **options, &block)
-    options[command_name] = option
+  def method_missing(command_name, target = nil, **options, &block)
+    #options[command_name] = option
     #TODO：存在しないメソッドが実行される問題について要検討
     impl(:call_function, :Anonymous, target, command_name, options, &block)
   end

@@ -38,17 +38,17 @@ end
 #標準ポーズコマンド
 define :pause do |options|
   #■行表示中スキップ処理
-  about :default_char_container , icon: options[:icon] do |options|
+  about target: :default_char_container , icon: options[:icon] do |options|
     #idleあるいはキー入力待機
     wait [:key_push, :idol]
 
     if options[:icon]
-      call_function options[:icon], :last, id: :icon
+      call_function options[:icon], target: :last, id: :icon
     end
 
     check [:key_push] do
       #スキップフラグを立てる
-      set :anonymous, skip_mode: true, all: true, interrupt: true
+      set target: :anonymous, skip_mode: true, all: true, interrupt: true
     end
 
     #キー入力伝搬を止める為に１フレ送る
@@ -59,13 +59,13 @@ define :pause do |options|
     #キー入力待機
     wait [:key_push]
 
-    delete :icon, interrupt: true
+    delete target: :icon, interrupt: true
 
     #ルートにウェイクを送る
-    set :anonymous, sleep_mode: :wake , root: true, all: true, interrupt: true
+    set target: :anonymous, sleep_mode: :wake , root: true, all: true, interrupt: true
 
     #スキップフラグを下ろす
-    set :anonymous, skip_mode: false , all: true, interrupt: true
+    set target: :anonymous, skip_mode: false , all: true, interrupt: true
   end
 
   #■ルートの待機処理
@@ -157,7 +157,6 @@ create :RenderTargetContainer,
 
 
 define :line_icon_func do |options|
-
   create :LayoutControl, 
           :x_pos => 0, 
           :y_pos => 0, 
@@ -171,29 +170,29 @@ define :line_icon_func do |options|
             :x_count => 4, 
             :y_count => 2
     _WHILE_ ->{true} do
-      set 7, visible: false
-      set 0, visible: true
+      set target: 7, visible: false
+      set target: 0, visible: true
     	wait [:count], count: 5
-      set 0, visible: false
-      set 1, visible: true
+      set target: 0, visible: false
+      set target: 1, visible: true
     	wait [:count], count: 5
-      set 1, visible: false
-      set 2, visible: true
+      set target: 1, visible: false
+      set target: 2, visible: true
     	wait [:count], count: 5
-      set 2, visible: false
-      set 3, visible: true
+      set target: 2, visible: false
+      set target: 3, visible: true
     	wait [:count], count: 5
-      set 3, visible: false
-      set 4, visible: true
+      set target: 3, visible: false
+      set target: 4, visible: true
     	wait [:count], count: 5
-      set 4, visible: false
-      set 5, visible: true
+      set target: 4, visible: false
+      set target: 5, visible: true
     	wait [:count], count: 5
-      set 5, visible: false
-      set 6, visible: true
+      set target: 5, visible: false
+      set target: 6, visible: true
     	wait [:count], count: 5
-      set 6, visible: false
-      set 7, visible: true
+      set target: 6, visible: false
+      set target: 7, visible: true
     	wait [:count], count: 30
     end
   end
@@ -214,17 +213,17 @@ define :page_icon_func do |options|
             :x_count => 4, 
             :y_count => 1
     _WHILE_ ->{true} do
-      set 3, visible: false
-      set 0, visible: true
+      set target:3, visible: false
+      set target:0, visible: true
     	wait [:count], count: 5
-      set 0, visible: false
-      set 1, visible: true
+      set target:0, visible: false
+      set target:1, visible: true
     	wait [:count], count: 5
-      set 1, visible: false
-      set 2, visible: true
+      set target:1, visible: false
+      set target:2, visible: true
     	wait [:count], count: 5
-      set 2, visible: false
-      set 3, visible: true
+      set target:2, visible: false
+      set target:3, visible: true
     	wait [:count], count: 5
     end
   end

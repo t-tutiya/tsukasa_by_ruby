@@ -61,8 +61,9 @@ class ScriptCompiler
     return  @option || []
   end
 
-  def impl(command_name, default_class, target, 
+  def impl(command_name, default_class, 
             option, 
+            target: nil,
             all: false, 
             interrupt: false, 
             root: false,
@@ -131,15 +132,15 @@ class ScriptCompiler
         #ブロックが定義されておらず、かつ呼び出し時に設定されている場合例外
         raise if !args_format.index(:block)       and block
       end
-      impl(command_name, default_class, target, option, option_hash, &block)
+      impl(command_name, default_class, option, option_hash, &block)
     end
   end
 
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
-  def method_missing(command_name, target = nil, **options, &block)
-    #options[command_name] = option
+  def method_missing(command_name, option = nil, **options, &block)
+    options[command_name] = option
     #TODO：存在しないメソッドが実行される問題について要検討
-    impl(:call_function, :Anonymous, target, command_name, options, &block)
+    impl(:call_function, :Anonymous, command_name, options, &block)
   end
 
   #今フレームを終了する

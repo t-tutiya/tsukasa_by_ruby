@@ -38,7 +38,7 @@ end
 #標準ポーズコマンド
 define :pause do |options|
   #■行表示中スキップ処理
-  about target: :default_char_container , icon: options[:icon] do |options|
+  about :default_char_container , icon: options[:icon] do |options|
     #idleあるいはキー入力待機
     wait [:key_push, :idol]
 
@@ -59,13 +59,13 @@ define :pause do |options|
     #キー入力待機
     wait [:key_push]
 
-    delete target: :icon, interrupt: true
+    delete :icon, interrupt: true
 
     #ルートにウェイクを送る
-    set target: :anonymous, sleep_mode: :wake , root: true, all: true, interrupt: true
+    set :anonymous, sleep_mode: :wake , root: true, all: true, interrupt: true
 
     #スキップフラグを下ろす
-    set target: :anonymous, skip_mode: false , all: true, interrupt: true
+    set :anonymous, skip_mode: false , all: true, interrupt: true
   end
 
   #■ルートの待機処理

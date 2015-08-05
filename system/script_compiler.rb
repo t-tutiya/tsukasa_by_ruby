@@ -128,7 +128,7 @@ class ScriptCompiler
 
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
   def method_missing(command_name, option = nil, **options, &block)
-    options[command_name] = option
+    options[:target] = option
     #TODO：存在しないメソッドが実行される問題について要検討
     impl(:call_function, :Anonymous, command_name, options, &block)
   end
@@ -163,7 +163,7 @@ class ScriptCompiler
   #コントロールの生成
   impl_define :create,  :option
   #コントロールの削除
-  impl_define :delete, :nop
+  impl_define :delete, :target_id
 
   #コントロール単位でイベント駆動するコマンド群を格納する
   impl_define :event,                 :option

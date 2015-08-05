@@ -51,7 +51,7 @@ class ScriptCompiler
             binding, 
             File.expand_path(argument[:script_path]))
     else
-      raise if !block
+      raise unless block
 
       #yieldブロックが設定されている場合
       @block_stack = system_options[:block_stack]

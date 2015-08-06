@@ -193,6 +193,7 @@ class ScriptCompiler
 
   #while文
   impl_define :_WHILE_, :option
+  impl_define :_BREAK_, :nop
 
   #コマンド名の再定義
   impl_define :_ALIAS_, :option

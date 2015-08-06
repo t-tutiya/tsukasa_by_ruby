@@ -350,10 +350,16 @@ class Control
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
   def eval_block(options, inner_options = {}, block)
     return unless block
+
+    #while文全体をスクリプトストレージにスタック
+    interrupt_command([:_END_SCOPE_, options, {:target_id => :anonymous}])
+
     eval_commands(@script_compiler.commands(options, 
                                             inner_options, 
                                             @root_control.system_property, 
                                             &block))
+
+    interrupt_command([:_BEGIN_SCOPE_, options, {:target_id => :anonymous}])
   end
 
   #IFやWHILEなどで渡されたlambdaを実行する
@@ -728,5 +734,53 @@ class Control #制御構文
 
   #１フレ分のみifの結果をコマンドリスト上に格納する
   def command_exp_result(options, inner_options)
+  end
+end
+
+class Control #制御構文
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
+
+  def command__BEGIN_SCOPE_(options, inner_options)
+    #これ自体はなにもしない
+    push_command_to_next_frame(:_BEGIN_SCOPE_, options, inner_options)
+  end
+
+  def command__END_SCOPE_(options, inner_options)
+    until @next_frame_commands.empty? do
+      command = @next_frame_commands.pop
+      return if command[0] == :_BEGIN_SCOPE_
+    end
+    raise #BEGIN_SCOPEが存在しない
+  end
+
+  def command__END_FUNCTION_(options, inner_options)
+    #これ自体はなにもしない
+  end
+
+  def command__RETURN_(options, inner_options)
+    #これ自体はなにもしない
+  end
+
+  def command__BREAK_(options, inner_options)
+
+    unless @command_list.index{|command|
+      command[0] == :_WHILE_}
+      return
+    end
+
+    until @next_frame_commands.empty? do
+      command = @next_frame_commands.pop
+      break if command[0] == :_BEGIN_SCOPE_
+    end
+
+    until @command_list.empty? do
+      command = @command_list.shift
+      break if command[0] == :_WHILE_
+    end
   end
 end

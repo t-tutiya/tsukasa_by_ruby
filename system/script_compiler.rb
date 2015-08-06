@@ -127,10 +127,11 @@ class ScriptCompiler
   end
 
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
-  def method_missing(command_name, option = nil, **options, &block)
-    options[:target] = option
+  def method_missing(user_function_name, option = nil, **options, &block)
+    #無名引数がある場合、関数名をキーに格納する
+    options[user_function_name.to_sym] = option if option
     #TODO：存在しないメソッドが実行される問題について要検討
-    impl(:call_function, :Anonymous, command_name, options, &block)
+    impl(:call_function, :Anonymous, user_function_name, options, &block)
   end
 
   #今フレームを終了する

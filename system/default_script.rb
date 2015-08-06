@@ -38,7 +38,7 @@ end
 #標準ポーズコマンド
 define :pause do |options|
   #■行表示中スキップ処理
-  about :default_char_container , icon: options[:icon] do |options|
+  about target: :default_char_container , icon: options[:icon] do |options|
     #idleあるいはキー入力待機
     wait [:key_push, :idol]
 

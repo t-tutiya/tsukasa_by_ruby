@@ -179,6 +179,9 @@ class ScriptCompiler
   impl_define :call_function,                  :option
   impl_define :call_builtin_command,           :option
 
+  impl_define :_RETURN_, :nop
+  impl_define :_BREAK_, :nop
+
   #制御構文 if系
   impl_define :_IF_,    :option
   impl_define :_THEN_,  :nop

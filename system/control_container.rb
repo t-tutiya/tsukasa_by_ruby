@@ -351,15 +351,10 @@ class Control
   def eval_block(options, inner_options = {}, block)
     return unless block
 
-    #while文全体をスクリプトストレージにスタック
-    interrupt_command([:_END_SCOPE_, options, {:target_id => :anonymous}])
-
     eval_commands(@script_compiler.commands(options, 
                                             inner_options, 
                                             @root_control.system_property, 
                                             &block))
-
-    interrupt_command([:_BEGIN_SCOPE_, options, {:target_id => :anonymous}])
   end
 
   #IFやWHILEなどで渡されたlambdaを実行する
@@ -416,6 +411,44 @@ class Control
         pp "クラス[" + self.class.to_s + "]：メソッド[" + method_name + "]は存在しません"
       end
     end
+  end
+
+  #############################################################################
+  #スタック操作関連
+  #############################################################################
+
+  #ユーザー定義コマンドを定義する
+  def command_define(options, inner_options)
+    @root_control.system_property[:function_list][options[:define]] = inner_options[:block]
+  end
+
+  #関数呼び出し
+  def command_call_function(options, inner_options)
+    #定義されていないfunctionが呼びだされたら例外を送出
+    raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{inner_options}" unless @root_control.system_property[:function_list].key?(options[:call_function])
+
+    inner_options[:block_stack] = Array.new unless inner_options[:block_stack]
+    #関数ブロックを引数に登録する
+    inner_options[:block_stack].push(inner_options[:block])
+    #下位伝搬を防ぐ為に要素を削除
+    inner_options.delete(:block)
+
+    #関数名に対応する関数ブロックを取得する
+    function_block = @root_control.system_property[:function_list][options[:call_function]]
+    
+    #下位伝搬を防ぐ為に要素を削除
+    options.delete(:call_function)
+    
+    interrupt_command([:_END_SCOPE_, {:scope_name => :function}, {:target_id => @id}])
+
+    #functionを実行時評価しコマンド列を生成する。
+    eval_block(options, inner_options, function_block)
+  end
+
+  def command_call_builtin_command(options, inner_options)
+    command_name = options[:call_builtin_command]
+    options.delete(:call_builtin_command) #削除
+    send("command_" + command_name.to_s, options, inner_options)
   end
 end
 
@@ -520,41 +553,6 @@ class Control
     return if !@event_list[options[:fire]]
 
     eval_block(options, @event_list[options[:fire]])
-  end
-
-  #############################################################################
-  #スタック操作関連
-  #############################################################################
-
-  #ユーザー定義コマンドを定義する
-  def command_define(options, inner_options)
-    @root_control.system_property[:function_list][options[:define]] = inner_options[:block]
-  end
-
-  #関数呼び出し
-  def command_call_function(options, inner_options)
-    #定義されていないfunctionが呼びだされたら例外を送出
-    raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{inner_options}" unless @root_control.system_property[:function_list].key?(options[:call_function])
-
-    inner_options[:block_stack] = Array.new unless inner_options[:block_stack]
-    #関数ブロックを引数に登録する
-    inner_options[:block_stack].push(inner_options[:block])
-    #下位伝搬を防ぐ為に要素を削除
-    inner_options.delete(:block)
-
-    #関数名に対応する関数ブロックを取得する
-    function_block = @root_control.system_property[:function_list][options[:call_function]]
-    #下位伝搬を防ぐ為に要素を削除
-    options.delete(:call_function)
-
-    #functionを実行時評価しコマンド列を生成する。
-    eval_block(options, inner_options, function_block)
-  end
-
-  def command_call_builtin_command(options, inner_options)
-    command_name = options[:call_builtin_command]
-    options.delete(:call_builtin_command) #削除
-    send("command_" + command_name.to_s, options, inner_options)
   end
 
   #############################################################################
@@ -666,6 +664,8 @@ class Control #制御構文
     #条件式が非成立であれば繰り返し構文を終了する
     return if !eval_lambda(options[:_WHILE_], options) #アイドル
 
+    interrupt_command([:_END_SCOPE_, {:scope_name => :while}, {:target_id => @id}])
+
     #while文全体をスクリプトストレージにスタック
     eval_commands([[:_WHILE_, options, inner_options]])
     #ブロックを実行時評価しコマンド列を生成する。
@@ -732,12 +732,33 @@ class Control #制御構文
     eval(options[:_EVAL_])
   end
 
-  #１フレ分のみifの結果をコマンドリスト上に格納する
-  def command_exp_result(options, inner_options)
+  def command__RETURN_(options, inner_options)
+    exit_scope(:function)
+  end
+
+  def command__BREAK_(options, inner_options)
+    exit_scope(:while)
+  end
+
+  def exit_scope(scope_name)
+    unless @command_list.index{|command, end_scope_options|
+      command == :_END_SCOPE_ and 
+      end_scope_options[:scope_name] == scope_name}
+      return
+    end
+
+    until @command_list.empty? do
+      command, end_scope_options = @command_list.shift
+
+      if  command == :_END_SCOPE_ and 
+          end_scope_options[:scope_name] == scope_name
+        break
+      end
+    end
   end
 end
 
-class Control #制御構文
+class Control #内部コマンド群
 
   #############################################################################
   #非公開インターフェイス
@@ -745,42 +766,11 @@ class Control #制御構文
 
   private
 
-  def command__BEGIN_SCOPE_(options, inner_options)
-    #これ自体はなにもしない
-    push_command_to_next_frame(:_BEGIN_SCOPE_, options, inner_options)
+  #１フレ分のみifの結果をコマンドリスト上に格納する
+  def command_exp_result(options, inner_options)
   end
 
   def command__END_SCOPE_(options, inner_options)
-    until @next_frame_commands.empty? do
-      command = @next_frame_commands.pop
-      return if command[0] == :_BEGIN_SCOPE_
-    end
-    raise #BEGIN_SCOPEが存在しない
   end
 
-  def command__END_FUNCTION_(options, inner_options)
-    #これ自体はなにもしない
-  end
-
-  def command__RETURN_(options, inner_options)
-    #これ自体はなにもしない
-  end
-
-  def command__BREAK_(options, inner_options)
-
-    unless @command_list.index{|command|
-      command[0] == :_WHILE_}
-      return
-    end
-
-    until @next_frame_commands.empty? do
-      command = @next_frame_commands.pop
-      break if command[0] == :_BEGIN_SCOPE_
-    end
-
-    until @command_list.empty? do
-      command = @command_list.shift
-      break if command[0] == :_WHILE_
-    end
-  end
 end

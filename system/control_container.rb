@@ -739,23 +739,6 @@ class Control #制御構文
       break if  command == :_WHILE_
     end
   end
-
-  def exit_scope(scope_name)
-    unless @command_list.index{|command, end_scope_options|
-      command == :_END_SCOPE_ and 
-      end_scope_options[:scope_name] == scope_name}
-      return
-    end
-
-    until @command_list.empty? do
-      command, end_scope_options = @command_list.shift
-
-      if  command == :_END_SCOPE_ and 
-          end_scope_options[:scope_name] == scope_name
-        break
-      end
-    end
-  end
 end
 
 class Control #内部コマンド群
@@ -769,8 +752,4 @@ class Control #内部コマンド群
   #１フレ分のみifの結果をコマンドリスト上に格納する
   def command_exp_result(options, inner_options)
   end
-
-  def command__END_SCOPE_(options, inner_options)
-  end
-
 end

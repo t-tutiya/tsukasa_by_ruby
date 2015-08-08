@@ -418,27 +418,6 @@ class Control
     @root_control.system_property[:function_list][options[:define]] = inner_options[:block]
   end
 
-  #関数呼び出し
-  def command_call_function(options, inner_options)
-    #定義されていないfunctionが呼びだされたら例外を送出
-    raise NameError, "undefined local variable or command or function `#{options[:call_function]}' for #{inner_options}" unless @root_control.system_property[:function_list].key?(options[:call_function])
-
-    inner_options[:block_stack] = Array.new unless inner_options[:block_stack]
-    #関数ブロックを引数に登録する
-    inner_options[:block_stack].push(inner_options[:block])
-    #下位伝搬を防ぐ為に要素を削除
-    inner_options.delete(:block)
-
-    #関数名に対応する関数ブロックを取得する
-    function_block = @root_control.system_property[:function_list][options[:call_function]]
-    
-    #下位伝搬を防ぐ為に要素を削除
-    options.delete(:call_function)
-
-    #functionを実行時評価しコマンド列を生成する。
-    eval_block(options, inner_options, function_block)
-  end
-
   def command_call_builtin_command(options, inner_options)
     command_name = options[:call_builtin_command]
     options.delete(:call_builtin_command) #削除
@@ -691,6 +670,27 @@ class Control #制御構文
       #コマンドブロックを実行する
       eval_block(options, inner_options[:block])
     end
+  end
+
+  #関数呼び出し
+  def command__CALL_(options, inner_options)
+    #定義されていないfunctionが呼びだされたら例外を送出
+    raise NameError, "undefined local variable or command or function `#{options[:_CALL_]}' for #{inner_options}" unless @root_control.system_property[:function_list].key?(options[:_CALL_])
+
+    inner_options[:block_stack] = Array.new unless inner_options[:block_stack]
+    #関数ブロックを引数に登録する
+    inner_options[:block_stack].push(inner_options[:block])
+    #下位伝搬を防ぐ為に要素を削除
+    inner_options.delete(:block)
+
+    #関数名に対応する関数ブロックを取得する
+    function_block = @root_control.system_property[:function_list][options[:_CALL_]]
+    
+    #下位伝搬を防ぐ為に要素を削除
+    options.delete(:_CALL_)
+
+    #functionを実行時評価しコマンド列を生成する。
+    eval_block(options, inner_options, function_block)
   end
 
   #関数ブロックを実行する

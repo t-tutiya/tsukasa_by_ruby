@@ -128,7 +128,7 @@ class ScriptCompiler
     #無名引数がある場合、関数名をキーに格納する
     options[user_function_name.to_sym] = option if option
     #TODO：存在しないメソッドが実行される問題について要検討
-    impl(:call_function, :Anonymous, user_function_name, options, &block)
+    impl(:_CALL_, :Anonymous, user_function_name, options, &block)
   end
 
   #今フレームを終了する
@@ -173,7 +173,7 @@ class ScriptCompiler
   impl_define :EXP,   :nop
 
   #これブロックが継承されないかも
-  impl_define :call_function,                  :option
+  impl_define :_CALL_,                  :option
   impl_define :call_builtin_command,           :option
 
   impl_define :_RETURN_, :nop

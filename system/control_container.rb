@@ -438,8 +438,6 @@ class Control
     
     #下位伝搬を防ぐ為に要素を削除
     options.delete(:call_function)
-    
-    interrupt_command([:_END_SCOPE_, {:scope_name => :function}, {:target_id => @id}])
 
     #functionを実行時評価しコマンド列を生成する。
     eval_block(options, inner_options, function_block)
@@ -664,8 +662,6 @@ class Control #制御構文
     #条件式が非成立であれば繰り返し構文を終了する
     return if !eval_lambda(options[:_WHILE_], options) #アイドル
 
-    interrupt_command([:_END_SCOPE_, {:scope_name => :while}, {:target_id => @id}])
-
     #while文全体をスクリプトストレージにスタック
     eval_commands([[:_WHILE_, options, inner_options]])
     #ブロックを実行時評価しコマンド列を生成する。
@@ -732,12 +728,16 @@ class Control #制御構文
     eval(options[:_EVAL_])
   end
 
-  def command__RETURN_(options, inner_options)
-    exit_scope(:function)
-  end
-
   def command__BREAK_(options, inner_options)
-    exit_scope(:while)
+    unless @command_list.index{|command, end_scope_options|
+                                command == :_WHILE_}
+      return
+    end
+
+    until @command_list.empty? do
+      command, end_scope_options = @command_list.shift
+      break if  command == :_WHILE_
+    end
   end
 
   def exit_scope(scope_name)

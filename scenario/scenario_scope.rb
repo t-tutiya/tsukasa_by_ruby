@@ -47,8 +47,7 @@ _WHILE_ -> {true}, target: :button1 do
 #  _BREAK_
   move_line x: 300, y: 300, count:0, frame: 60, start_x: 300, start_y: 0
   wait_command :move_line
-  _RETURN_
-  _BREAK_
+#  _BREAK_
   move_line x: 0,   y: 300, count:0, frame: 60, start_x: 300, start_y: 300
   wait_command :move_line
   _BREAK_

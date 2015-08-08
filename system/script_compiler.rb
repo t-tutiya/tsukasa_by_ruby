@@ -38,12 +38,9 @@ class ScriptCompiler
   end
 
   #ヘルパーメソッド群
-  def commands(argument, system_options = {}, system_property = {}, &block)
+  def commands(argument, system_options = {}, &block)
     @option = []
     @yield_block = nil
-
-    @system_property = system_property
-    @global_flag = @system_property[:global_flag]
 
     if argument[:script_path]
       #評価対象がスクリプトファイルの場合の場合

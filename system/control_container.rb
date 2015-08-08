@@ -83,8 +83,7 @@ class Control
       #デフォルトスクリプトの読み込み
       @command_list += @script_compiler.commands(
                           {:script_path => options[:default_script_path]}, 
-                          inner_options, 
-                          @root_control.system_property)
+                          inner_options)
     end
 
     #スクリプトパスが設定されているなら読み込んで登録する
@@ -92,8 +91,7 @@ class Control
       #シナリオファイルの読み込み
       @command_list += @script_compiler.commands(
                           {:script_path => options[:script_path]}, 
-                          inner_options, 
-                          @root_control.system_property)
+                          inner_options)
     end
 
     #ブロックが付与されているなら読み込んで登録する
@@ -101,7 +99,6 @@ class Control
       @command_list = @script_compiler.commands(
                           options, 
                           inner_options, 
-                          @root_control.system_property, 
                           &inner_options[:block])
     end
 
@@ -353,7 +350,6 @@ class Control
 
     eval_commands(@script_compiler.commands(options, 
                                             inner_options, 
-                                            @root_control.system_property, 
                                             &block))
   end
 

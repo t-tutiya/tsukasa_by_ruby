@@ -38,7 +38,7 @@ class ScriptCompiler
   end
 
   #ヘルパーメソッド群
-  def commands(argument, system_options = {}, &block)
+  def commands(argument, block_stack = nil, &block)
     @option = []
     @yield_block = nil
 
@@ -51,7 +51,7 @@ class ScriptCompiler
       raise unless block
 
       #yieldブロックが設定されている場合
-      @block_stack = system_options[:block_stack]
+      @block_stack = block_stack
 
       self.instance_exec(**argument, &block)
     end

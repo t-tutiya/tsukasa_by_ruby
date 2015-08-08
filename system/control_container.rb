@@ -82,23 +82,20 @@ class Control
     if options[:default_script_path]
       #デフォルトスクリプトの読み込み
       @command_list += @script_compiler.commands(
-                          {:script_path => options[:default_script_path]}, 
-                          inner_options)
+                          {:script_path => options[:default_script_path]})
     end
 
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]
       #シナリオファイルの読み込み
       @command_list += @script_compiler.commands(
-                          {:script_path => options[:script_path]}, 
-                          inner_options)
+                          {:script_path => options[:script_path]})
     end
 
     #ブロックが付与されているなら読み込んで登録する
     if inner_options[:block]
       @command_list = @script_compiler.commands(
                           options, 
-                          inner_options, 
                           &inner_options[:block])
     end
 
@@ -345,11 +342,11 @@ class Control
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
-  def eval_block(options, inner_options = {}, block)
+  def eval_block(options, block_stack = nil, block)
     return unless block
 
     eval_commands(@script_compiler.commands(options, 
-                                            inner_options, 
+                                            block_stack, 
                                             &block))
   end
 
@@ -677,11 +674,18 @@ class Control #制御構文
     #定義されていないfunctionが呼びだされたら例外を送出
     raise NameError, "undefined local variable or command or function `#{options[:_CALL_]}' for #{inner_options}" unless @root_control.system_property[:function_list].key?(options[:_CALL_])
 
-    inner_options[:block_stack] = Array.new unless inner_options[:block_stack]
-    #関数ブロックを引数に登録する
-    inner_options[:block_stack].push(inner_options[:block])
-    #下位伝搬を防ぐ為に要素を削除
-    inner_options.delete(:block)
+    #伝搬されているブロックがある場合
+    if inner_options[:block_stack]
+      block_stack = inner_options[:block_stack]
+      if inner_options[:block]
+        block_stack.push(inner_options[:block]) 
+      end
+    #付与ブロックがある場合
+    elsif inner_options[:block]
+      block_stack = [inner_options[:block]]
+    else
+      block_stack = nil
+    end
 
     #関数名に対応する関数ブロックを取得する
     function_block = @root_control.system_property[:function_list][options[:_CALL_]]
@@ -690,7 +694,7 @@ class Control #制御構文
     options.delete(:_CALL_)
 
     #functionを実行時評価しコマンド列を生成する。
-    eval_block(options, inner_options, function_block)
+    eval_block(options, block_stack, function_block)
   end
 
   #関数ブロックを実行する

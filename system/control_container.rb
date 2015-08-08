@@ -533,6 +533,78 @@ class Control
 end
 
 #############################################################################
+#***コマンド
+#############################################################################
+
+class Control #***
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
+
+  #関数呼び出し
+  def command__CALL_(options, inner_options)
+    #定義されていないfunctionが呼びだされたら例外を送出
+    raise NameError, "undefined local variable or command or function `#{options[:_CALL_]}' for #{inner_options}" unless @root_control.system_property[:function_list].key?(options[:_CALL_])
+
+    #伝搬されているブロックがある場合
+    if inner_options[:block_stack]
+      block_stack = inner_options[:block_stack]
+      if inner_options[:block]
+        block_stack.push(inner_options[:block]) 
+      end
+    #付与ブロックがある場合
+    elsif inner_options[:block]
+      block_stack = [inner_options[:block]]
+    else
+      block_stack = nil
+    end
+
+    #関数名に対応する関数ブロックを取得する
+    function_block = @root_control.system_property[:function_list][options[:_CALL_]]
+    
+    #下位伝搬を防ぐ為に要素を削除
+    options.delete(:_CALL_)
+
+    #functionを実行時評価しコマンド列を生成する。
+    eval_block(options, block_stack, function_block)
+  end
+
+  #関数ブロックを実行する
+  def command__YIELD_(options, inner_options)
+    return unless inner_options[:block_stack]
+    
+    eval_block(options, inner_options, inner_options[:block_stack].pop)
+  end
+
+  #コマンドを再定義する
+  def command__ALIAS_(options, inner_options)
+    #元コマンドが組み込みコマンドの場合
+    if @script_compiler.builtin_command_list.include?(options[:command_name])
+      #元コマンドをcall_builtin_commandで呼びだすブロックを設定する
+      @root_control.system_property[:function_list][options[:_ALIAS_]] = Proc.new{|command_options|
+        call_builtin_command(options[:command_name], command_options)
+      }
+
+      #コマンドを組み込みコマンドリストから削除する
+      @script_compiler.builtin_command_list.delete_if{ |command_name|
+        command_name == options[:command_name]
+      }
+    else
+      #新しいコマンド名に元のコマンドのブロックを設定する
+      @root_control.system_property[:function_list][options[:_ALIAS_]] = @root_control.system_property[:function_list][options[:command_name]]
+    end
+  end
+
+  #文字列を評価する（デバッグ用）
+  def command__EVAL_(options, inner_options)
+    eval(options[:_EVAL_])
+  end
+end
+
+#############################################################################
 #制御構文コマンド
 #############################################################################
 
@@ -618,6 +690,18 @@ class Control #制御構文
     eval_block(options, inner_options[:block])
   end
 
+  def command__BREAK_(options, inner_options)
+    unless @command_list.index{|command, end_scope_options|
+                                command == :_WHILE_}
+      return
+    end
+
+    until @command_list.empty? do
+      command, end_scope_options = @command_list.shift
+      break if  command == :_WHILE_
+    end
+  end
+
   def command__CASE_(options, inner_options)
     #比較元のオブジェクトを評価する
     value = eval_lambda(options[:_CASE_], options)
@@ -644,77 +728,6 @@ class Control #制御構文
     if exp_result[:case_value] == eval_lambda(options[:_WHEN_], options)
       #コマンドブロックを実行する
       eval_block(options, inner_options[:block])
-    end
-  end
-
-  #関数呼び出し
-  def command__CALL_(options, inner_options)
-    #定義されていないfunctionが呼びだされたら例外を送出
-    raise NameError, "undefined local variable or command or function `#{options[:_CALL_]}' for #{inner_options}" unless @root_control.system_property[:function_list].key?(options[:_CALL_])
-
-    #伝搬されているブロックがある場合
-    if inner_options[:block_stack]
-      block_stack = inner_options[:block_stack]
-      if inner_options[:block]
-        block_stack.push(inner_options[:block]) 
-      end
-    #付与ブロックがある場合
-    elsif inner_options[:block]
-      block_stack = [inner_options[:block]]
-    else
-      block_stack = nil
-    end
-
-    #関数名に対応する関数ブロックを取得する
-    function_block = @root_control.system_property[:function_list][options[:_CALL_]]
-    
-    #下位伝搬を防ぐ為に要素を削除
-    options.delete(:_CALL_)
-
-    #functionを実行時評価しコマンド列を生成する。
-    eval_block(options, block_stack, function_block)
-  end
-
-  #関数ブロックを実行する
-  def command__YIELD_(options, inner_options)
-    return unless inner_options[:block_stack]
-    
-    eval_block(options, inner_options, inner_options[:block_stack].pop)
-  end
-
-  #コマンドを再定義する
-  def command__ALIAS_(options, inner_options)
-    #元コマンドが組み込みコマンドの場合
-    if @script_compiler.builtin_command_list.include?(options[:command_name])
-      #元コマンドをcall_builtin_commandで呼びだすブロックを設定する
-      @root_control.system_property[:function_list][options[:_ALIAS_]] = Proc.new{|command_options|
-        call_builtin_command(options[:command_name], command_options)
-      }
-
-      #コマンドを組み込みコマンドリストから削除する
-      @script_compiler.builtin_command_list.delete_if{ |command_name|
-        command_name == options[:command_name]
-      }
-    else
-      #新しいコマンド名に元のコマンドのブロックを設定する
-      @root_control.system_property[:function_list][options[:_ALIAS_]] = @root_control.system_property[:function_list][options[:command_name]]
-    end
-  end
-
-  #文字列を評価する（デバッグ用）
-  def command__EVAL_(options, inner_options)
-    eval(options[:_EVAL_])
-  end
-
-  def command__BREAK_(options, inner_options)
-    unless @command_list.index{|command, end_scope_options|
-                                command == :_WHILE_}
-      return
-    end
-
-    until @command_list.empty? do
-      command, end_scope_options = @command_list.shift
-      break if  command == :_WHILE_
     end
   end
 end

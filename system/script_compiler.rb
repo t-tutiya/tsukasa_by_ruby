@@ -39,7 +39,7 @@ class ScriptCompiler
 
   #ヘルパーメソッド群
   def commands(argument, block_stack = nil, &block)
-    @option = []
+    @command_list = []
     @yield_block = nil
 
     if argument[:script_path]
@@ -55,7 +55,7 @@ class ScriptCompiler
 
       self.instance_exec(**argument, &block)
     end
-    return  @option || []
+    return  @command_list || []
   end
 
   def impl(command_name, default_class, 
@@ -87,10 +87,7 @@ class ScriptCompiler
     end
 
     #コマンドを登録する
-    @option.push([command_name,
-                  sub_options, 
-                  system_options,
-                  ])
+    @command_list.push([command_name,sub_options, system_options])
   end
 
   #コマンドに対応するメソッドを生成する。
@@ -100,11 +97,7 @@ class ScriptCompiler
     #組み込みコマンド名としてリストに追加する
     @@builtin_command_list.push(command_name)
 
-    define_method(command_name) do |option = nil, 
-                                    **option_hash, 
-                                    &block|
-                                    
-
+    define_method(command_name) do |option = nil, **option_hash, &block|
       case args_format
       when :target_id #無名引数＝送信先ＩＤ（省略可）
         if option

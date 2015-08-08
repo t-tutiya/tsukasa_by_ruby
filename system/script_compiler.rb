@@ -138,12 +138,6 @@ class ScriptCompiler
   impl_define :se_play, :nop
   impl_define :se_stop, :nop
 
-  #次に読み込むスクリプトファイルの指定
-  impl_define :next_scenario, :RenderTargetContainer, :option
-  impl_define :load_script,   :RenderTargetContainer, :option
-
-  impl_define :wake,                      :nop
-
   #移動
   impl_define :move,                      :nop
   impl_define :move_line,                 :nop
@@ -175,9 +169,6 @@ class ScriptCompiler
   #これブロックが継承されないかも
   impl_define :_CALL_,                  :option
   impl_define :call_builtin_command,           :option
-
-  impl_define :_RETURN_, :nop
-  impl_define :_BREAK_, :nop
 
   #制御構文 if系
   impl_define :_IF_,    :option

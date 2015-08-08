@@ -43,7 +43,7 @@ define :pause do |options|
     wait [:key_push, :idol]
 
     if options[:icon]
-      call_function options[:icon], target: :last, id: :icon
+      _CALL_ options[:icon], target: :last, id: :icon
     end
 
     check [:key_push] do
@@ -72,9 +72,7 @@ define :pause do |options|
   #スリープモードを設定
   sleep_mode mode: :sleep
   #ウェイク待ち
-  wait [:wake] do
-    _YIELD_
-  end
+  wait [:wake]
 end
 
 #指定フレーム数ウェイト

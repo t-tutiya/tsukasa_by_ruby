@@ -530,19 +530,6 @@ class Control
   def command_change_default_target(options, inner_options)
     @control_default[options[:change_default_target]] = options[:id]
   end
-
-  #次に読み込むスクリプトファイルのパスを設定する
-  def command_next_scenario(options, inner_options)
-    @next_script_file_path = options[:next_scenario]
-  end
-  
-  #スクリプトファイルの読み込み
-  def command_load_script(options, inner_options)
-    #指定されたスクリプトファイルを直接読み込む
-    #TODO：@command_listに上書きするのか、追記するのかはオプションで指定できた方が良いか？　その
-    @command_list = @script_compiler.commands({:script_path => options[:load_script]})
-  end
-  
 end
 
 #############################################################################

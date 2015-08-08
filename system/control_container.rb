@@ -186,19 +186,6 @@ class Control
     #待機モードを初期化
     @idle_mode = true
 
-=begin
-    #TODO：スクリプトの追加読み込みについては仕様検討中
-    #トークンの取得対象であるスクリプトストレージが空の場合
-    if @command_list.empty?
-      #次に読み込むスクリプトファイルが指定されている場合
-      if @next_script_file_path
-        #指定されたスクリプトファイルを読み込む
-        @command_list = @script_compiler.commands(@next_script_file_path)
-        #予約スクリプトファイルパスの初期化
-        @next_script_file_path = nil
-      end
-    end
-=end
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得

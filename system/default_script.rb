@@ -33,6 +33,7 @@ require 'dxruby'
 #無面関数として機能する
 define :about do |options|
   _YIELD_ options
+  _END_SCOPE_
 end
 
 #標準ポーズコマンド

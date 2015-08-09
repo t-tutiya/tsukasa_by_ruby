@@ -183,6 +183,7 @@ class ScriptCompiler
   impl_define :_ALIAS_, :option
   #コルーチン呼び出し
   impl_define :_YIELD_, :nop
+  impl_define :_END_SCOPE_, :nop
 
   #実行時評価
   impl_define :_EVAL_, :option

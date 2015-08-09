@@ -686,6 +686,8 @@ class Control #制御構文
     #条件式が非成立であれば繰り返し構文を終了する
     return if !eval_lambda(options[:_WHILE_], options) #アイドル
 
+    interrupt_command([:_END_SCOPE_, options, inner_options])
+
     #while文全体をスクリプトストレージにスタック
     eval_commands([[:_WHILE_, options, inner_options]])
     #ブロックを実行時評価しコマンド列を生成する。
@@ -694,13 +696,13 @@ class Control #制御構文
 
   def command__BREAK_(options, inner_options)
     unless @command_list.index{|command, end_scope_options|
-                                command == :_WHILE_}
+                                command == :_END_SCOPE_}
       return
     end
 
     until @command_list.empty? do
       command, end_scope_options = @command_list.shift
-      break if  command == :_WHILE_
+      break if  command == :_END_SCOPE_
     end
   end
 
@@ -744,5 +746,9 @@ class Control #内部コマンド群
 
   #１フレ分のみifの結果をコマンドリスト上に格納する
   def command_exp_result(options, inner_options)
+  end
+
+  #１フレ分のみifの結果をコマンドリスト上に格納する
+  def command__END_SCOPE_(options, inner_options)
   end
 end

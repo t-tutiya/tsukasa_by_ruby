@@ -99,7 +99,8 @@ class Control
     #ブロックが付与されているなら読み込んで登録する
     if inner_options[:block]
       @command_list = @script_compiler.commands(
-                          options, 
+                          options,
+                          inner_options[:block_stack],
                           &inner_options[:block])
     end
 
@@ -577,8 +578,11 @@ class Control #ユーザー定義関数操作
   #関数ブロックを実行する
   def command__YIELD_(options, inner_options)
     return unless inner_options[:block_stack]
-    
-    eval_block(options, &inner_options[:block_stack].pop)
+
+    block = inner_options[:block_stack].pop
+    block_stack = inner_options[:block_stack].empty? ? nil : inner_options[:block_stack]
+
+    eval_block(options, block_stack, &block)
   end
 
   #コマンドを再定義する

@@ -98,6 +98,7 @@ class ScriptCompiler
     @@builtin_command_list.push(command_name)
 
     define_method(command_name) do |option = nil, **option_hash, &block|
+=begin
       case args_format
       when :target_id #無名引数＝送信先ＩＤ（省略可）
         if option
@@ -111,7 +112,7 @@ class ScriptCompiler
       else
         raise
       end
-
+=end
       impl(command_name, default_class, option, option_hash, &block)
     end
   end

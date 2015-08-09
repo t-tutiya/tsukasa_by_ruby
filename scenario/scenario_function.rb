@@ -14,24 +14,24 @@ create :ButtonControl,
   image :file_path=>"./sozai/button_key_down.png", 
         :id=>:key_down, :visible => false
   on_mouse_over do
-    set :normal, visible: false
-    set :over,   visible: true
-    set :key_down, visible: false
+    set target: :normal, visible: false
+    set target: :over,   visible: true
+    set target: :key_down, visible: false
   end
   on_mouse_out do
-    set :over,   visible: false
-    set :normal, visible: true
-    set :key_down, visible: false
+    set target: :over,   visible: false
+    set target: :normal, visible: true
+    set target: :key_down, visible: false
   end
   on_key_down do
-    set :over,   visible: false
-    set :normal, visible: false
-    set :key_down, visible: true
+    set target: :over,   visible: false
+    set target: :normal, visible: false
+    set target: :key_down, visible: true
   end
   on_key_up do
-    set :key_down, visible: false
-    set :normal, visible: false
-    set :over,   visible: true
+    set target: :key_down, visible: false
+    set target: :normal, visible: false
+    set target: :over,   visible: true
   end
   #内部関数の定義
   _DEFINE_ :func do |val|

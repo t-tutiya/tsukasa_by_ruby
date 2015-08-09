@@ -37,17 +37,17 @@ create :ImageControl ,
        file_path: "./sozai/button_normal.png",
        id: :BG3, float_mode: :none
 
-set :BG1, file_path: "./sozai/button_normal.png", x_pos: 100, y_pos: 100, 
+set target: :BG1, file_path: "./sozai/button_normal.png", x_pos: 100, y_pos: 100, 
           float_mode: :right
 
 wait_push
 
-set :BG1, x_pos: 200, file_path: "./sozai/button_key_down.png"
+set target: :BG1, x_pos: 200, file_path: "./sozai/button_key_down.png"
 
 wait_push
 
-set :BG2, x_pos: 200, file_path: "./sozai/button_key_up.png"
+set target: :BG2, x_pos: 200, file_path: "./sozai/button_key_up.png"
 
 wait_push
 
-set :BG3, x_pos: 200, file_path: "./sozai/button_over.png"
+set target: :BG3, x_pos: 200, file_path: "./sozai/button_over.png"

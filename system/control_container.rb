@@ -333,7 +333,7 @@ class Control
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
-  def eval_block(options, block_stack = nil, block)
+  def eval_block(options, block_stack = nil, &block)
     return unless block
 
     eval_commands(@script_compiler.commands(options, 
@@ -443,7 +443,7 @@ class Control
     eval_commands([[:end_frame, {}, {:target_id => @id}]])
 
     #waitにブロックが付与されているならそれを実行する
-    eval_block(options, inner_options, inner_options[:block])
+    eval_block(options, &inner_options[:block])
 
     push_command_to_next_frame(:wait, options, inner_options)
   end
@@ -453,7 +453,7 @@ class Control
     return unless check_imple(options[:check], options)
 
     #checkにブロックが付与されているならそれを実行する
-    eval_block(options, inner_options, inner_options[:block])
+    eval_block(options, &inner_options[:block])
   end
 
   def check_imple(conditions, options)
@@ -502,20 +502,22 @@ class Control
   #############################################################################
 
   private
-
+=begin
   #イベントコマンドの登録
   def command_event(options, inner_options)
+    raise
     @event_list[options[:event]] = inner_options[:block]
   end
 
   #イベントの実行
   def command_fire(options, inner_options)
-    #キーが登録されていないなら終了
+    raise
+    \#キーが登録されていないなら終了
     return if !@event_list[options[:fire]]
 
     eval_block(options, @event_list[options[:fire]])
   end
-
+=end
   #############################################################################
   #分類未決定
   #############################################################################
@@ -569,14 +571,14 @@ class Control #***
     options.delete(:_CALL_)
 
     #functionを実行時評価しコマンド列を生成する。
-    eval_block(options, block_stack, function_block)
+    eval_block(options, block_stack, &function_block)
   end
 
   #関数ブロックを実行する
   def command__YIELD_(options, inner_options)
     return unless inner_options[:block_stack]
     
-    eval_block(options, inner_options, inner_options[:block_stack].pop)
+    eval_block(options, &inner_options[:block_stack].pop)
   end
 
   #コマンドを再定義する
@@ -626,7 +628,7 @@ class Control #制御構文
     end
 
     #if文の中身を実行する
-    eval_block(options, inner_options[:block])
+    eval_block(options, &inner_options[:block])
 
     push_command_to_next_frame(:exp_result, {:result => result}, inner_options)
   end
@@ -641,7 +643,7 @@ class Control #制御構文
     #結果がthenの場合
     if result and @next_frame_commands[result][1][:result] == :then
       #コマンドブロックを実行する
-      eval_block(options, inner_options[:block])
+      eval_block(options, &inner_options[:block])
     end
   end
 
@@ -657,7 +659,7 @@ class Control #制御構文
       #ラムダ式が真の場合
       if eval_lambda(options[:_ELSIF_], options)
         #コマンドブロックを実行する
-        eval_block(options, inner_options[:block])
+        eval_block(options, &inner_options[:block])
         #処理がこれ以上伝搬しないように評価結果をクリアする
         #TODO：コマンド自体を削除した方が確実
         @next_frame_commands[result][1][:result] = nil
@@ -675,7 +677,7 @@ class Control #制御構文
     #結果がelseの場合
     if result and @next_frame_commands[result][1][:result] == :else
       #コマンドブロックを実行する
-      eval_block(options, inner_options[:block])
+      eval_block(options, &inner_options[:block])
     end
   end
 
@@ -687,7 +689,7 @@ class Control #制御構文
     #while文全体をスクリプトストレージにスタック
     eval_commands([[:_WHILE_, options, inner_options]])
     #ブロックを実行時評価しコマンド列を生成する。
-    eval_block(options, inner_options[:block])
+    eval_block(options, &inner_options[:block])
   end
 
   def command__BREAK_(options, inner_options)
@@ -707,7 +709,7 @@ class Control #制御構文
     value = eval_lambda(options[:_CASE_], options)
 
     #case文の中身を実行する
-    eval_block(options, inner_options[:block])
+    eval_block(options, &inner_options[:block])
 
     push_command_to_next_frame(:exp_result, 
                               { :result => :else, :case_value => value}, 
@@ -727,7 +729,7 @@ class Control #制御構文
 
     if exp_result[:case_value] == eval_lambda(options[:_WHEN_], options)
       #コマンドブロックを実行する
-      eval_block(options, inner_options[:block])
+      eval_block(options, &inner_options[:block])
     end
   end
 end

@@ -42,7 +42,7 @@ end
 
 _ALIAS_ :move_line2 , command_name: :move_line
 
-about :button1 do
+about target: :button1 do
   move_line2 x: 0, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
   wait_command :move_line
   move_line2 x: 300, y: 300, count:0, frame: 60, start_x: 0, start_y: 300

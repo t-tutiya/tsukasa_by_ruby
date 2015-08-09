@@ -31,13 +31,13 @@ require 'dxruby'
 ###############################################################################
 
 #無面関数として機能する
-define :about do |options|
+_DEFINE_ :about do |options|
   _YIELD_ options
   _END_SCOPE_
 end
 
 #標準ポーズコマンド
-define :pause do |options|
+_DEFINE_ :pause do |options|
   #■行表示中スキップ処理
   about target: :default_char_container , icon: options[:icon] do |options|
     #idleあるいはキー入力待機
@@ -78,38 +78,38 @@ end
 
 #指定フレーム数ウェイト
 #ex. wait_count 60
-define :wait_count do |options|
+_DEFINE_ :wait_count do |options|
   wait [:count], count: options[:wait_count]
 end
 
 #指定コマンドウェイト
 #ex. wait_command :move_line
-define :wait_command do |options|
+_DEFINE_ :wait_command do |options|
   wait [:command], command: options[:wait_command]
 end
 
 #スキップモードの設定
-define :skip_mode do |options|
+_DEFINE_ :skip_mode do |options|
   set skip_mode: options[:mode]
 end
 
-define :sleep_mode do |options|
+_DEFINE_ :sleep_mode do |options|
   set sleep_mode: options[:mode]
 end
 
 
 #可視設定
-define :visible do |options|
+_DEFINE_ :visible do |options|
   set options
 end
 
 #単機能キー入力待ち
-define :wait_push do
+_DEFINE_ :wait_push do
   wait [:key_push]
   end_frame
 end
 
-define :image do |options|
+_DEFINE_ :image do |options|
   create :ImageControl , options do
     _YIELD_
   end
@@ -155,7 +155,7 @@ create :RenderTargetContainer,
   end
 
 
-define :line_icon_func do |options|
+_DEFINE_ :line_icon_func do |options|
   create :LayoutControl, 
           :x_pos => 0, 
           :y_pos => 0, 
@@ -197,7 +197,7 @@ define :line_icon_func do |options|
   end
 end
 
-define :page_icon_func do |options|
+_DEFINE_ :page_icon_func do |options|
 
   create :LayoutControl, 
           :x_pos => 0, 

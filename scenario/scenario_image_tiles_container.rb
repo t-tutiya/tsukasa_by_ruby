@@ -27,7 +27,7 @@
 #
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
-define :page_icon do |options|
+_DEFINE_ :page_icon do |options|
 
   create :LayoutControl, 
           :x_pos => options[:x_pos], 

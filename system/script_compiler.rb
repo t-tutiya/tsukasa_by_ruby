@@ -188,5 +188,5 @@ class ScriptCompiler
   #実行時評価
   impl_define :_EVAL_, :option
   #ユーザー定義コマンドの宣言
-  impl_define :define, :option
+  impl_define :_DEFINE_, :option
 end

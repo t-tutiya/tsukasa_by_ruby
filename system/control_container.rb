@@ -401,11 +401,6 @@ class Control
   #スタック操作関連
   #############################################################################
 
-  #ユーザー定義コマンドを定義する
-  def command_define(options, inner_options)
-    @root_control.system_property[:function_list][options[:define]] = inner_options[:block]
-  end
-
   def command_call_builtin_command(options, inner_options)
     command_name = options[:call_builtin_command]
     options.delete(:call_builtin_command) #削除
@@ -538,13 +533,18 @@ end
 #***コマンド
 #############################################################################
 
-class Control #***
+class Control #ユーザー定義関数操作
 
   #############################################################################
   #非公開インターフェイス
   #############################################################################
 
   private
+
+  #ユーザー定義コマンドを定義する
+  def command__DEFINE_(options, inner_options)
+    @root_control.system_property[:function_list][options[:_DEFINE_]] = inner_options[:block]
+  end
 
   #関数呼び出し
   def command__CALL_(options, inner_options)

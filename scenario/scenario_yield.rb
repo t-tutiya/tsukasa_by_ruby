@@ -1,12 +1,12 @@
 #! ruby -E utf-8
 
-define :func1 do
+_DEFINE_ :func1 do
     _EVAL_ "pp 'EVAL func1'"
     pp "pp func1"
     _YIELD_
 end
 
-define :func2 do
+_DEFINE_ :func2 do
     _EVAL_ "pp 'EVAL func2'"
     pp "pp func2"
     func1 do
@@ -17,7 +17,7 @@ define :func2 do
   end
 end
 
-define :func3 do
+_DEFINE_ :func3 do
     _EVAL_ "pp 'EVAL func3'"
     pp "pp func3"
     func2 do

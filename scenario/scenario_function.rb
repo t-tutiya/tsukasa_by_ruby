@@ -34,7 +34,7 @@ create :ButtonControl,
     set :over,   visible: true
   end
   #内部関数の定義
-  define :func do |val|
+  _DEFINE_ :func do |val|
     move_line x: 0, y: val[:y],   count:0, frame: 60, start_x: 0,   start_y: 0
     wait_command :move_line
   end
@@ -55,7 +55,7 @@ about :button1 do
   func y: 150
 end
 
-define :func2 do
+_DEFINE_ :func2 do
   image :file_path=>"./sozai/button_normal.png", 
        :id=>:normal2 do
    

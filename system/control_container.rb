@@ -30,7 +30,7 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class Control
+class Control #公開インターフェイス
   #プロパティ
   attr_accessor  :skip_mode #スキップモード
   attr_accessor  :sleep_mode #スリープモード
@@ -305,7 +305,7 @@ class Control
   end
 end
 
-class Control
+class Control #内部メソッド
 
   #############################################################################
   #非公開インターフェイス
@@ -343,9 +343,47 @@ class Control
       return lambda.call(options)
     end
   end
+  
+  def check_imple(conditions, options)
+    conditions.each do |condition|
+      case condition
+      when :wake
+        return true if @sleep_mode == :wake
+
+      when :idol
+        return true if all_controls_idle?
+
+      when :count
+        #残りwaitフレーム数が０より大きい場合
+        return true if options[:count] <= 0
+
+      when :command
+        #コマンドがリスト上に存在しなければ終了
+        unless @next_frame_commands.index{|command|
+          command[0]==options[:command]}
+          return true 
+        end
+
+      when :flag
+        unless @root_control.system_property[:global_flag][("user_" + options[:flag].to_s).to_sym]
+          return true 
+        end
+
+      when :key_push
+        #キー押下があれば終了
+        return true if Input.key_push?(K_SPACE)
+
+      when :skip
+        #スキップモードであれば終了
+        return true if @skip_mode
+      end
+    end
+    
+    return false
+  end
 end
 
-class Control
+class Control #コマンド名変更予定
 
   #############################################################################
   #非公開インターフェイス
@@ -392,25 +430,6 @@ class Control
   end
 
   #############################################################################
-  #スタック操作関連
-  #############################################################################
-
-  def command_call_builtin_command(options, inner_options)
-    command_name = options[:call_builtin_command]
-    options.delete(:call_builtin_command) #削除
-    send("command_" + command_name.to_s, options, inner_options)
-  end
-end
-
-class Control
-
-  #############################################################################
-  #非公開インターフェイス
-  #############################################################################
-
-  private
-
-  #############################################################################
   #タイミング制御コマンド
   #############################################################################
 
@@ -444,47 +463,9 @@ class Control
     #checkにブロックが付与されているならそれを実行する
     eval_block(options, &inner_options[:block])
   end
-
-  def check_imple(conditions, options)
-    conditions.each do |condition|
-      case condition
-      when :wake
-        return true if @sleep_mode == :wake
-
-      when :idol
-        return true if all_controls_idle?
-
-      when :count
-        #残りwaitフレーム数が０より大きい場合
-        return true if options[:count] <= 0
-
-      when :command
-        #コマンドがリスト上に存在しなければ終了
-        unless @next_frame_commands.index{|command|
-          command[0]==options[:command]}
-          return true 
-        end
-
-      when :flag
-        unless @root_control.system_property[:global_flag][("user_" + options[:flag].to_s).to_sym]
-          return true 
-        end
-
-      when :key_push
-        #キー押下があれば終了
-        return true if Input.key_push?(K_SPACE)
-
-      when :skip
-        #スキップモードであれば終了
-        return true if @skip_mode
-      end
-    end
-    
-    return false
-  end
 end
 
-class Control
+class Control #廃止できないか検討中
 
   #############################################################################
   #非公開インターフェイス
@@ -493,13 +474,13 @@ class Control
   private
 =begin
   #イベントコマンドの登録
-  def command_event(options, inner_options)
+  def command_event(options, inner_options) #廃止できないか検討中
     raise
     @event_list[options[:event]] = inner_options[:block]
   end
 
   #イベントの実行
-  def command_fire(options, inner_options)
+  def command_fire(options, inner_options) #廃止できないか検討中
     raise
     \#キーが登録されていないなら終了
     return if !@event_list[options[:fire]]
@@ -512,14 +493,38 @@ class Control
   #############################################################################
 
   #フラグを設定する
-  def command_flag(options, inner_options)
+  def command_flag(options, inner_options) #廃止できないか検討中
     #ユーザー定義フラグを更新する
     @root_control.system_property[:global_flag][("user_" + options[:key].to_s).to_sym] = options[:data]
   end
 
   #コマンド送信先ターゲットのデフォルトを変更する
-  def command_change_default_target(options, inner_options)
+  def command_change_default_target(options, inner_options) #廃止できないか検討中
     @control_default[options[:change_default_target]] = options[:id]
+  end
+
+  def command_call_builtin_command(options, inner_options) #廃止できないか検討中
+    command_name = options[:call_builtin_command]
+    options.delete(:call_builtin_command) #削除
+    send("command_" + command_name.to_s, options, inner_options)
+  end
+end
+
+#############################################################################
+#***コマンド
+#############################################################################
+
+class Control #スクリプトファイル操作操作
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
+
+  #スクリプトファイルを挿入する
+  def command__INCLUDE_(options, inner_options)
+    eval_commands(@script_compiler.commands({:script_path => options[:_INCLUDE_]}))
   end
 end
 
@@ -534,11 +539,6 @@ class Control #ユーザー定義関数操作
   #############################################################################
 
   private
-
-  #スクリプトファイルを挿入する
-  def command__INCLUDE_(options, inner_options)
-    eval_commands(@script_compiler.commands({:script_path => options[:_INCLUDE_]}))
-  end
 
   #ユーザー定義コマンドを定義する
   def command__DEFINE_(options, inner_options)

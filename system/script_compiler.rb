@@ -128,6 +128,7 @@ class ScriptCompiler
   impl_define :change_default_target
 
   impl_define :set
+  impl_define :_SET_DATA_
 
   #スクリプトファイルの挿入
   impl_define :_INCLUDE_

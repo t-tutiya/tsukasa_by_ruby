@@ -47,8 +47,8 @@ class Control #公開インターフェイス
       @system_property = {
         #functionのリスト（procで保存される）
         :function_list => {},
-        :global_flag => {},
       }
+      @user_data = {}
     end
 
     @script_compiler = ScriptCompiler.new
@@ -427,6 +427,11 @@ class Control #コマンド名変更予定
         pp "クラス[" + self.class.to_s + "]：メソッド[" + method_name + "]は存在しません"
       end
     end
+  end
+
+  #ユーザーデータ領域に値を保存する
+  def command__SET_DATA_(options, inner_options)
+    @user_data[options[:key]] = options[:data]
   end
 
   #############################################################################

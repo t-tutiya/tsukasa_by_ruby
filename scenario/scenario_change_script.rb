@@ -40,4 +40,4 @@ about do
   _BREAK_
 end
 
-set script_path: "./scenario/scenario_change_script_2.rb"
+_INCLUDE_ "./scenario/scenario_change_script_2.rb"

@@ -39,13 +39,6 @@ class Control
 
   attr_accessor  :id
 
-  #スクリプトファイルのパス。setするとファイルを読み込んでコマンドリストに追加する。
-  attr_reader  :script_path
-  def script_path=(path)
-    @script_path = path
-    @command_list += @script_compiler.commands({:script_path => path})
-  end
-
   def initialize(options, inner_options, root_control = nil)
     if root_control
       @root_control = root_control
@@ -88,12 +81,12 @@ class Control
 
     #デフォルトスクリプトの読み込み
     if options[:default_script_path]
-      self.script_path = options[:default_script_path]
+      @command_list += @script_compiler.commands({:script_path => options[:default_script_path]})
     end
 
     #スクリプトパスが設定されているなら読み込んで登録する
     if options[:script_path]
-      self.script_path = options[:script_path]
+      @command_list += @script_compiler.commands({:script_path => options[:script_path]})
     end
 
     #ブロックが付与されているなら読み込んで登録する
@@ -541,6 +534,11 @@ class Control #ユーザー定義関数操作
   #############################################################################
 
   private
+
+  #スクリプトファイルを挿入する
+  def command__INCLUDE_(options, inner_options)
+    eval_commands(@script_compiler.commands({:script_path => options[:_INCLUDE_]}))
+  end
 
   #ユーザー定義コマンドを定義する
   def command__DEFINE_(options, inner_options)

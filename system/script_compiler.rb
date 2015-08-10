@@ -129,6 +129,9 @@ class ScriptCompiler
 
   impl_define :set
 
+  #スクリプトファイルの挿入
+  impl_define :_INCLUDE_
+
   #コントロールの生成
   impl_define :create
   #コントロールの削除

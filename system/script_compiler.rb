@@ -91,28 +91,11 @@ class ScriptCompiler
   end
 
   #コマンドに対応するメソッドを生成する。
-  def self.impl_define(command_name, 
-                       default_class = :Anonymous, 
-                       args_format)
+  def self.impl_define(command_name, default_class = :Anonymous)
     #組み込みコマンド名としてリストに追加する
     @@builtin_command_list.push(command_name)
 
     define_method(command_name) do |option = nil, **option_hash, &block|
-=begin
-      case args_format
-      when :target_id #無名引数＝送信先ＩＤ（省略可）
-        if option
-          option_hash[:target] = option 
-          option = nil
-        end
-      when :option #無名引数必須
-        raise unless option
-      when :nop #無名引数禁止
-        raise if option
-      else
-        raise
-      end
-=end
       impl(command_name, default_class, option, option_hash, &block)
     end
   end
@@ -126,68 +109,68 @@ class ScriptCompiler
   end
 
   #今フレームを終了する
-  impl_define :end_frame,                :nop
+  impl_define :end_frame
 
   #ＳＥの再生と停止（暫定）
-  impl_define :se_play, :nop
-  impl_define :se_stop, :nop
+  impl_define :se_play
+  impl_define :se_stop
 
   #移動
-  impl_define :move,                      :nop
-  impl_define :move_line,                 :nop
-  impl_define :move_line_with_skip,       :nop
+  impl_define :move
+  impl_define :move_line
+  impl_define :move_line_with_skip
   #フラグ設定
-  impl_define :flag,                      :nop
+  impl_define :flag
 
   #フェードトランジション
-  impl_define :transition_fade,           :nop
+  impl_define :transition_fade
 
-  impl_define :change_default_target, :option
+  impl_define :change_default_target
 
-  impl_define :set,                :target_id
+  impl_define :set
 
   #コントロールの生成
-  impl_define :create,  :option
+  impl_define :create
   #コントロールの削除
-  impl_define :delete, :target_id
+  impl_define :delete
 
   #コントロール単位でイベント駆動するコマンド群を格納する
-  impl_define :event,                 :option
+  impl_define :event
 
   #各種ウェイト処理
-  impl_define :wait,                 :option
-  impl_define :check,            :option
+  impl_define :wait
+  impl_define :check
 
-  impl_define :EXP,   :nop
+  impl_define :EXP
 
   #これブロックが継承されないかも
-  impl_define :_CALL_,                  :option
-  impl_define :call_builtin_command,           :option
+  impl_define :_CALL_
+  impl_define :call_builtin_command
 
   #制御構文 if系
-  impl_define :_IF_,    :option
-  impl_define :_THEN_,  :nop
-  impl_define :_ELSE_,  :nop
-  impl_define :_ELSIF_, :option
+  impl_define :_IF_
+  impl_define :_THEN_
+  impl_define :_ELSE_
+  impl_define :_ELSIF_
 
   #case-when文
   #TODO：現状では受け取れる式は１個のみとする
   #TODO：複数取れるべきだが、現仕様では他のコマンドと整合しない
-  impl_define :_CASE_,  :option
-  impl_define :_WHEN_,  :option
+  impl_define :_CASE_
+  impl_define :_WHEN_
 
   #while文
-  impl_define :_WHILE_, :option
-  impl_define :_BREAK_, :nop
+  impl_define :_WHILE_
+  impl_define :_BREAK_
 
   #コマンド名の再定義
-  impl_define :_ALIAS_, :option
+  impl_define :_ALIAS_
   #コルーチン呼び出し
-  impl_define :_YIELD_, :nop
-  impl_define :_END_SCOPE_, :nop
+  impl_define :_YIELD_
+  impl_define :_END_SCOPE_
 
   #実行時評価
-  impl_define :_EVAL_, :option
+  impl_define :_EVAL_
   #ユーザー定義コマンドの宣言
-  impl_define :_DEFINE_, :option
+  impl_define :_DEFINE_
 end

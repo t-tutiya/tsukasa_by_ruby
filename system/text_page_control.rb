@@ -45,39 +45,39 @@ class ScriptCompiler
   #テキスト関連
 
   #文字
-  impl_define :char,                  :TextPageControl, :option
+  impl_define :char,                  :TextPageControl
   #文字列
-  impl_define :text,                  :TextPageControl, :option
+  impl_define :text,                  :TextPageControl
 
   #インデント設定
-  impl_define :indent,                :TextPageControl, :option
+  impl_define :indent,                :TextPageControl
   #改行
-  impl_define :line_feed,             :TextPageControl, :nop
+  impl_define :line_feed,             :TextPageControl
   #改ページ
-  impl_define :flash,                 :TextPageControl, :nop
+  impl_define :flash,                 :TextPageControl
   #画像スタック
-  impl_define :graph,                 :TextPageControl, :option
+  impl_define :graph,                 :TextPageControl
 
   #文字描画速度の設定
-  impl_define :delay,                 :TextPageControl, :option
+  impl_define :delay,                 :TextPageControl
 
   #ルビ文字の出力
-  impl_define :rubi_char,             :TextPageControl, :option
+  impl_define :rubi_char,             :TextPageControl
 
   #複数ルビ文字列の割り付け
-  impl_define :rubi,                  :TextPageControl, :option
+  impl_define :rubi,                  :TextPageControl
 
   #フォント設定の更新
   #現在値をリセット
-  impl_define :reset_font_config,     :TextPageControl, :option
+  impl_define :reset_font_config,     :TextPageControl
 
   #スタイル設定の更新
   #現在値をリセット
-  impl_define :reset_style_config,    :TextPageControl, :option
+  impl_define :reset_style_config,    :TextPageControl
 
   #その他制御系
   #レンダリング済みフォントの登録
-  impl_define :map_image_font,        :TextPageControl, :option
+  impl_define :map_image_font,        :TextPageControl
 
 end
 

@@ -29,11 +29,20 @@
 ###############################################################################
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
+pause icon: :page_icon_func
+line_feed
+text "■■■■■■■■■■■"
+pause icon: :line_icon_func
+text "■■■■■■■■■■■"
 pause
 line_feed
 text "■■■■■■■■■■■"
 pause
 text "■■■■■■■■■■■"
+pause
+flash
+
+text "■■■■■■■■■■■■■■■■■■■■■■"
 pause
 line_feed
 text "■■■■■■■■■■■"

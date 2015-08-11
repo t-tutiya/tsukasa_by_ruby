@@ -34,12 +34,12 @@ require_relative './control_container.rb'
 
 #コマンド宣言
 class ScriptCompiler
-  impl_define :on_mouse_over,   :nop
-  impl_define :on_mouse_out,    :nop
-  impl_define :on_key_down,     :nop
-  impl_define :on_key_down_out, :nop
-  impl_define :on_key_up,       :nop
-  impl_define :on_key_up_out,   :nop
+  impl_define :on_mouse_over
+  impl_define :on_mouse_out
+  impl_define :on_key_down
+  impl_define :on_key_down_out
+  impl_define :on_key_up
+  impl_define :on_key_up_out
 end
 
 #クリックイベントが発生するコントロールの基底クラス

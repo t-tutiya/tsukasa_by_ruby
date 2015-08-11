@@ -69,13 +69,19 @@ end
 about do
   _CHECK_ [:not_nil], key: :flag, keep: true do
     _SET_DATA_ key: :scenario, val: 1
-#    flash interrupt: true
-    pp "ok"
+    #↓ここがもう少し簡潔に表現できると良い
+    _BREAK_ target: :default_char_container, interrupt: true
     _BREAK_
-    #↓これは当然実行されない
-    #_BREAK_ target: :default_char_container, interrupt: true
   end
-  text "スクリプト１■■■■■■■■■■■■■■■■"
+  text "スクリプト１－Ａ■■■■■■■■■■■■■■"
+  line_feed
+  text "■■■■■■■■■■■■■■■■■■■■■■"
+  line_feed
+  text "■■■■■■■■■■■■■■■■■■■■■■"
+  line_feed
+  pause
+  flash
+  text "スクリプト１－Ｂ■■■■■■■■■■■■■■"
   line_feed
   text "■■■■■■■■■■■■■■■■■■■■■■"
   line_feed
@@ -84,6 +90,9 @@ about do
   pause
   _SET_DATA_ key: :scenario, val: 2
 end
+
+#TODO;ここでフレームを送らない場合、次のスクリプトファイルが:default_char_containerに読み込まれた後で_BREAK_が機能してしまう。どうにかならんかなーこれ
+end_frame 
 
 flash
 
@@ -96,3 +105,5 @@ _CHECK_ [:equal], key: :scenario, val: 2 do
 end
 
 text "インクルードしたスクリプト終了後処理はここに移ります"
+
+pause

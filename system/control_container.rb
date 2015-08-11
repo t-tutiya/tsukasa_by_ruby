@@ -716,11 +716,8 @@ class Control #制御構文
   end
 
   def command__BREAK_(options, inner_options)
-    unless @command_list.index{|command, end_scope_options|
-                                command == :_END_SCOPE_}
-      return
-    end
-
+    #_END_SCOPE_タグが見つかるまで@command_listからコマンドを取り除く
+    #_END_SCOPE_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
       command, end_scope_options = @command_list.shift
       break if command == :_END_SCOPE_

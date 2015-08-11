@@ -14,34 +14,36 @@ create :ButtonControl,
   image :file_path=>"./sozai/button_key_down.png", 
         :id=>:key_down, :visible => false
   on_mouse_over do
-    set target: :normal, visible: false
-    set target: :over,   visible: true
-    set target: :key_down, visible: false
+    set :normal, visible: false
+    set :over,   visible: true
+    set :key_down, visible: false
   end
   on_mouse_out do
-    set target: :over,   visible: false
-    set target: :normal, visible: true
-    set target: :key_down, visible: false
+    set :over,   visible: false
+    set :normal, visible: true
+    set :key_down, visible: false
   end
   on_key_down do
-    set target: :over,   visible: false
-    set target: :normal, visible: false
-    set target: :key_down, visible: true
+    set :over,   visible: false
+    set :normal, visible: false
+    set :key_down, visible: true
   end
   on_key_up do
-    set target: :key_down, visible: false
-    set target: :normal, visible: false
-    set target: :over,   visible: true
+    set :key_down, visible: false
+    set :normal, visible: false
+    set :over,   visible: true
   end
 end
 
-_WHILE_ -> {true}, target: :button1 do
-  move_line x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
-  wait_command :move_line
-  move_line x: 300, y: 300, count:0, frame: 60, start_x: 300, start_y: 0
-  wait_command :move_line
-  move_line x: 0,   y: 300, count:0, frame: 60, start_x: 300, start_y: 300
-  wait_command :move_line
-  move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 0,   start_y: 300
-  wait_command :move_line
+_SEND_ :button1 do
+  _WHILE_ -> {true} do
+    move_line x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
+    wait_command :move_line
+    move_line x: 300, y: 300, count:0, frame: 60, start_x: 300, start_y: 0
+    wait_command :move_line
+    move_line x: 0,   y: 300, count:0, frame: 60, start_x: 300, start_y: 300
+    wait_command :move_line
+    move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 0,   start_y: 300
+    wait_command :move_line
+  end
 end

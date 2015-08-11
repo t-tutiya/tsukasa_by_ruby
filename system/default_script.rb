@@ -62,7 +62,7 @@ _DEFINE_ :pause do |options|
     _CHECK_ [:key_push] do
       #スキップフラグを立てる
       _SEND_ :all , interrupt: true do
-        set skip_mode: true
+        _SET_ skip_mode: true
       end
     end
 
@@ -80,12 +80,12 @@ _DEFINE_ :pause do |options|
 
     #ルートにウェイクを送る
     _SEND_ :all , root: true, interrupt: true do
-      set sleep_mode: :wake
+      _SET_ sleep_mode: :wake
     end
 
     #スキップフラグを下ろす
     _SEND_ :all , root: true, interrupt: true do
-      set skip_mode: false
+      _SET_ skip_mode: false
     end
 
   end

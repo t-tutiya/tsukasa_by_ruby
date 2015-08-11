@@ -36,6 +36,7 @@ class Control #公開インターフェイス
   attr_accessor  :sleep_mode #スリープモード
   attr_accessor  :idle_mode #アイドルモード
   attr_reader  :system_property
+  attr_reader  :user_data
 
   attr_accessor  :id
 
@@ -376,19 +377,19 @@ class Control #内部メソッド
 
       when :equal
         #指定されたデータと値がイコールかどうか
-        return true if @user_data[options[:key]] == options[:val]
+        return true if @root_control.user_data[options[:key]] == options[:val]
 
       when :not_equal
         #指定されたデータと値がイコールでない場合
-        return true if @user_data[options[:key]] != options[:val]
+        return true if @root_control.user_data[options[:key]] != options[:val]
 
       when :nil
         #指定されたデータがnilの場合
-        return true if @user_data[options[:key]] == nil
+        return true if @root_control.user_data[options[:key]] == nil
 
       when :not_nil
         #指定されたデータがnilで無い場合
-        return true if @user_data[options[:key]] != nil
+        return true if @root_control.user_data[options[:key]] != nil
       end
     end
     
@@ -444,7 +445,7 @@ class Control #コマンド名変更予定
 
   #ユーザーデータ領域に値を保存する
   def command__SET_DATA_(options, inner_options)
-    @user_data[options[:key]] = options[:data]
+    @root_control.user_data[options[:key]] = options[:val]
   end
 
   #############################################################################

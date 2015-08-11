@@ -421,11 +421,11 @@ class TextPageControl < Control
   #flashコマンド
   #メッセージレイヤの消去
   def command__FLUSH_(options, inner_options)
-    #子コントロールをクリア
-    interrupt_command_to_all_children([:delete, 
+    @control_list.each do |control|
+      control.interrupt_command([:delete, 
                                         options, 
-                                       {:target_id => :anonymous}], 
-                                       :anonymous)
+                                       {:target_id => :anonymous}])
+    end
 
     #次のアクティブ行コントロールを追加  
     interrupt_command([:create, 

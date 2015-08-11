@@ -106,38 +106,16 @@ class Control #公開インターフェイス
   def push_command(command)
     #コマンドをスタックの末端に挿入する
     @command_list.push(command)
-    return true #コマンドをスタックした
   end
 
   #コマンドをスタックに格納する
   def interrupt_command(command)
     #コマンドをスタックの先頭に挿入する
     @command_list.unshift(command)
-    return true #コマンドをスタックした
   end
 
   def push_command_to_next_frame(command, options, inner_options)
     @next_frame_commands.push([command, options, inner_options])
-    return true
-  end
-
-  #強制的に全てのコントロールにコマンドを設定する
-  def interrupt_command_to_all(command, target_id)
-    if [@id, :anonymous].include?(target_id)
-      #コマンドをスタックの先頭に挿入する
-      @command_list.unshift(command)
-    end
-
-    #子要素に処理を伝搬する
-    @control_list.each do |control|
-      control.interrupt_command_to_all(command, target_id)
-    end
-  end
-
-  def interrupt_command_to_all_children(command, target_id)
-    @control_list.each do |control|
-      control.interrupt_command_to_all(command, :anonymous)
-    end
   end
 
   def update

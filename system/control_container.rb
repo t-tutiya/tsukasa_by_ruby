@@ -358,24 +358,37 @@ class Control #内部メソッド
         return true if options[:count] <= 0
 
       when :command
-        #コマンドがリスト上に存在しなければ終了
+        #コマンドがリスト上に存在しなければ
         unless @next_frame_commands.index{|command|
           command[0]==options[:command]}
           return true 
         end
 
-      when :flag
-        unless @root_control.system_property[:global_flag][("user_" + options[:flag].to_s).to_sym]
-          return true 
-        end
-
       when :key_push
-        #キー押下があれば終了
+        #キー押下があれば
         return true if Input.key_push?(K_SPACE)
 
       when :skip
-        #スキップモードであれば終了
+        #スキップモードであれば
         return true if @skip_mode
+
+      #ユーザデータ確認系
+
+      when :equal
+        #指定されたデータと値がイコールかどうか
+        return true if @user_data[options[:key]] == options[:val]
+
+      when :not_equal
+        #指定されたデータと値がイコールでない場合
+        return true if @user_data[options[:key]] != options[:val]
+
+      when :nil
+        #指定されたデータがnilの場合
+        return true if @user_data[options[:key]] == nil
+
+      when :not_nil
+        #指定されたデータがnilで無い場合
+        return true if @user_data[options[:key]] != nil
       end
     end
     
@@ -461,9 +474,9 @@ class Control #コマンド名変更予定
     push_command_to_next_frame(:wait, options, inner_options)
   end
 
-  def command_check(options, inner_options)
+  def command__CHECK_(options, inner_options)
     #チェック条件を満たさない場合は終了する
-    return unless check_imple(options[:check], options)
+    return unless check_imple(options[:_CHECK_], options)
 
     #checkにブロックが付与されているならそれを実行する
     eval_block(options, &inner_options[:block])
@@ -496,12 +509,6 @@ class Control #廃止できないか検討中
   #############################################################################
   #分類未決定
   #############################################################################
-
-  #フラグを設定する
-  def command_flag(options, inner_options) #廃止できないか検討中
-    #ユーザー定義フラグを更新する
-    @root_control.system_property[:global_flag][("user_" + options[:key].to_s).to_sym] = options[:data]
-  end
 
   #コマンド送信先ターゲットのデフォルトを変更する
   def command_change_default_target(options, inner_options) #廃止できないか検討中

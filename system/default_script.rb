@@ -47,7 +47,7 @@ _DEFINE_ :pause do |options|
       _CALL_ options[:icon], target: :last, id: :icon
     end
 
-    check [:key_push] do
+    _CHECK_ [:key_push] do
       #スキップフラグを立てる
       set target: :anonymous, skip_mode: true, all: true, interrupt: true
     end

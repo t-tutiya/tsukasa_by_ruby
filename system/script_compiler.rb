@@ -143,7 +143,7 @@ class ScriptCompiler
 
   #各種ウェイト処理
   impl_define :wait
-  impl_define :check
+  impl_define :_CHECK_
 
   impl_define :EXP
 

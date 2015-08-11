@@ -476,8 +476,14 @@ class Control #コマンド名変更予定
   end
 
   def command__CHECK_(options, inner_options)
-    #チェック条件を満たさない場合は終了する
-    return unless check_imple(options[:_CHECK_], options)
+    #チェック条件を満たさない場合
+    unless check_imple(options[:_CHECK_], options)
+      #指定があればコマンドを再スタックする
+      if options[:keep]
+        push_command_to_next_frame(:_CHECK_, options, inner_options)
+      end
+      return
+    end
 
     #checkにブロックが付与されているならそれを実行する
     eval_block(options, &inner_options[:block])

@@ -28,7 +28,53 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+#ボタン押下による範囲指定シナリオ分岐ギミックのサンプル
+#現状まだ正常に動作していない
+
+create :ButtonControl, 
+        :x_pos => 150, 
+        :y_pos => 150, 
+        :width => 256,
+        :height => 256,
+        :id=>:button1 do
+  image :file_path=>"./sozai/button_normal.png", 
+        :id=>:normal
+  image :file_path=>"./sozai/button_over.png", 
+        :id=>:over, :visible => false
+  image :file_path=>"./sozai/button_key_down.png", 
+        :id=>:key_down, :visible => false
+  on_mouse_over do
+    set target: :normal, visible: false
+    set target: :over,   visible: true
+    set target: :key_down, visible: false
+  end
+  on_mouse_out do
+    set target: :over,   visible: false
+    set target: :normal, visible: true
+    set target: :key_down, visible: false
+  end
+  on_key_down do
+    set target: :over,   visible: false
+    set target: :normal, visible: false
+    set target: :key_down, visible: true
+  end
+  on_key_up do
+    set target: :key_down, visible: false
+    set target: :normal, visible: false
+    set target: :over,   visible: true
+    _SET_DATA_ key: :flag, val: true
+  end
+end
+
 about do
+  _CHECK_ [:not_nil], key: :flag, keep: true do
+    _SET_DATA_ key: :scenario, val: 1
+#    flash interrupt: true
+    pp "ok"
+    _BREAK_
+    #↓これは当然実行されない
+    #_BREAK_ target: :default_char_container, interrupt: true
+  end
   text "スクリプト１■■■■■■■■■■■■■■■■"
   line_feed
   text "■■■■■■■■■■■■■■■■■■■■■■"
@@ -36,8 +82,17 @@ about do
   text "■■■■■■■■■■■■■■■■■■■■■■"
   line_feed
   pause
-  flash
-  _BREAK_
+  _SET_DATA_ key: :scenario, val: 2
 end
 
-_INCLUDE_ "./scenario/scenario_change_script_2.rb"
+flash
+
+_CHECK_ [:equal], key: :scenario, val: 1 do
+  _INCLUDE_ "./scenario/scenario_change_script_3.rb"
+end
+
+_CHECK_ [:equal], key: :scenario, val: 2 do
+  _INCLUDE_ "./scenario/scenario_change_script_2.rb"
+end
+
+text "インクルードしたスクリプト終了後処理はここに移ります"

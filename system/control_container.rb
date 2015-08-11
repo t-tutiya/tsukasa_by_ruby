@@ -723,7 +723,7 @@ class Control #制御構文
 
     until @command_list.empty? do
       command, end_scope_options = @command_list.shift
-      break if  command == :_END_SCOPE_
+      break if command == :_END_SCOPE_
     end
   end
 

@@ -197,7 +197,7 @@ class Control #公開インターフェイス
         inner_options[:target_id] = @control_default[inner_options[:default_class]]
         raise unless inner_options[:target_id]
       end
-
+=begin
       #ルートコントロールが送信対象として指定されている場合
       if inner_options[:root]
         #rootフラグをクリア
@@ -222,12 +222,14 @@ class Control #公開インターフェイス
         end
         next #次のコマンドを読む
       end
-
+=end
       if [@id, :anonymous].include?(inner_options[:target_id])
         #コマンドを実行する
-        target.send("command_" + command_name.to_s, options, inner_options)
+        send("command_" + command_name.to_s, options, inner_options)
       #送信対象として自身が指定されていない場合
       else 
+        raise
+=begin
         case inner_options[:target_id]
         when :first
           target = @control_list[0]
@@ -239,11 +241,12 @@ class Control #公開インターフェイス
 
         if inner_options[:interrupt]
           #コマンドの優先送信
-          target.interrupt_command(command, inner_options[:target_id])
+          interrupt_command(command, inner_options[:target_id])
         else
           #コマンドのスタック送信
-          target.push_command(command, inner_options[:target_id])
+          push_command(command, inner_options[:target_id])
         end
+=end
       end
     end
 
@@ -460,14 +463,21 @@ class Control #コマンド名変更予定
       controls = @root_control.find_control(options[:_SEND_])
     else
       if options[:_SEND_]
-        controls = find_control(options[:_SEND_])
-        return if controls.empty?
+        case options[:_SEND_]
+        when :last
+          controls = [@control_list.last]
+        else
+          controls = find_control(options[:_SEND_])
+        end
       else
         controls = [self]
       end
     end
 
-    if options[:_SEND_] == :all
+    return if controls.empty?
+
+    case options[:_SEND_]
+    when :all
       controls.each do |control|
         if options[:interrupt]
           control.interrupt_command([:_CALL_, {:_CALL_ => :scope}, inner_options])

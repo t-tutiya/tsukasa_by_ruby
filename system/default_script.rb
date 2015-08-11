@@ -37,6 +37,25 @@ _DEFINE_ :set do |options|
   end
 end
 
+_DEFINE_ :text do |options|
+  _SEND_ :default_char_container do
+    _TEXT_ options[:text]
+    options.delete(:text)
+  end
+end
+
+_DEFINE_ :line_feed do
+  _SEND_ :default_char_container do
+    _LINE_FEED_
+  end
+end
+
+_DEFINE_ :flash do
+  _SEND_ :default_char_container do
+    _FLUSH_
+  end
+end
+
 #無面関数として機能する
 _DEFINE_ :scope do |options|
   _YIELD_ options
@@ -51,12 +70,14 @@ end
 #標準ポーズコマンド
 _DEFINE_ :pause do |options|
   #■行表示中スキップ処理
-  about target: :default_char_container , icon: options[:icon] do |options|
+  _SEND_ :default_char_container do 
     #idleあるいはキー入力待機
     wait [:key_push, :idol]
 
     if options[:icon]
-      _CALL_ options[:icon], target: :last, id: :icon
+      _SEND_ :last do
+        _CALL_ options[:icon], id: :icon
+      end
     end
 
     _CHECK_ [:key_push] do
@@ -193,29 +214,29 @@ _DEFINE_ :line_icon_func do |options|
             :x_count => 4, 
             :y_count => 2
     _WHILE_ ->{true} do
-      set  target: 7, visible: false
-      set  target: 0, visible: true
+      set 7, visible: false
+      set 0, visible: true
     	wait [:count], count: 5
-      set  target: 0, visible: false
-      set  target: 1, visible: true
+      set 0, visible: false
+      set 1, visible: true
     	wait [:count], count: 5
-      set target: 1, visible: false
-      set target: 2, visible: true
+      set 1, visible: false
+      set 2, visible: true
     	wait [:count], count: 5
-      set target: 2, visible: false
-      set target: 3, visible: true
+      set 2, visible: false
+      set 3, visible: true
     	wait [:count], count: 5
-      set target: 3, visible: false
-      set target: 4, visible: true
+      set 3, visible: false
+      set 4, visible: true
     	wait [:count], count: 5
-      set target: 4, visible: false
-      set target: 5, visible: true
+      set 4, visible: false
+      set 5, visible: true
     	wait [:count], count: 5
-      set target: 5, visible: false
-      set target: 6, visible: true
+      set 5, visible: false
+      set 6, visible: true
     	wait [:count], count: 5
-      set target: 6, visible: false
-      set target: 7, visible: true
+      set 6, visible: false
+      set 7, visible: true
     	wait [:count], count: 30
     end
   end
@@ -236,17 +257,17 @@ _DEFINE_ :page_icon_func do |options|
             :x_count => 4, 
             :y_count => 1
     _WHILE_ ->{true} do
-      set target: 3, visible: false
-      set target: 0, visible: true
+      set 3, visible: false
+      set 0, visible: true
     	wait [:count], count: 5
-      set target: 0, visible: false
-      set target: 1, visible: true
+      set 0, visible: false
+      set 1, visible: true
     	wait [:count], count: 5
-      set target: 1, visible: false
-      set target: 2, visible: true
+      set 1, visible: false
+      set 2, visible: true
     	wait [:count], count: 5
-      set target: 2, visible: false
-      set target: 3, visible: true
+      set 2, visible: false
+      set 3, visible: true
     	wait [:count], count: 5
     end
   end

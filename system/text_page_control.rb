@@ -47,14 +47,14 @@ class ScriptCompiler
   #文字
   impl_define :char,                  :TextPageControl
   #文字列
-  impl_define :text,                  :TextPageControl
+  impl_define :_TEXT_,                  :TextPageControl
 
   #インデント設定
   impl_define :indent,                :TextPageControl
   #改行
-  impl_define :line_feed,             :TextPageControl
+  impl_define :_LINE_FEED_,             :TextPageControl
   #改ページ
-  impl_define :flash,                 :TextPageControl
+  impl_define :_FLUSH_,                 :TextPageControl
   #画像スタック
   impl_define :graph,                 :TextPageControl
 
@@ -318,7 +318,7 @@ class TextPageControl < Control
 
   #textコマンド
   #指定文字列を描画チェインに連結する
-  def command_text(options, inner_options)
+  def command__TEXT_(options, inner_options)
     command_list = Array.new
 
     #イメージフォントを使うかどうか
@@ -329,7 +329,7 @@ class TextPageControl < Control
     end
 
     #文字列を分解してcharコマンドに変換する
-    options[:text].each_char do |ch|
+    options[:_TEXT_].each_char do |ch|
       #１文字分の出力コマンドをスタックする
       command_list.push([char_command, 
                         {char_command => ch}, 
@@ -386,7 +386,7 @@ class TextPageControl < Control
 
   #line_feedコマンド
   #改行処理（CR＋LF）
-  def command_line_feed(options, inner_options)
+  def command__LINE_FEED_(options, inner_options)
 =begin
     #todo:インデントがある場合、インデント幅の無形コントロールを作る
     #Ｘ座標をリセット（インデント設定があればその分を加算）
@@ -420,7 +420,7 @@ class TextPageControl < Control
 
   #flashコマンド
   #メッセージレイヤの消去
-  def command_flash(options, inner_options)
+  def command__FLUSH_(options, inner_options)
     #子コントロールをクリア
     interrupt_command_to_all_children([:delete, 
                                         options, 

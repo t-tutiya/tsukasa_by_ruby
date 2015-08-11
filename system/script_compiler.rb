@@ -60,8 +60,8 @@ class ScriptCompiler
 
   def impl(command_name, default_class, 
             option, 
-            target: nil,
-            all: false, 
+#            target: nil,
+#            all: false, 
 #            interrupt: false, 
 #            root: false,
             **sub_options, 
@@ -70,10 +70,10 @@ class ScriptCompiler
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
 
-    system_options ={:target_id =>     target,
+    system_options ={#:target_id =>     target,
                      :default_class => default_class,
                      :block_stack =>   @block_stack,
-                     :all => all,
+#                     :all => all,
 #                     :root => root,
 #                     : => interrupt
                      }

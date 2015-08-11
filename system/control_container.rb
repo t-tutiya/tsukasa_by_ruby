@@ -103,57 +103,22 @@ class Control #公開インターフェイス
   end
 
   #コマンドをスタックに格納する
-  def push_command(command, target_id = @id)
-    #自身が送信対象として指定されている場合
-    if [@id, :anonymous].include?(target_id)
-      #コマンドをスタックの末端に挿入する
-      @command_list.push(command)
-      return true #コマンドをスタックした
-    end
-
-    #子要素に処理を伝搬する
-    @control_list.each do |control|
-      #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.push_command(command, target_id)
-    end
-
-    return false #コマンドをスタックしなかった
+  def push_command(command)
+    #コマンドをスタックの末端に挿入する
+    @command_list.push(command)
+    return true #コマンドをスタックした
   end
 
   #コマンドをスタックに格納する
-  def interrupt_command(command, target_id = @id)
-    #自身が送信対象として指定されている場合
-    if [@id, :anonymous].include?(target_id)
-      #コマンドをスタックの先頭に挿入する
-      @command_list.unshift(command)
-      return true #コマンドをスタックした
-    end
-
-    #子要素に処理を伝搬する
-    @control_list.each do |control|
-      #子要素がコマンドをスタックした時点でループを抜ける
-      return true if control.interrupt_command(command, target_id)
-    end
-
-    return false #コマンドをスタックしなかった
+  def interrupt_command(command)
+    #コマンドをスタックの先頭に挿入する
+    @command_list.unshift(command)
+    return true #コマンドをスタックした
   end
 
   def push_command_to_next_frame(command, options, inner_options)
     @next_frame_commands.push([command, options, inner_options])
     return true
-  end
-
-  #強制的に全てのコントロールにコマンドを設定する
-  def push_command_to_all(command, target_id)
-    if [@id, :anonymous].include?(target_id)
-      #コマンドをスタックの末端に挿入する
-      @command_list.push(command)
-    end
-
-    #子要素に処理を伝搬する
-    @control_list.each do |control|
-      control.push_command_to_all(command, target_id)
-    end
   end
 
   #強制的に全てのコントロールにコマンドを設定する
@@ -197,57 +162,9 @@ class Control #公開インターフェイス
         inner_options[:target_id] = @control_default[inner_options[:default_class]]
         raise unless inner_options[:target_id]
       end
-=begin
-      #ルートコントロールが送信対象として指定されている場合
-      if inner_options[:root]
-        #rootフラグをクリア
-        inner_options[:root] = false
-        #rootを実行対象とする
-        target = @root_control
-      else
-        #このコントロールを実行対象とする
-        target = self
-      end
 
-      #コントロール配下の全コントロールが送信対象として指定されている場合
-      if inner_options[:all]
-        #allフラグをクリア
-        inner_options[:all] = false
-        if inner_options[:interrupt]
-          #コマンドの優先送信
-          target.interrupt_command_to_all(command, inner_options[:target_id])
-        else
-          #コマンドのスタック送信
-          target.push_command_to_all(command, inner_options[:target_id])
-        end
-        next #次のコマンドを読む
-      end
-=end
-      if [@id, :anonymous].include?(inner_options[:target_id])
-        #コマンドを実行する
-        send("command_" + command_name.to_s, options, inner_options)
-      #送信対象として自身が指定されていない場合
-      else 
-        raise
-=begin
-        case inner_options[:target_id]
-        when :first
-          target = @control_list[0]
-          inner_options[:target_id] = :anonymous
-        when :last
-          target = @control_list.last
-          inner_options[:target_id] = :anonymous
-        end
-
-        if inner_options[:interrupt]
-          #コマンドの優先送信
-          interrupt_command(command, inner_options[:target_id])
-        else
-          #コマンドのスタック送信
-          push_command(command, inner_options[:target_id])
-        end
-=end
-      end
+      #コマンドを実行する
+      send("command_" + command_name.to_s, options, inner_options)
     end
 
     #一時的にスタックしていたコマンドをコマンドリストに移す

@@ -117,7 +117,7 @@ module Clickable
   def command_on_mouse_over(options, inner_options)
     #カーソルが指定範囲に侵入した場合
     if @on_mouse_over
-      eval_block(options, inner_options, &inner_options[:block])
+      eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
     push_command_to_next_frame(:on_mouse_over, options, inner_options)
   end
@@ -125,7 +125,7 @@ module Clickable
   def command_on_mouse_out(options, inner_options)
     #カーソルが指定範囲の外に移動した場合
     if @on_mouse_out
-      eval_block(options, inner_options, &inner_options[:block])
+      eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
     push_command_to_next_frame(:on_mouse_out, options, inner_options)
   end
@@ -133,7 +133,7 @@ module Clickable
   def command_on_key_down(options, inner_options)
     #マウスボタンが押下された場合
     if @on_key_down
-      eval_block(options, inner_options, &inner_options[:block])
+      eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
     push_command_to_next_frame(:on_key_down, options, inner_options)
   end
@@ -141,7 +141,7 @@ module Clickable
   def command_on_key_down_out(options, inner_options)
     #マウスボタンが範囲外で押下された場合
     if @on_key_down_out
-      eval_block(options, inner_options, &inner_options[:block])
+      eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
     push_command_to_next_frame(:on_key_down_out, options, inner_options)
   end
@@ -149,7 +149,7 @@ module Clickable
   def command_on_key_up(options, inner_options)
     #マウスボタン押下が解除された場合
     if @on_key_up
-      eval_block(options, inner_options, &inner_options[:block])
+      eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
     push_command_to_next_frame(:on_key_up, options, inner_options)
   end
@@ -157,7 +157,7 @@ module Clickable
   def command_on_key_up_out(options, inner_options)
     #マウスボタン押下が範囲外で解除された場合
     if @on_key_up_out
-      eval_block(options, inner_options, &inner_options[:block])
+      eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
     push_command_to_next_frame(:on_key_up_out, options, inner_options)
   end

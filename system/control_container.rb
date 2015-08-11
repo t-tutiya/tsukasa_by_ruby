@@ -279,17 +279,23 @@ class Control #公開インターフェイス
     return offset_x, offset_y
   end
 
-  def get_child(id)
-    #自身が送信対象として指定されている場合
-    return self if @id == id
-
-    #子要素に処理を伝搬する
-    @control_list.each do |control|
-      result = control.get_child(id)
-      return result if result
+  def find_control(id)
+    #自身が指定されたidか、allが指定されている場合
+    if id == @id or id == :all
+      #自身をスタックした配列を生成
+      controls = [self] 
+    else
+      #空の配列を生成する
+      controls = [] 
     end
 
-    return nil
+    #所持しているコントロールを探査
+    @control_list.each do |control|
+      child = control.find_control(id)
+      controls += child unless child.empty?
+    end
+
+    return controls
   end
 
   #全てのコントロールが待機モードになっているかを返す。
@@ -446,6 +452,36 @@ class Control #コマンド名変更予定
   #ユーザーデータ領域に値を保存する
   def command__SET_DATA_(options, inner_options)
     @root_control.user_data[options[:key]] = options[:val]
+  end
+
+  #コマンドを下位コントロールに送信する
+  def command__SEND_(options, inner_options)
+    if options[:root]
+      controls = @root_control.find_control(options[:_SEND_])
+    else
+      if options[:_SEND_]
+        controls = find_control(options[:_SEND_])
+      else
+        controls = [self]
+      end
+    end
+
+    if options[:_SEND_] == :all
+      controls.each do |control|
+        if options[:interrupt]
+          control.interrupt_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+        else
+          control.push_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+        end
+      end
+      return
+    end
+
+    if options[:interrupt]
+      controls[0].interrupt_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+    else
+      controls[0].push_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+    end
   end
 
   #############################################################################

@@ -129,6 +129,7 @@ class ScriptCompiler
 
   impl_define :set
   impl_define :_SET_DATA_
+  impl_define :_SEND_
 
   #スクリプトファイルの挿入
   impl_define :_INCLUDE_

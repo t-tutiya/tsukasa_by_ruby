@@ -31,6 +31,11 @@ require 'dxruby'
 ###############################################################################
 
 #無面関数として機能する
+_DEFINE_ :scope do |options|
+  _YIELD_ options
+end
+
+#無面関数として機能する
 _DEFINE_ :about do |options|
   _YIELD_ options
   _END_SCOPE_

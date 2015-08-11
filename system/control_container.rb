@@ -461,6 +461,7 @@ class Control #コマンド名変更予定
     else
       if options[:_SEND_]
         controls = find_control(options[:_SEND_])
+        return if controls.empty?
       else
         controls = [self]
       end

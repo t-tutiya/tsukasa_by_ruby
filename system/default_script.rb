@@ -31,7 +31,7 @@ require 'dxruby'
 ###############################################################################
 
 _DEFINE_ :set do |options|
-  _SEND_ options[:set] do
+  _SEND_ options[:set], interrupt: true do
     options.delete(:set)
     _SET_ options
   end
@@ -61,7 +61,9 @@ _DEFINE_ :pause do |options|
 
     _CHECK_ [:key_push] do
       #スキップフラグを立てる
-      set target: :anonymous, skip_mode: true, all: true, interrupt: true
+      _SEND_ :all , interrupt: true do
+        set skip_mode: true
+      end
     end
 
     #キー入力伝搬を止める為に１フレ送る
@@ -72,13 +74,20 @@ _DEFINE_ :pause do |options|
     #キー入力待機
     wait [:key_push]
 
-    delete target: :icon, interrupt: true
+    _SEND_ :icon, interrupt: true do
+      delete
+    end
 
     #ルートにウェイクを送る
-    set target: :anonymous, sleep_mode: :wake , root: true, all: true, interrupt: true
+    _SEND_ :all , root: true, interrupt: true do
+      set sleep_mode: :wake
+    end
 
     #スキップフラグを下ろす
-    set target: :anonymous, skip_mode: false , all: true, interrupt: true
+    _SEND_ :all , root: true, interrupt: true do
+      set skip_mode: false
+    end
+
   end
 
   #■ルートの待機処理
@@ -151,9 +160,12 @@ create :RenderTargetContainer,
           last: 255
         wait [:command, :skip], command: :transition_fade do
           #pp "idle"
-          set idle_mode: false, interrupt: true
+          _SEND_ nil, interrupt: true do
+            set idle_mode: false
+          end
         end
-        sleep_mode mode: :sleep
+        set sleep_mode: :sleep
+#        sleep_mode mode: :sleep
         wait [:wake]
         skip_mode mode: false
         transition_fade frame: 60,

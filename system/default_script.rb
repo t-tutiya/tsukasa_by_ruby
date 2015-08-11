@@ -30,6 +30,13 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+_DEFINE_ :set do |options|
+  _SEND_ options[:set] do
+    options.delete(:set)
+    _SET_ options
+  end
+end
+
 #無面関数として機能する
 _DEFINE_ :scope do |options|
   _YIELD_ options

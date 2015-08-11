@@ -127,7 +127,7 @@ class ScriptCompiler
 
   impl_define :change_default_target
 
-  impl_define :set
+  impl_define :_SET_
   impl_define :_SET_DATA_
   impl_define :_SEND_
 

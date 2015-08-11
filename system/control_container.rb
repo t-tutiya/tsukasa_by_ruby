@@ -437,7 +437,7 @@ class Control #コマンド名変更予定
   end
 
   #コントロールのプロパティを更新する
-  def command_set(options, inner_options)
+  def command__SET_(options, inner_options)
     #オプション全探査
     options.each do |key, val|
       method_name = key.to_s + "="

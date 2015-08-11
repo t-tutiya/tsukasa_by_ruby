@@ -312,6 +312,15 @@ class Control #内部メソッド
   #非公開インターフェイス
   #############################################################################
 
+  #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
+  def eval_block(options, block_stack = nil, &block)
+    return unless block
+
+    eval_commands(@script_compiler.commands(options, 
+                                            block_stack, 
+                                            &block))
+  end
+
   private
 
   #リソースを解放する
@@ -325,15 +334,6 @@ class Control #内部メソッド
     return unless commands
     #コマンドをリストにスタックする
     @command_list = commands +  @command_list
-  end
-
-  #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
-  def eval_block(options, block_stack = nil, &block)
-    return unless block
-
-    eval_commands(@script_compiler.commands(options, 
-                                            block_stack, 
-                                            &block))
   end
 
   #IFやWHILEなどで渡されたlambdaを実行する

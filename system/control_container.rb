@@ -460,38 +460,37 @@ class Control #コマンド名変更予定
   #コマンドを下位コントロールに送信する
   def command__SEND_(options, inner_options)
     if options[:root]
-      controls = @root_control.find_control(options[:_SEND_])
+      base_control = @root_control
     else
-      if options[:_SEND_]
-        case options[:_SEND_]
-        when :last
-          controls = [@control_list.last]
-        else
-          controls = find_control(options[:_SEND_])
-        end
-      else
-        controls = [self]
-      end
+      base_control = self
     end
 
-    return if controls.empty?
-
-    case options[:_SEND_]
-    when :all
-      controls.each do |control|
-        if options[:interrupt]
-          control.interrupt_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
-        else
-          control.push_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
-        end
+    unless options[:_SEND_]
+      if options[:interrupt]
+        base_control.interrupt_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+      else
+        base_control.push_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
       end
+
       return
     end
 
-    if options[:interrupt]
-      controls[0].interrupt_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+    case options[:_SEND_]
+    when :all
+      controls = base_control.find_control(:all)
+    when :last
+      #TODO*ここの実装が歪んでいる。しかしどうしたものか。
+      controls = [@control_list.last]
     else
-      controls[0].push_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+      controls = base_control.find_control(options[:_SEND_])
+    end
+
+    controls.each do |control|
+      if options[:interrupt]
+        control.interrupt_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+      else
+        control.push_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+      end
     end
   end
 

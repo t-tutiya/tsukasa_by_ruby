@@ -44,24 +44,24 @@ create :ButtonControl,
   image :file_path=>"./sozai/button_key_down.png", 
         :id=>:key_down, :visible => false
   on_mouse_over do
-    set target: :normal, visible: false
-    set target: :over,   visible: true
-    set target: :key_down, visible: false
+    set :normal, visible: false
+    set :over,   visible: true
+    set :key_down, visible: false
   end
   on_mouse_out do
-    set target: :over,   visible: false
-    set target: :normal, visible: true
-    set target: :key_down, visible: false
+    set :over,   visible: false
+    set :normal, visible: true
+    set :key_down, visible: false
   end
   on_key_down do
-    set target: :over,   visible: false
-    set target: :normal, visible: false
-    set target: :key_down, visible: true
+    set :over,   visible: false
+    set :normal, visible: false
+    set :key_down, visible: true
   end
   on_key_up do
-    set target: :key_down, visible: false
-    set target: :normal, visible: false
-    set target: :over,   visible: true
+    set :key_down, visible: false
+    set :normal, visible: false
+    set :over,   visible: true
     _SET_DATA_ key: :flag, val: true
   end
 end
@@ -70,7 +70,9 @@ about do
   _CHECK_ [:not_nil], key: :flag, keep: true do
     _SET_DATA_ key: :scenario, val: 1
     #↓ここがもう少し簡潔に表現できると良い
-    _BREAK_ target: :default_char_container, interrupt: true
+    _SEND_ :default_char_container, interrupt: true do
+      _BREAK_
+    end
     _BREAK_
   end
   text "スクリプト１－Ａ■■■■■■■■■■■■■■"

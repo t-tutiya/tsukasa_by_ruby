@@ -14,27 +14,27 @@ create :ButtonControl,
         :id=>:key_down, :visible => false
   on_mouse_over do
     pp "over"
-    set target: :normal, visible: false
-    set target: :over,   visible: true
-    set target: :key_down, visible: false
+    set :normal, visible: false
+    set :over,   visible: true
+    set :key_down, visible: false
   end
   on_mouse_out do
     pp "out"
-    set target: :over,   visible: false
-    set target: :normal, visible: true
-    set target: :key_down, visible: false
+    set:over,   visible: false
+    set:normal, visible: true
+    set:key_down, visible: false
   end
   on_key_down do
     pp "key_down"
-    set target: :over,   visible: false
-    set target: :normal, visible: false
-    set target: :key_down, visible: true
+    set :over,   visible: false
+    set :normal, visible: false
+    set :key_down, visible: true
   end
   on_key_up do
     pp "key_up"
-    set target: :key_down, visible: false
-    set target: :normal, visible: false
-    set target: :over,   visible: true
+    set :key_down, visible: false
+    set :normal, visible: false
+    set :over,   visible: true
   end
 
   #キー押下状態で判定範囲を超えた場合は、以下のイベントをフックして対応する

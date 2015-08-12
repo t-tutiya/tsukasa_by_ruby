@@ -429,6 +429,28 @@ class Control #コマンド名変更予定
     #checkにブロックが付与されているならそれを実行する
     eval_block(options, &inner_options[:block])
   end
+
+  #繰り返し
+  def command__WHILE_(options, inner_options)
+    #条件式が非成立であれば繰り返し構文を終了する
+    return if !eval_lambda(options[:_WHILE_], options) #アイドル
+
+    interrupt_command([:_END_SCOPE_, options, inner_options])
+
+    #while文全体をスクリプトストレージにスタック
+    eval_commands([[:_WHILE_, options, inner_options]])
+    #ブロックを実行時評価しコマンド列を生成する。
+    eval_block(options, &inner_options[:block])
+  end
+
+  def command__BREAK_(options, inner_options)
+    #_END_SCOPE_タグが見つかるまで@command_listからコマンドを取り除く
+    #_END_SCOPE_タグが見つからない場合は@command_listを空にする
+    until @command_list.empty? do
+      command, end_scope_options = @command_list.shift
+      break if command == :_END_SCOPE_
+    end
+  end
 end
 
 class Control #廃止できないか検討中
@@ -474,7 +496,7 @@ end
 #***コマンド
 #############################################################################
 
-class Control #スクリプトファイル操作操作
+class Control #スクリプトファイル操作
 
   #############################################################################
   #非公開インターフェイス
@@ -572,7 +594,7 @@ end
 #制御構文コマンド
 #############################################################################
 
-class Control #制御構文
+class Control #制御構文：廃止予定
 
   #############################################################################
   #非公開インターフェイス
@@ -581,7 +603,7 @@ class Control #制御構文
   private
 
   #ifコマンド
-  def command__IF_(options, inner_options)
+  def command__IF_(options, inner_options) #廃止予定
     #条件式を評価し、結果をoptionsに再格納する
     if eval_lambda(options[:_IF_], options)
       result = :then
@@ -596,7 +618,7 @@ class Control #制御構文
   end
 
   #thenコマンド
-  def command__THEN_(options, inner_options)
+  def command__THEN_(options, inner_options) #廃止予定
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
       command[0] == :exp_result
@@ -610,7 +632,7 @@ class Control #制御構文
   end
 
   #elseコマンド
-  def command__ELSIF_(options, inner_options)
+  def command__ELSIF_(options, inner_options) #廃止予定
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
       command[0] == :exp_result
@@ -630,7 +652,7 @@ class Control #制御構文
   end
 
   #elseコマンド
-  def command__ELSE_(options, inner_options)
+  def command__ELSE_(options, inner_options) #廃止予定
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
       command[0] == :exp_result
@@ -643,29 +665,7 @@ class Control #制御構文
     end
   end
 
-  #繰り返し
-  def command__WHILE_(options, inner_options)
-    #条件式が非成立であれば繰り返し構文を終了する
-    return if !eval_lambda(options[:_WHILE_], options) #アイドル
-
-    interrupt_command([:_END_SCOPE_, options, inner_options])
-
-    #while文全体をスクリプトストレージにスタック
-    eval_commands([[:_WHILE_, options, inner_options]])
-    #ブロックを実行時評価しコマンド列を生成する。
-    eval_block(options, &inner_options[:block])
-  end
-
-  def command__BREAK_(options, inner_options)
-    #_END_SCOPE_タグが見つかるまで@command_listからコマンドを取り除く
-    #_END_SCOPE_タグが見つからない場合は@command_listを空にする
-    until @command_list.empty? do
-      command, end_scope_options = @command_list.shift
-      break if command == :_END_SCOPE_
-    end
-  end
-
-  def command__CASE_(options, inner_options)
+  def command__CASE_(options, inner_options) #廃止予定
     #比較元のオブジェクトを評価する
     value = eval_lambda(options[:_CASE_], options)
 
@@ -677,7 +677,7 @@ class Control #制御構文
                               nil)
   end
 
-  def command__WHEN_(options, inner_options)
+  def command__WHEN_(options, inner_options) #廃止予定
     #条件式評価結果を取得する（ネスト対応の為に逆順に探査する）
     result = @next_frame_commands.rindex{|command|
       command[0] == :exp_result

@@ -45,16 +45,17 @@ class ScriptCompiler
   #テキスト関連
 
   #文字
-  impl_define :char,                  :TextPageControl
+  impl_define :char
   #文字列
-  impl_define :_TEXT_,                  :TextPageControl
+  impl_define :_TEXT_
 
+  impl_define :_LINE_FEED_
+  #改ページ
+  impl_define :_FLUSH_
+=begin
   #インデント設定
   impl_define :indent,                :TextPageControl
   #改行
-  impl_define :_LINE_FEED_,             :TextPageControl
-  #改ページ
-  impl_define :_FLUSH_,                 :TextPageControl
   #画像スタック
   impl_define :graph,                 :TextPageControl
 
@@ -78,7 +79,7 @@ class ScriptCompiler
   #その他制御系
   #レンダリング済みフォントの登録
   impl_define :map_image_font,        :TextPageControl
-
+=end
 end
 
 class TextPageControl < Control

@@ -72,22 +72,12 @@ class ScriptCompiler
 
     system_options[:block] = block if block
 
-    #組み込みコマンドリストに含まれていない場合
-    unless @@builtin_command_list.include?(command_name)
-      #ALIASされているのでコマンドを差し替える
-      sub_options[:call_builtin_command] = command_name
-      command_name = :call_builtin_command
-    end
-
     #コマンドを登録する
     @command_list.push([command_name,sub_options, system_options])
   end
 
   #コマンドに対応するメソッドを生成する。
   def self.impl_define(command_name, default_class = :Anonymous)
-    #組み込みコマンド名としてリストに追加する
-    @@builtin_command_list.push(command_name)
-
     define_method(command_name) do |option = nil, **option_hash, &block|
       impl(command_name, default_class, option, option_hash, &block)
     end
@@ -143,7 +133,6 @@ class ScriptCompiler
 
   #これブロックが継承されないかも
   impl_define :_CALL_
-  impl_define :call_builtin_command
 
   #制御構文 if系
   impl_define :_IF_
@@ -161,8 +150,6 @@ class ScriptCompiler
   impl_define :_WHILE_
   impl_define :_BREAK_
 
-  #コマンド名の再定義
-  impl_define :_ALIAS_
   #コルーチン呼び出し
   impl_define :_YIELD_
   impl_define :_END_SCOPE_

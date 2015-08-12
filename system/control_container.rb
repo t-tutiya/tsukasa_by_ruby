@@ -209,15 +209,6 @@ class Control #内部メソッド
   #非公開インターフェイス
   #############################################################################
 
-  #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
-  def eval_block(options, block_stack = nil, &block)
-    return unless block
-
-    eval_commands(@script_compiler.commands(options, 
-                                            block_stack, 
-                                            &block))
-  end
-
   private
 
   #リソースを解放する
@@ -231,6 +222,15 @@ class Control #内部メソッド
     return unless commands
     #コマンドをリストにスタックする
     @command_list = commands +  @command_list
+  end
+
+  #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
+  def eval_block(options, block_stack = nil, &block)
+    return unless block
+
+    eval_commands(@script_compiler.commands(options, 
+                                            block_stack, 
+                                            &block))
   end
 
   #IFやWHILEなどで渡されたlambdaを実行する
@@ -294,7 +294,7 @@ class Control #内部メソッド
   end
 end
 
-class Control #コマンド名変更予定
+class Control
 
   #############################################################################
   #非公開インターフェイス
@@ -446,63 +446,6 @@ class Control #コマンド名変更予定
   end
 end
 
-class Control #廃止できないか検討中
-
-  #############################################################################
-  #非公開インターフェイス
-  #############################################################################
-
-  private
-=begin
-  #イベントコマンドの登録
-  def command_event(options, inner_options) #廃止できないか検討中
-    raise
-    @event_list[options[:event]] = inner_options[:block]
-  end
-
-  #イベントの実行
-  def command_fire(options, inner_options) #廃止できないか検討中
-    raise
-    \#キーが登録されていないなら終了
-    return if !@event_list[options[:fire]]
-
-    eval_block(options, @event_list[options[:fire]])
-  end
-=end
-  #############################################################################
-  #分類未決定
-  #############################################################################
-
-  #コマンド送信先ターゲットのデフォルトを変更する
-  def command_change_default_target(options, inner_options) #廃止できないか検討中
-    @control_default[options[:change_default_target]] = options[:id]
-  end
-
-  def command_call_builtin_command(options, inner_options) #廃止できないか検討中
-    command_name = options[:call_builtin_command]
-    options.delete(:call_builtin_command) #削除
-    send("command_" + command_name.to_s, options, inner_options)
-  end
-end
-
-#############################################################################
-#***コマンド
-#############################################################################
-
-class Control #スクリプトファイル操作
-
-  #############################################################################
-  #非公開インターフェイス
-  #############################################################################
-
-  private
-
-  #スクリプトファイルを挿入する
-  def command__INCLUDE_(options, inner_options)
-    eval_commands(@script_compiler.commands({:script_path => options[:_INCLUDE_]}))
-  end
-end
-
 #############################################################################
 #***コマンド
 #############################################################################
@@ -514,6 +457,11 @@ class Control #ユーザー定義関数操作
   #############################################################################
 
   private
+
+  #スクリプトファイルを挿入する
+  def command__INCLUDE_(options, inner_options)
+    eval_commands(@script_compiler.commands({:script_path => options[:_INCLUDE_]}))
+  end
 
   #ユーザー定義コマンドを定義する
   def command__DEFINE_(options, inner_options)
@@ -558,30 +506,26 @@ class Control #ユーザー定義関数操作
     eval_block(options, block_stack, &block)
   end
 
-  #コマンドを再定義する
-  def command__ALIAS_(options, inner_options)
-    #元コマンドが組み込みコマンドの場合
-    if @script_compiler.builtin_command_list.include?(options[:command_name])
-      #元コマンドをcall_builtin_commandで呼びだすブロックを設定する
-      @root_control.system_property[:function_list][options[:_ALIAS_]] = Proc.new{|command_options|
-        call_builtin_command(options[:command_name], command_options)
-      }
-
-      #コマンドを組み込みコマンドリストから削除する
-      @script_compiler.builtin_command_list.delete_if{ |command_name|
-        command_name == options[:command_name]
-      }
-    else
-      #新しいコマンド名に元のコマンドのブロックを設定する
-      @root_control.system_property[:function_list][options[:_ALIAS_]] = @root_control.system_property[:function_list][options[:command_name]]
-    end
-  end
-
   #文字列を評価する（デバッグ用）
   def command__EVAL_(options, inner_options)
     eval(options[:_EVAL_])
   end
 end
+
+class Control #廃止できないか検討中
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
+
+  #コマンド送信先ターゲットのデフォルトを変更する
+  def command_change_default_target(options, inner_options) #廃止できないか検討中
+    @control_default[options[:change_default_target]] = options[:id]
+  end
+end
+
 
 #############################################################################
 #制御構文コマンド

@@ -58,9 +58,9 @@ class ImageTilesContainer < Control
     entities = entity.slice_tiles(@x_count, @y_count)
 
     entities.each.with_index(options[:start_index] || 0) do |image, index|
-      push_command([:create, 
+      push_command([:_CREATE_, 
                   {
-                    :create => :ImageControl,
+                    :_CREATE_ => :ImageControl,
                     :entity => image,
                     :id => index,
                     :float_mode => options[:float_mode],

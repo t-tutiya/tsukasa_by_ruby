@@ -1,6 +1,6 @@
 #! ruby -E utf-8
 
-create :ButtonControl, 
+_CREATE_ :ButtonControl, 
         :x_pos => 150, 
         :y_pos => 150, 
         :width => 256,

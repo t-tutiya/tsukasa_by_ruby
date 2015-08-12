@@ -158,14 +158,14 @@ _DEFINE_ :wait_push do
 end
 
 _DEFINE_ :image do |options|
-  create :ImageControl , options do
+  _CREATE_ :ImageControl , options do
     _YIELD_
   end
 end
 
 #標準テキストウィンドウ
 #TODOデバッグ用なので各種数字は暫定
-create :RenderTargetContainer,
+_CREATE_ :RenderTargetContainer,
   x_pos: 128,
   y_pos: 528,
   width: 1024,
@@ -173,7 +173,7 @@ create :RenderTargetContainer,
   index: 1000000, #描画順序
   id: :main_text_layer do
     #メッセージウィンドウ
-    create :TextPageControl, 
+    _CREATE_ :TextPageControl, 
       x_pos: 2,
       y_pos: 2,
       id: :default_char_container,
@@ -207,14 +207,14 @@ create :RenderTargetContainer,
 
 
 _DEFINE_ :line_icon_func do |options|
-  create :LayoutControl, 
+  _CREATE_ :LayoutControl, 
           :x_pos => 0, 
           :y_pos => 0, 
           :width => 24,
           :height => 24,
           :id => options[:id],
           :float_mode => :right do
-    create :ImageTilesContainer, 
+    _CREATE_ :ImageTilesContainer, 
             :file_path=>"./sozai/icon_8_a.png", 
             :id=>:test, 
             :x_count => 4, 
@@ -250,14 +250,14 @@ end
 
 _DEFINE_ :page_icon_func do |options|
 
-  create :LayoutControl, 
+  _CREATE_ :LayoutControl, 
           :x_pos => 0, 
           :y_pos => 0, 
           :width => 24,
           :height => 24,
           :id => options[:id],
           :float_mode => :right do
-    create :ImageTilesContainer, 
+    _CREATE_ :ImageTilesContainer, 
             :file_path=>"./sozai/icon_4_a.png", 
             :id=>:test, 
             :x_count => 4, 

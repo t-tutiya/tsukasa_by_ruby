@@ -243,8 +243,8 @@ class TextPageControl < Control
     super
 
     #次のアクティブ行コントロールを追加  
-    interrupt_command([:create, 
-                     {:create => :LayoutControl, 
+    interrupt_command([:_CREATE_, 
+                     {:_CREATE_ => :LayoutControl, 
                       :width => options[:width],
                       :height => @style_config[:line_height],
                       :float_mode => :bottom}, 
@@ -267,8 +267,8 @@ class TextPageControl < Control
   def command_char(options, inner_options)
     target = @control_list.last
     #文字コントロールを生成する
-    target.push_command([:create, 
-               {:create => :CharControl, 
+    target.push_command([:_CREATE_, 
+               {:_CREATE_ => :CharControl, 
                 :char => options[:char],
                 :font => @font,
                 :font_config => @font_config,
@@ -278,8 +278,8 @@ class TextPageControl < Control
                 :block => @char_renderer}])
 
     #文字幅スペーサーを生成する
-    target.push_command([:create, 
-                {:create => :LayoutControl, 
+    target.push_command([:_CREATE_, 
+                {:_CREATE_ => :LayoutControl, 
                 :width => @style_config[:charactor_pitch],
                 :height => @style_config[:line_height],
                 :float_mode => :right}, 
@@ -295,8 +295,8 @@ class TextPageControl < Control
 #TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
 =begin
     #文字コントロールを生成する
-    interrupt_command([:create, {
-                    :create => :CharControl, 
+    interrupt_command([:_CREATE_, {
+                    :_CREATE_ => :CharControl, 
                    :x_pos => @next_char_x + @margin_x,
                    :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
                    :char => "",
@@ -402,16 +402,16 @@ class TextPageControl < Control
                        inner_options])
 
     #次のアクティブ行コントロールを追加  
-    interrupt_command([:create, 
-                     {:create => :LayoutControl, 
+    interrupt_command([:_CREATE_, 
+                     {:_CREATE_ => :LayoutControl, 
                       :width => options[:width],
                       :height => @style_config[:line_height],
                       :float_mode => :bottom}, 
                       inner_options])
 
     #行間ピッチ分の無形コントロールを追加
-    interrupt_command([:create, 
-                     {:create => :LayoutControl, 
+    interrupt_command([:_CREATE_, 
+                     {:_CREATE_ => :LayoutControl, 
                       :width => options[:width],
                       :height => @style_config[:line_spacing],
                       :float_mode => :bottom}, 
@@ -428,8 +428,8 @@ class TextPageControl < Control
     end
 
     #次のアクティブ行コントロールを追加  
-    interrupt_command([:create, 
-                     {:create => :LayoutControl, 
+    interrupt_command([:_CREATE_, 
+                     {:_CREATE_ => :LayoutControl, 
                       :width => options[:width],
                       :height => @style_config[:line_height],
                       :float_mode => :bottom}, 

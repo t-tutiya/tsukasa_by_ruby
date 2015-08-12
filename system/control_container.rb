@@ -314,13 +314,13 @@ class Control #コマンド名変更予定
   #############################################################################
 
   #コントロールをリストに登録する
-  def command_create(options, inner_options)
+  def command__CREATE_(options, inner_options)
     #スキップモードの指定
     #TODO：ここで入れるのは相当イマイチ。方法を考える
     options[:skip_mode] = @skip_mode
 
     #コントロールを生成して子要素として登録する
-    @control_list.push(Module.const_get(options[:create]).new( options, 
+    @control_list.push(Module.const_get(options[:_CREATE_]).new( options, 
                                                                inner_options, 
                                                                @root_control))
     #付与ブロックを実行する

@@ -136,7 +136,7 @@ class ScriptCompiler
   impl_define :_INCLUDE_
 
   #コントロールの生成
-  impl_define :create
+  impl_define :_CREATE_
   #コントロールの削除
   impl_define :_DELETE_
 

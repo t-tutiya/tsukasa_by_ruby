@@ -28,7 +28,7 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-create :LayoutControl, 
+_CREATE_ :LayoutControl, 
         :x_pos => 600, 
         :y_pos => 150, 
         :width => 256,
@@ -42,7 +42,7 @@ create :LayoutControl,
   #image :file_path=>"./sozai/button_normal.png"
 end
 
-create :LayoutControl, 
+_CREATE_ :LayoutControl, 
         :x_pos => 0, 
         :y_pos => 0, 
         :width => 256,

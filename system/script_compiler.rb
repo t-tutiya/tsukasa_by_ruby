@@ -31,12 +31,6 @@ require 'dxruby'
 ###############################################################################
 
 class ScriptCompiler
-  @@builtin_command_list = Array.new #組み込みコマンドリスト
-
-  def builtin_command_list
-    @@builtin_command_list
-  end
-
   #ヘルパーメソッド群
   def commands(argument, block_stack = nil, &block)
     @command_list = []
@@ -58,18 +52,11 @@ class ScriptCompiler
     return  @command_list || []
   end
 
-  def impl(command_name, default_class, 
-            option, 
-            **sub_options, 
-            &block)
-
+  def impl(command_name, option, **sub_options, &block)
     #キー名無しオプションがある場合はコマンド名をキーに設定する
     sub_options[command_name] = option if option != nil
 
-    system_options ={:default_class => default_class,
-                     :block_stack =>   @block_stack,
-                     }
-
+    system_options = {:block_stack => @block_stack}
     system_options[:block] = block if block
 
     #コマンドを登録する
@@ -77,9 +64,9 @@ class ScriptCompiler
   end
 
   #コマンドに対応するメソッドを生成する。
-  def self.impl_define(command_name, default_class = :Anonymous)
+  def self.impl_define(command_name)
     define_method(command_name) do |option = nil, **option_hash, &block|
-      impl(command_name, default_class, option, option_hash, &block)
+      impl(command_name, option, option_hash, &block)
     end
   end
 
@@ -88,7 +75,7 @@ class ScriptCompiler
     #無名引数がある場合、関数名をキーに格納する
     options[user_function_name.to_sym] = option if option
     #TODO：存在しないメソッドが実行される問題について要検討
-    impl(:_CALL_, :Anonymous, user_function_name, options, &block)
+    impl(:_CALL_, user_function_name, options, &block)
   end
 
   impl_define :end_frame

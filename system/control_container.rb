@@ -70,14 +70,14 @@ class Control #公開インターフェイス
     @sleep_mode = :wake        #スリープの初期状態を設定する
 
     @delete_flag = false       #削除フラグの初期化
-
+=begin
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @control_default = {
       :TextPageControl   => :default_char_container,
       :RenderTargetContainer => :default_RenderTarget_container,
       :Anonymous       => :anonymous,
     }
-
+=end
     #デフォルトスクリプトの読み込み
     if options[:default_script_path]
       @command_list += @script_compiler.commands({:script_path => options[:default_script_path]})
@@ -520,6 +520,7 @@ class Control #廃止できないか検討中
 
   #コマンド送信先ターゲットのデフォルトを変更する
   def command_change_default_target(options, inner_options) #廃止できないか検討中
+    raise
     @control_default[options[:change_default_target]] = options[:id]
   end
 end

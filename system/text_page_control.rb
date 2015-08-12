@@ -248,7 +248,7 @@ class TextPageControl < Control
                       :width => options[:width],
                       :height => @style_config[:line_height],
                       :float_mode => :bottom}, 
-                      {:target_id => @id}])
+                      {}])
 
   end
 
@@ -274,8 +274,7 @@ class TextPageControl < Control
                 :font_config => @font_config,
                 :skip_mode =>  @skip_mode,
                 :float_mode => :right}, 
-               {:target_id => :anonymous,
-                :block => @char_renderer}])
+               {:block => @char_renderer}])
 
     #文字幅スペーサーを生成する
     target.push_command([:_CREATE_, 
@@ -283,8 +282,7 @@ class TextPageControl < Control
                 :width => @style_config[:charactor_pitch],
                 :height => @style_config[:line_height],
                 :float_mode => :right}, 
-               {:target_id => :anonymous,
-                :block => @char_renderer}])
+               {:block => @char_renderer}])
   end
 
   #image_charコマンド
@@ -305,8 +303,7 @@ class TextPageControl < Control
                    :skip_mode =>  @skip_mode,
                    :graph => true,
                    },
-                   {:target_id => @id,
-                    :block => @char_renderer},
+                   {:block => @char_renderer},
 #                   @font.glyph(options[:char].to_s])
                  )
 
@@ -422,9 +419,7 @@ class TextPageControl < Control
   #メッセージレイヤの消去
   def command__FLUSH_(options, inner_options)
     @control_list.each do |control|
-      control.interrupt_command([:_DELETE_, 
-                                        options, 
-                                       {:target_id => :anonymous}])
+      control.interrupt_command([:_DELETE_, options, {}])
     end
 
     #次のアクティブ行コントロールを追加  

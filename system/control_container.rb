@@ -134,13 +134,6 @@ class Control #公開インターフェイス
       #今フレーム処理終了判定
       break if command_name == :end_frame
 
-      #送信先ターゲットIDが設定されていない場合
-      unless inner_options[:target_id]
-        #デフォルトクラス名からIDを取得する
-        inner_options[:target_id] = @control_default[inner_options[:default_class]]
-        raise unless inner_options[:target_id]
-      end
-
       #コマンドを実行する
       send("command_" + command_name.to_s, options, inner_options)
     end
@@ -408,7 +401,7 @@ class Control #コマンド名変更予定
     end
 
     #フレーム終了疑似コマンドをスタックする
-    eval_commands([[:end_frame, {}, {:target_id => @id}]])
+    eval_commands([[:end_frame, {}, {}]])
 
     #waitにブロックが付与されているならそれを実行する
     eval_block(options, &inner_options[:block])

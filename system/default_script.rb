@@ -79,7 +79,7 @@ _DEFINE_ :pause do |options|
   #■行表示中スキップ処理
   _SEND_ :default_char_container do 
     #idleあるいはキー入力待機
-    wait [:key_push, :idol]
+    _WAIT_ [:key_push, :idol]
 
     if options[:icon]
       _SEND_ :last do
@@ -100,7 +100,7 @@ _DEFINE_ :pause do |options|
     #■行末待機処理
 
     #キー入力待機
-    wait [:key_push]
+    _WAIT_ [:key_push]
 
     #アイコン削除
     delete :icon
@@ -121,19 +121,19 @@ _DEFINE_ :pause do |options|
   #スリープモードを設定
   sleep_mode mode: :sleep
   #ウェイク待ち
-  wait [:wake]
+  _WAIT_ [:wake]
 end
 
 #指定フレーム数ウェイト
 #ex. wait_count 60
 _DEFINE_ :wait_count do |options|
-  wait [:count], count: options[:wait_count]
+  _WAIT_ [:count], count: options[:wait_count]
 end
 
 #指定コマンドウェイト
 #ex. wait_command :move_line
 _DEFINE_ :wait_command do |options|
-  wait [:command], command: options[:wait_command]
+  _WAIT_ [:command], command: options[:wait_command]
 end
 
 #スキップモードの設定
@@ -153,7 +153,7 @@ end
 
 #単機能キー入力待ち
 _DEFINE_ :wait_push do
-  wait [:key_push]
+  _WAIT_ [:key_push]
   end_frame
 end
 
@@ -185,7 +185,7 @@ create :RenderTargetContainer,
           count: 0,
           start: 0,
           last: 255
-        wait [:command, :skip], command: :transition_fade do
+        _WAIT_ [:command, :skip], command: :transition_fade do
           #pp "idle"
           _SEND_ nil, interrupt: true do
             set idle_mode: false
@@ -193,13 +193,13 @@ create :RenderTargetContainer,
         end
         set sleep_mode: :sleep
 #        sleep_mode mode: :sleep
-        wait [:wake]
+        _WAIT_ [:wake]
         skip_mode mode: false
         transition_fade frame: 60,
           count: 0,
           start: 255,
           last:128
-        wait [:command, :skip], command: :transition_fade
+        _WAIT_ [:command, :skip], command: :transition_fade
       } do
       set font_config: {size: 32}
     end
@@ -222,28 +222,28 @@ _DEFINE_ :line_icon_func do |options|
     _WHILE_ ->{true} do
       set 7, visible: false
       set 0, visible: true
-    	wait [:count], count: 5
+    	_WAIT_ [:count], count: 5
       set 0, visible: false
       set 1, visible: true
-    	wait [:count], count: 5
+    	_WAIT_ [:count], count: 5
       set 1, visible: false
       set 2, visible: true
-    	wait [:count], count: 5
+    	_WAIT_ [:count], count: 5
       set 2, visible: false
       set 3, visible: true
-    	wait [:count], count: 5
+    	_WAIT_ [:count], count: 5
       set 3, visible: false
       set 4, visible: true
-    	wait [:count], count: 5
+    	_WAIT_ [:count], count: 5
       set 4, visible: false
       set 5, visible: true
-    	wait [:count], count: 5
+    	_WAIT_ [:count], count: 5
       set 5, visible: false
       set 6, visible: true
-    	wait [:count], count: 5
+    	_WAIT_ [:count], count: 5
       set 6, visible: false
       set 7, visible: true
-    	wait [:count], count: 30
+    	_WAIT_ [:count], count: 30
     end
   end
 end
@@ -265,16 +265,16 @@ _DEFINE_ :page_icon_func do |options|
     _WHILE_ ->{true} do
       set 3, visible: false
       set 0, visible: true
-    	wait [:count], count: 5
+    	_WAIT_ [:count], count: 5
       set 0, visible: false
       set 1, visible: true
-    	wait [:count], count: 5
+    	_WAIT_ [:count], count: 5
       set 1, visible: false
       set 2, visible: true
-    	wait [:count], count: 5
+    	_WAIT_ [:count], count: 5
       set 2, visible: false
       set 3, visible: true
-    	wait [:count], count: 5
+    	_WAIT_ [:count], count: 5
     end
   end
 end

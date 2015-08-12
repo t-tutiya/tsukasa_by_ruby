@@ -144,7 +144,7 @@ class ScriptCompiler
   impl_define :event
 
   #各種ウェイト処理
-  impl_define :wait
+  impl_define :_WAIT_
   impl_define :_CHECK_
 
   impl_define :EXP

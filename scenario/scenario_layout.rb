@@ -59,15 +59,15 @@ create :LayoutControl,
   _WHILE_ ->{true} do
       set 3, visible: false
       set 0, visible: true
-  	wait [:count], count: 10
+  	_WAIT_ [:count], count: 10
       set 0, visible: false
       set 1, visible: true
-  	wait [:count], count: 10
+  	_WAIT_ [:count], count: 10
       set 1, visible: false
       set 2, visible: true
-  	wait [:count], count: 10
+  	_WAIT_ [:count], count: 10
       set 2, visible: false
       set 3, visible: true
-  	wait [:count], count: 10
+  	_WAIT_ [:count], count: 10
   end
 end

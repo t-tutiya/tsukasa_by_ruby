@@ -335,8 +335,8 @@ class TextPageControl < Control
                         {char_command => ch}, 
                         inner_options])
       #:waitコマンドをスタックする。待ち時間は遅延評価とする
-      command_list.push([:wait, 
-                        {:wait => [:count, :skip, :key_push],
+      command_list.push([:_WAIT_, 
+                        {:_WAIT_ => [:count, :skip, :key_push],
                          :count => :unset_wait_frame}, 
                          inner_options])
     end
@@ -378,8 +378,8 @@ class TextPageControl < Control
     @next_char_x += image.width + @style_config[:charactor_pitch]
 
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    interrupt_command([:wait, 
-                          {:wait => [:count, :skip, :key_push],
+    interrupt_command([:_WAIT_, 
+                          {:_WAIT_ => [:count, :skip, :key_push],
                            :count => :unset_wait_frame}, inner_options])
 =end
   end
@@ -396,8 +396,8 @@ class TextPageControl < Control
     #以下逆順に登録
 
     #改行時のwaitを設定する
-    interrupt_command([:wait, 
-                      {:wait => [:count, :skip, :key_push],
+    interrupt_command([:_WAIT_, 
+                      {:_WAIT_ => [:count, :skip, :key_push],
                        :count => @style_config[:line_feed_wait_frame]}, 
                        inner_options])
 

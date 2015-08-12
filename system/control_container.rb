@@ -393,7 +393,7 @@ class Control #コマンド名変更予定
   #タイミング制御コマンド
   #############################################################################
 
-  def command_wait(options, inner_options)
+  def command__WAIT_(options, inner_options)
     #待ちフレーム値が設定されていない場合はコンフィグから初期値を取得する
     #TODO:@style_config[:wait_frame]はchar特有のプロパティ
     if options[:count] and (options[:count] == :unset_wait_frame)
@@ -401,7 +401,7 @@ class Control #コマンド名変更予定
     end
 
     #チェック条件を満たしたら終了する
-    return if check_imple(options[:wait], options)
+    return if check_imple(options[:_WAIT_], options)
 
     if options[:count]
       options[:count] = options[:count] - 1
@@ -413,7 +413,7 @@ class Control #コマンド名変更予定
     #waitにブロックが付与されているならそれを実行する
     eval_block(options, &inner_options[:block])
 
-    push_command_to_next_frame(:wait, options, inner_options)
+    push_command_to_next_frame(:_WAIT_, options, inner_options)
   end
 
   def command__CHECK_(options, inner_options)

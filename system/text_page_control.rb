@@ -422,7 +422,7 @@ class TextPageControl < Control
   #メッセージレイヤの消去
   def command__FLUSH_(options, inner_options)
     @control_list.each do |control|
-      control.interrupt_command([:delete, 
+      control.interrupt_command([:_DELETE_, 
                                         options, 
                                        {:target_id => :anonymous}])
     end

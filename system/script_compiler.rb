@@ -138,7 +138,7 @@ class ScriptCompiler
   #コントロールの生成
   impl_define :create
   #コントロールの削除
-  impl_define :delete
+  impl_define :_DELETE_
 
   #コントロール単位でイベント駆動するコマンド群を格納する
   impl_define :event

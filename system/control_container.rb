@@ -329,7 +329,7 @@ class Control #コマンド名変更予定
 
   #disposeコマンド
   #コントロールを削除する
-  def command_delete(options, inner_options)
+  def command__DELETE_(options, inner_options)
     #削除フラグを立てる
     dispose()
   end

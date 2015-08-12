@@ -37,6 +37,13 @@ _DEFINE_ :set do |options|
   end
 end
 
+_DEFINE_ :delete do |options|
+  _SEND_ options[:delete], interrupt: true do
+    _DELETE_
+  end
+end
+
+
 _DEFINE_ :text do |options|
   _SEND_ :default_char_container do
     _TEXT_ options[:text]
@@ -95,9 +102,8 @@ _DEFINE_ :pause do |options|
     #キー入力待機
     wait [:key_push]
 
-    _SEND_ :icon, interrupt: true do
-      delete
-    end
+    #アイコン削除
+    delete :icon
 
     #ルートにウェイクを送る
     _SEND_ :all , root: true, interrupt: true do

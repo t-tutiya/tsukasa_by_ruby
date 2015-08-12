@@ -91,9 +91,6 @@ class ScriptCompiler
     impl(:_CALL_, :Anonymous, user_function_name, options, &block)
   end
 
-  #今フレームを終了する
-  impl_define :end_frame
-
   #ＳＥの再生と停止（暫定）
   impl_define :se_play
   impl_define :se_stop
@@ -102,8 +99,6 @@ class ScriptCompiler
   impl_define :move
   impl_define :move_line
   impl_define :move_line_with_skip
-  #フラグ設定
-  impl_define :flag
 
   #フェードトランジション
   impl_define :transition_fade
@@ -112,6 +107,7 @@ class ScriptCompiler
 
   impl_define :_SET_
   impl_define :_SET_DATA_
+
   impl_define :_SEND_
 
   #スクリプトファイルの挿入
@@ -122,40 +118,30 @@ class ScriptCompiler
   #コントロールの削除
   impl_define :_DELETE_
 
-  #コントロール単位でイベント駆動するコマンド群を格納する
-  impl_define :event
-
   #各種ウェイト処理
-  impl_define :_WAIT_
-  impl_define :_CHECK_
-
-  impl_define :EXP
-
-  #これブロックが継承されないかも
-  impl_define :_CALL_
+  impl_define :_WAIT_ #条件を満たさない限りブロックを実行して待機
+  impl_define :_CHECK_ #条件を満たしたらブロックを実行
 
   #制御構文 if系
-  impl_define :_IF_
-  impl_define :_THEN_
-  impl_define :_ELSE_
-  impl_define :_ELSIF_
+  impl_define :_IF_ #廃止予定
+  impl_define :_THEN_ #廃止予定
+  impl_define :_ELSE_ #廃止予定
+  impl_define :_ELSIF_ #廃止予定
 
   #case-when文
-  #TODO：現状では受け取れる式は１個のみとする
-  #TODO：複数取れるべきだが、現仕様では他のコマンドと整合しない
-  impl_define :_CASE_
-  impl_define :_WHEN_
+  impl_define :_CASE_ #廃止予定
+  impl_define :_WHEN_ #廃止予定
 
   #while文
   impl_define :_WHILE_
   impl_define :_BREAK_
 
-  #コルーチン呼び出し
+  #ユーザー定義コマンド
+  impl_define :_DEFINE_
+  impl_define :_CALL_
   impl_define :_YIELD_
   impl_define :_END_SCOPE_
 
   #実行時評価
   impl_define :_EVAL_
-  #ユーザー定義コマンドの宣言
-  impl_define :_DEFINE_
 end

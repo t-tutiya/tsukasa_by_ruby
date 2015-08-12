@@ -62,8 +62,6 @@ class Control #公開インターフェイス
 
     @control_list         = [] #コントロールリスト
 
-    @event_list           = {} #イベントリスト
-
     @child_update = true #updateを子コントロールに伝搬するか
     @child_render = true #renderを子コントロールに伝搬するか
 

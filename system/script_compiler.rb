@@ -91,6 +91,8 @@ class ScriptCompiler
     impl(:_CALL_, :Anonymous, user_function_name, options, &block)
   end
 
+  impl_define :end_frame
+
   #ＳＥの再生と停止（暫定）
   impl_define :se_play
   impl_define :se_stop

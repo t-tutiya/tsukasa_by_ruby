@@ -35,8 +35,8 @@ class Control #公開インターフェイス
   attr_accessor  :skip_mode #スキップモード
   attr_accessor  :sleep_mode #スリープモード
   attr_accessor  :idle_mode #アイドルモード
-  attr_reader  :system_property
   attr_reader  :user_data
+  attr_reader  :function_list
 
   attr_accessor  :id
 
@@ -45,14 +45,12 @@ class Control #公開インターフェイス
       @root_control = root_control
     else
       @root_control = self
-      @system_property = {
-        #functionのリスト（procで保存される）
-        :function_list => {},
-      }
       @user_data = {}
     end
 
-    @script_compiler = ScriptCompiler.new(self)
+    @function_list = {} # ユーザ定義関数
+
+    @script_compiler = ScriptCompiler.new(self, @root_control)
 
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
@@ -465,14 +463,17 @@ class Control #ユーザー定義関数操作
 
   #ユーザー定義コマンドを定義する
   def command__DEFINE_(options, inner_options)
-    @root_control.system_property[:function_list][options[:_ARGUMENT_]] = inner_options[:block]
+    @function_list[options[:_ARGUMENT_]] = inner_options[:block]
   end
 
   #関数呼び出し
   def command__CALL_(options, inner_options)
+    #関数名に対応する関数ブロックを取得する
+    function_block = @function_list[options[:_ARGUMENT_]] || @root_control.function_list[options[:_ARGUMENT_]]
+      
     #定義されていないfunctionが呼びだされたら例外を送出
-    raise NameError, "undefined local variable or command or function `#{options[:_ARGUMENT_]}' for #{inner_options}" unless @root_control.system_property[:function_list].key?(options[:_ARGUMENT_])
-
+    raise NameError, "undefined local variable or command or function `#{options[:_ARGUMENT_]}' for #{inner_options}" unless function_block
+    
     #伝搬されているブロックがある場合
     if inner_options[:block_stack]
       block_stack = inner_options[:block_stack]
@@ -486,9 +487,6 @@ class Control #ユーザー定義関数操作
       block_stack = nil
     end
 
-    #関数名に対応する関数ブロックを取得する
-    function_block = @root_control.system_property[:function_list][options[:_ARGUMENT_]]
-    
     if options[:_FUNCTION_ARGUMENT_]
       options[:_ARGUMENT_] = options[:_FUNCTION_ARGUMENT_] 
       #下位伝搬を防ぐ為に要素を削除

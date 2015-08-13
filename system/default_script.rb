@@ -45,7 +45,6 @@ end
 
 
 _DEFINE_ :text do |options|
-    pp options
   _SEND_ :default_char_container do
     _TEXT_ options[:_ARGUMENT_]
   end

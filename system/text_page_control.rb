@@ -341,7 +341,6 @@ class TextPageControl < Control
   #line_feedコマンド
   #改行処理（CR＋LF）
   def command__LINE_FEED_(options, inner_options)
-    pp "line_feed"
 =begin
     #todo:インデントがある場合、インデント幅の無形コントロールを作る
     #Ｘ座標をリセット（インデント設定があればその分を加算）
@@ -376,7 +375,6 @@ class TextPageControl < Control
   #flashコマンド
   #メッセージレイヤの消去
   def command__FLUSH_(options, inner_options)
-    pp "flush"
     @control_list.each do |control|
       control.interrupt_command([:_DELETE_, options, {}])
     end

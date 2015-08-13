@@ -60,7 +60,7 @@ class ImageTilesContainer < Control
     entities.each.with_index(options[:start_index] || 0) do |image, index|
       push_command([:_CREATE_, 
                   {
-                    :_CREATE_ => :ImageControl,
+                    :_ARGUMENT_ => :ImageControl,
                     :entity => image,
                     :id => index,
                     :float_mode => options[:float_mode],

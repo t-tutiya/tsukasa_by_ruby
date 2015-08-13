@@ -31,23 +31,23 @@ require 'dxruby'
 ###############################################################################
 
 _DEFINE_ :set do |options|
-  _SEND_ options[:set], interrupt: true do
-    options.delete(:set)
+  _SEND_ options[:_ARGUMENT_], interrupt: true do
+    options.delete(:_ARGUMENT_)
     _SET_ options
   end
 end
 
 _DEFINE_ :delete do |options|
-  _SEND_ options[:delete], interrupt: true do
+  _SEND_ options[:_ARGUMENT_], interrupt: true do
     _DELETE_
   end
 end
 
 
 _DEFINE_ :text do |options|
+    pp options
   _SEND_ :default_char_container do
-    _TEXT_ options[:text]
-    options.delete(:text)
+    _TEXT_ options[:_ARGUMENT_]
   end
 end
 
@@ -127,13 +127,13 @@ end
 #指定フレーム数ウェイト
 #ex. wait_count 60
 _DEFINE_ :wait_count do |options|
-  _WAIT_ [:count], count: options[:wait_count]
+  _WAIT_ [:count], count: options[:_ARGUMENT_]
 end
 
 #指定コマンドウェイト
 #ex. wait_command :move_line
 _DEFINE_ :wait_command do |options|
-  _WAIT_ [:command], command: options[:wait_command]
+  _WAIT_ [:command], command: options[:_ARGUMENT_]
 end
 
 #スキップモードの設定

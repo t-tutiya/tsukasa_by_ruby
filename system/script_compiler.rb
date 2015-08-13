@@ -54,7 +54,7 @@ class ScriptCompiler
 
   def impl(command_name, option, **sub_options, &block)
     #キー名無しオプションがある場合はコマンド名をキーに設定する
-    sub_options[command_name] = option if option != nil
+    sub_options[:_ARGUMENT_] = option if option != nil
 
     system_options = {:block_stack => @block_stack}
     system_options[:block] = block if block
@@ -73,7 +73,7 @@ class ScriptCompiler
   #プロシージャー登録されたコマンドが宣言された場合にここで受ける
   def method_missing(user_function_name, option = nil, **options, &block)
     #無名引数がある場合、関数名をキーに格納する
-    options[user_function_name.to_sym] = option if option
+    options[:_FUNCTION_ARGUMENT_] = option if option
     #TODO：存在しないメソッドが実行される問題について要検討
     impl(:_CALL_, user_function_name, options, &block)
   end

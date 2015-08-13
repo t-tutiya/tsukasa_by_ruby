@@ -245,7 +245,7 @@ class TextPageControl < Control
 
     #次のアクティブ行コントロールを追加  
     interrupt_command([:_CREATE_, 
-                     {:_CREATE_ => :LayoutControl, 
+                     {:_ARGUMENT_ => :LayoutControl, 
                       :width => options[:width],
                       :height => @style_config[:line_height],
                       :float_mode => :bottom}, 
@@ -269,8 +269,8 @@ class TextPageControl < Control
     target = @control_list.last
     #文字コントロールを生成する
     target.push_command([:_CREATE_, 
-               {:_CREATE_ => :CharControl, 
-                :char => options[:char],
+               {:_ARGUMENT_ => :CharControl, 
+                :char => options[:_ARGUMENT_],
                 :font => @font,
                 :font_config => @font_config,
                 :skip_mode =>  @skip_mode,
@@ -279,7 +279,7 @@ class TextPageControl < Control
 
     #文字幅スペーサーを生成する
     target.push_command([:_CREATE_, 
-                {:_CREATE_ => :LayoutControl, 
+                {:_ARGUMENT_ => :LayoutControl, 
                 :width => @style_config[:charactor_pitch],
                 :height => @style_config[:line_height],
                 :float_mode => :right}, 
@@ -295,7 +295,7 @@ class TextPageControl < Control
 =begin
     #文字コントロールを生成する
     interrupt_command([:_CREATE_, {
-                    :_CREATE_ => :CharControl, 
+                    :_ARGUMENT_ => :CharControl, 
                    :x_pos => @next_char_x + @margin_x,
                    :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
                    :char => "",
@@ -327,14 +327,14 @@ class TextPageControl < Control
     end
 
     #文字列を分解してcharコマンドに変換する
-    options[:_TEXT_].each_char do |ch|
+    options[:_ARGUMENT_].each_char do |ch|
       #１文字分の出力コマンドをスタックする
       command_list.push([char_command, 
-                        {char_command => ch}, 
+                        {:_ARGUMENT_ => ch}, 
                         inner_options])
       #:waitコマンドをスタックする。待ち時間は遅延評価とする
       command_list.push([:_WAIT_, 
-                        {:_WAIT_ => [:count, :skip, :key_push],
+                        {:_ARGUMENT_ => [:count, :skip, :key_push],
                          :count => :unset_wait_frame}, 
                          inner_options])
     end
@@ -385,6 +385,7 @@ class TextPageControl < Control
   #line_feedコマンド
   #改行処理（CR＋LF）
   def command__LINE_FEED_(options, inner_options)
+    pp "line_feed"
 =begin
     #todo:インデントがある場合、インデント幅の無形コントロールを作る
     #Ｘ座標をリセット（インデント設定があればその分を加算）
@@ -395,13 +396,13 @@ class TextPageControl < Control
 
     #改行時のwaitを設定する
     interrupt_command([:_WAIT_, 
-                      {:_WAIT_ => [:count, :skip, :key_push],
+                      {:_ARGUMENT_ => [:count, :skip, :key_push],
                        :count => @style_config[:line_feed_wait_frame]}, 
                        inner_options])
 
     #次のアクティブ行コントロールを追加  
     interrupt_command([:_CREATE_, 
-                     {:_CREATE_ => :LayoutControl, 
+                     {:_ARGUMENT_ => :LayoutControl, 
                       :width => options[:width],
                       :height => @style_config[:line_height],
                       :float_mode => :bottom}, 
@@ -409,7 +410,7 @@ class TextPageControl < Control
 
     #行間ピッチ分の無形コントロールを追加
     interrupt_command([:_CREATE_, 
-                     {:_CREATE_ => :LayoutControl, 
+                     {:_ARGUMENT_ => :LayoutControl, 
                       :width => options[:width],
                       :height => @style_config[:line_spacing],
                       :float_mode => :bottom}, 
@@ -419,13 +420,14 @@ class TextPageControl < Control
   #flashコマンド
   #メッセージレイヤの消去
   def command__FLUSH_(options, inner_options)
+    pp "flush"
     @control_list.each do |control|
       control.interrupt_command([:_DELETE_, options, {}])
     end
 
     #次のアクティブ行コントロールを追加  
     interrupt_command([:_CREATE_, 
-                     {:_CREATE_ => :LayoutControl, 
+                     {:_ARGUMENT_ => :LayoutControl, 
                       :width => options[:width],
                       :height => @style_config[:line_height],
                       :float_mode => :bottom}, 
@@ -550,7 +552,7 @@ class TextPageControl < Control
       end
 
       #ベース文字のcharコマンドをスタックする
-      commands.push([:char, {:char => ch}])
+      commands.push([:char, {:_ARGUMENT_ => ch}])
 
       #ベース文字カウンタインクリメント
       base_counter += 1
@@ -605,7 +607,7 @@ class TextPageControl < Control
   def command_indent(options, inner_options)
     raise
     #インデント開始Ｘ座標を設定もしくはクリアする
-    @indent_offset = options[:indent] ? @next_char_x : 0
+    @indent_offset = options[:_ARGUMENT_] ? @next_char_x : 0
   end
 
   #############################################################################
@@ -616,7 +618,7 @@ class TextPageControl < Control
   #TODO：このコマンドの存在自体に問題がある
   def command_delay(options, inner_options)
     #デフォルト速度、現在速度を更新
-    @style_config[:wait_frame] = @default_style_config[:wait_frame] = options[:delay]
+    @style_config[:wait_frame] = @default_style_config[:wait_frame] = options[:_ARGUMENT_]
   end
 
   #############################################################################

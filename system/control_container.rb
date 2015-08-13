@@ -79,11 +79,13 @@ class Control #公開インターフェイス
     }
 =end
     #デフォルトスクリプトの読み込み
+    #TODO：将来的にここで読み込まずにINCLUDEコマンドを使いたい
     if options[:default_script_path]
       @command_list += @script_compiler.commands({:script_path => options[:default_script_path]})
     end
 
     #スクリプトパスが設定されているなら読み込んで登録する
+    #TODO：将来的にここで読み込まずにINCLUDEコマンドを使いたい
     if options[:script_path]
       @command_list += @script_compiler.commands({:script_path => options[:script_path]})
     end
@@ -311,7 +313,7 @@ class Control
     options[:skip_mode] = @skip_mode
 
     #コントロールを生成して子要素として登録する
-    @control_list.push(Module.const_get(options[:_CREATE_]).new( options, 
+    @control_list.push(Module.const_get(options[:_ARGUMENT_]).new( options, 
                                                                inner_options, 
                                                                @root_control))
     #付与ブロックを実行する
@@ -351,31 +353,31 @@ class Control
       base_control = self
     end
 
-    unless options[:_SEND_]
+    unless options[:_ARGUMENT_]
       if options[:interrupt]
-        base_control.interrupt_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+        base_control.interrupt_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
       else
-        base_control.push_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+        base_control.push_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
       end
 
       return
     end
 
-    case options[:_SEND_]
+    case options[:_ARGUMENT_]
     when :all
       controls = base_control.find_control(:all)
     when :last
       #TODO*ここの実装が歪んでいる。しかしどうしたものか。
       controls = [@control_list.last]
     else
-      controls = base_control.find_control(options[:_SEND_])
+      controls = base_control.find_control(options[:_ARGUMENT_])
     end
 
     controls.each do |control|
       if options[:interrupt]
-        control.interrupt_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+        control.interrupt_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
       else
-        control.push_command([:_CALL_, {:_CALL_ => :scope}, inner_options])
+        control.push_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
       end
     end
   end
@@ -392,7 +394,7 @@ class Control
     end
 
     #チェック条件を満たしたら終了する
-    return if check_imple(options[:_WAIT_], options)
+    return if check_imple(options[:_ARGUMENT_], options)
 
     if options[:count]
       options[:count] = options[:count] - 1
@@ -409,10 +411,10 @@ class Control
 
   def command__CHECK_(options, inner_options)
     #チェック条件を満たさない場合
-    unless check_imple(options[:_CHECK_], options)
+    unless check_imple(options[:_ARGUMENT_], options)
       #指定があればコマンドを再スタックする
       if options[:keep]
-        push_command_to_next_frame(:_CHECK_, options, inner_options)
+        push_command_to_next_frame(:_ARGUMENT_, options, inner_options)
       end
       return
     end
@@ -424,7 +426,7 @@ class Control
   #繰り返し
   def command__WHILE_(options, inner_options)
     #条件式が非成立であれば繰り返し構文を終了する
-    return if !eval_lambda(options[:_WHILE_], options) #アイドル
+    return if !eval_lambda(options[:_ARGUMENT_], options) #アイドル
 
     interrupt_command([:_END_SCOPE_, options, inner_options])
 
@@ -458,18 +460,18 @@ class Control #ユーザー定義関数操作
 
   #スクリプトファイルを挿入する
   def command__INCLUDE_(options, inner_options)
-    eval_commands(@script_compiler.commands({:script_path => options[:_INCLUDE_]}))
+    eval_commands(@script_compiler.commands({:script_path => options[:_ARGUMENT_]}))
   end
 
   #ユーザー定義コマンドを定義する
   def command__DEFINE_(options, inner_options)
-    @root_control.system_property[:function_list][options[:_DEFINE_]] = inner_options[:block]
+    @root_control.system_property[:function_list][options[:_ARGUMENT_]] = inner_options[:block]
   end
 
   #関数呼び出し
   def command__CALL_(options, inner_options)
     #定義されていないfunctionが呼びだされたら例外を送出
-    raise NameError, "undefined local variable or command or function `#{options[:_CALL_]}' for #{inner_options}" unless @root_control.system_property[:function_list].key?(options[:_CALL_])
+    raise NameError, "undefined local variable or command or function `#{options[:_ARGUMENT_]}' for #{inner_options}" unless @root_control.system_property[:function_list].key?(options[:_ARGUMENT_])
 
     #伝搬されているブロックがある場合
     if inner_options[:block_stack]
@@ -485,10 +487,15 @@ class Control #ユーザー定義関数操作
     end
 
     #関数名に対応する関数ブロックを取得する
-    function_block = @root_control.system_property[:function_list][options[:_CALL_]]
+    function_block = @root_control.system_property[:function_list][options[:_ARGUMENT_]]
     
-    #下位伝搬を防ぐ為に要素を削除
-    options.delete(:_CALL_)
+    if options[:_FUNCTION_ARGUMENT_]
+      options[:_ARGUMENT_] = options[:_FUNCTION_ARGUMENT_] 
+      #下位伝搬を防ぐ為に要素を削除
+      options.delete(:_FUNCTION_ARGUMENT_)
+    else
+      options.delete(:_ARGUMENT_)
+    end
 
     #functionを実行時評価しコマンド列を生成する。
     eval_block(options, block_stack, &function_block)
@@ -521,7 +528,7 @@ class Control #廃止できないか検討中
   #コマンド送信先ターゲットのデフォルトを変更する
   def command_change_default_target(options, inner_options) #廃止できないか検討中
     raise
-    @control_default[options[:change_default_target]] = options[:id]
+    @control_default[options[:_ARGUMENT_]] = options[:id]
   end
 end
 
@@ -541,7 +548,7 @@ class Control #制御構文：廃止予定
   #ifコマンド
   def command__IF_(options, inner_options) #廃止予定
     #条件式を評価し、結果をoptionsに再格納する
-    if eval_lambda(options[:_IF_], options)
+    if eval_lambda(options[:_ARGUMENT_], options)
       result = :then
     else
       result = :else
@@ -577,7 +584,7 @@ class Control #制御構文：廃止予定
     #結果がelseの場合
     if result and @next_frame_commands[result][1][:result] == :else
       #ラムダ式が真の場合
-      if eval_lambda(options[:_ELSIF_], options)
+      if eval_lambda(options[:_ARGUMENT_], options)
         #コマンドブロックを実行する
         eval_block(options, &inner_options[:block])
         #処理がこれ以上伝搬しないように評価結果をクリアする
@@ -603,7 +610,7 @@ class Control #制御構文：廃止予定
 
   def command__CASE_(options, inner_options) #廃止予定
     #比較元のオブジェクトを評価する
-    value = eval_lambda(options[:_CASE_], options)
+    value = eval_lambda(options[:_ARGUMENT_], options)
 
     #case文の中身を実行する
     eval_block(options, &inner_options[:block])
@@ -624,7 +631,7 @@ class Control #制御構文：廃止予定
 
     exp_result = @next_frame_commands[result][1]
 
-    if exp_result[:case_value] == eval_lambda(options[:_WHEN_], options)
+    if exp_result[:case_value] == eval_lambda(options[:_ARGUMENT_], options)
       #コマンドブロックを実行する
       eval_block(options, &inner_options[:block])
     end

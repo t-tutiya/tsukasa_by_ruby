@@ -32,18 +32,7 @@ require_relative './control_container.rb'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-#コマンド宣言
-class ScriptCompiler
-  impl_define :on_mouse_over
-  impl_define :on_mouse_out
-  impl_define :on_key_down
-  impl_define :on_key_down_out
-  impl_define :on_key_up
-  impl_define :on_key_up_out
-end
-
 #クリックイベントが発生するコントロールの基底クラス
-#TODO：将来的にはSpriteクラスを使い、任意形状でカーソルとの当たり判定が出来るようにする
 module Clickable
   def initialize(options, inner_options, root_control)
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標

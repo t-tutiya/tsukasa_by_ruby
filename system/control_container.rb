@@ -52,7 +52,7 @@ class Control #公開インターフェイス
       @user_data = {}
     end
 
-    @script_compiler = ScriptCompiler.new
+    @script_compiler = ScriptCompiler.new(self)
 
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym

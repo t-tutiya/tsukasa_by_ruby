@@ -38,50 +38,6 @@ require_relative './char_control'
 #汎用テキストマネージャクラス
 ###############################################################################
 
-#コマンド宣言
-class ScriptCompiler
-  #TODO:これらはtext_layer内に動作を限定できないか？
-
-  #テキスト関連
-
-  #文字
-  impl_define :char
-  #文字列
-  impl_define :_TEXT_
-
-  impl_define :_LINE_FEED_
-  #改ページ
-  impl_define :_FLUSH_
-=begin
-  #インデント設定
-  impl_define :indent,                :TextPageControl
-  #改行
-  #画像スタック
-  impl_define :graph,                 :TextPageControl
-
-  #文字描画速度の設定
-  impl_define :delay,                 :TextPageControl
-
-  #ルビ文字の出力
-  impl_define :rubi_char,             :TextPageControl
-
-  #複数ルビ文字列の割り付け
-  impl_define :rubi,                  :TextPageControl
-
-  #フォント設定の更新
-  #現在値をリセット
-  impl_define :reset_font_config,     :TextPageControl
-
-  #スタイル設定の更新
-  #現在値をリセット
-  impl_define :reset_style_config,    :TextPageControl
-
-  #その他制御系
-  #レンダリング済みフォントの登録
-  impl_define :map_image_font,        :TextPageControl
-=end
-end
-
 class TextPageControl < Control
   include Movable #移動関連モジュール
   include Drawable #描画関連モジュール

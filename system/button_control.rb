@@ -31,10 +31,6 @@ require_relative './script_compiler.rb'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-#コマンド宣言
-class ScriptCompiler
-end
-
 #ボタンコントロール
 class ButtonControl  < Control
   include Drawable

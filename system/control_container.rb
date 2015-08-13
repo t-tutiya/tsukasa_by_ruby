@@ -513,7 +513,7 @@ class Control #ユーザー定義関数操作
 
   #文字列を評価する（デバッグ用）
   def command__EVAL_(options, inner_options)
-    eval(options[:_EVAL_])
+    eval(options[:_ARGUMENT_])
   end
 end
 

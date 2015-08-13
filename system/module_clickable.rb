@@ -52,6 +52,16 @@ module Clickable
     @width  = options[:width]  || 0 #横幅
     @height = options[:height] || 0 #縦幅
 
+    @collision_sprite = Sprite.new
+    if options[:collision]
+      @collision_sprite.collision = options[:collision]
+    else
+      @collision_sprite.collision = [0, 0, @width-1, @height-1]
+    end
+
+    @mouse_sprite = Sprite.new
+    @mouse_sprite.collision = [0, 0]
+
     @child_controls_draw_to_entity = false
     @over = false
     @out = true
@@ -72,10 +82,9 @@ module Clickable
     @y = Input.mouse_pos_y
 
     #描画範囲内かどうか
-    if (@x_pos < @x              and 
-        @x     < @x_pos + @width and
-        @y_pos < @y              and 
-        @y     < @y_pos + @height)
+    @collision_sprite.x, @collision_sprite.y = @x_pos, @y_pos
+    @mouse_sprite.x, @mouse_sprite.y = @x, @y
+    if (@mouse_sprite === @collision_sprite)
       #イベント起動済みフラグクリア
       @out = false
 

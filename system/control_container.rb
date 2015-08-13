@@ -414,7 +414,7 @@ class Control
     unless check_imple(options[:_ARGUMENT_], options)
       #指定があればコマンドを再スタックする
       if options[:keep]
-        push_command_to_next_frame(:_ARGUMENT_, options, inner_options)
+        push_command_to_next_frame(:_CHECK_, options, inner_options)
       end
       return
     end

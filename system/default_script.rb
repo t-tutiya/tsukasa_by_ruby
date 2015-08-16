@@ -277,4 +277,3 @@ _DEFINE_ :page_icon_func do |options|
     end
   end
 end
-

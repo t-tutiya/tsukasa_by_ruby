@@ -40,6 +40,7 @@ class Control #公開インターフェイス
   def initialize(options, inner_options, root_control = nil)
     if root_control
       @root_control = root_control
+      @user_data = @root_control.user_data
     else
       @root_control = self
       @user_data = {}
@@ -323,21 +324,27 @@ class Control
   end
 
   #コントロールのプロパティを更新する
+  #TODO：複数の変数を一回で設定できるようにしてあるが、１個に限定すべきかもしれない。
   def command__SET_(options, inner_options)
+    if options[:_ARGUMENT_]
+      variable = options[:_ARGUMENT_]
+      options.delete(:_ARGUMENT_)
+    else
+      variable = nil
+    end
+
     #オプション全探査
     options.each do |key, val|
-      method_name = "@" + key.to_s
-      if instance_variable_defined?(method_name)
-        instance_variable_set(method_name, val)
+      if variable
+        instance_variable_get("@" + variable.to_s)[key] = val
       else
-        pp "クラス[" + self.class.to_s + "]：メソッド[" + method_name + "]は存在しません"
+        if instance_variable_defined?("@" + key.to_s)
+          instance_variable_set("@" + key.to_s, val)
+        else
+          pp "クラス[" + self.class.to_s + "]：変数[" + "@" + key.to_s + "]は存在しません"
+        end
       end
     end
-  end
-
-  #ユーザーデータ領域に値を保存する
-  def command__SET_DATA_(options, inner_options)
-    @root_control.user_data[options[:key]] = options[:val]
   end
 
   #コマンドを下位コントロールに送信する

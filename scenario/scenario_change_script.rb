@@ -62,13 +62,13 @@ _CREATE_ :ButtonControl,
     set :key_down, visible: false
     set :normal, visible: false
     set :over,   visible: true
-    _SET_DATA_ key: :flag, val: true
+    _SET_ :user_data, flag: true
   end
 end
 
 about do
   _CHECK_ [:not_nil], key: :flag, keep: true do
-    _SET_DATA_ key: :scenario, val: 1
+    _SET_ :user_data, scenario: 1
     #↓ここがもう少し簡潔に表現できると良い
     _SEND_ :default_char_container, interrupt: true do
       _BREAK_
@@ -90,7 +90,7 @@ about do
   text "■■■■■■■■■■■■■■■■■■■■■■"
   line_feed
   pause
-  _SET_DATA_ key: :scenario, val: 2
+  _SET_ :user_data, scenario: 2
 end
 
 #TODO;ここでフレームを送らない場合、次のスクリプトファイルが:default_char_containerに読み込まれた後で_BREAK_が機能してしまう。どうにかならんかなーこれ

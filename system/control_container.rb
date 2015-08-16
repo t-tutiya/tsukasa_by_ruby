@@ -32,6 +32,9 @@ require 'dxruby'
 
 class Control #公開インターフェイス
   #プロパティ
+  attr_accessor  :skip_mode #スキップモード
+  attr_accessor  :sleep_mode #スリープモード
+  attr_accessor  :idle_mode #アイドルモード
   attr_reader  :user_data
   attr_reader  :function_list
 
@@ -326,9 +329,9 @@ class Control
   def command__SET_(options, inner_options)
     #オプション全探査
     options.each do |key, val|
-      method_name = "@" + key.to_s
-      if instance_variable_defined?(method_name)
-        instance_variable_set(method_name, val)
+      method_name = key.to_s + "="
+      if self.class.method_defined?(method_name)
+        send(method_name, val)
       else
         pp "クラス[" + self.class.to_s + "]：メソッド[" + method_name + "]は存在しません"
       end

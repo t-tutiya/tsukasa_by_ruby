@@ -290,17 +290,13 @@ class Control #内部メソッド
   end
 end
 
-class Control
+class Control #コントロールの生成／破棄
 
   #############################################################################
   #非公開インターフェイス
   #############################################################################
 
   private
-
-  #############################################################################
-  #スクリプト処理コマンド
-  #############################################################################
 
   #コントロールをリストに登録する
   def command__CREATE_(options, inner_options)
@@ -322,6 +318,15 @@ class Control
     #削除フラグを立てる
     dispose()
   end
+end
+
+class Control #セッター／ゲッター
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
 
   #コントロールのプロパティを更新する
   #TODO：複数の変数を一回で設定できるようにしてあるが、１個に限定すべきかもしれない。
@@ -359,47 +364,15 @@ class Control
       end
     end
   end
+end
 
-  #コマンドを下位コントロールに送信する
-  def command__SEND_(options, inner_options)
-    if options[:root]
-      base_control = @root_control
-    else
-      base_control = self
-    end
-
-    unless options[:_ARGUMENT_]
-      if options[:interrupt]
-        base_control.interrupt_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
-      else
-        base_control.push_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
-      end
-
-      return
-    end
-
-    case options[:_ARGUMENT_]
-    when :all
-      controls = base_control.find_control(:all)
-    when :last
-      #TODO*ここの実装が歪んでいる。しかしどうしたものか。
-      controls = [@control_list.last]
-    else
-      controls = base_control.find_control(options[:_ARGUMENT_])
-    end
-
-    controls.each do |control|
-      if options[:interrupt]
-        control.interrupt_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
-      else
-        control.push_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
-      end
-    end
-  end
+class Control #制御構文
 
   #############################################################################
-  #タイミング制御コマンド
+  #非公開インターフェイス
   #############################################################################
+
+  private
 
   def command__WAIT_(options, inner_options)
     #待ちフレーム値が設定されていない場合はコンフィグから初期値を取得する
@@ -461,10 +434,6 @@ class Control
   end
 end
 
-#############################################################################
-#***コマンド
-#############################################################################
-
 class Control #ユーザー定義関数操作
 
   #############################################################################
@@ -472,11 +441,6 @@ class Control #ユーザー定義関数操作
   #############################################################################
 
   private
-
-  #スクリプトファイルを挿入する
-  def command__INCLUDE_(options, inner_options)
-    eval_commands(@script_compiler.commands({:script_path => options[:_ARGUMENT_]}))
-  end
 
   #ユーザー定義コマンドを定義する
   def command__DEFINE_(options, inner_options)
@@ -525,6 +489,57 @@ class Control #ユーザー定義関数操作
 
     eval_block(options, block_stack, &block)
   end
+end
+
+class Control #スクリプト制御
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
+
+  #コマンドを下位コントロールに送信する
+  def command__SEND_(options, inner_options)
+    if options[:root]
+      base_control = @root_control
+    else
+      base_control = self
+    end
+
+    unless options[:_ARGUMENT_]
+      if options[:interrupt]
+        base_control.interrupt_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
+      else
+        base_control.push_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
+      end
+
+      return
+    end
+
+    case options[:_ARGUMENT_]
+    when :all
+      controls = base_control.find_control(:all)
+    when :last
+      #TODO*ここの実装が歪んでいる。しかしどうしたものか。
+      controls = [@control_list.last]
+    else
+      controls = base_control.find_control(options[:_ARGUMENT_])
+    end
+
+    controls.each do |control|
+      if options[:interrupt]
+        control.interrupt_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
+      else
+        control.push_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
+      end
+    end
+  end
+
+  #スクリプトファイルを挿入する
+  def command__INCLUDE_(options, inner_options)
+    eval_commands(@script_compiler.commands({:script_path => options[:_ARGUMENT_]}))
+  end
 
   #文字列を評価する（デバッグ用）
   def command__EVAL_(options, inner_options)
@@ -532,7 +547,7 @@ class Control #ユーザー定義関数操作
   end
 end
 
-class Control #内部コマンド群
+class Control #内部コマンド
 
   #############################################################################
   #非公開インターフェイス

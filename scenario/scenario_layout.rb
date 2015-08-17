@@ -56,7 +56,7 @@ _CREATE_ :LayoutControl,
       :id=>2, :visible => false
   image :file_path=>"./sozai/button_out.png", 
       :id=>3, :visible => false
-  _WHILE_ ->{true} do
+  _WHILE_ [:true] do
       set 3, visible: false
       set 0, visible: true
   	_WAIT_ [:count], count: 10

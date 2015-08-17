@@ -36,10 +36,10 @@ _CREATE_ :ButtonControl,
 end
 
 _SEND_ :button1 do
-_WHILE_ -> {true} do
+_WHILE_ [:true] do
   move_line x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
   wait_command :move_line
-  _WHILE_ -> {true} do
+  _WHILE_ [:true] do
     move_line x: 300, y: 0,   count:0, frame: 60, start_x: 0,   start_y: 0
     wait_command :move_line
     _BREAK_

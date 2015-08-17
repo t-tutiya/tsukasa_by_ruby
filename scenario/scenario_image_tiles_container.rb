@@ -35,7 +35,7 @@ _DEFINE_ :page_icon do |options|
           :width => 24,
           :height => 24 do
     _CREATE_ :ImageTilesContainer, :file_path=>"./sozai/icon_8_a.png", :id=>:test, :x_count => 4, :y_count => 2
-    _WHILE_ ->{true} do
+    _WHILE_ [:true] do
       set 7, visible: false
       set 0, visible: true
     	_WAIT_ [:count], count: 5
@@ -70,7 +70,7 @@ page_icon x_pos: 300, y_pos: 300
 
 _CREATE_ :LayoutControl, x_pos: 0, y_pos: 0 do
   _CREATE_ :ImageTilesContainer, :file_path=>"./sozai/icon_4_a.png", :id=>:test, :x_count => 4, :y_count => 1
-  _WHILE_ ->{true} do
+  _WHILE_ [:true] do
     set 3, visible: false
     set 0, visible: true
     _WAIT_ [:count], count: 5

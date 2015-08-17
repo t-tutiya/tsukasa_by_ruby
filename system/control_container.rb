@@ -230,15 +230,6 @@ class Control #内部メソッド
                                             &block))
   end
 
-  #IFやWHILEなどで渡されたlambdaを実行する
-  def eval_lambda(lambda, options)
-    if lambda.arity == 0
-      return lambda.call
-    else
-      return lambda.call(options)
-    end
-  end
-  
   def check_imple(conditions, options)
     conditions.each do |condition|
       case condition
@@ -284,6 +275,14 @@ class Control #内部メソッド
       when :not_nil
         #指定されたデータがnilで無い場合
         return true if @root_control.user_data[options[:key]] != nil
+
+      when :true
+        #必ず真を返す
+        return true
+
+      when :false
+        #必ず偽を返す
+        return false
       end
     end
     
@@ -441,8 +440,8 @@ class Control
 
   #繰り返し
   def command__WHILE_(options, inner_options)
-    #条件式が非成立であれば繰り返し構文を終了する
-    return if !eval_lambda(options[:_ARGUMENT_], options) #アイドル
+    #チェック条件を満たさないなら終了する
+    return unless check_imple(options[:_ARGUMENT_], options)
 
     interrupt_command([:_END_SCOPE_, options, inner_options])
 
@@ -533,6 +532,19 @@ class Control #ユーザー定義関数操作
   end
 end
 
+class Control #内部コマンド群
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
+
+  #１フレ分のみifの結果をコマンドリスト上に格納する
+  def command__END_SCOPE_(options, inner_options)
+  end
+end
+
 #############################################################################
 #制御構文コマンド
 #############################################################################
@@ -544,6 +556,15 @@ class Control #制御構文：廃止予定
   #############################################################################
 
   private
+
+  #IFやWHILEなどで渡されたlambdaを実行する
+  def eval_lambda(lambda, options) #廃止予定
+    if lambda.arity == 0
+      return lambda.call
+    else
+      return lambda.call(options)
+    end
+  end
 
   #ifコマンド
   def command__IF_(options, inner_options) #廃止予定
@@ -636,21 +657,8 @@ class Control #制御構文：廃止予定
       eval_block(options, &inner_options[:block])
     end
   end
-end
-
-class Control #内部コマンド群
-
-  #############################################################################
-  #非公開インターフェイス
-  #############################################################################
-
-  private
 
   #１フレ分のみifの結果をコマンドリスト上に格納する
-  def command_exp_result(options, inner_options)
-  end
-
-  #１フレ分のみifの結果をコマンドリスト上に格納する
-  def command__END_SCOPE_(options, inner_options)
+  def command_exp_result(options, inner_options) #廃止予定
   end
 end

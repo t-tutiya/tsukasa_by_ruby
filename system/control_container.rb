@@ -58,10 +58,6 @@ class Control #公開インターフェイス
 
     @control_list         = [] #コントロールリスト
 
-    #TODO:これらはシーンコントロールの管理として委譲してしまいたい
-    @child_update = true #updateを子コントロールに伝搬するか #現在未使用
-    @child_render = true #renderを子コントロールに伝搬するか #現在未使用
-
     @skip_mode = false         #スキップモードの初期化
     @idle_mode = true          #待機モードの初期化
     @sleep_mode = :wake        #スリープの初期状態を設定する
@@ -138,9 +134,6 @@ class Control #公開インターフェイス
     #一時的にスタックしていたコマンドをコマンドリストに移す
     @command_list = @next_frame_commands + @command_list
 
-    #子コントロール伝搬しないなら終了する
-    return unless @child_update
-
     #子コントロールを巡回してupdateを実行
     @control_list.each do |control|
       control.update
@@ -154,9 +147,6 @@ class Control #公開インターフェイス
 
   #下位コントロールを描画する
   def render(offset_x, offset_y, target)
-    #子コントロール伝搬しないなら終了する
-    return offset_x, offset_y unless @child_render
-
     #下位コントロール巡回
     @control_list.each do |child_control|
       #下位コントロールを上位ターゲットに直接描画

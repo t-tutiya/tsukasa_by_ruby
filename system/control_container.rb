@@ -58,8 +58,9 @@ class Control #公開インターフェイス
 
     @control_list         = [] #コントロールリスト
 
-    @child_update = true #updateを子コントロールに伝搬するか
-    @child_render = true #renderを子コントロールに伝搬するか
+    #TODO:これらはシーンコントロールの管理として委譲してしまいたい
+    @child_update = true #updateを子コントロールに伝搬するか #現在未使用
+    @child_render = true #renderを子コントロールに伝搬するか #現在未使用
 
     @skip_mode = false         #スキップモードの初期化
     @idle_mode = true          #待機モードの初期化
@@ -343,6 +344,19 @@ class Control
         else
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + key.to_s + "]は存在しません"
         end
+      end
+    end
+  end
+
+  #キーで指定したユーザーデータ領域に値で設定したコントロールの変数をコピーする
+  #TODO:微妙に_SET_と直行性が低い
+  def command__GET_(options, inner_options)
+    #オプション全探査
+    options.each do |key, val|
+      if instance_variable_defined?("@" + val.to_s)
+        @user_data[key] = instance_variable_get("@" + val.to_s)
+      else
+        pp "クラス[" + self.class.to_s + "]：変数[" + "@" + val.to_s + "]は存在しません"
       end
     end
   end

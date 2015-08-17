@@ -236,7 +236,7 @@ class Control #内部メソッド
       when :wake
         return true if @sleep_mode == :wake
 
-      when :idol
+      when :idle
         return true if all_controls_idle?
 
       when :count

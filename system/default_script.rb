@@ -78,7 +78,7 @@ _DEFINE_ :pause do |options|
   #■行表示中スキップ処理
   _SEND_ :default_char_container do 
     #idleあるいはキー入力待機
-    _WAIT_ [:key_push, :idol]
+    _WAIT_ [:key_push, :idle]
 
     if options[:icon]
       _SEND_ :last do
@@ -218,7 +218,7 @@ _DEFINE_ :line_icon_func do |options|
             :id=>:test, 
             :x_count => 4, 
             :y_count => 2
-    _WHILE_ ->{true} do
+    _WHILE_ [:true] do
       set 7, visible: false
       set 0, visible: true
     	_WAIT_ [:count], count: 5
@@ -261,7 +261,7 @@ _DEFINE_ :page_icon_func do |options|
             :id=>:test, 
             :x_count => 4, 
             :y_count => 1
-    _WHILE_ ->{true} do
+    _WHILE_ [:true] do
       set 3, visible: false
       set 0, visible: true
     	_WAIT_ [:count], count: 5

@@ -49,6 +49,16 @@ class ImageControl < Control
 
   def initialize(options, inner_options, root_control)
     super
+    command_load_image(options, inner_options)
+  end
+
+  def dispose()
+    #TODO：キャッシュ機構が作り込まれてないのでここで削除できない
+    #@entity.dispose
+    super
+  end
+  
+  def command_load_image(options, inner_options)
     #実体から初期化する
     if options[:entity]
       @file_path = nil
@@ -61,29 +71,9 @@ class ImageControl < Control
 
     #空コントロールとして初期化する
     else
+      @file_path = nil
       @entity = Image.new(1,1,[0,0,0])
     end
-
-    #縦横幅の更新
-    @width  = @entity.width
-    @height = @entity.height
-  end
-
-  def dispose()
-    #TODO：キャッシュ機構が作り込まれてないのでここで削除できない
-    #@entity.dispose
-    super
-  end
-  
-  def command_load_image(options, inner_options)
-    #同じファイルパスが指定された場合は処理を行わない
-    return if @file_path == options[:file_path]
-
-    #ファイルパスの格納
-    @file_path = options[:file_path]
-
-    #保持オブジェクトの初期化
-    @entity = @@image_cache[@file_path]
 
     #縦横幅の更新
     @width  = @entity.width

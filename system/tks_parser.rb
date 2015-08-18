@@ -174,7 +174,7 @@ class TKSParser < Parslet::Parser
       :inline_command => simple(:command)
     ) { command.to_s }
 
-    #textブロック→そのまま返す（？）
+    #textブロック→そのまま返す
     rule(
       :printable => sequence(:commands),
       :line_feed => nil,

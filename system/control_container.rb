@@ -241,8 +241,9 @@ class Control #内部メソッド
         end
 
       when :key_push
+        key_code = options[:key_code] ? options[:key_code] : K_SPACE
         #キー押下があれば
-        return true if Input.key_push?(K_SPACE)
+        return true if Input.key_push?(key_code)
 
       when :skip
         #スキップモードであれば

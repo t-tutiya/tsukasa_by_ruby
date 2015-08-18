@@ -37,12 +37,14 @@ _CREATE_ :ImageControl ,
        file_path: "./sozai/button_normal.png",
        id: :BG3, float_mode: :none
 
+text "スペースキーを押すごとにimageが更新されます"
+
+wait_push
+
 _SEND_ :BG1 do
   load_image file_path: "./sozai/button_normal.png"
   _SET_ x_pos: 100, y_pos: 100,  float_mode: :right
 end
-
-text "スペースキーを押すごとにimageが更新されます"
 
 wait_push
 

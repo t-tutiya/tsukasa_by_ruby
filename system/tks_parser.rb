@@ -124,26 +124,26 @@ class TKSParser < Parslet::Parser
       any | str(inline_command_close).absent? >> 
       any
     ).repeat.as(:inline_command) >> #コマンド文字列
-    str(inline_command_close) 
+    str(inline_command_close) #インラインコマンド接尾字
   }
 
   #コメント
   rule(:comment) {
-    str(comment_str) >> 
-    match[' \t'].repeat >> 
-    match['^\n'].repeat.as(:comment)
+    str(comment_str) >> #コメント接頭字
+    match[' \t'].repeat >> #頭の空白orタブは無視
+    match['^\n'].repeat.as(:comment) #改行までをコメントとする
   }
 
   #空行（テキストウィンドウの改ページの明示）
   rule(:blankline) { 
     (
-      match[' \t'].repeat >> 
-      newline
+      match[' \t'].repeat >> #空白orタブ
+      newline #改行
     ) 
   }
 
   rule(:node) { 
-    blankline.maybe >> 
+    blankline.maybe >> #空行
     (comment | command | printable) 
   }
 

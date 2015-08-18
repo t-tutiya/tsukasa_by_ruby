@@ -43,9 +43,12 @@ class TKSParser < Parslet::Parser
   attr_reader :indent_mode, :indent_width
 
   def initialize(
-    indent_mode: :spaces, indent_width: 2,
-    script_prefix: "@", comment_str: "//",
-    inline_command_open: "[", inline_command_close: "]"
+    indent_mode: :spaces, #インデントモード
+    indent_width: 2, #インデントの空白文字数単位
+    script_prefix: "@", #スクリプト行接頭字
+    comment_str: "//", #コメント行接頭字
+    inline_command_open: "[", #インラインコマンドプレフィクス
+    inline_command_close: "]" #インラインコマンドポストフィクス
   )
     super()
     @indent_mode = indent_mode
@@ -66,24 +69,30 @@ class TKSParser < Parslet::Parser
     @indent_char = nil
   end
 
+  #インデント対象
   def indent_char
     @indent_char ||= case @indent_mode
     when :tab
-      "\t"
+      "\t" #タブ
     when :spaces
-      " " * @indent_width
+      " " * @indent_width #指定した文字数の空白
     end
   end
 
+  #インデント
   rule(:indent) { str(indent_char) }
+  
+  #改行
   rule(:newline) { str("\n") }
 
+  #コマンドブロック
   rule(:command) {
     (str(script_prefix) | indent) >>
     match['^\n'].repeat(1).as(:command) >>
     newline.maybe
   }
 
+  #textコマンドブロック
   rule(:printable) {
     (
       (inline_command | text).repeat(1).as(:printable) >>
@@ -92,39 +101,59 @@ class TKSParser < Parslet::Parser
     )
   }
 
+  #文字（か？）
+  #TODO：インラインコマンドプレフィクスをハードコーディングしたらいかんのでは
   rule(:text) { match['^\[\n'].repeat(1).as(:text) }
 
+  #インラインコマンド
   rule(:inline_command) {
     str(inline_command_open) >>
     (str('\\') >> any | str(inline_command_close).absent? >> any).repeat.as(:inline_command) >>
     str(inline_command_close)
   }
 
+  #コメント
   rule(:comment) {
     str(comment_str) >> match[' \t'].repeat >> match['^\n'].repeat.as(:comment)
   }
 
+  #空行（テキストウィンドウの改ページの明示）
   rule(:blankline) { (match[' \t'].repeat >> newline) }
+
   rule(:node) { blankline.maybe >> (comment | command | printable) }
+
   rule(:document) { (blankline | node).repeat }
 
   root :document
 
   class Replacer < Parslet::Transform
+    #コメント行→無視
     rule(:comment => simple(:comment)) { [] }
+
+    #テキスト行→textコマンド
     rule(:text => simple(:string)) { %Q'text "#{string}"' }
+
+    #コマンドブロック→そのまま返す
     rule(:command => simple(:command)) { [command.to_s] }
+
+    #インラインコマンド→そのまま返す
     rule(:inline_command => simple(:command)) { command.to_s }
+
+    #textブロック→そのまま返す（？）
     rule(
       :printable => sequence(:commands),
       :line_feed => nil,
       :blanklines => []
     ) { commands }
+
+    #textブロック＋改行→改行コマンド追加
     rule(
       :printable => sequence(:commands),
       :line_feed => simple(:line_feed),
       :blanklines => []
     ) { commands + ["line_feed"] }
+
+    #textブロック＋改行＋空行→改行＋キー入力待ちコマンド追加追加
     rule(
       :printable => sequence(:commands),
       :line_feed => simple(:line_feed),

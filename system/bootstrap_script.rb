@@ -1,5 +1,4 @@
 #! ruby -E utf-8
-# coding: utf-8
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -29,35 +28,21 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require 'dxruby'
-require_relative './module_movable.rb'
-require_relative './module_drawable.rb'
-require_relative './module_clickable.rb'
+#デフォルトのユーザー定義関数群
+_INCLUDE_ "./system/default_script.rb"
 
-require_relative './control_container.rb'
+#以下、動作確認用のサンプルスクリプト
 
-require_relative './image_control.rb'
-require_relative './image_tiles_container.rb'
-
-require_relative './button_control.rb'
-require_relative './se_control.rb'
-
-require_relative './rendertarget_container.rb'
-require_relative './layout_control.rb'
-require_relative './text_page_control.rb'
-
-require_relative './log_container.rb'
-
-require_relative './VariableTextLayer.rb'
-
-require_relative './script_compiler.rb'
-
-#TODO：モジュールであるべきか？
-class Tsukasa < Control
-
-  def initialize(options, inner_options = {})
-    options[:script_path] = "./system/bootstrap_script.rb"
-    options[:id] = :default_rendertarget_container
-    super
-  end
-end
+#_INCLUDE_ "./scenario/scenario_function.rb"
+#_INCLUDE_ "./scenario/scenario_clickable.rb"
+#_INCLUDE_ "./scenario/scenario_yield.rb"
+#_INCLUDE_ "./scenario/scenario_while.rb"
+#_INCLUDE_ "./scenario/scenario_text.rb"
+#_INCLUDE_ "./scenario/scenario_image_tiles_container.rb"
+#_INCLUDE_ "./scenario/scenario_layout.rb"
+#_INCLUDE_ "./scenario/scenario_scope.rb"
+#_INCLUDE_ "./scenario/scenario_change_script.rb"
+#_INCLUDE_ "./scenario/scenario_check.rb"
+#_INCLUDE_ "./scenario/scenario_collision"
+#_INCLUDE_ "./scenario/scenario_ImageControl.rb"
+_INCLUDE_ "./scenario/tks_test.tks"

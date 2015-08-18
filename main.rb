@@ -8,22 +8,8 @@ require './system/tsukasa.rb'
 Window.resize(1280, 720)
 
 tsukasa = Tsukasa.new({ :width => 1280,
-                :height => 720,
-#                :script_path => "./scenario/scenario_function.rb",
-#                :script_path => "./scenario/scenario_clickable.rb",
-#                :script_path => "./scenario/scenario_yield.rb",
-#                :script_path => "./scenario/scenario_while.rb",
-#                :script_path => "./scenario/scenario_text.rb",
-#                :script_path => "./scenario/scenario_image_tiles_container.rb",
-#                :script_path => "./scenario/scenario_layout.rb",
-#                :script_path => "./scenario/scenario_scope.rb",
-#                :script_path => "./scenario/scenario_change_script.rb",
-#                :script_path => "./scenario/scenario_check.rb",
-#                :script_path => "./scenario/scenario_collision.
-#                :script_path => "./scenario/scenario_ImageControl.rb",
-                :script_path => "./scenario/tks_test.tks",
-                :id => :default_rendertarget_container
-                })
+                        :height => 720,
+                        })
 #ゲームループ
 Window.loop do
   #pp "frame"

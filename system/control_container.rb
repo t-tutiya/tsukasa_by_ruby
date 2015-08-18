@@ -71,11 +71,6 @@ class Control #公開インターフェイス
       :Anonymous       => :anonymous,
     }
 =end
-    #デフォルトスクリプトの読み込み
-    #TODO：将来的にここで読み込まずにINCLUDEコマンドを使いたい
-    if options[:default_script_path]
-      @command_list += @script_compiler.commands({:script_path => options[:default_script_path]})
-    end
 
     #スクリプトパスが設定されているなら読み込んで登録する
     #TODO：将来的にここで読み込まずにINCLUDEコマンドを使いたい

@@ -372,7 +372,7 @@ class TextPageControl < Control
                       inner_options])
   end
 
-  #flashコマンド
+  #flushコマンド
   #メッセージレイヤの消去
   def command__FLUSH_(options, inner_options)
     @control_list.each do |control|

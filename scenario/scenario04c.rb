@@ -1,4 +1,4 @@
-#flash
+#flush
 
 text "testC「司（Tsukasa）」は、土屋つかさが考えている「ゲームのアーキテクチ"
 line_feed
@@ -13,11 +13,11 @@ line_feed
 text "ルゲーム全体のサポートができるようになれば良いと思っています。"
 pause
 sleep_frame
-flash
+flush
 =end
 next_scenario "./scenario/scenario04b.rb"
 
 #EVAL "pp 'script next'"
 
 pause
-flash
+flush

@@ -82,7 +82,7 @@ about do
   text "■■■■■■■■■■■■■■■■■■■■■■"
   line_feed
   pause
-  flash
+  flush
   text "スクリプト１－Ｂ■■■■■■■■■■■■■■"
   line_feed
   text "■■■■■■■■■■■■■■■■■■■■■■"
@@ -96,7 +96,7 @@ end
 #TODO;ここでフレームを送らない場合、次のスクリプトファイルが:default_char_containerに読み込まれた後で_BREAK_が機能してしまう。どうにかならんかなーこれ
 end_frame 
 
-flash
+flush
 
 _CHECK_ [:equal], key: :scenario, val: 1 do
   _INCLUDE_ "./scenario/scenario_change_script_3.rb"

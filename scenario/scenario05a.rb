@@ -150,5 +150,5 @@ text "ひとまず"
 #next_scenario "./scenario/scenario04b.rb"
 
 #pause
-#flash
+#flush
 

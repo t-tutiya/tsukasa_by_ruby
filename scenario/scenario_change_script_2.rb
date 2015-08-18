@@ -35,4 +35,4 @@ line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 pause
-flash
+flush

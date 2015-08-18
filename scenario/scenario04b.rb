@@ -7,4 +7,4 @@ text "に開発しているＡＤＶエンジンです。b"
 next_scenario "./scenario/scenario04c.rb"
 
 pause
-flash
+flush

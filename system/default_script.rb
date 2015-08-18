@@ -56,7 +56,7 @@ _DEFINE_ :line_feed do
   end
 end
 
-_DEFINE_ :flash do
+_DEFINE_ :flush do
   _SEND_ :default_char_container do
     _FLUSH_
   end

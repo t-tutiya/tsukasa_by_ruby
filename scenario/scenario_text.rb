@@ -40,7 +40,7 @@ text "■■■■■■■■■■■"
 pause
 text "■■■■■■■■■■■"
 pause
-flash
+flush
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 pause
@@ -54,7 +54,7 @@ text "■■■■■■■■■■■"
 pause
 text "■■■■■■■■■■■"
 pause
-flash
+flush
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
@@ -63,7 +63,7 @@ line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 pause
-flash
+flush
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
@@ -72,7 +72,7 @@ line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 pause
-flash
+flush
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
@@ -81,7 +81,7 @@ line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 pause
-flash
+flush
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
@@ -90,7 +90,7 @@ line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 pause
-flash
+flush
 
 =begin
 text"asa）」のα１バージョンを"

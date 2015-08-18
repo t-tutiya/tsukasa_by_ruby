@@ -38,9 +38,12 @@ require 'parslet'
 
 class TKSParser < Parslet::Parser
 
-  attr_accessor :script_prefix, :comment_str
-  attr_accessor :inline_command_open, :inline_command_close
-  attr_reader :indent_mode, :indent_width
+  attr_accessor :script_prefix
+  attr_accessor :comment_str
+  attr_accessor :inline_command_open
+  attr_accessor :inline_command_close
+  attr_reader :indent_mode
+  attr_reader :indent_width
 
   def initialize(
     indent_mode: :spaces, #インデントモード
@@ -80,64 +83,96 @@ class TKSParser < Parslet::Parser
   end
 
   #インデント
-  rule(:indent) { str(indent_char) }
+  rule(:indent) { 
+    str(indent_char) 
+  }
   
   #改行
-  rule(:newline) { str("\n") }
+  rule(:newline) { 
+    str("\n") 
+  }
 
   #コマンドブロック
   rule(:command) {
-    (str(script_prefix) | indent) >>
-    match['^\n'].repeat(1).as(:command) >>
-    newline.maybe
+    ( str(script_prefix) | indent) >> #スクリプト行接頭字orインデント
+    match['^\n'].repeat(1).as(:command) >> #改行までの１文字以上の文字列
+    newline.maybe #改行
   }
 
   #textコマンドブロック
   rule(:printable) {
     (
-      (inline_command | text).repeat(1).as(:printable) >>
-      newline.maybe.as(:line_feed) >>
-      blankline.repeat.as(:blanklines)
+      #１個以上のインラインコマンドor文字列集合
+      ( inline_command | text ).repeat(1).as(:printable) >>
+      newline.maybe.as(:line_feed) >> #改行
+      blankline.repeat.as(:blanklines) #空行
     )
   }
 
-  #文字（か？）
+  #文字列
+  #インラインコマンド接頭字or改行までの１文字以上
   #TODO：インラインコマンドプレフィクスをハードコーディングしたらいかんのでは
-  rule(:text) { match['^\[\n'].repeat(1).as(:text) }
+  rule(:text) { 
+    match['^\[\n'].repeat(1).as(:text) 
+  }
 
   #インラインコマンド
   rule(:inline_command) {
-    str(inline_command_open) >>
-    (str('\\') >> any | str(inline_command_close).absent? >> any).repeat.as(:inline_command) >>
-    str(inline_command_close)
+    str(inline_command_open) >> #インラインコマンド接頭字
+    (
+      str('\\') >> 
+      any | str(inline_command_close).absent? >> 
+      any
+    ).repeat.as(:inline_command) >> #コマンド文字列
+    str(inline_command_close) 
   }
 
   #コメント
   rule(:comment) {
-    str(comment_str) >> match[' \t'].repeat >> match['^\n'].repeat.as(:comment)
+    str(comment_str) >> 
+    match[' \t'].repeat >> 
+    match['^\n'].repeat.as(:comment)
   }
 
   #空行（テキストウィンドウの改ページの明示）
-  rule(:blankline) { (match[' \t'].repeat >> newline) }
+  rule(:blankline) { 
+    (
+      match[' \t'].repeat >> 
+      newline
+    ) 
+  }
 
-  rule(:node) { blankline.maybe >> (comment | command | printable) }
+  rule(:node) { 
+    blankline.maybe >> 
+    (comment | command | printable) 
+  }
 
-  rule(:document) { (blankline | node).repeat }
+  rule(:document) { 
+    (blankline | node).repeat 
+  }
 
   root :document
 
   class Replacer < Parslet::Transform
     #コメント行→無視
-    rule(:comment => simple(:comment)) { [] }
+    rule(
+      :comment => simple(:comment)
+    ) { [] }
 
     #テキスト行→textコマンド
-    rule(:text => simple(:string)) { %Q'text "#{string}"' }
+    rule(
+      :text => simple(:string)
+    ) { %Q'text "#{string}"' }
 
     #コマンドブロック→そのまま返す
-    rule(:command => simple(:command)) { [command.to_s] }
+    rule(
+      :command => simple(:command)
+    ) { [command.to_s] }
 
     #インラインコマンド→そのまま返す
-    rule(:inline_command => simple(:command)) { command.to_s }
+    rule(
+      :inline_command => simple(:command)
+    ) { command.to_s }
 
     #textブロック→そのまま返す（？）
     rule(

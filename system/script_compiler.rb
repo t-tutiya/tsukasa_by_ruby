@@ -2,6 +2,8 @@
 
 require 'dxruby'
 
+require_relative "./tks_parser.rb"
+
 ###############################################################################
 #TSUKASA for DXRuby  α１
 #汎用ゲームエンジン「司（TSUKASA）」 for DXRuby
@@ -35,6 +37,10 @@ class ScriptCompiler
   def initialize(control, root_control)
     @control = control
     @root_control = root_control
+    
+    #TODO：本来は毎回生成するものではない。
+    @parser = TKSParser.new
+    @replacer = TKSParser::Replacer.new
   end
 
   #ヘルパーメソッド群
@@ -43,10 +49,17 @@ class ScriptCompiler
     @yield_block = nil
 
     if argument[:script_path]
-      #評価対象がスクリプトファイルの場合の場合
-      eval( File.read(argument[:script_path], encoding: "UTF-8"), 
-            binding, 
-            File.expand_path(argument[:script_path]))
+      if File.extname(argument[:script_path]) == ".tks"
+        #評価対象がｔｋｓファイルの場合の場合
+        eval( @replacer.apply(@parser.parse(File.read(argument[:script_path], encoding: "UTF-8"))).flatten.join("\n").encode("Windows-31J"), 
+              nil, 
+              File.expand_path(argument[:script_path]))
+      else
+        #評価対象がスクリプトファイルの場合の場合
+        eval( File.read(argument[:script_path], encoding: "UTF-8"), 
+              nil, 
+              File.expand_path(argument[:script_path]))
+      end
     else
       raise unless block
 

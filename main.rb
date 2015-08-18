@@ -13,7 +13,7 @@ tsukasa = Tsukasa.new({ :width => 1280,
 #                :script_path => "./scenario/scenario_clickable.rb",
 #                :script_path => "./scenario/scenario_yield.rb",
 #                :script_path => "./scenario/scenario_while.rb",
-                :script_path => "./scenario/scenario_text.rb",
+#                :script_path => "./scenario/scenario_text.rb",
 #                :script_path => "./scenario/scenario_image_tiles_container.rb",
 #                :script_path => "./scenario/scenario_layout.rb",
 #                :script_path => "./scenario/scenario_scope.rb",
@@ -21,6 +21,7 @@ tsukasa = Tsukasa.new({ :width => 1280,
 #                :script_path => "./scenario/scenario_check.rb",
 #                :script_path => "./scenario/scenario_collision.
 #                :script_path => "./scenario/scenario_ImageControl.rb",
+                :script_path => "./scenario/tks_test.tks",
                 :id => :default_rendertarget_container
                 })
 #ゲームループ

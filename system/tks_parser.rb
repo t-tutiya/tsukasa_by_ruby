@@ -111,9 +111,12 @@ class TKSParser < Parslet::Parser
 
   #文字列
   #インラインコマンド接頭字or改行までの１文字以上
-  #TODO：インラインコマンドプレフィクスをハードコーディングしたらいかんのでは
-  rule(:text) { 
-    match['^\[\n'].repeat(1).as(:text) 
+  rule(:text) {
+    (
+      str(inline_command_open).absent? >>
+      newline.absent? >>
+      any
+    ).repeat(1).as(:text) 
   }
 
   #インラインコマンド
@@ -174,7 +177,7 @@ class TKSParser < Parslet::Parser
       :inline_command => simple(:command)
     ) { command.to_s }
 
-    #textブロック→そのまま返す（？）
+    #textブロック→そのまま返す
     rule(
       :printable => sequence(:commands),
       :line_feed => nil,

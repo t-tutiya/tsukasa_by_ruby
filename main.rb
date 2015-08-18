@@ -19,7 +19,8 @@ tsukasa = Tsukasa.new({ :width => 1280,
 #                :script_path => "./scenario/scenario_scope.rb",
 #                :script_path => "./scenario/scenario_change_script.rb",
 #                :script_path => "./scenario/scenario_check.rb",
-#                :script_path => "./scenario/scenario_collision.rb",
+#                :script_path => "./scenario/scenario_collision.
+#                :script_path => "./scenario/scenario_ImageControl.rb",
                 :id => :default_rendertarget_container
                 })
 #ゲームループ

@@ -1,6 +1,7 @@
 #! ruby -E utf-8
 
 require 'dxruby'
+require 'pstore'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -574,10 +575,49 @@ class Control #セーブデータ制御
 
   private
 
+  #データセーブ
+  #TODO：保存先パスや名称は将来的には外部から与えるようにしたい
   def command__SAVE_(options, inner_options)
+    #グローバルデータ
+    if options[:global_data]
+      db = PStore.new("./data/global_data.bin")
+      db.transaction do
+        db["key"] = @global_data
+      end
+    #ユーザーデータ
+    #任意の接尾字を指定する
+    elsif options[:user_data_no]
+      db = PStore.new("./data/user_data_" + options[:user_data_no].to_s + ".bin")
+      db.transaction do
+        db["key"] = @user_data
+      end
+    else
+      #セーブファイル指定エラー
+      pp "対象セーブファイルが指定されていません"
+      raise 
+    end
   end
 
   def command__LOAD_(options, inner_options)
+    @user_data = nil
+    #グローバルデータ
+    if options[:global_data]
+      db = PStore.new("./data/global_data.bin")
+      db.transaction do
+        @global_data = db["key"]
+      end
+    #ユーザーデータ
+    #任意の接尾字を指定する
+    elsif options[:user_data_no]
+      db = PStore.new("./data/user_data_" + options[:user_data_no].to_s + ".bin")
+      db.transaction do
+        @user_data = db["key"]
+      end
+    else
+      #セーブファイル指定エラー
+      pp "対象セーブファイルが指定されていません"
+      raise 
+    end
   end
 
   #TODO：ProcをMarshal.dumpできない為、このアプローチでのクイックセーブは実現できない。一旦これらの機能開発はペンディングとする

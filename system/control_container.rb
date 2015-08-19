@@ -56,6 +56,7 @@ class Control #公開インターフェイス
     #コマンドリスト
     @command_list         = options[:command_list] || [] 
     #一時コマンドリスト
+    #TODO：これがシリアライズ対象になっているのはおかしいのかもしれない
     @next_frame_commands  = options[:next_frame_commands] || [] 
 
     @skip_mode = false         #スキップモードの初期化
@@ -185,6 +186,35 @@ class Control #公開インターフェイス
   #コントロールを削除して良いかどうか
   def delete?
     return @delete_flag
+  end
+
+  #シリアライズ
+  #各派生クラスでは、ハッシュに自分を再構築するのに必要なオプションを代入し、superを呼ぶ。
+  #TODO:Procをダンプする方法が無いため現在実装ペンディング中
+  def siriarize(options = {})
+
+    command_list = []
+
+    #子コントロールのシリアライズコマンドを取得
+    @control_list.each do |control|
+      command_list.push(control.siriarize)
+    end
+
+    #子コントロールのシリアライズコマンドとこのコントロールがスタックしている
+    command_list = command_list + @command_list
+  
+    options.update({
+                :_ARGUMENT_ => self.class.name.to_sym,
+                :function_list => @function_list,
+                :id => @id,
+                :command_list => command_list,
+                :next_frame_commands => @next_frame_commands
+                  })
+  
+    #オプションを生成
+    command = [:_CREATE_, options]
+
+    return command
   end
 end
 
@@ -533,6 +563,34 @@ class Control #スクリプト制御
   #文字列を評価する（デバッグ用）
   def command__EVAL_(options, inner_options)
     eval(options[:_ARGUMENT_])
+  end
+end
+
+class Control #セーブデータ制御
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
+
+  def command__SAVE_(options, inner_options)
+  end
+
+  def command__LOAD_(options, inner_options)
+  end
+
+  #TODO：ProcをMarshal.dumpできない為、このアプローチでのクイックセーブは実現できない。一旦これらの機能開発はペンディングとする
+  def command__QUICK_SAVE_(options, inner_options)
+    pp siriarize()
+    str = Marshal.dump(siriarize()) #コマンドにProcへの参照が含まれる場合ここでエラーになる
+    p Marshal.load(str)
+    raise
+  end
+
+  #TODO：ProcをMarshal.dumpできない為、このアプローチでのクイックセーブは実現できない。一旦これらの機能開発はペンディングとする
+  def command__QUICK_LOAD_(options, inner_options)
+    raise
   end
 end
 

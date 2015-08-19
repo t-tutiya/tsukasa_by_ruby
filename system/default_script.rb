@@ -278,3 +278,26 @@ _DEFINE_ :page_icon_func do |options|
   end
 end
 
+#初期レイヤ（背景）
+_CREATE_ :ImageControl,
+  index: 0, #描画順序
+  id: :base do
+end
+
+#初期レイヤ０
+_CREATE_ :ImageControl,
+  index: 1000, #描画順序
+  id: 0 do
+end
+
+#初期レイヤ１
+_CREATE_ :ImageControl,
+  index: 2000, #描画順序
+  id: 1 do
+end
+
+#初期レイヤ２
+_CREATE_ :ImageControl,
+  index: 3000, #描画順序
+  id: 2 do
+end

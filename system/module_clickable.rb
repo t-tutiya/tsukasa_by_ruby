@@ -41,9 +41,11 @@ module Clickable
     @width  = options[:width]  || 0 #横幅
     @height = options[:height] || 0 #縦幅
 
+    @collision = options[:collision]
+
     @collision_sprite = Sprite.new
-    if options[:collision]
-      @collision_sprite.collision = options[:collision]
+    if @collision
+      @collision_sprite.collision = @collision
     else
       @collision_sprite.collision = [0, 0, @width-1, @height-1]
     end

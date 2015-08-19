@@ -51,11 +51,14 @@ module Drawable
     @visible = options[:visible] == false ? false : true
 
     #子コントロールを自エンティティに描画するかどうか
-    @child_controls_draw_to_entity = options[:child_controls_draw_to_entity]
+    @child_controls_draw_to_entity = options[:child_controls_draw_to_entity] || nil
 
-    @draw_option = {} #描画オプション
-    @draw_option[:z] = options[:index] || 0 #重ね合わせ順序
-
+    if options[:draw_option]
+      @draw_option = options[:draw_option]
+    else
+      @draw_option = {} #描画オプション
+      @draw_option[:z] = options[:index] || 0 #重ね合わせ順序
+    end
 
     #回り込み指定（省略時は:none）
     @float_mode = options[:float_mode] || :none

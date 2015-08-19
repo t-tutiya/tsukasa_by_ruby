@@ -40,10 +40,6 @@ class LayoutControl < Control
   def initialize(options, inner_options, root_control)
     options[:child_controls_draw_to_entity] = false
     super
-
-    @width  = options[:width] || 0
-    @height = options[:height] || 0
-
   end
 
 end

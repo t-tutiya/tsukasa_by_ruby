@@ -44,11 +44,8 @@ require_relative './sound_control.rb'
 
 require_relative './rendertarget_container.rb'
 require_relative './layout_control.rb'
+
 require_relative './text_page_control.rb'
-
-require_relative './log_container.rb'
-
-require_relative './VariableTextLayer.rb'
 
 require_relative './script_compiler.rb'
 

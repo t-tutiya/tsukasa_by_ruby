@@ -33,6 +33,7 @@ require 'dxruby'
 class Control #公開インターフェイス
   #プロパティ
   attr_reader  :user_data
+  attr_reader  :global_data
   attr_reader  :function_list
 
   attr_accessor  :id
@@ -41,9 +42,11 @@ class Control #公開インターフェイス
     if root_control
       @root_control = root_control
       @user_data = @root_control.user_data
+      @global_data = @root_control.global_data
     else
       @root_control = self
       @user_data = {}
+      @global_data = {}
     end
 
     # ユーザ定義関数

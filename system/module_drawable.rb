@@ -64,9 +64,6 @@ module Drawable
     @width  = options[:width] || 0  #横幅
     @height = options[:height] || 0 #縦幅
 
-    @over_status = :out
-    @key_down_status = :up
-
     super
   end
 

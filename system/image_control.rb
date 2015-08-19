@@ -60,6 +60,7 @@ class ImageControl < Control
 
   def command_load_image(options, inner_options)
     #実体から初期化する
+    #TODO：シリアライズ対象にできないのでこの機能は辞めるかも
     if options[:entity]
       @file_path = nil
       @entity = options[:entity]

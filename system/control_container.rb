@@ -46,23 +46,23 @@ class Control #公開インターフェイス
       @user_data = {}
     end
 
-    @function_list = {} # ユーザ定義関数
-
-    @script_compiler = ScriptCompiler.new(self, @root_control)
-
+    # ユーザ定義関数
+    @function_list = options[:function_list] || {} 
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
-
-    @command_list         = [] #コマンドリスト
-    @next_frame_commands  = [] #一時コマンドリスト
-
-    @control_list         = [] #コントロールリスト
+    #コマンドリスト
+    @command_list         = options[:command_list] || [] 
+    #一時コマンドリスト
+    @next_frame_commands  = options[:next_frame_commands] || [] 
 
     @skip_mode = false         #スキップモードの初期化
     @idle_mode = true          #待機モードの初期化
     @sleep_mode = :wake        #スリープの初期状態を設定する
 
+    @script_compiler = ScriptCompiler.new(self, @root_control)
+    @control_list         = [] #コントロールリスト
     @delete_flag = false       #削除フラグの初期化
+
 =begin
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @control_default = {

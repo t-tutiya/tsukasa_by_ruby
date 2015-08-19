@@ -57,7 +57,7 @@ class ImageControl < Control
     #@entity.dispose
     super
   end
-  
+
   def command_load_image(options, inner_options)
     #実体から初期化する
     if options[:entity]

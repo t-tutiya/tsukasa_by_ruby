@@ -188,35 +188,6 @@ class Control #公開インターフェイス
   def delete?
     return @delete_flag
   end
-
-  #シリアライズ
-  #各派生クラスでは、ハッシュに自分を再構築するのに必要なオプションを代入し、superを呼ぶ。
-  #TODO:Procをダンプする方法が無いため現在実装ペンディング中
-  def siriarize(options = {})
-
-    command_list = []
-
-    #子コントロールのシリアライズコマンドを取得
-    @control_list.each do |control|
-      command_list.push(control.siriarize)
-    end
-
-    #子コントロールのシリアライズコマンドとこのコントロールがスタックしている
-    command_list = command_list + @command_list
-  
-    options.update({
-                :_ARGUMENT_ => self.class.name.to_sym,
-                :function_list => @function_list,
-                :id => @id,
-                :command_list => command_list,
-                :next_frame_commands => @next_frame_commands
-                  })
-  
-    #オプションを生成
-    command = [:_CREATE_, options]
-
-    return command
-  end
 end
 
 class Control #内部メソッド
@@ -618,19 +589,6 @@ class Control #セーブデータ制御
       pp "対象セーブファイルが指定されていません"
       raise 
     end
-  end
-
-  #TODO：ProcをMarshal.dumpできない為、このアプローチでのクイックセーブは実現できない。一旦これらの機能開発はペンディングとする
-  def command__QUICK_SAVE_(options, inner_options)
-    pp siriarize()
-    str = Marshal.dump(siriarize()) #コマンドにProcへの参照が含まれる場合ここでエラーになる
-    p Marshal.load(str)
-    raise
-  end
-
-  #TODO：ProcをMarshal.dumpできない為、このアプローチでのクイックセーブは実現できない。一旦これらの機能開発はペンディングとする
-  def command__QUICK_LOAD_(options, inner_options)
-    raise
   end
 end
 

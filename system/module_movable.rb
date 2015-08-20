@@ -31,39 +31,7 @@ require 'dxruby'
 ###############################################################################
 
 module Movable
-
-=begin
-  def command_move(options)
-
-    control_options = {}
-
-    if options[:offset]
-      control_options[:x] = options[:offset_x] + @x_pos
-      control_options[:y] = options[:offset_y] + @y_pos
-    else
-      control_options[:x] = options[:x]
-      control_options[:y] = options[:y]
-    end
-
-    #スキップモードであれば設定し、フレーム内処理を続行する
-    if @skip_mode
-      @x_pos = control_options[:x]
-      @y_pos = control_options[:y]
-      return
-    end
-
-    control_options[:start_x] = @x_pos
-    control_options[:start_y] = @y_pos
-    control_options[:count] = 0
-    control_options[:frame] = options[:frame]
-
-    interrupt_command(:move_line, control_options)
-
-    #待機モードを初期化
-    @idle_mode = false
-  end
-=end
-  def command_move_line(options, inner_options, command_name = :move_line)
+  def command_move_line(options, inner_options)
     #移動先座標の決定
     @x_pos = (options[:start_x] + (options[:x] - options[:start_x]).to_f / options[:frame] * options[:count]).to_i
     @y_pos = (options[:start_y] + (options[:y] - options[:start_y]).to_f / options[:frame] * options[:count]).to_i
@@ -75,18 +43,7 @@ module Movable
       #待機モードを初期化
       @idle_mode = false
       #:move_lineコマンドをスタックし直す
-      push_command_to_next_frame(command_name, options, inner_options)
+      push_command_to_next_frame(:move_line, options, inner_options)
     end
-  end
-
-  def command_move_line_with_skip(options, target)
-    #スキップモードであれば最終値を設定し、フレーム内処理を続行する
-    if @skip_mode
-      @x_pos = options[:x]
-      @y_pos = options[:y]
-      return
-    end
-    
-    command_move_line(options, target, :move_line_with_skip)
   end
 end

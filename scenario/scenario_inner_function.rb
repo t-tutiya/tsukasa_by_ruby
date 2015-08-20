@@ -1,7 +1,7 @@
 #! ruby -E utf-8
 
 #ボタンコントロール
-_CREATE_ :ButtonControl, 
+_CREATE_ :LayoutControl, 
         :x_pos => 0, 
         :y_pos => 0, 
         :width => 256,
@@ -17,7 +17,7 @@ _CREATE_ :ButtonControl,
 end
 
 #ボタンコントロール
-_CREATE_ :ButtonControl, 
+_CREATE_ :LayoutControl, 
         :x_pos => 0, 
         :y_pos => 0, 
         :width => 256,
@@ -33,7 +33,7 @@ _CREATE_ :ButtonControl,
 end
 
 #ボタンコントロール
-_CREATE_ :ButtonControl, 
+_CREATE_ :LayoutControl, 
         :x_pos => 0, 
         :y_pos => 0, 
         :width => 100,

@@ -36,10 +36,27 @@ require_relative './control_container.rb'
 class LayoutControl < Control
   include Movable #移動関連モジュール
   include Drawable #描画関連モジュール
+  include Clickable
 
   def initialize(options, inner_options, root_control)
-    options[:child_controls_draw_to_entity] = false
+    if options[:render_taget]
+      options[:child_controls_draw_to_entity] = true
+      #保持オブジェクトの初期化
+      @entity = RenderTarget.new( options[:width], 
+                                              options[:height], 
+                                              [0, 0, 0, 0])
+
+      @width  = @entity.width
+      @height = @entity.height
+    else
+      options[:child_controls_draw_to_entity] = false
+    end
+
     super
   end
 
+  def dispose()
+    @entity.dispose if @entity
+    super
+  end
 end

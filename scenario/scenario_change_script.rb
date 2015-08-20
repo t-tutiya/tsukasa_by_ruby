@@ -31,7 +31,7 @@
 #ボタン押下による範囲指定シナリオ分岐ギミックのサンプル
 #現状まだ正常に動作していない
 
-_CREATE_ :ButtonControl, 
+_CREATE_ :LayoutControl, 
         :x_pos => 150, 
         :y_pos => 150, 
         :width => 256,

@@ -1,6 +1,6 @@
 #! ruby -E utf-8
 
-_CREATE_ :ButtonControl, 
+_CREATE_ :LayoutControl, 
         :x_pos => 150, 
         :y_pos => 150, 
         :width => 256,

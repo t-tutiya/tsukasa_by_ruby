@@ -36,14 +36,11 @@ require_relative './module_clickable.rb'
 
 require_relative './control_container.rb'
 
+require_relative './layout_control.rb'
 require_relative './image_control.rb'
-require_relative './image_tiles_container.rb'
-
-require_relative './button_control.rb'
 require_relative './sound_control.rb'
 
-require_relative './rendertarget_container.rb'
-require_relative './layout_control.rb'
+require_relative './image_tiles_container.rb'
 
 require_relative './text_page_control.rb'
 

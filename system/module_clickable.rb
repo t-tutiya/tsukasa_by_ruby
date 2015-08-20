@@ -38,8 +38,8 @@ module Clickable
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
     @y_pos = options[:y_pos] || 0 #描画Ｙ座標
 
-    @width  = options[:width]  || 0 #横幅
-    @height = options[:height] || 0 #縦幅
+    @width  = options[:width]  || 1 #横幅
+    @height = options[:height] || 1 #縦幅
 
     @collision = options[:collision]
 

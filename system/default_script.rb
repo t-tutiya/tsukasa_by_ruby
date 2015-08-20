@@ -164,7 +164,7 @@ end
 
 #標準テキストウィンドウ
 #TODOデバッグ用なので各種数字は暫定
-_CREATE_ :RenderTargetContainer,
+_CREATE_ :LayoutControl,
   x_pos: 128,
   y_pos: 528,
   width: 1024,

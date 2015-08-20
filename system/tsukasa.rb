@@ -40,8 +40,6 @@ require_relative './layout_control.rb'
 require_relative './image_control.rb'
 require_relative './sound_control.rb'
 
-require_relative './image_tiles_container.rb'
-
 require_relative './text_page_control.rb'
 
 require_relative './script_compiler.rb'

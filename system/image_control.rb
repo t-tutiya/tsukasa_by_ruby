@@ -59,6 +59,29 @@ class ImageControl < Control
   end
 
   def command_load_image(options, inner_options)
+
+    #イメージの分割指定がある場合
+    if options[:tiles]
+      @file_path = options[:file_path]
+
+      entities = @@image_cache[@file_path].slice_tiles(
+                                                  options[:x_count] || 1, 
+                                                  options[:y_count] || 1)
+
+      entities.each.with_index(options[:start_index] || 0) do |image, index|
+        push_command([:_CREATE_, 
+                    {
+                      :_ARGUMENT_ => :ImageControl,
+                      :entity => image,
+                      :id => index,
+                      :float_mode => options[:float_mode],
+                      :visible => false
+                    }, inner_options])
+      end
+      return
+    end
+
+    
     #実体から初期化する
     #TODO：シリアライズ対象にできないのでこの機能は辞めるかも
     if options[:entity]

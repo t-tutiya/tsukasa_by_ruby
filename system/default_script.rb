@@ -213,7 +213,8 @@ _DEFINE_ :line_icon_func do |options|
           :height => 24,
           :id => options[:id],
           :float_mode => :right do
-    _CREATE_ :ImageTilesContainer, 
+    _CREATE_ :ImageControl, 
+            :tiles => true,
             :file_path=>"./sozai/icon_8_a.png", 
             :id=>:test, 
             :x_count => 4, 
@@ -256,7 +257,8 @@ _DEFINE_ :page_icon_func do |options|
           :height => 24,
           :id => options[:id],
           :float_mode => :right do
-    _CREATE_ :ImageTilesContainer, 
+    _CREATE_ :ImageControl, 
+            :tiles => true, 
             :file_path=>"./sozai/icon_4_a.png", 
             :id=>:test, 
             :x_count => 4, 

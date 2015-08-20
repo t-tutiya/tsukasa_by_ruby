@@ -45,8 +45,10 @@ module Drawable
     if options[:draw_option]
       @draw_option = options[:draw_option]
     else
-      @draw_option = {} #描画オプション
-      @draw_option[:z] = options[:index] || 0 #重ね合わせ順序
+      #描画オプション
+      @draw_option = {
+                      :z => options[:index] || 0 #重ね合わせ順序
+                      } 
     end
 
     #回り込み指定（省略時は:none）

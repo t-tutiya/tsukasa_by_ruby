@@ -1,9 +1,6 @@
 #! ruby -E utf-8
 
 require 'dxruby'
-require_relative './module_movable.rb'
-require_relative './module_drawable.rb'
-require_relative './control_container.rb'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１

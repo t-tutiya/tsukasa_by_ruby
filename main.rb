@@ -16,6 +16,5 @@ Window.loop do
   #Ragエンジン処理
   tsukasa.update
   #Ragエンジン描画
-#  rag.render(0, 0, Window, 1280, 720)
-  tsukasa.render(0, 0, Window)
+  tsukasa.render(0, 0, Window, {:width => 1280, :height => 720})
 end

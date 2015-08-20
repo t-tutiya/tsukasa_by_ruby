@@ -146,11 +146,11 @@ class Control #公開インターフェイス
   end
 
   #下位コントロールを描画する
-  def render(offset_x, offset_y, target)
+  def render(offset_x, offset_y, target, parent_size)
     #下位コントロール巡回
     @control_list.each do |child_control|
       #下位コントロールを上位ターゲットに直接描画
-      offset_x, offset_y = child_control.render(offset_x, offset_y, target)
+      offset_x, offset_y = child_control.render(offset_x, offset_y, target, parent_size)
     end
 
     #オフセット値を返す

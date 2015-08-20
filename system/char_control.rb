@@ -65,8 +65,8 @@ class CharControl < Control
     @skip_mode = options[:skip_mode] #スキップモード初期化
   end
 
-  def render(offset_x, offset_y, target)
-    dx , dy = super(offset_x - @offset_x, offset_y - @offset_y, target)
+  def render(offset_x, offset_y, target, parent_size)
+    dx , dy = super(offset_x - @offset_x, offset_y - @offset_y, target, parent_size)
     
     return dx + @offset_x, dy + @offset_y
   end

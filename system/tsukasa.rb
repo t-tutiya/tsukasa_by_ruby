@@ -46,7 +46,6 @@ require_relative './script_compiler.rb'
 
 #TODO：モジュールであるべきか？
 class Tsukasa < Control
-
   def initialize(options, inner_options = {})
     options[:script_path] = "./system/bootstrap_script.rb"
     options[:id] = :default_rendertarget_container

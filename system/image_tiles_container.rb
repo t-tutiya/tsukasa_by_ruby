@@ -50,12 +50,10 @@ class ImageTilesContainer < Control
   def initialize(options, inner_options, root_control)
     super
     @file_path = options[:file_path]
-    entity = @@image_tiles_cache[@file_path]
 
-    @x_count = options[:x_count] || 1
-    @y_count = options[:y_count] || 1
-
-    entities = entity.slice_tiles(@x_count, @y_count)
+    entities = @@image_tiles_cache[@file_path].slice_tiles(
+                                                options[:x_count] || 1, 
+                                                options[:y_count] || 1)
 
     entities.each.with_index(options[:start_index] || 0) do |image, index|
       push_command([:_CREATE_, 
@@ -68,23 +66,6 @@ class ImageTilesContainer < Control
                   }, inner_options])
     end
   end
-
-=begin
-  def file_path=(file_path)
-    #同じファイルパスが指定された場合は処理を行わない
-    return if @file_path == file_path
-
-    #ファイルパスの格納
-    @file_path = file_path
-
-    #保持オブジェクトの初期化
-    @entity = @@image_cache[@file_path]
-
-    #縦横幅の更新
-    @width  = @entity.width
-    @height = @entity.height
-  end
-=end
 
   def dispose()
     #TODO：キャッシュ機構が作り込まれてないのでここで削除できない

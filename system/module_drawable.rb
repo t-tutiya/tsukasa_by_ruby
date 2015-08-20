@@ -53,6 +53,7 @@ module Drawable
 
     #回り込み指定（省略時は:none）
     @float_mode = options[:float_mode] || :none
+    @align_y = :none
 
     #TODO：いらない気がする
     @width  = options[:width] || 0  #横幅
@@ -75,8 +76,15 @@ module Drawable
       #自エンティティを上位ターゲットに描画
       target.draw_ex(@x_pos, @y_pos, @entity, @draw_option)
     else
+
+      if @align_y == :bottom
+        y_pos = offset_y + @y_pos + parent_size[:height] - @height
+      else
+        y_pos = offset_y + @y_pos
+      end
+
       #エンティティを持っているなら自エンティティを上位ターゲットに描画
-      target.draw_ex(offset_x + @x_pos, offset_y + @y_pos, @entity, @draw_option) if @entity
+      target.draw_ex(offset_x + @x_pos, y_pos, @entity, @draw_option) if @entity
       #下位エンティティを上位ターゲットに描画
       super(offset_x + @x_pos, 
             offset_y + @y_pos, 

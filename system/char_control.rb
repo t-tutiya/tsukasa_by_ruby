@@ -63,6 +63,8 @@ class CharControl < Control
                           options[:font], 
                           options[:font_config])
     @skip_mode = options[:skip_mode] #スキップモード初期化
+
+    @align_y = :bottom
   end
 
   def render(offset_x, offset_y, target, parent_size)

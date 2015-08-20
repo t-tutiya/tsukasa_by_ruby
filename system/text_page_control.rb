@@ -46,24 +46,12 @@ class TextPageControl < Control
   #公開インターフェイス
   #############################################################################
 
-  #TODO：多分いらない
-  def width
-    @next_char_x + @font_config[:size]
-  end
-
-  #TODO：多分いらない
-  def height
-    @next_char_y + @font_config[:size]
-  end
-
-  attr_accessor  :char_renderer #文字レンダラ
-
   #attr_accessor  :font_config #フォント設定
   def font_config=(hash)
     @font_config.merge!(hash)
     reset_font()
   end
-  #attr_accessor  :default_font_config #デフォルトフォント設定
+  #attr_accessor  :default_font_config #デフォルトフォント設定 #現在機能していない
   def default_font_config=(hash)
     @default_font_config.merge!(hash)
   end
@@ -120,11 +108,11 @@ class TextPageControl < Control
     # :rubi_size ルビサイズ
     # :rubi_pitch ルビ幅
 
-  #attr_accessor  :style_config #書式設定
+  #attr_accessor  :style_config #書式設定 #現在機能していない
   def style_config=(hash)
     @style_config.merge!(hash)
   end
-  #attr_accessor  :default_style_config #デフォルト書式設定
+  #attr_accessor  :default_style_config #デフォルト書式設定 #現在機能していない
   def default_style_config=(hash)
     @default_style_config.merge!(hash)
   end
@@ -194,8 +182,7 @@ class TextPageControl < Control
     command_reset_style_config(nil, nil)
 
     #次に描画する文字のＸ座標とインデントＸ座標オフセットをリセット
-    #TODO：インデントは現在動かない
-    #@indent_offset = 0 
+    @indent_offset = 0 
 
     super
 
@@ -341,12 +328,6 @@ class TextPageControl < Control
   #line_feedコマンド
   #改行処理（CR＋LF）
   def command__LINE_FEED_(options, inner_options)
-=begin
-    #todo:インデントがある場合、インデント幅の無形コントロールを作る
-    #Ｘ座標をリセット（インデント設定があればその分を加算）
-    #@next_char_x = @indent_offset
-=end
-
     #以下逆順に登録
 
     #改行時のwaitを設定する
@@ -549,19 +530,6 @@ class TextPageControl < Control
   def command_map_image_font(options, inner_options)
     #レンダリング済みフォントデータファイルを任意フォント名で登録
     Image_font.regist(options[:font_name].to_s, options[:file_path].to_s)
-  end
-
-  #############################################################################
-  #ＵＩ操作コマンド
-  #############################################################################
-  #indentタグ
-  #インデントの設定/解除
-  #インデントはネストしないので注意
-  #TODO:微妙な仕様だな……
-  def command_indent(options, inner_options)
-    raise
-    #インデント開始Ｘ座標を設定もしくはクリアする
-    @indent_offset = options[:_ARGUMENT_] ? @next_char_x : 0
   end
 
   #############################################################################

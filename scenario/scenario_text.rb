@@ -28,6 +28,10 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+_SEND_ :default_char_container do
+  _SET_ indent_offset: 128
+end
+
 text "■■■■■■■■■■■■■■■■■■■■■■"
 pause icon: :page_icon_func
 line_feed

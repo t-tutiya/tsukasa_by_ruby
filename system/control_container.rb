@@ -334,8 +334,13 @@ class Control #セッター／ゲッター
       if variable
         instance_variable_get("@" + variable.to_s)[key] = val
       else
-        if instance_variable_defined?("@" + key.to_s)
+        #セッターが用意されている場合
+        if  respond_to?(key.to_s + "=")
+          send(key.to_s + "=", val)
+        #インスタンス変数が存在する場合
+        elsif instance_variable_defined?("@" + key.to_s)
           instance_variable_set("@" + key.to_s, val)
+        #どちらも無い場合はwarningを出して処理を続行する
         else
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + key.to_s + "]は存在しません"
         end

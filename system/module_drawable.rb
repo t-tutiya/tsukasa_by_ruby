@@ -32,6 +32,17 @@ require_relative './script_compiler.rb'
 ###############################################################################
 
 module Drawable
+  #プロパティ
+  attr_accessor  :x_pos
+  attr_accessor  :y_pos
+  attr_accessor  :visible
+
+  attr_accessor  :float_mode
+  attr_accessor  :z
+
+  attr_reader  :width
+  attr_reader  :height
+
   def initialize(options, inner_options, root_control)
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
     @y_pos = options[:y_pos] || 0 #描画Ｙ座標
@@ -59,6 +70,11 @@ module Drawable
     super
   end
 
+  #可視設定
+  def command_visible(options, target)
+    @visible = options[:visible]
+  end
+  
   #描画
   def render(offset_x, offset_y, target)
     return offset_x, offset_y unless @visible

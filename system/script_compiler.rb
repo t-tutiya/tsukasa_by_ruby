@@ -34,13 +34,12 @@ require_relative "./tks_parser.rb"
 
 class ScriptCompiler
 
+  @@parser = TKSParser.new
+  @@replacer = TKSParser::Replacer.new
+
   def initialize(control, root_control)
     @control = control
     @root_control = root_control
-    
-    #TODO：本来は毎回生成するものではない。
-    @parser = TKSParser.new
-    @replacer = TKSParser::Replacer.new
   end
 
   #ヘルパーメソッド群
@@ -51,7 +50,7 @@ class ScriptCompiler
     if argument[:script_path]
       if File.extname(argument[:script_path]) == ".tks"
         #評価対象がｔｋｓファイルの場合の場合
-        eval( @replacer.apply(@parser.parse(File.read(argument[:script_path], encoding: "UTF-8"))).flatten.join("\n").encode("Windows-31J"), 
+        eval( @@replacer.apply(@@parser.parse(File.read(argument[:script_path], encoding: "UTF-8"))).flatten.join("\n").encode("Windows-31J"), 
               nil, 
               File.expand_path(argument[:script_path]))
       else
@@ -72,11 +71,18 @@ class ScriptCompiler
   end
 
   def method_missing(command_name, option = nil, **options, &block)
-    function = @control.function_list[command_name] || @root_control.function_list[command_name]
 
-    if (!function && @control.respond_to?("command_" + command_name.to_s, true)) || command_name == :end_frame
+    function =  @control.function_list[command_name] || 
+                @root_control.function_list[command_name]
+
+    if (
+        !function && 
+         @control.respond_to?("command_" + command_name.to_s, true)
+       ) || 
+       command_name == :end_frame
+
       # 組み込みコマンドがある場合はそのまま呼ぶ
-      options[:_ARGUMENT_] = option if option != nil
+      options[:_ARGUMENT_] = option if option
     else
       # 組み込みコマンドが無い場合は_CALL_に差し替える
       options[:_FUNCTION_ARGUMENT_] = option if option
@@ -84,7 +90,8 @@ class ScriptCompiler
       command_name = :_CALL_
     end
 
-    inner_options = {:block_stack => @block_stack}
+    inner_options = {}
+    inner_options[:block_stack] = @block_stack
     inner_options[:block] = block if block
 
     #コマンドを登録する

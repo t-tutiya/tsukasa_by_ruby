@@ -31,22 +31,28 @@
 #_SEND_ :default_char_container do
 #  _SET_ align_y: :bottom
 #end
-
+=begin
+_SEND_ :default_char_container do
+  _RUBI_ "●", rubi: "★★★★"
+  #_SET_  font_config: {size: 64}
+end
 _SEND_ :default_char_container, interrupt: true do
   _SET_  style_config: {line_height: 64}
   _SET_ indent: 128
-  flush
   text "◆◆◆◆"
 end
-pause
+=end
 
-text "■■■■■"
+
+text "★★★★★"
+
 
 _SEND_ :default_char_container do
-  _SET_  font_config: {size: 64}
+  _RUBI_ "●", rubi: "test"
+  #_SET_  font_config: {size: 64}
 end
 
-text "■■■■■■"
+text "●●●●●"
 line_feed
 
 text "■■■■■■"

@@ -55,7 +55,7 @@ class Control #公開インターフェイス
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
     #コマンドリスト
-    @command_list         = options[:command_list] || [] 
+    @command_list         = [] 
     #一時コマンドリスト
     #TODO：これがシリアライズ対象になっているのはおかしいのかもしれない
     @next_frame_commands  = options[:next_frame_commands] || [] 
@@ -93,6 +93,9 @@ class Control #公開インターフェイス
 
     #コマンドセットがあるなら登録する
     eval_commands(options[:commands]) 
+    if options[:command_list]
+      @command_list = options[:command_list] + @command_list
+    end
   end
 
   #コマンドをスタックに格納する

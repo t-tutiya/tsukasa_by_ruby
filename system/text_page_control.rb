@@ -185,15 +185,6 @@ class TextPageControl < Control
     @indent = options[:indent] || 0 
 
     super
-
-    #次のアクティブ行コントロールを追加  
-    interrupt_command([:_CREATE_, 
-                     {:_ARGUMENT_ => :LayoutControl, 
-                      :width => options[:width],
-                      :height => @style_config[:line_height],
-                      :float_mode => :bottom}, 
-                      {}])
-
   end
 
   #############################################################################
@@ -331,6 +322,74 @@ class TextPageControl < Control
 =end
   end
 
+  def command__RUBI_(options, inner_options)
+
+    #ルビを構成するコマンド列を作成
+
+    rubi_command_list = Array.new
+
+    options[:rubi].each_char do |rubi|
+      rubi_command_list.push([:_CREATE_, 
+                 {:_ARGUMENT_ => :CharControl, 
+                  :char => rubi,
+
+                  :font_config => @font_config,
+
+                  :size => @font_config[:rubi_size],
+                  :fontname => @font_config[:fontname],
+                  :weight => @font_config[:bold],
+                  :italic => @font_config[:italic],
+
+                  :skip_mode =>  @skip_mode,
+                  :float_mode => :right}, 
+                 {:block => @char_renderer}])
+
+      #文字幅スペーサーを生成する
+      rubi_command_list.push([:_CREATE_, 
+                  {:_ARGUMENT_ => :LayoutControl, 
+                  :width => @style_config[:charactor_pitch],
+                  :height => @style_config[:line_height],
+                  :float_mode => :right}, 
+                 {:block => @char_renderer}])
+
+    rubi_command_list.push([:_WAIT_, 
+                      {:_ARGUMENT_ => [:count, :skip, :key_push],
+                       :count => 200}, 
+                       inner_options])
+    end
+
+    rubi_layout =[:_CREATE_, 
+                  { :_ARGUMENT_ => :LayoutControl, 
+                    :command_list => rubi_command_list,
+                    :y_pos => 32,
+                    :x_pos => 32,
+                    :width=> 128,
+                    :height=> 32}, inner_options]
+
+    #ベース文字
+    @control_list.last.push_command([:_CREATE_, 
+               {:_ARGUMENT_ => :CharControl, 
+                :command_list => [rubi_layout],
+                :char => options[:_ARGUMENT_],
+
+                :font_config => @font_config,
+
+                :size => @font_config[:size],
+                :fontname => @font_config[:fontname],
+                :weight => @font_config[:bold],
+                :italic => @font_config[:italic],
+
+                :skip_mode =>  @skip_mode,
+                :float_mode => :right}, 
+               {:block => @char_renderer}])
+
+    #:waitコマンドをスタックする。
+    @control_list.last.push_command([:_WAIT_, 
+                      {:_ARGUMENT_ => [:count, :skip, :key_push],
+                       :count => 2}, 
+                       inner_options])
+  end
+
   #line_feedコマンド
   #改行処理（CR＋LF）
   def command__LINE_FEED_(options, inner_options)
@@ -369,17 +428,16 @@ class TextPageControl < Control
   #flushコマンド
   #メッセージレイヤの消去
   def command__FLUSH_(options, inner_options)
+    #子コントロールをクリアする
     @control_list.each do |control|
       control.interrupt_command([:_DELETE_, options, {}])
     end
 
-    #次のアクティブ行コントロールを追加  
-    interrupt_command([:_CREATE_, 
-                     {:_ARGUMENT_ => :LayoutControl, 
-                      :width => options[:width],
-                      :height => @style_config[:line_height],
-                      :float_mode => :bottom}, 
-                      inner_options])
+    #改行を挿入して新規列レイアウトコントロールを生成する
+    indent = @indent #一時的にインデントを退避＆クリアする
+    @indent = 0
+    command__LINE_FEED_(options, inner_options)
+    @indent = indent
   end
 
   #############################################################################

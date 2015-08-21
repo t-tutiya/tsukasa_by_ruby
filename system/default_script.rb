@@ -203,6 +203,7 @@ _CREATE_ :LayoutControl,
         _WAIT_ [:command, :skip], command: :transition_fade
       } do
       set font_config: {size: 32}
+      _FLUSH_
     end
   end
 

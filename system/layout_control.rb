@@ -36,7 +36,7 @@ class LayoutControl < Control
   include Clickable
 
   def initialize(options, inner_options, root_control)
-    if options[:render_taget]
+    if options[:render_target]
       options[:child_controls_draw_to_entity] = true
       #保持オブジェクトの初期化
       @entity = RenderTarget.new( options[:width], 

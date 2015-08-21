@@ -339,7 +339,7 @@ class TextPageControl < Control
     #次のアクティブ行コントロールを追加  
     interrupt_command([:_CREATE_, 
                      {:_ARGUMENT_ => :LayoutControl, 
-                      :width => options[:width],
+                      :width => @width,
                       :height => @style_config[:line_height],
                       :float_mode => :bottom}, 
                       inner_options])
@@ -347,7 +347,7 @@ class TextPageControl < Control
     #行間ピッチ分の無形コントロールを追加
     interrupt_command([:_CREATE_, 
                      {:_ARGUMENT_ => :LayoutControl, 
-                      :width => options[:width],
+                      :width => @width,
                       :height => @style_config[:line_spacing],
                       :float_mode => :bottom}, 
                       inner_options])

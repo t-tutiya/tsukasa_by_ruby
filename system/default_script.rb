@@ -94,7 +94,7 @@ _DEFINE_ :pause do |options|
     end
 
     #キー入力伝搬を止める為に１フレ送る
-    end_frame 
+    _END_FRAME_ 
 
     #■行末待機処理
 
@@ -153,7 +153,7 @@ end
 #単機能キー入力待ち
 _DEFINE_ :wait_push do
   _WAIT_ [:key_push]
-  end_frame
+  _END_FRAME_
 end
 
 _DEFINE_ :image do |options|

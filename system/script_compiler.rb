@@ -72,15 +72,7 @@ class ScriptCompiler
 
   def method_missing(command_name, option = nil, **options, &block)
 
-    function =  @control.function_list[command_name] || 
-                @root_control.function_list[command_name]
-
-    if (
-        !function && 
-         @control.respond_to?("command_" + command_name.to_s, true)
-       ) || 
-       command_name == :end_frame
-
+    if @control.respond_to?("command_" + command_name.to_s, true)
       # 組み込みコマンドがある場合はそのまま呼ぶ
       options[:_ARGUMENT_] = option if option
     else

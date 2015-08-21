@@ -125,7 +125,7 @@ class Control #公開インターフェイス
       command_name, options, inner_options = command
 
       #今フレーム処理終了判定
-      break if command_name == :end_frame
+      break if command_name == :_END_FRAME_
 
       #コマンドを実行する
       send("command_" + command_name.to_s, options, inner_options)
@@ -385,7 +385,7 @@ class Control #制御構文
     end
 
     #フレーム終了疑似コマンドをスタックする
-    eval_commands([[:end_frame, {}, {}]])
+    eval_commands([[:_END_FRAME_, {}, {}]])
 
     #waitにブロックが付与されているならそれを実行する
     eval_block(options, &inner_options[:block])
@@ -605,7 +605,12 @@ class Control #内部コマンド
 
   private
 
-  #１フレ分のみifの結果をコマンドリスト上に格納する
+  #_BREAK_の終点を示す
   def command__END_SCOPE_(options, inner_options)
+  end
+  
+  #フレームの終了を示す（ダミーコマンド。これ自体は実行されない）
+  def command__END_FRAME_(options, inner_options)
+    raise
   end
 end

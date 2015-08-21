@@ -94,7 +94,7 @@ about do
 end
 
 #TODO;ここでフレームを送らない場合、次のスクリプトファイルが:default_char_containerに読み込まれた後で_BREAK_が機能してしまう。どうにかならんかなーこれ
-end_frame 
+_END_FRAME_
 
 flush
 

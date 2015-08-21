@@ -174,8 +174,8 @@ _CREATE_ :LayoutControl,
   id: :main_text_layer do
     #メッセージウィンドウ
     _CREATE_ :TextPageControl, 
-      x_pos: 2,
-      y_pos: 2,
+      x_pos: 0,
+      y_pos: 0,
       width: 1024,
       id: :default_char_container,
       font_config: { :size => 32, 

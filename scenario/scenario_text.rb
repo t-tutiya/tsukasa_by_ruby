@@ -28,11 +28,29 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+#_SEND_ :default_char_container do
+#  _SET_ align_y: :bottom
+#end
+
+_SEND_ :default_char_container, interrupt: true do
+  _SET_  style_config: {line_height: 64}
+  _SET_ indent: 128
+  flush
+  text "◆◆◆◆"
+end
+pause
+
+text "■■■■■"
+
 _SEND_ :default_char_container do
-  _SET_ indent_offset: 128
+  _SET_  font_config: {size: 64}
 end
 
-text "■■■■■■■■■■■■■■■■■■■■■■"
+text "■■■■■■"
+line_feed
+
+text "■■■■■■"
+
 pause icon: :page_icon_func
 line_feed
 text "■■■■■■■■■■■"

@@ -182,7 +182,7 @@ class TextPageControl < Control
     command_reset_style_config(nil, nil)
 
     #次に描画する文字のＸ座標とインデントＸ座標オフセットをリセット
-    @indent_offset = 0 
+    @indent = options[:indent] || 0 
 
     super
 
@@ -341,6 +341,13 @@ class TextPageControl < Control
                      {:_ARGUMENT_ => :LayoutControl, 
                       :width => @width,
                       :height => @style_config[:line_height],
+                      #インデント用無形コントロール
+                      :command_list => @indent > 0 ? [[:_CREATE_, 
+                                       {:_ARGUMENT_ => :LayoutControl, 
+                                        :width => @indent,
+                                        :height => @style_config[:line_height],
+                                        :float_mode => :right}, 
+                                        inner_options]] : nil, 
                       :float_mode => :bottom}, 
                       inner_options])
 

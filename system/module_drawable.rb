@@ -31,7 +31,20 @@ require_relative './script_compiler.rb'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+#モンキーパッチ
+module Window
+  #外枠のみの四角形を描画する
+  def self.draw_box_line(x1, y1, x2, y2, color = [255,255,255], z = 0)
+      Window.draw_line( x1, y1, x2, y1, [255,255,255], z)
+      Window.draw_line( x2, y1, x2, y2, [255,255,255], z)
+      Window.draw_line( x1, y1, x1, y2, [255,255,255], z)
+      Window.draw_line( x1, y2, x2, y2, [255,255,255], z)
+  end
+end
+
 module Drawable
+  @@_DRAWBABL_DEBUG_ = true
+
   def initialize(options, inner_options, root_control)
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
     @y_pos = options[:y_pos] || 0 #描画Ｙ座標
@@ -73,18 +86,27 @@ module Drawable
             offset_y, 
             @entity, 
             {:width => @width, :height => @height})
+
       #自エンティティを上位ターゲットに描画
       target.draw_ex(@x_pos, @y_pos, @entity, @draw_option)
+
     else
 
       if @align_y == :bottom
         y_pos = offset_y + @y_pos + parent_size[:height] - @height
+        x_pos = offset_x + @x_pos
       else
         y_pos = offset_y + @y_pos
+        x_pos = offset_x + @x_pos
       end
 
       #エンティティを持っているなら自エンティティを上位ターゲットに描画
-      target.draw_ex(offset_x + @x_pos, y_pos, @entity, @draw_option) if @entity
+      target.draw_ex(x_pos, y_pos, @entity, @draw_option) if @entity
+      #デバッグ用：コントロールの外枠を描画する
+      if @@_DRAWBABL_DEBUG_
+        Window.draw_box_line(x_pos, y_pos, offset_x + @width,  y_pos + @height)
+      end
+
       #下位エンティティを上位ターゲットに描画
       super(offset_x + @x_pos, 
             offset_y + @y_pos, 

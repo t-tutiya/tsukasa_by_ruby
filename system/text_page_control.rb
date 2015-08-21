@@ -49,7 +49,7 @@ class TextPageControl < Control
   #attr_accessor  :font_config #フォント設定
   def font_config=(hash)
     @font_config.merge!(hash)
-    reset_font()
+#    reset_font()
   end
   #attr_accessor  :default_font_config #デフォルトフォント設定 #現在機能していない
   def default_font_config=(hash)
@@ -214,9 +214,15 @@ class TextPageControl < Control
     target.push_command([:_CREATE_, 
                {:_ARGUMENT_ => :CharControl, 
                 :char => options[:_ARGUMENT_],
-                :font => @font,
+
                 :font_config => @font_config,
                 :skip_mode =>  @skip_mode,
+
+                :size => @font_config[:size],
+                :fontname => @font_config[:fontname],
+                :weight => @font_config[:bold],
+                :italic => @font_config[:italic],
+
                 :float_mode => :right}, 
                {:block => @char_renderer}])
 
@@ -377,138 +383,6 @@ class TextPageControl < Control
   end
 
   #############################################################################
-  #ルビ関連コマンド
-  #############################################################################
-=begin
-  #rubi_charコマンド
-  #ルビを出力する
-  #オフセットがあればそのＸ座標から、なければ文字の中心から計算して出力する
-  def command_rubi_char(options, inner_options)
-
-    #ルビ文字列を取得
-    texts = options[:char].to_s
-    #ルビの文字数を取得
-    length = texts.length
-    #ルビが構成するwidthを取得
-    width = @rubi_font.get_width(texts)
-
-    #開始相対x座標を取得。設定されてない場合はベース文字/2からwidth/2を引いた値
-    x = options[:offset] ?
-        options[:offset].to_i :
-        @font_config[:size]/2 - width/2
-
-    #一文字ごとに処理
-    texts.each_char do |ch|
-      #文字レンダラオブジェクトを生成し、描画チェインに連結する
-      #TODO:RAG2015版への移行作業まだ
-      @control_list.push(CharControl.new(
-                    @next_char_x + x + @margin_x,
-                    @next_char_y + @margin_y - @rubi_font.size - @font_config[:rubi_pitch],
-                    ch,
-                    @rubi_font,
-                    @font_config,
-                    @skip_mode,
-                    :normal,
-                    @char_renderer_commands
-                    ))
-      #相対Ｘ座標を次に進める
-      x += @font_config[:rubi_size]
-    end
-  end
-=end
-=begin
-  #rubiコマンド
-  #ルビを出力する（rubi_charの補助メソッド）
-  #char:ルビ文字列
-  #text:ルビを割り当てるベースの文字列
-  #align: expand（デフォルト）/center/left/rightから選ぶ
-  def command_rubi(options, inner_options)
-    raise #旧仕様なので機能しない
-    #ルビ文字列を取得
-    rubi_texts = options[:char]
-    #ルビの文字数を取得
-    rubi_length = rubi_texts.length
-    #ルビが構成するwidthを取得
-    rubi_width = @rubi_font.get_width(rubi_texts)
-
-    #ベース文字列を取得
-    base_texts = options[:text]
-    #ベース文字列の文字数を取得
-    base_length = base_texts.length
-    #ベース文字列が構成するwidthを取得（間に入る文字ピッチ分を考慮）
-    base_width = @font.get_width(base_texts) + 
-                 @style_config[:charactor_pitch] * (base_length - 1)
-
-    #align指定を取得（設定がなければ:expandとする）
-    align = options[:align] ? options[:align].to_sym : :expand
-
-    #開始相対ｘ座標とルビ文字の間隔を算出
-    case align
-    when :expand #均等割り付け
-      #ベース文字列幅（頭を揃える為に文字ピッチを加算している）をルビ文字数で均等に割った値をピッチとする
-      pitch = (base_width + @style_config[:charactor_pitch])/rubi_length
-      #ベース文字列の中心座標から、ルビ文字列幅の半分を引いた座標を基点とする
-      x = base_width/2 - ((rubi_length-1) * pitch + @font_config[:rubi_size])/2
-    when :center #中央揃え
-      pitch = @font_config[:rubi_size]
-      #ベース文字列の中心座標からルビ文字列幅の半分を引いた座標を基点とする
-      x = base_width/2 - rubi_width/2
-    when :left #左揃え
-      pitch = @font_config[:rubi_size]
-      #ベース文字列の左端を基点とする
-      x = 0 
-    when :right #右揃え
-      pitch = @font_config[:rubi_size]
-      #ベース文字列の右端から、ルビ文字列の横幅を引いた座標を基点とする
-      x = base_width - rubi_width
-    else
-      #使用されていないハッシュ。エラー。
-      puts "オプション#{align}は未定義です"
-      return
-    end
-
-    rubi_counter = 0
-    commands = Array.new
-    base_offset = 0
-    base_counter = 0
-
-    #ベース文字列を１文字ごとに処理
-    base_texts.each_char do |ch|
-      loop do
-        #ルビ文字を最後まで処理したならループを抜ける
-        break if rubi_counter == rubi_length
-
-        #対象のルビ文字の座標を算出
-        rubi_offset = x + pitch * rubi_counter
-        
-        #対象ルビが次のベース文字に対応しており、かつ、これが最後のベース文字の出力でないならループを抜ける
-        break if rubi_offset > base_offset and base_counter + 1 != base_length
-
-        #ルビ文字をスタックする
-        commands.push([:rubi_char, {:char => rubi_texts[rubi_counter],
-                                    :offset => rubi_offset - base_offset
-                                    }])
-
-        #ルビ文字カウンタインクリメント
-        rubi_counter += 1
-      end
-
-      #ベース文字のcharコマンドをスタックする
-      commands.push([:char, {:_ARGUMENT_ => ch}])
-
-      #ベース文字カウンタインクリメント
-      base_counter += 1
-
-      #ベース文字列のオフセット値を更新
-      base_offset += @font.get_width(ch) + @style_config[:charactor_pitch]
-    end
-
-    #生成したコマンド群をスタックに追加
-    #todo @command_listは廃止予定
-    #@command_list = commands + @command_list
-  end
-=end
-  #############################################################################
   #フォント操作関連コマンド
   #############################################################################
 
@@ -519,7 +393,7 @@ class TextPageControl < Control
     @font_config = @default_font_config.clone
 
     #fontオブジェクトを再生成する
-    reset_font()
+    #reset_font()
   end
 
   #reset_styleタグ
@@ -553,29 +427,29 @@ class TextPageControl < Control
   #############################################################################
   #内部メソッド
   #############################################################################
-
+=begin
   #fontオブジェクトを再生成する
-  def reset_font()
+  def reset_font() #削除予定
+    pp "reset"
     #フォントリソースを解放
-    @font.dispose if @font != nil 
+    @font.dispose if @font
     #イメージフォント使用中の場合
     @font = @font_config[:use_image_font] ?
             #イメージフォントオブジェクト生成
             Image_font.new(@font_config[:image_face]) :
             #フォントオブジェクト生成
-            @font = Font.new(@font_config[:size], 
-                             @font_config[:fontname],
-                            {:weight => @font_config[:bold],
-                             :italic => @font_config[:italic]})
+            Font.new(@font_config[:size], 
+                     @font_config[:fontname],
+                    {:weight => @font_config[:bold],
+                     :italic => @font_config[:italic]})
 
     #ルビフォントリソースを解放
-    @rubi_font.dispose if @rubi_font != nil 
+    @rubi_font.dispose if @rubi_font
     #ルビフォントオブジェクト生成
     @rubi_font = Font.new( @font_config[:rubi_size], 
                            @font_config[:fontname],
                           {:weight => @font_config[:bold],
                            :italic => @font_config[:italic]})
-                           
   end
+=end
 end
-

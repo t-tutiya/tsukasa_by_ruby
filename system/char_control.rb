@@ -43,10 +43,17 @@ class CharControl < Control
   def initialize(options, inner_options, root_control)
 
     super
+    
+    #フォントオブジェクト構築
+    #TODO：状況によってCharControlが実行される前に予め作っておいたFontオブジェクトがdiposeされ得るため、CharControlごとにfontオブジェクトを生成することにした。これがパフォーマンス的にありなのかちょっとわからない。
+    font = Font.new(options[:size], 
+                    options[:fontname],
+                    {:weight => options[:weight],
+                     :italic => options[:italic]})
 
     #現状での縦幅、横幅を取得
-    @width = options[:font].get_width(options[:char])
-    @height = options[:font].size
+    @width = font.get_width(options[:char])
+    @height = font.size
 
     #Image生成に必要な各種座標を生成する
     width, height, @offset_x, @offset_y = normalize_image(
@@ -60,7 +67,7 @@ class CharControl < Control
     @entity.draw_font_ex( @offset_x, 
                           @offset_y, 
                           options[:char], 
-                          options[:font], 
+                          font, 
                           options[:font_config])
     @skip_mode = options[:skip_mode] #スキップモード初期化
 

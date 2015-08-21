@@ -35,10 +35,20 @@ require_relative './script_compiler.rb'
 module Window
   #外枠のみの四角形を描画する
   def self.draw_box_line(x1, y1, x2, y2, color = [255,255,255], z = 0)
-      Window.draw_line( x1, y1, x2, y1, [255,255,255], z)
-      Window.draw_line( x2, y1, x2, y2, [255,255,255], z)
-      Window.draw_line( x1, y1, x1, y2, [255,255,255], z)
-      Window.draw_line( x1, y2, x2, y2, [255,255,255], z)
+    Window.draw_line( x1, y1, x2, y1, [255,255,255], z)
+    Window.draw_line( x2, y1, x2, y2, [255,255,255], z)
+    Window.draw_line( x1, y1, x1, y2, [255,255,255], z)
+    Window.draw_line( x1, y2, x2, y2, [255,255,255], z)
+  end
+end
+
+class RenderTarget
+  #外枠のみの四角形を描画する
+  def draw_box_line(x1, y1, x2, y2, color = [255,255,255], z = 0)
+    draw_line( x1, y1, x2, y1, [255,255,255], z)
+    draw_line( x2, y1, x2, y2, [255,255,255], z)
+    draw_line( x1, y1, x1, y2, [255,255,255], z)
+    draw_line( x1, y2, x2, y2, [255,255,255], z)
   end
 end
 
@@ -53,7 +63,7 @@ module Drawable
     @visible = options[:visible] == false ? false : true
 
     #子コントロールを自エンティティに描画するかどうか
-    @child_controls_draw_to_entity = options[:child_controls_draw_to_entity] || nil
+    @child_controls_draw_to_entity = options[:child_controls_draw_to_entity] || false
 
     if options[:draw_option]
       @draw_option = options[:draw_option]
@@ -82,16 +92,14 @@ module Drawable
     #下位エンティティを自エンティティに描画する場合
     if @child_controls_draw_to_entity
       #下位エンティティを自エンティティに描画
-      super(offset_x, 
-            offset_y, 
-            @entity, 
-            {:width => @width, :height => @height})
+      super(0, 0, @entity, {:width => @width, :height => @height})
+
+      x_pos = offset_x + @x_pos
+      y_pos = offset_y + @y_pos
 
       #自エンティティを上位ターゲットに描画
-      target.draw_ex(@x_pos, @y_pos, @entity, @draw_option)
-
+      target.draw_ex(x_pos, y_pos, @entity, @draw_option)
     else
-
       if @align_y == :bottom
         y_pos = offset_y + @y_pos + parent_size[:height] - @height
         x_pos = offset_x + @x_pos
@@ -102,18 +110,18 @@ module Drawable
 
       #エンティティを持っているなら自エンティティを上位ターゲットに描画
       target.draw_ex(x_pos, y_pos, @entity, @draw_option) if @entity
-      #デバッグ用：コントロールの外枠を描画する
-      if @@_DRAWBABL_DEBUG_
-        Window.draw_box_line(x_pos, y_pos, offset_x + @width,  y_pos + @height)
-      end
-
       #下位エンティティを上位ターゲットに描画
       super(offset_x + @x_pos, 
             offset_y + @y_pos, 
             target, 
             {:width => @width, :height => @height})
     end
-    
+
+    #デバッグ用：コントロールの外枠を描画する
+    if @@_DRAWBABL_DEBUG_
+      target.draw_box_line(x_pos, y_pos, x_pos + @width,  y_pos + @height)
+    end
+
     dx = offset_x + @x_pos
     dy = offset_y + @y_pos
 

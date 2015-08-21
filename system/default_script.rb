@@ -165,16 +165,18 @@ end
 #標準テキストウィンドウ
 #TODOデバッグ用なので各種数字は暫定
 _CREATE_ :LayoutControl,
+  render_target: true,
   x_pos: 128,
-  y_pos: 528,
+  y_pos: 256 + 192,
   width: 1024,
-  height: 600,
+  height: 192,
   index: 1000000, #描画順序
   id: :main_text_layer do
     #メッセージウィンドウ
     _CREATE_ :TextPageControl, 
       x_pos: 2,
       y_pos: 2,
+      width: 1024,
       id: :default_char_container,
       font_config: { :size => 32, 
                      :fontname => "ＭＳＰ ゴシック"},

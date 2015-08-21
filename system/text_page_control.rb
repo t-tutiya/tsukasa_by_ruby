@@ -208,7 +208,7 @@ class TextPageControl < Control
 
   #charコマンド
   #指定文字（群）を描画チェインに連結する
-  def command_char(options, inner_options)
+  def command__CHAR_(options, inner_options)
     target = @control_list.last
     #文字コントロールを生成する
     target.push_command([:_CREATE_, 
@@ -272,7 +272,7 @@ class TextPageControl < Control
     if @font_config[:use_image_font]
       char_command = :image_char
     else
-      char_command = :char
+      char_command = :_CHAR_
     end
 
     #文字列を分解してcharコマンドに変換する

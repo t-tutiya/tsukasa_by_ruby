@@ -180,7 +180,7 @@ _CREATE_ :LayoutControl,
       id: :default_char_container,
       size: 32, 
       fontname: "ＭＳＰ ゴシック",
-      style_config: { :wait_frame => 2,},
+      wait_frame: 2,
       char_renderer: Proc.new{
         transition_fade frame: 15,
           count: 0,

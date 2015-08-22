@@ -374,11 +374,6 @@ class Control #制御構文
   private
 
   def command__WAIT_(options, inner_options)
-    #待ちフレーム値が設定されていない場合はコンフィグから初期値を取得する
-    #TODO:@style_config[:wait_frame]はchar特有のプロパティ
-    if options[:count] and (options[:count] == :unset_wait_frame)
-      options[:count] = @style_config[:wait_frame]
-    end
 
     #チェック条件を満たしたら終了する
     return if check_imple(options[:_ARGUMENT_], options)

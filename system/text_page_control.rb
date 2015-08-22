@@ -163,7 +163,6 @@ class TextPageControl < Control
     @bold = options[:bold] || false #太字
     @italic = options[:italic] || false #イタリック
 
-
     #font_configのデフォルト値を更新
     @default_font_config.merge!(font_config)
 
@@ -175,11 +174,14 @@ class TextPageControl < Control
       :line_spacing => 12,   #行間の幅
       :charactor_pitch => 3, #文字間の幅
       :line_height => 32,    #行の高さ
-
-      #その他
-      :wait_frame => 2, #文字描画後の待ちフレーム数
-      :line_feed_wait_frame => 0, #改行後の待ちフレーム数
     }
+
+    #文字描画後の待ちフレーム数
+    @wait_frame = options[:wait_frame] || 2 
+    #津美の待ちフレーム数
+    @rubi_wait_frame = options[:rubi_wait_frame] || 20 
+    #改行後の待ちフレーム数
+    @line_feed_wait_frame = options[:line_feed_wait_frame] || 0
 
     #ルビ文字のベース文字からのピッチ幅
     #TODO:style_configに含めるべき？
@@ -287,7 +289,7 @@ class TextPageControl < Control
       #:waitコマンドをスタックする。待ち時間は遅延評価とする
       command_list.push([:_WAIT_, 
                         {:_ARGUMENT_ => [:count, :skip, :key_push],
-                         :count => :unset_wait_frame}, 
+                         :count => @wait_frame}, 
                          inner_options])
     end
 
@@ -330,7 +332,7 @@ class TextPageControl < Control
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
     interrupt_command([:_WAIT_, 
                           {:_WAIT_ => [:count, :skip, :key_push],
-                           :count => :unset_wait_frame}, inner_options])
+                           :count => @wait_frame}, inner_options])
 =end
   end
 
@@ -368,7 +370,7 @@ class TextPageControl < Control
 
     rubi_command_list.push([:_WAIT_, 
                       {:_ARGUMENT_ => [:count, :skip, :key_push],
-                       :count => 200}, 
+                       :count => @rubi_wait_frame}, 
                        inner_options])
     end
 
@@ -414,7 +416,7 @@ class TextPageControl < Control
     #改行時のwaitを設定する
     interrupt_command([:_WAIT_, 
                       {:_ARGUMENT_ => [:count, :skip, :key_push],
-                       :count => @style_config[:line_feed_wait_frame]}, 
+                       :count => @line_feed_wait_frame}, 
                        inner_options])
 
     #次のアクティブ行コントロールを追加  
@@ -485,17 +487,6 @@ class TextPageControl < Control
   def command_map_image_font(options, inner_options)
     #レンダリング済みフォントデータファイルを任意フォント名で登録
     Image_font.regist(options[:font_name].to_s, options[:file_path].to_s)
-  end
-
-  #############################################################################
-  #描画タイミング制御
-  #############################################################################
-
-  #描画速度指定
-  #TODO：このコマンドの存在自体に問題がある
-  def command_delay(options, inner_options)
-    #デフォルト速度、現在速度を更新
-    @style_config[:wait_frame] = @default_style_config[:wait_frame] = options[:_ARGUMENT_]
   end
 
   #############################################################################

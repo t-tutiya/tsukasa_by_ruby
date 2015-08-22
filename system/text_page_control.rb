@@ -143,7 +143,7 @@ class TextPageControl < Control
       :shadow_y => 1,              #影:オフセットＹ座標
     }
 
-    @edge = options[:edge] || true,               #縁文字
+    @edge = options[:edge] || true               #縁文字
     @shadow = options[:shadow] || false            #影
 
     #影：縁まで影を落とすか
@@ -158,8 +158,6 @@ class TextPageControl < Control
     #フォントオブジェクト用の情報
     @size = options[:size] || 24                 #フォントサイズ
     @fontname = options[:fontname] || "ＭＳ 明朝"        #フォント名
-    @rubi_size = options[:rubi_size]|| 12            #ルビ文字のフォントサイズ
-
     @bold = options[:bold] || false #太字
     @italic = options[:italic] || false #イタリック
 
@@ -178,14 +176,19 @@ class TextPageControl < Control
 
     #文字描画後の待ちフレーム数
     @wait_frame = options[:wait_frame] || 2 
-    #津美の待ちフレーム数
-    @rubi_wait_frame = options[:rubi_wait_frame] || 20 
     #改行後の待ちフレーム数
     @line_feed_wait_frame = options[:line_feed_wait_frame] || 0
 
+    ###ルビ関連
+
+    @rubi_size = options[:rubi_size]|| 12            #ルビ文字のフォントサイズ
+    #ルビの表示開始オフセット値
+    @rubi_offset_x = options[:rubi_offset_x] || 0
+    @rubi_offset_y = options[:rubi_offset_y] || -@rubi_size
     #ルビ文字のベース文字からのピッチ幅
-    #TODO:style_configに含めるべき？
     @rubi_pitch = options[:rubi_pitch] || 12
+    #ルビの待ちフレーム数
+    @rubi_wait_frame = options[:rubi_wait_frame] || 20 
 
     #style_configのデフォルト値を更新
     @default_style_config.merge!(style_config)
@@ -377,8 +380,8 @@ class TextPageControl < Control
     rubi_layout =[:_CREATE_, 
                   { :_ARGUMENT_ => :LayoutControl, 
                     :command_list => rubi_command_list,
-                    :y_pos => 32,
-                    :x_pos => 32,
+                    :x_pos => @rubi_offset_x,
+                    :y_pos => @rubi_offset_y,
                     :width=> 128,
                     :height=> @rubi_size}, inner_options]
 

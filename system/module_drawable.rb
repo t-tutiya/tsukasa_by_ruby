@@ -59,6 +59,9 @@ module Drawable
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
     @y_pos = options[:y_pos] || 0 #描画Ｙ座標
 
+    @offset_x = 0
+    @offset_y = 0
+
     #可視フラグ（省略時はtrue）
     @visible = options[:visible] == false ? false : true
 
@@ -94,18 +97,18 @@ module Drawable
       #下位エンティティを自エンティティに描画
       super(0, 0, @entity, {:width => @width, :height => @height})
 
-      x_pos = offset_x + @x_pos
-      y_pos = offset_y + @y_pos
+      x_pos = offset_x + @x_pos + @offset_x
+      y_pos = offset_y + @y_pos + @offset_y
 
       #自エンティティを上位ターゲットに描画
       target.draw_ex(x_pos, y_pos, @entity, @draw_option)
     else
       if @align_y == :bottom
-        y_pos = offset_y + @y_pos + parent_size[:height] - @height
-        x_pos = offset_x + @x_pos
+        x_pos = offset_x + @x_pos + @offset_x
+        y_pos = offset_y + @y_pos + @offset_y + parent_size[:height] - @height
       else
-        y_pos = offset_y + @y_pos
-        x_pos = offset_x + @x_pos
+        x_pos = offset_x + @x_pos + @offset_x
+        y_pos = offset_y + @y_pos + @offset_y
       end
 
       #エンティティを持っているなら自エンティティを上位ターゲットに描画

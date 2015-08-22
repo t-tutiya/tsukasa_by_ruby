@@ -39,7 +39,9 @@ class LayoutControl < Control
     if options[:render_target]
       options[:child_controls_draw_to_entity] = true
       #保持オブジェクトの初期化
-      @entity = RenderTarget.new(options[:width], options[:height], [0,0,0,0])
+      @entity = RenderTarget.new( options[:width], 
+                                  options[:height], 
+                                  options[:color] || [0,0,0])
       @width  = @entity.width
       @height = @entity.height
     else

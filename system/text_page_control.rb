@@ -49,11 +49,6 @@ class TextPageControl < Control
   #attr_accessor  :font_config #フォント設定
   def font_config=(hash)
     @font_config.merge!(hash)
-#    reset_font()
-  end
-  #attr_accessor  :default_font_config #デフォルトフォント設定 #現在機能していない
-  def default_font_config=(hash)
-    @default_font_config.merge!(hash)
   end
     #基礎情報
     # :size 文字サイズ
@@ -108,29 +103,19 @@ class TextPageControl < Control
     # :rubi_size ルビサイズ
     # :rubi_pitch ルビ幅
 
-  #attr_accessor  :style_config #書式設定 #現在機能していない
-  def style_config=(hash)
-    @style_config.merge!(hash)
-  end
-  #attr_accessor  :default_style_config #デフォルト書式設定 #現在機能していない
-  def default_style_config=(hash)
-    @default_style_config.merge!(hash)
-  end
-    # :line_spacing  #行間
-    # :charactor_pitch #文字間
-    # :line_height #行の高さ
-    # :wait_frame #一文字置きの待機フレーム
-    # :line_feed_wait_frame #改行時の待機フレーム
+  # :line_spacing  #行間
+  # :charactor_pitch #文字間
+  # :line_height #行の高さ
+  # :wait_frame #一文字置きの待機フレーム
+  # :line_feed_wait_frame #改行時の待機フレーム
 
   def initialize(options, inner_options, root_control)
     @child_controls_draw_to_entity = false
     @char_renderer = options[:char_renderer]
 
-    font_config  = options[:font_config]  || {} #フォントコンフィグ
-    style_config = options[:style_config] || {} #スタイルコンフィグ
 
     #draw_font_exに渡すオプション
-    @default_font_config = {
+    @font_config = {
       :color => [255,255,255],     #色
       :aa => true,                 #アンチエイリアスのオンオフ
 
@@ -142,6 +127,9 @@ class TextPageControl < Control
       :shadow_x => 1,              #影:オフセットＸ座標
       :shadow_y => 1,              #影:オフセットＹ座標
     }
+
+    #オプションと結合
+    @font_config.merge!(options[:font_config]  || {})
 
     @edge = options[:edge] || true               #縁文字
     @shadow = options[:shadow] || false            #影
@@ -161,23 +149,14 @@ class TextPageControl < Control
     @bold = options[:bold] || false #太字
     @italic = options[:italic] || false #イタリック
 
-    #font_configのデフォルト値を更新
-    @default_font_config.merge!(font_config)
-
-    #fong_configの初期化
-    command_reset_font_config(nil, nil)
-
-    #スタイルの初期設定
-    @default_style_config = {
-      :line_spacing => 12,   #行間の幅
-      :charactor_pitch => 3, #文字間の幅
-      :line_height => 32,    #行の高さ
-    }
-
     #文字描画後の待ちフレーム数
     @wait_frame = options[:wait_frame] || 2 
     #改行後の待ちフレーム数
     @line_feed_wait_frame = options[:line_feed_wait_frame] || 0
+
+    @line_spacing = options[:line_spacing] || 12   #行間の幅
+    @charactor_pitch = options[:charactor_pitch ] || 3 #文字間の幅
+    @line_height = options[:line_height] || 32    #行の高さ
 
     ###ルビ関連
 
@@ -189,12 +168,6 @@ class TextPageControl < Control
     @rubi_pitch = options[:rubi_pitch] || 12
     #ルビの待ちフレーム数
     @rubi_wait_frame = options[:rubi_wait_frame] || 20 
-
-    #style_configのデフォルト値を更新
-    @default_style_config.merge!(style_config)
-
-    #style_configの初期化
-    command_reset_style_config(nil, nil)
 
     #次に描画する文字のＸ座標とインデントＸ座標オフセットをリセット
     @indent = options[:indent] || 0 
@@ -238,8 +211,8 @@ class TextPageControl < Control
     #文字幅スペーサーを生成する
     target.push_command([:_CREATE_, 
                 {:_ARGUMENT_ => :LayoutControl, 
-                :width => @style_config[:charactor_pitch],
-                :height => @style_config[:line_height],
+                :width => @charactor_pitch,
+                :height => @line_height,
                 :align_y => :bottom,
                 :float_mode => :right}, 
                {:block => @char_renderer}])
@@ -256,7 +229,7 @@ class TextPageControl < Control
     interrupt_command([:_CREATE_, {
                     :_ARGUMENT_ => :CharControl, 
                    :x_pos => @next_char_x + @margin_x,
-                   :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
+                   :y_pos => @next_char_y + @margin_y + @line_height - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
                    :char => "",
                    :font => @font,
                    :font_config => @font_config,
@@ -269,7 +242,7 @@ class TextPageControl < Control
 
     #描画座標を１文字＋文字ピッチ分進める
     @next_char_x += @font.get_width(options[:char].to_s) + 
-                    @style_config[:charactor_pitch]
+                    @charactor_pitch
 =end
   end
 
@@ -323,7 +296,7 @@ class TextPageControl < Control
     #TODO：こっち未修正
     @control_list.push(CharControl.new(
                     {:x_pos => @next_char_x + @margin_x,
-                     :y_pos => @next_char_y + @margin_y + @style_config[:line_height] - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
+                     :y_pos => @next_char_y + @margin_y + @line_height - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
                      :char => "",
                      :font => @font,
                      :font_config => @font_config,
@@ -332,7 +305,7 @@ class TextPageControl < Control
                     image
                   ))
     #描画座標を画像横幅＋文字ピッチ分進める
-    @next_char_x += image.width + @style_config[:charactor_pitch]
+    @next_char_x += image.width + @charactor_pitch
 
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
     interrupt_command([:_WAIT_, 
@@ -432,12 +405,12 @@ class TextPageControl < Control
     interrupt_command([:_CREATE_, 
                      {:_ARGUMENT_ => :LayoutControl, 
                       :width => @width,
-                      :height => @style_config[:line_height],
+                      :height => @line_height,
                       #インデント用無形コントロール
                       :command_list => @indent > 0 ? [[:_CREATE_, 
                                        {:_ARGUMENT_ => :LayoutControl, 
                                         :width => @indent,
-                                        :height => @style_config[:line_height],
+                                        :height => @line_height,
                                         :float_mode => :right}, 
                                         inner_options]] : nil, 
                       :float_mode => :bottom}, 
@@ -447,7 +420,7 @@ class TextPageControl < Control
     interrupt_command([:_CREATE_, 
                      {:_ARGUMENT_ => :LayoutControl, 
                       :width => @width,
-                      :height => @style_config[:line_spacing],
+                      :height => @line_spacing,
                       :float_mode => :bottom}, 
                       inner_options])
   end
@@ -468,27 +441,6 @@ class TextPageControl < Control
   end
 
   #############################################################################
-  #フォント操作関連コマンド
-  #############################################################################
-
-  #reset_font_configタグ
-  #文字属性をデフォルトに戻す
-  def command_reset_font_config(options, inner_options)
-    #fontの設定をデフォルト設定で上書きする
-    @font_config = @default_font_config.clone
-
-    #fontオブジェクトを再生成する
-    #reset_font()
-  end
-
-  #reset_styleタグ
-  #スタイルをデフォルトに戻す
-  def command_reset_style_config(options, inner_options)
-    #styleの設定をデフォルト設定で上書きする
-    @style_config = @default_style_config.clone
-  end
-
-  #############################################################################
   #レンダリング済みフォントデータファイル登録コマンド
   #############################################################################
 
@@ -497,33 +449,4 @@ class TextPageControl < Control
     #レンダリング済みフォントデータファイルを任意フォント名で登録
     Image_font.regist(options[:font_name].to_s, options[:file_path].to_s)
   end
-
-  #############################################################################
-  #内部メソッド
-  #############################################################################
-=begin
-  #fontオブジェクトを再生成する
-  def reset_font() #削除予定
-    pp "reset"
-    #フォントリソースを解放
-    @font.dispose if @font
-    #イメージフォント使用中の場合
-    @font = @font_config[:use_image_font] ?
-            #イメージフォントオブジェクト生成
-            Image_font.new(@font_config[:image_face]) :
-            #フォントオブジェクト生成
-            Font.new(@font_config[:size], 
-                     @font_config[:fontname],
-                    {:weight => @font_config[:bold],
-                     :italic => @font_config[:italic]})
-
-    #ルビフォントリソースを解放
-    @rubi_font.dispose if @rubi_font
-    #ルビフォントオブジェクト生成
-    @rubi_font = Font.new( @font_config[:rubi_size], 
-                           @font_config[:fontname],
-                          {:weight => @font_config[:bold],
-                           :italic => @font_config[:italic]})
-  end
-=end
 end

@@ -112,26 +112,26 @@ class TextPageControl < Control
     @child_controls_draw_to_entity = false
     @char_renderer = options[:char_renderer]
 
-
     #draw_font_exに渡すオプション
     @font_config = {
       :color => [255,255,255],     #色
       :aa => true,                 #アンチエイリアスのオンオフ
 
-      :edge_color => [48, 48, 48], #縁文字：縁の色
+      :edge => true,               #縁文字
+      :shadow => true,            #影
+
+      :edge_color => [0, 0, 0], #縁文字：縁の色
       :edge_width => 2,            #縁文字：縁の幅
       :edge_level => 16,           #縁文字：縁の濃さ
 
-      :shadow_color => [0,0,0],    #影：影の色
-      :shadow_x => 1,              #影:オフセットＸ座標
-      :shadow_y => 1,              #影:オフセットＹ座標
+      :shadow_color => [0, 0, 0],    #影：影の色
+      :shadow_x => 4,              #影:オフセットＸ座標
+      :shadow_y => 4,              #影:オフセットＹ座標
     }
 
     #オプションと結合
     @font_config.merge!(options[:font_config]  || {})
 
-    @edge = options[:edge] || true               #縁文字
-    @shadow = options[:shadow] || false            #影
 
     #影：縁まで影を落とすか
     #TODO：現行コードでは未使用
@@ -203,13 +203,13 @@ class TextPageControl < Control
     end
 
     #影文字の場合、オフセット分を縦幅、横幅に追加する
-    if @shadow
+    if @font_config[:shadow]
       real_width = width + @font_config[:shadow_x]
       real_height = height + @font_config[:shadow_y]
     end
 
     #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加し、縁サイズ分をオフセットに加える。
-    if @edge
+    if @font_config[:edge]
       real_width = width + @font_config[:edge_width] * 2
       real_height = height + @font_config[:edge_width] * 2
       offset_x = -1 * @font_config[:edge_width]
@@ -218,13 +218,13 @@ class TextPageControl < Control
 
     #文字用のimageを作成
     entity = Image.new(real_width, real_height, [0, 0, 0, 0]) 
-    
+
     #フォントを描画
-    entity.draw_font_ex( -1 * offset_x, 
-                          -1 * offset_y, 
-                          options[:_ARGUMENT_], 
-                          font, 
-                          @font_config)
+    entity.draw_font_ex(-1 * offset_x, 
+                        -1 * offset_y, 
+                        options[:_ARGUMENT_], 
+                        font, 
+                        @font_config)
 
     target = @control_list.last
 
@@ -258,34 +258,6 @@ class TextPageControl < Control
                {:block => @char_renderer}])
   end
 
-  #image_charコマンド
-  #指定文字（群）のレンダリング済みフォントを描画チェインに連結する
-  def command_image_char(options, inner_options)
-    raise
-#以下旧仕様なので動作しない
-#TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
-=begin
-    #文字コントロールを生成する
-    interrupt_command([:_CREATE_, {
-                    :_ARGUMENT_ => :CharControl, 
-                   :x_pos => @next_char_x + @margin_x,
-                   :y_pos => @next_char_y + @margin_y + @line_height - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
-                   :char => "",
-                   :font => @font,
-                   :font_config => @font_config,
-                   :skip_mode =>  @skip_mode,
-                   :graph => true,
-                   },
-                   {:block => @char_renderer},
-#                   @font.glyph(options[:char].to_s])
-                 )
-
-    #描画座標を１文字＋文字ピッチ分進める
-    @next_char_x += @font.get_width(options[:char].to_s) + 
-                    @charactor_pitch
-=end
-  end
-
   #textコマンド
   #指定文字列を描画チェインに連結する
   def command__TEXT_(options, inner_options)
@@ -313,45 +285,6 @@ class TextPageControl < Control
 
     #展開したコマンドをスタックする
     eval_commands(command_list)
-  end
-
-  #graphコマンド
-  #指定画像を描画チェインに連結する
-  def command_graph(options, inner_options)
-    #以下旧仕様で動かない
-    raise
-=begin
-    #:is_charが省略されている場合初期値を設定する
-    options[:is_char] = true if !options.key?(:is_char)
-
-    #指定された画像を読み込む
-    image = Image.load(options[:file_path])
-
-    #:color_keyオプションが設定されている場合
-    if options.key?(:color_key)
-      #抜き色を設定する
-      image.set_color_key(options[:color_key])
-    end
-    #文字レンダラオブジェクトを生成し、描画チェインに連結する
-    #TODO：こっち未修正
-    @control_list.push(CharControl.new(
-                    {:x_pos => @next_char_x + @margin_x,
-                     :y_pos => @next_char_y + @margin_y + @line_height - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
-                     :char => "",
-                     :font => @font,
-                     :font_config => @font_config,
-                     :skip_mode =>  @skip_mode,
-                     :graph => options[:is_char]},
-                    image
-                  ))
-    #描画座標を画像横幅＋文字ピッチ分進める
-    @next_char_x += image.width + @charactor_pitch
-
-    #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
-    interrupt_command([:_WAIT_, 
-                          {:_WAIT_ => [:count, :skip, :key_push],
-                           :count => @wait_frame}, inner_options])
-=end
   end
 
   def command__RUBI_(options, inner_options)
@@ -435,8 +368,77 @@ class TextPageControl < Control
   #レンダリング済みフォントデータファイル登録コマンド
   #############################################################################
 
+  #image_charコマンド
+  #指定文字（群）のレンダリング済みフォントを描画チェインに連結する
+  def command_image_char(options, inner_options) #改修前
+    raise
+#以下旧仕様なので動作しない
+#TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
+=begin
+    #文字コントロールを生成する
+    interrupt_command([:_CREATE_, {
+                    :_ARGUMENT_ => :CharControl, 
+                   :x_pos => @next_char_x + @margin_x,
+                   :y_pos => @next_char_y + @margin_y + @line_height - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
+                   :char => "",
+                   :font => @font,
+                   :font_config => @font_config,
+                   :skip_mode =>  @skip_mode,
+                   :graph => true,
+                   },
+                   {:block => @char_renderer},
+#                   @font.glyph(options[:char].to_s])
+                 )
+
+    #描画座標を１文字＋文字ピッチ分進める
+    @next_char_x += @font.get_width(options[:char].to_s) + 
+                    @charactor_pitch
+=end
+  end
+
+  #graphコマンド
+  #指定画像を描画チェインに連結する
+  def command_graph(options, inner_options)#改修前
+    #以下旧仕様で動かない
+    raise
+=begin
+    #:is_charが省略されている場合初期値を設定する
+    options[:is_char] = true if !options.key?(:is_char)
+
+    #指定された画像を読み込む
+    image = Image.load(options[:file_path])
+
+    #:color_keyオプションが設定されている場合
+    if options.key?(:color_key)
+      #抜き色を設定する
+      image.set_color_key(options[:color_key])
+    end
+    #文字レンダラオブジェクトを生成し、描画チェインに連結する
+    #TODO：こっち未修正
+    @control_list.push(CharControl.new(
+                    {:x_pos => @next_char_x + @margin_x,
+                     :y_pos => @next_char_y + @margin_y + @line_height - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
+                     :char => "",
+                     :font => @font,
+                     :font_config => @font_config,
+                     :skip_mode =>  @skip_mode,
+                     :graph => options[:is_char]},
+                    image
+                  ))
+    #描画座標を画像横幅＋文字ピッチ分進める
+    @next_char_x += image.width + @charactor_pitch
+
+    #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
+    interrupt_command([:_WAIT_, 
+                          {:_WAIT_ => [:count, :skip, :key_push],
+                           :count => @wait_frame}, inner_options])
+=end
+  end
+
+
   #レンダリング済みフォントデータファイルを登録する
-  def command_map_image_font(options, inner_options)
+  def command_map_image_font(options, inner_options)#改修前
+    raise
     #レンダリング済みフォントデータファイルを任意フォント名で登録
     Image_font.regist(options[:font_name].to_s, options[:file_path].to_s)
   end

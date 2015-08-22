@@ -178,8 +178,8 @@ _CREATE_ :LayoutControl,
       y_pos: 0,
       width: 1024,
       id: :default_char_container,
-      font_config: { :size => 32, 
-                     :fontname => "ＭＳＰ ゴシック"},
+      size: 32, 
+      fontname: "ＭＳＰ ゴシック",
       style_config: { :wait_frame => 2,},
       char_renderer: Proc.new{
         transition_fade frame: 15,
@@ -202,8 +202,8 @@ _CREATE_ :LayoutControl,
           last:128
         _WAIT_ [:command, :skip], command: :transition_fade
       } do
-      set font_config: {size: 32}
-      _FLUSH_
+      set size: 32
+      _FLUSH_ #これが必ず必要
     end
   end
 

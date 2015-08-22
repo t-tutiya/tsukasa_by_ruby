@@ -59,7 +59,10 @@ class CharControl < Control
     width, height, @offset_x, @offset_y = normalize_image(
                                           @width, 
                                           @height, 
-                                          options[:font_config])
+                                          options[:font_config],
+                                          options[:italic],
+                                          options[:shadow],
+                                          options[:edge])
     #文字用のimageを作成
     @entity = Image.new(width, height, [0, 0, 0, 0]) 
     
@@ -85,20 +88,20 @@ class CharControl < Control
     super
   end
 
-  def normalize_image(width, height, font_config)
+  def normalize_image(width, height, font_config, italic, shadow, edge)
     #※ボールドの対応はしない
 
     #イタリックの場合、文字サイズの半分を横幅に追加する。
-    if font_config[:italic]
+    if italic
       width += font_config[:size]/2
     end
     #影文字の場合、オフセット分を縦幅、横幅に追加する
-    if font_config[:shadow]
+    if shadow
       width += font_config[:shadow_x]
       height += font_config[:shadow_y]
     end
     #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加し、縁サイズ分をオフセットに加える。
-    if font_config[:edge]
+    if edge
       width += font_config[:edge_width] * 2
       height += font_config[:edge_width] * 2
       offset_x = font_config[:edge_width]

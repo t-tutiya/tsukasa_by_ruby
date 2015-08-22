@@ -129,34 +129,40 @@ class TextPageControl < Control
     font_config  = options[:font_config]  || {} #フォントコンフィグ
     style_config = options[:style_config] || {} #スタイルコンフィグ
 
-    #フォントの初期設定
+    #draw_font_exに渡すオプション
     @default_font_config = {
-      :size => 24,                 #フォントサイズ
-      :fontname => "ＭＳ 明朝",        #フォント名
       :color => [255,255,255],     #色
+      :aa => true,                 #アンチエイリアスのオンオフ
 
-      :rubi_size => 12,            #ルビ文字のフォントサイズ
-      :rubi_pitch => 2,            #ルビ文字のベース文字からのピッチ幅
-
-      :edge => true,               #縁文字
       :edge_color => [48, 48, 48], #縁文字：縁の色
       :edge_width => 2,            #縁文字：縁の幅
       :edge_level => 16,           #縁文字：縁の濃さ
 
-      :bold => false,              #太字
-      :italic => false,            #イタリック
-
-      :shadow => false,            #影
-      :shadow_edge => false,       #影：縁まで影を落とすか
       :shadow_color => [0,0,0],    #影：影の色
       :shadow_x => 1,              #影:オフセットＸ座標
       :shadow_y => 1,              #影:オフセットＹ座標
-
-      :aa => true,                 #アンチエイリアスのオンオフ
-
-      :use_image_font => false,    #レンダリング済みフォント使用中かどうか
-      :image_face => nil,          #レンダリング済みフォントのフォント名
     }
+
+    @edge = options[:edge] || true,               #縁文字
+    @shadow = options[:shadow] || false            #影
+
+    #影：縁まで影を落とすか
+    #TODO：現行コードでは未使用
+    @shadow_edge = options[:shadow_edge] || false      
+
+    #レンダリング済みフォント使用中かどうか
+    @use_image_font = options[:use_image_font] || false
+    #レンダリング済みフォントのフォント名
+    @image_face = options[:image_face] || nil
+
+    #フォントオブジェクト用の情報
+    @size = options[:size] || 24                 #フォントサイズ
+    @fontname = options[:fontname] || "ＭＳ 明朝"        #フォント名
+    @rubi_size = options[:rubi_size]|| 12            #ルビ文字のフォントサイズ
+
+    @bold = options[:bold] || false #太字
+    @italic = options[:italic] || false #イタリック
+
 
     #font_configのデフォルト値を更新
     @default_font_config.merge!(font_config)
@@ -174,6 +180,10 @@ class TextPageControl < Control
       :wait_frame => 2, #文字描画後の待ちフレーム数
       :line_feed_wait_frame => 0, #改行後の待ちフレーム数
     }
+
+    #ルビ文字のベース文字からのピッチ幅
+    #TODO:style_configに含めるべき？
+    @rubi_pitch = options[:rubi_pitch] || 12
 
     #style_configのデフォルト値を更新
     @default_style_config.merge!(style_config)
@@ -209,10 +219,12 @@ class TextPageControl < Control
                 :font_config => @font_config,
                 :skip_mode =>  @skip_mode,
 
-                :size => @font_config[:size],
-                :fontname => @font_config[:fontname],
-                :weight => @font_config[:bold],
-                :italic => @font_config[:italic],
+                :size => @size,
+                :fontname => @fontname,
+                :weight => @bold,
+                :italic => @italic,
+                :edge => @edge,
+                :shadow => @shadow,
 
                 :float_mode => :right}, 
                {:block => @char_renderer}])
@@ -335,10 +347,12 @@ class TextPageControl < Control
 
                   :font_config => @font_config,
 
-                  :size => @font_config[:rubi_size],
+                  :size => @rubi_size,
                   :fontname => @font_config[:fontname],
-                  :weight => @font_config[:bold],
-                  :italic => @font_config[:italic],
+                  :weight => @bold,
+                  :italic => @italic,
+                :edge => @edge,
+                :shadow => @shadow,
 
                   :skip_mode =>  @skip_mode,
                   :float_mode => :right}, 
@@ -347,8 +361,8 @@ class TextPageControl < Control
       #文字幅スペーサーを生成する
       rubi_command_list.push([:_CREATE_, 
                   {:_ARGUMENT_ => :LayoutControl, 
-                  :width => @style_config[:charactor_pitch],
-                  :height => @style_config[:line_height],
+                  :width => @rubi_pitch,
+                  :height => @rubi_size,
                   :float_mode => :right}, 
                  {:block => @char_renderer}])
 
@@ -364,7 +378,7 @@ class TextPageControl < Control
                     :y_pos => 32,
                     :x_pos => 32,
                     :width=> 128,
-                    :height=> 32}, inner_options]
+                    :height=> @rubi_size}, inner_options]
 
     #ベース文字
     @control_list.last.push_command([:_CREATE_, 
@@ -374,10 +388,12 @@ class TextPageControl < Control
 
                 :font_config => @font_config,
 
-                :size => @font_config[:size],
+                :size => @size,
                 :fontname => @font_config[:fontname],
-                :weight => @font_config[:bold],
-                :italic => @font_config[:italic],
+                :weight => @bold,
+                :italic => @italic,
+                :edge => @edge,
+                :shadow => @shadow,
 
                 :skip_mode =>  @skip_mode,
                 :float_mode => :right}, 

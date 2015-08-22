@@ -49,7 +49,8 @@ text "★★★★★"
 
 _SEND_ :default_char_container do
   _RUBI_ "●", rubi: "test"
-  #_SET_  font_config: {size: 64}
+  _SET_  size: 64
+  _SET_  style_config: {line_height: 64}
 end
 
 text "●●●●●"

@@ -230,6 +230,7 @@ class TextPageControl < Control
                 :italic => @italic,
                 :edge => @edge,
                 :shadow => @shadow,
+                :align_y => :bottom,
 
                 :float_mode => :right}, 
                {:block => @char_renderer}])
@@ -239,6 +240,7 @@ class TextPageControl < Control
                 {:_ARGUMENT_ => :LayoutControl, 
                 :width => @style_config[:charactor_pitch],
                 :height => @style_config[:line_height],
+                :align_y => :bottom,
                 :float_mode => :right}, 
                {:block => @char_renderer}])
   end
@@ -356,8 +358,9 @@ class TextPageControl < Control
                   :fontname => @font_config[:fontname],
                   :weight => @bold,
                   :italic => @italic,
-                :edge => @edge,
-                :shadow => @shadow,
+                  :edge => @edge,
+                  :shadow => @shadow,
+                  :align_y => :bottom,
 
                   :skip_mode =>  @skip_mode,
                   :float_mode => :right}, 
@@ -368,6 +371,7 @@ class TextPageControl < Control
                   {:_ARGUMENT_ => :LayoutControl, 
                   :width => @rubi_pitch,
                   :height => @rubi_size,
+                  :align_y => :bottom,
                   :float_mode => :right}, 
                  {:block => @char_renderer}])
 
@@ -377,6 +381,7 @@ class TextPageControl < Control
                        inner_options])
     end
 
+    #ルビ文字群を格納するlayout
     rubi_layout =[:_CREATE_, 
                   { :_ARGUMENT_ => :LayoutControl, 
                     :command_list => rubi_command_list,
@@ -399,6 +404,7 @@ class TextPageControl < Control
                 :italic => @italic,
                 :edge => @edge,
                 :shadow => @shadow,
+                :align_y => :bottom,
 
                 :skip_mode =>  @skip_mode,
                 :float_mode => :right}, 

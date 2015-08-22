@@ -76,7 +76,7 @@ module Drawable
 
     #回り込み指定（省略時は:none）
     @float_mode = options[:float_mode] || :none
-    @align_y = :none
+    @align_y = options[:align_y] || :none
 
     #TODO：いらない気がする
     @width  = options[:width] || 0  #横幅

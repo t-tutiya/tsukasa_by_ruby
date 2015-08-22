@@ -37,20 +37,24 @@ _SEND_ :default_char_container do
   #_SET_  font_config: {size: 64}
 end
 _SEND_ :default_char_container, interrupt: true do
-  _SET_  style_config: {line_height: 64}
+  _SET_  line_height: 64
   _SET_ indent: 128
   text "◆◆◆◆"
 end
 =end
 
-
-text "★★★★★"
+line_feed
+text "★★★★★テスト中"
 
 
 _SEND_ :default_char_container do
-  _RUBI_ "●", rubi: "test"
+  _RUBI_ "●", rubi: "■■■■■"
+end
+
+_SEND_ :default_char_container do
+  _RUBI_ "◆", rubi: "test"
   _SET_  size: 64
-  _SET_  style_config: {line_height: 64}
+  _SET_  line_height: 64
 end
 
 text "●●●●●"

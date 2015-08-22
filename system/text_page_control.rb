@@ -4,7 +4,6 @@ require 'dxruby'
 
 require_relative './script_compiler.rb'
 require_relative './Image_font_maker'
-require_relative './char_control'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -159,15 +158,14 @@ class TextPageControl < Control
     @line_height = options[:line_height] || 32    #行の高さ
 
     ###ルビ関連
-
-    @rubi_size = options[:rubi_size]|| 12            #ルビ文字のフォントサイズ
+    @rubi_size = options[:rubi_size] || 12            #ルビ文字のフォントサイズ
     #ルビの表示開始オフセット値
     @rubi_offset_x = options[:rubi_offset_x] || 0
     @rubi_offset_y = options[:rubi_offset_y] || -@rubi_size
     #ルビ文字のベース文字からのピッチ幅
     @rubi_pitch = options[:rubi_pitch] || 12
     #ルビの待ちフレーム数
-    @rubi_wait_frame = options[:rubi_wait_frame] || 20 
+    @rubi_wait_frame = options[:rubi_wait_frame] || 2 
 
     #次に描画する文字のＸ座標とインデントＸ座標オフセットをリセット
     @indent = options[:indent] || 0 
@@ -188,22 +186,64 @@ class TextPageControl < Control
   #charコマンド
   #指定文字（群）を描画チェインに連結する
   def command__CHAR_(options, inner_options)
+
+    #フォントオブジェクト構築
+    font = Font.new(@size, 
+                    @fontname,
+                    {:weight => @weight,
+                     :italic => @italic})
+
+    #現状での縦幅、横幅を取得
+    real_width = width = font.get_width(options[:_ARGUMENT_])
+    real_width = height = font.size
+
+    #イタリックの場合、文字サイズの半分を横幅に追加する。
+    if @italic
+      real_width = width + @font_config[:size]/2
+    end
+
+    #影文字の場合、オフセット分を縦幅、横幅に追加する
+    if @shadow
+      real_width = width + @font_config[:shadow_x]
+      real_height = height + @font_config[:shadow_y]
+    end
+
+    #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加し、縁サイズ分をオフセットに加える。
+    if @edge
+      real_width = width + @font_config[:edge_width] * 2
+      real_height = height + @font_config[:edge_width] * 2
+      offset_x = -1 * @font_config[:edge_width]
+      offset_y = -1 * @font_config[:edge_width]
+    end
+
+    #文字用のimageを作成
+    entity = Image.new(real_width, real_height, [0, 0, 0, 0]) 
+    
+    #フォントを描画
+    entity.draw_font_ex( -1 * offset_x, 
+                          -1 * offset_y, 
+                          options[:_ARGUMENT_], 
+                          font, 
+                          @font_config)
+
     target = @control_list.last
+
     #文字コントロールを生成する
     target.push_command([:_CREATE_, 
-               {:_ARGUMENT_ => :CharControl, 
-                :char => options[:_ARGUMENT_],
+               {:_ARGUMENT_ => :ImageControl, 
+                :entity => entity,
 
-                :font_config => @font_config,
                 :skip_mode =>  @skip_mode,
 
-                :size => @size,
-                :fontname => @fontname,
-                :weight => @bold,
-                :italic => @italic,
-                :edge => @edge,
-                :shadow => @shadow,
                 :align_y => :bottom,
+                
+                :width => width,
+                :height => height,
+                
+                :command_list=> options[:command_list],
+
+                :offset_x => offset_x,
+                :offset_y => offset_y,
 
                 :float_mode => :right}, 
                {:block => @char_renderer}])
@@ -315,79 +355,30 @@ class TextPageControl < Control
   end
 
   def command__RUBI_(options, inner_options)
-
-    #ルビを構成するコマンド列を作成
-
-    rubi_command_list = Array.new
-
-    options[:rubi].each_char do |rubi|
-      rubi_command_list.push([:_CREATE_, 
-                 {:_ARGUMENT_ => :CharControl, 
-                  :char => rubi,
-
-                  :font_config => @font_config,
-
-                  :size => @rubi_size,
-                  :fontname => @font_config[:fontname],
-                  :weight => @bold,
-                  :italic => @italic,
-                  :edge => @edge,
-                  :shadow => @shadow,
-                  :align_y => :bottom,
-
-                  :skip_mode =>  @skip_mode,
-                  :float_mode => :right}, 
-                 {:block => @char_renderer}])
-
-      #文字幅スペーサーを生成する
-      rubi_command_list.push([:_CREATE_, 
-                  {:_ARGUMENT_ => :LayoutControl, 
-                  :width => @rubi_pitch,
-                  :height => @rubi_size,
-                  :align_y => :bottom,
-                  :float_mode => :right}, 
-                 {:block => @char_renderer}])
-
-    rubi_command_list.push([:_WAIT_, 
-                      {:_ARGUMENT_ => [:count, :skip, :key_push],
-                       :count => @rubi_wait_frame}, 
-                       inner_options])
-    end
-
-    #ルビ文字群を格納するlayout
+    #ルビを出力するTextPageControlを生成する
     rubi_layout =[:_CREATE_, 
-                  { :_ARGUMENT_ => :LayoutControl, 
-                    :command_list => rubi_command_list,
+                  { :_ARGUMENT_ => :TextPageControl, 
+                    :command_list => [
+                      [:_LINE_FEED_, {},inner_options],
+                      [:_TEXT_, {:_ARGUMENT_=> options[:rubi]},inner_options]],
                     :x_pos => @rubi_offset_x,
                     :y_pos => @rubi_offset_y,
                     :width=> 128,
-                    :height=> @rubi_size}, inner_options]
+                    :height=> @rubi_size,
+                    :size => @rubi_size,
+                    :line_height => @rubi_size,
+                    :fontname => @fontname,
+                    :line_spacing => 0,
+                    :char_renderer => @char_renderer,
+                    :wait_frame => @rubi_wait_frame},
+                  inner_options]
 
-    #ベース文字
-    @control_list.last.push_command([:_CREATE_, 
-               {:_ARGUMENT_ => :CharControl, 
+    #TextPageControlをベース文字に登録する。
+    interrupt_command([:_CHAR_, 
+               {:_ARGUMENT_ => options[:_ARGUMENT_], 
                 :command_list => [rubi_layout],
-                :char => options[:_ARGUMENT_],
-
-                :font_config => @font_config,
-
-                :size => @size,
-                :fontname => @font_config[:fontname],
-                :weight => @bold,
-                :italic => @italic,
-                :edge => @edge,
-                :shadow => @shadow,
-                :align_y => :bottom,
-
-                :skip_mode =>  @skip_mode,
                 :float_mode => :right}, 
                {:block => @char_renderer}])
-
-    #:waitコマンドをスタックする。
-    @control_list.last.push_command([:_WAIT_, 
-                      {:_ARGUMENT_ => [:count, :skip, :key_push],
-                       :count => 2}, 
-                       inner_options])
   end
 
   #line_feedコマンド

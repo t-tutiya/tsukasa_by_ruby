@@ -59,8 +59,8 @@ module Drawable
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
     @y_pos = options[:y_pos] || 0 #描画Ｙ座標
 
-    @offset_x = 0
-    @offset_y = 0
+    @offset_x = options[:offset_x] || 0 #描画オフセットＸ座標
+    @offset_y = options[:offset_y] || 0 #描画オフセットＹ座標
 
     #可視フラグ（省略時はtrue）
     @visible = options[:visible] == false ? false : true

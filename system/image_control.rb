@@ -85,19 +85,36 @@ class ImageControl < Control
       @file_path = nil
       @entity = options[:entity]
 
+      if options[:width]
+        @width = options[:width]
+      else
+        @width  = @entity.width
+      end
+
+      if options[:height]
+        @height = options[:height]
+      else
+        @height  = @entity.height
+      end
+
     #ファイルパスから初期化する
     elsif options[:file_path]
       @file_path = options[:file_path]
       @entity = @@image_cache[@file_path]
 
+      #縦横幅の更新
+      @width  = @entity.width
+      @height = @entity.height
+
     #空コントロールとして初期化する
     else
       @file_path = nil
       @entity = Image.new(1,1,[0,0,0])
+
+      #縦横幅の更新
+      @width  = 1
+      @height = 1
     end
 
-    #縦横幅の更新
-    @width  = @entity.width
-    @height = @entity.height
   end
 end

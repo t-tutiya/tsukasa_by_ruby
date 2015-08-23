@@ -32,14 +32,22 @@ require 'dxruby'
 
 module Movable
   def command_move_line(options, inner_options)
+
+    options[:count] = 0 unless options[:count]
+
+    start_x = options[:start][0]
+    start_y = options[:start][1]
+    end_x = options[:end][0]
+    end_y = options[:end][1]
+
     #移動先座標の決定
-    @x_pos = (options[:start_x] + (options[:x] - options[:start_x]).to_f / options[:frame] * options[:count]).to_i
-    @y_pos = (options[:start_y] + (options[:y] - options[:start_y]).to_f / options[:frame] * options[:count]).to_i
+    @x_pos = (start_x + (end_x - start_x).to_f / options[:total_frame] * options[:count]).to_i
+    @y_pos = (start_y + (end_y - start_y).to_f / options[:total_frame] * options[:count]).to_i
     #カウントアップ
     options[:count] += 1
 
     #カウントが指定フレーム以下の場合
-    if options[:count] <= options[:frame]
+    if options[:count] <= options[:total_frame]
       #待機モードを初期化
       @idle_mode = false
       #:move_lineコマンドをスタックし直す
@@ -48,7 +56,6 @@ module Movable
   end
 
   def command_move_spline(options, inner_options)
-
 
     options[:count] = 0 unless options[:count]
 
@@ -75,10 +82,10 @@ module Movable
 
       #重み付け関数
       coefficent = b_spline_coefficent(step - index)
+#      coefficent = line_coefficent(step - index)
 
       x += path[path_index][0] * coefficent
       y += path[path_index][1] * coefficent
-
     end
 
     #移動先座標の決定
@@ -114,5 +121,19 @@ module Movable
     end
   end
 
+  #１次スプライン重み付け関数のつもりだけど動かなかった
+  #TODO：解決策求む
+  def line_coefficent(t)
+    t = t.abs
+
+    # -1.0 < t < 1.0
+    if t < 1.0 
+      return 1.0 - t
+
+    # t <= -1.0 or 1.0 <= t
+    else 
+      return 0.0
+    end
+  end
 
 end

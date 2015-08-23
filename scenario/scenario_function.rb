@@ -35,19 +35,19 @@ _CREATE_ :LayoutControl,
   end
   #内部関数の定義
   _DEFINE_ :func do |val|
-    move_line x: 0, y: val[:y],   count:0, frame: 60, start_x: 0,   start_y: 0
+    move_line start: [0,0], end: [0,val[:y]], total_frame: 60
     wait_command :move_line
   end
 end
 
 _SEND_  :button1 do
-  move_line x: 0, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
+  move_line start: [0,0], end: [0,300], total_frame: 60
   wait_command :move_line
-  move_line x: 300, y: 300, count:0, frame: 60, start_x: 0, start_y: 300
+  move_line start: [0,300], end: [300,300], total_frame: 60
   wait_command :move_line
-  move_line x: 300,   y: 0, count:0, frame: 60, start_x: 300, start_y: 300
+  move_line start: [300,300], end: [300,0], total_frame: 60
   wait_command :move_line
-  move_line x: 0,   y: 0,   count:0, frame: 60, start_x: 300,   start_y: 0
+  move_line start: [300,0], end: [0,0], total_frame: 60
   wait_command :move_line
   #渡せるのは名前付きオプションのみ(targetは自動で渡される)
   func y: 150
@@ -67,7 +67,7 @@ end
 func2 do
   _EVAL_ "pp 'test'"
   pp "func2"
-  move_line x: 600, y: 300,   count:0, frame: 60, start_x: 0,   start_y: 0
+  move_line start: [0,0], end: [600,300], total_frame: 60
 end
 
 

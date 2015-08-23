@@ -132,7 +132,6 @@ class TextPageControl < Control
     #オプションと結合
     @font_config.merge!(options[:font_config]  || {})
 
-
     #影：縁まで影を落とすか
     #TODO：現行コードでは未使用
     @shadow_edge = options[:shadow_edge] || false      
@@ -161,7 +160,7 @@ class TextPageControl < Control
     @rubi_size = options[:rubi_size] || 12            #ルビ文字のフォントサイズ
     #ルビの表示開始オフセット値
     @rubi_offset_x = options[:rubi_offset_x] || 0
-    @rubi_offset_y = options[:rubi_offset_y] || -@rubi_size
+    @rubi_offset_y = options[:rubi_offset_y] || -1 * @rubi_size
     #ルビ文字のベース文字からのピッチ幅
     @rubi_pitch = options[:rubi_pitch] || 12
     #ルビの待ちフレーム数

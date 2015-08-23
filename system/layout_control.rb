@@ -41,7 +41,7 @@ class LayoutControl < Control
       #保持オブジェクトの初期化
       @entity = RenderTarget.new( options[:width], 
                                   options[:height], 
-                                  options[:color] || [0,0,0])
+                                  options[:color] || [0,0,0,0])
       @width  = @entity.width
       @height = @entity.height
     else

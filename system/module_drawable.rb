@@ -77,6 +77,8 @@ module Drawable
                       } 
     end
 
+    @draw_option[:alpha] = @draw_option[:alpha] || 255
+
     #回り込み指定（省略時は:none）
     @float_mode = options[:float_mode] || :none
     @align_y = options[:align_y] || :none
@@ -178,17 +180,27 @@ module Drawable
 
     options[:count] = 0 unless options[:count]
 
-    #開始座標が設定されていない場合は現在の座標を開始座標とする
-    options[:start] = [@x_pos, @y_pos] unless options[:start]
+    #初期値が設定されていない場合は現在値を設定する
+    options[:start] = [@x_pos, @y_pos, @draw_option[:alpha]] unless options[:start]
 
     start_x = options[:start][0]
     start_y = options[:start][1]
+    start_alpha = options[:start][2]
+
     end_x = options[:end][0]
     end_y = options[:end][1]
+
+    #透明度が設定されていなければ現在の値で初期化
+    unless options[:end][2]
+      options[:end][2] = @draw_option[:alpha]
+    end
+
+    end_alpha = options[:end][2]
 
     #移動先座標の決定
     @x_pos = (start_x + (end_x - start_x).to_f / options[:total_frame] * options[:count]).to_i
     @y_pos = (start_y + (end_y - start_y).to_f / options[:total_frame] * options[:count]).to_i
+    @draw_option[:alpha] = (start_alpha + (end_alpha - start_alpha).to_f / options[:total_frame] * options[:count]).to_i
 
     #カウントが指定フレーム未満の場合
     if options[:count] < options[:total_frame]
@@ -212,6 +224,7 @@ module Drawable
 
     x = 0.0
     y = 0.0
+    alpha = 0.0
     size = path.size - 1 #添え字のＭＡＸが欲しいので-1する
 
     #全ての座標を巡回し、それぞれの座標についてstep量に応じた重み付けを行い、その総和を現countでの座標とする
@@ -233,11 +246,20 @@ module Drawable
 
       x += path[path_index][0] * coefficent
       y += path[path_index][1] * coefficent
+
+      #透明度が設定されていなければ現在の値で初期化
+      unless path[path_index][2]
+        options[:path][path_index][2] = @draw_option[:alpha]
+      end
+
+      alpha += path[path_index][2] * coefficent
     end
 
     #移動先座標の決定
     @x_pos = x.round
     @y_pos = y.round
+    @draw_option[:alpha] = alpha.round
+
     #カウントアップ
     options[:count] += 1
 

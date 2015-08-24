@@ -4,6 +4,7 @@
 _CREATE_ :LayoutControl, 
         :width => 256,
         :height => 256,
+        :render_target => true,
         :id=>:button1 do
   image :file_path=>"./sozai/button_normal.png", 
         :id=>:normal
@@ -38,11 +39,11 @@ _SEND_ :button1 do
   _WHILE_ [:true] do
     move_line end: [300,0], total_frame: 60
     wait_command :move_line
-    move_line end: [300,300], total_frame: 60
+    move_line end: [300,300,255], total_frame: 60
     wait_command :move_line
-    move_line end: [0,300], total_frame: 60
+    move_line end: [0,300,0], total_frame: 60
     wait_command :move_line
-    move_line end: [0,0], total_frame: 60
+    move_line end: [0,0,255], total_frame: 60
     wait_command :move_line
   end
 end
@@ -53,11 +54,11 @@ image :file_path=>"./sozai/button_normal.png",
 _SEND_ :img1 do
   _WHILE_ [:true] do
     move_spline total_frame: 300, path: [
-  [ 10.0 * 4,  30.0 * 4],
-  [ 77.0 * 4,  49.0 * 4],
-  [ 21.0 * 4, 165.0 * 4],
-  [171.0 * 4,  43.0 * 4],
-  [153.0 * 4, 164.0 * 4],
+  [ 10.0 * 4,  30.0 * 4, 0],
+  [ 77.0 * 4,  49.0 * 4, 255],
+  [ 21.0 * 4, 165.0 * 4, 0],
+  [171.0 * 4,  43.0 * 4,255],
+  [153.0 * 4, 164.0 * 4, 0],
 ]
     wait_command :move_spline
   end

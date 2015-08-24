@@ -34,6 +34,11 @@ require_relative './control_container.rb'
 
 #クリックイベントが発生するコントロールの基底クラス
 module Clickable
+
+  def colorkey=(file_path)
+    @colorkey = Image.load(file_path)
+  end
+
   def initialize(options, inner_options, root_control)
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
     @y_pos = options[:y_pos] || 0 #描画Ｙ座標
@@ -42,6 +47,9 @@ module Clickable
     @height = options[:height] || 1 #縦幅
 
     @collision = options[:collision]
+
+    self.colorkey = options[:colorkey] if options[:colorkey]
+    @colorkey_border = options[:colorkey_border] || 255
 
     @collision_sprite = Sprite.new
     if @collision
@@ -72,10 +80,27 @@ module Clickable
     @x = Input.mouse_pos_x
     @y = Input.mouse_pos_y
 
+    @collision_sprite.x = @x_pos 
+    @collision_sprite.y = @y_pos
+    @mouse_sprite.x = @x
+    @mouse_sprite.y = @y
+
     #描画範囲内かどうか
-    @collision_sprite.x, @collision_sprite.y = @x_pos, @y_pos
-    @mouse_sprite.x, @mouse_sprite.y = @x, @y
     if (@mouse_sprite === @collision_sprite)
+      if @colorkey
+        if @colorkey[@x - @x_pos, @y - @y_pos][0] >= @colorkey_border
+          inner_control = true
+        else
+          inner_control = false
+        end
+      else
+        inner_control = true
+      end
+    else
+      inner_control = false
+    end
+    
+    if inner_control
       #イベント起動済みフラグクリア
       @out = false
 

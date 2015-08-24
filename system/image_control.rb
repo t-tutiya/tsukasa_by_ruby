@@ -32,8 +32,6 @@ require 'dxruby'
 
 #イメージコントロール
 class ImageControl < Control
-  #移動関連モジュール読み込み
-  include Movable
   include Drawable
 
   #Imageのキャッシュ機構の簡易実装

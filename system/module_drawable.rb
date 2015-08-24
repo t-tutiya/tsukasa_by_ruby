@@ -173,4 +173,115 @@ module Drawable
       push_command_to_next_frame(:transition_fade, options, inner_options)
     end
   end
+
+  def command_move_line(options, inner_options)
+
+    options[:count] = 0 unless options[:count]
+
+    #開始座標が設定されていない場合は現在の座標を開始座標とする
+    options[:start] = [@x_pos, @y_pos] unless options[:start]
+
+    start_x = options[:start][0]
+    start_y = options[:start][1]
+    end_x = options[:end][0]
+    end_y = options[:end][1]
+
+    #移動先座標の決定
+    @x_pos = (start_x + (end_x - start_x).to_f / options[:total_frame] * options[:count]).to_i
+    @y_pos = (start_y + (end_y - start_y).to_f / options[:total_frame] * options[:count]).to_i
+
+    #カウントが指定フレーム未満の場合
+    if options[:count] < options[:total_frame]
+      #待機モードを初期化
+      @idle_mode = false
+      #:move_lineコマンドをスタックし直す
+      push_command_to_next_frame(:move_line, options, inner_options)
+    end
+
+    #カウントアップ
+    options[:count] += 1
+  end
+
+  def command_move_spline(options, inner_options)
+
+    options[:count] = 0 unless options[:count]
+
+    path = options[:path]
+
+    step = path.size.to_f / options[:total_frame] * options[:count]
+
+    x = 0.0
+    y = 0.0
+    size = path.size - 1 #添え字のＭＡＸが欲しいので-1する
+
+    #全ての座標を巡回し、それぞれの座標についてstep量に応じた重み付けを行い、その総和を現countでの座標とする
+    #始点と終点を通過させる為、その前後２個に仮想の座標が存在する物としている
+    -2.upto(size + 2) do |index|
+
+      #始点と終点を通過させるために強制的な補正をかける
+      if index < 0 # -2 <= index < 0
+        path_index = 0 
+      elsif size < index # size < index <= size + 2
+        path_index = size
+      else # 0 <= index <= size
+        path_index = index
+      end
+
+      #重み付け関数
+      coefficent = b_spline_coefficent(step - index)
+#      coefficent = line_coefficent(step - index)
+
+      x += path[path_index][0] * coefficent
+      y += path[path_index][1] * coefficent
+    end
+
+    #移動先座標の決定
+    @x_pos = x.round
+    @y_pos = y.round
+    #カウントアップ
+    options[:count] += 1
+
+    #カウントが指定フレーム以下の場合
+    if options[:count] <= options[:total_frame]
+      #待機モードを初期化
+      @idle_mode = false
+      #:move_lineコマンドをスタックし直す
+      push_command_to_next_frame(:move_spline, options, inner_options)
+    end
+  end
+
+  #３次Ｂスプライン重み付け関数
+  def b_spline_coefficent(t)
+    t = t.abs
+
+    # -1.0 < t < 1.0
+    if t < 1.0 
+      return (3.0 * t ** 3 -6.0 * t ** 2 + 4.0) / 6.0
+
+    # -2.0 < t <= -1.0 or 1.0 <= t < 2.0
+    elsif t < 2.0 
+      return  -(t - 2.0) ** 3 / 6.0
+
+    # t <= -2.0 or 2.0 <= t
+    else 
+      return 0.0
+    end
+  end
+
+  #１次スプライン重み付け関数のつもりだけど動かなかった
+  #TODO：解決策求む
+  def line_coefficent(t)
+    raise
+    t = t.abs
+
+    # -1.0 < t < 1.0
+    if t < 1.0 
+      return 1.0 - t
+
+    # t <= -1.0 or 1.0 <= t
+    else 
+      return 0.0
+    end
+  end
+
 end

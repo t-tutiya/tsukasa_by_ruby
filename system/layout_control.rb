@@ -31,7 +31,6 @@ require 'dxruby'
 ###############################################################################
 
 class LayoutControl < Control
-  include Movable #移動関連モジュール
   include Drawable #描画関連モジュール
   include Clickable
 

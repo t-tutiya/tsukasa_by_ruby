@@ -2,8 +2,6 @@
 
 #ボタンコントロール
 _CREATE_ :LayoutControl, 
-        :x_pos => 150, 
-        :y_pos => 150, 
         :width => 256,
         :height => 256,
         :id=>:button1 do

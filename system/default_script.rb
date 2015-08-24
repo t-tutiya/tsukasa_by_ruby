@@ -130,7 +130,7 @@ _DEFINE_ :wait_count do |options|
 end
 
 #指定コマンドウェイト
-#ex. wait_command :move_line
+#ex. wait_command :move
 _DEFINE_ :wait_command do |options|
   _WAIT_ [:command], command: options[:_ARGUMENT_]
 end

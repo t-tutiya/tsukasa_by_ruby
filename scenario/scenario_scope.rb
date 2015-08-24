@@ -37,22 +37,22 @@ end
 
 _SEND_ :button1 do
 _WHILE_ [:true] do
-  move_line start: [0,0], end: [300,0], total_frame: 60
-  wait_command :move_line
+  move start: [0,0], end: [300,0], total_frame: 60
+  wait_command :move
   _WHILE_ [:true] do
-    move_line start: [0,0], end: [300,0], total_frame: 60
-    wait_command :move_line
+    move start: [0,0], end: [300,0], total_frame: 60
+    wait_command :move
     _BREAK_
   end
 #  _BREAK_
-    move_line start: [300,0], end: [300,300], total_frame: 60
-  wait_command :move_line
+    move start: [300,0], end: [300,300], total_frame: 60
+  wait_command :move
 #  _BREAK_
-  move_line start: [300,300], end: [0,300], total_frame: 60
-  wait_command :move_line
+  move start: [300,300], end: [0,300], total_frame: 60
+  wait_command :move
   _BREAK_
-  move_line start: [0,300], end: [0,0], total_frame: 60
-  wait_command :move_line
+  move start: [0,300], end: [0,0], total_frame: 60
+  wait_command :move
   _BREAK_
 end
 

@@ -176,12 +176,17 @@ module Drawable
     end
   end
 
-  def command_move_line(options, inner_options)
+  def command_move(options, inner_options)
 
     options[:count] = 0 unless options[:count]
 
     #初期値が設定されていない場合は現在値を設定する
-    options[:start] = [@x_pos, @y_pos, @draw_option[:alpha]] unless options[:start]
+    options[:start] = [@x_pos, @y_pos] unless options[:start]
+  
+    #透明度が設定されていなければ現在の値で初期化
+    unless options[:start][2]
+      options[:start][2] = @draw_option[:alpha]
+    end
 
     start_x = options[:start][0]
     start_y = options[:start][1]
@@ -206,21 +211,21 @@ module Drawable
     if options[:count] < options[:total_frame]
       #待機モードを初期化
       @idle_mode = false
-      #:move_lineコマンドをスタックし直す
-      push_command_to_next_frame(:move_line, options, inner_options)
+      #:moveコマンドをスタックし直す
+      push_command_to_next_frame(:move, options, inner_options)
     end
 
     #カウントアップ
     options[:count] += 1
   end
 
-  def command_move_spline(options, inner_options)
+  def command_move_path(options, inner_options)
 
     options[:count] = 0 unless options[:count]
 
     path = options[:path]
 
-    step = path.size.to_f / options[:total_frame] * options[:count]
+    step = (path.size.to_f-1) / options[:total_frame] * options[:count]
 
     x = 0.0
     y = 0.0
@@ -240,9 +245,15 @@ module Drawable
         path_index = index
       end
 
-      #重み付け関数
-      coefficent = b_spline_coefficent(step - index)
-#      coefficent = line_coefficent(step - index)
+
+      case options[:type]
+      when :spline
+        coefficent = b_spline_coefficent(step - index)
+      when :line
+        coefficent = line_coefficent(step - index)
+      else
+        coefficent = line_coefficent(step - index)
+      end
 
       x += path[path_index][0] * coefficent
       y += path[path_index][1] * coefficent
@@ -268,7 +279,7 @@ module Drawable
       #待機モードを初期化
       @idle_mode = false
       #:move_lineコマンドをスタックし直す
-      push_command_to_next_frame(:move_spline, options, inner_options)
+      push_command_to_next_frame(:move_path, options, inner_options)
     end
   end
 
@@ -290,20 +301,16 @@ module Drawable
     end
   end
 
-  #１次スプライン重み付け関数のつもりだけど動かなかった
-  #TODO：解決策求む
   def line_coefficent(t)
-    raise
     t = t.abs
 
-    # -1.0 < t < 1.0
-    if t < 1.0 
-      return 1.0 - t
-
+    if t <= 1.0 
+      return 1 - t
     # t <= -1.0 or 1.0 <= t
     else 
       return 0.0
     end
   end
+
 
 end

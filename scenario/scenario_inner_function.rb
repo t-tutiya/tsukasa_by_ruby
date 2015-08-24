@@ -11,8 +11,8 @@ _CREATE_ :LayoutControl,
         :id=>:normal
   #内部関数の定義
   _DEFINE_ :func do
-    move_line start: [0,0], end: [500,0], total_frame: 60
-    wait_command :move_line
+    move start: [0,0], end: [500,0], total_frame: 60
+    wait_command :move
   end
 end
 
@@ -27,8 +27,8 @@ _CREATE_ :LayoutControl,
         :id=>:normal
   #内部関数の定義
   _DEFINE_ :func do
-    move_line start: [0,0], end: [150,500], total_frame: 60
-    wait_command :move_line
+    move start: [0,0], end: [150,500], total_frame: 60
+    wait_command :move
   end
 end
 

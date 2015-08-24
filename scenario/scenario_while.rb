@@ -36,6 +36,19 @@ _DEFINE_ :button do |options|
   end
 end
 
+#以下はいずれ全部画像処理系のスクリプトサンプルに持っていく
+#TODO：サンプル実行に必要なリソースファイルをアップする
+
+_CREATE_ :LayoutControl , width: 1280, height: 720 , render_target: true do
+  image file_path: "./sozai/bg_sample.png", id: :test
+
+  setup_rule file_path: "sozai/circle_rule.png"
+    _WHILE_ [:true] do
+      transition_rule :count=> 0, :total_frame => 60, :vague => 50
+      _WAIT_ [:command], :command => :transition_rule
+    end
+end
+
 button id: :button1
 button id: :button2
 button id: :button3
@@ -84,3 +97,4 @@ _SEND_ :button3 do
     wait_command :move_path
   end
 end
+

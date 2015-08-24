@@ -149,33 +149,9 @@ module Drawable
 
     return dx, dy
   end
+end
 
-  #フェードインコマンド
-  #count:現在カウント
-  #frame:フレーム数
-  #start:開始α値
-  #last:終了α値
-  def command_transition_fade(options, inner_options) 
-    #スキップモードであれば最終値を設定し、フレーム内処理を続行する
-    if @skip_mode
-      @draw_option[:alpha] = options[:last]
-      return
-    end
-
-    #透明度の決定
-    @draw_option[:alpha] = options[:start] + 
-                          (((options[:last] - options[:start]).to_f / options[:frame]) * options[:count]).to_i
-
-    #カウントアップ
-    options[:count] += 1
-
-    #カウントが指定フレーム以下の場合
-    if options[:count] <= options[:frame]
-      #:transition_fadeコマンドをスタックし直す
-      push_command_to_next_frame(:transition_fade, options, inner_options)
-    end
-  end
-
+module Drawable #ムーブ
   def command_move(options, inner_options)
 
     options[:count] = 0 unless options[:count]
@@ -311,6 +287,133 @@ module Drawable
       return 0.0
     end
   end
+end
 
+module Drawable #トランジション
 
+  #フェードインコマンド
+  #count:現在カウント
+  #frame:フレーム数
+  #start:開始α値
+  #last:終了α値
+  def command_transition_fade(options, inner_options) 
+    #スキップモードであれば最終値を設定し、フレーム内処理を続行する
+    if @skip_mode
+      @draw_option[:alpha] = options[:last]
+      return
+    end
+
+    #透明度の決定
+    @draw_option[:alpha] = options[:start] + 
+                          (((options[:last] - options[:start]).to_f / options[:frame]) * options[:count]).to_i
+
+    #カウントアップ
+    options[:count] += 1
+
+    #カウントが指定フレーム以下の場合
+    if options[:count] <= options[:frame]
+      #:transition_fadeコマンドをスタックし直す
+      push_command_to_next_frame(:transition_fade, options, inner_options)
+    end
+  end
+
+  def command_setup_rule(options, inner_options)
+    @shader = TransitionShader.new(Image.load(options[:file_path]))
+  end
+
+  def command_transition_rule(options, inner_options)
+    count =  options[:count]
+    total_frame =  options[:total_frame]
+    vague =  options[:vague]
+
+    @shader.g_min = (((vague + total_frame).fdiv(total_frame)) * count - vague).fdiv(total_frame)
+    @shader.g_max = (((vague + total_frame).fdiv(total_frame)) * count).fdiv(total_frame)
+
+    #カウントが指定フレーム未満の場合
+    if options[:count] < options[:total_frame]
+      @draw_option[:shader] = @shader
+      #待機モードを初期化
+      @idle_mode = false
+      #カウントアップ
+      options[:count] += 1
+      #:transition_ruleコマンドをスタックし直す
+      push_command_to_next_frame(:transition_rule, options, inner_options)
+    end
+  end
+
+  class TransitionShader < DXRuby::Shader
+    #ルールトランジションを実行するHLSLスクリプト
+    hlsl = <<EOS
+    float g_min;
+    float g_max;
+    float2 scale;
+    texture tex0;
+    texture tex1;
+    sampler Samp0 = sampler_state
+    {
+     Texture =<tex0>;
+    };
+    sampler Samp1 = sampler_state
+    {
+     Texture =<tex1>;
+     AddressU = WRAP;
+     AddressV = WRAP;
+    };
+
+    struct PixelIn
+    {
+      float2 UV : TEXCOORD0;
+    };
+    struct PixelOut
+    {
+      float4 Color : COLOR0;
+    };
+
+    PixelOut PS(PixelIn input)
+    {
+      PixelOut output;
+      output.Color = tex2D( Samp0, input.UV );
+      output.Color.a *= smoothstep(g_min, g_max, tex2D( Samp1, input.UV * scale ).r );
+
+      return output;
+    }
+
+    technique Transition
+    {
+     pass P0
+     {
+      PixelShader = compile ps_2_0 PS();
+     }
+    }
+EOS
+
+    #HLSLスクリプトと引数を定義
+    @@core = DXRuby::Shader::Core.new(
+      hlsl,
+      {
+        :g_min => :float,
+        :g_max => :float,
+        :scale => :float, # HLSL側がfloat2の場合は:floatを指定して[Float, Flaot]という形で渡す
+        :tex1 => :texture,
+      }
+    )
+
+    #image：ルール画像のImageオブジェクト(省略でクロスフェード)
+    def initialize(image=nil)
+      super(@@core, "Transition")
+      if image
+        @image = image
+      else
+        @image = DXRuby::Image.new(1, 1, [0,0,0])
+      end
+
+      self.g_min = 1.0
+      self.g_max = 1.0
+      self.tex1   = @image
+      self.scale  = [ DXRuby::Window.width.fdiv(@image.width), 
+                      DXRuby::Window.height.fdiv(@image.height)
+                    ]
+    end
+
+  end
 end

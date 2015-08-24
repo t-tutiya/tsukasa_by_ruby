@@ -35,6 +35,9 @@ module Movable
 
     options[:count] = 0 unless options[:count]
 
+    #開始座標が設定されていない場合は現在の座標を開始座標とする
+    options[:start] = [@x_pos, @y_pos] unless options[:start]
+
     start_x = options[:start][0]
     start_y = options[:start][1]
     end_x = options[:end][0]
@@ -43,16 +46,17 @@ module Movable
     #移動先座標の決定
     @x_pos = (start_x + (end_x - start_x).to_f / options[:total_frame] * options[:count]).to_i
     @y_pos = (start_y + (end_y - start_y).to_f / options[:total_frame] * options[:count]).to_i
-    #カウントアップ
-    options[:count] += 1
 
-    #カウントが指定フレーム以下の場合
-    if options[:count] <= options[:total_frame]
+    #カウントが指定フレーム未満の場合
+    if options[:count] < options[:total_frame]
       #待機モードを初期化
       @idle_mode = false
       #:move_lineコマンドをスタックし直す
       push_command_to_next_frame(:move_line, options, inner_options)
     end
+
+    #カウントアップ
+    options[:count] += 1
   end
 
   def command_move_spline(options, inner_options)
@@ -124,6 +128,7 @@ module Movable
   #１次スプライン重み付け関数のつもりだけど動かなかった
   #TODO：解決策求む
   def line_coefficent(t)
+    raise
     t = t.abs
 
     # -1.0 < t < 1.0

@@ -87,6 +87,9 @@ module Drawable
     @width  = options[:width] || 0  #横幅
     @height = options[:height] || 0 #縦幅
 
+    #ルールトランジション用の画像ファイルパスがあるならシェーダーを初期化する
+    self.rule = options[:rule] if options[:rule]
+
     super
   end
 
@@ -291,6 +294,10 @@ end
 
 module Drawable #トランジション
 
+  def rule=(file_path)
+    @rule = TransitionShader.new(Image.load(file_path))
+  end
+
   #フェードインコマンド
   #count:現在カウント
   #frame:フレーム数
@@ -317,27 +324,25 @@ module Drawable #トランジション
     end
   end
 
-  def command_setup_rule(options, inner_options)
-    @shader = TransitionShader.new(Image.load(options[:file_path]))
-  end
-
   def command_transition_rule(options, inner_options)
     count =  options[:count]
     total_frame =  options[:total_frame]
     vague =  options[:vague]
 
-    @shader.g_min = (((vague + total_frame).fdiv(total_frame)) * count - vague).fdiv(total_frame)
-    @shader.g_max = (((vague + total_frame).fdiv(total_frame)) * count).fdiv(total_frame)
+    @rule.g_min = (((vague + total_frame).fdiv(total_frame)) * count - vague).fdiv(total_frame)
+    @rule.g_max = (((vague + total_frame).fdiv(total_frame)) * count).fdiv(total_frame)
 
     #カウントが指定フレーム未満の場合
     if options[:count] < options[:total_frame]
-      @draw_option[:shader] = @shader
+      @draw_option[:shader] = @rule
       #待機モードを初期化
       @idle_mode = false
       #カウントアップ
       options[:count] += 1
       #:transition_ruleコマンドをスタックし直す
       push_command_to_next_frame(:transition_rule, options, inner_options)
+    else
+      @draw_option[:shader] = nil
     end
   end
 

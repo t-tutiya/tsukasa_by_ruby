@@ -124,16 +124,15 @@ class TextPageControl < Control
       :edge_level => 16,           #縁文字：縁の濃さ
 
       :shadow_color => [0, 0, 0],    #影：影の色
-      :shadow_x => 4,              #影:オフセットＸ座標
-      :shadow_y => 4,              #影:オフセットＹ座標
+      :shadow_x => 0,              #影:オフセットＸ座標
+      :shadow_y => 0,              #影:オフセットＹ座標
     }
 
     #オプションと結合
     @font_config.merge!(options[:font_config]  || {})
 
     #影：縁まで影を落とすか
-    #TODO：現行コードでは未使用
-    @shadow_edge = options[:shadow_edge] || false      
+    @shadow = options[:shadow] || false      
 
     #レンダリング済みフォント使用中かどうか
     @use_image_font = options[:use_image_font] || false

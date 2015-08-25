@@ -171,6 +171,16 @@ _CREATE_ :LayoutControl,
   height: 192,
   index: 1000000, #描画順序
   id: :message0 do
+    #デフォルトの背景画像
+    image id: :bg
+    ##このコントロールにload_imageを実行すると背景画像をセットできる。
+    ##ex.
+    ##  _SEND_ :message0 do
+    ##    _SEND_ :bg do
+    ##      load_image  file_path: "./sozai/bg_test.jpg" 
+    ##    end
+    ##  end
+
     #メッセージウィンドウ
     _CREATE_ :TextPageControl, 
       x_pos: 0,
@@ -206,7 +216,6 @@ _CREATE_ :LayoutControl,
     end
   end
 
-
 _DEFINE_ :line_icon_func do |options|
   _CREATE_ :LayoutControl, 
           :x_pos => 0, 
@@ -220,32 +229,33 @@ _DEFINE_ :line_icon_func do |options|
             :file_path=>"./sozai/icon_8_a.png", 
             :id=>:test, 
             :x_count => 4, 
-            :y_count => 2
-    _WHILE_ [:true] do
-      set 7, visible: false
-      set 0, visible: true
-    	_WAIT_ [:count], count: 5
-      set 0, visible: false
-      set 1, visible: true
-    	_WAIT_ [:count], count: 5
-      set 1, visible: false
-      set 2, visible: true
-    	_WAIT_ [:count], count: 5
-      set 2, visible: false
-      set 3, visible: true
-    	_WAIT_ [:count], count: 5
-      set 3, visible: false
-      set 4, visible: true
-    	_WAIT_ [:count], count: 5
-      set 4, visible: false
-      set 5, visible: true
-    	_WAIT_ [:count], count: 5
-      set 5, visible: false
-      set 6, visible: true
-    	_WAIT_ [:count], count: 5
-      set 6, visible: false
-      set 7, visible: true
-    	_WAIT_ [:count], count: 30
+            :y_count => 2 do
+      _WHILE_ [:true] do
+        set 7, visible: false
+        set 0, visible: true
+      	_WAIT_ [:count], count: 5
+        set 0, visible: false
+        set 1, visible: true
+      	_WAIT_ [:count], count: 5
+        set 1, visible: false
+        set 2, visible: true
+      	_WAIT_ [:count], count: 5
+        set 2, visible: false
+        set 3, visible: true
+      	_WAIT_ [:count], count: 5
+        set 3, visible: false
+        set 4, visible: true
+      	_WAIT_ [:count], count: 5
+        set 4, visible: false
+        set 5, visible: true
+      	_WAIT_ [:count], count: 5
+        set 5, visible: false
+        set 6, visible: true
+      	_WAIT_ [:count], count: 5
+        set 6, visible: false
+        set 7, visible: true
+      	_WAIT_ [:count], count: 30
+      end
     end
   end
 end
@@ -264,20 +274,21 @@ _DEFINE_ :page_icon_func do |options|
             :file_path=>"./sozai/icon_4_a.png", 
             :id=>:test, 
             :x_count => 4, 
-            :y_count => 1
-    _WHILE_ [:true] do
-      set 3, visible: false
-      set 0, visible: true
-    	_WAIT_ [:count], count: 5
-      set 0, visible: false
-      set 1, visible: true
-    	_WAIT_ [:count], count: 5
-      set 1, visible: false
-      set 2, visible: true
-    	_WAIT_ [:count], count: 5
-      set 2, visible: false
-      set 3, visible: true
-    	_WAIT_ [:count], count: 5
+            :y_count => 1 do
+      _WHILE_ [:true] do
+        set 3, visible: false
+        set 0, visible: true
+      	_WAIT_ [:count], count: 5
+        set 0, visible: false
+        set 1, visible: true
+      	_WAIT_ [:count], count: 5
+        set 1, visible: false
+        set 2, visible: true
+      	_WAIT_ [:count], count: 5
+        set 2, visible: false
+        set 3, visible: true
+      	_WAIT_ [:count], count: 5
+      end
     end
   end
 end

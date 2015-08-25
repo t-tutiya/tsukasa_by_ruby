@@ -358,14 +358,36 @@ class Control #セッター／ゲッター
   end
 
   #キーで指定したユーザーデータ領域に値で設定したコントロールの変数をコピーする
-  #TODO:微妙に_SET_と直行性が低い
+  #キーに:_RESULT_が指定された場合、内部変数@_RESULT_に格納され、再帰的に中身を読み出せる。
+  ##  ex.
+  ##  @test = {:n1 => {:nn1 => 4,:nn2 => 50}, :n2 => [1,20,300]}
+  ##  上記ハッシュに対して以下のコマンドを実行した場合
+  ##  _GET_ :test, u1: :n1, _RESULT_: :n2
+  ##  _GET_ :_RESULT_,  u3: 0, u4: 2
+  ##  ユーザーデータ領域には以下のように格納される（u1はこれ以上中が読めない）
+  ##  @user_data = {:u1=>{:nn1=>4, :nn2=>50}, :u3=>1, :u4=>300}
   def command__GET_(options, inner_options)
+    if options[:_ARGUMENT_]
+      variable = options[:_ARGUMENT_]
+      options.delete(:_ARGUMENT_)
+    else
+      variable = nil
+    end
+
     #オプション全探査
     options.each do |key, val|
-      if instance_variable_defined?("@" + val.to_s)
-        @user_data[key] = instance_variable_get("@" + val.to_s)
+      if variable
+        if key == :_RESULT_
+          @_RESULT_ = instance_variable_get("@" + variable.to_s)[val]
+        else
+          @user_data[key] = instance_variable_get("@" + variable.to_s)[val]
+        end
       else
-        pp "クラス[" + self.class.to_s + "]：変数[" + "@" + val.to_s + "]は存在しません"
+        if instance_variable_defined?("@" + val.to_s)
+          @user_data[key] = instance_variable_get("@" + val.to_s)
+        else
+          pp "クラス[" + self.class.to_s + "]：変数[" + "@" + val.to_s + "]は存在しません"
+        end
       end
     end
   end

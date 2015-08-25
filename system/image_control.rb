@@ -64,14 +64,15 @@ class ImageControl < Control
                                                   options[:y_count] || 1)
 
       entities.each.with_index(options[:start_index] || 0) do |image, index|
-        push_command([:_CREATE_, 
-                    {
-                      :_ARGUMENT_ => :ImageControl,
-                      :entity => image,
-                      :id => index,
-                      :float_mode => options[:float_mode],
-                      :visible => false
-                    }, inner_options])
+        #TODO;インデックスと逆順に格納されている。直すべきか検討
+        interrupt_command([:_CREATE_, 
+                          {
+                            :_ARGUMENT_ => :ImageControl,
+                            :entity => image,
+                            :id => index,
+                            :float_mode => options[:float_mode],
+                            :visible => false
+                          }, inner_options])
       end
       return
     end

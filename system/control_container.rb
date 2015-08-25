@@ -249,6 +249,11 @@ class Control #内部メソッド
         #キー押下があれば
         return true if Input.key_push?(key_code)
 
+      when :key_down
+        key_code = options[:key_code] ? options[:key_code] : K_SPACE
+        #キー押下があれば
+        return true if Input.key_down?(key_code)
+
       when :skip
         #スキップモードであれば
         return true if @skip_mode
@@ -394,16 +399,15 @@ class Control #制御構文
 
   def command__CHECK_(options, inner_options)
     #チェック条件を満たさない場合
-    unless check_imple(options[:_ARGUMENT_], options)
-      #指定があればコマンドを再スタックする
-      if options[:keep]
-        push_command_to_next_frame(:_CHECK_, options, inner_options)
-      end
-      return
+    if check_imple(options[:_ARGUMENT_], options)
+      #checkにブロックが付与されているならそれを実行する
+      eval_block(options, &inner_options[:block])
     end
 
-    #checkにブロックが付与されているならそれを実行する
-    eval_block(options, &inner_options[:block])
+    #指定があればコマンドを再スタックする
+    if options[:keep]
+      push_command_to_next_frame(:_CHECK_, options, inner_options)
+    end
   end
 
   #繰り返し

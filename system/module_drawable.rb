@@ -97,25 +97,23 @@ module Drawable
   def render(offset_x, offset_y, target, parent_size)
     return offset_x, offset_y unless @visible
 
+    if @align_y == :bottom 
+      x_pos = offset_x + @x_pos + @offset_x
+      y_pos = offset_y + @y_pos + @offset_y + parent_size[:height] - @height
+    else
+      x_pos = offset_x + @x_pos + @offset_x
+      y_pos = offset_y + @y_pos + @offset_y
+    end
+
     #下位エンティティを自エンティティに描画する場合
     if @child_controls_draw_to_entity
       #下位エンティティを自エンティティに描画
       super(0, 0, @entity, {:width => @width, :height => @height})
 
-      x_pos = offset_x + @x_pos + @offset_x
-      y_pos = offset_y + @y_pos + @offset_y
 
       #自エンティティを上位ターゲットに描画
       target.draw_ex(x_pos, y_pos, @entity, @draw_option)
     else
-      if @align_y == :bottom
-        x_pos = offset_x + @x_pos + @offset_x
-        y_pos = offset_y + @y_pos + @offset_y + parent_size[:height] - @height
-      else
-        x_pos = offset_x + @x_pos + @offset_x
-        y_pos = offset_y + @y_pos + @offset_y
-      end
-
       #エンティティを持っているなら自エンティティを上位ターゲットに描画
       target.draw_ex(x_pos, y_pos, @entity, @draw_option) if @entity
       #下位エンティティを上位ターゲットに描画

@@ -45,70 +45,59 @@ line_feed
 
 text "■■■■■■"
 
-pause icon: :page_icon_func
+#pause icon: :page_icon_func
 line_feed
 text "■■■■■■■■■■■"
-pause icon: :line_icon_func
+wl
 text "■■■■■■■■■■■"
-pause
-
 _SEND_ :message0 do
   _SEND_ :default_text_page_control0 do
     _SET_  size: 32
     _SET_  line_height: 32
   end
 end
-flush
+wp
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
-pause
+wl
 line_feed
 text "■■■■■■■■■■■"
-pause
+wl
 text "■■■■■■■■■■■"
-pause
+wl
 line_feed
 text "■■■■■■■■■■■"
-pause
+wl
 text "■■■■■■■■■■■"
-pause
-flush
+wp
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
-line_feed
-pause
-flush
+wp
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
-line_feed
-pause
-flush
+wp
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
-line_feed
-pause
-flush
+wp
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
-line_feed
-pause
-flush
+wp
 
 =begin
 text"asa）」のα１バージョンを"

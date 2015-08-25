@@ -30,6 +30,15 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+_DEFINE_ :wl do
+  pause icon: :line_icon_func
+end
+
+_DEFINE_ :wp do
+  pause icon: :page_icon_func
+  flush
+end
+
 _DEFINE_ :set do |options|
   _SEND_ options[:_ARGUMENT_], interrupt: true do
     options.delete(:_ARGUMENT_)
@@ -237,6 +246,8 @@ _DEFINE_ :line_icon_func do |options|
           :y_pos => 0, 
           :width => 24,
           :height => 24,
+          :align_y => :bottom,
+          :float_mode => :right,
           :id => options[:id],
           :float_mode => :right do
     _CREATE_ :ImageControl, 
@@ -282,6 +293,8 @@ _DEFINE_ :page_icon_func do |options|
           :y_pos => 0, 
           :width => 24,
           :height => 24,
+          :align_y => :bottom,
+          :float_mode => :right,
           :id => options[:id],
           :float_mode => :right do
     _CREATE_ :ImageControl, 

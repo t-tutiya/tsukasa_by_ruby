@@ -45,19 +45,19 @@ end
 
 
 _DEFINE_ :text do |options|
-  _SEND_ :default_text_page_control0 do
+  _SEND_ default: :TextPageControl do
     _TEXT_ options[:_ARGUMENT_]
   end
 end
 
 _DEFINE_ :line_feed do
-  _SEND_ :default_text_page_control0 do
+  _SEND_ default: :TextPageControl  do
     _LINE_FEED_
   end
 end
 
 _DEFINE_ :flush do
-  _SEND_ :default_text_page_control0 do
+  _SEND_ default: :TextPageControl  do
     _FLUSH_
   end
 end

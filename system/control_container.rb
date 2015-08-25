@@ -36,6 +36,7 @@ class Control #公開インターフェイス
   attr_reader  :user_data
   attr_reader  :global_data
   attr_reader  :function_list
+  attr_reader  :default_control
 
   attr_accessor  :id
 
@@ -44,10 +45,19 @@ class Control #公開インターフェイス
       @root_control = root_control
       @user_data = @root_control.user_data
       @global_data = @root_control.global_data
+      @default_control = @root_control.default_control
     else
       @root_control = self
+      #個別ユーザーデータ領域
       @user_data = {}
+      #ゲーム全体で共有するセーブデータ
       @global_data = {}
+      #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
+      @default_control = {
+        :TextPageControl   => :default_text_page_control0,
+        :RenderTargetContainer => :default_RenderTarget_container,
+        :Anonymous       => :anonymous,
+      }
     end
 
     # ユーザ定義関数
@@ -67,15 +77,6 @@ class Control #公開インターフェイス
     @script_compiler = ScriptCompiler.new(self, @root_control)
     @control_list         = [] #コントロールリスト
     @delete_flag = false       #削除フラグの初期化
-
-=begin
-    #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
-    @control_default = {
-      :TextPageControl   => :default_text_page_control0,
-      :RenderTargetContainer => :default_RenderTarget_container,
-      :Anonymous       => :anonymous,
-    }
-=end
 
     #スクリプトパスが設定されているなら読み込んで登録する
     #TODO：将来的にここで読み込まずにINCLUDEコマンドを使いたい
@@ -499,6 +500,12 @@ class Control #スクリプト制御
       base_control = @root_control
     else
       base_control = self
+    end
+
+    #デフォルト指定があるならターゲットのコントロールを差し替える
+    if options[:default]
+      raise unless @default_control[options[:default]]
+      options[:_ARGUMENT_] = @default_control[options[:default]]
     end
 
     unless options[:_ARGUMENT_]

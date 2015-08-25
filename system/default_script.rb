@@ -165,7 +165,6 @@ end
 #標準テキストウィンドウ
 #TODOデバッグ用なので各種数字は暫定
 _CREATE_ :LayoutControl,
-  render_target: true,
   x_pos: 128,
   y_pos: 256 + 192,
   width: 1024,

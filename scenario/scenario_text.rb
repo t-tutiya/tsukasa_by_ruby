@@ -43,7 +43,7 @@ _SEND_ :default_text_page_control0, interrupt: true do
 end
 =end
 
-line_feed
+#line_feed
 text "★★★★★テスト中"
 
 

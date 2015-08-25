@@ -5,7 +5,6 @@ _DEFINE_ :button do |options|
   _CREATE_ :LayoutControl, 
           :width => 256,
           :height => 256,
-          :render_target => true,
           :id=>options[:id] do
     image :file_path=>"./sozai/button_normal.png", 
           :id=>:normal
@@ -42,21 +41,16 @@ end
 _CREATE_ :LayoutControl , 
           width: 1280, 
           height: 720 , 
-          rule: "sozai/circle_rule.png", 
-          render_target: true do
+          rule: "sozai/circle_rule.png" do
   image file_path: "./sozai/bg_sample.png", id: :test
 
   _WHILE_ [:true] do
-    transition_rule :count=> 0, :total_frame => 60, :vague => 50
+    transition_rule :count=> 0, :total_frame => 120, :vague => 50
     _WAIT_ [:command], :command => :transition_rule
   end
 end
 
 button id: :button1
-button id: :button2
-button id: :button3
-
-
 _SEND_ :button1 do
   _WHILE_ [:true] do
     move end: [300,0], total_frame: 60
@@ -70,6 +64,7 @@ _SEND_ :button1 do
   end
 end
 
+button id: :button2
 _SEND_ :button2 do
   _WHILE_ [:true] do
     move_path total_frame: 300, path: [
@@ -83,6 +78,7 @@ _SEND_ :button2 do
   end
 end
 
+button id: :button3
 _SEND_ :button3 do
   _WHILE_ [:true] do
     move_path total_frame: 300, type: :spline, path: [
@@ -100,4 +96,3 @@ _SEND_ :button3 do
     wait_command :move_path
   end
 end
-

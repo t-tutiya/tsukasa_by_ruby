@@ -291,7 +291,7 @@ class TextPageControl < Control
                   { :_ARGUMENT_ => :TextPageControl, 
                     :command_list => [
                       [:_LINE_FEED_, {},inner_options],
-                      [:_TEXT_, {:_ARGUMENT_=> options[:rubi]},inner_options]],
+                      [:_TEXT_, {:_ARGUMENT_=> options[:text]},inner_options]],
                     :x_pos => @rubi_offset_x,
                     :y_pos => @rubi_offset_y,
                     :width=> 128,

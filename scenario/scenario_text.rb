@@ -28,34 +28,17 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-#_SEND_ :default_text_page_control0 do
-#  _SET_ align_y: :bottom
-#end
-=begin
-_SEND_ :default_text_page_control0 do
-  _RUBI_ "●", rubi: "★★★★"
-  #_SET_  font_config: {size: 64}
-end
-_SEND_ :default_text_page_control0, interrupt: true do
-  _SET_  line_height: 64
-  _SET_ indent: 128
-  text "◆◆◆◆"
-end
-=end
-
-#line_feed
 text "★★★★★テスト中"
 
-
-_SEND_ :default_text_page_control0 do
-  _RUBI_ "●", rubi: "■■■■■"
+_SEND_ :message0 do
+  _SEND_ :default_text_page_control0 do
+    _SET_  size: 64
+    _SET_  line_height: 64
+  end
 end
 
-_SEND_ :default_text_page_control0 do
-  _RUBI_ "◆", rubi: "test"
-  _SET_  size: 64
-  _SET_  line_height: 64
-end
+rubi "●", text: "■■■■■"
+rubi "◆", text: "test"
 
 text "●●●●●"
 line_feed
@@ -68,11 +51,13 @@ text "■■■■■■■■■■■"
 pause icon: :line_icon_func
 text "■■■■■■■■■■■"
 pause
-line_feed
-text "■■■■■■■■■■■"
-pause
-text "■■■■■■■■■■■"
-pause
+
+_SEND_ :message0 do
+  _SEND_ :default_text_page_control0 do
+    _SET_  size: 32
+    _SET_  line_height: 32
+  end
+end
 flush
 
 text "■■■■■■■■■■■■■■■■■■■■■■"

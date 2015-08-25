@@ -45,20 +45,34 @@ end
 
 
 _DEFINE_ :text do |options|
-  _SEND_ default: :TextPageControl do
-    _TEXT_ options[:_ARGUMENT_]
+  _SEND_ :message0 do
+    _SEND_ default: :TextPageControl do
+      _TEXT_ options[:_ARGUMENT_]
+    end
   end
 end
 
 _DEFINE_ :line_feed do
-  _SEND_ default: :TextPageControl  do
-    _LINE_FEED_
+  _SEND_ :message0 do
+    _SEND_ default: :TextPageControl  do
+      _LINE_FEED_
+    end
   end
 end
 
 _DEFINE_ :flush do
-  _SEND_ default: :TextPageControl  do
-    _FLUSH_
+  _SEND_ :message0 do
+    _SEND_ default: :TextPageControl  do
+      _FLUSH_
+    end
+  end
+end
+
+_DEFINE_ :rubi do |options|
+  _SEND_ :message0 do
+    _SEND_ default: :TextPageControl do
+      _RUBI_ options[:_ARGUMENT_], text: options[:text]
+    end
   end
 end
 
@@ -75,45 +89,46 @@ end
 
 #標準ポーズコマンド
 _DEFINE_ :pause do |options|
-  #■行表示中スキップ処理
-  _SEND_ :default_text_page_control0 do 
-    #idleあるいはキー入力待機
-    _WAIT_ [:key_push, :idle]
+  _SEND_ :message0 do
+    #■行表示中スキップ処理
+    _SEND_ :default_text_page_control0 do 
+      #idleあるいはキー入力待機
+      _WAIT_ [:key_push, :idle]
 
-    if options[:icon]
-      _SEND_ :last do
-        _CALL_ options[:icon], id: :icon
+      if options[:icon]
+        _SEND_ :last do
+          _CALL_ options[:icon], id: :icon
+        end
+      end
+
+      _CHECK_ [:key_push] do
+        #スキップフラグを立てる
+        _SEND_ :all , interrupt: true do
+          _SET_ skip_mode: true
+        end
+      end
+
+      #キー入力伝搬を止める為に１フレ送る
+      _END_FRAME_ 
+
+      #■行末待機処理
+
+      #キー入力待機
+      _WAIT_ [:key_push]
+
+      #アイコン削除
+      delete :icon
+
+      #ルートにウェイクを送る
+      _SEND_ :all , root: true, interrupt: true do
+        _SET_ sleep_mode: :wake
+      end
+
+      #スキップフラグを下ろす
+      _SEND_ :all , root: true, interrupt: true do
+        _SET_ skip_mode: false
       end
     end
-
-    _CHECK_ [:key_push] do
-      #スキップフラグを立てる
-      _SEND_ :all , interrupt: true do
-        _SET_ skip_mode: true
-      end
-    end
-
-    #キー入力伝搬を止める為に１フレ送る
-    _END_FRAME_ 
-
-    #■行末待機処理
-
-    #キー入力待機
-    _WAIT_ [:key_push]
-
-    #アイコン削除
-    delete :icon
-
-    #ルートにウェイクを送る
-    _SEND_ :all , root: true, interrupt: true do
-      _SET_ sleep_mode: :wake
-    end
-
-    #スキップフラグを下ろす
-    _SEND_ :all , root: true, interrupt: true do
-      _SET_ skip_mode: false
-    end
-
   end
 
   #■ルートの待機処理

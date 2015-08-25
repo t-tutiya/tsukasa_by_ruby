@@ -45,19 +45,19 @@ end
 
 
 _DEFINE_ :text do |options|
-  _SEND_ :default_char_container do
+  _SEND_ :default_text_page_control0 do
     _TEXT_ options[:_ARGUMENT_]
   end
 end
 
 _DEFINE_ :line_feed do
-  _SEND_ :default_char_container do
+  _SEND_ :default_text_page_control0 do
     _LINE_FEED_
   end
 end
 
 _DEFINE_ :flush do
-  _SEND_ :default_char_container do
+  _SEND_ :default_text_page_control0 do
     _FLUSH_
   end
 end
@@ -76,7 +76,7 @@ end
 #標準ポーズコマンド
 _DEFINE_ :pause do |options|
   #■行表示中スキップ処理
-  _SEND_ :default_char_container do 
+  _SEND_ :default_text_page_control0 do 
     #idleあるいはキー入力待機
     _WAIT_ [:key_push, :idle]
 
@@ -171,13 +171,13 @@ _CREATE_ :LayoutControl,
   width: 1024,
   height: 192,
   index: 1000000, #描画順序
-  id: :main_text_layer do
+  id: :message0 do
     #メッセージウィンドウ
     _CREATE_ :TextPageControl, 
       x_pos: 0,
       y_pos: 0,
       width: 1024,
-      id: :default_char_container,
+      id: :default_text_page_control0,
       size: 32, 
       fontname: "ＭＳＰ ゴシック",
       wait_frame: 2,

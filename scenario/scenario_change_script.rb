@@ -70,7 +70,7 @@ about do
   _CHECK_ [:not_nil], key: :flag, keep: true do
     _SET_ :user_data, scenario: 1
     #↓ここがもう少し簡潔に表現できると良い
-    _SEND_ :default_char_container, interrupt: true do
+    _SEND_ :default_text_page_control0, interrupt: true do
       _BREAK_
     end
     _BREAK_
@@ -93,7 +93,7 @@ about do
   _SET_ :user_data, scenario: 2
 end
 
-#TODO;ここでフレームを送らない場合、次のスクリプトファイルが:default_char_containerに読み込まれた後で_BREAK_が機能してしまう。どうにかならんかなーこれ
+#TODO;ここでフレームを送らない場合、次のスクリプトファイルが:default_text_page_control0に読み込まれた後で_BREAK_が機能してしまう。どうにかならんかなーこれ
 _END_FRAME_
 
 flush

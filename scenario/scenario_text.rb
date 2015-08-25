@@ -30,11 +30,9 @@
 
 text "★★★★★テスト中"
 
-_SEND_ :message0 do
-  _SEND_ :default_text_page_control0 do
-    _SET_  size: 64
-    _SET_  line_height: 64
-  end
+_SEND_ :default_text_page_control0 do
+  _SET_  size: 64
+  _SET_  line_height: 64
 end
 
 rubi "●", text: "■■■■■"
@@ -50,12 +48,12 @@ line_feed
 text "■■■■■■■■■■■"
 wl
 text "■■■■■■■■■■■"
-_SEND_ :message0 do
-  _SEND_ :default_text_page_control0 do
-    _SET_  size: 32
-    _SET_  line_height: 32
-  end
+
+_SEND_ :default_text_page_control0 do
+  _SET_  size: 32
+  _SET_  line_height: 32
 end
+
 wp
 
 text "■■■■■■■■■■■■■■■■■■■■■■"

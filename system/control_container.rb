@@ -60,7 +60,7 @@ class Control #公開インターフェイス
     #TODO：これがシリアライズ対象になっているのはおかしいのかもしれない
     @next_frame_commands  = options[:next_frame_commands] || [] 
 
-    @skip_mode = false         #スキップモードの初期化
+    @skip_mode = options[:skip_mode] || false #スキップモードの初期化
     @idle_mode = true          #待機モードの初期化
     @sleep_mode = :wake        #スリープの初期状態を設定する
 

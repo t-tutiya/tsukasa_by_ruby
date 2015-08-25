@@ -204,7 +204,14 @@ module Drawable #ムーブ
 
     path = options[:path]
 
-    step = (path.size.to_f-1) / options[:total_frame] * options[:count]
+    #始点／終点を強制的に通過させるかどうか
+    if options[:origin]
+      #TODO：これだと開始時／終了時にもたってしまい、ゲームで使う補間に適さないように思える。どちらを標準にすべきか検討
+      step =(path.size.to_f + 1)/ options[:total_frame] * options[:count] - 1.0
+    else
+      #Ｂスプライン補間時に始点終点を通らない
+      step =(path.size.to_f - 1)/ options[:total_frame] * options[:count]
+    end
 
     x = 0.0
     y = 0.0
@@ -223,7 +230,6 @@ module Drawable #ムーブ
       else # 0 <= index <= size
         path_index = index
       end
-
 
       case options[:type]
       when :spline

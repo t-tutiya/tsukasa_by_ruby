@@ -36,12 +36,8 @@ class Control #公開インターフェイス
   attr_accessor  :id
 
   def initialize(options, inner_options, root_control)
-    #共有リソースデータの保存
+    #rootコントロールの保存
     @root_control = root_control
-    #TODO：下記３つはrootから取得すべきか
-    @user_data = @root_control.user_data
-    @global_data = @root_control.global_data
-    @default_control = @root_control.default_control
 
     # ユーザ定義関数
     @function_list = options[:function_list] || {} 
@@ -363,11 +359,11 @@ class Control #セッター／ゲッター
         if key == :_RESULT_
           @_RESULT_ = instance_variable_get("@" + variable.to_s)[val]
         else
-          @user_data[key] = instance_variable_get("@" + variable.to_s)[val]
+          @root_control.user_data[key] = instance_variable_get("@" + variable.to_s)[val]
         end
       else
         if instance_variable_defined?("@" + val.to_s)
-          @user_data[key] = instance_variable_get("@" + val.to_s)
+          @root_control.user_data[key] = instance_variable_get("@" + val.to_s)
         else
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + val.to_s + "]は存在しません"
         end
@@ -513,8 +509,8 @@ class Control #スクリプト制御
 
     #デフォルト指定があるならターゲットのコントロールを差し替える
     if options[:default]
-      raise unless @default_control[options[:default]]
-      options[:_ARGUMENT_] = @default_control[options[:default]]
+      raise unless @root_control.default_control[options[:default]]
+      options[:_ARGUMENT_] = @root_control.default_control[options[:default]]
     end
 
     unless options[:_ARGUMENT_]
@@ -572,14 +568,14 @@ class Control #セーブデータ制御
     if options[:global_data]
       db = PStore.new("./data/global_data.bin")
       db.transaction do
-        db["key"] = @global_data
+        db["key"] = @root_control.global_data
       end
     #ユーザーデータ
     #任意の接尾字を指定する
     elsif options[:user_data_no]
       db = PStore.new("./data/user_data_" + options[:user_data_no].to_s + ".bin")
       db.transaction do
-        db["key"] = @user_data
+        db["key"] = @root_control.user_data
       end
     else
       #セーブファイル指定エラー
@@ -589,19 +585,18 @@ class Control #セーブデータ制御
   end
 
   def command__LOAD_(options, inner_options)
-    @user_data = nil
     #グローバルデータ
     if options[:global_data]
       db = PStore.new("./data/global_data.bin")
       db.transaction do
-        @global_data = db["key"]
+        @root_control.global_data = db["key"]
       end
     #ユーザーデータ
     #任意の接尾字を指定する
     elsif options[:user_data_no]
       db = PStore.new("./data/user_data_" + options[:user_data_no].to_s + ".bin")
       db.transaction do
-        @user_data = db["key"]
+        @root_control.user_data = db["key"]
       end
     else
       #セーブファイル指定エラー

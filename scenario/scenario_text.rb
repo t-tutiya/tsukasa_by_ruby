@@ -28,6 +28,15 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+_CHECK_ [:key_down] , key_code: K_RCONTROL, keep: true do
+  _SEND_ :all , root: true do
+    _EVAL_ "pp 'push'"
+    _EVAL_ "pp 'p'"
+    set :all, skip_mode: true
+    set :all, sleep_mode: :wake
+  end
+end
+
 text "★★★★★テスト中"
 
 _SEND_ :default_text_page_control0 do
@@ -46,7 +55,7 @@ text "■■■■■■"
 #pause icon: :page_icon_func
 line_feed
 text "■■■■■■■■■■■"
-wl
+lp
 text "■■■■■■■■■■■"
 
 _SEND_ :default_text_page_control0 do
@@ -54,48 +63,48 @@ _SEND_ :default_text_page_control0 do
   _SET_  line_height: 32
 end
 
-wp
+page_pause
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
-wl
+lp
 line_feed
 text "■■■■■■■■■■■"
-wl
+lp
 text "■■■■■■■■■■■"
-wl
+lp
 line_feed
 text "■■■■■■■■■■■"
-wl
+lp
 text "■■■■■■■■■■■"
-wp
+page_pause
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
-wp
+page_pause
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
-wp
+page_pause
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
-wp
+page_pause
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
-wp
+page_pause
 
 =begin
 text"asa）」のα１バージョンを"

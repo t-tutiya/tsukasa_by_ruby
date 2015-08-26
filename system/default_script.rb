@@ -30,62 +30,108 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-_DEFINE_ :wl do
-  pause icon: :line_icon_func
-end
+###############################################################################
+#システムサポート
+###############################################################################
 
-_DEFINE_ :wp do
-  pause icon: :page_icon_func
-  flush
-end
-
+#_SET_の第１引数を送信先コントロールにした物
+#TODO：これ、ネストsetと競合してるので再検討
 _DEFINE_ :set do |options|
-_SEND_ options[:_ARGUMENT_], interrupt: true do
-  options.delete(:_ARGUMENT_)
-  _SET_ options
-end
+  _SEND_ options[:_ARGUMENT_], interrupt: true do
+    options.delete(:_ARGUMENT_)
+    _SET_ options
+  end
 end
 
+#汎用_DELETE_
 _DEFINE_ :delete do |options|
-_SEND_ options[:_ARGUMENT_], interrupt: true do
-  _DELETE_
-end
+  _SEND_ options[:_ARGUMENT_], interrupt: true do
+    _DELETE_
+  end
 end
 
+#無名関数として機能する
+_DEFINE_ :scope do |options|
+  _YIELD_ options
+end
 
+#無名関数として機能する（_BREAK_で脱出できる）
+#TODO：もうちょっと上手い方法はないものか
+_DEFINE_ :about do |options|
+  _YIELD_ options
+  _END_SCOPE_
+end
+
+#指定フレーム数ウェイト
+#ex. wait_count 60
+_DEFINE_ :wait_count do |options|
+  _WAIT_ [:count], count: options[:_ARGUMENT_]
+end
+
+#指定コマンドウェイト
+#ex. wait_command :move
+_DEFINE_ :wait_command do |options|
+  _WAIT_ [:command], command: options[:_ARGUMENT_]
+end
+
+#スキップモードの設定
+_DEFINE_ :skip_mode do |options|
+  set skip_mode: options[:mode]
+end
+
+#スリープモードの設定
+_DEFINE_ :sleep_mode do |options|
+  set sleep_mode: options[:mode]
+end
+
+#可視設定
+_DEFINE_ :visible do |options|
+  set options
+end
+
+#単機能キー入力待ち
+_DEFINE_ :wait_push do
+  _WAIT_ [:key_push]
+  _END_FRAME_
+end
+
+#Imageコントロール生成
+_DEFINE_ :image do |options|
+  _CREATE_ :ImageControl , options do
+    _YIELD_
+  end
+end
+
+###############################################################################
+#テキストレイヤ関連
+###############################################################################
+
+#_TEXT_デフォルト送信
 _DEFINE_ :text do |options|
   _SEND_ default: :TextPageControl do
     _TEXT_ options[:_ARGUMENT_]
   end
 end
 
+#_line_feed_デフォルト送信
 _DEFINE_ :line_feed do
   _SEND_ default: :TextPageControl  do
     _LINE_FEED_
   end
 end
 
+#_flush_デフォルト送信
 _DEFINE_ :flush do
   _SEND_ default: :TextPageControl  do
     _FLUSH_
   end
 end
 
+#_rubi_デフォルト送信
 _DEFINE_ :rubi do |options|
   _SEND_ default: :TextPageControl do
     _RUBI_ options[:_ARGUMENT_], text: options[:text]
   end
-end
-
-#無面関数として機能する
-_DEFINE_ :scope do |options|
-  _YIELD_ options
-end
-
-#無面関数として機能する
-_DEFINE_ :about do |options|
-  _YIELD_ options
-  _END_SCOPE_
 end
 
 #標準ポーズコマンド
@@ -137,44 +183,25 @@ _DEFINE_ :pause do |options|
   _WAIT_ [:wake]
 end
 
-#指定フレーム数ウェイト
-#ex. wait_count 60
-_DEFINE_ :wait_count do |options|
-  _WAIT_ [:count], count: options[:_ARGUMENT_]
+#行クリック待ちポーズ
+_DEFINE_ :line_pause do
+  pause icon: :line_icon_func
 end
 
-#指定コマンドウェイト
-#ex. wait_command :move
-_DEFINE_ :wait_command do |options|
-  _WAIT_ [:command], command: options[:_ARGUMENT_]
+#行クリック待ちポーズ(line_pauseの省略板)
+_DEFINE_ :lp do
+  line_pause
 end
 
-#スキップモードの設定
-_DEFINE_ :skip_mode do |options|
-  set skip_mode: options[:mode]
+#ページクリック待ちポーズ
+_DEFINE_ :page_pause do
+  pause icon: :page_icon_func
+  flush
 end
 
-_DEFINE_ :sleep_mode do |options|
-  set sleep_mode: options[:mode]
-end
-
-
-#可視設定
-_DEFINE_ :visible do |options|
-  set options
-end
-
-#単機能キー入力待ち
-_DEFINE_ :wait_push do
-  _WAIT_ [:key_push]
-  _END_FRAME_
-end
-
-_DEFINE_ :image do |options|
-  _CREATE_ :ImageControl , options do
-    _YIELD_
-  end
-end
+###############################################################################
+#デフォルトのレイヤ群
+###############################################################################
 
 #標準テキストウィンドウ
 #TODOデバッグ用なので各種数字は暫定

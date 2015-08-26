@@ -196,7 +196,7 @@ class TKSParser < Parslet::Parser
       :printable => sequence(:commands),
       :line_feed => simple(:line_feed),
       :blanklines => simple(:blanklines)
-    ) { commands + ["pause", "flush"] }
+    ) { commands + ["page_pause"] }
   end
 
 end

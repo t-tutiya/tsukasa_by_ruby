@@ -152,7 +152,9 @@ module Drawable
 end
 
 module Drawable #描画
-  def command_backlay(options, inner_options)
+
+  #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
+  def command_render_to_image(options, inner_options)
     rt = RenderTarget.new(@width, @height)
     render( 0, 0, rt, {:width => @width, :height => @height})
     entity  = rt.to_image

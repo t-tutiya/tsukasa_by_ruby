@@ -65,6 +65,9 @@ end
 
 page_pause
 
+#render_to_image
+backlay
+
 text "■■■■■■■■■■■■■■■■■■■■■■"
 lp
 line_feed

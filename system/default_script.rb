@@ -34,6 +34,11 @@ require 'dxruby'
 #システムサポート
 ###############################################################################
 
+#コマンド名のalias
+_DEFINE_ :backlay do
+  render_to_image
+end
+
 #_SET_の第１引数を送信先コントロールにした物
 #TODO：これ、ネストsetと競合してるので再検討
 _DEFINE_ :set do |options|

@@ -74,46 +74,58 @@ class ImageControl < Control
                             :visible => false
                           }, inner_options])
       end
-      return
-    end
-
-    
-    #実体から初期化する
-    #TODO：シリアライズ対象にできないのでこの機能は辞めるかも
-    if options[:entity]
-      @file_path = nil
-      @entity = options[:entity]
-
-      if options[:width]
-        @width = options[:width]
-      else
-        @width  = @entity.width
-      end
-
-      if options[:height]
-        @height = options[:height]
-      else
-        @height  = @entity.height
-      end
-
-    #ファイルパスから初期化する
-    elsif options[:file_path]
-      @file_path = options[:file_path]
-      @entity = @@image_cache[@file_path]
-
-      #縦横幅の更新
-      @width  = @entity.width
-      @height = @entity.height
-
-    #空コントロールとして初期化する
     else
-      @file_path = nil
-      @entity = Image.new(1,1,[0,0,0])
 
-      #縦横幅の更新
-      @width  = 1
-      @height = 1
+      #実体から初期化する
+      #TODO：シリアライズ対象にできないのでこの機能は辞めるかも
+      if options[:entity]
+        @file_path = nil
+        @entity = options[:entity]
+
+        if options[:width]
+          @width = options[:width]
+        else
+          @width  = @entity.width
+        end
+
+        if options[:height]
+          @height = options[:height]
+        else
+          @height  = @entity.height
+        end
+
+      #ファイルパスから初期化する
+      elsif options[:file_path]
+        @file_path = options[:file_path]
+        @entity = @@image_cache[@file_path]
+
+        #縦横幅の更新
+        @width  = @entity.width
+        @height = @entity.height
+
+      #空コントロールとして初期化する
+      else
+        @file_path = nil
+        @entity = Image.new(1,1,[0,0,0])
+
+        #縦横幅の更新
+        @width  = 1
+        @height = 1
+      end
     end
 
+    #同名のtksファイルがあれば読み込む
+    if options[:file_path]
+      tks_path = File.dirname( options[:file_path]) + "/" + 
+             File.basename(options[:file_path], ".*") + ".tks"
+      rb_path = File.dirname( options[:file_path]) + "/" + 
+             File.basename(options[:file_path], ".*") + ".rb"
+      if File.exist?(tks_path)
+        @command_list += @script_compiler.commands({:script_path => tks_path})
+      end
+      if File.exist?(rb_path)
+        @command_list += @script_compiler.commands({:script_path => rb_path})
+      end
+    end
   end
 end

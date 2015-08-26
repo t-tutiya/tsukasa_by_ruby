@@ -152,6 +152,21 @@ module Drawable
   end
 end
 
+module Drawable #描画
+  def command_backlay(options, inner_options)
+    rt = RenderTarget.new(@width, @height)
+    render( 0, 0, rt, {:width => @width, :height => @height})
+    entity  = rt.to_image
+    #イメージコントロールを生成する
+    interrupt_command([:_CREATE_, 
+               {:_ARGUMENT_ => :ImageControl, 
+                :entity => entity,
+                :index => 1000000,
+                }, 
+                inner_options])
+  end
+end
+
 module Drawable #ムーブ
   def command_move(options, inner_options)
 

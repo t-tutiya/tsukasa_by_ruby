@@ -44,10 +44,27 @@ require_relative './text_page_control.rb'
 require_relative './script_compiler.rb'
 
 #TODO：モジュールであるべきか？
-class Tsukasa < Control
-  def initialize(options, inner_options = {})
+class Tsukasa < LayoutControl
+  attr_reader  :user_data
+  attr_reader  :global_data
+  attr_reader  :default_control
+  attr_reader  :function_list
+
+  def initialize(options)
+    @root_control = self
+    #個別ユーザーデータ領域
+    @user_data = {}
+    #ゲーム全体で共有するセーブデータ
+    @global_data = {}
+    #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
+    @default_control = {
+      :TextPageControl   => :default_text_page_control0,
+      :RenderTargetContainer => :default_RenderTarget_container,
+      :Anonymous       => :anonymous,
+    }
     options[:script_path] = "./system/bootstrap_script.rb"
     options[:id] = :default_rendertarget_container
-    super
+    options[:redenr_target] = false
+    super(options, {}, @root_control)
   end
 end

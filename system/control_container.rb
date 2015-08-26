@@ -33,32 +33,15 @@ require 'pstore'
 
 class Control #公開インターフェイス
   #プロパティ
-  attr_reader  :user_data
-  attr_reader  :global_data
-  attr_reader  :function_list
-  attr_reader  :default_control
-
   attr_accessor  :id
 
-  def initialize(options, inner_options, root_control = nil)
-    if root_control
-      @root_control = root_control
-      @user_data = @root_control.user_data
-      @global_data = @root_control.global_data
-      @default_control = @root_control.default_control
-    else
-      @root_control = self
-      #個別ユーザーデータ領域
-      @user_data = {}
-      #ゲーム全体で共有するセーブデータ
-      @global_data = {}
-      #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
-      @default_control = {
-        :TextPageControl   => :default_text_page_control0,
-        :RenderTargetContainer => :default_RenderTarget_container,
-        :Anonymous       => :anonymous,
-      }
-    end
+  def initialize(options, inner_options, root_control)
+    #共有リソースデータの保存
+    @root_control = root_control
+    #TODO：下記３つはrootから取得すべきか
+    @user_data = @root_control.user_data
+    @global_data = @root_control.global_data
+    @default_control = @root_control.default_control
 
     # ユーザ定義関数
     @function_list = options[:function_list] || {} 

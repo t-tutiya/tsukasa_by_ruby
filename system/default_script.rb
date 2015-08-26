@@ -356,15 +356,17 @@ end
 #ボタンコントロール
 _DEFINE_ :button do |options|
   _CREATE_ :LayoutControl, 
+          :x_pos => options[:x_pos] || 0,
+          :y_pos => options[:y_pos] || 0,
           :width => 256,
           :height => 256,
           :id=>options[:id] do
     image :file_path=>"./sozai/button_normal.png", 
-          :id=>:normal
+          :id=>:normal do end
     image :file_path=>"./sozai/button_over.png", 
-          :id=>:over, :visible => false
+          :id=>:over, :visible => false do end
     image :file_path=>"./sozai/button_key_down.png", 
-          :id=>:key_down, :visible => false
+          :id=>:key_down, :visible => false do end
     on_mouse_over do
       set :normal, visible: false
       set :over,   visible: true
@@ -385,5 +387,6 @@ _DEFINE_ :button do |options|
       set :normal, visible: false
       set :over,   visible: true
     end
+    _YIELD_
   end
 end

@@ -1,7 +1,6 @@
 #! ruby -E utf-8
 
 require 'dxruby'
-require 'pp'
 require './system/tsukasa.rb'
 
 #初期化

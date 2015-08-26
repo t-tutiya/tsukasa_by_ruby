@@ -30,6 +30,8 @@
 ###############################################################################
 
 require 'dxruby'
+require 'pp'
+
 require_relative './module_drawable.rb'
 require_relative './module_clickable.rb'
 

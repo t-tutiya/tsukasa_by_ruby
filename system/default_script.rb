@@ -204,58 +204,72 @@ end
 ###############################################################################
 
 #標準テキストウィンドウ
-#TODOデバッグ用なので各種数字は暫定
-_CREATE_ :LayoutControl,
+_DEFINE_ :TextWindow do |options|
+  _CREATE_ :LayoutControl,
+    x_pos: options[:x_pos],
+    y_pos: options[:y_pos],
+    width: options[:width],
+    height: options[:height],
+    index: 1000000, #描画順序
+    id: options[:id] do
+      #デフォルトの背景画像
+      image id: :bg
+      ##このコントロールにload_imageを実行すると背景画像をセットできる。
+      ##ex.
+      ##  _SEND_ :message0 do
+      ##    _SEND_ :bg do
+      ##      load_image  file_path: "./sozai/bg_test.jpg" 
+      ##    end
+      ##  end
+
+      #メッセージウィンドウ
+      _CREATE_ :TextPageControl, 
+        x_pos: 0,
+        y_pos: 0,
+        width: options[:width],
+        id: options[:text_page_id],
+        size: 32, 
+        fontname: "ＭＳＰ ゴシック",
+        wait_frame: 2,
+        char_renderer: Proc.new{
+          transition_fade frame: 15,
+            count: 0,
+            start: 0,
+            last: 255
+          _WAIT_ [:command, :skip], command: :transition_fade do
+            _SEND_ nil, interrupt: true do
+              set idle_mode: false
+            end
+          end
+          set sleep_mode: :sleep
+          _WAIT_ [:wake]
+          skip_mode mode: false
+          transition_fade frame: 60,
+            count: 0,
+            start: 255,
+            last:128
+          _WAIT_ [:command, :skip], command: :transition_fade
+        } do
+        set size: 32
+        _FLUSH_ #これが必ず必要
+      end
+  end
+end
+
+TextWindow id: :message0, text_page_id: :default_text_page_control0,
   x_pos: 128,
   y_pos: 256 + 192,
   width: 1024,
-  height: 192,
-  index: 1000000, #描画順序
-  id: :message0 do
-    #デフォルトの背景画像
-    image id: :bg
-    ##このコントロールにload_imageを実行すると背景画像をセットできる。
-    ##ex.
-    ##  _SEND_ :message0 do
-    ##    _SEND_ :bg do
-    ##      load_image  file_path: "./sozai/bg_test.jpg" 
-    ##    end
-    ##  end
+  height: 192
 
-    #メッセージウィンドウ
-    _CREATE_ :TextPageControl, 
-      x_pos: 0,
-      y_pos: 0,
-      width: 1024,
-      id: :default_text_page_control0,
-      size: 32, 
-      fontname: "ＭＳＰ ゴシック",
-      wait_frame: 2,
-      char_renderer: Proc.new{
-        transition_fade frame: 15,
-          count: 0,
-          start: 0,
-          last: 255
-        _WAIT_ [:command, :skip], command: :transition_fade do
-          #pp "idle"
-          _SEND_ nil, interrupt: true do
-            set idle_mode: false
-          end
-        end
-        set sleep_mode: :sleep
-#        sleep_mode mode: :sleep
-        _WAIT_ [:wake]
-        skip_mode mode: false
-        transition_fade frame: 60,
-          count: 0,
-          start: 255,
-          last:128
-        _WAIT_ [:command, :skip], command: :transition_fade
-      } do
-      set size: 32
-      _FLUSH_ #これが必ず必要
-    end
-  end
+=begin
+#全画面の場合
+TextWindow id: :message0, text_page_id: :default_text_page_control0,
+  x_pos: 64,
+  y_pos: 64,
+  width: 1024,
+  height: 768
+=end
 
 _DEFINE_ :line_icon_func do |options|
   _CREATE_ :LayoutControl, 
@@ -269,7 +283,7 @@ _DEFINE_ :line_icon_func do |options|
           :float_mode => :right do
     _CREATE_ :ImageControl, 
             :tiles => true,
-            :file_path=>"./sozai/icon_8_a.png", 
+            :file_path=>"./sozai/icon/icon_8_a.png", 
             :id=>:test, 
             :x_count => 4, 
             :y_count => 2 
@@ -289,7 +303,7 @@ _DEFINE_ :page_icon_func do |options|
           :float_mode => :right do
     _CREATE_ :ImageControl, 
             :tiles => true, 
-            :file_path=>"./sozai/icon_4_a.png", 
+            :file_path=>"./sozai/icon/icon_4_a.png", 
             :id=>:test, 
             :x_count => 4, 
             :y_count => 1 do
@@ -333,4 +347,43 @@ end
 _CREATE_ :ImageControl,
   index: 3000, #描画順序
   id: 2 do
+end
+
+###############################################################################
+#汎用コントロール
+###############################################################################
+
+#ボタンコントロール
+_DEFINE_ :button do |options|
+  _CREATE_ :LayoutControl, 
+          :width => 256,
+          :height => 256,
+          :id=>options[:id] do
+    image :file_path=>"./sozai/button_normal.png", 
+          :id=>:normal
+    image :file_path=>"./sozai/button_over.png", 
+          :id=>:over, :visible => false
+    image :file_path=>"./sozai/button_key_down.png", 
+          :id=>:key_down, :visible => false
+    on_mouse_over do
+      set :normal, visible: false
+      set :over,   visible: true
+      set :key_down, visible: false
+    end
+    on_mouse_out do
+      set :over,   visible: false
+      set :normal, visible: true
+      set :key_down, visible: false
+    end
+    on_key_down do
+      set :over,   visible: false
+      set :normal, visible: false
+      set :key_down, visible: true
+    end
+    on_key_up do
+      set :key_down, visible: false
+      set :normal, visible: false
+      set :over,   visible: true
+    end
+  end
 end

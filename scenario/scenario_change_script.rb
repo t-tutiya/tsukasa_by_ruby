@@ -67,7 +67,7 @@ _CREATE_ :LayoutControl,
 end
 
 about do
-  _CHECK_ [:not_nil], key: :flag, keep: true do
+  _CHECK_ [:not_nil], key: :flag, keep: true, once: true do
     _SET_ :user_data, scenario: 1
     #↓ここがもう少し簡潔に表現できると良い
     _SEND_ :default_text_page_control0, interrupt: true do

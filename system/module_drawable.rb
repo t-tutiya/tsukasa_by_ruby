@@ -52,7 +52,7 @@ class RenderTarget
 end
 
 module Drawable
-  @@_DRAWBABL_DEBUG_ = true
+  @@_DRAWBABL_DEBUG_ = false
 
   def initialize(options, inner_options, root_control)
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標

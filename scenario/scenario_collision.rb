@@ -46,7 +46,6 @@ _CREATE_ :LayoutControl,
   end
 end
 
-
 _CREATE_ :LayoutControl, 
         :x_pos => 450, 
         :y_pos => 150, 
@@ -78,16 +77,6 @@ _CREATE_ :LayoutControl,
   on_key_up do
     set :normal, visible: false
     set :over,   visible: true
-=begin
-    #TODO:幾つか足りない処理があったのでひとまずコメントアウト
-    _SEND_ :key_down do
-      transition_fade frame: 15,
-        count: 0,
-        start: 255,
-        last: 0
-    end
-    _WAIT_ [:command, :skip], command: :transition_fade
-=end
     set :key_down, visible: false
   end
 end

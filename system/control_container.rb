@@ -38,6 +38,11 @@ class Control #公開インターフェイス
   def initialize(options, inner_options, root_control)
     #rootコントロールの保存
     @root_control = root_control
+    
+    #個別ユーザーデータ領域
+    @user_data = @root_control.user_data
+    #ゲーム全体で共有するセーブデータ
+    @global_data = @root_control.global_data
 
     # ユーザ定義関数
     @function_list = options[:function_list] || {} 
@@ -403,6 +408,8 @@ class Control #制御構文
     if check_imple(options[:_ARGUMENT_], options)
       #checkにブロックが付与されているならそれを実行する
       eval_block(options, &inner_options[:block])
+      #onceオプションが設定されていれば_CECHK_を終了する
+      return if options[:once]
     end
 
     #指定があればコマンドを再スタックする

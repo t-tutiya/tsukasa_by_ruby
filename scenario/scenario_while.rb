@@ -1,47 +1,12 @@
 #! ruby -E utf-8
 
-#ボタンコントロール
-_DEFINE_ :button do |options|
-  _CREATE_ :LayoutControl, 
-          :width => 256,
-          :height => 256,
-          :id=>options[:id] do
-    image :file_path=>"./sozai/button_normal.png", 
-          :id=>:normal
-    image :file_path=>"./sozai/button_over.png", 
-          :id=>:over, :visible => false
-    image :file_path=>"./sozai/button_key_down.png", 
-          :id=>:key_down, :visible => false
-    on_mouse_over do
-      set :normal, visible: false
-      set :over,   visible: true
-      set :key_down, visible: false
-    end
-    on_mouse_out do
-      set :over,   visible: false
-      set :normal, visible: true
-      set :key_down, visible: false
-    end
-    on_key_down do
-      set :over,   visible: false
-      set :normal, visible: false
-      set :key_down, visible: true
-    end
-    on_key_up do
-      set :key_down, visible: false
-      set :normal, visible: false
-      set :over,   visible: true
-    end
-  end
-end
-
 #以下はいずれ全部画像処理系のスクリプトサンプルに持っていく
 #TODO：サンプル実行に必要なリソースファイルをアップする
 
 _CREATE_ :LayoutControl , 
           width: 1280, 
           height: 720 , 
-          rule: "sozai/circle_rule.png" do
+          rule: "sozai/rule/circle_rule.png" do
   image file_path: "./sozai/bg_sample.png", id: :test
 
   _WHILE_ [:true] do

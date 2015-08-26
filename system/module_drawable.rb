@@ -1,7 +1,6 @@
 #! ruby -E utf-8
 
 require 'dxruby'
-require_relative './script_compiler.rb'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１

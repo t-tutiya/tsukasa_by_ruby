@@ -2,7 +2,6 @@
 
 require 'dxruby'
 
-require_relative './script_compiler.rb'
 require_relative './Image_font_maker'
 
 ###############################################################################

@@ -33,7 +33,7 @@ _CHECK_ [:key_down] , key_code: K_RCONTROL, keep: true do
   _SEND_ :default_text_page_control0 , interrupt: true do
     _SEND_ :all , interrupt: true do
       _SET_ :_MODE_STATUS_, skip: true
-#      _SET_ sleep_mode: :wake
+#      _SET_ :_MODE_STATUS_, wake: :true
     end
    end
 end

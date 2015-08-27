@@ -79,11 +79,6 @@ _DEFINE_ :wait_command do |options|
   _WAIT_ [:command], command: options[:_ARGUMENT_]
 end
 
-#スリープモードの設定
-_DEFINE_ :sleep_mode do |options|
-  set sleep_mode: options[:mode]
-end
-
 #可視設定
 _DEFINE_ :visible do |options|
   set options
@@ -158,10 +153,8 @@ _DEFINE_ :pause do |options|
     #アイコン削除
     delete :icon
 
-    #ルートにウェイクを送る
-    _SEND_ :all , root: true, interrupt: true do
-      _SET_ sleep_mode: :wake
-    end
+    #ウェイクに移行
+    _SET_ :_MODE_STATUS_, wake: true
 
     #スキップフラグを下ろす
     _SEND_ :all , root: true, interrupt: true do
@@ -171,7 +164,7 @@ _DEFINE_ :pause do |options|
 
   #■ルートの待機処理
   #スリープモードを設定
-  sleep_mode mode: :sleep
+  _SET_ :_MODE_STATUS_, wake: false
   #ウェイク待ち
   _WAIT_ [:wake]
 end
@@ -234,7 +227,7 @@ _DEFINE_ :TextWindow do |options|
               set idle_mode: false
             end
           end
-          set sleep_mode: :sleep
+          _SET_ :_MODE_STATUS_, wake: false
           _WAIT_ [:wake]
           _SET_ :_MODE_STATUS_, skip: false
           transition_fade frame: 60,

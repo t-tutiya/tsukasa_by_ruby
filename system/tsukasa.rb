@@ -61,7 +61,7 @@ class Tsukasa < LayoutControl
     @_GLOBAL_DATA_ = {}
     #各種モードの管理
     @_MODE_STATUS_ = {
-      :sleep => :wake,
+      :wake => true,
       :skip => false
       #idle_modeはシステムが管理する為、ここでは扱わない
     }

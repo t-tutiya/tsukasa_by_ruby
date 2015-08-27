@@ -57,7 +57,6 @@ class Control #公開インターフェイス
     @next_frame_commands  = options[:next_frame_commands] || [] 
 
     @idle_mode = true          #待機モードの初期化
-    @sleep_mode = :wake        #スリープの初期状態を設定する
 
     @script_compiler = ScriptCompiler.new(self, @root_control)
     @control_list         = [] #コントロールリスト
@@ -213,7 +212,7 @@ class Control #内部メソッド
     conditions.each do |condition|
       case condition
       when :wake
-        return true if @sleep_mode == :wake
+        return true if @_MODE_STATUS_[:wake]
 
       when :idle
         return true if all_controls_idle?

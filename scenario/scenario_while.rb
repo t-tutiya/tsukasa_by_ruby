@@ -7,7 +7,7 @@ _CREATE_ :LayoutControl ,
           width: 1280, 
           height: 720 , 
           rule: "sozai/rule/circle_rule.png" do
-  image file_path: "./sozai/bg_sample.png", id: :test
+  _CREATE_ :ImageControl, file_path: "./sozai/bg_sample.png", id: :test
 
   _WHILE_ [:true] do
     transition_rule :count=> 0, :total_frame => 120, :vague => 50

@@ -100,13 +100,6 @@ _DEFINE_ :wait_push do
   _END_FRAME_
 end
 
-#Imageコントロール生成
-_DEFINE_ :image do |options|
-  _CREATE_ :ImageControl , options do
-    _YIELD_
-  end
-end
-
 ###############################################################################
 #テキストレイヤ関連
 ###############################################################################
@@ -218,7 +211,7 @@ _DEFINE_ :TextWindow do |options|
     index: 1000000, #描画順序
     id: options[:id] do
       #デフォルトの背景画像
-      image id: :bg
+      _CREATE_ :ImageControl, id: :bg
       ##このコントロールにload_imageを実行すると背景画像をセットできる。
       ##ex.
       ##  _SEND_ :message0 do
@@ -366,12 +359,15 @@ _DEFINE_ :button do |options|
           :width => 256,
           :height => 256,
           :id=>options[:id] do
-    image :file_path=>"./sozai/button_normal.png", 
-          :id=>:normal do end
-    image :file_path=>"./sozai/button_over.png", 
-          :id=>:over, :visible => false do end
-    image :file_path=>"./sozai/button_key_down.png", 
-          :id=>:key_down, :visible => false do end
+    _CREATE_ :ImageControl, 
+      :file_path=>"./sozai/button_normal.png", 
+      :id=>:normal
+    _CREATE_ :ImageControl, 
+      :file_path=>"./sozai/button_over.png", 
+      :id=>:over, :visible => false
+    _CREATE_ :ImageControl, 
+      :file_path=>"./sozai/button_key_down.png", 
+      :id=>:key_down, :visible => false
     on_mouse_over do
       set :normal, visible: false
       set :over,   visible: true
@@ -395,3 +391,4 @@ _DEFINE_ :button do |options|
     _YIELD_
   end
 end
+

@@ -407,8 +407,7 @@ class Control #制御構文
     if check_imple(options[:_ARGUMENT_], options)
       #checkにブロックが付与されているならそれを実行する
       eval_block(options, &inner_options[:block])
-      #onceオプションが設定されていれば_CECHK_を終了する
-      return if options[:once]
+      return
     end
 
     #指定があればコマンドを再スタックする

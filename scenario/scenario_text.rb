@@ -28,20 +28,6 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-#右ＣＴＲＬによるテキストスキップ機構
-#TODO：ひとまず動くが、もっと簡潔な記述が出来そう
-_CHECK_ [:true] , keep: true do
-  _SET_ :_MODE_STATUS_, ctrl_skip: false
-end
-_CHECK_ [:key_down] , key_code: K_RCONTROL , keep: true do
-  _SET_ :_MODE_STATUS_, ctrl_skip: true
-end
-=begin
-_CHECK_ [:true] , keep: true do
-  _EVAL_ "pp @_MODE_STATUS_"
-end
-=end
-
 text "★★★★★テスト中"
 
 _SEND_ :default_text_page_control0 do

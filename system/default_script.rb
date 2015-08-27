@@ -127,7 +127,7 @@ _DEFINE_ :pause do |options|
   #■行表示中スキップ処理
   _SEND_ :default_text_page_control0 do 
     #idleあるいはキー入力待機
-    _WAIT_ [:key_push, :idle]
+    _WAIT_ [:key_push, :idle, :mode], mode: :ctrl_skip
 
     if options[:icon]
       _SEND_ :last do
@@ -156,16 +156,22 @@ _DEFINE_ :pause do |options|
 
     #スキップフラグを下ろす
     _SET_ :_MODE_STATUS_, skip: false
+
+    #CTRLスキップの為に必要
+    _END_FRAME_ 
   end
 
   #■ルートの待機処理
   #スリープモードを設定
   _SET_ :_MODE_STATUS_, wake: false
 
+  _SET_ :_MODE_STATUS_, ctrl_skip: false
+  _CHECK_ [:key_down] , key_code: K_RCONTROL , keep: true do
+    _SET_ :_MODE_STATUS_, ctrl_skip: true
+  end
+
   #ウェイク待ち
   _WAIT_ [:mode], mode: [:ctrl_skip, :wake]
-
-  _END_FRAME_ #CTRLスキップの為に必要
 end
 
 #行クリック待ちポーズ
@@ -181,7 +187,6 @@ end
 #ページクリック待ちポーズ
 _DEFINE_ :page_pause do
   pause icon: :page_icon_func
-  _END_FRAME_ #CTRLスキップの為に必要
   flush
 end
 
@@ -223,7 +228,7 @@ _DEFINE_ :TextWindow do |options|
             start: 0,
             last: 255
           #CTRLスキップチェック
-          _CHECK_ [:mode], mode: :ctrl_skip, keep: true, once: true  do
+          _CHECK_ [:mode], mode: :ctrl_skip, keep: true do
             _SET_ :draw_option, alpha: 255
             _SET_ :_MODE_STATUS_, wake: true
           end
@@ -243,6 +248,11 @@ _DEFINE_ :TextWindow do |options|
         } do
         set size: 32
         _FLUSH_ #これが必ず必要
+        #右ＣＴＲＬによるテキストスキップ
+        _SET_ :_MODE_STATUS_, ctrl_skip: false
+        _CHECK_ [:key_down] , key_code: K_RCONTROL, keep: true do
+          _SET_ :_MODE_STATUS_, ctrl_skip: true
+        end
       end
   end
 end

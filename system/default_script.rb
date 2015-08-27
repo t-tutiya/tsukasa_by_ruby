@@ -79,11 +79,6 @@ _DEFINE_ :wait_command do |options|
   _WAIT_ [:command], command: options[:_ARGUMENT_]
 end
 
-#スキップモードの設定
-_DEFINE_ :skip_mode do |options|
-  set skip_mode: options[:mode]
-end
-
 #スリープモードの設定
 _DEFINE_ :sleep_mode do |options|
   set sleep_mode: options[:mode]
@@ -148,7 +143,7 @@ _DEFINE_ :pause do |options|
     _CHECK_ [:key_push] do
       #スキップフラグを立てる
       _SEND_ :all , interrupt: true do
-        _SET_ skip_mode: true
+        _SET_ :_MODE_STATUS_, skip: true
       end
     end
 
@@ -170,7 +165,7 @@ _DEFINE_ :pause do |options|
 
     #スキップフラグを下ろす
     _SEND_ :all , root: true, interrupt: true do
-      _SET_ skip_mode: false
+      _SET_ :_MODE_STATUS_, skip: false
     end
   end
 
@@ -241,7 +236,7 @@ _DEFINE_ :TextWindow do |options|
           end
           set sleep_mode: :sleep
           _WAIT_ [:wake]
-          skip_mode mode: false
+          _SET_ :_MODE_STATUS_, skip: false
           transition_fade frame: 60,
             count: 0,
             start: 255,

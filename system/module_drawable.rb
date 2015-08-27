@@ -325,7 +325,7 @@ module Drawable #トランジション
   #last:終了α値
   def command_transition_fade(options, inner_options) 
     #スキップモードであれば最終値を設定し、フレーム内処理を続行する
-    if @skip_mode
+    if @_MODE_STATUS_[:skip]
       @draw_option[:alpha] = options[:last]
       return
     end

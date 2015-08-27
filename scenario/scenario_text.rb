@@ -28,13 +28,14 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+#右ＣＴＲＬによるテキストスキップ機構（未完成）
 _CHECK_ [:key_down] , key_code: K_RCONTROL, keep: true do
-  _SEND_ :all , root: true do
-    _EVAL_ "pp 'push'"
-    _EVAL_ "pp 'p'"
-    set :all, skip_mode: true
-    set :all, sleep_mode: :wake
-  end
+  _SEND_ :default_text_page_control0 , interrupt: true do
+    _SEND_ :all , interrupt: true do
+      _SET_ :_MODE_STATUS_, skip: true
+#      _SET_ sleep_mode: :wake
+    end
+   end
 end
 
 text "★★★★★テスト中"
@@ -66,7 +67,7 @@ end
 page_pause
 
 #render_to_image
-backlay
+#backlay
 
 text "■■■■■■■■■■■■■■■■■■■■■■"
 lp

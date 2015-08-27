@@ -43,6 +43,8 @@ class Control #公開インターフェイス
     @_USER_DATA_ = @root_control._USER_DATA_
     #ゲーム全体で共有するセーブデータ
     @_GLOBAL_DATA_ = @root_control._GLOBAL_DATA_
+    #各種モードの管理
+    @_MODE_STATUS_ =  @root_control._MODE_STATUS_
 
     # ユーザ定義関数
     @function_list = options[:function_list] || {} 
@@ -54,7 +56,6 @@ class Control #公開インターフェイス
     #TODO：これがシリアライズ対象になっているのはおかしいのかもしれない
     @next_frame_commands  = options[:next_frame_commands] || [] 
 
-    @skip_mode = options[:skip_mode] || false #スキップモードの初期化
     @idle_mode = true          #待機モードの初期化
     @sleep_mode = :wake        #スリープの初期状態を設定する
 
@@ -240,7 +241,7 @@ class Control #内部メソッド
 
       when :skip
         #スキップモードであれば
-        return true if @skip_mode
+        return true if @_MODE_STATUS_[:skip]
 
       #ユーザデータ確認系
 
@@ -284,10 +285,6 @@ class Control #コントロールの生成／破棄
 
   #コントロールをリストに登録する
   def command__CREATE_(options, inner_options)
-    #スキップモードの指定
-    #TODO：ここで入れるのは相当イマイチ。方法を考える
-    options[:skip_mode] = @skip_mode
-
     #コントロールを生成して子要素として登録する
     @control_list.push(Module.const_get(options[:_ARGUMENT_]).new( options, 
                                                                inner_options, 
@@ -457,7 +454,8 @@ class Control #ユーザー定義関数操作
   #関数呼び出し
   def command__CALL_(options, inner_options)
     #関数名に対応する関数ブロックを取得する
-    function_block = @function_list[options[:_ARGUMENT_]] || @root_control.function_list[options[:_ARGUMENT_]]
+    function_block =  @function_list[options[:_ARGUMENT_]] || 
+                      @root_control.function_list[options[:_ARGUMENT_]]
       
     #定義されていないfunctionが呼びだされたら例外を送出
     raise NameError, "undefined local variable or command or function `#{options[:_ARGUMENT_]}' for #{inner_options}" unless function_block

@@ -228,9 +228,6 @@ class TextPageControl < Control
     target.push_command([:_CREATE_, 
                {:_ARGUMENT_ => :ImageControl, 
                 :entity => entity,
-
-                :skip_mode =>  @skip_mode,
-
                 :align_y => :bottom,
                 
                 :width => width,
@@ -383,7 +380,6 @@ class TextPageControl < Control
                    :char => "",
                    :font => @font,
                    :font_config => @font_config,
-                   :skip_mode =>  @skip_mode,
                    :graph => true,
                    },
                    {:block => @char_renderer},
@@ -421,7 +417,6 @@ class TextPageControl < Control
                      :char => "",
                      :font => @font,
                      :font_config => @font_config,
-                     :skip_mode =>  @skip_mode,
                      :graph => options[:is_char]},
                     image
                   ))

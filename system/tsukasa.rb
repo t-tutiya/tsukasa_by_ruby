@@ -49,6 +49,7 @@ require_relative './script_compiler.rb'
 class Tsukasa < LayoutControl
   attr_reader  :_USER_DATA_
   attr_reader  :_GLOBAL_DATA_
+  attr_reader  :_MODE_STATUS_
   attr_reader  :default_control
   attr_reader  :function_list
 
@@ -58,6 +59,12 @@ class Tsukasa < LayoutControl
     @_USER_DATA_ = {}
     #ゲーム全体で共有するセーブデータ
     @_GLOBAL_DATA_ = {}
+    #各種モードの管理
+    @_MODE_STATUS_ = {
+      :sleep => :wake,
+      :skip => false
+      #idle_modeはシステムが管理する為、ここでは扱わない
+    }
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @default_control = {
       :TextPageControl   => :default_text_page_control0,

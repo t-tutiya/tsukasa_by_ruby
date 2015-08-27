@@ -137,9 +137,7 @@ _DEFINE_ :pause do |options|
 
     _CHECK_ [:key_push] do
       #スキップフラグを立てる
-      _SEND_ :all , interrupt: true do
-        _SET_ :_MODE_STATUS_, skip: true
-      end
+      _SET_ :_MODE_STATUS_, skip: true
     end
 
     #キー入力伝搬を止める為に１フレ送る
@@ -157,9 +155,7 @@ _DEFINE_ :pause do |options|
     _SET_ :_MODE_STATUS_, wake: true
 
     #スキップフラグを下ろす
-    _SEND_ :all , root: true, interrupt: true do
-      _SET_ :_MODE_STATUS_, skip: false
-    end
+    _SET_ :_MODE_STATUS_, skip: false
   end
 
   #■ルートの待機処理

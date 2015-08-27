@@ -212,6 +212,10 @@ module Drawable #ムーブ
     options[:count] += 1
   end
 
+
+  #スプライン補間
+  #これらの実装については以下のサイトを参考にさせて頂きました。感謝します。
+  # http://www1.u-netsurf.ne.jp/~future/HTML/bspline.html
   def command_move_path(options, inner_options)
 
     options[:count] = 0 unless options[:count]

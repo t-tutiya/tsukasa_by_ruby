@@ -213,8 +213,13 @@ class Control #内部メソッド
       case condition
       #汎用モードチェック
       when :mode
-        #TODO;チェックしたいモードが１個以上だった場合にも対応したい
-        return true if @_MODE_STATUS_[options[:mode]]
+        if options[:mode].instance_of?(Array)
+          options[:mode].each do |mode|
+            return true if @_MODE_STATUS_[mode]
+          end
+        else
+          return true if @_MODE_STATUS_[options[:mode]]
+        end
 
       when :idle
         return true if all_controls_idle?

@@ -274,7 +274,7 @@ class TextPageControl < Control
       command_list.push([:_WAIT_, 
                         {:_ARGUMENT_ => [:count, :mode, :key_push],
                          :count => @wait_frame,
-                         :mode => :skip}, 
+                         :mode => [:skip, :ctrl_skip]}, 
                          inner_options])
     end
 
@@ -318,7 +318,7 @@ class TextPageControl < Control
     interrupt_command([:_WAIT_, 
                       {:_ARGUMENT_ => [:count, :mode, :key_push],
                        :count => @line_feed_wait_frame,
-                       :mode => :skip}, 
+                       :mode => [:skip, :ctrl_skip]}, 
                        inner_options])
 
     #次のアクティブ行コントロールを追加  
@@ -429,7 +429,7 @@ class TextPageControl < Control
     interrupt_command([:_WAIT_, 
                           {:_WAIT_ => [:count, :mode, :key_push],
                            :count => @wait_frame,
-                           :mode => :skip}, inner_options])
+                           :mode => [:skip, :ctrl_skip]}, inner_options])
 =end
   end
 

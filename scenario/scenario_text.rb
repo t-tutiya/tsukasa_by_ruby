@@ -28,15 +28,19 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-#右ＣＴＲＬによるテキストスキップ機構（未完成）
-_CHECK_ [:key_down] , key_code: K_RCONTROL, keep: true do
-  _SEND_ :default_text_page_control0 , interrupt: true do
-    _SEND_ :all , interrupt: true do
-      _SET_ :_MODE_STATUS_, skip: true
-#      _SET_ :_MODE_STATUS_, wake: :true
-    end
-   end
+#右ＣＴＲＬによるテキストスキップ機構
+#TODO：ひとまず動くが、もっと簡潔な記述が出来そう
+_CHECK_ [:true] , keep: true do
+  _SET_ :_MODE_STATUS_, ctrl_skip: false
 end
+_CHECK_ [:key_down] , key_code: K_RCONTROL , keep: true do
+  _SET_ :_MODE_STATUS_, ctrl_skip: true
+end
+=begin
+_CHECK_ [:true] , keep: true do
+  _EVAL_ "pp @_MODE_STATUS_"
+end
+=end
 
 text "★★★★★テスト中"
 
@@ -69,7 +73,7 @@ page_pause
 #render_to_image
 #backlay
 
-text "■■■■■■■■■■■■■■■■■■■■■■"
+text "２■■■■■■■■■■■■■■■■■■■■■"
 lp
 line_feed
 text "■■■■■■■■■■■"
@@ -82,28 +86,28 @@ lp
 text "■■■■■■■■■■■"
 page_pause
 
-text "■■■■■■■■■■■■■■■■■■■■■■"
+text "３■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 page_pause
 
-text "■■■■■■■■■■■■■■■■■■■■■■"
+text "４■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 page_pause
 
-text "■■■■■■■■■■■■■■■■■■■■■■"
+text "５■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 page_pause
 
-text "■■■■■■■■■■■■■■■■■■■■■■"
+text "６■■■■■■■■■■■■■■■■■■■■■"
 line_feed
 text "■■■■■■■■■■■■■■■■■■■■■■"
 line_feed

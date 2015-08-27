@@ -146,7 +146,7 @@ _DEFINE_ :pause do |options|
     #■行末待機処理
 
     #キー入力待機
-    _WAIT_ [:key_push]
+    _WAIT_ [:key_push, :mode], mode: :ctrl_skip
 
     #アイコン削除
     delete :icon
@@ -161,8 +161,11 @@ _DEFINE_ :pause do |options|
   #■ルートの待機処理
   #スリープモードを設定
   _SET_ :_MODE_STATUS_, wake: false
+
   #ウェイク待ち
-  _WAIT_ [:mode], mode: :wake
+  _WAIT_ [:mode], mode: [:ctrl_skip, :wake]
+
+  _END_FRAME_ #CTRLスキップの為に必要
 end
 
 #行クリック待ちポーズ
@@ -178,6 +181,7 @@ end
 #ページクリック待ちポーズ
 _DEFINE_ :page_pause do
   pause icon: :page_icon_func
+  _END_FRAME_ #CTRLスキップの為に必要
   flush
 end
 
@@ -218,7 +222,12 @@ _DEFINE_ :TextWindow do |options|
             count: 0,
             start: 0,
             last: 255
-          _WAIT_ [:command, :mode], command: :transition_fade ,mode: :wake do
+          #CTRLスキップチェック
+          _CHECK_ [:mode], mode: :ctrl_skip, keep: true, once: true  do
+            _SET_ :draw_option, alpha: 255
+            _SET_ :_MODE_STATUS_, wake: true
+          end
+          _WAIT_ [:command, :mode], command: :transition_fade ,mode: [:wake, :ctrl_skip] do
             _SEND_ nil, interrupt: true do
               set idle_mode: false
             end
@@ -230,7 +239,7 @@ _DEFINE_ :TextWindow do |options|
             count: 0,
             start: 255,
             last:128
-          _WAIT_ [:command, :mode], command: :transition_fade ,mode: :wake 
+          _WAIT_ [:command, :mode], command: :transition_fade ,mode: [:wake, :ctrl_skip] 
         } do
         set size: 32
         _FLUSH_ #これが必ず必要

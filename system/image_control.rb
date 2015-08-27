@@ -77,7 +77,6 @@ class ImageControl < Control
     else
 
       #実体から初期化する
-      #TODO：シリアライズ対象にできないのでこの機能は辞めるかも
       if options[:entity]
         @file_path = nil
         @entity = options[:entity]
@@ -112,6 +111,9 @@ class ImageControl < Control
         @width  = 1
         @height = 1
       end
+
+      @real_width = @entity.width
+      @real_height = @entity.height
     end
 
     #同名のtksファイルがあれば読み込む

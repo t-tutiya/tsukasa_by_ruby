@@ -43,8 +43,8 @@ class LayoutControl < Control
       @entity = RenderTarget.new( options[:width]  || 1, 
                                   options[:height] || 1, 
                                   options[:color]  || [0,0,0,0])
-      @width  = @entity.width
-      @height = @entity.height
+      @real_width = @width  = @entity.width
+      @real_height = @height = @entity.height
     else
       options[:child_controls_draw_to_entity] = false
     end

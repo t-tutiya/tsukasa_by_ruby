@@ -83,8 +83,8 @@ module Drawable
     @align_y = options[:align_y] || :none
 
     #TODO：いらない気がする
-    @width  = options[:width] || 0  #横幅
-    @height = options[:height] || 0 #縦幅
+    @real_width = @width  = options[:width] || 0  #横幅
+    @real_height = @height = options[:height] || 0 #縦幅
 
     #ルールトランジション用の画像ファイルパスがあるならシェーダーを初期化する
     self.rule = options[:rule] if options[:rule]
@@ -124,7 +124,8 @@ module Drawable
 
     #デバッグ用：コントロールの外枠を描画する
     if @@_DRAWBABL_DEBUG_
-      target.draw_box_line(x_pos, y_pos, x_pos + @width,  y_pos + @height)
+      target.draw_box_line( x_pos, y_pos, 
+                            x_pos + @real_width,  y_pos + @real_height)
     end
 
     dx = offset_x + @x_pos

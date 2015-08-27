@@ -40,9 +40,9 @@ class Control #公開インターフェイス
     @root_control = root_control
     
     #個別ユーザーデータ領域
-    @user_data = @root_control.user_data
+    @_USER_DATA_ = @root_control._USER_DATA_
     #ゲーム全体で共有するセーブデータ
-    @global_data = @root_control.global_data
+    @_GLOBAL_DATA_ = @root_control._GLOBAL_DATA_
 
     # ユーザ定義関数
     @function_list = options[:function_list] || {} 
@@ -246,19 +246,19 @@ class Control #内部メソッド
 
       when :equal
         #指定されたデータと値がイコールかどうか
-        return true if @root_control.user_data[options[:key]] == options[:val]
+        return true if @root_control._USER_DATA_[options[:key]] == options[:val]
 
       when :not_equal
         #指定されたデータと値がイコールでない場合
-        return true if @root_control.user_data[options[:key]] != options[:val]
+        return true if @root_control._USER_DATA_[options[:key]] != options[:val]
 
       when :nil
         #指定されたデータがnilの場合
-        return true if @root_control.user_data[options[:key]] == nil
+        return true if @root_control._USER_DATA_[options[:key]] == nil
 
       when :not_nil
         #指定されたデータがnilで無い場合
-        return true if @root_control.user_data[options[:key]] != nil
+        return true if @root_control._USER_DATA_[options[:key]] != nil
 
       when :true
         #必ず真を返す
@@ -364,11 +364,11 @@ class Control #セッター／ゲッター
         if key == :_RESULT_
           @_RESULT_ = instance_variable_get("@" + variable.to_s)[val]
         else
-          @root_control.user_data[key] = instance_variable_get("@" + variable.to_s)[val]
+          @root_control._USER_DATA_[key] = instance_variable_get("@" + variable.to_s)[val]
         end
       else
         if instance_variable_defined?("@" + val.to_s)
-          @root_control.user_data[key] = instance_variable_get("@" + val.to_s)
+          @root_control._USER_DATA_[key] = instance_variable_get("@" + val.to_s)
         else
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + val.to_s + "]は存在しません"
         end
@@ -575,14 +575,14 @@ class Control #セーブデータ制御
     if options[:global_data]
       db = PStore.new("./data/global_data.bin")
       db.transaction do
-        db["key"] = @root_control.global_data
+        db["key"] = @root_control._GLOBAL_DATA_
       end
     #ユーザーデータ
     #任意の接尾字を指定する
     elsif options[:user_data_no]
       db = PStore.new("./data/user_data_" + options[:user_data_no].to_s + ".bin")
       db.transaction do
-        db["key"] = @root_control.user_data
+        db["key"] = @root_control._USER_DATA_
       end
     else
       #セーブファイル指定エラー
@@ -596,14 +596,14 @@ class Control #セーブデータ制御
     if options[:global_data]
       db = PStore.new("./data/global_data.bin")
       db.transaction do
-        @root_control.global_data = db["key"]
+        @root_control._GLOBAL_DATA_ = db["key"]
       end
     #ユーザーデータ
     #任意の接尾字を指定する
     elsif options[:user_data_no]
       db = PStore.new("./data/user_data_" + options[:user_data_no].to_s + ".bin")
       db.transaction do
-        @root_control.user_data = db["key"]
+        @root_control._USER_DATA_ = db["key"]
       end
     else
       #セーブファイル指定エラー

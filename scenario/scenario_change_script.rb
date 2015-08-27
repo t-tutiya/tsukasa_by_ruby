@@ -39,13 +39,13 @@ button  id: :button1,
     set :key_down, visible: false
     set :normal, visible: false
     set :over,   visible: true
-    _SET_ :user_data, flag: true
+    _SET_ :_USER_DATA_, flag: true
   end
 end
 
 about do
   _CHECK_ [:not_nil], key: :flag, keep: true, once: true do
-    _SET_ :user_data, scenario: 1
+    _SET_ :_USER_DATA_, scenario: 1
     #↓ここがもう少し簡潔に表現できると良い
     _SEND_ :default_text_page_control0, interrupt: true do
       _BREAK_
@@ -67,7 +67,7 @@ about do
   text "■■■■■■■■■■■■■■■■■■■■■■"
   line_feed
   pause
-  _SET_ :user_data, scenario: 2
+  _SET_ :_USER_DATA_, scenario: 2
 end
 
 #TODO;ここでフレームを送らない場合、次のスクリプトファイルが:default_text_page_control0に読み込まれた後で_BREAK_が機能してしまう。どうにかならんかなーこれ

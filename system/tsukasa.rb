@@ -47,17 +47,17 @@ require_relative './script_compiler.rb'
 
 #TODO：モジュールであるべきか？
 class Tsukasa < LayoutControl
-  attr_reader  :user_data
-  attr_reader  :global_data
+  attr_reader  :_USER_DATA_
+  attr_reader  :_GLOBAL_DATA_
   attr_reader  :default_control
   attr_reader  :function_list
 
   def initialize(options)
     @root_control = self
     #個別ユーザーデータ領域
-    @user_data = {}
+    @_USER_DATA_ = {}
     #ゲーム全体で共有するセーブデータ
-    @global_data = {}
+    @_GLOBAL_DATA_ = {}
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @default_control = {
       :TextPageControl   => :default_text_page_control0,

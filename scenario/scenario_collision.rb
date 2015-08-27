@@ -40,7 +40,7 @@ _CREATE_ :LayoutControl,
         start: 255,
         last: 0
     end
-    _WAIT_ [:command, :skip], command: :transition_fade
+    _WAIT_ [:command, :mode], command: :transition_fade, mode: :skip
 =end
     set :key_down, visible: false
   end

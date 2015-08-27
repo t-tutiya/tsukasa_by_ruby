@@ -166,7 +166,7 @@ _DEFINE_ :pause do |options|
   #スリープモードを設定
   _SET_ :_MODE_STATUS_, wake: false
   #ウェイク待ち
-  _WAIT_ [:wake]
+  _WAIT_ [:mode], mode: :wake
 end
 
 #行クリック待ちポーズ
@@ -222,19 +222,19 @@ _DEFINE_ :TextWindow do |options|
             count: 0,
             start: 0,
             last: 255
-          _WAIT_ [:command, :skip], command: :transition_fade do
+          _WAIT_ [:command, :mode], command: :transition_fade ,mode: :wake do
             _SEND_ nil, interrupt: true do
               set idle_mode: false
             end
           end
           _SET_ :_MODE_STATUS_, wake: false
-          _WAIT_ [:wake]
+          _WAIT_ [:mode], mode: :wake
           _SET_ :_MODE_STATUS_, skip: false
           transition_fade frame: 60,
             count: 0,
             start: 255,
             last:128
-          _WAIT_ [:command, :skip], command: :transition_fade
+          _WAIT_ [:command, :mode], command: :transition_fade ,mode: :wake 
         } do
         set size: 32
         _FLUSH_ #これが必ず必要

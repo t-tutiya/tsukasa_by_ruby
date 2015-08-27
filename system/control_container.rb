@@ -211,8 +211,10 @@ class Control #内部メソッド
   def check_imple(conditions, options)
     conditions.each do |condition|
       case condition
-      when :wake
-        return true if @_MODE_STATUS_[:wake]
+      #汎用モードチェック
+      when :mode
+        #TODO;チェックしたいモードが１個以上だった場合にも対応したい
+        return true if @_MODE_STATUS_[options[:mode]]
 
       when :idle
         return true if all_controls_idle?
@@ -237,10 +239,6 @@ class Control #内部メソッド
         key_code = options[:key_code] ? options[:key_code] : K_SPACE
         #キー押下があれば
         return true if Input.key_down?(key_code)
-
-      when :skip
-        #スキップモードであれば
-        return true if @_MODE_STATUS_[:skip]
 
       #ユーザデータ確認系
 

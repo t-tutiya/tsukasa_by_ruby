@@ -579,15 +579,15 @@ class Control #セーブデータ制御
   #TODO：保存先パスや名称は将来的には外部から与えるようにしたい
   def command__SAVE_(options, inner_options)
     #グローバルデータ
-    if options[:global_data]
+    if options[:data_no] == 0
       db = PStore.new("./data/global_data.bin")
       db.transaction do
         db["key"] = @root_control._GLOBAL_DATA_
       end
     #ユーザーデータ
     #任意の接尾字を指定する
-    elsif options[:user_data_no]
-      db = PStore.new("./data/user_data_" + options[:user_data_no].to_s + ".bin")
+    elsif options[:data_no]
+      db = PStore.new("./data/user_data_" + options[:data_no].to_s + ".bin")
       db.transaction do
         db["key"] = @root_control._USER_DATA_
       end
@@ -600,15 +600,15 @@ class Control #セーブデータ制御
 
   def command__LOAD_(options, inner_options)
     #グローバルデータ
-    if options[:global_data]
+    if options[:data_no] == 0
       db = PStore.new("./data/global_data.bin")
       db.transaction do
         @root_control._GLOBAL_DATA_ = db["key"]
       end
     #ユーザーデータ
     #任意の接尾字を指定する
-    elsif options[:user_data_no]
-      db = PStore.new("./data/user_data_" + options[:user_data_no].to_s + ".bin")
+    elsif options[:data_no]
+      db = PStore.new("./data/user_data_" + options[:data_no].to_s + ".bin")
       db.transaction do
         @root_control._USER_DATA_ = db["key"]
       end

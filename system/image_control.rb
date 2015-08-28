@@ -34,14 +34,6 @@ require 'dxruby'
 class ImageControl < Control
   include Drawable
 
-  #Imageのキャッシュ機構の簡易実装
-  #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
-  @@image_cache = Hash.new
-  #キャッシュされていない画像パスが指定されたら読み込む
-  @@image_cache.default_proc = ->(hsh, key) {
-    hsh[key] = Image.load(key)
-  }
-
   def initialize(options, inner_options, root_control)
     super
     command_load_image(options, inner_options)
@@ -54,79 +46,93 @@ class ImageControl < Control
   end
 
   def command_load_image(options, inner_options)
-
-    #イメージの分割指定がある場合
-    if options[:tiles]
-      @file_path = options[:file_path]
-
-      entities = @@image_cache[@file_path].slice_tiles(
-                                                  options[:x_count] || 1, 
-                                                  options[:y_count] || 1)
-
-      entities.each.with_index(options[:start_index] || 0) do |image, index|
-        #TODO;インデックスと逆順に格納されている。直すべきか検討
-        interrupt_command([:_CREATE_, 
-                          {
-                            :_ARGUMENT_ => :ImageControl,
-                            :entity => image,
-                            :id => index,
-                            :float_mode => options[:float_mode],
-                            :visible => false
-                          }, inner_options])
-      end
-    else
-
+    if options[:entity]
       #実体から初期化する
-      if options[:entity]
-        @file_path = nil
-        @entity = options[:entity]
-
-        if options[:width]
-          @width = options[:width]
-        else
-          @width  = @entity.width
-        end
-
-        if options[:height]
-          @height = options[:height]
-        else
-          @height  = @entity.height
-        end
-
+      @entity = options[:entity]
+    elsif options[:file_path]
       #ファイルパスから初期化する
-      elsif options[:file_path]
-        @file_path = options[:file_path]
-        @entity = @@image_cache[@file_path]
-
-        #縦横幅の更新
-        @width  = @entity.width
-        @height = @entity.height
-
+      @entity = @@image_cache[options[:file_path]]
+    else
       #空コントロールとして初期化する
-      else
-        @file_path = nil
-        @entity = Image.new(1,1,[0,0,0])
+      @entity = Image.new(1,1,[0,0,0])
+    end
 
-        #縦横幅の更新
-        @width  = 1
-        @height = 1
-      end
+    #entityの実体サイズを保存する
+    @real_width = @entity.width
+    @real_height = @entity.height
 
-      @real_width = @entity.width
-      @real_height = @entity.height
+    #仮想Ｘ幅
+    if options[:width]
+      @width = options[:width]
+    else
+      @width  = @entity.width
+    end
+
+    #仮想Ｙ幅
+    if options[:height]
+      @height = options[:height]
+    else
+      @height  = @entity.height
     end
 
     #同名のtksファイルがあれば読み込む
     if options[:file_path]
-      tks_path = File.dirname( options[:file_path]) + "/" + 
-             File.basename(options[:file_path], ".*") + ".tks"
-      rb_path = File.dirname( options[:file_path]) + "/" + 
-             File.basename(options[:file_path], ".*") + ".rb"
-      if File.exist?(tks_path)
-        @command_list += @script_compiler.commands({:script_path => tks_path})
+      file_path = File.dirname( options[:file_path]) + "/" + 
+                  File.basename(options[:file_path], ".*")
+
+      if File.exist?(file_path + ".tks")
+        @command_list += @script_compiler.commands({:script_path => file_path + ".tks"})
+      elsif File.exist?(file_path + ".rb")
+        @command_list += @script_compiler.commands({:script_path => file_path + ".rb"})
       end
-      if File.exist?(rb_path)
-        @command_list += @script_compiler.commands({:script_path => rb_path})
+    end
+  end
+end
+
+class TileImageControl < Control
+
+  def initialize(options, inner_options, root_control)
+    super
+    command_load_tiles(options, inner_options)
+  end
+
+  def dispose()
+    #TODO：キャッシュ機構が作り込まれてないのでここで削除できない
+    #@entity.dispose
+    super
+  end
+
+  def command_load_tiles(options, inner_options)
+    if options[:entity]
+      enity = options[:entity]
+    else
+      enity = @@image_cache[options[:file_path]]
+    end
+
+    entities = enity.slice_tiles(options[:x_count] || 1, 
+                                 options[:y_count] || 1)
+
+    entities.each.with_index(options[:start_index] || 0) do |image, index|
+      #TODO;インデックスと逆順に格納されている。直すべきか検討
+      interrupt_command([:_CREATE_, 
+                        {
+                          :_ARGUMENT_ => :ImageControl,
+                          :entity => image,
+                          :id => index,
+                          :float_mode => options[:float_mode],
+                          :visible => false
+                        }, inner_options])
+    end
+
+    #同名のtksファイルがあれば読み込む
+    if options[:file_path]
+      file_path = File.dirname( options[:file_path]) + "/" + 
+                  File.basename(options[:file_path], ".*")
+
+      if File.exist?(file_path + ".tks")
+        @command_list += @script_compiler.commands({:script_path => file_path + ".tks"})
+      elsif File.exist?(file_path + ".rb")
+        @command_list += @script_compiler.commands({:script_path => file_path + ".rb"})
       end
     end
   end

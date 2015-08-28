@@ -282,7 +282,7 @@ _DEFINE_ :line_icon_func do |options|
           :float_mode => :right,
           :id => options[:id],
           :float_mode => :right do
-    _CREATE_ :ImageControl, 
+    _CREATE_ :TileImageControl, 
             :tiles => true,
             :file_path=>"./sozai/icon/icon_8_a.png", 
             :id=>:test, 
@@ -302,7 +302,7 @@ _DEFINE_ :page_icon_func do |options|
           :float_mode => :right,
           :id => options[:id],
           :float_mode => :right do
-    _CREATE_ :ImageControl, 
+    _CREATE_ :TileImageControl, 
             :tiles => true, 
             :file_path=>"./sozai/icon/icon_4_a.png", 
             :id=>:test, 

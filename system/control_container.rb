@@ -35,6 +35,14 @@ class Control #公開インターフェイス
   #プロパティ
   attr_accessor  :id
 
+  #Imageのキャッシュ機構の簡易実装
+  #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
+  @@image_cache = Hash.new
+  #キャッシュされていない画像パスが指定されたら読み込む
+  @@image_cache.default_proc = ->(hsh, key) {
+    hsh[key] = Image.load(key)
+  }
+
   def initialize(options, inner_options, root_control)
     #rootコントロールの保存
     @root_control = root_control

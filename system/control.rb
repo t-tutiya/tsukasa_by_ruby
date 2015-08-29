@@ -71,7 +71,6 @@ class Control #公開インターフェイス
     @delete_flag = false       #削除フラグの初期化
 
     #スクリプトパスが設定されているなら読み込んで登録する
-    #TODO：将来的にここで読み込まずにINCLUDEコマンドを使いたい
     if options[:script_path]
       @command_list += @script_compiler.commands({:script_path => options[:script_path]})
     end

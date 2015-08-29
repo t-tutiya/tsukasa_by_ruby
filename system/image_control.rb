@@ -37,17 +37,6 @@ class ImageControl < Control
   def initialize(options, inner_options, root_control)
     command_load_image(options, inner_options)
     super
-    #同名のtksファイルがあれば読み込む
-    if options[:file_path]
-      file_path = File.dirname( options[:file_path]) + "/" + 
-                  File.basename(options[:file_path], ".*")
-
-      if File.exist?(file_path + ".tks")
-        @command_list += @script_compiler.commands({:script_path => file_path + ".tks"})
-      elsif File.exist?(file_path + ".rb")
-        @command_list += @script_compiler.commands({:script_path => file_path + ".rb"})
-      end
-    end
   end
 
   def dispose()
@@ -102,18 +91,6 @@ class TileImageControl < Control
                           :float_mode => options[:float_mode],
                           :visible => false
                         }, inner_options])
-    end
-
-    #同名のtksファイルがあれば読み込む
-    if options[:file_path]
-      file_path = File.dirname( options[:file_path]) + "/" + 
-                  File.basename(options[:file_path], ".*")
-
-      if File.exist?(file_path + ".tks")
-        @command_list += @script_compiler.commands({:script_path => file_path + ".tks"})
-      elsif File.exist?(file_path + ".rb")
-        @command_list += @script_compiler.commands({:script_path => file_path + ".rb"})
-      end
     end
   end
 end

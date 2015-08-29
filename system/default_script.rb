@@ -288,6 +288,7 @@ _DEFINE_ :line_icon_func do |options|
     _CREATE_ :TileImageControl, 
             :tiles => true,
             :file_path=>"./sozai/icon/icon_8_a.png", 
+            :script_path=>"./sozai/icon/icon_8_a.rb", 
             :id=>:test, 
             :x_count => 4, 
             :y_count => 2 

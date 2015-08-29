@@ -237,9 +237,7 @@ _DEFINE_ :TextWindow do |options|
           _WAIT_  [:command, :mode], 
                   command: :transition_fade , 
                   mode: [:wake, :ctrl_skip] do
-            _SEND_ nil, interrupt: true do
-              set idle_mode: false
-            end
+            _SET_ idle_mode: false
           end
           _SET_ :_MODE_STATUS_, wake: false
           _WAIT_ [:mode], mode: :wake
@@ -251,7 +249,7 @@ _DEFINE_ :TextWindow do |options|
           end
           _WAIT_ [:command, :mode], command: :transition_fade ,mode: [:wake, :ctrl_skip] 
         } do
-        set size: 32
+        _SET_ size: 32
         _FLUSH_ #これが必ず必要
         #右ＣＴＲＬによるテキストスキップ
         _SET_ :_MODE_STATUS_, ctrl_skip: false

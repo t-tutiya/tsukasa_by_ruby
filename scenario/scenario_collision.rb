@@ -35,7 +35,7 @@ _CREATE_ :LayoutControl,
 =begin
     #TODO:幾つか足りない処理があったのでひとまずコメントアウト
     _SEND_ :key_down do
-      transition_fade frame: 15,
+      transition_fade total_frame: 15,
         count: 0,
         start: 255,
         last: 0

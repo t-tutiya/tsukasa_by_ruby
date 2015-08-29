@@ -337,13 +337,13 @@ module Drawable #トランジション
 
     #透明度の決定
     @draw_option[:alpha] = options[:start] + 
-                          (((options[:last] - options[:start]).to_f / options[:frame]) * options[:count]).to_i
+                          (((options[:last] - options[:start]).to_f / options[:total_frame]) * options[:count]).to_i
 
     #カウントアップ
     options[:count] += 1
 
     #カウントが指定フレーム以下の場合
-    if options[:count] <= options[:frame]
+    if options[:count] <= options[:total_frame]
       #:transition_fadeコマンドをスタックし直す
       push_command_to_next_frame(:transition_fade, options, inner_options)
     end

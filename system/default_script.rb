@@ -223,7 +223,7 @@ _DEFINE_ :TextWindow do |options|
         fontname: "ＭＳＰ ゴシック",
         wait_frame: 2,
         char_renderer: Proc.new{
-          transition_fade frame: 15,
+          transition_fade total_frame: 15,
             count: 0,
             start: 0,
             last: 255
@@ -240,7 +240,7 @@ _DEFINE_ :TextWindow do |options|
           _SET_ :_MODE_STATUS_, wake: false
           _WAIT_ [:mode], mode: :wake
           _SET_ :_MODE_STATUS_, skip: false
-          transition_fade frame: 60,
+          transition_fade total_frame: 60,
             count: 0,
             start: 255,
             last:128

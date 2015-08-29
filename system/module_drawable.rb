@@ -82,9 +82,20 @@ module Drawable
     @float_mode = options[:float_mode] || :none
     @align_y = options[:align_y] || :none
 
-    #TODO：いらない気がする
-    @real_width = @width  = options[:width] || 0  #横幅
-    @real_height = @height = options[:height] || 0 #縦幅
+    @entity = options[:entity]
+
+    @real_width =  @width = 0
+    @real_height = @height = 0
+
+    if @entity
+      @real_width = @entity.width
+      @real_height = @entity.height
+      @width  = options[:width] ? options[:width] : @real_width
+      @height = options[:height] ? options[:height] : @real_height
+    else
+      @real_width = @width  = options[:width] if options[:width]
+      @real_height = @height = options[:height] if options[:height]
+    end
 
     #ルールトランジション用の画像ファイルパスがあるならシェーダーを初期化する
     self.rule = options[:rule] if options[:rule]

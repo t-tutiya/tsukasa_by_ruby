@@ -35,8 +35,19 @@ class ImageControl < Control
   include Drawable
 
   def initialize(options, inner_options, root_control)
-    super
     command_load_image(options, inner_options)
+    super
+    #同名のtksファイルがあれば読み込む
+    if options[:file_path]
+      file_path = File.dirname( options[:file_path]) + "/" + 
+                  File.basename(options[:file_path], ".*")
+
+      if File.exist?(file_path + ".tks")
+        @command_list += @script_compiler.commands({:script_path => file_path + ".tks"})
+      elsif File.exist?(file_path + ".rb")
+        @command_list += @script_compiler.commands({:script_path => file_path + ".rb"})
+      end
+    end
   end
 
   def dispose()
@@ -48,43 +59,12 @@ class ImageControl < Control
   def command_load_image(options, inner_options)
     if options[:entity]
       #実体から初期化する
-      @entity = options[:entity]
     elsif options[:file_path]
       #ファイルパスから初期化する
-      @entity = @@image_cache[options[:file_path]]
+      options[:entity] = @@image_cache[options[:file_path]]
     else
       #空コントロールとして初期化する
-      @entity = Image.new(1,1,[0,0,0])
-    end
-
-    #entityの実体サイズを保存する
-    @real_width = @entity.width
-    @real_height = @entity.height
-
-    #仮想Ｘ幅
-    if options[:width]
-      @width = options[:width]
-    else
-      @width  = @entity.width
-    end
-
-    #仮想Ｙ幅
-    if options[:height]
-      @height = options[:height]
-    else
-      @height  = @entity.height
-    end
-
-    #同名のtksファイルがあれば読み込む
-    if options[:file_path]
-      file_path = File.dirname( options[:file_path]) + "/" + 
-                  File.basename(options[:file_path], ".*")
-
-      if File.exist?(file_path + ".tks")
-        @command_list += @script_compiler.commands({:script_path => file_path + ".tks"})
-      elsif File.exist?(file_path + ".rb")
-        @command_list += @script_compiler.commands({:script_path => file_path + ".rb"})
-      end
+      options[:entity] = Image.new(1,1,[0,0,0])
     end
   end
 end

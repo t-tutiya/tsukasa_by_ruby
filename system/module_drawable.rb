@@ -264,13 +264,15 @@ module Drawable #ムーブ
         path_index = index
       end
 
+      options[:type] = :line unless options[:type]
+
       case options[:type]
       when :spline
         coefficent = b_spline_coefficent(step - index)
       when :line
         coefficent = line_coefficent(step - index)
       else
-        coefficent = line_coefficent(step - index)
+        raise
       end
 
       x += path[path_index][0] * coefficent

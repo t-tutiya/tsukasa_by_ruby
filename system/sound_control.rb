@@ -75,6 +75,7 @@ class SoundControl  < Control
     @midi = true if File.extname(options[:file_path]) == ".mid"
 
     #開始位置
+    #TODO:これがwavでエラーにならないのはなんでだ？
     @entity.start = options[:start] || 0
 
     if @midi
@@ -107,6 +108,6 @@ class SoundControl  < Control
   #TODO;上手く動いてないが理由が分からない
   def command_fade(options, inner_options)
     @entity.set_volume(options[:start] || @volume, 0)
-    @entity.set_volume(options[:last], options[:fade_ms])
+    @entity.set_volume(options[:last]  || 0, options[:fade_ms] || 0)
   end
 end

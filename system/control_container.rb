@@ -217,6 +217,9 @@ class Control #内部メソッド
   end
 
   def check_imple(conditions, options)
+    #条件が単体だった場合、要素１の配列にする。
+    conditions = [conditions] unless conditions.instance_of?(Array)
+  
     conditions.each do |condition|
       case condition
       #汎用モードチェック

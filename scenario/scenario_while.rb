@@ -11,7 +11,7 @@ _CREATE_ :LayoutControl ,
           rule: "sozai/rule/circle_rule.png" do
   _CREATE_ :ImageControl, file_path: "./sozai/bg_sample.png", id: :test
 
-  _WHILE_ [:true] do
+  _WHILE_ :true do
     transition_rule :count=> 0, :total_frame => 240, :vague => 50
     _WAIT_ [:command], :command => :transition_rule
   end
@@ -19,7 +19,7 @@ end
 
 button id: :button1
 _SEND_ :button1 do
-  _WHILE_ [:true] do
+  _WHILE_ :true do
     move last: [300,0], total_frame: 60
     wait_command :move
     move last: [300,300,255], total_frame: 60
@@ -33,7 +33,7 @@ end
 
 button id: :button2
 _SEND_ :button2 do
-  _WHILE_ [:true] do
+  _WHILE_ :true do
     move_path total_frame: 300, path: [
   [ 10.0 * 4,  30.0 * 4, 255],
   [ 77.0 * 4,  49.0 * 4, 0],
@@ -47,7 +47,7 @@ end
 
 button id: :button3
 _SEND_ :button3 do
-  _WHILE_ [:true] do
+  _WHILE_ :true do
     move_path total_frame: 300, type: :spline, path: [
 #  [ 10.0 * 4,  30.0 * 4, 0],
 #  [ 77.0 * 4,  49.0 * 4, 255],

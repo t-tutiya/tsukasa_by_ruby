@@ -224,15 +224,19 @@ _DEFINE_ :TextWindow do |options|
         wait_frame: 2,
         char_renderer: Proc.new{
           transition_fade total_frame: 15,
-            count: 0,
-            start: 0,
-            last: 255
+                          start: 0,
+                          last: 255,
+                          check: [[:mode], {:mode => [:skip, :ctrl_skip]}] do
+                            _SET_ :draw_option, alpha: 255
+          end
           #CTRLスキップチェック
           _CHECK_ [:mode], mode: :ctrl_skip, keep: true do
             _SET_ :draw_option, alpha: 255
             _SET_ :_MODE_STATUS_, wake: true
           end
-          _WAIT_ [:command, :mode], command: :transition_fade ,mode: [:wake, :ctrl_skip] do
+          _WAIT_  [:command, :mode], 
+                  command: :transition_fade , 
+                  mode: [:wake, :ctrl_skip] do
             _SEND_ nil, interrupt: true do
               set idle_mode: false
             end
@@ -241,9 +245,10 @@ _DEFINE_ :TextWindow do |options|
           _WAIT_ [:mode], mode: :wake
           _SET_ :_MODE_STATUS_, skip: false
           transition_fade total_frame: 60,
-            count: 0,
-            start: 255,
-            last:128
+                          last:128,
+                          check: [[:mode], {:mode => [:skip, :ctrl_skip]}] do
+                                          _SET_ :draw_option, alpha: 128
+          end
           _WAIT_ [:command, :mode], command: :transition_fade ,mode: [:wake, :ctrl_skip] 
         } do
         set size: 32

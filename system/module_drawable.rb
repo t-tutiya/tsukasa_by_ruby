@@ -52,7 +52,7 @@ class RenderTarget
 end
 
 module Drawable
-  @@_DRAWBABL_DEBUG_ = false
+  @@_DRAWBABL_DEBUG_ = true
 
   def initialize(options, inner_options, root_control)
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
@@ -171,8 +171,15 @@ end
 
 module Drawable #ムーブ
   def command_move(options, inner_options)
-
+    #現在の経過カウントを初期化
     options[:count] = 0 unless options[:count]
+
+    #条件判定が存在し、かつその条件が成立した場合
+    if options[:check] and check_imple(options[:check][0], options[:check][1])
+      #ブロックがあれば実行し、コマンドを終了する
+      eval_block(options, &inner_options[:block]) if inner_options[:block]
+      return
+    end
 
     #初期値が設定されていない場合は現在値を設定する
     options[:start] = [@x_pos, @y_pos] unless options[:start]
@@ -218,8 +225,15 @@ module Drawable #ムーブ
   #これらの実装については以下のサイトを参考にさせて頂きました。感謝します。
   # http://www1.u-netsurf.ne.jp/~future/HTML/bspline.html
   def command_move_path(options, inner_options)
-
+    #現在の経過カウントを初期化
     options[:count] = 0 unless options[:count]
+
+    #条件判定が存在し、かつその条件が成立した場合
+    if options[:check] and check_imple(options[:check][0], options[:check][1])
+      #ブロックがあれば実行し、コマンドを終了する
+      eval_block(options, &inner_options[:block]) if inner_options[:block]
+      return
+    end
 
     path = options[:path]
 
@@ -329,9 +343,15 @@ module Drawable #トランジション
   #start:開始α値
   #last:終了α値
   def command_transition_fade(options, inner_options) 
-    #スキップモードであれば最終値を設定し、フレーム内処理を続行する
-    if @_MODE_STATUS_[:skip]
-      @draw_option[:alpha] = options[:last]
+    #現在の経過カウントを初期化
+    options[:count] = 0 unless options[:count]
+    #透明度が設定されていなければ現在の値で初期化
+    options[:start] = @draw_option[:alpha] unless options[:start]
+
+    #条件判定が存在し、かつその条件が成立した場合
+    if options[:check] and check_imple(options[:check][0], options[:check][1])
+      #ブロックがあれば実行し、コマンドを終了する
+      eval_block(options, &inner_options[:block]) if inner_options[:block]
       return
     end
 
@@ -349,13 +369,20 @@ module Drawable #トランジション
     end
   end
 
+  #ルールトランジション
   def command_transition_rule(options, inner_options)
-    count =  options[:count]
-    total_frame =  options[:total_frame]
-    vague =  options[:vague]
+    #現在の経過カウントを初期化
+    options[:count] = 0 unless options[:count]
 
-    @rule.g_min = (((vague + total_frame).fdiv(total_frame)) * count - vague).fdiv(total_frame)
-    @rule.g_max = (((vague + total_frame).fdiv(total_frame)) * count).fdiv(total_frame)
+    #条件判定が存在し、かつその条件が成立した場合
+    if options[:check] and check_imple(options[:check][0], options[:check][1])
+      #ブロックがあれば実行し、コマンドを終了する
+      eval_block(options, &inner_options[:block]) if inner_options[:block]
+      return
+    end
+
+    @rule.g_min = (((options[:vague] + options[:total_frame]).fdiv(options[:total_frame])) * options[:count] - options[:vague]).fdiv(options[:total_frame])
+    @rule.g_max = (((options[:vague] + options[:total_frame]).fdiv(options[:total_frame])) * options[:count]).fdiv(options[:total_frame])
 
     #カウントが指定フレーム未満の場合
     if options[:count] < options[:total_frame]

@@ -186,15 +186,15 @@ module Drawable #ムーブ
     start_y = options[:start][1]
     start_alpha = options[:start][2]
 
-    end_x = options[:end][0]
-    end_y = options[:end][1]
+    end_x = options[:last][0]
+    end_y = options[:last][1]
 
     #透明度が設定されていなければ現在の値で初期化
-    unless options[:end][2]
-      options[:end][2] = @draw_option[:alpha]
+    unless options[:last][2]
+      options[:last][2] = @draw_option[:alpha]
     end
 
-    end_alpha = options[:end][2]
+    end_alpha = options[:last][2]
 
     #移動先座標の決定
     @x_pos = (start_x + (end_x - start_x).to_f / options[:total_frame] * options[:count]).to_i

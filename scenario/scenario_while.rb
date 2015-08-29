@@ -3,6 +3,8 @@
 #以下はいずれ全部画像処理系のスクリプトサンプルに持っていく
 #TODO：サンプル実行に必要なリソースファイルをアップする
 
+_CREATE_ :ImageControl, file_path: "./sozai/bg_test.jpg", id: :test
+
 _CREATE_ :LayoutControl , 
           width: 1280, 
           height: 720 , 
@@ -10,7 +12,7 @@ _CREATE_ :LayoutControl ,
   _CREATE_ :ImageControl, file_path: "./sozai/bg_sample.png", id: :test
 
   _WHILE_ [:true] do
-    transition_rule :count=> 0, :total_frame => 120, :vague => 50
+    transition_rule :count=> 0, :total_frame => 240, :vague => 50
     _WAIT_ [:command], :command => :transition_rule
   end
 end
@@ -18,13 +20,13 @@ end
 button id: :button1
 _SEND_ :button1 do
   _WHILE_ [:true] do
-    move end: [300,0], total_frame: 60
+    move last: [300,0], total_frame: 60
     wait_command :move
-    move end: [300,300,255], total_frame: 60
+    move last: [300,300,255], total_frame: 60
     wait_command :move
-    move end: [0,300,0], total_frame: 60
+    move last: [0,300,0], total_frame: 60
     wait_command :move
-    move end: [0,0,255], total_frame: 60
+    move last: [0,0,255], total_frame: 60
     wait_command :move
   end
 end

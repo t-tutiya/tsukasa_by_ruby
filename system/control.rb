@@ -473,7 +473,7 @@ class Control #ユーザー定義関数操作
     
     #伝搬されているブロックがある場合
     if inner_options[:block_stack]
-      block_stack = inner_options[:block_stack]
+      block_stack = inner_options[:block_stack].dup
       if inner_options[:block]
         block_stack.push(inner_options[:block]) 
       end
@@ -500,8 +500,9 @@ class Control #ユーザー定義関数操作
   def command__YIELD_(options, inner_options)
     return unless inner_options[:block_stack]
 
-    block = inner_options[:block_stack].pop
-    block_stack = inner_options[:block_stack].empty? ? nil : inner_options[:block_stack]
+    block_stack = inner_options[:block_stack].dup
+    block = block_stack.pop
+    block_stack = nil if block_stack.empty?
 
     eval_block(options, block_stack, &block)
   end

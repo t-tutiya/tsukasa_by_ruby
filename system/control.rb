@@ -225,12 +225,9 @@ class Control #内部メソッド
       case condition
       #汎用モードチェック
       when :mode
-        if options[:mode].instance_of?(Array)
-          options[:mode].each do |mode|
-            return true if @_MODE_STATUS_[mode]
-          end
-        else
-          return true if @_MODE_STATUS_[options[:mode]]
+        options[:mode] = [options[:mode]] unless options[:mode].instance_of?(Array)
+        options[:mode].each do |mode|
+          return true if @_MODE_STATUS_[mode]
         end
 
       when :idle
@@ -261,22 +258,18 @@ class Control #内部メソッド
 
       when :equal
         #指定されたデータと値がイコールかどうか
-        #return true if @root_control._USER_DATA_[options[:key]] == options[:val]
         return true if @root_control.send(args_name)[options[:key]] == options[:val]
 
       when :not_equal
         #指定されたデータと値がイコールでない場合
-        #return true if @root_control._USER_DATA_[options[:key]] != options[:val]
         return true if @root_control.send(args_name)[options[:key]] != options[:val]
 
       when :nil
         #指定されたデータがnilの場合
-        #return true if @root_control._USER_DATA_[options[:key]] == nil
         return true if @root_control.send(args_name)[options[:key]] == nil
 
       when :not_nil
         #指定されたデータがnilで無い場合
-        #return true if @root_control._USER_DATA_[options[:key]] != nil
         return true if @root_control.send(args_name)[options[:key]] != nil
 
       when :true

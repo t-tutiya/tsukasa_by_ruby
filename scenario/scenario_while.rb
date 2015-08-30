@@ -3,6 +3,8 @@
 #以下はいずれ全部画像処理系のスクリプトサンプルに持っていく
 #TODO：サンプル実行に必要なリソースファイルをアップする
 
+_SET_ :_GLOBAL_DATA_, _DEBUG_: true
+
 _CREATE_ :ImageControl, file_path: "./sozai/bg_test.jpg", id: :test
 
 _CREATE_ :LayoutControl , 

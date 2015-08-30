@@ -38,12 +38,7 @@ module Clickable
   end
 
   def initialize(options, inner_options, root_control)
-    @x_pos = options[:x_pos] || 0 #描画Ｘ座標
-    @y_pos = options[:y_pos] || 0 #描画Ｙ座標
-
-    @width  = options[:width]  || 1 #横幅
-    @height = options[:height] || 1 #縦幅
-
+    super
     @collision = options[:collision]
 
     self.colorkey = options[:colorkey] if options[:colorkey]
@@ -59,11 +54,9 @@ module Clickable
     @mouse_sprite = Sprite.new
     @mouse_sprite.collision = [0, 0]
 
-    @child_controls_draw_to_entity = false
     @over = false
     @out = true
 
-    super
   end
 
   def update()

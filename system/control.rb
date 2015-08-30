@@ -497,6 +497,7 @@ class Control #ユーザー定義関数操作
   end
 
   #関数ブロックを実行する
+  #TODO:この実装だと_YIELD_自身にはブロックを付与できないが、それは良いのか？
   def command__YIELD_(options, inner_options)
     return unless inner_options[:block_stack]
 

@@ -230,7 +230,10 @@ _DEFINE_ :TextWindow do |options|
                             _SET_ :draw_option, alpha: 255
           end
           #CTRLスキップチェック
-          _CHECK_ [:mode], mode: :ctrl_skip, keep: true do
+          _CHECK_ [:mode, :command], 
+                  command: :transition_fade , 
+                  mode: :ctrl_skip, 
+                  keep: true do
             _SET_ :draw_option, alpha: 255
             _SET_ :_MODE_STATUS_, wake: true
           end
@@ -245,17 +248,22 @@ _DEFINE_ :TextWindow do |options|
           transition_fade total_frame: 60,
                           last:128,
                           check: [[:mode], {:mode => [:skip, :ctrl_skip]}] do
-                                          _SET_ :draw_option, alpha: 128
+                            #スキップされた時はフェードアウトしない
+                            _SET_ :draw_option, alpha: 255
           end
-          _WAIT_ [:command, :mode], command: :transition_fade ,mode: [:wake, :ctrl_skip] 
+          _WAIT_ [:command, :mode], 
+                  command: :transition_fade ,
+                  mode: [:wake, :ctrl_skip] 
         } do
         _SET_ size: 32
         _FLUSH_ #これが必ず必要
         #右ＣＴＲＬによるテキストスキップ
         _SET_ :_MODE_STATUS_, ctrl_skip: false
+
         _CHECK_ [:key_down] , key_code: K_RCONTROL, keep: true do
           _SET_ :_MODE_STATUS_, ctrl_skip: true
         end
+
       end
   end
 end

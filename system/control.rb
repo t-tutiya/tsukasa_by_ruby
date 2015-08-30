@@ -251,12 +251,12 @@ class Control #内部メソッド
         end
 
       when :key_push
-        key_code = options[:key_code] ? options[:key_code] : K_SPACE
+        key_code = options[:key_push_code] ? options[:key_push_code] : K_SPACE
         #キー押下があれば
         return true if Input.key_push?(key_code)
 
       when :key_down
-        key_code = options[:key_code] ? options[:key_code] : K_SPACE
+        key_code = options[:key_down_code] ? options[:key_down_code] : K_SPACE
         #キー押下があれば
         return true if Input.key_down?(key_code)
 

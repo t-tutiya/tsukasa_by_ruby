@@ -84,12 +84,6 @@ _DEFINE_ :visible do |options|
   set options
 end
 
-#単機能キー入力待ち
-_DEFINE_ :wait_push do
-  _WAIT_ [:key_push]
-  _END_FRAME_
-end
-
 ###############################################################################
 #テキストレイヤ関連
 ###############################################################################
@@ -135,40 +129,29 @@ _DEFINE_ :pause do |options|
       end
     end
 
-    _CHECK_ [:key_push] do
-      #スキップフラグを立てる
-      _SET_ :_MODE_STATUS_, skip: true
-    end
-
     #キー入力伝搬を止める為に１フレ送る
     _END_FRAME_ 
 
     #■行末待機処理
 
     #キー入力待機
-    _WAIT_ [:key_push, :mode], mode: :ctrl_skip
+    _WAIT_ [:key_push, :key_down] , 
+            key_down_code: K_RCONTROL
+
+    _CHECK_ [:key_down] , key_down_code: K_RCONTROL do
+      _SET_ :_MODE_STATUS_, ctrl_skip: true
+    end
 
     #アイコン削除
     delete :icon
 
     #ウェイクに移行
     _SET_ :_MODE_STATUS_, wake: true
-
-    #スキップフラグを下ろす
-    _SET_ :_MODE_STATUS_, skip: false
-
-    #CTRLスキップの為に必要
-    _END_FRAME_ 
   end
 
   #■ルートの待機処理
   #スリープモードを設定
   _SET_ :_MODE_STATUS_, wake: false
-
-  _SET_ :_MODE_STATUS_, ctrl_skip: false
-  _CHECK_ [:key_down] , key_code: K_RCONTROL , keep: true do
-    _SET_ :_MODE_STATUS_, ctrl_skip: true
-  end
 
   #ウェイク待ち
   _WAIT_ [:mode], mode: [:ctrl_skip, :wake]
@@ -223,31 +206,26 @@ _DEFINE_ :TextWindow do |options|
         fontname: "ＭＳＰ ゴシック",
         wait_frame: 2,
         char_renderer: Proc.new{
+          _CHECK_ [:key_down] , key_down_code: K_RCONTROL do
+            _SET_ :_MODE_STATUS_, ctrl_skip: true
+          end
           transition_fade total_frame: 15,
                           start: 0,
                           last: 255,
-                          check: [[:mode], {:mode => [:skip, :ctrl_skip]}] do
+                          check: [[:mode, :key_push], 
+                                  {:mode => [:ctrl_skip]}] do
                             _SET_ :draw_option, alpha: 255
-          end
-          #CTRLスキップチェック
-          _CHECK_ [:mode, :command], 
-                  command: :transition_fade , 
-                  mode: :ctrl_skip, 
-                  keep: true do
-            _SET_ :draw_option, alpha: 255
-            _SET_ :_MODE_STATUS_, wake: true
-          end
-          _WAIT_  [:command, :mode], 
-                  command: :transition_fade , 
-                  mode: [:wake, :ctrl_skip] do
+                          end
+          _WAIT_  [:command], command: :transition_fade do
             _SET_ idle_mode: false
           end
           _SET_ :_MODE_STATUS_, wake: false
           _WAIT_ [:mode], mode: :wake
-          _SET_ :_MODE_STATUS_, skip: false
+          _END_FRAME_
           transition_fade total_frame: 60,
                           last:128,
-                          check: [[:mode], {:mode => [:skip, :ctrl_skip]}] do
+                          check: [[:mode, :key_push], 
+                                  {:mode => [:ctrl_skip]}] do
                             #スキップされた場合
                             _CHECK_ :mode, mode: :ctrl_skip do
                               #CTRLスキップ中であれば透明度255
@@ -264,13 +242,6 @@ _DEFINE_ :TextWindow do |options|
         } do
         _SET_ size: 32
         _FLUSH_ #これが必ず必要
-        #右ＣＴＲＬによるテキストスキップ
-        _SET_ :_MODE_STATUS_, ctrl_skip: false
-
-        _CHECK_ [:key_down] , key_code: K_RCONTROL, keep: true do
-          _SET_ :_MODE_STATUS_, ctrl_skip: true
-        end
-
       end
   end
 end

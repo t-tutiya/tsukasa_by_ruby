@@ -28,6 +28,9 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+#デバッグモードの設定
+_SET_ :_GLOBAL_DATA_, _DEBUG_: true
+
 #デフォルトのユーザー定義関数群
 _INCLUDE_ "./system/default_script.rb"
 

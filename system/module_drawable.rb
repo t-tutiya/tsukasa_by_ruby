@@ -52,8 +52,6 @@ class RenderTarget
 end
 
 module Drawable
-  @@_DRAWBABL_DEBUG_ = true
-
   def initialize(options, inner_options, root_control)
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
     @y_pos = options[:y_pos] || 0 #描画Ｙ座標
@@ -134,7 +132,7 @@ module Drawable
     end
 
     #デバッグ用：コントロールの外枠を描画する
-    if @@_DRAWBABL_DEBUG_
+    if @_GLOBAL_DATA_[:_DEBUG_]
       target.draw_box_line( x_pos, y_pos, 
                             x_pos + @real_width,  y_pos + @real_height)
     end

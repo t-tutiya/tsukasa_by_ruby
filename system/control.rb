@@ -588,14 +588,17 @@ class Control #セーブデータ制御
   def command__SAVE_(options, inner_options)
     #グローバルデータ
     if options[:_ARGUMENT_] == 0
-      db = PStore.new("./data/global_data.bin")
+      db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
+                      @_GLOBAL_DATA_[:_GLOBAL_DATA_FILENAME_])
       db.transaction do
         db["key"] = @root_control._GLOBAL_DATA_
       end
     #ユーザーデータ
     #任意の接尾字を指定する
     elsif options[:_ARGUMENT_]
-      db = PStore.new("./data/user_data_" + options[:_ARGUMENT_].to_s + ".bin")
+      db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
+                      options[:_ARGUMENT_].to_s +
+                      @_GLOBAL_DATA_[:_USER_DATA_FILENAME_])
       db.transaction do
         db["key"] = @root_control._USER_DATA_
       end
@@ -609,14 +612,17 @@ class Control #セーブデータ制御
   def command__LOAD_(options, inner_options)
     #グローバルデータ
     if options[:_ARGUMENT_] == 0
-      db = PStore.new("./data/global_data.bin")
+      db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
+                      @_GLOBAL_DATA_[:_GLOBAL_DATA_FILENAME_])
       db.transaction do
         @root_control._GLOBAL_DATA_ = db["key"]
       end
     #ユーザーデータ
     #任意の接尾字を指定する
     elsif options[:_ARGUMENT_]
-      db = PStore.new("./data/user_data_" + options[:_ARGUMENT_].to_s + ".bin")
+      db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
+                      options[:_ARGUMENT_].to_s +
+                      @_GLOBAL_DATA_[:_USER_DATA_FILENAME_])
       db.transaction do
         @root_control._USER_DATA_ = db["key"]
       end

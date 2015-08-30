@@ -58,7 +58,12 @@ class Tsukasa < LayoutControl
     #個別ユーザーデータ領域
     @_USER_DATA_ = {}
     #ゲーム全体で共有するセーブデータ
-    @_GLOBAL_DATA_ = {}
+    @_GLOBAL_DATA_ = {
+      :_DEBUG_ => false,
+      :_SAVE_DATA_PATH_ => "./data/",
+      :_GLOBAL_DATA_FILENAME_ => "global_data.bin",
+      :_USER_DATA_FILENAME_ => "_user_data.bin",
+    }
     #各種モードの管理
     @_MODE_STATUS_ = {
       :wake => true,

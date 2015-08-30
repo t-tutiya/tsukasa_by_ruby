@@ -230,6 +230,12 @@ class Control #内部メソッド
           return true if @_MODE_STATUS_[mode]
         end
 
+      when :not_mode
+        options[:mode] = [options[:mode]] unless options[:mode].instance_of?(Array)
+        options[:mode].each do |mode|
+          return true unless @_MODE_STATUS_[mode]
+        end
+
       when :idle
         return true if all_controls_idle?
 

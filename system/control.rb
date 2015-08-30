@@ -424,11 +424,6 @@ class Control #制御構文
       eval_block(options, &inner_options[:block])
       return
     end
-
-    #指定があればコマンドを再スタックする
-    if options[:keep]
-      push_command_to_next_frame(:_CHECK_, options, inner_options)
-    end
   end
 
   #繰り返し

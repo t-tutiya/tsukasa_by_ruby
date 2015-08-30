@@ -248,8 +248,15 @@ _DEFINE_ :TextWindow do |options|
           transition_fade total_frame: 60,
                           last:128,
                           check: [[:mode], {:mode => [:skip, :ctrl_skip]}] do
-                            #スキップされた時はフェードアウトしない
-                            _SET_ :draw_option, alpha: 255
+                            #スキップされた場合
+                            _CHECK_ :mode, mode: :ctrl_skip do
+                              #CTRLスキップ中であれば透明度255
+                              _SET_ :draw_option, alpha: 255
+                            end
+                            _CHECK_ :not_mode, mode: :ctrl_skip do
+                              #CTRLスキップ中でなければ透明度128
+                              _SET_ :draw_option, alpha: 128
+                            end
           end
           _WAIT_ [:command, :mode], 
                   command: :transition_fade ,

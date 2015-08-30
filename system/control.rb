@@ -218,7 +218,9 @@ class Control #内部メソッド
   def check_imple(conditions, options)
     #条件が単体だった場合、要素１の配列にする。
     conditions = [conditions] unless conditions.instance_of?(Array)
-  
+
+    args_name = options[:type] ? options[:type] : :_USER_DATA_
+
     conditions.each do |condition|
       case condition
       #汎用モードチェック
@@ -259,19 +261,23 @@ class Control #内部メソッド
 
       when :equal
         #指定されたデータと値がイコールかどうか
-        return true if @root_control._USER_DATA_[options[:key]] == options[:val]
+        #return true if @root_control._USER_DATA_[options[:key]] == options[:val]
+        return true if @root_control.send(args_name)[options[:key]] == options[:val]
 
       when :not_equal
         #指定されたデータと値がイコールでない場合
-        return true if @root_control._USER_DATA_[options[:key]] != options[:val]
+        #return true if @root_control._USER_DATA_[options[:key]] != options[:val]
+        return true if @root_control.send(args_name)[options[:key]] != options[:val]
 
       when :nil
         #指定されたデータがnilの場合
-        return true if @root_control._USER_DATA_[options[:key]] == nil
+        #return true if @root_control._USER_DATA_[options[:key]] == nil
+        return true if @root_control.send(args_name)[options[:key]] == nil
 
       when :not_nil
         #指定されたデータがnilで無い場合
-        return true if @root_control._USER_DATA_[options[:key]] != nil
+        #return true if @root_control._USER_DATA_[options[:key]] != nil
+        return true if @root_control.send(args_name)[options[:key]] != nil
 
       when :true
         #必ず真を返す

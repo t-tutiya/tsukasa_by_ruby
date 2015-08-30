@@ -386,6 +386,8 @@ module Drawable #トランジション
   def command_transition_rule(options, inner_options)
     #現在の経過カウントを初期化
     options[:count] = 0 unless options[:count]
+    #曖昧さを初期化
+    options[:vague] = 40 unless options[:vague]
 
     #条件判定が存在し、かつその条件が成立した場合
     if options[:check] and check_imple(options[:check][0], options[:check][1])

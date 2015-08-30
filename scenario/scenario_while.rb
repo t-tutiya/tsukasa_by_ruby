@@ -12,7 +12,7 @@ _CREATE_ :LayoutControl ,
   _CREATE_ :ImageControl, file_path: "./sozai/bg_sample.png", id: :test
 
   _WHILE_ :true do
-    transition_rule :count=> 0, :total_frame => 240, :vague => 50
+    transition_rule :total_frame => 240
     _WAIT_ [:command], :command => :transition_rule
   end
 end

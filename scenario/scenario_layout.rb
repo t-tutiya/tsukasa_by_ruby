@@ -33,13 +33,13 @@ _CREATE_ :LayoutControl,
         :y_pos => 150, 
         :width => 256,
         :height => 256 do
-  image :file_path=>"./sozai/button_normal.png", float_mode: :right,
+  _CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png", float_mode: :right,
          :x_pos => 150,
          :y_pos => 150
-  image :file_path=>"./sozai/button_normal.png", float_mode: :right#,
+  _CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png", float_mode: :right#,
          #:x_pos => 100,
          #:y_pos => 100
-  #image :file_path=>"./sozai/button_normal.png"
+  #_CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png"
 end
 
 _CREATE_ :LayoutControl, 
@@ -48,13 +48,13 @@ _CREATE_ :LayoutControl,
         :width => 256,
         :height => 256 do
 
-  image :file_path=>"./sozai/button_normal.png", 
+  _CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png", 
       :id=>0, :visible => true
-  image :file_path=>"./sozai/button_over.png", 
+  _CREATE_ :ImageControl, :file_path=>"./sozai/button_over.png", 
       :id=>1, :visible => false
-  image :file_path=>"./sozai/button_key_down.png", 
+  _CREATE_ :ImageControl, :file_path=>"./sozai/button_key_down.png", 
       :id=>2, :visible => false
-  image :file_path=>"./sozai/button_out.png", 
+  _CREATE_ :ImageControl, :file_path=>"./sozai/button_out.png", 
       :id=>3, :visible => false
   _WHILE_ [:true] do
       set 3, visible: false

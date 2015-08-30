@@ -25,7 +25,7 @@ _SEND_  :button1 do
 end
 
 _DEFINE_ :func2 do
-  image :file_path=>"./sozai/button_normal.png", 
+  _CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png", 
        :id=>:normal2 do
    
     _YIELD_

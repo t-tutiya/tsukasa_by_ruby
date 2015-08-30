@@ -8,11 +8,11 @@ _CREATE_ :LayoutControl,
         :colorkey => "./sozai/star_button.png",
         :colorkey_border => 200,
         :id=>:button1 do
-  image :file_path=>"./sozai/star_button.png", 
+  _CREATE_ :ImageControl, :file_path=>"./sozai/star_button.png", 
         :id=>:normal
-  image :file_path=>"./sozai/button_over.png", 
+  _CREATE_ :ImageControl, :file_path=>"./sozai/button_over.png", 
         :id=>:over, :visible => false
-  image :file_path=>"./sozai/button_key_down.png", 
+  _CREATE_ :ImageControl, :file_path=>"./sozai/button_key_down.png", 
         :id=>:key_down, :visible => false
   on_mouse_over do
     pp "over"

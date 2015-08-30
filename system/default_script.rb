@@ -154,7 +154,9 @@ _DEFINE_ :pause do |options|
   _SET_ :_MODE_STATUS_, wake: false
 
   #ウェイク待ち
-  _WAIT_ [:mode], mode: [:ctrl_skip, :wake]
+  _WAIT_ [:mode], mode: [:ctrl_skip, :wake] do
+    _YIELD_
+  end
 end
 
 #行クリック待ちポーズ

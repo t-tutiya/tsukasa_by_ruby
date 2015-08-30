@@ -412,7 +412,7 @@ class Control #制御構文
     eval_commands([[:_END_FRAME_, {}, {}]])
 
     #waitにブロックが付与されているならそれを実行する
-    eval_block(options, &inner_options[:block])
+    eval_block(options, inner_options[:block_stack], &inner_options[:block])
 
     push_command_to_next_frame(:_WAIT_, options, inner_options)
   end

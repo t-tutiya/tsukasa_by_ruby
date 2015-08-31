@@ -276,20 +276,34 @@ class Control #内部メソッド
       #ユーザデータ確認系
 
       when :equal
+        return unless options[:equal]
         #指定されたデータと値がイコールかどうか
-        return true if @root_control.send(args_name)[options[:key]] == options[:val]
+        options[:equal].each do |key, val|
+          return true if @root_control.send(args_name)[key] == val
+        end
 
       when :not_equal
+        return unless options[:not_equal]
         #指定されたデータと値がイコールでない場合
-        return true if @root_control.send(args_name)[options[:key]] != options[:val]
+        options[:not_equal].each do |key, val|
+          return true if @root_control.send(args_name)[key] != val
+        end
 
-      when :nil
+      when :null
+        return unless options[:null]
+        options[:null] = [options[:null]] unless options[:null].instance_of?(Array)
         #指定されたデータがnilの場合
-        return true if @root_control.send(args_name)[options[:key]] == nil
+        options[:null].each do |key|
+          return true if @root_control.send(args_name)[key] == nil
+        end
 
-      when :not_nil
+      when :not_null
+        return unless options[:not_null]
+        options[:not_null] = [options[:not_null]] unless options[:not_null].instance_of?(Array)
         #指定されたデータがnilで無い場合
-        return true if @root_control.send(args_name)[options[:key]] != nil
+        options[:not_null].each do |key|
+          return true if @root_control.send(args_name)[key] != nil
+        end
 
       when :true
         #必ず真を返す

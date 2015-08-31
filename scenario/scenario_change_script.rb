@@ -44,13 +44,13 @@ end
 
 _DEFINE_ :special_pause do
   pause do
-    _CHECK_ [:not_nil], key: :flag do
+    _CHECK_ [:not_null], not_null: :flag do
       _SET_ :_USER_DATA_, scenario: 1
       _SET_ :_MODE_STATUS_, wake: true
       delete :message0
     end
   end
-  _CHECK_ [:not_nil], key: :flag do
+  _CHECK_ [:not_null], not_null: :flag do
     _BREAK_
   end
 end
@@ -85,11 +85,11 @@ TextWindow id: :message0, text_page_id: :default_text_page_control0,
   width: 1024,
   height: 192
 
-_CHECK_ [:equal], key: :scenario, val: 1 do
+_CHECK_ [:equal], equal: {:scenario => 1} do
   _INCLUDE_ "./scenario/scenario_change_script_3.rb"
 end
 
-_CHECK_ [:equal], key: :scenario, val: 2 do
+_CHECK_ [:equal], equal: {:scenario => 2} do
   _INCLUDE_ "./scenario/scenario_change_script_2.rb"
 end
 

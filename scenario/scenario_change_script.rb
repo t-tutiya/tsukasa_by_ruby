@@ -44,21 +44,22 @@ button  id: :button1,
 end
 
 about do
-  _CHECK_ [:not_nil], key: :flag, keep: true, once: true do
-    _SET_ :_USER_DATA_, scenario: 1
-    #↓ここがもう少し簡潔に表現できると良い
-    _SEND_ :default_text_page_control0, interrupt: true do
-      _BREAK_
-    end
-    _BREAK_
-  end
   text "スクリプト１－Ａ■■■■■■■■■■■■■■"
   line_feed
   text "■■■■■■■■■■■■■■■■■■■■■■"
   line_feed
   text "■■■■■■■■■■■■■■■■■■■■■■"
   line_feed
-  pause
+  pause do
+    _CHECK_ [:not_nil], key: :flag do
+      _SET_ :_USER_DATA_, scenario: 1
+      _SET_ :_MODE_STATUS_, wake: true
+      delete :message0
+    end
+  end
+  _CHECK_ [:not_nil], key: :flag do
+    _BREAK_
+  end
   flush
   text "スクリプト１－Ｂ■■■■■■■■■■■■■■"
   line_feed
@@ -66,9 +67,24 @@ about do
   line_feed
   text "■■■■■■■■■■■■■■■■■■■■■■"
   line_feed
-  pause
+  pause do
+    _CHECK_ [:not_nil], key: :flag do
+      _SET_ :_USER_DATA_, scenario: 1
+      _SET_ :_MODE_STATUS_, wake: true
+      delete :message0
+    end
+  end
+  _CHECK_ [:not_nil], key: :flag do
+    _BREAK_
+  end
   _SET_ :_USER_DATA_, scenario: 2
 end
+
+TextWindow id: :message0, text_page_id: :default_text_page_control0,
+  x_pos: 128,
+  y_pos: 256 + 192,
+  width: 1024,
+  height: 192
 
 #TODO;ここでフレームを送らない場合、次のスクリプトファイルが:default_text_page_control0に読み込まれた後で_BREAK_が機能してしまう。どうにかならんかなーこれ
 _END_FRAME_

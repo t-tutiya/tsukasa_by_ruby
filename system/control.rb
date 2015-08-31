@@ -33,7 +33,13 @@ require 'pstore'
 
 class Control #公開インターフェイス
   #プロパティ
+  attr_accessor  :_USER_DATA_
+  attr_accessor  :_GLOBAL_DATA_
+  attr_accessor  :_MODE_STATUS_
+
   attr_accessor  :id
+
+  attr_accessor  :idle_mode
 
   #Imageのキャッシュ機構の簡易実装
   #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
@@ -366,14 +372,11 @@ class Control #セッター／ゲッター
     #オプション全探査
     options.each do |key, val|
       if variable
-        instance_variable_get("@" + variable.to_s)[key] = val
+        send(variable.to_s)[key] = val
       else
         #セッターが用意されている場合
         if  respond_to?(key.to_s + "=")
           send(key.to_s + "=", val)
-        #インスタンス変数が存在する場合
-        elsif instance_variable_defined?("@" + key.to_s)
-          instance_variable_set("@" + key.to_s, val)
         #どちらも無い場合はwarningを出して処理を続行する
         else
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + key.to_s + "]は存在しません"
@@ -403,13 +406,13 @@ class Control #セッター／ゲッター
     options.each do |key, val|
       if variable
         if key == :_RESULT_
-          @_RESULT_ = instance_variable_get("@" + variable.to_s)[val]
+          @_RESULT_ = send(variable.to_s)[val]
         else
-          @root_control._USER_DATA_[key] = instance_variable_get("@" + variable.to_s)[val]
+          @root_control._USER_DATA_[key] = send(variable.to_s)[val]
         end
       else
-        if instance_variable_defined?("@" + val.to_s)
-          @root_control._USER_DATA_[key] = instance_variable_get("@" + val.to_s)
+        if respond_to?(val.to_s)
+          @root_control._USER_DATA_[key] = send(val.to_s)
         else
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + val.to_s + "]は存在しません"
         end

@@ -52,6 +52,24 @@ class RenderTarget
 end
 
 module Drawable
+
+  attr_accessor  :x_pos
+  attr_accessor  :y_pos
+
+  attr_accessor  :offset_x
+  attr_accessor  :offset_y
+
+  attr_accessor  :visible
+
+  attr_accessor  :draw_option
+
+  attr_accessor  :float_mode
+  attr_accessor  :align_y
+  attr_accessor  :entity
+
+  attr_accessor  :real_width
+  attr_accessor  :real_height
+
   def initialize(options, inner_options, root_control)
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
     @y_pos = options[:y_pos] || 0 #描画Ｙ座標

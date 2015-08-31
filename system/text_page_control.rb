@@ -47,6 +47,33 @@ class TextPageControl < Control
   def font_config=(hash)
     @font_config.merge!(hash)
   end
+
+  attr_accessor  :font_config
+  attr_accessor  :shadow
+
+#  attr_accessor  :use_image_font
+#  attr_accessor  :image_face
+
+  attr_accessor  :size
+  attr_accessor  :fontname
+  attr_accessor  :bold
+  attr_accessor  :italic
+
+  attr_accessor  :wait_frame
+  attr_accessor  :line_feed_wait_frame
+
+  attr_accessor  :line_spacing
+  attr_accessor  :charactor_pitch
+  attr_accessor  :line_height
+  
+  attr_accessor  :rubi_size
+  attr_accessor  :rubi_offset_x
+  attr_accessor  :rubi_offset_y
+  attr_accessor  :rubi_pitch
+  attr_accessor  :rubi_wait_frame
+
+  attr_accessor  :indent
+
     #基礎情報
     # :size 文字サイズ
     # :color 文字色

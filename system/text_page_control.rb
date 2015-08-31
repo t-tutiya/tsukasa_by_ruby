@@ -271,10 +271,12 @@ class TextPageControl < Control
                         {:_ARGUMENT_ => ch}, 
                         inner_options])
       #:waitコマンドをスタックする
+      ##TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
       command_list.push([:_WAIT_, 
-                        {:_ARGUMENT_ => [:count, :mode, :key_push],
+                        {:_ARGUMENT_ => [:count, :mode, :key_push, :key_down],
                          :count => @wait_frame,
-                         :mode => [:skip, :ctrl_skip]}, 
+                         :key_down_code => K_RCONTROL,
+                         :mode => [:skip]}, 
                          inner_options])
     end
 
@@ -315,10 +317,12 @@ class TextPageControl < Control
     #以下逆順に登録
 
     #改行時のwaitを設定する
+    ##TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
     interrupt_command([:_WAIT_, 
-                      {:_ARGUMENT_ => [:count, :mode, :key_push],
+                      {:_ARGUMENT_ => [:count, :mode, :key_push, :key_down],
                        :count => @line_feed_wait_frame,
-                       :mode => [:skip, :ctrl_skip]}, 
+                       :key_down_code => K_RCONTROL,
+                       :mode => [:skip]}, 
                        inner_options])
 
     #次のアクティブ行コントロールを追加  
@@ -426,10 +430,12 @@ class TextPageControl < Control
     @next_char_x += image.width + @charactor_pitch
 
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
+    #TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
     interrupt_command([:_WAIT_, 
-                          {:_WAIT_ => [:count, :mode, :key_push],
+                          {:_WAIT_ => [:count, :mode, :key_push, :key_down],
                            :count => @wait_frame,
-                           :mode => [:skip, :ctrl_skip]}, inner_options])
+                           :key_down_code => K_RCONTROL,
+                           :mode => [:skip]}, inner_options])
 =end
   end
 

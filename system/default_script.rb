@@ -121,8 +121,10 @@ _DEFINE_ :pause do |options|
   #■行表示中スキップ処理
   _SEND_ :default_text_page_control0 do 
     #idleあるいはキー入力待機
-    _WAIT_ [:key_push, :idle, :mode], mode: :ctrl_skip
+    _WAIT_ [:key_push, :idle, :key_down] , 
+            key_down_code: K_RCONTROL
 
+    #クリック待ちアイコンの表示
     if options[:icon]
       _SEND_ :last do
         _CALL_ options[:icon], id: :icon
@@ -134,13 +136,9 @@ _DEFINE_ :pause do |options|
 
     #■行末待機処理
 
-    #キー入力待機
+    #スペースキーあるいはCTRLキーの押下を待つ
     _WAIT_ [:key_push, :key_down] , 
             key_down_code: K_RCONTROL
-
-    _CHECK_ [:key_down] , key_down_code: K_RCONTROL do
-      _SET_ :_MODE_STATUS_, ctrl_skip: true
-    end
 
     #アイコン削除
     delete :icon
@@ -154,7 +152,9 @@ _DEFINE_ :pause do |options|
   _SET_ :_MODE_STATUS_, wake: false
 
   #ウェイク待ち
-  _WAIT_ [:mode], mode: [:ctrl_skip, :wake] do
+  _WAIT_ [:mode, :key_down], 
+          mode: [:wake],
+          key_down_code: K_RCONTROL do
     _YIELD_
   end
 end
@@ -208,14 +208,11 @@ _DEFINE_ :TextWindow do |options|
         fontname: "ＭＳＰ ゴシック",
         wait_frame: 2,
         char_renderer: Proc.new{
-          _CHECK_ [:key_down] , key_down_code: K_RCONTROL do
-            _SET_ :_MODE_STATUS_, ctrl_skip: true
-          end
           transition_fade total_frame: 15,
                           start: 0,
                           last: 255,
-                          check: [[:mode, :key_push], 
-                                  {:mode => [:ctrl_skip]}] do
+                          check: [[:key_push, :key_down], 
+                                  {:key_down_code => K_RCONTROL}] do
                             _SET_ :draw_option, alpha: 255
                           end
           _WAIT_  [:command], command: :transition_fade do
@@ -226,21 +223,21 @@ _DEFINE_ :TextWindow do |options|
           _END_FRAME_
           transition_fade total_frame: 60,
                           last:128,
-                          check: [[:mode, :key_push], 
-                                  {:mode => [:ctrl_skip]}] do
+                          check: [[:key_push ,:key_down], 
+                                  {:key_down_code => K_RCONTROL}] do
                             #スキップされた場合
-                            _CHECK_ :mode, mode: :ctrl_skip do
+                            _CHECK_ :key_down, key_down_code: K_RCONTROL do
                               #CTRLスキップ中であれば透明度255
                               _SET_ :draw_option, alpha: 255
                             end
-                            _CHECK_ :not_mode, mode: :ctrl_skip do
+                            _CHECK_ :key_push do
                               #CTRLスキップ中でなければ透明度128
                               _SET_ :draw_option, alpha: 128
                             end
           end
-          _WAIT_ [:command, :mode], 
+          _WAIT_ [:command, :key_down], 
                   command: :transition_fade ,
-                  mode: [:wake, :ctrl_skip] 
+                  key_down_code: K_RCONTROL 
         } do
         _SET_ size: 32
         _FLUSH_ #これが必ず必要

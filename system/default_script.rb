@@ -118,8 +118,8 @@ end
 
 #標準ポーズコマンド
 _DEFINE_ :pause do |options|
-  #■行表示中スキップ処理
   _SEND_ :default_text_page_control0 do 
+    #■文字列表示中スキップ処理
     #idleあるいはキー入力待機
     _WAIT_ [:key_push, :idle, :key_down] , 
             key_down_code: K_RCONTROL
@@ -134,13 +134,12 @@ _DEFINE_ :pause do |options|
     #キー入力伝搬を止める為に１フレ送る
     _END_FRAME_ 
 
-    #■行末待機処理
-
-    #スペースキーあるいはCTRLキーの押下を待つ
+    #■文字列表示後の待機処理
+    #スペースキーあるいはCTRLキーの押下待機
     _WAIT_ [:key_push, :key_down] , 
             key_down_code: K_RCONTROL
 
-    #アイコン削除
+    #クリック待ちアイコンの削除
     delete :icon
 
     #ウェイクに移行
@@ -148,10 +147,10 @@ _DEFINE_ :pause do |options|
   end
 
   #■ルートの待機処理
-  #スリープモードを設定
+  #非ウェイク状態に移行
   _SET_ :_MODE_STATUS_, wake: false
 
-  #ウェイク待ち
+  #ウェイク状態まで待機
   _WAIT_ [:mode, :key_down], 
           mode: [:wake],
           key_down_code: K_RCONTROL do
@@ -208,6 +207,7 @@ _DEFINE_ :TextWindow do |options|
         fontname: "ＭＳＰ ゴシック",
         wait_frame: 2,
         char_renderer: Proc.new{
+          #フェードイン（スペースキーか右CTRLが押されたらスキップ）
           transition_fade total_frame: 15,
                           start: 0,
                           last: 255,
@@ -215,12 +215,17 @@ _DEFINE_ :TextWindow do |options|
                                   {:key_down_code => K_RCONTROL}] do
                             _SET_ :draw_option, alpha: 255
                           end
+          #トランジションが終了するまで非アイドル状態
           _WAIT_  [:command], command: :transition_fade do
             _SET_ idle_mode: false
           end
+          #非wake状態に移行
           _SET_ :_MODE_STATUS_, wake: false
+          #wake状態になるまで待機
           _WAIT_ [:mode], mode: :wake
+          #キー入力伝搬を防ぐ為に１フレ送る
           _END_FRAME_
+          #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
           transition_fade total_frame: 60,
                           last:128,
                           check: [[:key_push ,:key_down], 
@@ -235,9 +240,9 @@ _DEFINE_ :TextWindow do |options|
                               _SET_ :draw_option, alpha: 128
                             end
           end
-          _WAIT_ [:command, :key_down], 
-                  command: :transition_fade ,
-                  key_down_code: K_RCONTROL 
+          #トランジションが終了するまで待機
+          _WAIT_ [:command], 
+                  command: :transition_fade
         } do
         _SET_ size: 32
         _FLUSH_ #これが必ず必要

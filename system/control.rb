@@ -239,6 +239,9 @@ class Control #内部メソッド
       when :idle
         return true if all_controls_idle?
 
+      when :not_idle
+        return true unless all_controls_idle?
+
       when :count
         #残りwaitフレーム数が０より大きい場合
         return true if options[:count] <= 0
@@ -255,10 +258,20 @@ class Control #内部メソッド
         #キー押下があれば
         return true if Input.key_push?(key_code)
 
+      when :not_key_push
+        key_code = options[:key_push_code] ? options[:key_push_code] : K_SPACE
+        #キー押下があれば
+        return true unless Input.key_push?(key_code)
+
       when :key_down
         key_code = options[:key_down_code] ? options[:key_down_code] : K_SPACE
         #キー押下があれば
         return true if Input.key_down?(key_code)
+
+      when :not_key_down
+        key_code = options[:key_down_code] ? options[:key_down_code] : K_SPACE
+        #キー押下があれば
+        return true unless Input.key_down?(key_code)
 
       #ユーザデータ確認系
 

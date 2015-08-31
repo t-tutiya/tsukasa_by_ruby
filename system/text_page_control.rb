@@ -276,7 +276,7 @@ class TextPageControl < Control
                         {:_ARGUMENT_ => [:count, :mode, :key_push, :key_down],
                          :count => @wait_frame,
                          :key_down_code => K_RCONTROL,
-                         :mode => [:skip]}, 
+                         }, 
                          inner_options])
     end
 
@@ -322,7 +322,7 @@ class TextPageControl < Control
                       {:_ARGUMENT_ => [:count, :mode, :key_push, :key_down],
                        :count => @line_feed_wait_frame,
                        :key_down_code => K_RCONTROL,
-                       :mode => [:skip]}, 
+                       }, 
                        inner_options])
 
     #次のアクティブ行コントロールを追加  
@@ -435,7 +435,7 @@ class TextPageControl < Control
                           {:_WAIT_ => [:count, :mode, :key_push, :key_down],
                            :count => @wait_frame,
                            :key_down_code => K_RCONTROL,
-                           :mode => [:skip]}, inner_options])
+                           }, inner_options])
 =end
   end
 

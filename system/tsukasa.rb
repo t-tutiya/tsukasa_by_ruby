@@ -67,7 +67,6 @@ class Tsukasa < LayoutControl
     #各種モードの管理
     @_MODE_STATUS_ = {
       :wake => true,
-      :skip => false
       #idle_modeはシステムが管理する為、ここでは扱わない
     }
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル

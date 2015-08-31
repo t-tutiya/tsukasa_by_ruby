@@ -219,8 +219,6 @@ module Drawable #ムーブ
 
     #カウントが指定フレーム未満の場合
     if options[:count] < options[:total_frame]
-      #待機モードを初期化
-      @idle_mode = false
       #:moveコマンドをスタックし直す
       push_command_to_next_frame(:move, options, inner_options)
     end
@@ -305,8 +303,6 @@ module Drawable #ムーブ
 
     #カウントが指定フレーム以下の場合
     if options[:count] <= options[:total_frame]
-      #待機モードを初期化
-      @idle_mode = false
       #:move_lineコマンドをスタックし直す
       push_command_to_next_frame(:move_path, options, inner_options)
     end
@@ -400,8 +396,6 @@ module Drawable #トランジション
     #カウントが指定フレーム未満の場合
     if options[:count] < options[:total_frame]
       @draw_option[:shader] = @rule
-      #待機モードを初期化
-      @idle_mode = false
       #カウントアップ
       options[:count] += 1
       #:transition_ruleコマンドをスタックし直す

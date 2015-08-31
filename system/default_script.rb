@@ -119,8 +119,7 @@ end
 #標準ポーズコマンド
 _DEFINE_ :pause do |options|
   _SEND_ :default_text_page_control0 do 
-    #■文字列表示中スキップ処理
-    #非idleまで状態
+    #idleになるまで状態
     _WAIT_ [:idle]
 
     #クリック待ちアイコンの表示
@@ -130,13 +129,14 @@ _DEFINE_ :pause do |options|
       end
     end
 
-    #■文字列表示後の待機処理
     #スペースキーあるいはCTRLキーの押下待機
     _WAIT_ [:key_push, :key_down] , 
             key_down_code: K_RCONTROL
 
     #クリック待ちアイコンの削除
-    delete :icon
+    _SEND_ :icon do
+      _DELETE_
+    end
 
     #ウェイクに移行
     _SET_ :_MODE_STATUS_, wake: true
@@ -240,8 +240,7 @@ _DEFINE_ :TextWindow do |options|
                             end
           end
           #トランジションが終了するまで待機
-          _WAIT_ [:command], 
-                  command: :transition_fade
+          _WAIT_ [:command], command: :transition_fade
         } do
         _SET_ size: 32
         _FLUSH_ #これが必ず必要

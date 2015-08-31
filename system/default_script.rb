@@ -120,9 +120,8 @@ end
 _DEFINE_ :pause do |options|
   _SEND_ :default_text_page_control0 do 
     #■文字列表示中スキップ処理
-    #idleあるいはキー入力待機
-    _WAIT_ [:key_push, :idle, :key_down] , 
-            key_down_code: K_RCONTROL
+    #非idleまで状態
+    _WAIT_ [:idle]
 
     #クリック待ちアイコンの表示
     if options[:icon]
@@ -130,9 +129,6 @@ _DEFINE_ :pause do |options|
         _CALL_ options[:icon], id: :icon
       end
     end
-
-    #キー入力伝搬を止める為に１フレ送る
-    _END_FRAME_ 
 
     #■文字列表示後の待機処理
     #スペースキーあるいはCTRLキーの押下待機
@@ -156,6 +152,9 @@ _DEFINE_ :pause do |options|
           key_down_code: K_RCONTROL do
     _YIELD_
   end
+
+  #１フレ分は必ず表示させる
+  _END_FRAME_ 
 end
 
 #行クリック待ちポーズ

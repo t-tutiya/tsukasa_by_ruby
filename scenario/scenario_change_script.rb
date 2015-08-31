@@ -29,7 +29,6 @@
 ###############################################################################
 
 #ボタン押下による範囲指定シナリオ分岐ギミックのサンプル
-#現状まだ正常に動作していない
 
 #TODO：これ、動いてはいるけど元のon_key_upが上書きされているわけではない。
 button  id: :button1, 
@@ -43,6 +42,19 @@ button  id: :button1,
   end
 end
 
+_DEFINE_ :special_pause do
+  pause do
+    _CHECK_ [:not_nil], key: :flag do
+      _SET_ :_USER_DATA_, scenario: 1
+      _SET_ :_MODE_STATUS_, wake: true
+      delete :message0
+    end
+  end
+  _CHECK_ [:not_nil], key: :flag do
+    _BREAK_
+  end
+end
+
 about do
   text "スクリプト１－Ａ■■■■■■■■■■■■■■"
   line_feed
@@ -50,16 +62,9 @@ about do
   line_feed
   text "■■■■■■■■■■■■■■■■■■■■■■"
   line_feed
-  pause do
-    _CHECK_ [:not_nil], key: :flag do
-      _SET_ :_USER_DATA_, scenario: 1
-      _SET_ :_MODE_STATUS_, wake: true
-      delete :message0
-    end
-  end
-  _CHECK_ [:not_nil], key: :flag do
-    _BREAK_
-  end
+
+  special_pause
+
   flush
   text "スクリプト１－Ｂ■■■■■■■■■■■■■■"
   line_feed
@@ -67,17 +72,11 @@ about do
   line_feed
   text "■■■■■■■■■■■■■■■■■■■■■■"
   line_feed
-  pause do
-    _CHECK_ [:not_nil], key: :flag do
-      _SET_ :_USER_DATA_, scenario: 1
-      _SET_ :_MODE_STATUS_, wake: true
-      delete :message0
-    end
-  end
-  _CHECK_ [:not_nil], key: :flag do
-    _BREAK_
-  end
+
+  special_pause
+
   _SET_ :_USER_DATA_, scenario: 2
+   delete :message0
 end
 
 TextWindow id: :message0, text_page_id: :default_text_page_control0,
@@ -85,11 +84,6 @@ TextWindow id: :message0, text_page_id: :default_text_page_control0,
   y_pos: 256 + 192,
   width: 1024,
   height: 192
-
-#TODO;ここでフレームを送らない場合、次のスクリプトファイルが:default_text_page_control0に読み込まれた後で_BREAK_が機能してしまう。どうにかならんかなーこれ
-_END_FRAME_
-
-flush
 
 _CHECK_ [:equal], key: :scenario, val: 1 do
   _INCLUDE_ "./scenario/scenario_change_script_3.rb"

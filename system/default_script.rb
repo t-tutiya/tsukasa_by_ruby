@@ -60,11 +60,9 @@ _DEFINE_ :scope do |options|
   _YIELD_ options
 end
 
-#無名関数として機能する（_BREAK_で脱出できる）
-#TODO：もうちょっと上手い方法はないものか
+#無名関数として機能する（_RETURN_で脱出できる）
 _DEFINE_ :about do |options|
   _YIELD_ options
-  _END_SCOPE_
 end
 
 #指定フレーム数ウェイト
@@ -271,8 +269,7 @@ _DEFINE_ :line_icon_func do |options|
           :height => 24,
           :align_y => :bottom,
           :float_mode => :right,
-          :id => options[:id],
-          :float_mode => :right do
+          :id => options[:id] do
     _CREATE_ :TileImageControl, 
             :tiles => true,
             :file_path=>"./sozai/icon/icon_8_a.png", 
@@ -292,8 +289,7 @@ _DEFINE_ :page_icon_func do |options|
           :height => 24,
           :align_y => :bottom,
           :float_mode => :right,
-          :id => options[:id],
-          :float_mode => :right do
+          :id => options[:id] do
     _CREATE_ :TileImageControl, 
             :tiles => true, 
             :file_path=>"./sozai/icon/icon_4_a.png", 

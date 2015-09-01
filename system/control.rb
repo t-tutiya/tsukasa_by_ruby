@@ -67,7 +67,6 @@ class Control #公開インターフェイス
     #コマンドリスト
     @command_list         = [] 
     #一時コマンドリスト
-    #TODO：これがシリアライズ対象になっているのはおかしいのかもしれない
     @next_frame_commands  = options[:next_frame_commands] || [] 
 
     @idle_mode = true          #待機モードの初期化

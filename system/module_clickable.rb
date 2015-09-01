@@ -37,6 +37,10 @@ module Clickable
     @colorkey = Image.load(file_path)
   end
 
+  attr_accessor  :collision
+  attr_accessor  :colorkey_border
+  attr_reader  :colorkey
+
   def initialize(options, inner_options, root_control)
     super
     @collision = options[:collision]

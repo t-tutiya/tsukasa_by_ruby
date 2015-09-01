@@ -7,7 +7,7 @@ _CREATE_ :LayoutControl,
         :width => 256,
         :height => 256,
         :id=>:button1,
-        :collision=>[128,128,128] do
+        :collision_shape=>[128,128,128] do
   _CREATE_ :ImageControl, :entity=>Image.new(256,256).circle_fill(128,128,128,C_BLUE).draw_font(80, 120, "NORMAL", Font.default),
         :id=>:normal
   _CREATE_ :ImageControl, :entity=>Image.new(256,256).circle_fill(128,128,128,C_YELLOW).draw_font(80, 120, "OVER", Font.default, C_BLACK),

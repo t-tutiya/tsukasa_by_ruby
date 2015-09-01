@@ -5,7 +5,7 @@ _CREATE_ :LayoutControl,
         :y_pos => 150, 
         :width => 256,
         :height => 256,
-        :colorkey => "./sozai/star_button.png",
+        :colorkey_file_path => "./sozai/star_button.png",
         :colorkey_border => 200,
         :id=>:button1 do
   _CREATE_ :ImageControl, :file_path=>"./sozai/star_button.png", 

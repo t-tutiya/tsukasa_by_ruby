@@ -33,24 +33,25 @@ require 'dxruby'
 #クリックイベントが発生するコントロールの基底クラス
 module Clickable
 
-  def colorkey=(file_path)
-    @colorkey = Image.load(file_path)
+  attr_reader  :colorkey_file_path
+  def colorkey_file_path=(colorkey_file_path)
+    @colorkey_file_path = colorkey_file_path
+    @colorkey_entity = Image.load(colorkey_file_path)
   end
 
-  attr_accessor  :collision
+  attr_accessor  :collision_shape
   attr_accessor  :colorkey_border
-  attr_reader  :colorkey #画像
 
   def initialize(options, inner_options, root_control)
     super
-    @collision = options[:collision]
+    @collision_shape = options[:collision_shape]
 
-    self.colorkey = options[:colorkey] if options[:colorkey]
+    self.colorkey_file_path = options[:colorkey_file_path] if options[:colorkey_file_path]
     @colorkey_border = options[:colorkey_border] || 255
 
     @collision_sprite = Sprite.new
-    if @collision
-      @collision_sprite.collision = @collision
+    if @collision_shape
+      @collision_sprite.collision = @collision_shape
     else
       @collision_sprite.collision = [0, 0, @width-1, @height-1]
     end
@@ -82,8 +83,8 @@ module Clickable
 
     #描画範囲内かどうか
     if (@mouse_sprite === @collision_sprite)
-      if @colorkey
-        if @colorkey[@x - @x_pos, @y - @y_pos][0] >= @colorkey_border
+      if @colorkey_entity
+        if @colorkey_entity[@x - @x_pos, @y - @y_pos][0] >= @colorkey_border
           inner_control = true
         else
           inner_control = false

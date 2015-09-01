@@ -31,11 +31,6 @@
 #デバッグモードの設定
 _SET_ :_GLOBAL_DATA_, _DEBUG_: true
 
-#無名関数として機能する（_RETURN_で脱出できる）
-_DEFINE_ :about do |options|
-  _YIELD_ options
-end
-
 #デフォルトのユーザー定義関数群
 _INCLUDE_ "./system/default_script.rb"
 
@@ -50,9 +45,9 @@ _INCLUDE_ "./system/default_script.rb"
 #_INCLUDE_ "./scenario/scenario_while.rb"
 #_INCLUDE_ "./scenario/scenario_layout.rb"
 #_INCLUDE_ "./scenario/scenario_scope.rb"
-#_INCLUDE_ "./scenario/scenario_change_script.rb"
+_INCLUDE_ "./scenario/scenario_change_script.rb"
 #_INCLUDE_ "./scenario/scenario_check.rb"
 #_INCLUDE_ "./scenario/scenario_collision.rb"
 #_INCLUDE_ "./scenario/scenario_ImageControl.rb"
-_INCLUDE_ "./scenario/scenario_text.rb"
+#_INCLUDE_ "./scenario/scenario_text.rb"
 #_INCLUDE_ "./scenario/tks_test.tks"

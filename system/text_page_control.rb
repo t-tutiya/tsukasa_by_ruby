@@ -198,7 +198,7 @@ class TextPageControl < Control
 
   def siriarize(options = {})
     pp "TextPageControlはシリアライズできません"
-    #raise
+    raise
 
     options.update({
       :font_config => @font_config,

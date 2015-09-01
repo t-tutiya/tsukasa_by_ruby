@@ -594,9 +594,9 @@ class Control #スクリプト制御
 
     unless options[:_ARGUMENT_]
       if options[:interrupt]
-        base_control.interrupt_command([:_CALL_, {:_ARGUMENT_ => :about}, inner_options])
+        base_control.interrupt_command([:_SCOPE_, {}, inner_options])
       else
-        base_control.push_command([:_CALL_, {:_ARGUMENT_ => :about}, inner_options])
+        base_control.push_command([:_SCOPE_, {}, inner_options])
       end
 
       return
@@ -614,9 +614,9 @@ class Control #スクリプト制御
 
     controls.each do |control|
       if options[:interrupt]
-        control.interrupt_command([:_CALL_, {:_ARGUMENT_ => :about}, inner_options])
+        control.interrupt_command([:_SCOPE_, {}, inner_options])
       else
-        control.push_command([:_CALL_, {:_ARGUMENT_ => :about}, inner_options])
+        control.push_command([:_SCOPE_, {}, inner_options])
       end
     end
   end
@@ -731,7 +731,13 @@ class Control #内部コマンド
 
   private
 
-  #ループのの終点を示す
+  #ブロックを実行する。無名関数として機能する
+  def command__SCOPE_(options, inner_options)
+    interrupt_command([:_END_FUNCTION_, options, inner_options])
+    eval_block(options, options[:blcok_stack], &inner_options[:block])
+  end
+
+  #ループの終点を示す
   def command__END_LOOP_(options, inner_options)
   end
 

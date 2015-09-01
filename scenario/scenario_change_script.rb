@@ -52,7 +52,7 @@ _DEFINE_ :special_pause do
   end
 end
 
-about do
+_SCOPE_ do
   text "スクリプト１－Ａ■■■■■■■■■■■■■■"
   line_feed
   text "■■■■■■■■■■■■■■■■■■■■■■"

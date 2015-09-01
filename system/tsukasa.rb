@@ -63,6 +63,7 @@ class Tsukasa < LayoutControl
       :_SAVE_DATA_PATH_ => "./data/",
       :_GLOBAL_DATA_FILENAME_ => "global_data.bin",
       :_USER_DATA_FILENAME_ => "_user_data.bin",
+      :_QUICK_DATA_FILENAME_ => "_quick_data.bin",
     }
     #各種モードの管理
     @_MODE_STATUS_ = {

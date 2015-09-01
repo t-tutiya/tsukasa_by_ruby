@@ -206,7 +206,7 @@ class Control #公開インターフェイス
     })
 
     #オプションを生成
-    command = [:_CREATE_, options]
+    command = [:_CREATE_, options, {}]
 
     return command
   end
@@ -691,12 +691,34 @@ class Control #セーブデータ制御
   end
 
   def command__QUICK_SAVE_(options, inner_options)
-    pp "quick save"
-    #マーシャルダンプテスト
-    sorce = Marshal.dump(siriarize())
-    #マーシャルロードテスト
-    pp Marshal.load(sorce)
-    raise
+    command_list = []
+    #子コントロールのシリアライズコマンドを取得
+    @control_list.each do |control|
+      command_list.push(control.siriarize)
+    end
+
+  
+    db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
+                    options[:_ARGUMENT_].to_s +
+                    @_GLOBAL_DATA_[:_QUICK_DATA_FILENAME_])
+
+    db.transaction do
+      db["key"] = Marshal.dump(command_list)
+    end
+  end
+
+  def command__QUICK_LOAD_(options, inner_options)
+    db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
+                    options[:_ARGUMENT_].to_s +
+                    @_GLOBAL_DATA_[:_QUICK_DATA_FILENAME_])
+
+    code = ""
+
+    db.transaction do
+      command_list = Marshal.load(db["key"])
+      eval_commands(command_list)
+    end
+
   end
 
 end

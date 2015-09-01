@@ -34,6 +34,12 @@ _SET_ :_GLOBAL_DATA_, _DEBUG_: true
 #デフォルトのユーザー定義関数群
 _INCLUDE_ "./system/default_script.rb"
 
+#無名関数として機能する
+#TODO：現状必須になっているが、辞めたい
+_DEFINE_ :scope do |options|
+  _YIELD_ options
+end
+
 #以下、動作確認用のサンプルスクリプト
 
 #_INCLUDE_ "./scenario/scenario_sound.rb"
@@ -41,7 +47,7 @@ _INCLUDE_ "./system/default_script.rb"
 #_INCLUDE_ "./scenario/scenario_inner_function.rb"
 #_INCLUDE_ "./scenario/scenario_clickable.rb"
 #_INCLUDE_ "./scenario/scenario_yield.rb"
-_INCLUDE_ "./scenario/scenario_while.rb"
+#_INCLUDE_ "./scenario/scenario_while.rb"
 #_INCLUDE_ "./scenario/scenario_layout.rb"
 #_INCLUDE_ "./scenario/scenario_scope.rb"
 #_INCLUDE_ "./scenario/scenario_change_script.rb"

@@ -39,7 +39,7 @@ module Clickable
 
   attr_accessor  :collision
   attr_accessor  :colorkey_border
-  attr_reader  :colorkey
+  attr_reader  :colorkey #画像
 
   def initialize(options, inner_options, root_control)
     super

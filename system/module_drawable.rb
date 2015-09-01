@@ -177,6 +177,36 @@ module Drawable
 
     return dx, dy
   end
+
+  def siriarize(options = {})
+
+    options.update({
+      :x_pos  => @x_pos,
+      :y_pos => @y_pos,
+
+      :offset_x => @offset_x,
+      :offset_y => @offset_y,
+
+      :visible => @visible,
+
+      :draw_option => @draw_option,
+
+      :float_mode => @float_mode,
+      :align_y => @align_y,
+#      :entity => @entity,
+
+      :real_width => @real_width,
+      :real_height => @real_height,
+      
+      #未実装
+      :file_path => @file_path,
+      :rule_file_path => @rule_file_path
+    })
+
+    return super(options)
+  end
+
+
 end
 
 module Drawable #描画

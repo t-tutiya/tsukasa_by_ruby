@@ -62,6 +62,21 @@ class SoundControl  < Control
     command_load_sound(options, inner_options)
   end
 
+  def siriarize(options = {})
+
+    options.update({
+      #未実装
+      :file_path => @file_path,
+      :start => @start,
+      :loop_start => @loop_start,
+      :loop_end => @loop_end,
+      :loop_count => @loop_count,
+      :volume => @volume,
+    })
+
+    return  super(options)
+  end
+
   #サウンドリソースを解放します
   def dispose
     @entity.dispose

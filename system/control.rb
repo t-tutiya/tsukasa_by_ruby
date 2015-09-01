@@ -188,6 +188,29 @@ class Control #公開インターフェイス
   def delete?
     return @delete_flag
   end
+
+
+  def siriarize(options = {})
+
+    command_list = []
+
+    #子コントロールのシリアライズコマンドを取得
+    @control_list.each do |control|
+      command_list.push(control.siriarize)
+    end
+
+    options.update({
+      :_ARGUMENT_ => self.class.name.to_sym,
+      :id => @id,
+      :command_list => command_list
+    })
+
+    #オプションを生成
+    command = [:_CREATE_, options]
+
+    return command
+  end
+
 end
 
 class Control #内部メソッド
@@ -666,6 +689,16 @@ class Control #セーブデータ制御
       raise 
     end
   end
+
+  def command__QUICK_SAVE_(options, inner_options)
+    pp "quick save"
+    #マーシャルダンプテスト
+    sorce = Marshal.dump(siriarize())
+    #マーシャルロードテスト
+    pp Marshal.load(sorce)
+    raise
+  end
+
 end
 
 class Control #内部コマンド

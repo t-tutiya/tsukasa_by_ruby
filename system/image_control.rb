@@ -35,26 +35,37 @@ class ImageControl < Control
   include Drawable
 
   def initialize(options, inner_options, root_control)
-    command_load_image(options, inner_options)
+    if options[:entity]
+      self.entity = options[:entity]
+    else
+      self.file_path = options[:file_path]
+    end
+    options[:entity] = @entity
     super
+  end
+  
+  attr_reader :file_path
+  
+  def file_path=(file_path = nil)
+    if file_path
+      #画像ファイルをキャッシュから読み込んで初期化する
+      @entity = @@image_cache[file_path]
+    else
+      #空コントロールとして初期化する
+      @entity = Image.new(1,1,[0,0,0])
+    end
+  end
+
+  attr_reader :entity
+
+  def entity=(entity)
+    @entity = entity
   end
 
   def dispose()
     #TODO：キャッシュ機構が作り込まれてないのでここで削除できない
     #@entity.dispose
     super
-  end
-
-  def command_load_image(options, inner_options)
-    if options[:entity]
-      #実体から初期化する
-    elsif options[:file_path]
-      #ファイルパスから初期化する
-      options[:entity] = @@image_cache[options[:file_path]]
-    else
-      #空コントロールとして初期化する
-      options[:entity] = Image.new(1,1,[0,0,0])
-    end
   end
 end
 
@@ -62,16 +73,6 @@ class TileImageControl < Control
 
   def initialize(options, inner_options, root_control)
     super
-    command_load_tiles(options, inner_options)
-  end
-
-  def dispose()
-    #TODO：キャッシュ機構が作り込まれてないのでここで削除できない
-    #@entity.dispose
-    super
-  end
-
-  def command_load_tiles(options, inner_options)
     if options[:entity]
       enity = options[:entity]
     else
@@ -92,5 +93,11 @@ class TileImageControl < Control
                           :visible => false
                         }, inner_options])
     end
+  end
+
+  def dispose()
+    #TODO：キャッシュ機構が作り込まれてないのでここで削除できない
+    #@entity.dispose
+    super
   end
 end

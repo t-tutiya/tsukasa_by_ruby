@@ -39,31 +39,31 @@ _CREATE_ :ImageControl ,
 
 text "スペースキーを押すごとにimageが更新されます"
 
-wait_push
+pause
 
 _SEND_ :BG1 do
-  load_image file_path: "./sozai/button_normal.png"
+  _SET_ file_path: "./sozai/button_normal.png"
   _SET_ x_pos: 100, y_pos: 100,  float_mode: :right
 end
 
-wait_push
+pause
 
 _SEND_ :BG1 do
-  load_image file_path: "./sozai/button_key_down.png"
+  _SET_ file_path: "./sozai/button_key_down.png"
   _SET_ x_pos: 200
 end
 
-wait_push
+pause
 
 _SEND_ :BG2 do
-  load_image file_path: "./sozai/button_key_up.png"
+  _SET_ file_path: "./sozai/button_key_up.png"
   _SET_ x_pos: 200
 end
 
 
-wait_push
+pause
 
 _SEND_ :BG3 do
-  load_image file_path: "./sozai/button_over.png"
+  _SET_ file_path: "./sozai/button_over.png"
   _SET_ x_pos: 200
 end

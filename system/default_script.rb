@@ -190,7 +190,7 @@ _DEFINE_ :TextWindow do |options|
       ##ex.
       ##  _SEND_ :message0 do
       ##    _SEND_ :bg do
-      ##      load_image  file_path: "./sozai/bg_test.jpg" 
+      ##      _SET_ file_path: "./sozai/bg_test.jpg" 
       ##    end
       ##  end
 

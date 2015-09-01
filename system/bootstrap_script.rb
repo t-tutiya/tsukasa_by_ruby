@@ -31,14 +31,14 @@
 #デバッグモードの設定
 _SET_ :_GLOBAL_DATA_, _DEBUG_: true
 
+#無名関数として機能する（_RETURN_で脱出できる）
+_DEFINE_ :about do |options|
+  _YIELD_ options
+end
+
 #デフォルトのユーザー定義関数群
 _INCLUDE_ "./system/default_script.rb"
 
-#無名関数として機能する
-#TODO：現状必須になっているが、辞めたい
-_DEFINE_ :scope do |options|
-  _YIELD_ options
-end
 
 #以下、動作確認用のサンプルスクリプト
 

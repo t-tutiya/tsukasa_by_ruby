@@ -594,9 +594,9 @@ class Control #スクリプト制御
 
     unless options[:_ARGUMENT_]
       if options[:interrupt]
-        base_control.interrupt_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
+        base_control.interrupt_command([:_CALL_, {:_ARGUMENT_ => :about}, inner_options])
       else
-        base_control.push_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
+        base_control.push_command([:_CALL_, {:_ARGUMENT_ => :about}, inner_options])
       end
 
       return
@@ -614,9 +614,9 @@ class Control #スクリプト制御
 
     controls.each do |control|
       if options[:interrupt]
-        control.interrupt_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
+        control.interrupt_command([:_CALL_, {:_ARGUMENT_ => :about}, inner_options])
       else
-        control.push_command([:_CALL_, {:_ARGUMENT_ => :scope}, inner_options])
+        control.push_command([:_CALL_, {:_ARGUMENT_ => :about}, inner_options])
       end
     end
   end

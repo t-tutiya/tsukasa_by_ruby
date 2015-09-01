@@ -55,16 +55,6 @@ _DEFINE_ :delete do |options|
   end
 end
 
-#無名関数として機能する
-_DEFINE_ :scope do |options|
-  _YIELD_ options
-end
-
-#無名関数として機能する（_RETURN_で脱出できる）
-_DEFINE_ :about do |options|
-  _YIELD_ options
-end
-
 #指定フレーム数ウェイト
 #ex. wait_count 60
 _DEFINE_ :wait_count do |options|

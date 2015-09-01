@@ -50,9 +50,6 @@ _DEFINE_ :special_pause do
       delete :message0
     end
   end
-  _CHECK_ [:not_null], not_null: :flag do
-    _BREAK_
-  end
 end
 
 about do
@@ -64,6 +61,9 @@ about do
   line_feed
 
   special_pause
+  _CHECK_ [:not_null], not_null: :flag do
+    _RETURN_
+  end
 
   flush
   text "スクリプト１－Ｂ■■■■■■■■■■■■■■"
@@ -74,6 +74,9 @@ about do
   line_feed
 
   special_pause
+  _CHECK_ [:not_null], not_null: :flag do
+    _RETURN_
+  end
 
   _SET_ :_USER_DATA_, scenario: 2
    delete :message0

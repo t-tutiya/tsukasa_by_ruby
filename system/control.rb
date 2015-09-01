@@ -461,7 +461,7 @@ class Control #制御構文
     #チェック条件を満たさないなら終了する
     return unless check_imple(options[:_ARGUMENT_], options)
 
-    interrupt_command([:_END_SCOPE_, options, inner_options])
+    interrupt_command([:_END_LOOP_, options, inner_options])
 
     #while文全体をスクリプトストレージにスタック
     eval_commands([[:_WHILE_, options, inner_options]])
@@ -470,11 +470,18 @@ class Control #制御構文
   end
 
   def command__BREAK_(options, inner_options)
-    #_END_SCOPE_タグが見つかるまで@command_listからコマンドを取り除く
-    #_END_SCOPE_タグが見つからない場合は@command_listを空にする
+    #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
+    #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
-      command, end_scope_options = @command_list.shift
-      break if command == :_END_SCOPE_
+      break if @command_list.shift[0] == :_END_LOOP_
+    end
+  end
+
+  def command__RETURN_(options, inner_options)
+    #_END_FUNCTION_タグが見つかるまで@command_listからコマンドを取り除く
+    #_END_FUNCTION_タグが見つからない場合は@command_listを空にする
+    until @command_list.empty? do
+      break if @command_list.shift[0] == :_END_FUNCTION_
     end
   end
 end
@@ -521,6 +528,8 @@ class Control #ユーザー定義関数操作
     else
       options.delete(:_ARGUMENT_)
     end
+
+    interrupt_command([:_END_FUNCTION_, options, inner_options])
 
     #functionを実行時評価しコマンド列を生成する。
     eval_block(options, block_stack, &function_block)
@@ -668,8 +677,12 @@ class Control #内部コマンド
 
   private
 
-  #_BREAK_の終点を示す
-  def command__END_SCOPE_(options, inner_options)
+  #ループのの終点を示す
+  def command__END_LOOP_(options, inner_options)
+  end
+
+  #ファンクションの終点を示す
+  def command__END_FUNCTION_(options, inner_options)
   end
   
   #フレームの終了を示す（ダミーコマンド。これ自体は実行されない）

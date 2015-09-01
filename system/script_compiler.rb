@@ -71,6 +71,10 @@ class ScriptCompiler
   end
 
   def method_missing(command_name, option = nil, **options, &block)
+    if [:_END_FUNCTION_, :_END_LOOP_].index(command_name)
+      pp "#{command_name}コマンドは使用できません"
+      raise
+    end
 
     if @control.respond_to?("command_" + command_name.to_s, true)
       # 組み込みコマンドがある場合はそのまま呼ぶ

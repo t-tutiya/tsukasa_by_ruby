@@ -37,27 +37,24 @@ class ImageControl < Control
   def initialize(options, inner_options, root_control)
     if options[:entity]
       self.entity = options[:entity]
-    else
+    elsif options[:file_path]
       self.file_path = options[:file_path]
+    else
+      #空コントロールとして初期化する
+      @entity = Image.new(1,1,[0,0,0])
     end
     options[:entity] = @entity
     super
   end
   
   attr_reader :file_path
-  
   def file_path=(file_path = nil)
-    if file_path
-      #画像ファイルをキャッシュから読み込んで初期化する
-      @entity = @@image_cache[file_path]
-    else
-      #空コントロールとして初期化する
-      @entity = Image.new(1,1,[0,0,0])
-    end
+    @file_path = file_path
+    #画像ファイルをキャッシュから読み込んで初期化する
+    @entity = @@image_cache[file_path]
   end
 
   attr_reader :entity
-
   def entity=(entity)
     @entity = entity
   end
@@ -74,12 +71,12 @@ class TileImageControl < Control
   def initialize(options, inner_options, root_control)
     super
     if options[:entity]
-      enity = options[:entity]
+      entity = options[:entity]
     else
-      enity = @@image_cache[options[:file_path]]
+      entity = @@image_cache[options[:file_path]]
     end
 
-    entities = enity.slice_tiles(options[:x_count] || 1, 
+    entities = entity.slice_tiles(options[:x_count] || 1, 
                                  options[:y_count] || 1)
 
     entities.each.with_index(options[:start_index] || 0) do |image, index|

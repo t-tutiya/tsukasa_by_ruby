@@ -36,36 +36,66 @@ require 'dxruby'
 #TODO：DirectSoundの仕様上、一つ目の初期化時に時間がかかるようです。
 class SoundControl  < Control
 
+  attr_reader :start
   def start=(start)
+    @start = start
     @entity.start = start
   end
 
+  attr_reader :loop_start
   def loop_start=(loop_start)
+    @loop_start = loop_start
     @entity.loop_start = loop_start if @midi
   end
 
+  attr_reader :loop_end
   def loop_end=(loop_end)
+    @loop_end = loop_end
     @entity.loop_end = loop_end if @midi
   end
 
+  attr_reader :loop_count
   def loop_count=(loop_count)
+    @loop_count = loop_count
     @entity.loop_count = loop_count
   end
 
+  attr_reader :volume
   def volume=(volume)
     @volume = volume
     @entity.set_volume(@volume, 0)
   end
 
+  attr_reader :file_path
+  def file_path=(file_path)
+    @file_path = file_path
+    @entity = Sound.new(@file_path)
+    @midi = true if File.extname(@file_path) == ".mid"
+  end
+
   def initialize(options, inner_options, root_control)
     super
-    command_load_sound(options, inner_options)
+    self.file_path = options[:file_path]
+
+    #開始位置
+    #TODO:これがwavでエラーにならないのはなんでだ？
+    self.start = options[:start] || 0
+
+    #ループ開始位置
+    self.loop_start = options[:loop_start] || 0
+    #ループ終了位置
+    self.loop_end = options[:loop_end] || 0
+
+    #ループ回数（－１なら無限ループ）
+    self.loop_count = options[:loop_count] || 1
+
+    #ボリューム／フェード指定
+    self.volume = options[:volume] || 230
   end
 
   def siriarize(options = {})
 
     options.update({
-      #未実装
       :file_path => @file_path,
       :start => @start,
       :loop_start => @loop_start,
@@ -81,32 +111,6 @@ class SoundControl  < Control
   def dispose
     @entity.dispose
     super
-  end
-
-  #音を再生します
-  def command_load_sound(options, inner_options)
-    @entity = Sound.new(options[:file_path])
-
-    @midi = true if File.extname(options[:file_path]) == ".mid"
-
-    #開始位置
-    #TODO:これがwavでエラーにならないのはなんでだ？
-    @entity.start = options[:start] || 0
-
-    if @midi
-      #ループ開始位置
-      @entity.loop_start = options[:loop_start] || 0
-      #ループ終了位置
-      @entity.loop_end = options[:loop_end] || 0
-    end
-
-    #ループ回数（－１なら無限ループ）
-    @entity.loop_count = options[:loop_count] || 1
-
-    #ボリューム／フェード指定
-    fade_time = options[:fade_ms] || 0
-    @volume = options[:volume] || 230
-    @entity.set_volume(@volume, fade_time)
   end
 
   #音を再生します

@@ -277,21 +277,21 @@ class ImageControl < Control #移動
     #移動先座標の決定
     @x_pos= ( start_x + 
               (end_x - start_x).to_f * 
-              @@EasingProcHash[options[:easing]].call(
+              EasingProcHash[options[:easing]].call(
                 options[:count].fdiv(options[:total_frame])
               )
             ).to_i
 
     @y_pos= ( start_y + 
               (end_y - start_y).to_f * 
-              @@EasingProcHash[options[:easing]].call(
+              EasingProcHash[options[:easing]].call(
                 options[:count].fdiv(options[:total_frame])
               )
             ).to_i
 
     @draw_option[:alpha]= ( start_alpha + 
                             (end_alpha - start_alpha).to_f * 
-                            @@EasingProcHash[options[:easing]].call(
+                            EasingProcHash[options[:easing]].call(
                               options[:count].fdiv(options[:total_frame])
                             )
                           ).to_i
@@ -564,7 +564,7 @@ end
 
 class ImageControl < Control
   # jQuery + jQueryEasingPluginより32種類の内蔵イージング関数。それぞれの動きはサンプルを実行して確認のこと。
-  @@EasingProcHash = {
+  EasingProcHash = {
     :liner => ->x{x},
     :in_quad => ->x{x**2},
     :in_cubic => ->x{x**3},

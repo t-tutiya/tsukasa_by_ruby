@@ -46,8 +46,6 @@ require_relative './text_page_control.rb'
 
 require_relative './script_compiler.rb'
 
-require_relative './module_easing.rb'
-
 #TODO：モジュールであるべきか？
 class Tsukasa < LayoutControl
   attr_reader  :_USER_DATA_

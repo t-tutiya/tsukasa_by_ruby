@@ -251,13 +251,13 @@ class ImageControl < Control #移動
     #初期値が設定されていない場合は現在値を設定する
     options[:start] = [@x_pos, @y_pos] unless options[:start]
   
+    start_x = options[:start][0]
+    start_y = options[:start][1]
+
     #透明度が設定されていなければ現在の値で初期化
     unless options[:start][2]
       options[:start][2] = @draw_option[:alpha]
     end
-
-    start_x = options[:start][0]
-    start_y = options[:start][1]
     start_alpha = options[:start][2]
 
     end_x = options[:last][0]
@@ -267,7 +267,6 @@ class ImageControl < Control #移動
     unless options[:last][2]
       options[:last][2] = @draw_option[:alpha]
     end
-
     end_alpha = options[:last][2]
 
     # Easingパラメータが設定されていなければ線形移動を設定
@@ -276,9 +275,26 @@ class ImageControl < Control #移動
     end
 
     #移動先座標の決定
-    @x_pos = (start_x + (end_x - start_x).to_f * Easing::EasingProcHash[options[:easing]].call(options[:count].fdiv(options[:total_frame]))).to_i
-    @y_pos = (start_y + (end_y - start_y).to_f * Easing::EasingProcHash[options[:easing]].call(options[:count].fdiv(options[:total_frame]))).to_i
-    @draw_option[:alpha] = (start_alpha + (end_alpha - start_alpha).to_f * Easing::EasingProcHash[options[:easing]].call(options[:count].fdiv(options[:total_frame]))).to_i
+    @x_pos= ( start_x + 
+              (end_x - start_x).to_f * 
+              @@EasingProcHash[options[:easing]].call(
+                options[:count].fdiv(options[:total_frame])
+              )
+            ).to_i
+
+    @y_pos= ( start_y + 
+              (end_y - start_y).to_f * 
+              @@EasingProcHash[options[:easing]].call(
+                options[:count].fdiv(options[:total_frame])
+              )
+            ).to_i
+
+    @draw_option[:alpha]= ( start_alpha + 
+                            (end_alpha - start_alpha).to_f * 
+                            @@EasingProcHash[options[:easing]].call(
+                              options[:count].fdiv(options[:total_frame])
+                            )
+                          ).to_i
 
     #カウントが指定フレーム未満の場合
     if options[:count] < options[:total_frame]
@@ -534,4 +550,156 @@ EOS
     end
 
   end
+end
+
+class ImageControl < Control
+  # jQuery + jQueryEasingPluginより32種類の内蔵イージング関数。それぞれの動きはサンプルを実行して確認のこと。
+  @@EasingProcHash = {
+    :liner => ->x{x},
+    :in_quad => ->x{x**2},
+    :in_cubic => ->x{x**3},
+    :in_quart => ->x{x**4},
+    :in_quint => ->x{x**5},
+    :in_expo => ->x{x == 0 ? 0 : 2 ** (10 * (x - 1))},
+    :in_sine => ->x{-Math.cos(x * Math::PI / 2) + 1},
+    :in_circ => ->x{x == 0 ? 0 : -(Math.sqrt(1 - (x * x)) - 1)},
+    :in_back => ->x{x == 0 ? 0 : x == 1 ? 1 : (s = 1.70158; x * x * ((s + 1) * x - s))},
+    :in_bounce => ->x{1-EasingProcHash[:out_bounce][1-x]},
+    :in_elastic => ->x{1-EasingProcHash[:out_elastic][1-x]},
+    :out_quad => ->x{1-EasingProcHash[:in_quad][1-x]},
+    :out_cubic => ->x{1-EasingProcHash[:in_cubic][1-x]},
+    :out_quart => ->x{1-EasingProcHash[:in_quart][1-x]},
+    :out_quint => ->x{1-EasingProcHash[:in_quint][1-x]},
+    :out_expo => ->x{1-EasingProcHash[:in_expo][1-x]},
+    :out_sine => ->x{1-EasingProcHash[:in_sine][1-x]},
+    :out_circ => ->x{1-EasingProcHash[:in_circ][1-x]},
+    :out_back => ->x{1-EasingProcHash[:in_back][1-x]},
+    :out_bounce => ->x{
+      case x
+      when 0, 1
+        x
+      else
+        if x < (1 / 2.75)
+          7.5625 * x * x
+        elsif x < (2 / 2.75)
+          x -= 1.5 / 2.75
+          7.5625 * x * x + 0.75
+        elsif x < 2.5 / 2.75
+          x -= 2.25 / 2.75
+          7.5625 * x * x + 0.9375
+        else
+          x -= 2.625 / 2.75
+          7.5625 * x * x + 0.984375
+        end
+      end
+    },
+    :out_elastic => ->x{
+      case x
+      when 0, 1
+        x
+      else
+        (2 ** (-10 * x)) * Math.sin((x / 0.15 - 0.5) * Math::PI) + 1
+      end
+    },
+    :swing => ->x{0.5 - Math.cos( x * Math::PI ) / 2},
+    :inout_quad => ->x{
+      if x < 0.5
+        x *= 2
+        0.5 * x * x
+      else
+        x = (x * 2) - 1
+        -0.5 * (x * (x - 2) - 1)
+      end
+    },
+    :inout_cubic => ->x{
+      if x < 0.5
+        x *= 2
+        0.5 * x * x * x
+      else
+        x = (x * 2) - 2
+        0.5 * (x * x * x + 2)
+      end
+    },
+    :inout_quart => ->x{
+      if x < 0.5
+        x *= 2
+        0.5 * x * x * x * x
+      else
+        x = (x * 2) - 2
+        -0.5 * (x * x * x * x - 2)
+      end
+    },
+    :inout_quint => ->x{
+      if x < 0.5
+        x *= 2
+        0.5 * x * x * x * x * x
+      else
+        x = (x * 2) - 2
+        0.5 * (x * x * x * x * x + 2)
+      end
+    },
+    :inout_sine => ->x{
+      -0.5 * (Math.cos(Math::PI * x) - 1);
+    },
+    :inout_expo => ->x{
+      case x
+      when 0, 1
+        x
+      else
+        if x < 0.5
+          x *= 2
+          0.5 * (2 ** (10 * (x - 1)))
+        else
+          x = x * 2 - 1
+          0.5 * (-2 ** (-10 * x) + 2)
+        end
+      end
+    },
+    :inout_circ => ->x{
+    if x < 0.5
+      x *= 2
+      -0.5 * (Math.sqrt(1 - x * x) - 1);
+    else
+      x = x * 2 - 2
+      0.5 * (Math.sqrt(1 - x * x) + 1);
+    end
+    },
+    :inout_back => ->x{
+      case x
+      when 0, 1
+        x
+      else
+        if x < 0.5
+          EasingProcHash[:in_back][x*2] * 0.5
+        else
+          EasingProcHash[:out_back][x*2-1] * 0.5 + 0.5
+        end
+      end
+    },
+    :inout_bounce => ->x{
+      case x
+      when 0, 1
+        x
+      else
+        if x < 0.5
+          EasingProcHash[:in_bounce][x*2] * 0.5
+        else
+          EasingProcHash[:out_bounce][x*2-1] * 0.5 + 0.5
+        end
+      end
+    },
+    :inout_elastic => ->x{
+      case x
+      when 0, 1
+        x
+      else
+        if x < 0.5
+          EasingProcHash[:in_elastic][x*2] * 0.5
+        else
+          EasingProcHash[:out_elastic][x*2-1] * 0.5 + 0.5
+        end
+      end
+    },
+  }
+
 end

@@ -8,7 +8,7 @@ _CREATE_ :ImageControl, file_path: "./sozai/bg_test.jpg", id: :test
 _CREATE_ :LayoutControl , 
           width: 1280, 
           height: 720 , 
-          rule: "sozai/rule/circle_rule.png" do
+          rule_file_path: "sozai/rule/circle_rule.png" do
   _CREATE_ :ImageControl, file_path: "./sozai/bg_sample.png", id: :test
 
   _WHILE_ :true do

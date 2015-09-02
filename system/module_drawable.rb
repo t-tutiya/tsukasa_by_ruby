@@ -53,6 +53,14 @@ end
 
 module Drawable
 
+  #Imageのキャッシュ機構の簡易実装
+  #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
+  @@image_cache = Hash.new
+  #キャッシュされていない画像パスが指定されたら読み込む
+  @@image_cache.default_proc = ->(hsh, key) {
+    hsh[key] = Image.load(key)
+  }
+
   attr_accessor  :x_pos
   attr_accessor  :y_pos
 
@@ -67,8 +75,30 @@ module Drawable
   attr_accessor  :align_y
   attr_accessor  :entity
 
+  attr_accessor  :width
+  attr_accessor  :height
+
   attr_accessor  :real_width
   attr_accessor  :real_height
+
+  attr_reader :file_path
+  def file_path=(file_path)
+    @file_path = file_path
+    #画像ファイルをキャッシュから読み込んで初期化する
+    @entity = @@image_cache[file_path]
+  end
+
+  attr_reader :entity
+  def entity=(entity)
+    @entity = entity
+  end
+
+  attr_reader :rule_file_path
+  def rule_file_path=(rule_file_path)
+    @rule_file_path = rule_file_path
+    #画像ファイルをキャッシュから読み込んで初期化する
+    @rule_entity = TransitionShader.new(@@image_cache[rule_file_path])
+  end
 
   def initialize(options, inner_options, root_control)
     @x_pos = options[:x_pos] || 0 #描画Ｘ座標
@@ -98,7 +128,17 @@ module Drawable
     @float_mode = options[:float_mode] || :none
     @align_y = options[:align_y] || :none
 
-    @entity = options[:entity]
+    if options[:entity]
+      @entity = options[:entity]
+    elsif options[:file_path]
+      self.file_path = options[:file_path]
+    else
+      #空コントロールとして初期化する
+      @entity = Image.new(1,1,[0,0,0])
+    end
+
+    #ルールトランジション用の画像ファイルパスがあるならシェーダーを初期化する
+    self.rule_file_path = options[:rule_file_path] if options[:rule_file_path]
 
     @real_width =  @width = 0
     @real_height = @height = 0
@@ -112,9 +152,6 @@ module Drawable
       @real_width = @width  = options[:width] if options[:width]
       @real_height = @height = options[:height] if options[:height]
     end
-
-    #ルールトランジション用の画像ファイルパスがあるならシェーダーを初期化する
-    self.rule = options[:rule] if options[:rule]
 
     super
   end
@@ -387,16 +424,7 @@ module Drawable #ムーブ
 end
 
 module Drawable #トランジション
-
-  def rule=(file_path)
-    @rule = TransitionShader.new(Image.load(file_path))
-  end
-
   #フェードインコマンド
-  #count:現在カウント
-  #frame:フレーム数
-  #start:開始α値
-  #last:終了α値
   def command_transition_fade(options, inner_options) 
     #現在の経過カウントを初期化
     options[:count] = 0 unless options[:count]
@@ -438,12 +466,12 @@ module Drawable #トランジション
       return
     end
 
-    @rule.g_min = (((options[:vague] + options[:total_frame]).fdiv(options[:total_frame])) * options[:count] - options[:vague]).fdiv(options[:total_frame])
-    @rule.g_max = (((options[:vague] + options[:total_frame]).fdiv(options[:total_frame])) * options[:count]).fdiv(options[:total_frame])
+    @rule_entity.g_min = (((options[:vague] + options[:total_frame]).fdiv(options[:total_frame])) * options[:count] - options[:vague]).fdiv(options[:total_frame])
+    @rule_entity.g_max = (((options[:vague] + options[:total_frame]).fdiv(options[:total_frame])) * options[:count]).fdiv(options[:total_frame])
 
     #カウントが指定フレーム未満の場合
     if options[:count] < options[:total_frame]
-      @draw_option[:shader] = @rule
+      @draw_option[:shader] = @rule_entity
       #カウントアップ
       options[:count] += 1
       #:transition_ruleコマンドをスタックし直す

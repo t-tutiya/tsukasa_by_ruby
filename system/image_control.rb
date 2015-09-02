@@ -35,30 +35,9 @@ class ImageControl < Control
   include Drawable
 
   def initialize(options, inner_options, root_control)
-    if options[:entity]
-      self.entity = options[:entity]
-    elsif options[:file_path]
-      self.file_path = options[:file_path]
-    else
-      #空コントロールとして初期化する
-      @entity = Image.new(1,1,[0,0,0])
-    end
-    options[:entity] = @entity
     super
   end
   
-  attr_reader :file_path
-  def file_path=(file_path = nil)
-    @file_path = file_path
-    #画像ファイルをキャッシュから読み込んで初期化する
-    @entity = @@image_cache[file_path]
-  end
-
-  attr_reader :entity
-  def entity=(entity)
-    @entity = entity
-  end
-
   def dispose()
     #TODO：キャッシュ機構が作り込まれてないのでここで削除できない
     #@entity.dispose

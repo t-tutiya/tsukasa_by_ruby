@@ -222,12 +222,10 @@ class ImageControl < Control #描画
 
       :float_mode => @float_mode,
       :align_y => @align_y,
-#      :entity => @entity,
 
       :real_width => @real_width,
       :real_height => @real_height,
-      
-      #未実装
+
       :file_path => @file_path,
       :rule_file_path => @rule_file_path
     })

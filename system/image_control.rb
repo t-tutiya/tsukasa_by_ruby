@@ -460,8 +460,18 @@ class ImageControl < Control #フェード
       return
     end
 
-    @rule_entity.g_min = (((options[:vague] + options[:total_frame]).fdiv(options[:total_frame])) * options[:count] - options[:vague]).fdiv(options[:total_frame])
-    @rule_entity.g_max = (((options[:vague] + options[:total_frame]).fdiv(options[:total_frame])) * options[:count]).fdiv(options[:total_frame])
+    @rule_entity.g_min =( ( options[:vague] + 
+                            options[:total_frame]
+                          ).fdiv(options[:total_frame]) *
+                          options[:count] - 
+                          options[:vague]
+                        ).fdiv(options[:total_frame])
+
+    @rule_entity.g_max =( ( options[:vague] + 
+                            options[:total_frame]
+                          ).fdiv(options[:total_frame]) *
+                          options[:count]
+                        ).fdiv(options[:total_frame])
 
     #カウントが指定フレーム未満の場合
     if options[:count] < options[:total_frame]

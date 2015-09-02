@@ -109,14 +109,8 @@ class ImageControl < Control #描画
     #可視フラグ（省略時はtrue）
     @visible = options[:visible] == false ? false : true
 
-    if options[:draw_option]
-      @draw_option = options[:draw_option]
-    else
-      #描画オプション
-      @draw_option = {
-                      :z => options[:index] || 0 #重ね合わせ順序
-                      } 
-    end
+    #描画オプション
+    @draw_option = options[:draw_option] || {}
 
     @draw_option[:alpha] = @draw_option[:alpha] || 255
 
@@ -242,23 +236,6 @@ class ImageControl < Control #描画
   end
 
 
-end
-
-class ImageControl < Control
-
-  #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
-  def command_render_to_image(options, inner_options)
-    rt = RenderTarget.new(@width, @height)
-    render( 0, 0, rt, {:width => @width, :height => @height})
-    entity  = rt.to_image
-    #イメージコントロールを生成する
-    interrupt_command([:_CREATE_, 
-               {:_ARGUMENT_ => :ImageControl, 
-                :entity => entity,
-                :index => 1000000,
-                }, 
-                inner_options])
-  end
 end
 
 class ImageControl < Control #移動

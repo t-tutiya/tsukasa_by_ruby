@@ -51,4 +51,18 @@ class LayoutControl < ImageControl
     @entity.dispose if @entity
     super
   end
+
+  #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
+  def command_render_to_image(options, inner_options)
+    rt = RenderTarget.new(@width, @height)
+    render( 0, 0, rt, {:width => @width, :height => @height})
+    entity  = rt.to_image
+    #イメージコントロールを生成する
+    interrupt_command([:_CREATE_, 
+               {:_ARGUMENT_ => :ImageControl, 
+                :entity => entity,
+                :index => 1000000,
+                }, 
+                inner_options])
+  end
 end

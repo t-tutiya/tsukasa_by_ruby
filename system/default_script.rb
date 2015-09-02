@@ -172,7 +172,7 @@ _DEFINE_ :TextWindow do |options|
     y_pos: options[:y_pos],
     width: options[:width],
     height: options[:height],
-    index: 1000000, #描画順序
+    draw_option: {z: 1000000}, #描画順序
     id: options[:id] do
       #デフォルトの背景画像
       _CREATE_ :ImageControl, id: :bg
@@ -306,25 +306,25 @@ end
 
 #初期レイヤ（背景）
 _CREATE_ :ImageControl,
-  index: 0, #描画順序
+  draw_option: {z: 0}, #描画順序
   id: :base do
 end
 
 #初期レイヤ０
 _CREATE_ :ImageControl,
-  index: 1000, #描画順序
+  draw_option: {z: 1000}, #描画順序
   id: 0 do
 end
 
 #初期レイヤ１
 _CREATE_ :ImageControl,
-  index: 2000, #描画順序
+  draw_option: {z: 2000}, #描画順序
   id: 1 do
 end
 
 #初期レイヤ２
 _CREATE_ :ImageControl,
-  index: 3000, #描画順序
+  draw_option: {z: 3000}, #描画順序
   id: 2 do
 end
 

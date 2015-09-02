@@ -33,12 +33,13 @@ require 'dxruby'
 require 'pp'
 
 require_relative './control.rb'
-require_relative './module_drawable.rb'
 require_relative './module_clickable.rb'
 
+require_relative './image_control.rb'
 
 require_relative './layout_control.rb'
-require_relative './image_control.rb'
+require_relative './tile_image_control.rb'
+
 require_relative './sound_control.rb'
 
 require_relative './text_page_control.rb'

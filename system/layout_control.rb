@@ -42,8 +42,6 @@ class LayoutControl < ImageControl
       options[:entity] = RenderTarget.new( options[:width]  || 1, 
                                   options[:height] || 1, 
                                   options[:color]  || [0,0,0,0])
-    else
-      options[:child_controls_draw_to_entity] = false
     end
 
     super

@@ -109,9 +109,6 @@ class ImageControl < Control #描画
     #可視フラグ（省略時はtrue）
     @visible = options[:visible] == false ? false : true
 
-    #子コントロールを自エンティティに描画するかどうか
-    @child_controls_draw_to_entity = options[:child_controls_draw_to_entity] || false
-
     if options[:draw_option]
       @draw_option = options[:draw_option]
     else
@@ -128,13 +125,15 @@ class ImageControl < Control #描画
     @align_y = options[:align_y] || :none
 
     if options[:entity]
-      @entity = options[:entity]
+      self.entity = options[:entity]
     elsif options[:file_path]
       self.file_path = options[:file_path]
     else
-      #空コントロールとして初期化する
-      @entity = Image.new(1,1,[0,0,0])
+      options[:child_controls_draw_to_entity] = false
     end
+
+    #子コントロールを自エンティティに描画するかどうか
+    @child_controls_draw_to_entity = options[:child_controls_draw_to_entity] || false
 
     #ルールトランジション用の画像ファイルパスがあるならシェーダーを初期化する
     self.rule_file_path = options[:rule_file_path] if options[:rule_file_path]

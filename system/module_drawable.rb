@@ -51,8 +51,7 @@ class RenderTarget
   end
 end
 
-module Drawable
-
+class ImageControl < Control #描画
   #Imageのキャッシュ機構の簡易実装
   #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
   @@image_cache = Hash.new
@@ -246,7 +245,7 @@ module Drawable
 
 end
 
-module Drawable #描画
+class ImageControl < Control
 
   #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
   def command_render_to_image(options, inner_options)
@@ -263,7 +262,7 @@ module Drawable #描画
   end
 end
 
-module Drawable #ムーブ
+class ImageControl < Control #移動
   def command_move(options, inner_options)
     #現在の経過カウントを初期化
     options[:count] = 0 unless options[:count]
@@ -423,7 +422,7 @@ module Drawable #ムーブ
   end
 end
 
-module Drawable #トランジション
+class ImageControl < Control #フェード
   #フェードインコマンド
   def command_transition_fade(options, inner_options) 
     #現在の経過カウントを初期化

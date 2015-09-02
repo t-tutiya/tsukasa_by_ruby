@@ -30,8 +30,7 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class LayoutControl < Control
-  include Drawable #描画関連モジュール
+class LayoutControl < ImageControl
   include Clickable
 
   def initialize(options, inner_options, root_control)

@@ -30,29 +30,22 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-#イメージコントロール
-class ImageControl < Control
-  include Drawable
-
-  def initialize(options, inner_options, root_control)
-    super
-  end
-  
-  def dispose()
-    #TODO：キャッシュ機構が作り込まれてないのでここで削除できない
-    #@entity.dispose
-    super
-  end
-end
-
 class TileImageControl < Control
+
+  #Imageのキャッシュ機構の簡易実装
+  #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
+  @@tile_image_cache = Hash.new
+  #キャッシュされていない画像パスが指定されたら読み込む
+  @@tile_image_cache.default_proc = ->(hsh, key) {
+    hsh[key] = Image.load(key)
+  }
 
   def initialize(options, inner_options, root_control)
     super
     if options[:entity]
       entity = options[:entity]
     else
-      entity = @@image_cache[options[:file_path]]
+      entity = @@tile_image_cache[options[:file_path]]
     end
 
     entities = entity.slice_tiles(options[:x_count] || 1, 

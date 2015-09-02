@@ -36,8 +36,7 @@ require_relative './Image_font_maker'
 #汎用テキストマネージャクラス
 ###############################################################################
 
-class TextPageControl < Control
-  include Drawable #描画関連モジュール
+class TextPageControl < ImageControl
 
   #############################################################################
   #公開インターフェイス

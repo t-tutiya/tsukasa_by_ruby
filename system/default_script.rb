@@ -192,46 +192,46 @@ _DEFINE_ :TextWindow do |options|
         id: options[:text_page_id],
         size: 32, 
         fontname: "ＭＳＰ ゴシック",
-        wait_frame: 2,
-        char_renderer: Proc.new{
-          #フェードイン（スペースキーか右CTRLが押されたらスキップ）
-          transition_fade total_frame: 15,
-                          start: 0,
-                          last: 255,
-                          check: [[:key_push, :key_down], 
-                                  {:key_down_code => K_RCONTROL}] do
-                            _SET_ :draw_option, alpha: 255
-                          end
-          #トランジションが終了するまで非アイドル状態
-          _WAIT_  [:command], command: :transition_fade do
-            _SET_ idle_mode: false
-          end
-          #非wake状態に移行
-          _SET_ :_MODE_STATUS_, wake: false
-          #wake状態になるまで待機
-          _WAIT_ [:mode], mode: :wake
-          #キー入力伝搬を防ぐ為に１フレ送る
-          _END_FRAME_
-          #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
-          transition_fade total_frame: 60,
-                          last:128,
-                          check: [[:key_push ,:key_down], 
-                                  {:key_down_code => K_RCONTROL}] do
-                            #スキップされた場合
-                            _CHECK_ :key_down, key_down_code: K_RCONTROL do
-                              #CTRLスキップ中であれば透明度255
+        wait_frame: 2 do
+          _CHAR_RENDERER_ do
+            #フェードイン（スペースキーか右CTRLが押されたらスキップ）
+            transition_fade total_frame: 15,
+                            start: 0,
+                            last: 255,
+                            check: [[:key_push, :key_down], 
+                                    {:key_down_code => K_RCONTROL}] do
                               _SET_ :draw_option, alpha: 255
                             end
-                            _CHECK_ :key_push do
-                              #CTRLスキップ中でなければ透明度128
-                              _SET_ :draw_option, alpha: 128
-                            end
+            #トランジションが終了するまで非アイドル状態
+            _WAIT_  [:command], command: :transition_fade do
+              _SET_ idle_mode: false
+            end
+            #非wake状態に移行
+            _SET_ :_MODE_STATUS_, wake: false
+            #wake状態になるまで待機
+            _WAIT_ [:mode], mode: :wake
+            #キー入力伝搬を防ぐ為に１フレ送る
+            _END_FRAME_
+            #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
+            transition_fade total_frame: 60,
+                            last:128,
+                            check: [[:key_push ,:key_down], 
+                                    {:key_down_code => K_RCONTROL}] do
+                              #スキップされた場合
+                              _CHECK_ :key_down, key_down_code: K_RCONTROL do
+                                #CTRLスキップ中であれば透明度255
+                                _SET_ :draw_option, alpha: 255
+                              end
+                              _CHECK_ :key_push do
+                                #CTRLスキップ中でなければ透明度128
+                                _SET_ :draw_option, alpha: 128
+                              end
+            end
+            #トランジションが終了するまで待機
+            _WAIT_ [:command], command: :transition_fade
           end
-          #トランジションが終了するまで待機
-          _WAIT_ [:command], command: :transition_fade
-        } do
-        _SET_ size: 32
-        _FLUSH_ #これが必ず必要
+          _SET_ size: 32
+          _FLUSH_ #これが必ず必要
       end
   end
 end

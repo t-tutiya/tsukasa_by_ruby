@@ -48,7 +48,6 @@ class TextPageControl < ImageControl
   end
 
   attr_accessor  :font_config
-  attr_accessor  :shadow
 
 #  attr_accessor  :use_image_font
 #  attr_accessor  :image_face
@@ -133,8 +132,8 @@ class TextPageControl < ImageControl
   # :line_feed_wait_frame #改行時の待機フレーム
 
   def initialize(options, inner_options, root_control)
-    @child_controls_draw_to_entity = false
-    @char_renderer = options[:char_renderer]
+    options[:child_controls_draw_to_entity] = false
+    @char_renderer = nil
 
     #draw_font_exに渡すオプション
     @font_config = {
@@ -155,9 +154,6 @@ class TextPageControl < ImageControl
 
     #オプションと結合
     @font_config.merge!(options[:font_config]  || {})
-
-    #影：縁まで影を落とすか
-    @shadow = options[:shadow] || false      
 
     #レンダリング済みフォント使用中かどうか
     @use_image_font = options[:use_image_font] || false
@@ -201,7 +197,6 @@ class TextPageControl < ImageControl
 
     options.update({
       :font_config => @font_config,
-      :shadow => @shadow,
 
       #未実装
       #:use_image_font => @use_image_font,
@@ -312,6 +307,10 @@ class TextPageControl < ImageControl
                 :align_y => :bottom,
                 :float_mode => :right}, 
                {:block => @char_renderer}])
+  end
+
+  def command__CHAR_RENDERER_(options, inner_options)
+    @char_renderer = inner_options[:block]
   end
 
   #textコマンド

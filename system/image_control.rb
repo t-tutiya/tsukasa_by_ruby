@@ -270,10 +270,15 @@ class ImageControl < Control #移動
 
     end_alpha = options[:last][2]
 
+    # Easingパラメータが設定されていなければ線形移動を設定
+    unless options[:easing]
+      options[:easing] = :liner
+    end
+
     #移動先座標の決定
-    @x_pos = (start_x + (end_x - start_x).to_f / options[:total_frame] * options[:count]).to_i
-    @y_pos = (start_y + (end_y - start_y).to_f / options[:total_frame] * options[:count]).to_i
-    @draw_option[:alpha] = (start_alpha + (end_alpha - start_alpha).to_f / options[:total_frame] * options[:count]).to_i
+    @x_pos = (start_x + (end_x - start_x).to_f * Easing::EasingProcHash[options[:easing]].call(options[:count].fdiv(options[:total_frame]))).to_i
+    @y_pos = (start_y + (end_y - start_y).to_f * Easing::EasingProcHash[options[:easing]].call(options[:count].fdiv(options[:total_frame]))).to_i
+    @draw_option[:alpha] = (start_alpha + (end_alpha - start_alpha).to_f * Easing::EasingProcHash[options[:easing]].call(options[:count].fdiv(options[:total_frame]))).to_i
 
     #カウントが指定フレーム未満の場合
     if options[:count] < options[:total_frame]

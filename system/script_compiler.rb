@@ -47,17 +47,17 @@ class ScriptCompiler
     @command_list = []
     @yield_block = nil
 
-    if argument[:script_path]
-      if File.extname(argument[:script_path]) == ".tks"
+    if argument[:script_file_path]
+      if File.extname(argument[:script_file_path]) == ".tks"
         #評価対象がｔｋｓファイルの場合の場合
-        eval( @@replacer.apply(@@parser.parse(File.read(argument[:script_path], encoding: "UTF-8"))).flatten.join("\n").encode("Windows-31J"), 
+        eval( @@replacer.apply(@@parser.parse(File.read(argument[:script_file_path], encoding: "UTF-8"))).flatten.join("\n").encode("Windows-31J"), 
               nil, 
-              File.expand_path(argument[:script_path]))
+              File.expand_path(argument[:script_file_path]))
       else
         #評価対象がスクリプトファイルの場合の場合
-        eval( File.read(argument[:script_path], encoding: "UTF-8"), 
+        eval( File.read(argument[:script_file_path], encoding: "UTF-8"), 
               nil, 
-              File.expand_path(argument[:script_path]))
+              File.expand_path(argument[:script_file_path]))
       end
     else
       raise unless block

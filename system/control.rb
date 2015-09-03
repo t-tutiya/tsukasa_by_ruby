@@ -39,6 +39,14 @@ class Control #公開インターフェイス
 
   attr_accessor  :id
 
+  attr_reader  :script_file_path
+  def script_file_path=(script_file_path)
+    @script_file_path = script_file_path 
+    @command_list =  
+      @script_compiler.commands({:script_file_path => script_file_path}) +
+      @command_list
+  end
+
   attr_accessor  :idle_mode
 
   def initialize(options, inner_options, root_control)
@@ -53,38 +61,35 @@ class Control #公開インターフェイス
     @_MODE_STATUS_ =  @root_control._MODE_STATUS_
 
     # ユーザ定義関数
-    @function_list = options[:function_list] || {} 
+    @function_list = {} 
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
     #コマンドリスト
-    @command_list         = [] 
+    @command_list = [] 
     #一時コマンドリスト
-    @next_frame_commands  = options[:next_frame_commands] || [] 
+    @next_frame_commands = [] 
 
     @idle_mode = true          #待機モードの初期化
 
     @script_compiler = ScriptCompiler.new(self, @root_control)
-    @control_list         = [] #コントロールリスト
+    @control_list = [] #コントロールリスト
     @delete_flag = false       #削除フラグの初期化
-
-    #スクリプトパスが設定されているなら読み込んで登録する
-    if options[:script_path]
-      @command_list += @script_compiler.commands({:script_path => options[:script_path]})
-    end
 
     #ブロックが付与されているなら読み込んで登録する
     if inner_options[:block]
-      @command_list = @script_compiler.commands(
-                          options,
-                          inner_options[:block_stack],
-                          &inner_options[:block])
+      eval_block(options, inner_options[:block_stack], &inner_options[:block])
+    end
+
+    #スクリプトパスが設定されているなら読み込んで登録する
+    if options[:script_file_path]
+      self.script_file_path = options[:script_file_path] 
     end
 
     #コマンドセットがあるなら登録する
-    eval_commands(options[:commands]) 
     if options[:command_list]
-      @command_list = options[:command_list] + @command_list
+      eval_commands(options[:command_list]) 
     end
+
   end
 
   #コマンドをスタックに格納する
@@ -194,7 +199,9 @@ class Control #公開インターフェイス
     options.update({
       :_ARGUMENT_ => self.class.name.to_sym,
       :id => @id,
-      :command_list => command_list
+      :script_file_path => @script_file_path,
+      :command_list => command_list,
+      :idle_mode => @idle_mode
     })
 
     #オプションを生成
@@ -615,7 +622,7 @@ class Control #スクリプト制御
 
   #スクリプトファイルを挿入する
   def command__INCLUDE_(options, inner_options)
-    eval_commands(@script_compiler.commands({:script_path => options[:_ARGUMENT_]}))
+    self.script_file_path = options[:_ARGUMENT_]
   end
 
   #文字列を評価する（デバッグ用）

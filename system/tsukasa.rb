@@ -78,7 +78,7 @@ class Tsukasa < LayoutControl
       :RenderTargetContainer => :default_RenderTarget_container,
       :Anonymous       => :anonymous,
     }
-    options[:script_path] = "./system/bootstrap_script.rb"
+    options[:script_file_path] = "./system/bootstrap_script.rb"
     options[:id] = :default_rendertarget_container
     options[:redenr_target] = false unless options[:redenr_target]
     super(options, {}, @root_control)

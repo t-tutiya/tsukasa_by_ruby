@@ -107,27 +107,24 @@ end
 #標準ポーズコマンド
 _DEFINE_ :pause do |options|
   _SEND_ :default_text_page_control0 do 
-    #idleになるまで状態
-    _WAIT_ [:idle]
-
     #クリック待ちアイコンの表示
-    if options[:icon]
-      _SEND_ :last do
-        _CALL_ options[:icon], id: :icon
+    _SEND_ :last do
+      _END_FRAME_
+
+      _CALL_ options[:icon], id: :icon do
+        #スペースキーあるいはCTRLキーの押下待機
+        _WAIT_ [:key_push, :key_down] , 
+                key_down_code: K_RCONTROL
+
+        #クリック待ちアイコンの削除
+        _SEND_ :icon do
+          _DELETE_
+        end
+
+        #ウェイクに移行
+        _SET_ :_MODE_STATUS_, wake: true
       end
     end
-
-    #スペースキーあるいはCTRLキーの押下待機
-    _WAIT_ [:key_push, :key_down] , 
-            key_down_code: K_RCONTROL
-
-    #クリック待ちアイコンの削除
-    _SEND_ :icon do
-      _DELETE_
-    end
-
-    #ウェイクに移行
-    _SET_ :_MODE_STATUS_, wake: true
   end
 
   #■ルートの待機処理
@@ -203,9 +200,7 @@ _DEFINE_ :TextWindow do |options|
                               _SET_ :draw_option, alpha: 255
                             end
             #トランジションが終了するまで非アイドル状態
-            _WAIT_  [:command], command: :transition_fade do
-              _SET_ idle_mode: false
-            end
+            _WAIT_  [:command], command: :transition_fade
             #非wake状態に移行
             _SET_ :_MODE_STATUS_, wake: false
             #wake状態になるまで待機
@@ -267,6 +262,7 @@ _DEFINE_ :line_icon_func do |options|
             :id=>:test, 
             :x_count => 4, 
             :y_count => 2 
+    _YIELD_
   end
 end
 
@@ -301,6 +297,7 @@ _DEFINE_ :page_icon_func do |options|
       	_WAIT_ [:count], count: 5
       end
     end
+    _YIELD_
   end
 end
 

@@ -47,8 +47,6 @@ class Control #公開インターフェイス
       @command_list
   end
 
-  attr_accessor  :idle_mode
-
   def initialize(options, inner_options, root_control)
     #rootコントロールの保存
     @root_control = root_control
@@ -68,8 +66,6 @@ class Control #公開インターフェイス
     @command_list = [] 
     #一時コマンドリスト
     @next_frame_commands = [] 
-
-    @idle_mode = true          #待機モードの初期化
 
     @script_compiler = ScriptCompiler.new(self, @root_control)
     @control_list = [] #コントロールリスト
@@ -111,8 +107,6 @@ class Control #公開インターフェイス
   def update
     #次フレコマンド列クリア
     @next_frame_commands = []
-    #待機モードを初期化
-    @idle_mode = true
 
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
@@ -173,14 +167,6 @@ class Control #公開インターフェイス
     return controls
   end
 
-  #全てのコントロールが待機モードになっているかを返す。
-  #TODO：現状毎フレここで実行しているのだけど、コストが高すぎるので本当はupdateの戻り値の集計ですませたい。なんとかできないか考える。
-  def all_controls_idle?
-    @idle_mode &&= @control_list.all?(&:all_controls_idle?)
-
-    return @idle_mode
-  end
-
   #コントロールを削除して良いかどうか
   def delete?
     return @delete_flag
@@ -201,7 +187,6 @@ class Control #公開インターフェイス
       :id => @id,
       :script_file_path => @script_file_path,
       :command_list => command_list,
-      :idle_mode => @idle_mode
     })
 
     #オプションを生成
@@ -262,12 +247,6 @@ class Control #内部メソッド
         options[:mode].each do |mode|
           return true unless @_MODE_STATUS_[mode]
         end
-
-      when :idle
-        return true if all_controls_idle?
-
-      when :not_idle
-        return true unless all_controls_idle?
 
       when :count
         #残りwaitフレーム数が０より大きい場合

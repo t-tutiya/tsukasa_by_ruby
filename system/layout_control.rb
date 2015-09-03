@@ -30,11 +30,12 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class LayoutControl < ImageControl
+class LayoutControl < Control
+  include Drawable
   include Clickable
 
   def initialize(options, inner_options, root_control)
-    options[:render_target] = true if options[:render_target] == nil
+    options[:render_target] = true unless options[:render_target] == false
 
     if options[:render_target]
       options[:child_controls_draw_to_entity] = true

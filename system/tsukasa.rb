@@ -54,6 +54,7 @@ class Tsukasa < LayoutControl
   attr_reader  :_MODE_STATUS_
   attr_reader  :default_control
   attr_reader  :function_list
+  attr_accessor  :sleep_mode
 
   def initialize(options)
     @root_control = self
@@ -67,11 +68,10 @@ class Tsukasa < LayoutControl
       :_USER_DATA_FILENAME_ => "_user_data.bin",
       :_QUICK_DATA_FILENAME_ => "_quick_data.bin",
     }
-    #各種モードの管理
-    @_MODE_STATUS_ = {
-      :wake => true,
-      #idle_modeはシステムが管理する為、ここでは扱わない
-    }
+    
+    #スリープ状態にあるコントロールが存在するかどうかを示す
+    @sleep_mode = false
+
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @default_control = {
       :TextPageControl   => :default_text_page_control0,

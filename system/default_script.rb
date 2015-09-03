@@ -122,18 +122,17 @@ _DEFINE_ :pause do |options|
         end
 
         #ウェイクに移行
-        _SET_ :_MODE_STATUS_, wake: true
+        _SET_ sleep: false
       end
     end
   end
 
   #■ルートの待機処理
-  #非ウェイク状態に移行
-  _SET_ :_MODE_STATUS_, wake: false
+  #スリープ状態に移行
+  _SET_ sleep: true
 
   #ウェイク状態まで待機
-  _WAIT_ [:mode, :key_down], 
-          mode: [:wake],
+  _WAIT_ [:not_sleep, :key_down], 
           key_down_code: K_RCONTROL do
     _YIELD_
   end
@@ -201,10 +200,10 @@ _DEFINE_ :TextWindow do |options|
                             end
             #トランジションが終了するまで非アイドル状態
             _WAIT_  [:command], command: :transition_fade
-            #非wake状態に移行
-            _SET_ :_MODE_STATUS_, wake: false
-            #wake状態になるまで待機
-            _WAIT_ [:mode], mode: :wake
+            #スリープ状態に移行
+            _SET_ sleep: true
+            #ウェイク状態になるまで待機
+            _WAIT_ [:not_sleep]
             #キー入力伝搬を防ぐ為に１フレ送る
             _END_FRAME_
             #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）

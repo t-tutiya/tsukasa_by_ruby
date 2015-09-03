@@ -39,6 +39,13 @@ class Control #公開インターフェイス
 
   attr_accessor  :id
 
+  def sleep=(sleep_mode)
+    @root_control.sleep_mode = sleep_mode
+  end 
+  def sleep
+    return @root_control.sleep_mode
+  end
+
   attr_reader  :script_file_path
   def script_file_path=(script_file_path)
     @script_file_path = script_file_path 
@@ -235,18 +242,12 @@ class Control #内部メソッド
 
     conditions.each do |condition|
       case condition
-      #汎用モードチェック
-      when :mode
-        options[:mode] = [options[:mode]] unless options[:mode].instance_of?(Array)
-        options[:mode].each do |mode|
-          return true if @_MODE_STATUS_[mode]
-        end
 
-      when :not_mode
-        options[:mode] = [options[:mode]] unless options[:mode].instance_of?(Array)
-        options[:mode].each do |mode|
-          return true unless @_MODE_STATUS_[mode]
-        end
+      when :sleep
+        return true if @root_control.sleep_mode
+
+      when :not_sleep
+        return true unless @root_control.sleep_mode
 
       when :count
         #残りwaitフレーム数が０より大きい場合

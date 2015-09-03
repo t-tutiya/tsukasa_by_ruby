@@ -38,7 +38,8 @@ _INCLUDE_ "./system/default_script.rb"
 #以下、動作確認用のサンプルスクリプト
 
 #_INCLUDE_ "./scenario/scenario_sound.rb"
-_INCLUDE_ "./scenario/scenario_function.rb"
+#_INCLUDE_ "./scenario/scenario_function.rb"
+_INCLUDE_ "./scenario/scenario_easing.rb"
 #_INCLUDE_ "./scenario/scenario_inner_function.rb"
 #_INCLUDE_ "./scenario/scenario_clickable.rb"
 #_INCLUDE_ "./scenario/scenario_yield.rb"

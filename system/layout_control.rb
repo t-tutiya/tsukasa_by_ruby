@@ -40,9 +40,9 @@ class LayoutControl < Control
     if options[:render_target]
       options[:child_controls_draw_to_entity] = true
       #保持オブジェクトの初期化
-      options[:entity] = RenderTarget.new( options[:width]  || 1, 
-                                  options[:height] || 1, 
-                                  options[:color]  || [0,0,0,0])
+      options[:entity] = RenderTarget.new(options[:width]  || 1, 
+                                          options[:height] || 1, 
+                                          options[:color]  || [0,0,0,0])
     end
 
     super

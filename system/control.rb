@@ -622,6 +622,7 @@ class Control #セーブデータ制御
   #データセーブ
   #TODO：保存先パスや名称は将来的には外部から与えるようにしたい
   def command__SAVE_(options, inner_options)
+    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
     #グローバルデータ
     if options[:_ARGUMENT_] == 0
       db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
@@ -646,6 +647,7 @@ class Control #セーブデータ制御
   end
 
   def command__LOAD_(options, inner_options)
+    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
     #グローバルデータ
     if options[:_ARGUMENT_] == 0
       db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
@@ -670,6 +672,7 @@ class Control #セーブデータ制御
   end
 
   def command__QUICK_SAVE_(options, inner_options)
+    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
     command_list = []
     #子コントロールのシリアライズコマンドを取得
     @control_list.each do |control|
@@ -687,6 +690,7 @@ class Control #セーブデータ制御
   end
 
   def command__QUICK_LOAD_(options, inner_options)
+    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
     db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
                     options[:_ARGUMENT_].to_s +
                     @_GLOBAL_DATA_[:_QUICK_DATA_FILENAME_])

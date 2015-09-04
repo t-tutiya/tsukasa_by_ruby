@@ -33,7 +33,7 @@ require 'dxruby'
 class LayoutControl < Control
   include Drawable
   include Clickable
-
+  
   def initialize(options, inner_options, root_control)
     options[:render_target] = true unless options[:render_target] == false
 

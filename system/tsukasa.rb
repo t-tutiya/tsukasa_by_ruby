@@ -51,15 +51,12 @@ require_relative './script_compiler.rb'
 class Tsukasa < LayoutControl
   attr_reader  :_USER_DATA_
   attr_reader  :_GLOBAL_DATA_
-  attr_reader  :_MODE_STATUS_
   attr_reader  :default_control
   attr_reader  :function_list
   attr_accessor  :sleep_mode
 
   def initialize(options)
     @root_control = self
-    #個別ユーザーデータ領域
-    @_USER_DATA_ = {}
     #ゲーム全体で共有するセーブデータ
     @_GLOBAL_DATA_ = {
       :_DEBUG_ => false,
@@ -81,6 +78,72 @@ class Tsukasa < LayoutControl
     options[:script_file_path] = "./system/bootstrap_script.rb"
     options[:id] = :default_rendertarget_container
     options[:redenr_target] = false unless options[:redenr_target]
+
+    #ラベル関連
+    @label_name = options[:label_name] || nil
+    @label_id = options[:label_id] || 0
+    @label_options = options[:label_options] || nil
+
+    @_USER_DATA_ = {}
+    @_GLOBAL_DATA_ = {}
+
     super(options, {}, @root_control)
+  end
+
+  def siriarize(options = {})
+
+    options.update({
+      :label_name => @label_name,
+      :label_id => @label_id,
+      :label_options => @label_options,
+    })
+
+    return super(options)
+  end
+
+  def command_label(options, inner_options)
+    unless @_USER_DATA_[:_READ_FRAG_]
+      @_USER_DATA_[:_READ_FRAG_] = {} 
+    end
+
+    if not @label_name and not options[:name] 
+      raise
+    end
+
+    #ラベル名が指定されていて、かつ保存されているラベル名と異なる
+    if options[:name] and (@label_name != options[:name])
+      #ラベル名を保存する
+      @label_name = options[:name]
+      #ラベルのIDをクリアする
+      @label_id = 0
+    else
+      #ラベルのIDをインクリメントする
+      @label_id += 1
+    end
+
+    if not @label_title and not options[:title] 
+      raise
+    end
+
+    #ベースラベルタイトルの存在チェック
+    if options[:title]
+      @label_title = options[:title]
+    end
+
+    unless @_USER_DATA_[:_READ_FRAG_][@label_name]
+      @_USER_DATA_[:_READ_FRAG_][@label_name] = []
+    end
+
+    if @_USER_DATA_[:_READ_FRAG_][@label_name][@label_id]
+      #グローバルデータ領域に既読であると通知
+      @_GLOBAL_DATA_[:_NOT_READ_] = false
+    else
+      #グローバルデータ領域に未読状態であると通知
+      @_GLOBAL_DATA_[:_NOT_READ_] = true
+
+      #既読フラグを立てる
+      @_USER_DATA_[:_READ_FRAG_][@label_name][@label_id] = @label_title
+    end
+    #pp @_USER_DATA_[:_READ_FRAG_]
   end
 end

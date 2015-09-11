@@ -111,6 +111,8 @@ _DEFINE_ :pause do |options|
     _SEND_ :last do
       _END_FRAME_
 
+      _WAIT_ [:count], count: 15
+
       _CALL_ options[:icon], id: :icon do
         #スペースキーあるいはCTRLキーの押下待機
         _WAIT_ [:key_push, :key_down] , 

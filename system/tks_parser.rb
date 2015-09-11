@@ -42,11 +42,11 @@ class TKSParser < Parslet::Parser
   attr_accessor :comment_str
   attr_accessor :inline_command_open
   attr_accessor :inline_command_close
-  attr_reader :indent_mode
+#  attr_reader :indent_mode
   attr_reader :indent_width
 
   def initialize(
-    indent_mode: :spaces, #インデントモード
+#    indent_mode: :spaces, #インデントモード
     indent_width: 2, #インデントの空白文字数単位
     script_prefix: "@", #スクリプト行接頭字
     comment_str: "//", #コメント行接頭字
@@ -54,14 +54,14 @@ class TKSParser < Parslet::Parser
     inline_command_close: "]" #インラインコマンドポストフィクス
   )
     super()
-    @indent_mode = indent_mode
+#    @indent_mode = indent_mode
     @indent_width = indent_width
     @script_prefix = script_prefix
     @comment_str = comment_str
     @inline_command_open = inline_command_open
     @inline_command_close = inline_command_close
   end
-
+=begin
   def indent_mode=(indent_mode)
     @indent_mode = indent_mode
     @indent_char = nil
@@ -81,10 +81,13 @@ class TKSParser < Parslet::Parser
       " " * @indent_width #指定した文字数の空白
     end
   end
+=end
 
   #インデント
   rule(:indent) { 
-    str(indent_char) 
+#    str(indent_char) 
+    #タブor指定文字数の半角空白をインデントと定義する
+    str("\t") | str(" " * @indent_width)
   }
   
   #改行

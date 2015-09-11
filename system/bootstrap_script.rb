@@ -29,21 +29,19 @@
 ###############################################################################
 
 #デバッグモードの設定
-_SET_ :_GLOBAL_DATA_, _DEBUG_: true
+_SET_ :_GLOBAL_DATA_, _DEBUG_: false
 
 #デフォルトのユーザー定義関数群
 _INCLUDE_ "./system/default_script.rb"
 
-
-#以下、動作確認用のサンプルスクリプト
-
+#デバッグ用のサンプル
 #_INCLUDE_ "./scenario/scenario_sound.rb"
-#_INCLUDE_ "./scenario/scenario_function.rb"
 #_INCLUDE_ "./scenario/scenario_easing.rb"
 #_INCLUDE_ "./scenario/scenario_inner_function.rb"
 #_INCLUDE_ "./scenario/scenario_clickable.rb"
 #_INCLUDE_ "./scenario/scenario_yield.rb"
 #_INCLUDE_ "./scenario/scenario_while.rb"
+#_INCLUDE_ "./scenario/scenario_function.rb"
 #_INCLUDE_ "./scenario/scenario_layout.rb"
 #_INCLUDE_ "./scenario/scenario_scope.rb"
 #_INCLUDE_ "./scenario/scenario_change_script.rb"
@@ -51,5 +49,10 @@ _INCLUDE_ "./system/default_script.rb"
 #_INCLUDE_ "./scenario/scenario_collision.rb"
 #_INCLUDE_ "./scenario/scenario_ImageControl.rb"
 #_INCLUDE_ "./scenario/scenario_text.rb"
-_INCLUDE_ "./scenario/scenario_label.rb"
+#_INCLUDE_ "./scenario/scenario_label.rb"
 #_INCLUDE_ "./scenario/tks_test.tks"
+
+_INCLUDE_ "./scenario/first.tks"
+
+#_INCLUDE_ "./sample/sample_1_1.tks"
+

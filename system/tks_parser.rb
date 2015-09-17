@@ -39,7 +39,7 @@ require 'parslet'
 class TKSParser < Parslet::Parser
 
   attr_accessor :script_prefix
-  attr_accessor :comment_str
+  attr_accessor :comment_prefix
   attr_accessor :inline_command_open
   attr_accessor :inline_command_close
 #  attr_reader :indent_mode
@@ -49,7 +49,7 @@ class TKSParser < Parslet::Parser
 #    indent_mode: :spaces, #インデントモード
     indent_width: 2, #インデントの空白文字数単位
     script_prefix: "@", #スクリプト行接頭字
-    comment_str: "//", #コメント行接頭字
+    comment_prefix: ["//"], #コメント行接頭字
     inline_command_open: "[", #インラインコマンドプレフィクス
     inline_command_close: "]" #インラインコマンドポストフィクス
   )
@@ -57,7 +57,7 @@ class TKSParser < Parslet::Parser
 #    @indent_mode = indent_mode
     @indent_width = indent_width
     @script_prefix = script_prefix
-    @comment_str = comment_str
+    @comment_prefix = comment_prefix
     @inline_command_open = inline_command_open
     @inline_command_close = inline_command_close
   end
@@ -144,9 +144,20 @@ class TKSParser < Parslet::Parser
 
   #コメント
   rule(:comment) {
-    #コメント接頭字 >> #頭の空白orタブは無視 >> #改行までをコメントとする
-    str(comment_str) >> match[' \t'].repeat >> match['^\n'].repeat.as(:comment)
+    #先頭を取り出しておく
+    first = _comment(comment_prefix.first)
+    #injectで動的に`|`のチェインを作る
+    #comment_stringsの要素数がひとつの場合はfirstを返すだけ
+    comment_prefix[1..-1].inject(first) {|prev, str|
+      prev | _comment(str)
+    }
   }
+
+  def _comment(comment_str)
+    str(comment_str) >> #コメント接頭字
+    match[' \t'].repeat >> #頭の空白orタブは無視
+    match['^\n'].repeat.as(:comment) #改行までをコメントとする
+  end
 
   #空行（テキストウィンドウの改ページの明示）
   rule(:blankline) { 

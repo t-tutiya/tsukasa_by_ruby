@@ -42,12 +42,11 @@ class TextPageControl < ImageControl
   #公開インターフェイス
   #############################################################################
 
-  #attr_accessor  :font_config #フォント設定
+  #フォント設定
+  attr_reader  :font_config
   def font_config=(hash)
     @font_config.merge!(hash)
   end
-
-  attr_accessor  :font_config
 
 #  attr_accessor  :use_image_font
 #  attr_accessor  :image_face

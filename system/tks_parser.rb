@@ -124,8 +124,13 @@ class TKSParser < Parslet::Parser
     #インラインコマンド接頭字
     str(inline_command_open) >> 
     #コマンド文字列
-    ( str('\\') >> any | 
-      str(inline_command_close).absent? >> any).repeat.as(:inline_command) >> 
+    ( 
+      #任意のエスケープシーケンス文字（ex. "\["）
+      str('\\') >> any | arrangement |
+      #インラインコマンド接尾字以外の任意一文字
+      str(inline_command_close).absent? >> any
+      
+    ).repeat.as(:inline_command) >> 
     #インラインコマンド接尾字
     str(inline_command_close) 
   }

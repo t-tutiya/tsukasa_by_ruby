@@ -87,7 +87,8 @@ class TKSParser < Parslet::Parser
   rule(:indent) { 
 #    str(indent_char) 
     #タブor指定文字数の半角空白をインデントと定義する
-    str("\t") | str(" " * @indent_width)
+    str("\t") | 
+    str(" " * @indent_width)
   }
   
   #改行
@@ -104,57 +105,53 @@ class TKSParser < Parslet::Parser
 
   #textコマンドブロック
   rule(:printable) {
-    (
       #１個以上のインラインコマンドor文字列集合
       ( inline_command | text ).repeat(1).as(:printable) >>
       newline.maybe.as(:line_feed) >> #改行
       blankline.repeat.as(:blanklines) #空行
-    )
   }
 
   #文字列
   #インラインコマンド接頭字or改行までの１文字以上
   rule(:text) {
     (
-      str(inline_command_open).absent? >>
-      newline.absent? >>
-      any
+      str(inline_command_open).absent? >> newline.absent? >> any
     ).repeat(1).as(:text) 
   }
 
   #インラインコマンド
   rule(:inline_command) {
-    str(inline_command_open) >> #インラインコマンド接頭字
-    (
-      str('\\') >> 
-      any | str(inline_command_close).absent? >> 
-      any
-    ).repeat.as(:inline_command) >> #コマンド文字列
-    str(inline_command_close) #インラインコマンド接尾字
+    #インラインコマンド接頭字
+    str(inline_command_open) >> 
+    #コマンド文字列
+    ( str('\\') >> any | 
+      str(inline_command_close).absent? >> any).repeat.as(:inline_command) >> 
+    #インラインコマンド接尾字
+    str(inline_command_close) 
   }
 
   #コメント
   rule(:comment) {
-    str(comment_str) >> #コメント接頭字
-    match[' \t'].repeat >> #頭の空白orタブは無視
-    match['^\n'].repeat.as(:comment) #改行までをコメントとする
+    #コメント接頭字 >> #頭の空白orタブは無視 >> #改行までをコメントとする
+    str(comment_str) >> match[' \t'].repeat >> match['^\n'].repeat.as(:comment)
   }
 
   #空行（テキストウィンドウの改ページの明示）
   rule(:blankline) { 
-    (
-      match[' \t'].repeat >> #空白orタブ
-      newline #改行
-    ) 
+    #空白orタブ >> 改行
+    match[' \t'].repeat >> newline 
   }
 
   rule(:node) { 
-    blankline.maybe >> #空行
-    (comment | command | printable) 
+    #空行
+    blankline.maybe >> (comment | 
+                        command | 
+                        printable) 
   }
 
   rule(:document) { 
-    (blankline | node).repeat 
+    ( blankline | 
+      node).repeat 
   }
 
   root :document

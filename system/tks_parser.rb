@@ -127,12 +127,19 @@ class TKSParser < Parslet::Parser
     ( 
       #任意のエスケープシーケンス文字（ex. "\["）
       str('\\') >> any | 
+      #配列
+      arrangement |
       #インラインコマンド接尾字以外の任意一文字
       str(inline_command_close).absent? >> any
       
     ).repeat.as(:inline_command) >> 
     #インラインコマンド接尾字
     str(inline_command_close) 
+  }
+
+  #配列表記
+  rule(:arrangement) {
+    str('[') >> (str(']').absent? >> any).repeat >> str(']')
   }
 
   #コメント

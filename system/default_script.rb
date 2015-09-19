@@ -104,6 +104,13 @@ _DEFINE_ :rubi do |options|
   end
 end
 
+#_TEXT_デフォルト送信
+_DEFINE_ :text_style do |options|
+  _SEND_ default: :TextPageControl do
+    _SET_ options
+  end
+end
+
 #標準ポーズコマンド
 _DEFINE_ :pause do |options|
   _SEND_ :default_text_page_control0 do 
@@ -157,6 +164,12 @@ end
 _DEFINE_ :page_pause do
   pause icon: :page_icon_func
   flush
+end
+
+_DEFINE_ :text0 do
+  _SEND_ default: :TextPageControl, interrupt: true do
+    _YIELD_
+  end
 end
 
 ###############################################################################
@@ -232,7 +245,7 @@ _DEFINE_ :TextWindow do |options|
   end
 end
 
-TextWindow id: :message0, text_page_id: :default_text_page_control0,
+TextWindow id: :text0, text_page_id: :default_text_page_control0,
   x_pos: 128,
   y_pos: 256 + 192,
   width: 1024,
@@ -240,7 +253,7 @@ TextWindow id: :message0, text_page_id: :default_text_page_control0,
 
 =begin
 #全画面の場合
-TextWindow id: :message0, text_page_id: :default_text_page_control0,
+TextWindow id: :text1, text_page_id: :default_text_page_control0,
   x_pos: 64,
   y_pos: 64,
   width: 1024,

@@ -505,10 +505,10 @@ class Control #ユーザー定義関数操作
     #関数名に対応する関数ブロックを取得する
     function_block =  @function_list[options[:_ARGUMENT_]] || 
                       @root_control.function_list[options[:_ARGUMENT_]]
-      
+
     #定義されていないfunctionが呼びだされたら例外を送出
     raise NameError, "undefined local variable or command or function `#{options[:_ARGUMENT_]}' for #{inner_options}" unless function_block
-    
+
     #伝搬されているブロックがある場合
     if inner_options[:block_stack]
       block_stack = inner_options[:block_stack].dup
@@ -716,8 +716,27 @@ class Control #内部コマンド
 
   #ブロックを実行する。無名関数として機能する
   def command__SCOPE_(options, inner_options)
+
+    #関数の終端を設定
     interrupt_command([:_END_FUNCTION_, options, inner_options])
-    eval_block(options, options[:blcok_stack], &inner_options[:block])
+
+    #YIELD用のブロックが渡されている場合、ここでスタックする
+    #TODO:_CALL_とロジックが被ってるのでなんとかしたい。
+    #伝搬されているブロックがある場合
+    if inner_options[:block_stack]
+      block_stack = inner_options[:block_stack].dup
+      if inner_options[:block]
+        block_stack.push(inner_options[:block]) 
+      end
+    #付与ブロックがある場合
+    elsif inner_options[:block]
+      block_stack = [inner_options[:block]]
+    else
+      block_stack = nil
+    end
+
+    #関数を展開する
+    eval_block(options, block_stack, &inner_options[:block])
   end
 
   #ループの終点を示す

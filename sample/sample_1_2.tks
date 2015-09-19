@@ -1,13 +1,12 @@
 文字装飾デモです。行の途中で[text_style font_config:{color:[255,0,0]}]フォントの色を変えます
 	text_style fontname: "ＭＳ Ｐ明朝", font_config:{color:[255,255,255]}
-フォントの種類を変えたり[text_style line_height: 64, size:64, fontname: "ＭＳＰ ゴシック"]
-文字サイズを変える事もできます。
+フォントの種類を変えたり[text_style line_height: 64, fontname: "ＭＳＰ ゴシック"]
+文字サイズを[text_style  size:16]変える事も[text_style  size:64]できます。
 
-
-	text0{_SET_ size:32, line_height: 32}
-
-他にも様々な設定が可能です。
+	_SEND_(:text0){style size:32, line_height: 32}
+	
+他にも様々な設定が可能です。[lp]
 	text_style wait_frame: 10
-例えば文字の表示速度を変えたり、
+例えば文字の表示速度を変えたり、[lp]
 	text_style wait_frame: 2
 [rubi "ル", text: "エクスカリバ－"]ビを振る事もできます。

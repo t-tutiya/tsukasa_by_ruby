@@ -166,12 +166,6 @@ _DEFINE_ :page_pause do
   flush
 end
 
-_DEFINE_ :text0 do
-  _SEND_ default: :TextPageControl, interrupt: true do
-    _YIELD_
-  end
-end
-
 ###############################################################################
 #デフォルトのレイヤ群
 ###############################################################################
@@ -242,6 +236,11 @@ _DEFINE_ :TextWindow do |options|
           _SET_ size: 32
           _FLUSH_ #これが必ず必要
       end
+    _DEFINE_ :style do |options|
+      _SEND_ default: :TextPageControl, interrupt: true do
+        _SET_ options
+      end
+    end
   end
 end
 

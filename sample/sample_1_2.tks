@@ -3,8 +3,8 @@
 フォントの種類を変えたり[text_style line_height: 64, fontname: "ＭＳＰ ゴシック"]
 文字サイズを[text_style  size:16]変える事も[text_style  size:64]できます。
 
-	_SEND_(:text0){style size:32, line_height: 32}
-	
+	text0{style size:32, line_height: 32}
+
 他にも様々な設定が可能です。[lp]
 	text_style wait_frame: 10
 例えば文字の表示速度を変えたり、[lp]

@@ -506,8 +506,14 @@ class Control #ユーザー定義関数操作
     function_block =  @function_list[options[:_ARGUMENT_]] || 
                       @root_control.function_list[options[:_ARGUMENT_]]
 
-    #定義されていないfunctionが呼びだされたら例外を送出
-    raise NameError, "undefined local variable or command or function `#{options[:_ARGUMENT_]}' for #{inner_options}" unless function_block
+    #指定されたコマンドが定義されていない場合
+    unless function_block
+      #下位コントロールへの_SEND_であるとみなす
+      command__SEND_(options, inner_options)
+      return
+      #定義されていないfunctionが呼びだされたら例外を送出
+      #raise NameError, "undefined local variable or command or function `#{options[:_ARGUMENT_]}' for #{inner_options}"
+    end
 
     #伝搬されているブロックがある場合
     if inner_options[:block_stack]
@@ -589,6 +595,10 @@ class Control #スクリプト制御
       controls = [@control_list.last]
     else
       controls = base_control.find_control(options[:_ARGUMENT_])
+    end
+
+    if controls.empty?
+      pp "下位コントロール#{options[:_ARGUMENT_].to_s}は存在しません。削除されているか生成されていません"
     end
 
     controls.each do |control|

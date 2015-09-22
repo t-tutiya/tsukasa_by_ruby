@@ -60,7 +60,8 @@ class TileImageControl < Control
                           :id => index,
                           :float_mode => options[:float_mode],
                           :visible => false
-                        }, inner_options])
+                        }, 
+                        {}])
     end
   end
 

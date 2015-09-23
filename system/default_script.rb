@@ -78,62 +78,36 @@ end
 
 #_TEXT_デフォルト送信
 _DEFINE_ :text do |options|
-  _SEND_ default: :TextPageControl do
-    _TEXT_ options[:_ARGUMENT_]
+  _SEND_ :text0 do
+    text options[:_ARGUMENT_]
   end
 end
 
 #_line_feed_デフォルト送信
 _DEFINE_ :line_feed do
-  _SEND_ default: :TextPageControl  do
-    _LINE_FEED_
+  _SEND_ :text0  do
+    line_feed
   end
 end
 
 #_flush_デフォルト送信
 _DEFINE_ :flush do
-  _SEND_ default: :TextPageControl  do
-    _FLUSH_
+  _SEND_ :text0  do
+    flush
   end
 end
 
 #_rubi_デフォルト送信
 _DEFINE_ :rubi do |options|
-  _SEND_ default: :TextPageControl do
-    _RUBI_ options[:_ARGUMENT_], text: options[:text]
-  end
-end
-
-#_TEXT_デフォルト送信
-_DEFINE_ :text_style do |options|
-  _SEND_ default: :TextPageControl do
-    _SET_ options
+  _SEND_ :text0  do
+    rubi options
   end
 end
 
 #標準ポーズコマンド
 _DEFINE_ :pause do |options|
-  _SEND_ :default_text_page_control0 do 
-    #クリック待ちアイコンの表示
-    _SEND_ :last do
-      _END_FRAME_
-
-      _WAIT_ [:count], count: 15
-
-      _CALL_ options[:icon], id: :icon do
-        #スペースキーあるいはCTRLキーの押下待機
-        _WAIT_ [:key_push, :key_down] , 
-                key_down_code: K_RCONTROL
-
-        #クリック待ちアイコンの削除
-        _SEND_ :icon do
-          _DELETE_
-        end
-
-        #ウェイクに移行
-        _SET_ sleep: false
-      end
-    end
+  _SEND_ :text0 do 
+    pause options
   end
 
   #■ルートの待機処理
@@ -237,8 +211,54 @@ _DEFINE_ :TextWindow do |options|
           _FLUSH_ #これが必ず必要
       end
     _DEFINE_ :style do |options|
-      _SEND_ default: :TextPageControl, interrupt: true do
+      _SEND_ default: :TextPageControl do
         _SET_ options
+      end
+    end
+    _DEFINE_ :text do |options|
+      _SEND_ default: :TextPageControl do
+        _TEXT_ options
+      end
+    end
+    _DEFINE_ :line_feed do
+      _SEND_ default: :TextPageControl  do
+        _LINE_FEED_
+      end
+    end
+    #_rubi_デフォルト送信
+    _DEFINE_ :rubi do |options|
+      _SEND_ default: :TextPageControl do
+        _RUBI_ options[:_ARGUMENT_], text: options[:text]
+      end
+    end
+    #_flush_デフォルト送信
+    _DEFINE_ :flush do
+      _SEND_ default: :TextPageControl  do
+        _FLUSH_
+      end
+    end
+    _DEFINE_ :pause do |options|
+      _SEND_ :default_text_page_control0 do 
+        #クリック待ちアイコンの表示
+        _SEND_ :last do
+          _END_FRAME_
+
+          _WAIT_ [:count], count: 15
+
+          _CALL_ options[:icon], id: :icon do
+            #スペースキーあるいはCTRLキーの押下待機
+            _WAIT_ [:key_push, :key_down] , 
+                    key_down_code: K_RCONTROL
+
+            #クリック待ちアイコンの削除
+            _SEND_ :icon do
+              _DELETE_
+            end
+
+            #ウェイクに移行
+            _SET_ sleep: false
+          end
+        end
       end
     end
   end

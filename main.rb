@@ -4,10 +4,10 @@ require 'dxruby'
 require './system/tsukasa.rb'
 
 #初期化
-Window.resize(1280, 720)
+Window.resize(800, 600)
 
-tsukasa = Tsukasa.new({ :width => 1280,
-                        :height => 720,
+tsukasa = Tsukasa.new({ :width => 800,
+                        :height => 600,
                         })
 #ゲームループ
 Window.loop do
@@ -15,5 +15,5 @@ Window.loop do
   #Ragエンジン処理
   tsukasa.update
   #Ragエンジン描画
-  tsukasa.render(0, 0, Window, {:width => 1280, :height => 720})
+  tsukasa.render(0, 0, Window, {:width => 800, :height => 600})
 end

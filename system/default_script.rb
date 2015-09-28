@@ -343,19 +343,19 @@ end
 #初期レイヤ０
 _CREATE_ :ImageControl,
   draw_option: {z: 1000}, #描画順序
-  id: 0 do
+  id: :img0 do
 end
 
 #初期レイヤ１
 _CREATE_ :ImageControl,
   draw_option: {z: 2000}, #描画順序
-  id: 1 do
+  id: :img1 do
 end
 
 #初期レイヤ２
 _CREATE_ :ImageControl,
   draw_option: {z: 3000}, #描画順序
-  id: 2 do
+  id: :img2 do
 end
 
 ###############################################################################

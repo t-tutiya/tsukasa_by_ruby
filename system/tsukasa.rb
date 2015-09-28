@@ -101,6 +101,10 @@ class Tsukasa < LayoutControl
     return super(options)
   end
 
+  def render(offset_x, offset_y, target, parent_size = {:width => Window.width, :height => Window.width})
+    super
+  end
+
   def command_label(options, inner_options)
     unless @_USER_DATA_[:_READ_FRAG_]
       @_USER_DATA_[:_READ_FRAG_] = {} 

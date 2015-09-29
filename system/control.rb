@@ -280,6 +280,16 @@ class Control #内部メソッド
         #キー押下があれば
         return true unless Input.key_down?(key_code)
 
+      when :key_up
+        key_code = options[:key_up_code] ? options[:key_up_code] : K_SPACE
+        #キー解除があれば
+        return true if Input.key_release?(key_code)
+
+      when :not_key_up
+        key_code = options[:key_up_code] ? options[:key_up_code] : K_SPACE
+        #キー押下があれば
+        return true unless Input.key_release?(key_code)
+
       #ユーザデータ確認系
 
       when :equal

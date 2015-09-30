@@ -385,34 +385,6 @@ module Drawable
 end
 
 module Drawable
-  #フェードインコマンド
-  def command_transition_fade(options, inner_options) 
-    #現在の経過カウントを初期化
-    options[:count] = 0 unless options[:count]
-    #透明度が設定されていなければ現在の値で初期化
-    options[:start] = @draw_option[:alpha] unless options[:start]
-
-    #条件判定が存在し、かつその条件が成立した場合
-    if options[:check] and check_imple(options[:check][0], options[:check][1])
-      #ブロックがあれば実行し、コマンドを終了する
-      eval_block(options, &inner_options[:block]) if inner_options[:block]
-      return
-    end
-
-    #透明度の決定
-    @draw_option[:alpha] = options[:start] + 
-                          (((options[:last] - options[:start]).to_f / options[:total_frame]) * options[:count]).to_i
-
-    #カウントアップ
-    options[:count] += 1
-
-    #カウントが指定フレーム以下の場合
-    if options[:count] <= options[:total_frame]
-      #:transition_fadeコマンドをスタックし直す
-      push_command_to_next_frame(:transition_fade, options, inner_options)
-    end
-  end
-
   #ルールトランジション
   def command_transition_rule(options, inner_options)
     #現在の経過カウントを初期化

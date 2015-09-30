@@ -277,7 +277,7 @@ module Drawable
   #スプライン補間
   #これらの実装については以下のサイトを参考にさせて頂きました。感謝します。
   # http://www1.u-netsurf.ne.jp/~future/HTML/bspline.html
-  def command_move_path(options, inner_options)
+  def command_path_move(options, inner_options)
     #現在の経過カウントを初期化
     options[:count] = 0 unless options[:count]
 
@@ -344,13 +344,12 @@ module Drawable
     @y_pos = y.round
     @draw_option[:alpha] = alpha.round
 
-    #カウントアップ
-    options[:count] += 1
-
     #カウントが指定フレーム以下の場合
     if options[:count] <= options[:total_frame]
+      #カウントアップ
+      options[:count] += 1
       #:move_lineコマンドをスタックし直す
-      push_command_to_next_frame(:move_path, options, inner_options)
+      push_command_to_next_frame(:path_move, options, inner_options)
     end
   end
 

@@ -221,6 +221,8 @@ end
 
 module Drawable
   def command_move(options, inner_options)
+    raise unless options[:total_frame] #必須要素
+
     #現在の経過カウントを初期化
     options[:count] = 0 unless options[:count]
 
@@ -231,64 +233,46 @@ module Drawable
       return
     end
 
-    #初期値が設定されていない場合は現在値を設定する
-    options[:start] = [@x_pos, @y_pos] unless options[:start]
-  
-    start_x = options[:start][0]
-    start_y = options[:start][1]
-
-    #透明度が設定されていなければ現在の値で初期化
-    unless options[:start][2]
-      options[:start][2] = @draw_option[:alpha]
-    end
-    start_alpha = options[:start][2]
-
-    end_x = options[:last][0]
-    end_y = options[:last][1]
-
-    #透明度が設定されていなければ現在の値で初期化
-    unless options[:last][2]
-      options[:last][2] = @draw_option[:alpha]
-    end
-    end_alpha = options[:last][2]
-
     # Easingパラメータが設定されていなければ線形移動を設定
-    unless options[:easing]
-      options[:easing] = :liner
+    options[:easing] = :liner unless options[:easing]
+
+    options[:type].each do |key, index|
+      #開始値が設定されていなければ現在の値で初期化
+      unless options[:type][key].instance_of?(Array)
+        if key == :x
+          options[:type][key] = [@x_pos, options[:type][key]]
+        elsif key == :y
+          options[:type][key] = [@y_pos, options[:type][key]]
+        else
+          options[:type][key] = [@draw_option[key] || 0, options[:type][key]]
+        end
+
+      end
+
+      result = (options[:type][key][0] + 
+                 (options[:type][key][1] - options[:type][key][0]).to_f * 
+                  EasingProcHash[options[:easing]].call(
+                    options[:count].fdiv(options[:total_frame])
+                 )
+               ).to_i
+
+      if key == :x
+        @x_pos = result
+      elsif key == :y
+        @y_pos = result
+      else
+        @draw_option[key] = result
+      end
     end
-
-    #移動先座標の決定
-    @x_pos= ( start_x + 
-              (end_x - start_x).to_f * 
-              EasingProcHash[options[:easing]].call(
-                options[:count].fdiv(options[:total_frame])
-              )
-            ).to_i
-
-    @y_pos= ( start_y + 
-              (end_y - start_y).to_f * 
-              EasingProcHash[options[:easing]].call(
-                options[:count].fdiv(options[:total_frame])
-              )
-            ).to_i
-
-    @draw_option[:alpha]= ( start_alpha + 
-                            (end_alpha - start_alpha).to_f * 
-                            EasingProcHash[options[:easing]].call(
-                              options[:count].fdiv(options[:total_frame])
-                            )
-                          ).to_i
 
     #カウントが指定フレーム未満の場合
     if options[:count] < options[:total_frame]
+      #カウントアップ
+      options[:count] += 1
       #:moveコマンドをスタックし直す
       push_command_to_next_frame(:move, options, inner_options)
     end
-
-    #カウントアップ
-    options[:count] += 1
   end
-
 
   #スプライン補間
   #これらの実装については以下のサイトを参考にさせて頂きました。感謝します。

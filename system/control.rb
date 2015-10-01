@@ -260,35 +260,71 @@ class Control #内部メソッド
           return true 
         end
 
+      #キーが押下されている
       when :key_push
-        key_code = options[:key_push_code] ? options[:key_push_code] : K_SPACE
-        #キー押下があれば
-        return true if Input.key_push?(key_code)
+        #対象キーが設定されていなければスペースキーとする
+        options[:key_push_code] = [K_SPACE] unless options[:key_push_code]
+        #対象キーが配列で渡されていない場合配列に変換する
+        options[:key_push_code] = [options[:key_push_code]] unless options[:key_push_code].instance_of?(Array)
+        #キーの入力チェック
+        options[:key_push_code].each do |key_code|
+          return true if Input.key_push?(key_code)
+        end
 
+      #キーが押下されていない
       when :not_key_push
-        key_code = options[:key_push_code] ? options[:key_push_code] : K_SPACE
-        #キー押下があれば
-        return true unless Input.key_push?(key_code)
+        #対象キーが設定されていなければスペースキーとする
+        options[:not_key_push_code] = [K_SPACE] unless options[:not_key_push_code]
+        #対象キーが配列で渡されていない場合配列に変換する
+        options[:not_key_push_code] = [options[:not_key_push_code]] unless options[:not_key_push_code].instance_of?(Array)
+        #キーの入力チェック
+        options[:not_key_push_code].each do |key_code|
+          return true unless Input.key_push?(key_code)
+        end
 
+      #キーが押下されている（前回との比較付き）
       when :key_down
-        key_code = options[:key_down_code] ? options[:key_down_code] : K_SPACE
-        #キー押下があれば
-        return true if Input.key_down?(key_code)
+        #対象キーが設定されていなければスペースキーとする
+        options[:key_down_code] = [K_SPACE] unless options[:key_down_code]
+        #対象キーが配列で渡されていない場合配列に変換する
+        options[:key_down_code] = [options[:key_down_code]] unless options[:key_down_code].instance_of?(Array)
+        #キーの入力チェック
+        options[:key_down_code].each do |key_code|
+          return true if Input.key_down?(key_code)
+        end
 
+      #キーが押下されていない（前回との比較付き）
       when :not_key_down
-        key_code = options[:key_down_code] ? options[:key_down_code] : K_SPACE
-        #キー押下があれば
-        return true unless Input.key_down?(key_code)
+        #対象キーが設定されていなければスペースキーとする
+        options[:not_key_down_code] = [K_SPACE] unless options[:not_key_down_code]
+        #対象キーが配列で渡されていない場合配列に変換する
+        options[:not_key_down_code] = [options[:not_key_down_code]] unless options[:not_key_down_code].instance_of?(Array)
+        #キーの入力チェック
+        options[:not_key_down_code].each do |key_code|
+          return true unless Input.key_down?(key_code)
+        end
 
+      #キーが解除された
       when :key_up
-        key_code = options[:key_up_code] ? options[:key_up_code] : K_SPACE
-        #キー解除があれば
-        return true if Input.key_release?(key_code)
+        #対象キーが設定されていなければスペースキーとする
+        options[:key_up_code] = [K_SPACE] unless options[:key_up_code]
+        #対象キーが配列で渡されていない場合配列に変換する
+        options[:key_up_code] = [options[:key_up_code]] unless options[:key_up_code].instance_of?(Array)
+        #キーの入力チェック
+        options[:key_up_code].each do |key_code|
+          return true if Input.key_release?(key_code)
+        end
 
+      #キーが解除されていない
       when :not_key_up
-        key_code = options[:key_up_code] ? options[:key_up_code] : K_SPACE
-        #キー押下があれば
-        return true unless Input.key_release?(key_code)
+        #対象キーが設定されていなければスペースキーとする
+        options[:not_key_up_code] = [K_SPACE] unless options[:not_key_up_code]
+        #対象キーが配列で渡されていない場合配列に変換する
+        options[:not_key_up_code] = [options[:not_key_up_code]] unless options[:not_key_up_code].instance_of?(Array)
+        #キーの入力チェック
+        options[:not_key_up_code].each do |key_code|
+          return true unless Input.key_release?(key_code)
+        end
 
       #ユーザデータ確認系
 

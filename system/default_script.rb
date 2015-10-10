@@ -260,6 +260,7 @@ _DEFINE_ :TextWindow do |options|
         end
       end
     end
+    _YIELD_
   end
 end
 

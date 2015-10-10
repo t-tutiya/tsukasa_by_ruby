@@ -1,0 +1,11 @@
+@	img0 {
+@		_SET_ file_path: "./sozai/button_normal.png"
+@		path_move total_frame: 300, type: :spline, path: [
+@			[  0,   0, 255],
+@			[ 30,  90, 128],
+@			[240, 150, 255],
+@			[ 60, 480,  64],
+@			[410, 120, 255],
+@			[450, 480, 128],
+@		]
+@	}

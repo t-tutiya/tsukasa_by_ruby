@@ -52,5 +52,4 @@ _INCLUDE_ "./system/default_script.rb"
 #_INCLUDE_ "./scenario/scenario_label.rb"
 #_INCLUDE_ "./scenario/tks_test.tks"
 
-#_INCLUDE_ "./scenario/first.tks"
-_INCLUDE_ "./test/0930test01.rb"
+_INCLUDE_ "./scenario/first.tks"

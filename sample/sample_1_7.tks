@@ -1,0 +1,15 @@
+@	img0 {
+@		_SET_ file_path: "./sozai/bg_sample.png"
+@	}
+
+@	_CREATE_ :LayoutControl, id: :test0,
+@		x_pos: 100, y_pos: 100, width: 512, height: 512, draw_option: {z: 4000} do
+@		_CREATE_ :ImageControl, file_path: "./sozai/button_over.png", x_pos: 100
+@		_CREATE_ :ImageControl, file_path: "./sozai/button_normal.png", y_pos: 100
+@	end
+
+@	test0 {
+@		move type: {alpha: 0}, total_frame: 180
+@		_WAIT_  [:command], command: :move
+@		move type: {alpha: 255}, total_frame: 360
+@	}

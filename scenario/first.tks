@@ -2,4 +2,8 @@
 	#_INCLUDE_ "./sample/sample_1_2.tks"
 	#_INCLUDE_ "./sample/sample_1_3.tks"
 	#_INCLUDE_ "./sample/sample_1_4.tks"
-	_INCLUDE_ "./sample/sample_1_5.tks"
+	#_INCLUDE_ "./sample/sample_1_5.tks"
+	#_INCLUDE_ "./sample/sample_1_6.tks"
+	#_INCLUDE_ "./sample/sample_1_7.tks"
+	_INCLUDE_ "./sample/sample_1_8.tks"
+

@@ -116,7 +116,7 @@ _DEFINE_ :pause do |options|
 
   #ウェイク状態まで待機
   _WAIT_ [:not_sleep, :key_down], 
-          key_down_code: K_RCONTROL do
+          key_down: K_RCONTROL do
     _YIELD_
   end
 
@@ -177,7 +177,7 @@ _DEFINE_ :TextWindow do |options|
             move  type: {alpha:[0,255]},
                   total_frame: 15,
                   check: [[:key_push, :key_down], 
-                          {:key_down_code => K_RCONTROL}] do
+                          {:key_down => K_RCONTROL}] do
                     _SET_ :draw_option, alpha: 255
                   end
             #トランジションが終了するまで非アイドル状態
@@ -192,9 +192,9 @@ _DEFINE_ :TextWindow do |options|
             move  type: {alpha:128},
                   total_frame: 60,
                   check: [[:key_push ,:key_down], 
-                          {:key_down_code => K_RCONTROL}] do
+                          {:key_down => K_RCONTROL}] do
                     #スキップされた場合
-                    _CHECK_ :key_down, key_down_code: K_RCONTROL do
+                    _CHECK_ :key_down, key_down: K_RCONTROL do
                       #CTRLスキップ中であれば透明度255
                       _SET_ :draw_option, alpha: 255
                     end
@@ -247,7 +247,7 @@ _DEFINE_ :TextWindow do |options|
           _CALL_ options[:icon], id: :icon do
             #スペースキーあるいはCTRLキーの押下待機
             _WAIT_ [:key_push, :key_down] , 
-                    key_down_code: K_RCONTROL
+                    key_down: K_RCONTROL
 
             #クリック待ちアイコンの削除
             _SEND_ :icon do

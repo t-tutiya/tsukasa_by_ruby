@@ -335,7 +335,7 @@ class TextPageControl < ImageControl
       command_list.push([:_WAIT_, 
                         {:_ARGUMENT_ => [:count, :mode, :key_push, :key_down],
                          :count => @wait_frame,
-                         :key_down_code => K_RCONTROL,
+                         :key_down => K_RCONTROL,
                          }, 
                          inner_options])
     end
@@ -381,7 +381,7 @@ class TextPageControl < ImageControl
     interrupt_command([:_WAIT_, 
                       {:_ARGUMENT_ => [:count, :mode, :key_push, :key_down],
                        :count => @line_feed_wait_frame,
-                       :key_down_code => K_RCONTROL,
+                       :key_down => K_RCONTROL,
                        }, 
                        inner_options])
 
@@ -494,7 +494,7 @@ class TextPageControl < ImageControl
     interrupt_command([:_WAIT_, 
                           {:_WAIT_ => [:count, :mode, :key_push, :key_down],
                            :count => @wait_frame,
-                           :key_down_code => K_RCONTROL,
+                           :key_down => K_RCONTROL,
                            }, inner_options])
 =end
   end

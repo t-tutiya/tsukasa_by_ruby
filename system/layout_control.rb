@@ -62,7 +62,8 @@ class LayoutControl < Control
     interrupt_command([:_CREATE_, 
                {:_ARGUMENT_ => :ImageControl, 
                 :entity => entity,
-                :index => 1000000,
+                :draw_option => {z: 1000000},
+                :id => options[:_ARGUMENT]
                 }, 
                 inner_options])
   end

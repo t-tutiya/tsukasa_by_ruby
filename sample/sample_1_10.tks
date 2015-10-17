@@ -1,0 +1,15 @@
+@	_CREATE_ :LayoutControl, id: :test0, width: 800, height: 600 do
+@		_CREATE_ :ImageControl, file_path: "./sozai/bg_test.jpg"
+@		_CREATE_ :ImageControl, file_path: "./sozai/char/B-1.png", x_pos: 250
+@	end
+
+@	_CREATE_ :ImageControl, id: :test1, file_path: "./sozai/bg_sample.png"
+
+@	_WAIT_  [:key_push], key_push: K_SPACE
+
+@	test1 {
+@		_SET_ rule_file_path: "sozai/rule/horizontal_rule.png"
+@		transition_rule :total_frame => 240
+@		_WAIT_ [:command], :command => :transition_rule
+@		_DELETE_
+@	}

@@ -29,22 +29,22 @@
 ###############################################################################
 
 _CREATE_ :LayoutControl, 
-        :x_pos => 600, 
-        :y_pos => 150, 
+        :x => 600, 
+        :y => 150, 
         :width => 256,
         :height => 256 do
   _CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png", float_mode: :right,
-         :x_pos => 150,
-         :y_pos => 150
+         :x => 150,
+         :y => 150
   _CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png", float_mode: :right#,
-         #:x_pos => 100,
-         #:y_pos => 100
+         #:x => 100,
+         #:y => 100
   #_CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png"
 end
 
 _CREATE_ :LayoutControl, 
-        :x_pos => 0, 
-        :y_pos => 0, 
+        :x => 0, 
+        :y => 0, 
         :width => 256,
         :height => 256 do
 

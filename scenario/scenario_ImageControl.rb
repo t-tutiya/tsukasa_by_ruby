@@ -43,21 +43,21 @@ pause
 
 _SEND_ :BG1 do
   _SET_ file_path: "./sozai/button_normal.png"
-  _SET_ x_pos: 100, y_pos: 100,  float_mode: :right
+  _SET_ x: 100, y: 100,  float_mode: :right
 end
 
 pause
 
 _SEND_ :BG1 do
   _SET_ file_path: "./sozai/button_key_down.png"
-  _SET_ x_pos: 200
+  _SET_ x: 200
 end
 
 pause
 
 _SEND_ :BG2 do
   _SET_ file_path: "./sozai/button_key_up.png"
-  _SET_ x_pos: 200
+  _SET_ x: 200
 end
 
 
@@ -65,5 +65,5 @@ pause
 
 _SEND_ :BG3 do
   _SET_ file_path: "./sozai/button_over.png"
-  _SET_ x_pos: 200
+  _SET_ x: 200
 end

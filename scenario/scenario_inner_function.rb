@@ -2,8 +2,8 @@
 
 #ボタンコントロール
 _CREATE_ :LayoutControl, 
-        :x_pos => 0, 
-        :y_pos => 0, 
+        :x => 0, 
+        :y => 0, 
         :width => 256,
         :height => 256,
         :id=>:button1 do
@@ -18,8 +18,8 @@ end
 
 #ボタンコントロール
 _CREATE_ :LayoutControl, 
-        :x_pos => 0, 
-        :y_pos => 0, 
+        :x => 0, 
+        :y => 0, 
         :width => 256,
         :height => 256,
         :id=>:button2 do
@@ -34,8 +34,8 @@ end
 
 #ボタンコントロール
 _CREATE_ :LayoutControl, 
-        :x_pos => 0, 
-        :y_pos => 0, 
+        :x => 0, 
+        :y => 0, 
         :width => 100,
         :height => 100,
         :id=>:button3 do

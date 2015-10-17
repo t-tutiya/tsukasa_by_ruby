@@ -60,8 +60,8 @@ module Drawable
     hsh[key] = Image.load(key)
   }
 
-  attr_accessor  :x_pos
-  attr_accessor  :y_pos
+  attr_accessor  :x
+  attr_accessor  :y
 
   attr_accessor  :offset_x
   attr_accessor  :offset_y
@@ -90,8 +90,8 @@ module Drawable
   end
 
   def initialize(options, inner_options, root_control)
-    @x_pos = options[:x_pos] || 0 #描画Ｘ座標
-    @y_pos = options[:y_pos] || 0 #描画Ｙ座標
+    @x = options[:x] || 0 #描画Ｘ座標
+    @y = options[:y] || 0 #描画Ｙ座標
 
     @offset_x = options[:offset_x] || 0 #描画オフセットＸ座標
     @offset_y = options[:offset_y] || 0 #描画オフセットＹ座標
@@ -137,11 +137,11 @@ module Drawable
     return offset_x, offset_y unless @visible
 
     if @align_y == :bottom 
-      x_pos = offset_x + @x_pos + @offset_x
-      y_pos = offset_y + @y_pos + @offset_y + parent_size[:height] - @height
+      x = offset_x + @x + @offset_x
+      y = offset_y + @y + @offset_y + parent_size[:height] - @height
     else
-      x_pos = offset_x + @x_pos + @offset_x
-      y_pos = offset_y + @y_pos + @offset_y
+      x = offset_x + @x + @offset_x
+      y = offset_y + @y + @offset_y
     end
 
     #下位エンティティを自エンティティに描画する場合
@@ -151,25 +151,25 @@ module Drawable
 
 
       #自エンティティを上位ターゲットに描画
-      target.draw_ex(x_pos, y_pos, @entity, @draw_option)
+      target.draw_ex(x, y, @entity, @draw_option)
     else
       #エンティティを持っているなら自エンティティを上位ターゲットに描画
-      target.draw_ex(x_pos, y_pos, @entity, @draw_option) if @entity
+      target.draw_ex(x, y, @entity, @draw_option) if @entity
       #下位エンティティを上位ターゲットに描画
-      super(offset_x + @x_pos, 
-            offset_y + @y_pos, 
+      super(offset_x + @x, 
+            offset_y + @y, 
             target, 
             {:width => @width, :height => @height})
     end
 
     #デバッグ用：コントロールの外枠を描画する
     if @_GLOBAL_DATA_[:_DEBUG_]
-      target.draw_box_line( x_pos, y_pos, 
-                            x_pos + @real_width,  y_pos + @real_height)
+      target.draw_box_line( x, y, 
+                            x + @real_width,  y + @real_height)
     end
 
-    dx = offset_x + @x_pos
-    dy = offset_y + @y_pos
+    dx = offset_x + @x
+    dy = offset_y + @y
 
     #連結指定チェック
     case @float_mode
@@ -194,8 +194,8 @@ module Drawable
   def siriarize(options = {})
 
     options.update({
-      :x_pos  => @x_pos,
-      :y_pos => @y_pos,
+      :x  => @x,
+      :y => @y,
 
       :offset_x => @offset_x,
       :offset_y => @offset_y,
@@ -240,9 +240,9 @@ module Drawable
       #開始値が設定されていなければ現在の値で初期化
       unless options[:type][key].instance_of?(Array)
         if key == :x
-          options[:type][key] = [@x_pos, options[:type][key]]
+          options[:type][key] = [@x, options[:type][key]]
         elsif key == :y
-          options[:type][key] = [@y_pos, options[:type][key]]
+          options[:type][key] = [@y, options[:type][key]]
         else
           options[:type][key] = [@draw_option[key] || 0, options[:type][key]]
         end
@@ -257,9 +257,9 @@ module Drawable
                ).to_i
 
       if key == :x
-        @x_pos = result
+        @x = result
       elsif key == :y
-        @y_pos = result
+        @y = result
       else
         @draw_option[key] = result
       end
@@ -340,8 +340,8 @@ module Drawable
     end
 
     #移動先座標の決定
-    @x_pos = x.round
-    @y_pos = y.round
+    @x = x.round
+    @y = y.round
     @draw_option[:alpha] = alpha.round
 
     #カウントが指定フレーム以下の場合

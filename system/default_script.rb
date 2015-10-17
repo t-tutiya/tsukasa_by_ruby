@@ -147,8 +147,8 @@ end
 #標準テキストウィンドウ
 _DEFINE_ :TextWindow do |options|
   _CREATE_ :LayoutControl,
-    x_pos: options[:x_pos],
-    y_pos: options[:y_pos],
+    x: options[:x],
+    y: options[:y],
     width: options[:width],
     height: options[:height],
     draw_option: {z: 1000000}, #描画順序
@@ -165,8 +165,8 @@ _DEFINE_ :TextWindow do |options|
 
       #メッセージウィンドウ
       _CREATE_ :TextPageControl, 
-        x_pos: 0,
-        y_pos: 0,
+        x: 0,
+        y: 0,
         width: options[:width],
         id: options[:text_page_id],
         size: 32, 
@@ -265,24 +265,24 @@ _DEFINE_ :TextWindow do |options|
 end
 
 TextWindow id: :text0, text_page_id: :default_text_page_control0,
-  x_pos: 128,
-  y_pos: 256 + 192,
+  x: 128,
+  y: 256 + 192,
   width: 1024,
   height: 192
 
 =begin
 #全画面の場合
 TextWindow id: :text1, text_page_id: :default_text_page_control0,
-  x_pos: 64,
-  y_pos: 64,
+  x: 64,
+  y: 64,
   width: 1024,
   height: 768
 =end
 
 _DEFINE_ :line_icon_func do |options|
   _CREATE_ :LayoutControl, 
-          :x_pos => 0, 
-          :y_pos => 0, 
+          :x => 0, 
+          :y => 0, 
           :width => 24,
           :height => 24,
           :align_y => :bottom,
@@ -302,8 +302,8 @@ end
 _DEFINE_ :page_icon_func do |options|
 
   _CREATE_ :LayoutControl, 
-          :x_pos => 0, 
-          :y_pos => 0, 
+          :x => 0, 
+          :y => 0, 
           :width => 24,
           :height => 24,
           :align_y => :bottom,
@@ -365,8 +365,8 @@ end
 #ボタンコントロール
 _DEFINE_ :button do |options|
   _CREATE_ :LayoutControl, 
-          :x_pos => options[:x_pos] || 0,
-          :y_pos => options[:y_pos] || 0,
+          :x => options[:x] || 0,
+          :y => options[:y] || 0,
           :width => 256,
           :height => 256,
           :id=>options[:id] do

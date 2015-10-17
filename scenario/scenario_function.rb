@@ -2,8 +2,8 @@
 
 #ボタンコントロール
 button  id: :button1, 
-        x_pos: 150,
-        y_pos: 150 do
+        x: 150,
+        y: 150 do
   #内部関数の定義
   _DEFINE_ :func do |val|
     move type: {y: val[:y]}, total_frame: 60, easing: :out_elastic

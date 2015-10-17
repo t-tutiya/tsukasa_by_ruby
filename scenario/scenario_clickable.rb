@@ -1,8 +1,8 @@
 #! ruby -E utf-8
 
 _CREATE_ :LayoutControl, 
-        :x_pos => 150, 
-        :y_pos => 150, 
+        :x => 150, 
+        :y => 150, 
         :width => 256,
         :height => 256,
         :colorkey_file_path => "./sozai/star_button.png",

@@ -32,8 +32,8 @@
 
 #TODO：これ、動いてはいるけど元のon_key_upが上書きされているわけではない。
 button  id: :button1, 
-        x_pos: 150,
-        y_pos: 150 do
+        x: 150,
+        y: 150 do
   on_key_up do
     set :key_down, visible: false
     set :normal, visible: false
@@ -83,8 +83,8 @@ _SCOPE_ do
 end
 
 TextWindow id: :message0, text_page_id: :default_text_page_control0,
-  x_pos: 128,
-  y_pos: 256 + 192,
+  x: 128,
+  y: 256 + 192,
   width: 1024,
   height: 192
 

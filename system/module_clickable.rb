@@ -73,18 +73,18 @@ module Clickable
     @on_key_up_out  = false
 
     #マウスカーソル座標を取得
-    @x = Input.mouse_pos_x
-    @y = Input.mouse_pos_y
+    @cursol_x = Input.mouse_pos_x
+    @cursol_y = Input.mouse_pos_y
 
-    @collision_sprite.x = @x_pos 
-    @collision_sprite.y = @y_pos
-    @mouse_sprite.x = @x
-    @mouse_sprite.y = @y
+    @collision_sprite.x = @x 
+    @collision_sprite.y = @y
+    @mouse_sprite.x = @cursol_x
+    @mouse_sprite.y = @cursol_x
 
     #描画範囲内かどうか
     if (@mouse_sprite === @collision_sprite)
       if @colorkey_entity
-        if @colorkey_entity[@x - @x_pos, @y - @y_pos][0] >= @colorkey_border
+        if @colorkey_entity[@cursol_x - @x, @cursol_y - @y][0] >= @colorkey_border
           inner_control = true
         else
           inner_control = false

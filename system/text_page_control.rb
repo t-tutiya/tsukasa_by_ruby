@@ -351,8 +351,8 @@ class TextPageControl < ImageControl
                     :command_list => [
                       [:_LINE_FEED_, {},inner_options],
                       [:_TEXT_, {:_ARGUMENT_=> options[:text]},inner_options]],
-                    :x_pos => @rubi_offset_x,
-                    :y_pos => @rubi_offset_y,
+                    :x => @rubi_offset_x,
+                    :y => @rubi_offset_y,
                     :width=> 128,
                     :height=> @rubi_size,
                     :size => @rubi_size,
@@ -441,8 +441,8 @@ class TextPageControl < ImageControl
     #文字コントロールを生成する
     interrupt_command([:_CREATE_, {
                     :_ARGUMENT_ => :CharControl, 
-                   :x_pos => @next_char_x + @margin_x,
-                   :y_pos => @next_char_y + @margin_y + @line_height - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
+                   :x => @next_char_x + @margin_x,
+                   :y => @next_char_y + @margin_y + @line_height - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
                    :char => "",
                    :font => @font,
                    :font_config => @font_config,
@@ -478,8 +478,8 @@ class TextPageControl < ImageControl
     #文字レンダラオブジェクトを生成し、描画チェインに連結する
     #TODO：こっち未修正
     @control_list.push(CharControl.new(
-                    {:x_pos => @next_char_x + @margin_x,
-                     :y_pos => @next_char_y + @margin_y + @line_height - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
+                    {:x => @next_char_x + @margin_x,
+                     :y => @next_char_y + @margin_y + @line_height - @font.size, #行の高さと文字の高さは一致していないかもしれないので、下端に合わせる
                      :char => "",
                      :font => @font,
                      :font_config => @font_config,

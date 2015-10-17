@@ -62,7 +62,7 @@ class LayoutControl < Control
     interrupt_command([:_CREATE_, 
                {:_ARGUMENT_ => :ImageControl, 
                 :entity => entity,
-                :draw_option => {z: 1000000},
+                :z => options[:z] || Float::INFINITY, #描画順を正の無限大とする
                 :id => options[:_ARGUMENT]
                 }, 
                 inner_options])

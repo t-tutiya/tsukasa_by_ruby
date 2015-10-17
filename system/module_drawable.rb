@@ -68,8 +68,6 @@ module Drawable
 
   attr_accessor  :visible
 
-  attr_accessor  :draw_option
-
   attr_accessor  :float_mode
   attr_accessor  :align_y
   attr_accessor  :entity
@@ -89,6 +87,106 @@ module Drawable
     @rule_entity = TransitionShader.new(@@image_cache[rule_file_path])
   end
 
+  #横の拡大率 
+  #Float (default: 1)
+  def scale_x=(arg)
+    @draw_option[:scale_x] = arg
+  end
+  def scale_x()
+    @draw_option[:scale_x]
+  end
+
+  #縦の拡大率  
+  #Float (default: 1)
+  def scale_y=(arg)
+    @draw_option[:scale_y] = arg
+  end
+  def scale_y()
+    @draw_option[:scale_y]
+  end
+
+  #回転、拡大の中心X座標。
+  #nilで画像の中心になります。
+  #Integer (default: nil)
+  def center_x=(arg)
+    @draw_option[:center_x] = arg
+  end
+  def center_x()
+    @draw_option[:center_x]
+  end
+
+  #回転、拡大の中心Y座標。
+  #nilで画像の中心になります。
+  #Integer (default: nil)
+  def center_y=(arg)
+    @draw_option[:center_y] = arg
+  end
+  def center_y()
+    @draw_option[:center_y]
+  end
+
+  #アルファ値(0～255)。
+  #Integer (default: 255)
+  def alpha=(arg)
+    @draw_option[:alpha] = arg
+  end
+  def alpha()
+    @draw_option[:alpha]
+  end
+
+  #:alpha、:none、:add、:add2、:subで合成方法を指定。
+  #:noneは透明色、半透明色もそのまま上書き描画します。
+  #:addはソースにアルファ値を、
+  #:add2は背景に255-アルファ値を適用します。
+  #:subはアルファ値を全ての色の合成に、
+  #:sub2はRGBの色をそれぞれ別々に合成に適用します。
+  #Symbol (default: :alpha)
+  def blend=(arg)
+    @draw_option[:blend] = arg
+  end
+  def blend()
+    @draw_option[:blend]
+  end
+
+  #色
+  #[R, G, B]で、それぞれ0～255、省略すると[255, 255, 255]になります。
+  #Array (default: [255,255,255])
+  def color=(arg)
+    @draw_option[:color] = arg
+  end
+  def color()
+    @draw_option[:color]
+  end
+
+  #360度系で画像の回転角度を指定します。
+  #拡大率と同時に指定した場合は拡大率が先に適用されます。
+  #Integer (default: 0)
+  def angle=(arg)
+    @draw_option[:angle] = arg
+  end
+  def angle()
+    @draw_option[:angle]
+  end
+
+  #描画順序。
+  #小さいほど奥になり、同じ値の場合は最初にdrawしたものが一番奥になります。
+  #Integer|Float (default: 0)
+  def z=(arg)
+    @draw_option[:z] = arg
+  end
+  def z()
+    @draw_option[:z]
+  end
+
+  #描画時の指定座標x/yに、画像のcenter_x/yで指定した位置が来るように補正されます
+  #bool (default: false)
+  def offset_sync=(arg)
+    @draw_option[:offset_sync] = arg
+  end
+  def offset_sync()
+    @draw_option[:offset_sync]
+  end
+
   def initialize(options, inner_options, root_control)
     @x = options[:x] || 0 #描画Ｘ座標
     @y = options[:y] || 0 #描画Ｙ座標
@@ -99,10 +197,19 @@ module Drawable
     #可視フラグ（省略時はtrue）
     @visible = options[:visible] == false ? false : true
 
-    #描画オプション
+    #描画オプションの初期化
     @draw_option = options[:draw_option] || {}
 
-    @draw_option[:alpha] = @draw_option[:alpha] || 255
+    @draw_option[:scale_x] = options[:scale_x] || 1
+    @draw_option[:scale_y] = options[:scale_y] || 1
+    @draw_option[:center_x] = options[:center_x] || nil
+    @draw_option[:center_y] = options[:center_y] || nil
+    @draw_option[:alpha] = options[:alpha] || 255
+    @draw_option[:blend] = options[:blend] || :alpha
+    @draw_option[:color] = options[:color] || [255,255,255]
+    @draw_option[:angle] = options[:angle] || 0
+    @draw_option[:z] = options[:z] || 0
+    @draw_option[:offset_sync] = options[:offset_sync] || false
 
     #回り込み指定（省略時は:none）
     @float_mode = options[:float_mode] || :none
@@ -237,32 +344,20 @@ module Drawable
     options[:easing] = :liner unless options[:easing]
 
     options[:type].each do |key, index|
+
       #開始値が設定されていなければ現在の値で初期化
       unless options[:type][key].instance_of?(Array)
-        if key == :x
-          options[:type][key] = [@x, options[:type][key]]
-        elsif key == :y
-          options[:type][key] = [@y, options[:type][key]]
-        else
-          options[:type][key] = [@draw_option[key] || 0, options[:type][key]]
-        end
-
+        options[:type][key] = [send(key), options[:type][key]]
       end
 
-      result = (options[:type][key][0] + 
-                 (options[:type][key][1] - options[:type][key][0]).to_f * 
-                  EasingProcHash[options[:easing]].call(
-                    options[:count].fdiv(options[:total_frame])
-                 )
-               ).to_i
-
-      if key == :x
-        @x = result
-      elsif key == :y
-        @y = result
-      else
-        @draw_option[key] = result
-      end
+      #値を更新する
+      send(key.to_s + "=", 
+            (options[:type][key][0] + 
+              (options[:type][key][1] - options[:type][key][0]).to_f * 
+                EasingProcHash[options[:easing]].call(
+                  options[:count].fdiv(options[:total_frame])
+              )
+            ).to_i)
     end
 
     #カウントが指定フレーム未満の場合

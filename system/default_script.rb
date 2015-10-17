@@ -151,7 +151,7 @@ _DEFINE_ :TextWindow do |options|
     y: options[:y],
     width: options[:width],
     height: options[:height],
-    draw_option: {z: 1000000}, #描画順序
+    z: 1000000, #描画順序
     id: options[:id] do
       #デフォルトの背景画像
       _CREATE_ :ImageControl, id: :bg
@@ -178,7 +178,7 @@ _DEFINE_ :TextWindow do |options|
                   total_frame: 15,
                   check: [[:key_push, :key_down], 
                           {:key_down => K_RCONTROL}] do
-                    _SET_ :draw_option, alpha: 255
+                    _SET_ alpha: 255
                   end
             #トランジションが終了するまで非アイドル状態
             _WAIT_  [:command], command: :move
@@ -196,11 +196,11 @@ _DEFINE_ :TextWindow do |options|
                     #スキップされた場合
                     _CHECK_ :key_down, key_down: K_RCONTROL do
                       #CTRLスキップ中であれば透明度255
-                      _SET_ :draw_option, alpha: 255
+                      _SET_ alpha: 255
                     end
                     _CHECK_ :key_push do
                       #CTRLスキップ中でなければ透明度128
-                      _SET_ :draw_option, alpha: 128
+                      _SET_ alpha: 128
                     end
             end
             #トランジションが終了するまで待機
@@ -336,25 +336,25 @@ end
 
 #初期レイヤ（背景）
 _CREATE_ :ImageControl,
-  draw_option: {z: 0}, #描画順序
+  z: 0, #描画順序
   id: :base do
 end
 
 #初期レイヤ０
 _CREATE_ :ImageControl,
-  draw_option: {z: 1000}, #描画順序
+  z: 100, #描画順序
   id: :img0 do
 end
 
 #初期レイヤ１
 _CREATE_ :ImageControl,
-  draw_option: {z: 2000}, #描画順序
+  z: 2000, #描画順序
   id: :img1 do
 end
 
 #初期レイヤ２
 _CREATE_ :ImageControl,
-  draw_option: {z: 3000}, #描画順序
+  z: 3000, #描画順序
   id: :img2 do
 end
 

@@ -175,7 +175,7 @@ _DEFINE_ :TextWindow do |options|
           _CHAR_RENDERER_ do
             #フェードイン（スペースキーか右CTRLが押されたらスキップ）
             move  type: {alpha:[0,255]},
-                  total_frame: 15,
+                  time: 15,
                   check: [[:key_push, :key_down], 
                           {:key_down => K_RCONTROL}] do
                     _SET_ alpha: 255
@@ -190,7 +190,7 @@ _DEFINE_ :TextWindow do |options|
             _END_FRAME_
             #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
             move  type: {alpha:128},
-                  total_frame: 60,
+                  time: 60,
                   check: [[:key_push ,:key_down], 
                           {:key_down => K_RCONTROL}] do
                     #スキップされた場合

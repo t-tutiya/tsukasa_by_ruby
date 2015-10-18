@@ -328,7 +328,7 @@ end
 
 module Drawable
   def command_move(options, inner_options)
-    raise unless options[:total_frame] #必須要素
+    raise unless options[:time] #必須要素
 
     #現在の経過カウントを初期化
     options[:count] = 0 unless options[:count]
@@ -355,13 +355,13 @@ module Drawable
             (options[:type][key][0] + 
               (options[:type][key][1] - options[:type][key][0]).to_f * 
                 EasingProcHash[options[:easing]].call(
-                  options[:count].fdiv(options[:total_frame])
+                  options[:count].fdiv(options[:time])
               )
             ).to_i)
     end
 
     #カウントが指定フレーム未満の場合
-    if options[:count] < options[:total_frame]
+    if options[:count] < options[:time]
       #カウントアップ
       options[:count] += 1
       #:moveコマンドをスタックし直す
@@ -388,10 +388,10 @@ module Drawable
     #始点／終点を強制的に通過させるかどうか
     if options[:origin]
       #TODO：これだと開始時／終了時にもたってしまい、ゲームで使う補間に適さないように思える。どちらを標準にすべきか検討
-      step =(path.size.to_f + 1)/ options[:total_frame] * options[:count] - 1.0
+      step =(path.size.to_f + 1)/ options[:time] * options[:count] - 1.0
     else
       #Ｂスプライン補間時に始点終点を通らない
-      step =(path.size.to_f - 1)/ options[:total_frame] * options[:count]
+      step =(path.size.to_f - 1)/ options[:time] * options[:count]
     end
 
     x = 0.0
@@ -440,7 +440,7 @@ module Drawable
     @draw_option[:alpha] = alpha.round
 
     #カウントが指定フレーム以下の場合
-    if options[:count] <= options[:total_frame]
+    if options[:count] <= options[:time]
       #カウントアップ
       options[:count] += 1
       #:move_lineコマンドをスタックし直す
@@ -494,20 +494,20 @@ module Drawable
     end
 
     @rule_entity.g_min =( ( options[:vague] + 
-                            options[:total_frame]
-                          ).fdiv(options[:total_frame]) *
+                            options[:time]
+                          ).fdiv(options[:time]) *
                           options[:count] - 
                           options[:vague]
-                        ).fdiv(options[:total_frame])
+                        ).fdiv(options[:time])
 
     @rule_entity.g_max =( ( options[:vague] + 
-                            options[:total_frame]
-                          ).fdiv(options[:total_frame]) *
+                            options[:time]
+                          ).fdiv(options[:time]) *
                           options[:count]
-                        ).fdiv(options[:total_frame])
+                        ).fdiv(options[:time])
 
     #カウントが指定フレーム未満の場合
-    if options[:count] < options[:total_frame]
+    if options[:count] < options[:time]
       @draw_option[:shader] = @rule_entity
       #カウントアップ
       options[:count] += 1

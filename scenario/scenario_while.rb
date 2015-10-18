@@ -12,7 +12,7 @@ _CREATE_ :LayoutControl ,
   _CREATE_ :ImageControl, file_path: "./sozai/bg_sample.png", id: :test
 
   _WHILE_ :true do
-    transition_rule :total_frame => 240
+    transition_rule :time => 240
     _WAIT_ [:command], :command => :transition_rule
   end
 end
@@ -20,13 +20,13 @@ end
 button id: :button1
 _SEND_ :button1 do
   _WHILE_ :true do
-    move type: {x: 300, y: 0, alpha: 0}, total_frame: 60
+    move type: {x: 300, y: 0, alpha: 0}, time: 60
     wait_command :move
-    move type: {x: 300, y: 300, alpha: 255}, total_frame: 60
+    move type: {x: 300, y: 300, alpha: 255}, time: 60
     wait_command :move
-    move type: {x: 0, y: 300, alpha: 0}, total_frame: 60
+    move type: {x: 0, y: 300, alpha: 0}, time: 60
     wait_command :move
-    move type: {x: 0, y: 0, alpha: 255}, total_frame: 60
+    move type: {x: 0, y: 0, alpha: 255}, time: 60
     wait_command :move
   end
 end
@@ -34,7 +34,7 @@ end
 button id: :button2
 _SEND_ :button2 do
   _WHILE_ :true do
-    path_move total_frame: 300, path: [
+    path_move time: 300, path: [
   [ 10.0 * 4,  30.0 * 4, 255],
   [ 77.0 * 4,  49.0 * 4, 0],
   [ 21.0 * 4, 165.0 * 4, 255],
@@ -48,7 +48,7 @@ end
 button id: :button3
 _SEND_ :button3 do
   _WHILE_ :true do
-    path_move total_frame: 300, type: :spline, path: [
+    path_move time: 300, type: :spline, path: [
 #  [ 10.0 * 4,  30.0 * 4, 0],
 #  [ 77.0 * 4,  49.0 * 4, 255],
 #  [ 21.0 * 4, 165.0 * 4, 0],

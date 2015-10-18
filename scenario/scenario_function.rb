@@ -6,19 +6,19 @@ button  id: :button1,
         y: 150 do
   #内部関数の定義
   _DEFINE_ :func do |val|
-    move type: {y: val[:y]}, total_frame: 60, easing: :out_elastic
+    move type: {y: val[:y]}, time: 60, easing: :out_elastic
     wait_command :move
   end
 end
 
 _SEND_  :button1 do
-  move type: {x: 0, y: 300}, total_frame: 60, easing: :in_quint
+  move type: {x: 0, y: 300}, time: 60, easing: :in_quint
   wait_command :move
-  move type: {x: 300, y: 300}, total_frame: 60, easing: :in_quint
+  move type: {x: 300, y: 300}, time: 60, easing: :in_quint
   wait_command :move
-  move type: {x: 300, y: 0}, total_frame: 60, easing: :in_quint
+  move type: {x: 300, y: 0}, time: 60, easing: :in_quint
   wait_command :move
-  move type: {x: 0, y: 0}, total_frame: 60, easing: :in_quint
+  move type: {x: 0, y: 0}, time: 60, easing: :in_quint
   wait_command :move
   #渡せるのは名前付きオプションのみ(targetは自動で渡される)
   func y: 150
@@ -38,7 +38,7 @@ end
 func2 do
   _EVAL_ "pp 'test'"
   pp "func2"
-  move type: {x: [0, 600], y: [0, 300]}, total_frame: 60, easing: :out_bounce
+  move type: {x: [0, 600], y: [0, 300]}, time: 60, easing: :out_bounce
 end
 
 

@@ -9,7 +9,7 @@
 
 @	test1 {
 @		_SET_ rule_file_path: "sozai/rule/horizontal_rule.png"
-@		transition_rule :time => 240
-@		_WAIT_ [:command], :command => :transition_rule
+@		move type: {rule_counter:[0,255]}, time: 240
+@		_WAIT_ [:command], :command => :move
 @		_DELETE_
 @	}

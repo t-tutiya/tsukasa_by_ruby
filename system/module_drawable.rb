@@ -80,13 +80,6 @@ module Drawable
 
   attr_accessor :entity
 
-  attr_reader :rule_file_path
-  def rule_file_path=(rule_file_path)
-    @rule_file_path = rule_file_path
-    #画像ファイルをキャッシュから読み込んで初期化する
-    @rule_entity = TransitionShader.new(@@image_cache[rule_file_path])
-  end
-
   #横の拡大率 
   #Float (default: 1)
   def scale_x=(arg)
@@ -178,6 +171,34 @@ module Drawable
     @draw_option[:z]
   end
 
+  #ルールトラジンション：ルール画像設定
+  attr_reader :rule_file_path
+  def rule_file_path=(rule_file_path)
+    @rule_file_path = rule_file_path
+    #画像ファイルをキャッシュから読み込んで初期化する
+    @rule_entity = TransitionShader.new(@@image_cache[rule_file_path])
+    @draw_option[:shader] = @rule_entity
+  end
+
+  #ルールトランジション：カウンター
+  attr_reader :rule_counter
+  def rule_counter=(arg)
+    @rule_counter = arg
+    @rule_entity.g_min =(( @rule_vague + 255).fdiv(255) *
+                          @rule_counter - 
+                          @rule_vague
+                        ).fdiv(255)
+
+    @rule_entity.g_max =( ( @rule_vague + 
+                            255
+                          ).fdiv(255) *
+                          @rule_counter
+                        ).fdiv(255)
+  end
+
+  #ルールトランジション：曖昧さ
+  attr_accessor :rule_vague
+
   #描画時の指定座標x/yに、画像のcenter_x/yで指定した位置が来るように補正されます
   #bool (default: false)
   def offset_sync=(arg)
@@ -221,7 +242,11 @@ module Drawable
     @child_controls_draw_to_entity = options[:child_controls_draw_to_entity] || false
 
     #ルールトランジション用の画像ファイルパスがあるならシェーダーを初期化する
-    self.rule_file_path = options[:rule_file_path] if options[:rule_file_path]
+    @rule_vague = options[:rule_vague] || 40
+    if options[:rule_file_path]
+      self.rule_file_path = options[:rule_file_path] 
+      self.rule_counter = options[:rule_counter]
+    end
 
     @real_width =  @width = 0
     @real_height = @height = 0
@@ -318,6 +343,8 @@ module Drawable
       :real_height => @real_height,
 
       :rule_file_path => @rule_file_path
+      :rule_counter => @rule_counter
+      :rule_vague => @rule_vague
     })
 
     return super(options)
@@ -479,45 +506,6 @@ module Drawable
 end
 
 module Drawable
-  #ルールトランジション
-  def command_transition_rule(options, inner_options)
-    #現在の経過カウントを初期化
-    options[:count] = 0 unless options[:count]
-    #曖昧さを初期化
-    options[:vague] = 40 unless options[:vague]
-
-    #条件判定が存在し、かつその条件が成立した場合
-    if options[:check] and check_imple(options[:check][0], options[:check][1])
-      #ブロックがあれば実行し、コマンドを終了する
-      eval_block(options, &inner_options[:block]) if inner_options[:block]
-      return
-    end
-
-    @rule_entity.g_min =( ( options[:vague] + 
-                            options[:time]
-                          ).fdiv(options[:time]) *
-                          options[:count] - 
-                          options[:vague]
-                        ).fdiv(options[:time])
-
-    @rule_entity.g_max =( ( options[:vague] + 
-                            options[:time]
-                          ).fdiv(options[:time]) *
-                          options[:count]
-                        ).fdiv(options[:time])
-
-    #カウントが指定フレーム未満の場合
-    if options[:count] < options[:time]
-      @draw_option[:shader] = @rule_entity
-      #カウントアップ
-      options[:count] += 1
-      #:transition_ruleコマンドをスタックし直す
-      push_command_to_next_frame(:transition_rule, options, inner_options)
-    else
-      @draw_option[:shader] = nil
-    end
-  end
-
   class TransitionShader < DXRuby::Shader
     #ルールトランジションを実行するHLSLスクリプト
     hlsl = <<EOS

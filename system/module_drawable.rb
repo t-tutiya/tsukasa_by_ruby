@@ -342,9 +342,9 @@ module Drawable
       :real_width => @real_width,
       :real_height => @real_height,
 
-      :rule_file_path => @rule_file_path
-      :rule_counter => @rule_counter
-      :rule_vague => @rule_vague
+      :rule_file_path => @rule_file_path,
+      :rule_counter => @rule_counter,
+      :rule_vague => @rule_vague,
     })
 
     return super(options)

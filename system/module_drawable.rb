@@ -171,33 +171,9 @@ module Drawable
     @draw_option[:z]
   end
 
-  #ルールトラジンション：ルール画像設定
-  attr_reader :rule_file_path
-  def rule_file_path=(rule_file_path)
-    @rule_file_path = rule_file_path
-    #画像ファイルをキャッシュから読み込んで初期化する
-    @rule_entity = TransitionShader.new(@@image_cache[rule_file_path])
-    @draw_option[:shader] = @rule_entity
+  def shader=(arg)
+     @draw_option[:shader] = find_control(arg)[0].entity
   end
-
-  #ルールトランジション：カウンター
-  attr_reader :rule_counter
-  def rule_counter=(arg)
-    @rule_counter = arg
-    @rule_entity.g_min =(( @rule_vague + 255).fdiv(255) *
-                          @rule_counter - 
-                          @rule_vague
-                        ).fdiv(255)
-
-    @rule_entity.g_max =( ( @rule_vague + 
-                            255
-                          ).fdiv(255) *
-                          @rule_counter
-                        ).fdiv(255)
-  end
-
-  #ルールトランジション：曖昧さ
-  attr_accessor :rule_vague
 
   #描画時の指定座標x/yに、画像のcenter_x/yで指定した位置が来るように補正されます
   #bool (default: false)

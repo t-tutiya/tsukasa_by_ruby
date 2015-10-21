@@ -9,7 +9,7 @@
 @	end
 
 @	test0 {
-@		move type: {alpha: 0}, total_frame: 180
+@		move type: {alpha: 0}, time: 180
 @		_WAIT_  [:command], command: :move
-@		move type: {alpha: 255}, total_frame: 360
+@		move type: {alpha: 255}, time: 360
 @	}

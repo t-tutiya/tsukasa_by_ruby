@@ -10,6 +10,6 @@
 @	img1 {_SET_ visible: true }
 
 @	last {
-@		move type: {alpha: [255, 0]}, total_frame: 360
+@		move type: {alpha: [255, 0]}, time: 360
 @	}
 

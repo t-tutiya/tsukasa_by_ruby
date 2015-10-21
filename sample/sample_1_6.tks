@@ -4,15 +4,15 @@
 
 @	img0 {
 @		_SET_ file_path: "./sozai/button_over.png", x_pos: 250, y_pos: 100
-@		move type: {alpha: 0}, total_frame: 180
+@		move type: {alpha: 0}, time: 180
 @		_WAIT_  [:command], command: :move
-@		move type: {alpha: 255}, total_frame: 360
+@		move type: {alpha: 255}, time: 360
 @	}
 
 @	img1 {
 @		_SET_ file_path: "./sozai/button_normal.png", x_pos: 150, y_pos: 200
-@		move type: {alpha: 0}, total_frame: 180
+@		move type: {alpha: 0}, time: 180
 @		_WAIT_  [:command], command: :move
-@		move type: {alpha: 255}, total_frame: 360
+@		move type: {alpha: 255}, time: 360
 @	}
 

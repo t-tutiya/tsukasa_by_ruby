@@ -365,6 +365,17 @@ class Control #内部メソッド
       when :false
         #必ず偽を返す
         return false
+
+      #指定ＩＤの子要素が存在する
+      when :child
+        return unless options[:child]
+        return true if find_control(options[:child]).count > 0
+
+      #指定ＩＤの子要素が存在しない
+      when :not_child
+        return unless options[:not_child]
+        return true if find_control(options[:not_child]).count == 0
+
       end
     end
     

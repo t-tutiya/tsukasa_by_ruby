@@ -19,6 +19,6 @@
 @			_WAIT_ [:command], :command => :_MOVE_
 @			_DELETE_
 @		}
-@		_WAIT_ [:not_child], not_child: :rule0
+@		_WAIT_ [:child], child: :rule0
 @		_DELETE_
 @	}

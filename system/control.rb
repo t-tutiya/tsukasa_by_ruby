@@ -253,12 +253,17 @@ class Control #内部メソッド
         #残りwaitフレーム数が０より大きい場合
         return true if options[:count] <= 0
 
+      #継続条件：コマンドがリスト上に存在している
       when :command
-        #コマンドがリスト上に存在しなければ
         unless @next_frame_commands.index{|command|
           command[0]==options[:command]}
           return true 
         end
+
+      #継続条件：指定ＩＤの子要素が存在する
+      when :child
+        return unless options[:child]
+        return true if find_control(options[:child]).count == 0
 
       #キーが押下されている
       when :key_push
@@ -365,17 +370,6 @@ class Control #内部メソッド
       when :false
         #必ず偽を返す
         return false
-
-      #指定ＩＤの子要素が存在する
-      when :child
-        return unless options[:child]
-        return true if find_control(options[:child]).count > 0
-
-      #指定ＩＤの子要素が存在しない
-      when :not_child
-        return unless options[:not_child]
-        return true if find_control(options[:not_child]).count == 0
-
       end
     end
     

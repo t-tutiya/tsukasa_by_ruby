@@ -6,20 +6,20 @@ button  id: :button1,
         y: 150 do
   #内部関数の定義
   _DEFINE_ :func do |val|
-    move type: {y: val[:y]}, time: 60, easing: :out_elastic
-    wait_command :move
+    _MOVE_ type: {y: val[:y]}, time: 60, easing: :out_elastic
+    wait_command :_MOVE_
   end
 end
 
 _SEND_  :button1 do
-  move type: {x: 0, y: 300}, time: 60, easing: :in_quint
-  wait_command :move
-  move type: {x: 300, y: 300}, time: 60, easing: :in_quint
-  wait_command :move
-  move type: {x: 300, y: 0}, time: 60, easing: :in_quint
-  wait_command :move
-  move type: {x: 0, y: 0}, time: 60, easing: :in_quint
-  wait_command :move
+  _MOVE_ type: {x: 0, y: 300}, time: 60, easing: :in_quint
+  wait_command :_MOVE_
+  _MOVE_ type: {x: 300, y: 300}, time: 60, easing: :in_quint
+  wait_command :_MOVE_
+  _MOVE_ type: {x: 300, y: 0}, time: 60, easing: :in_quint
+  wait_command :_MOVE_
+  _MOVE_ type: {x: 0, y: 0}, time: 60, easing: :in_quint
+  wait_command :_MOVE_
   #渡せるのは名前付きオプションのみ(targetは自動で渡される)
   func y: 150
 end
@@ -38,7 +38,7 @@ end
 func2 do
   _EVAL_ "pp 'test'"
   pp "func2"
-  move type: {x: [0, 600], y: [0, 300]}, time: 60, easing: :out_bounce
+  _MOVE_ type: {x: [0, 600], y: [0, 300]}, time: 60, easing: :out_bounce
 end
 
 

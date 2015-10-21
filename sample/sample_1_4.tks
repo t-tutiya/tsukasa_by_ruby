@@ -1,4 +1,4 @@
 @	img0 {
 @		_SET_ file_path: "./sozai/char/A-1.png"
-@		move type: {x: 500, y: -100}, time: 120
+@		_MOVE_ type: {x: 500, y: -100}, time: 120
 @	}

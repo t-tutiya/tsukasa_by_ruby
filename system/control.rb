@@ -810,7 +810,7 @@ class Control #内部コマンド
 end
 
 class Control #プロパティのパラメータ遷移
-  def command_move(options, inner_options)
+  def command__MOVE_(options, inner_options)
     raise unless options[:time] #必須要素
 
     #現在の経過カウントを初期化
@@ -847,8 +847,8 @@ class Control #プロパティのパラメータ遷移
     if options[:count] < options[:time]
       #カウントアップ
       options[:count] += 1
-      #:moveコマンドをスタックし直す
-      push_command_to_next_frame(:move, options, inner_options)
+      #:_MOVE_コマンドをスタックし直す
+      push_command_to_next_frame(:_MOVE_, options, inner_options)
     end
   end
 

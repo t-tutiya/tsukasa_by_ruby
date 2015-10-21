@@ -11,8 +11,8 @@ _CREATE_ :LayoutControl,
         :id=>:normal
   #内部関数の定義
   _DEFINE_ :func do
-    move type:{x: 500}, time: 60
-    wait_command :move
+    _MOVE_ type:{x: 500}, time: 60
+    wait_command :_MOVE_
   end
 end
 
@@ -27,8 +27,8 @@ _CREATE_ :LayoutControl,
         :id=>:normal
   #内部関数の定義
   _DEFINE_ :func do
-    move type:{x: 150, y: 500}, time: 60
-    wait_command :move
+    _MOVE_ type:{x: 150, y: 500}, time: 60
+    wait_command :_MOVE_
   end
 end
 

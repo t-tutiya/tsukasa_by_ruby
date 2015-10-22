@@ -5,7 +5,7 @@
 
 _CREATE_ :ImageControl, file_path: "./sozai/bg_test.jpg", id: :test
 
-_CREATE_ :LayoutControl , 
+_CREATE_ :RenderTargetControl , 
           width: 1280, 
           height: 720 , 
           rule_file_path: "sozai/rule/circle_rule.png" do

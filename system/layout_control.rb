@@ -31,40 +31,66 @@ require 'dxruby'
 ###############################################################################
 
 class LayoutControl < Control
-  include Drawable
-  include Clickable
-  
-  def initialize(options, inner_options, root_control)
-    options[:render_target] = true unless options[:render_target] == false
+  attr_accessor  :x
+  attr_accessor  :y
 
-    if options[:render_target]
-      options[:child_controls_draw_to_entity] = true
-      #保持オブジェクトの初期化
-      options[:entity] = RenderTarget.new(options[:width]  || 1, 
-                                          options[:height] || 1, 
-                                          options[:color]  || [0,0,0,0])
+  def initialize(options, inner_options, root_control)
+    @x = options[:x] || 0 #描画Ｘ座標
+    @y = options[:y] || 0 #描画Ｙ座標
+    @width = options[:width] || 1 #描画Ｘ座標
+    @height = options[:height] || 0 #描画Ｙ座標
+
+    @offset_x = options[:offset_x] || 0 #描画オフセットＸ座標
+    @offset_y = options[:offset_y] || 0 #描画オフセットＹ座標
+
+    #回り込み指定（省略時は:none）
+    @float_mode = options[:float_mode] || :none
+    @align_y = options[:align_y] || :none
+
+    #可視フラグ（省略時はtrue）
+    @visible = options[:visible] == false ? false : true
+
+    super
+  end
+
+  #下位コントロールを描画する
+  def render(offset_x, offset_y, target, parent_size)
+    return offset_x, offset_y unless @visible
+
+    if @align_y == :bottom 
+      x = offset_x + @x + @offset_x
+      y = offset_y + @y + @offset_y + parent_size[:height] - @height
+    else
+      x = offset_x + @x + @offset_x
+      y = offset_y + @y + @offset_y
     end
 
-    super
-  end
+    #下位コントロールを上位ターゲットに直接描画
+    super(offset_x + @x, 
+          offset_y + @y, 
+          target, 
+          {:width => @width, :height => @height})
 
-  def dispose()
-    @entity.dispose if @entity
-    super
-  end
+    dx = offset_x + @x
+    dy = offset_y + @y
 
-  #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
-  def command__TO_IMAGE_(options, inner_options)
-    rt = RenderTarget.new(@width, @height)
-    render( 0, 0, rt, {:width => @width, :height => @height})
-    entity  = rt.to_image
-    #イメージコントロールを生成する
-    interrupt_command([:_CREATE_, 
-               {:_ARGUMENT_ => :ImageControl, 
-                :entity => entity,
-                :z => options[:z] || Float::INFINITY, #描画順を正の無限大とする
-                :id => options[:_ARGUMENT]
-                }, 
-                inner_options])
+    #連結指定チェック
+    case @float_mode
+    #右連結
+    when :right
+      dx += @width
+    #下連結
+    when :bottom
+      dy += @height
+    #連結解除
+    when :none
+      dx = offset_x
+      dy = offset_y
+    else
+      pp @float_mode
+      raise
+    end
+
+    return dx, dy
   end
 end

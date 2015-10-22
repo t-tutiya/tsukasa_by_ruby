@@ -146,7 +146,7 @@ end
 
 #標準テキストウィンドウ
 _DEFINE_ :TextWindow do |options|
-  _CREATE_ :LayoutControl,
+  _CREATE_ :RenderTargetControl,
     x: options[:x],
     y: options[:y],
     width: options[:width],
@@ -280,7 +280,7 @@ TextWindow id: :text1, text_page_id: :default_text_page_control0,
 =end
 
 _DEFINE_ :line_icon_func do |options|
-  _CREATE_ :LayoutControl, 
+  _CREATE_ :RenderTargetControl, 
           :x => 0, 
           :y => 0, 
           :width => 24,
@@ -301,7 +301,7 @@ end
 
 _DEFINE_ :page_icon_func do |options|
 
-  _CREATE_ :LayoutControl, 
+  _CREATE_ :RenderTargetControl, 
           :x => 0, 
           :y => 0, 
           :width => 24,
@@ -364,7 +364,7 @@ end
 
 #ボタンコントロール
 _DEFINE_ :button do |options|
-  _CREATE_ :LayoutControl, 
+  _CREATE_ :RenderTargetControl, 
           :x => options[:x] || 0,
           :y => options[:y] || 0,
           :width => 256,

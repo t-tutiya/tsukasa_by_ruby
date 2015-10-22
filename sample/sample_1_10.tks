@@ -1,4 +1,4 @@
-@	_CREATE_ :LayoutControl, id: :test0, width: 800, height: 600 do
+@	_CREATE_ :RenderTargetControl, id: :test0, width: 800, height: 600 do
 @		_CREATE_ :ImageControl, file_path: "./sozai/bg_test.jpg"
 @		_CREATE_ :ImageControl, file_path: "./sozai/char/B-1.png", x: 250
 @	end

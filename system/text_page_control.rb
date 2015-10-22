@@ -302,10 +302,10 @@ class TextPageControl < ImageControl
                 {:_ARGUMENT_ => :LayoutControl, 
                 :width => @charactor_pitch,
                 :height => @line_height,
-                :render_target => false,
                 :align_y => :bottom,
                 :float_mode => :right}, 
-               {:block => @char_renderer}])
+                {}
+               ])
   end
 
   def command__CHAR_RENDERER_(options, inner_options)
@@ -390,13 +390,11 @@ class TextPageControl < ImageControl
                      {:_ARGUMENT_ => :LayoutControl, 
                       :width => @width,
                       :height => @line_height,
-                      :render_target => false,
                       #インデント用無形コントロール
                       :command_list => @indent > 0 ? [[:_CREATE_, 
                                        {:_ARGUMENT_ => :LayoutControl, 
                                         :width => @indent,
                                         :height => @line_height,
-                                        :render_target => false,
                                         :float_mode => :right}, 
                                         inner_options]] : nil, 
                       :float_mode => :bottom}, 
@@ -407,7 +405,6 @@ class TextPageControl < ImageControl
                      {:_ARGUMENT_ => :LayoutControl, 
                       :width => @width,
                       :height => @line_spacing,
-                      :render_target => false,
                       :float_mode => :bottom}, 
                       inner_options])
   end

@@ -217,13 +217,6 @@ module Drawable
     #子コントロールを自エンティティに描画するかどうか
     @child_controls_draw_to_entity = options[:child_controls_draw_to_entity] || false
 
-    #ルールトランジション用の画像ファイルパスがあるならシェーダーを初期化する
-    @rule_vague = options[:rule_vague] || 40
-    if options[:rule_file_path]
-      self.rule_file_path = options[:rule_file_path] 
-      self.rule_counter = options[:rule_counter]
-    end
-
     @real_width =  @width = 0
     @real_height = @height = 0
 

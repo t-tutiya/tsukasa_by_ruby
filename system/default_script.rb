@@ -62,7 +62,7 @@ _DEFINE_ :wait_count do |options|
 end
 
 #指定コマンドウェイト
-#ex. wait_command :move
+#ex. wait_command :_MOVE_ 
 _DEFINE_ :wait_command do |options|
   _WAIT_ [:command], command: options[:_ARGUMENT_]
 end
@@ -174,14 +174,14 @@ _DEFINE_ :TextWindow do |options|
         wait_frame: 2 do
           _CHAR_RENDERER_ do
             #フェードイン（スペースキーか右CTRLが押されたらスキップ）
-            move  type: {alpha:[0,255]},
+            _MOVE_   type: {alpha:[0,255]},
                   time: 15,
                   check: [[:key_push, :key_down], 
                           {:key_down => K_RCONTROL}] do
                     _SET_ alpha: 255
                   end
             #トランジションが終了するまで非アイドル状態
-            _WAIT_  [:command], command: :move
+            _WAIT_  [:command], command: :_MOVE_ 
             #スリープ状態に移行
             _SET_ sleep: true
             #ウェイク状態になるまで待機
@@ -189,7 +189,7 @@ _DEFINE_ :TextWindow do |options|
             #キー入力伝搬を防ぐ為に１フレ送る
             _END_FRAME_
             #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
-            move  type: {alpha:128},
+            _MOVE_   type: {alpha:128},
                   time: 60,
                   check: [[:key_push ,:key_down], 
                           {:key_down => K_RCONTROL}] do
@@ -204,7 +204,7 @@ _DEFINE_ :TextWindow do |options|
                     end
             end
             #トランジションが終了するまで待機
-            _WAIT_ [:command], command: :move
+            _WAIT_ [:command], command: :_MOVE_ 
           end
           _SET_ size: 32
           _FLUSH_ #これが必ず必要

@@ -31,6 +31,43 @@ require 'dxruby'
 ###############################################################################
 
 class LayoutControl < Control
-  include Drawable
+  include Layoutable
   include Clickable
+
+  #描画
+  def render(offset_x, offset_y, target, parent_size)
+    return offset_x, offset_y unless @visible
+
+    x = offset_x + @x + @offset_x
+    y = offset_y + @y + @offset_y
+
+    if @align_y == :bottom 
+      y += parent_size[:height] - @height
+    end
+
+    dx, dy =  super(x, y, target, parent_size)
+    return dx + offset_x, dy + offset_y
+  end
+
+  def siriarize(options = {})
+
+    options.update({
+      :x  => @x,
+      :y => @y,
+
+      :offset_x => @offset_x,
+      :offset_y => @offset_y,
+
+      :visible => @visible,
+
+      :float_mode => @float_mode,
+      :align_y => @align_y,
+
+      :real_width => @real_width,
+      :real_height => @real_height,
+    })
+
+    return super(options)
+  end
+
 end

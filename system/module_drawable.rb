@@ -52,6 +52,7 @@ class RenderTarget
 end
 
 module Drawable
+  include Layoutable
   #Imageのキャッシュ機構の簡易実装
   #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
   @@image_cache = Hash.new
@@ -60,23 +61,7 @@ module Drawable
     hsh[key] = Image.load(key)
   }
 
-  attr_accessor  :x
-  attr_accessor  :y
-
-  attr_accessor  :offset_x
-  attr_accessor  :offset_y
-
-  attr_accessor  :visible
-
-  attr_accessor  :float_mode
-  attr_accessor  :align_y
   attr_accessor  :entity
-
-  attr_accessor  :width
-  attr_accessor  :height
-
-  attr_accessor  :real_width
-  attr_accessor  :real_height
 
   #横の拡大率 
   #Float (default: 1)
@@ -183,15 +168,6 @@ module Drawable
   end
 
   def initialize(options, inner_options, root_control)
-    @x = options[:x] || 0 #描画Ｘ座標
-    @y = options[:y] || 0 #描画Ｙ座標
-
-    @offset_x = options[:offset_x] || 0 #描画オフセットＸ座標
-    @offset_y = options[:offset_y] || 0 #描画オフセットＹ座標
-
-    #可視フラグ（省略時はtrue）
-    @visible = options[:visible] == false ? false : true
-
     #描画オプションの初期化
     @draw_option = options[:draw_option] || {}
 
@@ -206,14 +182,7 @@ module Drawable
     @draw_option[:z] = options[:z] || 0
     @draw_option[:offset_sync] = options[:offset_sync] || false
 
-    #回り込み指定（省略時は:none）
-    @float_mode = options[:float_mode] || :none
-    @align_y = options[:align_y] || :none
-
     @entity = options[:entity] if options[:entity]
-
-    @real_width =  @width = 0
-    @real_height = @height = 0
 
     if @entity
       @real_width = @entity.width
@@ -221,8 +190,8 @@ module Drawable
       @width  = options[:width] ? options[:width] : @real_width
       @height = options[:height] ? options[:height] : @real_height
     else
-      @real_width = @width  = options[:width] if options[:width]
-      @real_height = @height = options[:height] if options[:height]
+      @real_width = @width  = options[:width] ? options[:width] : 0
+      @real_height = @height = options[:height] ? options[:height] : 0
     end
 
     super
@@ -242,10 +211,11 @@ module Drawable
     #エンティティを保持している場合
     if @entity
       #下位エンティティを自エンティティに描画
-      super(0, 0, @entity, {:width => @width, :height => @height})
+      dx, dy = super(0, 0, @entity, {:width => @width, :height => @height})
+      #自エンティティを上位ターゲットに描画
+      target.draw_ex(x, y, @entity, @draw_option)
     else
-      #下位コントロールを上位ターゲットに直接描画
-      super(x, y, target, {:width => @width, :height => @height})
+      dx = dy = 0
     end
 
     #デバッグ用：コントロールの外枠を描画する
@@ -253,32 +223,7 @@ module Drawable
       target.draw_box_line( x, y, x + @real_width,  y + @real_height)
     end
 
-    dx = offset_x + @x
-    dy = offset_y + @y
-
-    #連結指定チェック
-    case @float_mode
-    #右連結
-    when :right
-      dx += @width
-    #下連結
-    when :bottom
-      dy += @height
-    #連結解除
-    when :none
-      dx = offset_x
-      dy = offset_y
-    else
-      pp @float_mode
-      raise
-    end
-
-    if @entity
-      #自エンティティを上位ターゲットに描画
-      target.draw_ex(x, y, @entity, @draw_option)
-    end
-
-    return dx, dy
+    return dx + offset_x, dy + offset_y
   end
 
   def siriarize(options = {})
@@ -299,16 +244,10 @@ module Drawable
 
       :real_width => @real_width,
       :real_height => @real_height,
-
-      :rule_file_path => @rule_file_path,
-      :rule_counter => @rule_counter,
-      :rule_vague => @rule_vague,
     })
 
     return super(options)
   end
-
-
 end
 
 module Drawable

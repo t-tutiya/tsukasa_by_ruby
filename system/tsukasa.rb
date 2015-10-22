@@ -34,6 +34,7 @@ require 'pp'
 
 require_relative './control.rb'
 require_relative './module_clickable.rb'
+require_relative './module_layoutable.rb'
 require_relative './module_drawable.rb'
 
 require_relative './image_control.rb'
@@ -89,7 +90,6 @@ class Tsukasa < RenderTargetControl
     @label_options = options[:label_options] || nil
 
     @_USER_DATA_ = {}
-    @_GLOBAL_DATA_ = {}
 
     super(options, {}, @root_control)
   end

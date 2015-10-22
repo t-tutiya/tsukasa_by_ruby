@@ -78,8 +78,6 @@ module Drawable
   attr_accessor  :real_width
   attr_accessor  :real_height
 
-  attr_accessor :entity
-
   #横の拡大率 
   #Float (default: 1)
   def scale_x=(arg)
@@ -245,9 +243,6 @@ module Drawable
     if @entity
       #下位エンティティを自エンティティに描画
       super(0, 0, @entity, {:width => @width, :height => @height})
-
-      #自エンティティを上位ターゲットに描画
-      target.draw_ex(x, y, @entity, @draw_option)
     else
       #下位コントロールを上位ターゲットに直接描画
       super(x, y, target, {:width => @width, :height => @height})
@@ -276,6 +271,11 @@ module Drawable
     else
       pp @float_mode
       raise
+    end
+
+    if @entity
+      #自エンティティを上位ターゲットに描画
+      target.draw_ex(x, y, @entity, @draw_option)
     end
 
     return dx, dy

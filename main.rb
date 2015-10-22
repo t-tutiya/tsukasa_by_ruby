@@ -7,10 +7,10 @@ width = 800
 heigth = 600
 
 #初期化
-Window.resize(width, heigth)
+Window.resize(width, height)
 
 tsukasa = Tsukasa.new({ :width => width,
-                        :height => heigth,
+                        :height => height,
                         })
 #ゲームループ
 Window.loop do

@@ -279,8 +279,6 @@ class TextPageControl < LayoutControl
 
     target = @control_list.last
 
-    pp height
-
     #文字コントロールを生成する
     target.push_command([:_CREATE_, 
                {:_ARGUMENT_ => :ImageControl, 
@@ -364,7 +362,6 @@ class TextPageControl < LayoutControl
                     :wait_frame => @rubi_wait_frame},
                   {}]
 
-    pp @size
     #TextPageControlをベース文字に登録する。
     @control_list.last.push_command([:_CREATE_, 
                {:_ARGUMENT_ => :LayoutControl, 

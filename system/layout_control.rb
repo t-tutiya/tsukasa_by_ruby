@@ -54,7 +54,7 @@ class LayoutControl < Control
   end
 
   #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
-  def command_render_to_image(options, inner_options)
+  def command__TO_IMAGE_(options, inner_options)
     rt = RenderTarget.new(@width, @height)
     render( 0, 0, rt, {:width => @width, :height => @height})
     entity  = rt.to_image

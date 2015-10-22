@@ -36,7 +36,7 @@ require 'dxruby'
 
 #コマンド名のalias
 _DEFINE_ :backlay do
-  render_to_image
+  _TO_IMAGE_
 end
 
 #_SET_の第１引数を送信先コントロールにした物

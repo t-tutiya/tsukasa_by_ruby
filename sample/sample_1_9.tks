@@ -4,7 +4,7 @@
 
 @	_WAIT_  [:key_push], key_push: K_SPACE
 
-@	render_to_image
+@	_TO_IMAGE_
 
 @	img0 {_SET_ visible: false}
 @	img1 {_SET_ visible: true }

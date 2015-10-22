@@ -56,7 +56,7 @@ end
 
 page_pause
 
-#render_to_image
+#_TO_IMAGE_
 #backlay
 
 text "２■■■■■■■■■■■■■■■■■■■■■"

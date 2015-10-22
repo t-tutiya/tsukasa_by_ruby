@@ -214,9 +214,6 @@ module Drawable
 
     @entity = options[:entity] if options[:entity]
 
-    #子コントロールを自エンティティに描画するかどうか
-    @child_controls_draw_to_entity = options[:child_controls_draw_to_entity] || false
-
     @real_width =  @width = 0
     @real_height = @height = 0
 
@@ -245,17 +242,14 @@ module Drawable
       y = offset_y + @y + @offset_y
     end
 
-    #下位エンティティを自エンティティに描画する場合
-    if @child_controls_draw_to_entity
+    #エンティティを保持している場合
+    if @entity
       #下位エンティティを自エンティティに描画
       super(0, 0, @entity, {:width => @width, :height => @height})
-
 
       #自エンティティを上位ターゲットに描画
       target.draw_ex(x, y, @entity, @draw_option)
     else
-      #エンティティを持っているなら自エンティティを上位ターゲットに描画
-      target.draw_ex(x, y, @entity, @draw_option) if @entity
       #下位エンティティを上位ターゲットに描画
       super(offset_x + @x, 
             offset_y + @y, 

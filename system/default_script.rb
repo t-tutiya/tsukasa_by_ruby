@@ -151,7 +151,6 @@ _DEFINE_ :TextWindow do |options|
     y: options[:y],
     width: options[:width],
     height: options[:height],
-    z: 1000000, #描画順序
     id: options[:id] do
       #デフォルトの背景画像
       _CREATE_ :ImageControl, id: :bg
@@ -268,7 +267,9 @@ TextWindow id: :text0, text_page_id: :default_text_page_control0,
   x: 128,
   y: 256 + 192,
   width: 1024,
-  height: 192
+  height: 192,
+  z: 1000000 #描画順序
+
 
 =begin
 #全画面の場合
@@ -276,7 +277,8 @@ TextWindow id: :text1, text_page_id: :default_text_page_control0,
   x: 64,
   y: 64,
   width: 1024,
-  height: 768
+  height: 768,
+  z: 1000000 #描画順序
 =end
 
 _DEFINE_ :line_icon_func do |options|

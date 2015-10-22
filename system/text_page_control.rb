@@ -131,7 +131,6 @@ class TextPageControl < LayoutControl
   # :line_feed_wait_frame #改行時の待機フレーム
 
   def initialize(options, inner_options, root_control)
-    options[:child_controls_draw_to_entity] = false
     @char_renderer = nil
 
     #draw_font_exに渡すオプション

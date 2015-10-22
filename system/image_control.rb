@@ -42,8 +42,6 @@ class ImageControl < Control
   end
 
   def initialize(options, inner_options, root_control)
-    options[:child_controls_draw_to_entity] = false
-
     if options[:file_path]
       @file_path = options[:file_path]
       options[:entity] = @@image_cache[options[:file_path]]

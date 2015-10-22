@@ -35,7 +35,6 @@ class RenderTargetControl < Control
   include Clickable
   
   def initialize(options, inner_options, root_control)
-    options[:child_controls_draw_to_entity] = true
     #保持オブジェクトの初期化
     options[:entity] = RenderTarget.new(options[:width]  || 1, 
                                         options[:height] || 1, 

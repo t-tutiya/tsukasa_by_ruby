@@ -249,12 +249,6 @@ module Drawable
 
       #自エンティティを上位ターゲットに描画
       target.draw_ex(x, y, @entity, @draw_option)
-    else
-      #下位エンティティを上位ターゲットに描画
-      super(offset_x + @x, 
-            offset_y + @y, 
-            target, 
-            {:width => @width, :height => @height})
     end
 
     #デバッグ用：コントロールの外枠を描画する

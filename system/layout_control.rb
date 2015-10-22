@@ -57,14 +57,6 @@ class LayoutControl < Control
   def render(offset_x, offset_y, target, parent_size)
     return offset_x, offset_y unless @visible
 
-    if @align_y == :bottom 
-      x = offset_x + @x + @offset_x
-      y = offset_y + @y + @offset_y + parent_size[:height] - @height
-    else
-      x = offset_x + @x + @offset_x
-      y = offset_y + @y + @offset_y
-    end
-
     #下位コントロールを上位ターゲットに直接描画
     super(offset_x + @x, 
           offset_y + @y, 

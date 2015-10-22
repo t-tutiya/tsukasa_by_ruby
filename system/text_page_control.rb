@@ -131,7 +131,7 @@ class TextPageControl < LayoutControl
   # :line_feed_wait_frame #改行時の待機フレーム
 
   def initialize(options, inner_options, root_control)
-    @char_renderer = nil
+    @char_renderer = options[:char_renderer] if options[:char_renderer]
 
     #draw_font_exに渡すオプション
     @font_config = {
@@ -279,6 +279,8 @@ class TextPageControl < LayoutControl
 
     target = @control_list.last
 
+    pp height
+
     #文字コントロールを生成する
     target.push_command([:_CREATE_, 
                {:_ARGUMENT_ => :ImageControl, 
@@ -349,7 +351,7 @@ class TextPageControl < LayoutControl
                   { :_ARGUMENT_ => :TextPageControl, 
                     :command_list => [
                       [:_LINE_FEED_, {},inner_options],
-                      [:_TEXT_, {:_ARGUMENT_=> options[:text]},inner_options]],
+                      [:_TEXT_, {:_ARGUMENT_=> options[:_ARGUMENT_]},inner_options]],
                     :x => @rubi_offset_x,
                     :y => @rubi_offset_y,
                     :width=> 128,
@@ -360,14 +362,17 @@ class TextPageControl < LayoutControl
                     :line_spacing => 0,
                     :char_renderer => @char_renderer,
                     :wait_frame => @rubi_wait_frame},
-                  inner_options]
+                  {}]
 
+    pp @size
     #TextPageControlをベース文字に登録する。
-    interrupt_command([:_CHAR_, 
-               {:_ARGUMENT_ => options[:_ARGUMENT_], 
+    @control_list.last.push_command([:_CREATE_, 
+               {:_ARGUMENT_ => :LayoutControl, 
+                :width => 0,
+                :height => @size,
                 :command_list => [rubi_layout],
                 :float_mode => :right}, 
-               {:block => @char_renderer}])
+               {}])
   end
 
   #line_feedコマンド

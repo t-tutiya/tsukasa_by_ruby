@@ -234,7 +234,6 @@ module Drawable
   def render(offset_x, offset_y, target, parent_size)
     return offset_x, offset_y unless @visible
 
-
     x = offset_x + @x + @offset_x
     y = offset_y + @y + @offset_y
 

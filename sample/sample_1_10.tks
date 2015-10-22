@@ -4,10 +4,8 @@
 @	end
 
 @	_CREATE_ :ImageControl, id: :test1, file_path: "./sozai/bg_sample.png" do
-@		_CREATE_ :RuleShaderControl, 
-					id: :rule0, 
-					file_path: "./sozai/rule/horizontal_rule.png",
-@					vague: 40
+@		_CREATE_ :RuleShaderControl, id: :rule0, vague: 40,
+					file_path: "./sozai/rule/horizontal_rule.png"
 @		_SET_ shader: :rule0
 @	end
 

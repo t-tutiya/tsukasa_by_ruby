@@ -36,7 +36,7 @@ require_relative './Image_font_maker'
 #汎用テキストマネージャクラス
 ###############################################################################
 
-class TextPageControl < ImageControl
+class TextPageControl < LayoutControl
 
   #############################################################################
   #公開インターフェイス

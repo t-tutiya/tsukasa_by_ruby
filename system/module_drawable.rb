@@ -248,12 +248,14 @@ module Drawable
 
       #自エンティティを上位ターゲットに描画
       target.draw_ex(x, y, @entity, @draw_option)
+    else
+      #下位コントロールを上位ターゲットに直接描画
+      super(x, y, target, {:width => @width, :height => @height})
     end
 
     #デバッグ用：コントロールの外枠を描画する
     if @_GLOBAL_DATA_[:_DEBUG_]
-      target.draw_box_line( x, y, 
-                            x + @real_width,  y + @real_height)
+      target.draw_box_line( x, y, x + @real_width,  y + @real_height)
     end
 
     dx = offset_x + @x

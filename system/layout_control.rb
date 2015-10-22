@@ -31,58 +31,6 @@ require 'dxruby'
 ###############################################################################
 
 class LayoutControl < Control
-  attr_accessor  :x
-  attr_accessor  :y
-
-  def initialize(options, inner_options, root_control)
-    @x = options[:x] || 0 #描画Ｘ座標
-    @y = options[:y] || 0 #描画Ｙ座標
-    @width = options[:width] || 1 #描画Ｘ座標
-    @height = options[:height] || 0 #描画Ｙ座標
-
-    @offset_x = options[:offset_x] || 0 #描画オフセットＸ座標
-    @offset_y = options[:offset_y] || 0 #描画オフセットＹ座標
-
-    #回り込み指定（省略時は:none）
-    @float_mode = options[:float_mode] || :none
-    @align_y = options[:align_y] || :none
-
-    #可視フラグ（省略時はtrue）
-    @visible = options[:visible] == false ? false : true
-
-    super
-  end
-
-  #下位コントロールを描画する
-  def render(offset_x, offset_y, target, parent_size)
-    return offset_x, offset_y unless @visible
-
-    #下位コントロールを上位ターゲットに直接描画
-    super(offset_x + @x, 
-          offset_y + @y, 
-          target, 
-          {:width => @width, :height => @height})
-
-    dx = offset_x + @x
-    dy = offset_y + @y
-
-    #連結指定チェック
-    case @float_mode
-    #右連結
-    when :right
-      dx += @width
-    #下連結
-    when :bottom
-      dy += @height
-    #連結解除
-    when :none
-      dx = offset_x
-      dy = offset_y
-    else
-      pp @float_mode
-      raise
-    end
-
-    return dx, dy
-  end
+  include Drawable
+  include Clickable
 end

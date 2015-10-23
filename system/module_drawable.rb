@@ -199,31 +199,29 @@ module Drawable
 
   #描画
   def render(offset_x, offset_y, target, parent_size)
-    return offset_x, offset_y unless @visible
+    return 0, 0 unless @entity
 
+    #下位エンティティを自エンティティに描画
+    dx, dy = super(0, 0, @entity, {:width => @width, :height => @height})
+
+    #描画座標のオフセット値を合算
     x = offset_x + @x + @offset_x
     y = offset_y + @y + @offset_y
 
+    #下揃えを考慮
     if @align_y == :bottom 
       y += parent_size[:height] - @height
     end
 
-    #エンティティを保持している場合
-    if @entity
-      #下位エンティティを自エンティティに描画
-      dx, dy = super(0, 0, @entity, {:width => @width, :height => @height})
-      #自エンティティを上位ターゲットに描画
-      target.draw_ex(x, y, @entity, @draw_option)
-    else
-      dx = dy = 0
-    end
+    #自エンティティを上位ターゲットに描画
+    target.draw_ex(x, y, @entity, @draw_option)
 
     #デバッグ用：コントロールの外枠を描画する
     if @_GLOBAL_DATA_[:_DEBUG_]
       target.draw_box_line( x, y, x + @real_width,  y + @real_height)
     end
 
-    return dx + offset_x, dy + offset_y
+    return dx, dy
   end
 
   def siriarize(options = {})

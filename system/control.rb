@@ -148,7 +148,13 @@ class Control #公開インターフェイス
     #下位コントロール巡回
     @control_list.each do |child_control|
       #下位コントロールを上位ターゲットに直接描画
-      offset_x, offset_y = child_control.render(offset_x, offset_y, target, parent_size)
+      width, height = child_control.render( offset_x, 
+                                            offset_y, 
+                                            target, 
+                                            parent_size)
+      #次のコントロールの描画座標原点を設定する
+      offset_x += width
+      offset_y += height
     end
 
     #オフセット値を返す

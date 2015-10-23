@@ -71,16 +71,10 @@ module Layoutable
 
   #描画
   def render(offset_x, offset_y, target, parent_size)
+    return 0, 0 unless @visible
     #下位コントロールを上位ターゲットに直接描画
     super(offset_x, offset_y, target, {:width => @width, :height => @height})
 
-    #デバッグ用：コントロールの外枠を描画する
-    if @_GLOBAL_DATA_[:_DEBUG_]
-      target.draw_box_line( offset_x, 
-                            offset_y, 
-                            offset_x + @real_width,  
-                            offset_y + @real_height)
-    end
 
     #連結指定チェック
     case @float_mode

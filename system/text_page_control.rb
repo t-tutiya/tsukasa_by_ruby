@@ -372,6 +372,12 @@ class TextPageControl < LayoutControl
                {}])
   end
 
+  #グローバルデータ領域にあるデータをテキストとして出力する
+  def command__DATA_(options, inner_options)
+    options[:_ARGUMENT_] = @_GLOBAL_DATA_[options[:_ARGUMENT_]].to_s
+    command__TEXT_(options, inner_options)
+  end
+
   #line_feedコマンド
   #改行処理（CR＋LF）
   def command__LINE_FEED_(options, inner_options)

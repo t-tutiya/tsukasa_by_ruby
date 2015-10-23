@@ -218,6 +218,11 @@ _DEFINE_ :TextWindow do |options|
         _TEXT_ options
       end
     end
+    _DEFINE_ :_DATA_ do |options|
+      _SEND_ default: :TextPageControl do
+        _DATA_ options
+      end
+    end
     _DEFINE_ :line_feed do
       _SEND_ default: :TextPageControl  do
         _LINE_FEED_

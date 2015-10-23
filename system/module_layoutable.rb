@@ -72,9 +72,9 @@ module Layoutable
   #描画
   def render(offset_x, offset_y, target, parent_size)
     return 0, 0 unless @visible
+
     #下位コントロールを上位ターゲットに直接描画
     super(offset_x, offset_y, target, {:width => @width, :height => @height})
-
 
     #連結指定チェック
     case @float_mode

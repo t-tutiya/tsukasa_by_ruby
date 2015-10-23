@@ -237,7 +237,7 @@ class TextPageControl < LayoutControl
   #charコマンド
   #指定文字（群）を描画チェインに連結する
   def command__CHAR_(options, inner_options)
-
+=begin
     #フォントオブジェクト構築
     font = Font.new(@size, 
                     @fontname,
@@ -295,6 +295,38 @@ class TextPageControl < LayoutControl
 
                 :float_mode => :right}, 
                {:block => @char_renderer}])
+=end
+    target = @control_list.last
+    #文字コントロールを生成する
+    target.push_command([:_CREATE_, 
+               {:_ARGUMENT_ => :CharControl, 
+                :align_y => :bottom,
+
+                :size => @size, 
+                :font_name => @fontname,
+                :weight => @bold,
+                :italic => @italic,
+
+                :charactor => options[:_ARGUMENT_],
+
+                :color => [255,255,255],
+                :aa => @aa,
+
+                :edge => @edge,
+                :shadow => @shadow,
+
+                :edge_color => @edge_color,
+                :edge_width => @edge_width,
+                :edge_level => @edge_level,
+
+                :shadow_color => @shadow_color,
+                :shadow_x => @shadow_x,
+                :shadow_y => @shadow_y,
+
+                :command_list=> options[:command_list],
+
+                :float_mode => :right}, 
+               {:block => @char_renderer}])
 
     #文字幅スペーサーを生成する
     target.push_command([:_CREATE_, 
@@ -303,8 +335,7 @@ class TextPageControl < LayoutControl
                 :height => @line_height,
                 :align_y => :bottom,
                 :float_mode => :right}, 
-                {}
-               ])
+                {}])
   end
 
   def command__CHAR_RENDERER_(options, inner_options)

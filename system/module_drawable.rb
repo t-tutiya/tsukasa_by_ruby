@@ -199,6 +199,9 @@ module Drawable
 
   #描画
   def render(offset_x, offset_y, target, parent_size)
+    #TPDP:この行はLayoutableでも必要になってしまっていて、恐らく設計ミス
+    return 0, 0 unless @visible
+
     return 0, 0 unless @entity
 
     #下位エンティティを自エンティティに描画

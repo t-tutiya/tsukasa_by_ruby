@@ -106,7 +106,9 @@ class TKSParser < Parslet::Parser
   #textコマンドブロック
   rule(:printable) {
       #１個以上のインラインコマンドor文字列集合
-      ( inline_command | text ).repeat(1).as(:printable) >>
+      ( inline_data | 
+        inline_command | 
+        text ).repeat(1).as(:printable) >>
       newline.maybe.as(:line_feed) >> #改行
       blankline.repeat.as(:blanklines) #空行
   }
@@ -125,6 +127,8 @@ class TKSParser < Parslet::Parser
     str(inline_command_open) >> 
     #コマンド文字列
     ( 
+      #先頭`=`不可
+      str('=').absent? >>
       #任意のエスケープシーケンス文字（ex. "\["）
       str('\\') >> any | 
       #配列
@@ -133,6 +137,24 @@ class TKSParser < Parslet::Parser
       str(inline_command_close).absent? >> any
       
     ).repeat.as(:inline_command) >> 
+    #インラインコマンド接尾字
+    str(inline_command_close) 
+  }
+
+  #インラインデータ
+  rule(:inline_data) {
+    #インラインコマンド接頭字
+    str('[') >> str('=') >> 
+    #コマンド文字列
+    ( 
+      #任意のエスケープシーケンス文字（ex. "\["）
+      str('\\') >> any | 
+      #配列
+      arrangement |
+      #インラインコマンド接尾字以外の任意一文字
+      str(inline_command_close).absent? >> any
+      
+    ).repeat.as(:inline_data) >> 
     #インラインコマンド接尾字
     str(inline_command_close) 
   }
@@ -199,6 +221,11 @@ class TKSParser < Parslet::Parser
     rule(
       :inline_command => simple(:command)
     ) { command.to_s }
+
+    #インラインデータ→_DATA_コマンドに変換する
+    rule(
+      :inline_data => simple(:command)
+    ) { "text0{_DATA_ " + command.to_s + "}" }
 
     #textブロック→そのまま返す
     rule(

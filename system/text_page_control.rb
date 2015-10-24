@@ -167,7 +167,7 @@ class TextPageControl < LayoutControl
 
   attr_accessor  :rubi_pitch
   def rubi_pitch=(arg)
-    @rubi_option[:pitch] = arg
+    @rubi_option[:charactor_pitch] = arg
   end
 
   attr_accessor  :rubi_wait_frame
@@ -217,15 +217,11 @@ class TextPageControl < LayoutControl
     #ルビ文字情報
     @rubi_option = {
       :size => options[:rubi_size] || 12,            #ルビ文字のフォントサイズ
-
       #ルビの表示開始オフセット値
       :offset_x => options[:rubi_offset_x] || 0,
       :offset_y => options[:rubi_offset_y] || -1 * (options[:rubi_size] || 12),
-
-      #TODO：これ使ってないけどなんのパラメータか忘れた
       #ルビ文字のベース文字からのピッチ幅
-      :pitch => options[:rubi_pitch] || 12,
-
+      :charactor_pitch => options[:rubi_pitch] || 12,
       #ルビの待ちフレーム数
       :wait_frame => options[:rubi_wait_frame] || 2 
     }
@@ -356,6 +352,7 @@ class TextPageControl < LayoutControl
                     :line_height => @rubi_option[:size],
                     :font_name => @char_option[:font_name],
                     :line_spacing => 0,
+                    :charactor_pitch => @rubi_option[:charactor_pitch],
                     :char_renderer => @char_renderer,
                     :wait_frame => @rubi_option[:wait_frame]},
                   {}]

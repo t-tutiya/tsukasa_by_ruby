@@ -76,20 +76,6 @@ end
 #テキストレイヤ関連
 ###############################################################################
 
-#_TEXT_デフォルト送信
-_DEFINE_ :text do |options|
-  _SEND_ :text0 do
-    text options[:_ARGUMENT_]
-  end
-end
-
-#_line_feed_デフォルト送信
-_DEFINE_ :line_feed do
-  _SEND_ :text0  do
-    line_feed
-  end
-end
-
 #_flush_デフォルト送信
 _DEFINE_ :flush do
   _SEND_ :text0  do
@@ -213,7 +199,7 @@ _DEFINE_ :TextWindow do |options|
         _SET_ options
       end
     end
-    _DEFINE_ :text do |options|
+    _DEFINE_ :_TEXT_ do |options|
       _SEND_ default: :TextPageControl do
         _TEXT_ options
       end
@@ -223,7 +209,7 @@ _DEFINE_ :TextWindow do |options|
         _DATA_ options
       end
     end
-    _DEFINE_ :line_feed do
+    _DEFINE_ :_LINE_FEED_ do
       _SEND_ default: :TextPageControl  do
         _LINE_FEED_
       end

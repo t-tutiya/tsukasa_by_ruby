@@ -210,22 +210,33 @@ class TKSParser < Parslet::Parser
     #テキスト行→textコマンド
     rule(
       :text => simple(:string)
-    ) { %Q'text "#{string}"' }
-
+    ) {
+      "_SEND_(:text0){" + 
+        %Q'_TEXT_ "#{string}"' +
+      "}" 
+    }
     #コマンドブロック→そのまま返す
     rule(
       :command => simple(:command)
-    ) { [command.to_s] }
+    ) {
+      [command.to_s]
+    }
 
     #インラインコマンド→そのまま返す
     rule(
       :inline_command => simple(:command)
-    ) { command.to_s }
+    ) { 
+        command.to_s
+    }
 
     #インラインデータ→_DATA_コマンドに変換する
     rule(
       :inline_data => simple(:command)
-    ) { "text0{_DATA_ " + command.to_s + "}" }
+    ) {
+       "_SEND_(:text0){" + 
+         "_DATA_ " + command.to_s +
+       "}" 
+       }
 
     #textブロック→そのまま返す
     rule(
@@ -239,14 +250,20 @@ class TKSParser < Parslet::Parser
       :printable => sequence(:commands),
       :line_feed => simple(:line_feed),
       :blanklines => []
-    ) { commands + ["line_feed"] }
+    ) { 
+        commands + 
+        ["_SEND_(:text0){ _LINE_FEED_ }"]
+    }
 
     #textブロック＋改行＋空行→改行＋キー入力待ちコマンド追加追加
     rule(
       :printable => sequence(:commands),
       :line_feed => simple(:line_feed),
       :blanklines => simple(:blanklines)
-    ) { commands + ["page_pause"] }
+    ) { 
+        commands + 
+        ["page_pause"] 
+    }
   end
 
 end

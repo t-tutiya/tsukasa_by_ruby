@@ -169,7 +169,7 @@ _DEFINE_ :TextWindow do |options|
         width: options[:width],
         id: options[:text_page_id],
         size: 32, 
-        fontname: "ＭＳＰ ゴシック",
+        font_name: "ＭＳＰ ゴシック",
         wait_frame: 2 do
           _CHAR_RENDERER_ do
             #フェードイン（スペースキーか右CTRLが押されたらスキップ）

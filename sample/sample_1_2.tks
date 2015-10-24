@@ -1,6 +1,6 @@
-文字装飾デモです。行の途中で[text0{style font_config:{color:[255,0,0]}}]フォントの色を変えます
-	text0{style  fontname: "ＭＳ Ｐ明朝", font_config:{color:[255,255,255]}}
-フォントの種類を変えたり[text0{style  line_height: 64, fontname: "ＭＳＰ ゴシック"}]
+文字装飾デモです。行の途中で[text0{style color:[255,0,0]}]フォントの色を変えます
+	text0{style  font_name: "ＭＳ Ｐ明朝", color:[255,255,255]}
+フォントの種類を変えたり[text0{style  line_height: 64, font_name: "ＭＳＰ ゴシック"}]
 文字サイズを[text0{style size:16}]変える事も[text0{style  size:64}]できます。
 
 	text0{style size:32, line_height: 32}

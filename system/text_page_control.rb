@@ -42,69 +42,36 @@ class TextPageControl < LayoutControl
   #公開インターフェイス
   #############################################################################
 
-  #フォント設定
-  attr_reader  :font_config
-  def font_config=(hash)
-    @font_config.merge!(hash)
-  end
-
 #  attr_accessor  :use_image_font
 #  attr_accessor  :image_face
 
-  attr_accessor  :size
-  attr_accessor  :fontname
-  attr_accessor  :bold
-  attr_accessor  :italic
+  #テキストページ情報
 
-  attr_accessor  :wait_frame
-  attr_accessor  :line_feed_wait_frame
+  attr_accessor  :wait_frame  #一文字置きの待機フレーム
+  attr_accessor  :line_feed_wait_frame  #改行時の待機フレーム
 
-  attr_accessor  :line_spacing
-  attr_accessor  :charactor_pitch
-  attr_accessor  :line_height
-  
-  attr_accessor  :rubi_size
-  attr_accessor  :rubi_offset_x
-  attr_accessor  :rubi_offset_y
-  attr_accessor  :rubi_pitch
-  attr_accessor  :rubi_wait_frame
+  attr_accessor  :line_spacing  #行間
+  attr_accessor  :charactor_pitch #文字間
+  attr_accessor  :line_height #行の高さ
 
   attr_accessor  :indent
 
-    #基礎情報
-    # :size 文字サイズ
-    # :color 文字色
-    # :bold 太字（bool）
-    # :italic イタリック（bool）
-    # :z  #描画順指定（TODO：反映未確認）
-    #
-    #袋文字関連
-    # :edge  #袋文字を描画するかどうかをtrue/falseで指定します。
-    # :edge_color  #袋文字の枠色を指定します。配列で[R, G, B]それぞれ0～255
-    # :edge_width  #袋文字の枠の幅を0～の数値で指定します。1で1ピクセル
-    # :edge_level  #袋文字の枠の濃さを0～の数値で指定します。大きいほど濃くなりますが、幅が大きいほど薄くなります。値の制限はありませんが、目安としては一桁ぐらいが実用範囲でしょう。
-    #
-    #影文字関連
-    # :shadow  #影を描画するかどうかをtrue/falseで指定します
-    # :shadow_edge #edgeがtrueの場合に、枠の部分に対して影を付けるかどうかをtrue/falseで指定します。trueで枠の影が描かれます
-    # :shadow_color  #影の色を指定します。配列で[R, G, B]、それぞれ0～255
-    # :shadow_x  #影の位置を相対座標で指定します。+1は1ピクセル右になります
-    # :shadow_y  #影の位置を相対座標で指定します。+1は1ピクセル下になります
-    #
-    #スケール変換関連
-    #TODO：CharConrol#normarize_imageが処理をフックして、下記プロパティの中で反映されない物がありそう。スケールとか
-    # :scalex  #横の拡大率
-    # :scaley  #縦の拡大率
-    # :centerx  #回転、拡大の中心点。省略すると一番左になります。
-    # :centery  #回転、拡大の中心点。省略すると一番上になります。
-    # :alpha  #アルファ値(0～255)。省略すると255になります。
-    # :blend  #:alpha、:add、:add2、:sub、:sub2で合成方法を指定します。省略すると:alphaとなります。
-    #   :addはソースにアルファ値を、
-    #   :add2は背景に255-アルファ値を適用します。
-    #   :subはアルファ値を全ての色の合成に、
-    #   :sub2はRGBの色をそれぞれ別々に合成に適用します。
-    # :angle  #360度系で画像の回転角度を指定します。拡大率と同時に指定した場合は拡大率が先に適用されます。
-    # :aa  #アンチエイリアスのオンオフ
+  #文字基礎情報
+
+  attr_reader  :size #文字サイズ
+  def size=(arg)
+    @char_option[:size] = arg
+  end
+  
+  attr_reader  :color #文字色
+  def color=(arg)
+    @char_option[:color] = arg
+  end
+
+  attr_reader  :font_name
+  def font_name=(arg)
+    @char_option[:font_name] = arg
+  end
 
     #TODO：以下はdxrubyのFont情報と無関係なので管理を分離する
     # :fontname
@@ -120,68 +87,148 @@ class TextPageControl < LayoutControl
     #        #イメージフォント使用中フラグをクリア
     #        target[:use_image_font] = false
     #      end
-    #ルビ関連情報
-    # :rubi_size ルビサイズ
-    # :rubi_pitch ルビ幅
 
-  # :line_spacing  #行間
-  # :charactor_pitch #文字間
-  # :line_height #行の高さ
-  # :wait_frame #一文字置きの待機フレーム
-  # :line_feed_wait_frame #改行時の待機フレーム
+  attr_reader :weight # 太字（bool || integer）
+  def weight=(arg)
+    @char_option[:weight] = arg
+  end
+  attr_reader :italic # イタリック（bool）
+  def italic=(arg)
+    @char_option[:italic] = arg
+  end
+  attr_reader :z #描画順指定（TODO：反映未確認）
+  def z=(arg)
+    @char_option[:z] = arg
+  end
+  attr_reader  :aa   #アンチエイリアスのオンオフ
+  def aa=(arg)
+    @char_option[:aa] = arg
+  end
+
+  #袋文字関連
+    
+  attr_reader :edge  # 袋文字を描画するかどうかをtrue/falseで指定します。
+  def edge=(arg)
+    @char_option[:edge] = arg
+  end
+  attr_reader :edge_color  # 袋文字の枠色を指定します。配列で[R, G, B]それぞれ0～255
+  def edge_color=(arg)
+    @char_option[:edge_color] = arg
+  end
+  attr_reader :edge_width  # 袋文字の枠の幅を0～の数値で指定します。1で1ピクセル
+  def edge_width=(arg)
+    @char_option[:edge_width] = arg
+  end
+  attr_reader :edge_level  # 袋文字の枠の濃さを0～の数値で指定します。大きいほど濃くなりますが、幅が大きいほど薄くなります。値の制限はありませんが、目安としては一桁ぐらいが実用範囲でしょう。
+  def edge_level=(arg)
+    @char_option[:edge_level] = arg
+  end
+
+  #影文字関連
+
+  attr_reader :shadow    # 影を描画するかどうかをtrue/falseで指定します
+  def shadow=(arg)
+    @char_option[:shadow] = arg
+  end
+  attr_reader :shadow_edge   # edgeがtrueの場合に、枠の部分に対して影を付けるかどうかをtrue/falseで指定します。trueで枠の影が描かれます
+  def shadow_edge=(arg)
+    @char_option[:shadow_edge] = arg
+  end
+  attr_reader :shadow_color    # 影の色を指定します。配列で[R, G, B]、それぞれ0～255
+  def shadow_color=(arg)
+    @char_option[:shadow_color] = arg
+  end
+  attr_reader :shadow_x    # 影の位置を相対座標で指定します。+1は1ピクセル右になります
+  def shadow_x=(arg)
+    @char_option[:shadow_x] = arg
+  end
+  attr_reader :shadow_y    # 影の位置を相対座標で指定します。+1は1ピクセル下になります
+  def shadow_y=(arg)
+    @char_option[:shadow_y] = arg
+  end
+
+
+  #ルビ関連情報
+
+  attr_accessor  :rubi_size #ルビサイズ
+  def rubi_size=(arg)
+    @rubi_option[:size] = arg
+  end
+
+  attr_accessor  :rubi_offset_x #ルビ幅
+  def rubi_offset_x=(arg)
+    @rubi_option[:offset_x] = arg
+  end
+
+  attr_accessor  :rubi_offset_y
+  def rubi_offset_y=(arg)
+    @rubi_option[:offset_y] = arg
+  end
+
+  attr_accessor  :rubi_pitch
+  def rubi_pitch=(arg)
+    @rubi_option[:pitch] = arg
+  end
+
+  attr_accessor  :rubi_wait_frame
+  def rubi_wait_frame=(arg)
+    @rubi_option[:wait_frame] = arg
+  end
+
 
   def initialize(options, inner_options, root_control)
     @char_renderer = options[:char_renderer] if options[:char_renderer]
-
-    #draw_font_exに渡すオプション
-    @font_config = {
-      :color => [255,255,255],     #色
-      :aa => true,                 #アンチエイリアスのオンオフ
-
-      :edge => true,               #縁文字
-      :shadow => true,            #影
-
-      :edge_color => [0, 0, 0], #縁文字：縁の色
-      :edge_width => 2,            #縁文字：縁の幅
-      :edge_level => 16,           #縁文字：縁の濃さ
-
-      :shadow_color => [0, 0, 0],    #影：影の色
-      :shadow_x => 0,              #影:オフセットＸ座標
-      :shadow_y => 0,              #影:オフセットＹ座標
-    }
-
-    #オプションと結合
-    @font_config.merge!(options[:font_config]  || {})
 
     #レンダリング済みフォント使用中かどうか
     @use_image_font = options[:use_image_font] || false
     #レンダリング済みフォントのフォント名
     @image_face = options[:image_face] || nil
 
-    #フォントオブジェクト用の情報
-    @size = options[:size] || 24                 #フォントサイズ
-    @fontname = options[:fontname] || "ＭＳ 明朝"        #フォント名
-    @bold = options[:bold] || false #太字
-    @italic = options[:italic] || false #イタリック
-
     #文字描画後の待ちフレーム数
     @wait_frame = options[:wait_frame] || 2 
     #改行後の待ちフレーム数
     @line_feed_wait_frame = options[:line_feed_wait_frame] || 0
-
     @line_spacing = options[:line_spacing] || 12   #行間の幅
     @charactor_pitch = options[:charactor_pitch ] || 3 #文字間の幅
     @line_height = options[:line_height] || 32    #行の高さ
 
-    ###ルビ関連
-    @rubi_size = options[:rubi_size] || 12            #ルビ文字のフォントサイズ
-    #ルビの表示開始オフセット値
-    @rubi_offset_x = options[:rubi_offset_x] || 0
-    @rubi_offset_y = options[:rubi_offset_y] || -1 * @rubi_size
-    #ルビ文字のベース文字からのピッチ幅
-    @rubi_pitch = options[:rubi_pitch] || 12
-    #ルビの待ちフレーム数
-    @rubi_wait_frame = options[:rubi_wait_frame] || 2 
+    #文字情報
+    @char_option = {
+      :size => options[:size] || 24,                 #フォントサイズ
+      :font_name => options[:font_name] || "ＭＳ 明朝",        #フォント名
+      :weight => options[:bold] || false, #太字
+      :italic => options[:italic] || false, #イタリック
+
+      :color => options[:color] || [255,255,255],     #色
+      :aa => options[:aa] || true,                 #アンチエイリアスのオンオフ
+
+      :edge => options[:edge] || true,               #縁文字
+      :shadow => options[:shadow] || true,            #影
+
+      :edge_color => options[:edge_color] || [0, 0, 0], #縁文字：縁の色
+      :edge_width => options[:edge_width] || 2,            #縁文字：縁の幅
+      :edge_level => options[:edge_level] || 16,           #縁文字：縁の濃さ
+
+      :shadow_color => options[:shadow_color] || [0, 0, 0],    #影：影の色
+      :shadow_x => options[:shadow_x] || 0,              #影:オフセットＸ座標
+      :shadow_y => options[:shadow_y] || 0,              #影:オフセットＹ座標
+    }
+
+    #ルビ文字情報
+    @rubi_option = {
+      :size => options[:rubi_size] || 12,            #ルビ文字のフォントサイズ
+
+      #ルビの表示開始オフセット値
+      :offset_x => options[:rubi_offset_x] || 0,
+      :offset_y => options[:rubi_offset_y] || -1 * (options[:rubi_size] || 12),
+
+      #TODO：これ使ってないけどなんのパラメータか忘れた
+      #ルビ文字のベース文字からのピッチ幅
+      :pitch => options[:rubi_pitch] || 12,
+
+      #ルビの待ちフレーム数
+      :wait_frame => options[:rubi_wait_frame] || 2 
+    }
 
     #次に描画する文字のＸ座標とインデントＸ座標オフセットをリセット
     @indent = options[:indent] || 0 
@@ -194,6 +241,7 @@ class TextPageControl < LayoutControl
     raise
 
     options.update({
+=begin
       :font_config => @font_config,
 
       #未実装
@@ -219,6 +267,7 @@ class TextPageControl < LayoutControl
       :rubi_wait_frame => @rubi_wait_frame,
 
       :indent => @indent,
+=end
     })
 
     return super(options)
@@ -237,99 +286,18 @@ class TextPageControl < LayoutControl
   #charコマンド
   #指定文字（群）を描画チェインに連結する
   def command__CHAR_(options, inner_options)
-=begin
-    #フォントオブジェクト構築
-    font = Font.new(@size, 
-                    @fontname,
-                    {:weight => @weight,
-                     :italic => @italic})
-
-    #現状での縦幅、横幅を取得
-    real_width = width = font.get_width(options[:_ARGUMENT_])
-    real_width = height = font.size
-
-    #イタリックの場合、文字サイズの半分を横幅に追加する。
-    if @italic
-      real_width = width + @font_config[:size]/2
-    end
-
-    #影文字の場合、オフセット分を縦幅、横幅に追加する
-    if @font_config[:shadow]
-      real_width = width + @font_config[:shadow_x]
-      real_height = height + @font_config[:shadow_y]
-    end
-
-    #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加し、縁サイズ分をオフセットに加える。
-    if @font_config[:edge]
-      real_width = width + @font_config[:edge_width] * 2
-      real_height = height + @font_config[:edge_width] * 2
-      offset_x = -1 * @font_config[:edge_width]
-      offset_y = -1 * @font_config[:edge_width]
-    end
-
-    #文字用のimageを作成
-    entity = Image.new(real_width, real_height, [0, 0, 0, 0]) 
-
-    #フォントを描画
-    entity.draw_font_ex(-1 * offset_x, 
-                        -1 * offset_y, 
-                        options[:_ARGUMENT_], 
-                        font, 
-                        @font_config)
-
-    target = @control_list.last
-
     #文字コントロールを生成する
-    target.push_command([:_CREATE_, 
-               {:_ARGUMENT_ => :ImageControl, 
-                :entity => entity,
-                :align_y => :bottom,
-                
-                :width => width,
-                :height => height,
-                
-                :command_list=> options[:command_list],
-
-                :offset_x => offset_x,
-                :offset_y => offset_y,
-
-                :float_mode => :right}, 
-               {:block => @char_renderer}])
-=end
-    target = @control_list.last
-    #文字コントロールを生成する
-    target.push_command([:_CREATE_, 
+    @control_list.last.push_command([:_CREATE_, 
                {:_ARGUMENT_ => :CharControl, 
                 :align_y => :bottom,
-
-                :size => @size, 
-                :font_name => @fontname,
-                :weight => @bold,
-                :italic => @italic,
-
                 :charactor => options[:_ARGUMENT_],
-
-                :color => [255,255,255],
-                :aa => @aa,
-
-                :edge => @edge,
-                :shadow => @shadow,
-
-                :edge_color => @edge_color,
-                :edge_width => @edge_width,
-                :edge_level => @edge_level,
-
-                :shadow_color => @shadow_color,
-                :shadow_x => @shadow_x,
-                :shadow_y => @shadow_y,
-
                 :command_list=> options[:command_list],
-
-                :float_mode => :right}, 
+                :float_mode => :right,
+                }.merge(@char_option), 
                {:block => @char_renderer}])
 
     #文字幅スペーサーを生成する
-    target.push_command([:_CREATE_, 
+    @control_list.last.push_command([:_CREATE_, 
                 {:_ARGUMENT_ => :LayoutControl, 
                 :width => @charactor_pitch,
                 :height => @line_height,
@@ -348,7 +316,7 @@ class TextPageControl < LayoutControl
     command_list = Array.new
 
     #イメージフォントを使うかどうか
-    if @font_config[:use_image_font]
+    if @use_image_font
       char_command = :image_char
     else
       char_command = :_CHAR_
@@ -381,16 +349,15 @@ class TextPageControl < LayoutControl
                     :command_list => [
                       [:_LINE_FEED_, {},inner_options],
                       [:_TEXT_, {:_ARGUMENT_=> options[:_ARGUMENT_]},inner_options]],
-                    :x => @rubi_offset_x,
-                    :y => @rubi_offset_y,
-                    :width=> 128,
-                    :height=> @rubi_size,
-                    :size => @rubi_size,
-                    :line_height => @rubi_size,
-                    :fontname => @fontname,
+                    :x => @rubi_option[:offset_x],
+                    :y => @rubi_option[:offset_y],
+                    :height=> @rubi_option[:size],
+                    :size => @rubi_option[:size],
+                    :line_height => @rubi_option[:size],
+                    :font_name => @char_option[:font_name],
                     :line_spacing => 0,
                     :char_renderer => @char_renderer,
-                    :wait_frame => @rubi_wait_frame},
+                    :wait_frame => @rubi_option[:wait_frame]},
                   {}]
 
     #TextPageControlをベース文字に登録する。

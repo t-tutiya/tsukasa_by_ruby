@@ -78,21 +78,21 @@ end
 
 #_flush_デフォルト送信
 _DEFINE_ :flush do
-  _SEND_ :text0  do
+  _SEND_ default: :TextLayer  do
     flush
   end
 end
 
 #_rubi_デフォルト送信
 _DEFINE_ :rubi do |options|
-  _SEND_ :text0  do
+  _SEND_ default: :TextLayer  do
     rubi options
   end
 end
 
 #標準ポーズコマンド
 _DEFINE_ :pause do |options|
-  _SEND_ :text0 do 
+  _SEND_ default: :TextLayer do 
     pause options
   end
 
@@ -195,39 +195,39 @@ _DEFINE_ :TextWindow do |options|
           _FLUSH_ #これが必ず必要
       end
     _DEFINE_ :style do |options|
-      _SEND_ default: :TextPageControl do
+      _SEND_ :last do
         _SET_ options
       end
     end
     _DEFINE_ :_TEXT_ do |options|
-      _SEND_ default: :TextPageControl do
+      _SEND_ :last do
         _TEXT_ options
       end
     end
     _DEFINE_ :_DATA_ do |options|
-      _SEND_ default: :TextPageControl do
+      _SEND_ :last do
         _DATA_ options
       end
     end
     _DEFINE_ :_LINE_FEED_ do
-      _SEND_ default: :TextPageControl  do
+      _SEND_ :last  do
         _LINE_FEED_
       end
     end
     #_rubi_デフォルト送信
     _DEFINE_ :rubi do |options|
-      _SEND_ default: :TextPageControl do
+      _SEND_ :last do
         _RUBI_ options[:_ARGUMENT_], text: options[:text]
       end
     end
     #_flush_デフォルト送信
     _DEFINE_ :flush do
-      _SEND_ default: :TextPageControl  do
+      _SEND_ :last  do
         _FLUSH_
       end
     end
     _DEFINE_ :pause do |options|
-      _SEND_ :default_text_page_control0 do 
+      _SEND_ :last do 
         #クリック待ちアイコンの表示
         _SEND_ :last do
           _END_FRAME_

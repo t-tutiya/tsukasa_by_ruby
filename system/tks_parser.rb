@@ -211,7 +211,7 @@ class TKSParser < Parslet::Parser
     rule(
       :text => simple(:string)
     ) {
-      "_SEND_(:text0){" + 
+      "_SEND_(default: :TextLayer){" + 
         %Q'_TEXT_ "#{string}"' +
       "}" 
     }
@@ -233,7 +233,7 @@ class TKSParser < Parslet::Parser
     rule(
       :inline_data => simple(:command)
     ) {
-       "_SEND_(:text0){" + 
+       "_SEND_(default: :TextLayer){" + 
          "_DATA_ " + command.to_s +
        "}" 
        }
@@ -252,7 +252,7 @@ class TKSParser < Parslet::Parser
       :blanklines => []
     ) { 
         commands + 
-        ["_SEND_(:text0){ _LINE_FEED_ }"]
+        ["_SEND_(default: :TextLayer){ _LINE_FEED_ }"]
     }
 
     #textブロック＋改行＋空行→改行＋キー入力待ちコマンド追加追加

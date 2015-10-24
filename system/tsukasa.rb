@@ -77,6 +77,7 @@ class Tsukasa < RenderTargetControl
 
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @default_control = {
+      :TextLayer => :text0,
       :TextPageControl   => :default_text_page_control0,
       :RenderTargetContainer => :default_RenderTarget_container,
       :Anonymous       => :anonymous,

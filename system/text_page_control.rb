@@ -367,9 +367,9 @@ class TextPageControl < LayoutControl
                {}])
   end
 
-  #グローバルデータ領域にあるデータをテキストとして出力する
+  #一時データ領域にあるデータをテキストとして出力する
   def command__DATA_(options, inner_options)
-    options[:_ARGUMENT_] = @_GLOBAL_DATA_[options[:_ARGUMENT_]].to_s
+    options[:_ARGUMENT_] = @_TEMP_[options[:_ARGUMENT_]].to_s
     command__TEXT_(options, inner_options)
   end
 

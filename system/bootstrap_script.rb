@@ -29,7 +29,7 @@
 ###############################################################################
 
 #デバッグモードの設定
-_SET_ :_GLOBAL_DATA_, _DEBUG_: false
+_SET_ :_SYSTEM_, _DEBUG_: false
 
 #デフォルトのユーザー定義関数群
 _INCLUDE_ "./system/default_script.rb"

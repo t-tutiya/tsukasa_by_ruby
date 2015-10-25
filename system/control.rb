@@ -33,8 +33,10 @@ require 'pstore'
 
 class Control #公開インターフェイス
   #プロパティ
-  attr_accessor  :_USER_DATA_
-  attr_accessor  :_GLOBAL_DATA_
+  attr_accessor  :_SYSTEM_  #システム全体で共有されるデータ群。保存対象。
+  attr_accessor  :_LOCAL_   #個別のセーブデータを表すデータ群。保存対象。
+  attr_accessor  :_TEMP_    #一時的に管理するデータ群。保存対象ではない。
+
   attr_accessor  :_MODE_STATUS_
 
   attr_accessor  :id
@@ -59,9 +61,11 @@ class Control #公開インターフェイス
     @root_control = root_control
     
     #個別ユーザーデータ領域
-    @_USER_DATA_ = @root_control._USER_DATA_
+    @_LOCAL_ = @root_control._LOCAL_
     #ゲーム全体で共有するセーブデータ
-    @_GLOBAL_DATA_ = @root_control._GLOBAL_DATA_
+    @_SYSTEM_ = @root_control._SYSTEM_
+    #保存されないデータ群
+    @_TEMP_ = @root_control._TEMP_
     #各種モードの管理
     @_MODE_STATUS_ =  @root_control._MODE_STATUS_
 
@@ -244,7 +248,7 @@ class Control #内部メソッド
     #条件が単体だった場合、要素１の配列にする。
     conditions = [conditions] unless conditions.instance_of?(Array)
 
-    args_name = options[:type] ? options[:type] : :_USER_DATA_
+    args_name = options[:type] ? options[:type] : :_LOCAL_
 
     conditions.each do |condition|
       case condition
@@ -420,6 +424,7 @@ class Control #セッター／ゲッター
   #コントロールのプロパティを更新する
   #TODO：複数の変数を一回で設定できるようにしてあるが、１個に限定すべきかもしれない。
   def command__SET_(options, inner_options)
+    #対象ハッシュが指定されている場合
     if options[:_ARGUMENT_]
       variable = options[:_ARGUMENT_]
       options.delete(:_ARGUMENT_)
@@ -430,6 +435,7 @@ class Control #セッター／ゲッター
     #オプション全探査
     options.each do |key, val|
       if variable
+        #ハッシュに値を代入する
         send(variable.to_s)[key] = val
       else
         #セッターが用意されている場合
@@ -466,11 +472,11 @@ class Control #セッター／ゲッター
         if key == :_RESULT_
           @_RESULT_ = send(variable.to_s)[val]
         else
-          @root_control._USER_DATA_[key] = send(variable.to_s)[val]
+          @root_control._TEMP_[key] = send(variable.to_s)[val]
         end
       else
         if respond_to?(val.to_s)
-          @root_control._USER_DATA_[key] = send(val.to_s)
+          @root_control._TEMP_[key] = send(val.to_s)
         else
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + val.to_s + "]は存在しません"
         end
@@ -692,19 +698,19 @@ class Control #セーブデータ制御
     raise unless options[:_ARGUMENT_].kind_of?(Numeric)
     #グローバルデータ
     if options[:_ARGUMENT_] == 0
-      db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
-                      @_GLOBAL_DATA_[:_GLOBAL_DATA_FILENAME_])
+      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
+                      @_SYSTEM_[:_SYSTEM_FILENAME_])
       db.transaction do
-        db["key"] = @root_control._GLOBAL_DATA_
+        db["key"] = @root_control._SYSTEM_
       end
     #ユーザーデータ
     #任意の接尾字を指定する
     elsif options[:_ARGUMENT_]
-      db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
+      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
                       options[:_ARGUMENT_].to_s +
-                      @_GLOBAL_DATA_[:_USER_DATA_FILENAME_])
+                      @_SYSTEM_[:_LOCAL_FILENAME_])
       db.transaction do
-        db["key"] = @root_control._USER_DATA_
+        db["key"] = @root_control._LOCAL_
       end
     else
       #セーブファイル指定エラー
@@ -717,19 +723,19 @@ class Control #セーブデータ制御
     raise unless options[:_ARGUMENT_].kind_of?(Numeric)
     #グローバルデータ
     if options[:_ARGUMENT_] == 0
-      db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
-                      @_GLOBAL_DATA_[:_GLOBAL_DATA_FILENAME_])
+      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
+                      @_SYSTEM_[:_SYSTEM_FILENAME_])
       db.transaction do
-        @root_control._GLOBAL_DATA_ = db["key"]
+        @root_control._SYSTEM_ = db["key"]
       end
     #ユーザーデータ
     #任意の接尾字を指定する
     elsif options[:_ARGUMENT_]
-      db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
+      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
                       options[:_ARGUMENT_].to_s +
-                      @_GLOBAL_DATA_[:_USER_DATA_FILENAME_])
+                      @_SYSTEM_[:_LOCAL_FILENAME_])
       db.transaction do
-        @root_control._USER_DATA_ = db["key"]
+        @root_control._LOCAL_ = db["key"]
       end
     else
       #セーブファイル指定エラー
@@ -747,9 +753,9 @@ class Control #セーブデータ制御
     end
 
   
-    db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
+    db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
                     options[:_ARGUMENT_].to_s +
-                    @_GLOBAL_DATA_[:_QUICK_DATA_FILENAME_])
+                    @_SYSTEM_[:_QUICK_DATA_FILENAME_])
 
     db.transaction do
       db["key"] = Marshal.dump(command_list)
@@ -758,9 +764,9 @@ class Control #セーブデータ制御
 
   def command__QUICK_LOAD_(options, inner_options)
     raise unless options[:_ARGUMENT_].kind_of?(Numeric)
-    db = PStore.new(@_GLOBAL_DATA_[:_SAVE_DATA_PATH_] + 
+    db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
                     options[:_ARGUMENT_].to_s +
-                    @_GLOBAL_DATA_[:_QUICK_DATA_FILENAME_])
+                    @_SYSTEM_[:_QUICK_DATA_FILENAME_])
 
     code = ""
 

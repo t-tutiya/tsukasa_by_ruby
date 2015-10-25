@@ -38,14 +38,14 @@ button  id: :button1,
     set :key_down, visible: false
     set :normal, visible: false
     set :over,   visible: true
-    _SET_ :_USER_DATA_, flag: true
+    _SET_ :_LOCAL_, flag: true
   end
 end
 
 _DEFINE_ :special_pause do
   pause do
     _CHECK_ [:not_null], not_null: :flag do
-      _SET_ :_USER_DATA_, scenario: 1
+      _SET_ :_LOCAL_, scenario: 1
       _SET_ :_MODE_STATUS_, wake: true
       delete :message0
     end
@@ -78,7 +78,7 @@ _SCOPE_ do
     _RETURN_
   end
 
-  _SET_ :_USER_DATA_, scenario: 2
+  _SET_ :_LOCAL_, scenario: 2
    delete :message0
 end
 

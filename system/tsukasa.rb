@@ -55,8 +55,10 @@ require_relative './script_compiler.rb'
 
 #TODO：モジュールであるべきか？
 class Tsukasa < RenderTargetControl
-  attr_reader  :_USER_DATA_
-  attr_reader  :_GLOBAL_DATA_
+  attr_reader  :_LOCAL_
+  attr_reader  :_SYSTEM_
+  attr_reader  :_TEMP_
+
   attr_reader  :default_control
   attr_reader  :function_list
   attr_accessor  :sleep_mode
@@ -64,14 +66,17 @@ class Tsukasa < RenderTargetControl
   def initialize(options)
     @root_control = self
     #ゲーム全体で共有するセーブデータ
-    @_GLOBAL_DATA_ = {
+    @_SYSTEM_ = {
       :_DEBUG_ => false,
       :_SAVE_DATA_PATH_ => "./data/",
-      :_GLOBAL_DATA_FILENAME_ => "global_data.bin",
-      :_USER_DATA_FILENAME_ => "_user_data.bin",
+      :_SYSTEM_FILENAME_ => "system_data.bin",
+      :_LOCAL_FILENAME_ => "_local_data.bin",
       :_QUICK_DATA_FILENAME_ => "_quick_data.bin",
     }
-    
+
+    @_LOCAL_ = {}
+    @_TEMP_ = {}
+
     #スリープ状態にあるコントロールが存在するかどうかを示す
     @sleep_mode = false
 
@@ -90,8 +95,6 @@ class Tsukasa < RenderTargetControl
     @label_name = options[:label_name] || nil
     @label_id = options[:label_id] || 0
     @label_options = options[:label_options] || nil
-
-    @_USER_DATA_ = {}
 
     super(options, {}, @root_control)
   end
@@ -112,8 +115,8 @@ class Tsukasa < RenderTargetControl
   end
 
   def command_label(options, inner_options)
-    unless @_USER_DATA_[:_READ_FRAG_]
-      @_USER_DATA_[:_READ_FRAG_] = {} 
+    unless @_LOCAL_[:_READ_FRAG_]
+      @_LOCAL_[:_READ_FRAG_] = {} 
     end
 
     if not @label_name and not options[:name] 
@@ -140,20 +143,20 @@ class Tsukasa < RenderTargetControl
       @label_title = options[:title]
     end
 
-    unless @_USER_DATA_[:_READ_FRAG_][@label_name]
-      @_USER_DATA_[:_READ_FRAG_][@label_name] = []
+    unless @_LOCAL_[:_READ_FRAG_][@label_name]
+      @_LOCAL_[:_READ_FRAG_][@label_name] = []
     end
 
-    if @_USER_DATA_[:_READ_FRAG_][@label_name][@label_id]
+    if @_LOCAL_[:_READ_FRAG_][@label_name][@label_id]
       #グローバルデータ領域に既読であると通知
-      @_GLOBAL_DATA_[:_NOT_READ_] = false
+      @_SYSTEM_[:_NOT_READ_] = false
     else
       #グローバルデータ領域に未読状態であると通知
-      @_GLOBAL_DATA_[:_NOT_READ_] = true
+      @_SYSTEM_[:_NOT_READ_] = true
 
       #既読フラグを立てる
-      @_USER_DATA_[:_READ_FRAG_][@label_name][@label_id] = @label_title
+      @_LOCAL_[:_READ_FRAG_][@label_name][@label_id] = @label_title
     end
-    #pp @_USER_DATA_[:_READ_FRAG_]
+    #pp @_LOCAL_[:_READ_FRAG_]
   end
 end

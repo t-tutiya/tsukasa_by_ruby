@@ -5,10 +5,10 @@
 @	_WAIT_  [:key_push], key_push: K_SPACE
 
 @	img0 {
-@		_MOVE_ type: {alpha: [255, 0]}, time: 360
+@		_MOVE_ 360, alpha: [255, 0]
 @	}
 @	img1 {
 @		_SET_ visible: true
-@		_MOVE_ type: {alpha: [0,255]}, time: 360
+@		_MOVE_ 360, alpha: [0,255]
 @	}
 

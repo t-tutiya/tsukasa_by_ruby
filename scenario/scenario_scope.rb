@@ -5,21 +5,21 @@ button id: :button1
 
 _SEND_ :button1 do
 _WHILE_ [:true] do
-  _MOVE_ type:{x: [0,300]}, time: 60
+  _MOVE_ 60, x: [0,300]
   wait_command :_MOVE_
   _WHILE_ [:true] do
-    _MOVE_ type:{x: [0,300]}, time: 60
+    _MOVE_ 60, x: [0,300]
     wait_command :_MOVE_
     _BREAK_
   end
 #  _BREAK_
-    _MOVE_ type:{y: 300}, time: 60
+    _MOVE_ 60, y: 300
   wait_command :_MOVE_
 #  _BREAK_
-  _MOVE_ type:{x: 0}, time: 60
+  _MOVE_ 60, x: 0
   wait_command :_MOVE_
   _BREAK_
-  _MOVE_ type:{y: 0}, time: 60
+  _MOVE_ 60, y: 0
   wait_command :_MOVE_
   _BREAK_
 end

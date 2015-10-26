@@ -9,7 +9,7 @@
 @	end
 
 @	test0 {
-@		_MOVE_ type: {alpha: 0}, time: 180
+@		_MOVE_ 180, alpha: 0
 @		_WAIT_  [:command], command: :_MOVE_
-@		_MOVE_ type: {alpha: 255}, time: 360
+@		_MOVE_ 360, alpha: 255
 @	}

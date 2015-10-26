@@ -828,42 +828,50 @@ end
 
 class Control #プロパティのパラメータ遷移
   def command__MOVE_(options, inner_options)
-    raise unless options[:time] #必須要素
-
+    raise unless options[:_ARGUMENT_] #必須要素
+    
+    options[:option] =  {} unless options[:option]
+    
     #現在の経過カウントを初期化
-    options[:count] = 0 unless options[:count]
+    options[:option][:count] = 0 unless options[:option][:count]
 
     #条件判定が存在し、かつその条件が成立した場合
-    if options[:check] and check_imple(options[:check][0], options[:check][1])
+    if options[:option][:check] and 
+        check_imple(options[:option][:check][0], options[:option][:check][1])
       #ブロックがあれば実行し、コマンドを終了する
-      eval_block(options, &inner_options[:block]) if inner_options[:block]
+      if inner_options[:block]
+        eval_block(options, &inner_options[:block]) 
+      end
       return
     end
 
     # Easingパラメータが設定されていなければ線形移動を設定
-    options[:easing] = :liner unless options[:easing]
+    options[:option][:easing] = :liner unless options[:option][:easing]
 
-    options[:type].each do |key, index|
+    options.each do |key, index|
+
+      next if key == :option
+      next if key == :_ARGUMENT_
 
       #開始値が設定されていなければ現在の値で初期化
-      unless options[:type][key].instance_of?(Array)
-        options[:type][key] = [send(key), options[:type][key]]
+      unless options[key].instance_of?(Array)
+        options[key] = [send(key), options[key]]
       end
 
       #値を更新する
       send(key.to_s + "=", 
-            (options[:type][key][0] + 
-              (options[:type][key][1] - options[:type][key][0]).to_f * 
-                EasingProcHash[options[:easing]].call(
-                  options[:count].fdiv(options[:time])
+            (options[key][0] + 
+              (options[key][1] - options[key][0]).to_f * 
+                EasingProcHash[options[:option][:easing]].call(
+                  options[:option][:count].fdiv(options[:_ARGUMENT_])
               )
             ).to_i)
     end
 
     #カウントが指定フレーム未満の場合
-    if options[:count] < options[:time]
+    if options[:option][:count] < options[:_ARGUMENT_]
       #カウントアップ
-      options[:count] += 1
+      options[:option][:count] += 1
       #:_MOVE_コマンドをスタックし直す
       push_command_to_next_frame(:_MOVE_, options, inner_options)
     end

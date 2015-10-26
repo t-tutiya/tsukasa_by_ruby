@@ -11,7 +11,7 @@ _CREATE_ :RenderTargetControl,
         :id=>:normal
   #内部関数の定義
   _DEFINE_ :func do
-    _MOVE_ type:{x: 500}, time: 60
+    _MOVE_ 60, x: 500
     wait_command :_MOVE_
   end
 end
@@ -27,7 +27,7 @@ _CREATE_ :RenderTargetControl,
         :id=>:normal
   #内部関数の定義
   _DEFINE_ :func do
-    _MOVE_ type:{x: 150, y: 500}, time: 60
+    _MOVE_ 60, x: 150, y: 500
     wait_command :_MOVE_
   end
 end

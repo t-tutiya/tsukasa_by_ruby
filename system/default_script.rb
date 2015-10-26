@@ -121,10 +121,9 @@ _DEFINE_ :TextWindow do |options|
         wait_frame: 2 do
           _CHAR_RENDERER_ do
             #フェードイン（スペースキーか右CTRLが押されたらスキップ）
-            _MOVE_   type: {alpha:[0,255]},
-                  time: 15,
-                  check: [[:key_push, :key_down], 
-                          {:key_down => K_RCONTROL}] do
+            _MOVE_   15, alpha:[0,255],
+                  option: {check: [[:key_push, :key_down], 
+                          {:key_down => K_RCONTROL}]} do
                     _SET_ alpha: 255
                   end
             #トランジションが終了するまで非アイドル状態
@@ -136,10 +135,10 @@ _DEFINE_ :TextWindow do |options|
             #キー入力伝搬を防ぐ為に１フレ送る
             _END_FRAME_
             #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
-            _MOVE_   type: {alpha:128},
-                  time: 60,
+            _MOVE_  60,  alpha:128,
+                  option: {
                   check: [[:key_push ,:key_down], 
-                          {:key_down => K_RCONTROL}] do
+                          {:key_down => K_RCONTROL}]} do
                     #スキップされた場合
                     _CHECK_ :key_down, key_down: K_RCONTROL do
                       #CTRLスキップ中であれば透明度255

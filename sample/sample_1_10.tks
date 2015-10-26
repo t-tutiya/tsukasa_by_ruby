@@ -13,7 +13,7 @@
 
 @	test1{
 @		rule0 {
-@			_MOVE_ type: {counter:[0,255]}, time: 240
+@			_MOVE_ 240, counter:[0,255]
 @			_WAIT_ [:command], :command => :_MOVE_
 @			_DELETE_
 @		}

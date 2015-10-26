@@ -8,6 +8,6 @@
 @	img0 {_SET_ file_path: "./sozai/char/B-2.png"}
 
 @	last {
-@		_MOVE_ type: {alpha: [255, 0]}, time: 360
+@		_MOVE_ 360, alpha: [255, 0]
 @	}
 

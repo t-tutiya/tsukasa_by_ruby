@@ -20,13 +20,13 @@ end
 button id: :button1
 _SEND_ :button1 do
   _WHILE_ :true do
-    _MOVE_ type: {x: 300, y: 0, alpha: 0}, time: 60
+    _MOVE_ 60, x: 300, y: 0, alpha: 0
     wait_command :_MOVE_
-    _MOVE_ type: {x: 300, y: 300, alpha: 255}, time: 60
+    _MOVE_ 60, x: 300, y: 300, alpha: 255
     wait_command :_MOVE_
-    _MOVE_ type: {x: 0, y: 300, alpha: 0}, time: 60
+    _MOVE_ 60, x: 0, y: 300, alpha: 0
     wait_command :_MOVE_
-    _MOVE_ type: {x: 0, y: 0, alpha: 255}, time: 60
+    _MOVE_ 60, x: 0, y: 0, alpha: 255
     wait_command :_MOVE_
   end
 end

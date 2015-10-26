@@ -34,11 +34,6 @@ require 'dxruby'
 #システムサポート
 ###############################################################################
 
-#コマンド名のalias
-_DEFINE_ :backlay do
-  _TO_IMAGE_
-end
-
 #指定フレーム数ウェイト
 #ex. wait_count 60
 _DEFINE_ :wait_count do |options|

@@ -34,7 +34,7 @@ end
 button id: :button2
 _SEND_ :button2 do
   _WHILE_ :true do
-    _PATH_ time: 300, path: [
+    _PATH_ 300, path: [
   [ 10.0 * 4,  30.0 * 4, 255],
   [ 77.0 * 4,  49.0 * 4, 0],
   [ 21.0 * 4, 165.0 * 4, 255],
@@ -48,7 +48,7 @@ end
 button id: :button3
 _SEND_ :button3 do
   _WHILE_ :true do
-    _PATH_ time: 300, type: :spline, path: [
+    _PATH_ 300, type: :spline, path: [
 #  [ 10.0 * 4,  30.0 * 4, 0],
 #  [ 77.0 * 4,  49.0 * 4, 255],
 #  [ 21.0 * 4, 165.0 * 4, 0],

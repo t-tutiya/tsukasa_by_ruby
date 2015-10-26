@@ -104,6 +104,7 @@ module Layoutable
   #これらの実装については以下のサイトを参考にさせて頂きました。感謝します。
   # http://www1.u-netsurf.ne.jp/~future/HTML/bspline.html
   def command__PATH_(options, inner_options)
+    raise unless options[:_ARGUMENT_] #必須要素
     #現在の経過カウントを初期化
     options[:count] = 0 unless options[:count]
 
@@ -119,10 +120,10 @@ module Layoutable
     #始点／終点を強制的に通過させるかどうか
     if options[:origin]
       #TODO：これだと開始時／終了時にもたってしまい、ゲームで使う補間に適さないように思える。どちらを標準にすべきか検討
-      step =(path.size.to_f + 1)/ options[:time] * options[:count] - 1.0
+      step =(path.size.to_f + 1)/ options[:_ARGUMENT_] * options[:count] - 1.0
     else
       #Ｂスプライン補間時に始点終点を通らない
-      step =(path.size.to_f - 1)/ options[:time] * options[:count]
+      step =(path.size.to_f - 1)/ options[:_ARGUMENT_] * options[:count]
     end
 
     x = 0.0
@@ -171,7 +172,7 @@ module Layoutable
     @draw_option[:alpha] = alpha.round
 
     #カウントが指定フレーム以下の場合
-    if options[:count] <= options[:time]
+    if options[:count] <= options[:_ARGUMENT_]
       #カウントアップ
       options[:count] += 1
       #:move_lineコマンドをスタックし直す

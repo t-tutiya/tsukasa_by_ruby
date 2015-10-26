@@ -34,21 +34,21 @@ end
 button id: :button2
 _SEND_ :button2 do
   _WHILE_ :true do
-    path_move time: 300, path: [
+    _PATH_ time: 300, path: [
   [ 10.0 * 4,  30.0 * 4, 255],
   [ 77.0 * 4,  49.0 * 4, 0],
   [ 21.0 * 4, 165.0 * 4, 255],
   [171.0 * 4,  43.0 * 4,0],
   [153.0 * 4, 164.0 * 4, 255],
 ]
-    wait_command :path_move
+    wait_command :_PATH_
   end
 end
 
 button id: :button3
 _SEND_ :button3 do
   _WHILE_ :true do
-    path_move time: 300, type: :spline, path: [
+    _PATH_ time: 300, type: :spline, path: [
 #  [ 10.0 * 4,  30.0 * 4, 0],
 #  [ 77.0 * 4,  49.0 * 4, 255],
 #  [ 21.0 * 4, 165.0 * 4, 0],
@@ -60,6 +60,6 @@ _SEND_ :button3 do
   [171.0 * 4,  43.0 * 4],
   [153.0 * 4, 164.0 * 4],
 ]
-    wait_command :path_move
+    wait_command :_PATH_
   end
 end

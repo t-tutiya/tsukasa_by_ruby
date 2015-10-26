@@ -98,3 +98,114 @@ module Layoutable
     return dx, dy
   end
 end
+
+module Layoutable
+  #スプライン補間
+  #これらの実装については以下のサイトを参考にさせて頂きました。感謝します。
+  # http://www1.u-netsurf.ne.jp/~future/HTML/bspline.html
+  def command__PATH_(options, inner_options)
+    #現在の経過カウントを初期化
+    options[:count] = 0 unless options[:count]
+
+    #条件判定が存在し、かつその条件が成立した場合
+    if options[:check] and check_imple(options[:check][0], options[:check][1])
+      #ブロックがあれば実行し、コマンドを終了する
+      eval_block(options, &inner_options[:block]) if inner_options[:block]
+      return
+    end
+
+    path = options[:path]
+
+    #始点／終点を強制的に通過させるかどうか
+    if options[:origin]
+      #TODO：これだと開始時／終了時にもたってしまい、ゲームで使う補間に適さないように思える。どちらを標準にすべきか検討
+      step =(path.size.to_f + 1)/ options[:time] * options[:count] - 1.0
+    else
+      #Ｂスプライン補間時に始点終点を通らない
+      step =(path.size.to_f - 1)/ options[:time] * options[:count]
+    end
+
+    x = 0.0
+    y = 0.0
+    alpha = 0.0
+    size = path.size - 1 #添え字のＭＡＸが欲しいので-1する
+
+    #全ての座標を巡回し、それぞれの座標についてstep量に応じた重み付けを行い、その総和を現countでの座標とする
+    #始点と終点を通過させる為、その前後２個に仮想の座標が存在する物としている
+    -2.upto(size + 2) do |index|
+
+      #始点と終点を通過させるために強制的な補正をかける
+      if index < 0 # -2 <= index < 0
+        path_index = 0 
+      elsif size < index # size < index <= size + 2
+        path_index = size
+      else # 0 <= index <= size
+        path_index = index
+      end
+
+      options[:type] = :line unless options[:type]
+
+      case options[:type]
+      when :spline
+        coefficent = b_spline_coefficent(step - index)
+      when :line
+        coefficent = line_coefficent(step - index)
+      else
+        raise
+      end
+
+      x += path[path_index][0] * coefficent
+      y += path[path_index][1] * coefficent
+
+      #透明度が設定されていなければ現在の値で初期化
+      unless path[path_index][2]
+        options[:path][path_index][2] = @draw_option[:alpha]
+      end
+
+      alpha += path[path_index][2] * coefficent
+    end
+
+    #移動先座標の決定
+    @x = x.round
+    @y = y.round
+    @draw_option[:alpha] = alpha.round
+
+    #カウントが指定フレーム以下の場合
+    if options[:count] <= options[:time]
+      #カウントアップ
+      options[:count] += 1
+      #:move_lineコマンドをスタックし直す
+      push_command_to_next_frame(:_PATH_, options, inner_options)
+    end
+  end
+
+  #３次Ｂスプライン重み付け関数
+  def b_spline_coefficent(t)
+    t = t.abs
+
+    # -1.0 < t < 1.0
+    if t < 1.0 
+      return (3.0 * t ** 3 -6.0 * t ** 2 + 4.0) / 6.0
+
+    # -2.0 < t <= -1.0 or 1.0 <= t < 2.0
+    elsif t < 2.0 
+      return  -(t - 2.0) ** 3 / 6.0
+
+    # t <= -2.0 or 2.0 <= t
+    else 
+      return 0.0
+    end
+  end
+
+  def line_coefficent(t)
+    t = t.abs
+
+    if t <= 1.0 
+      return 1 - t
+    # t <= -1.0 or 1.0 <= t
+    else 
+      return 0.0
+    end
+  end
+end
+

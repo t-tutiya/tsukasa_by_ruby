@@ -76,20 +76,6 @@ end
 #テキストレイヤ関連
 ###############################################################################
 
-#_flush_デフォルト送信
-_DEFINE_ :flush do
-  _SEND_ default: :TextLayer  do
-    flush
-  end
-end
-
-#_rubi_デフォルト送信
-_DEFINE_ :rubi do |options|
-  _SEND_ default: :TextLayer  do
-    rubi options
-  end
-end
-
 #標準ポーズコマンド
 _DEFINE_ :pause do |options|
   _SEND_ default: :TextLayer do 
@@ -123,7 +109,9 @@ end
 #ページクリック待ちポーズ
 _DEFINE_ :page_pause do
   pause icon: :page_icon_func
-  flush
+  _SEND_ default: :TextLayer  do
+    _FLUSH_
+  end
 end
 
 ###############################################################################
@@ -215,13 +203,13 @@ _DEFINE_ :TextWindow do |options|
       end
     end
     #_rubi_デフォルト送信
-    _DEFINE_ :rubi do |options|
+    _DEFINE_ :_RUBI_ do |options|
       _SEND_ :last do
         _RUBI_ options[:_ARGUMENT_], text: options[:text]
       end
     end
     #_flush_デフォルト送信
-    _DEFINE_ :flush do
+    _DEFINE_ :_FLUSH_ do
       _SEND_ :last  do
         _FLUSH_
       end

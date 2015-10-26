@@ -9,4 +9,4 @@
 	text0{style wait_frame: 10}
 例えば文字の表示速度を変えたり、[lp]
 	text0{style wait_frame: 2}
-[text0{rubi "エクスカリバ－"}]ルビを振る事もできます。
+[text0{_RUBI_ "エクスカリバ－"}]ルビを振る事もできます。

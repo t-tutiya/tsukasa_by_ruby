@@ -15,24 +15,24 @@ _CREATE_ :RenderTargetControl,
   _CREATE_ :ImageControl, :entity=>Image.new(256,256).circle_fill(128,128,128,C_GREEN).draw_font(80, 120, "DOWN", Font.default),
         :id=>:key_down, :visible => false
   on_mouse_over do
-    set :normal, visible: false
-    set :over,   visible: true
-    set :key_down, visible: false
+    normal  {_SET_ visible: false}
+    over    {_SET_ visible: true}
+    key_down{_SET_ visible: false}
   end
   on_mouse_out do
-    set :over,   visible: false
-    set :normal, visible: true
-    set :key_down, visible: false
+    normal  {_SET_ visible: true}
+    over    {_SET_ visible: false}
+    key_down{_SET_ visible: false}
   end
   on_key_down do
-    set :over,   visible: false
-    set :normal, visible: false
-    set :key_down, visible: true
+    normal  {_SET_ visible: false}
+    over    {_SET_ visible: false}
+    key_down{_SET_ visible: true}
   end
   on_key_up do
-    set :normal, visible: false
-    set :over,   visible: true
-    set :key_down, visible: false
+    normal  {_SET_ visible: false}
+    over    {_SET_ visible: true}
+    key_down{_SET_ visible: false}
   end
 end
 
@@ -50,23 +50,23 @@ _CREATE_ :RenderTargetControl,
   _CREATE_ :ImageControl, :entity=>Image.new(256,256).triangle_fill(128,0,0,255,255,255,C_GREEN).draw_font(80, 120, "DOWN", Font.default),
         :id=>:key_down, :visible => false
   on_mouse_over do
-    set :normal, visible: false
-    set :over,   visible: true
-    set :key_down, visible: false
+    normal  {_SET_ visible: false}
+    over    {_SET_ visible: true}
+    key_down{_SET_ visible: false}
   end
   on_mouse_out do
-    set :over,   visible: false
-    set :normal, visible: true
-    set :key_down, visible: false
+    normal  {_SET_ visible: true}
+    over    {_SET_ visible: false}
+    key_down{_SET_ visible: false}
   end
   on_key_down do
-    set :over,   visible: false
-    set :normal, visible: false
-    set :key_down, visible: true
+    normal  {_SET_ visible: false}
+    over    {_SET_ visible: false}
+    key_down{_SET_ visible: true}
   end
   on_key_up do
-    set :normal, visible: false
-    set :over,   visible: true
-    set :key_down, visible: false
+    normal  {_SET_ visible: false}
+    over    {_SET_ visible: true}
+    key_down{_SET_ visible: false}
   end
 end

@@ -14,29 +14,30 @@ _CREATE_ :RenderTargetControl,
         :id=>:over, :visible => false
   _CREATE_ :ImageControl, :file_path=>"./sozai/button_key_down.png", 
         :id=>:key_down, :visible => false
+
   on_mouse_over do
     pp "over"
-    set :normal, visible: false
-    set :over,   visible: true
-    set :key_down, visible: false
+    normal  {_SET_ visible: false}
+    over    {_SET_ visible: true}
+    key_down{_SET_ visible: false}
   end
   on_mouse_out do
     pp "out"
-    set:over,   visible: false
-    set:normal, visible: true
-    set:key_down, visible: false
+    normal  {_SET_ visible: true}
+    over    {_SET_ visible: false}
+    key_down{_SET_ visible: false}
   end
   on_key_down do
     pp "key_down"
-    set :over,   visible: false
-    set :normal, visible: false
-    set :key_down, visible: true
+    normal  {_SET_ visible: false}
+    over    {_SET_ visible: false}
+    key_down{_SET_ visible: true}
   end
   on_key_up do
     pp "key_up"
-    set :key_down, visible: false
-    set :normal, visible: false
-    set :over,   visible: true
+    normal  {_SET_ visible: false}
+    over    {_SET_ visible: true}
+    key_down{_SET_ visible: false}
   end
 
   #キー押下状態で判定範囲を超えた場合は、以下のイベントをフックして対応する

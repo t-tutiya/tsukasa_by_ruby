@@ -36,9 +36,9 @@ button  id: :button1,
         x: 150,
         y: 150 do
   on_key_up do
-    set :key_down, visible: false
-    set :normal, visible: false
-    set :over,   visible: true
+    normal  {_SET_ visible: false}
+    over    {_SET_ visible: true}
+    key_down{_SET_ visible: false}
     _SET_ :_LOCAL_, flag: true
   end
 end

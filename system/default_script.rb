@@ -39,22 +39,6 @@ _DEFINE_ :backlay do
   _TO_IMAGE_
 end
 
-#_SET_の第１引数を送信先コントロールにした物
-#TODO：これ、ネストsetと競合してるので再検討
-_DEFINE_ :set do |options|
-  _SEND_ options[:_ARGUMENT_], interrupt: true do
-    options.delete(:_ARGUMENT_)
-    _SET_ options
-  end
-end
-
-#汎用_DELETE_
-_DEFINE_ :delete do |options|
-  _SEND_ options[:_ARGUMENT_], interrupt: true do
-    _DELETE_
-  end
-end
-
 #指定フレーム数ウェイト
 #ex. wait_count 60
 _DEFINE_ :wait_count do |options|
@@ -65,11 +49,6 @@ end
 #ex. wait_command :_MOVE_ 
 _DEFINE_ :wait_command do |options|
   _WAIT_ [:command], command: options[:_ARGUMENT_]
-end
-
-#可視設定
-_DEFINE_ :visible do |options|
-  set options
 end
 
 ###############################################################################
@@ -297,17 +276,17 @@ _DEFINE_ :page_icon_func do |options|
             :x_count => 4, 
             :y_count => 1 do
       _WHILE_ [:true] do
-        set 3, visible: false
-        set 0, visible: true
+        _SEND_(3){_SET_  visible: false}
+        _SEND_(0){_SET_  visible: true}
       	_WAIT_ [:count], count: 5
-        set 0, visible: false
-        set 1, visible: true
+        _SEND_(0){_SET_  visible: false}
+        _SEND_(1){_SET_  visible: true}
       	_WAIT_ [:count], count: 5
-        set 1, visible: false
-        set 2, visible: true
+        _SEND_(1){_SET_  visible: false}
+        _SEND_(2){_SET_  visible: true}
       	_WAIT_ [:count], count: 5
-        set 2, visible: false
-        set 3, visible: true
+        _SEND_(2){_SET_  visible: false}
+        _SEND_(3){_SET_  visible: true}
       	_WAIT_ [:count], count: 5
       end
     end
@@ -361,24 +340,24 @@ _DEFINE_ :button do |options|
       :file_path=>"./sozai/button_key_down.png", 
       :id=>:key_down, :visible => false
     on_mouse_over do
-      set :normal, visible: false
-      set :over,   visible: true
-      set :key_down, visible: false
+      normal  {_SET_ visible: false}
+      over    {_SET_ visible: true}
+      key_down{_SET_ visible: false}
     end
     on_mouse_out do
-      set :over,   visible: false
-      set :normal, visible: true
-      set :key_down, visible: false
+      normal  {_SET_ visible: true}
+      over    {_SET_ visible: false}
+      key_down{_SET_ visible: false}
     end
     on_key_down do
-      set :over,   visible: false
-      set :normal, visible: false
-      set :key_down, visible: true
+      normal  {_SET_ visible: false}
+      over    {_SET_ visible: false}
+      key_down{_SET_ visible: true}
     end
     on_key_up do
-      set :key_down, visible: false
-      set :normal, visible: false
-      set :over,   visible: true
+      normal  {_SET_ visible: false}
+      over    {_SET_ visible: true}
+      key_down{_SET_ visible: false}
     end
     _YIELD_
   end

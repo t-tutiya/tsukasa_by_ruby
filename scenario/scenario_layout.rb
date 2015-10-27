@@ -56,7 +56,7 @@ _CREATE_ :RenderTargetControl,
       :id=>2, :visible => false
   _CREATE_ :ImageControl, :file_path=>"./sozai/button_out.png", 
       :id=>3, :visible => false
-  _WHILE_ [:true] do
+  _LOOP_ stop: false do
     _SEND_(3){_SET_  visible: false}
     _SEND_(0){_SET_  visible: true}
   	_WAIT_ count: 10

@@ -512,7 +512,7 @@ class Control #制御構文
   end
 
   #繰り返し
-  def command__WHILE_(options, inner_options)
+  def command__LOOP_(options, inner_options)
     #チェック条件を満たさないなら終了する
     return if check_imple(options)
 
@@ -523,7 +523,7 @@ class Control #制御構文
     interrupt_command([:_END_LOOP_, options, inner_options])
 
     #while文全体をスクリプトストレージにスタック
-    eval_commands([[:_WHILE_, options, inner_options]])
+    eval_commands([[:_LOOP_, options, inner_options]])
     #ブロックを実行時評価しコマンド列を生成する。
     eval_block(options, &inner_options[:block])
   end

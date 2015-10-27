@@ -11,7 +11,7 @@ _CREATE_ :RenderTargetControl ,
           rule_file_path: "sozai/rule/circle_rule.png" do
   _CREATE_ :ImageControl, file_path: "./sozai/bg_sample.png", id: :test
 
-  _WHILE_ :true do
+  _LOOP_ :true do
     transition_rule :time => 240
     _WAIT_ :command => :transition_rule
   end
@@ -19,7 +19,7 @@ end
 
 button id: :button1
 _SEND_ :button1 do
-  _WHILE_ :true do
+  _LOOP_ :true do
     _MOVE_ 60, x: 300, y: 0, alpha: 0
     wait_command :_MOVE_
     _MOVE_ 60, x: 300, y: 300, alpha: 255
@@ -33,7 +33,7 @@ end
 
 button id: :button2
 _SEND_ :button2 do
-  _WHILE_ :true do
+  _LOOP_ :true do
     _PATH_ 300, path: [
   [ 10.0 * 4,  30.0 * 4, 255],
   [ 77.0 * 4,  49.0 * 4, 0],
@@ -47,7 +47,7 @@ end
 
 button id: :button3
 _SEND_ :button3 do
-  _WHILE_ :true do
+  _LOOP_ :true do
     _PATH_ 300, type: :spline, path: [
 #  [ 10.0 * 4,  30.0 * 4, 0],
 #  [ 77.0 * 4,  49.0 * 4, 255],

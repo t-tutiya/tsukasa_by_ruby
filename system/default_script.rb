@@ -267,7 +267,7 @@ _DEFINE_ :page_icon_func do |options|
             :id=>:test, 
             :x_count => 4, 
             :y_count => 1 do
-      _WHILE_ stop: true do
+      _LOOP_ stop: true do
         _SEND_(3){_SET_  visible: false}
         _SEND_(0){_SET_  visible: true}
       	_WAIT_  count: 5

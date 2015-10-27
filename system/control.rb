@@ -244,147 +244,138 @@ class Control #内部メソッド
                                             &block))
   end
 
-  def check_imple(conditions, options)
-    #条件が単体だった場合、要素１の配列にする。
-    conditions = [conditions] unless conditions.instance_of?(Array)
+  def check_imple(options)
+    args_name = options[:_ARGUMENT_] ? options[:_ARGUMENT_] : :_LOCAL_
 
-    args_name = options[:type] ? options[:type] : :_LOCAL_
-
-    conditions.each do |condition|
-      case condition
-
+    options.each do |key, value|
+      next if key == :_ARGUMENT_
+      case key
       when :sleep
-        return true if @root_control.sleep_mode
-
-      when :not_sleep
-        return true unless @root_control.sleep_mode
+        return true if @root_control.sleep_mode == value
 
       when :count
         #残りwaitフレーム数が０より大きい場合
-        return true if options[:count] <= 0
+        return true if value <= 0
 
       #継続条件：コマンドがリスト上に存在している
       when :command
         unless @next_frame_commands.index{|command|
-          command[0]==options[:command]}
+          command[0] == value}
           return true 
         end
 
       #継続条件：指定ＩＤの子要素が存在する
       when :child
-        return unless options[:child]
-        return true if find_control(options[:child]).count == 0
+        return unless value
+        return true if find_control(value).count == 0
 
       #キーが押下されている
       when :key_push
         #対象キーが設定されていなければスペースキーとする
-        options[:key_push] = [K_SPACE] unless options[:key_push]
+        value = [K_SPACE] unless value
         #対象キーが配列で渡されていない場合配列に変換する
-        options[:key_push] = [options[:key_push]] unless options[:key_push].instance_of?(Array)
+        value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
-        options[:key_push].each do |key_code|
+        value.each do |key_code|
           return true if Input.key_push?(key_code)
         end
 
       #キーが押下されていない
       when :not_key_push
         #対象キーが設定されていなければスペースキーとする
-        options[:not_key_push] = [K_SPACE] unless options[:not_key_push]
+        value = [K_SPACE] unless value
         #対象キーが配列で渡されていない場合配列に変換する
-        options[:not_key_push] = [options[:not_key_push]] unless options[:not_key_push].instance_of?(Array)
+        value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
-        options[:not_key_push].each do |key_code|
+        value.each do |key_code|
           return true unless Input.key_push?(key_code)
         end
 
       #キーが押下されている（前回との比較付き）
       when :key_down
         #対象キーが設定されていなければスペースキーとする
-        options[:key_down] = [K_SPACE] unless options[:key_down]
+        value = [K_SPACE] unless value
         #対象キーが配列で渡されていない場合配列に変換する
-        options[:key_down] = [options[:key_down]] unless options[:key_down].instance_of?(Array)
+        value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
-        options[:key_down].each do |key_code|
+        value.each do |key_code|
           return true if Input.key_down?(key_code)
         end
 
       #キーが押下されていない（前回との比較付き）
       when :not_key_down
         #対象キーが設定されていなければスペースキーとする
-        options[:not_key_down] = [K_SPACE] unless options[:not_key_down]
+        value = [K_SPACE] unless value
         #対象キーが配列で渡されていない場合配列に変換する
-        options[:not_key_down] = [options[:not_key_down]] unless options[:not_key_down].instance_of?(Array)
+        value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
-        options[:not_key_down].each do |key_code|
+        value.each do |key_code|
           return true unless Input.key_down?(key_code)
         end
 
       #キーが解除された
       when :key_up
         #対象キーが設定されていなければスペースキーとする
-        options[:key_up] = [K_SPACE] unless options[:key_up]
+        value = [K_SPACE] unless value
         #対象キーが配列で渡されていない場合配列に変換する
-        options[:key_up] = [options[:key_up]] unless options[:key_up].instance_of?(Array)
+        value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
-        options[:key_up].each do |key_code|
+        value.each do |key_code|
           return true if Input.key_release?(key_code)
         end
 
       #キーが解除されていない
       when :not_key_up
         #対象キーが設定されていなければスペースキーとする
-        options[:not_key_up] = [K_SPACE] unless options[:not_key_up]
+        value = [K_SPACE] unless value
         #対象キーが配列で渡されていない場合配列に変換する
-        options[:not_key_up] = [options[:not_key_up]] unless options[:not_key_up].instance_of?(Array)
+        value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
-        options[:not_key_up].each do |key_code|
+        value.each do |key_code|
           return true unless Input.key_release?(key_code)
         end
 
       #ユーザデータ確認系
 
       when :equal
-        return unless options[:equal]
+        return unless value
         #指定されたデータと値がイコールかどうか
-        options[:equal].each do |key, val|
+        value.each do |key, val|
           return true if @root_control.send(args_name)[key] == val
         end
 
       when :not_equal
-        return unless options[:not_equal]
+        return unless value
         #指定されたデータと値がイコールでない場合
-        options[:not_equal].each do |key, val|
+        value.each do |key, val|
           return true if @root_control.send(args_name)[key] != val
         end
 
       when :null
-        return unless options[:null]
-        options[:null] = [options[:null]] unless options[:null].instance_of?(Array)
+        return unless value
+        value = [value] unless value.instance_of?(Array)
         #指定されたデータがnilの場合
-        options[:null].each do |key|
+        value.each do |key|
           return true if @root_control.send(args_name)[key] == nil
         end
 
       when :not_null
-        return unless options[:not_null]
-        options[:not_null] = [options[:not_null]] unless options[:not_null].instance_of?(Array)
+        return unless value
+        value = [value] unless value.instance_of?(Array)
         #指定されたデータがnilで無い場合
-        options[:not_null].each do |key|
+        value.each do |key|
           return true if @root_control.send(args_name)[key] != nil
         end
 
-      when :true
+      when :stop
         #必ず真を返す
-        return true
-
-      when :false
-        #必ず偽を返す
-        return false
+        return value
       end
     end
     
     return false
   end
+
 end
 
 class Control #コントロールの生成／破棄
@@ -496,7 +487,7 @@ class Control #制御構文
   def command__WAIT_(options, inner_options)
 
     #チェック条件を満たしたら終了する
-    return if check_imple(options[:_ARGUMENT_], options)
+    return if check_imple(options)
 
     if options[:count]
       options[:count] = options[:count] - 1
@@ -513,7 +504,7 @@ class Control #制御構文
 
   def command__CHECK_(options, inner_options)
     #チェック条件を満たさない場合
-    if check_imple(options[:_ARGUMENT_], options)
+    if check_imple(options)
       #checkにブロックが付与されているならそれを実行する
       eval_block(options, &inner_options[:block])
       return
@@ -523,7 +514,11 @@ class Control #制御構文
   #繰り返し
   def command__WHILE_(options, inner_options)
     #チェック条件を満たさないなら終了する
-    return unless check_imple(options[:_ARGUMENT_], options)
+    return if check_imple(options)
+
+    if options[:count]
+      options[:count] = options[:count] - 1
+    end
 
     interrupt_command([:_END_LOOP_, options, inner_options])
 
@@ -837,7 +832,7 @@ class Control #プロパティのパラメータ遷移
 
     #条件判定が存在し、かつその条件が成立した場合
     if options[:option][:check] and 
-        check_imple(options[:option][:check][0], options[:option][:check][1])
+        check_imple(options[:option][:check])
       #ブロックがあれば実行し、コマンドを終了する
       if inner_options[:block]
         eval_block(options, &inner_options[:block]) 

@@ -59,15 +59,15 @@ _CREATE_ :RenderTargetControl,
   _WHILE_ [:true] do
     _SEND_(3){_SET_  visible: false}
     _SEND_(0){_SET_  visible: true}
-  	_WAIT_ [:count], count: 10
+  	_WAIT_ count: 10
     _SEND_(0){_SET_  visible: false}
     _SEND_(1){_SET_  visible: true}
-  	_WAIT_ [:count], count: 10
+  	_WAIT_ count: 10
     _SEND_(1){_SET_  visible: false}
     _SEND_(2){_SET_  visible: true}
-  	_WAIT_ [:count], count: 10
+  	_WAIT_ count: 10
     _SEND_(2){_SET_  visible: false}
     _SEND_(3){_SET_  visible: true}
-  	_WAIT_ [:count], count: 10
+  	_WAIT_ count: 10
   end
 end

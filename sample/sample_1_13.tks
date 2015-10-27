@@ -1,0 +1,12 @@
+ＸかＺのキーを押してください
+@	_WAIT_ key_down: [K_X,K_Z]
+
+@	_CHECK_ key_down: [K_X] do
+Ｘキーが押されました
+@	end
+
+@	_CHECK_ key_down: [K_Z] do
+Ｚキーが押されました
+@	end
+
+もう一度実行する場合は再起動して下さい。

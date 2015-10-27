@@ -1,7 +1,7 @@
 @	base {_SET_ file_path: "./sozai/bg_sample.png"}
 @	img0 {_SET_ file_path: "./sozai/char/B-1.png", x: 250}
 
-@	_WAIT_  [:key_push], key_push: K_SPACE
+@	_WAIT_ key_push: K_SPACE
 
 @	_TO_IMAGE_
 

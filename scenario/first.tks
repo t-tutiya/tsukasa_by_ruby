@@ -8,5 +8,7 @@
 	#_INCLUDE_ "./sample/sample_1_8.tks"
 	#_INCLUDE_ "./sample/sample_1_9.tks"
 	#_INCLUDE_ "./sample/sample_1_10.tks"
-	_INCLUDE_ "./sample/sample_1_11.tks"
+	#_INCLUDE_ "./sample/sample_1_11.tks"
+	#_INCLUDE_ "./sample/sample_1_12.tks"
+	#_INCLUDE_ "./sample/sample_1_13.tks"	#条件分岐
 

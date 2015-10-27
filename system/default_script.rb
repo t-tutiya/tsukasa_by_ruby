@@ -37,13 +37,13 @@ require 'dxruby'
 #指定フレーム数ウェイト
 #ex. wait_count 60
 _DEFINE_ :wait_count do |options|
-  _WAIT_ [:count], count: options[:_ARGUMENT_]
+  _WAIT_ count: options[:_ARGUMENT_]
 end
 
 #指定コマンドウェイト
 #ex. wait_command :_MOVE_ 
 _DEFINE_ :wait_command do |options|
-  _WAIT_ [:command], command: options[:_ARGUMENT_]
+  _WAIT_ command: options[:_ARGUMENT_]
 end
 
 ###############################################################################
@@ -61,8 +61,8 @@ _DEFINE_ :pause do |options|
   _SET_ sleep: true
 
   #ウェイク状態まで待機
-  _WAIT_ [:not_sleep, :key_down], 
-          key_down: K_RCONTROL do
+  _WAIT_  key_down: K_RCONTROL, 
+          sleep: false do
     _YIELD_
   end
 
@@ -122,35 +122,33 @@ _DEFINE_ :TextWindow do |options|
           _CHAR_RENDERER_ do
             #フェードイン（スペースキーか右CTRLが押されたらスキップ）
             _MOVE_   15, alpha:[0,255],
-                  option: {check: [[:key_push, :key_down], 
-                          {:key_down => K_RCONTROL}]} do
+                  option: {check: {:key_down => K_RCONTROL, :key_push => K_SPACE}} do
                     _SET_ alpha: 255
                   end
             #トランジションが終了するまで非アイドル状態
-            _WAIT_  [:command], command: :_MOVE_ 
+            _WAIT_  command: :_MOVE_ 
             #スリープ状態に移行
             _SET_ sleep: true
             #ウェイク状態になるまで待機
-            _WAIT_ [:not_sleep]
+            _WAIT_ sleep: false
             #キー入力伝搬を防ぐ為に１フレ送る
             _END_FRAME_
             #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
             _MOVE_  60,  alpha:128,
                   option: {
-                  check: [[:key_push ,:key_down], 
-                          {:key_down => K_RCONTROL}]} do
+                  check: {:key_down => K_RCONTROL, :key_push => K_SPACE}} do
                     #スキップされた場合
-                    _CHECK_ :key_down, key_down: K_RCONTROL do
+                    _CHECK_ key_down: K_RCONTROL do
                       #CTRLスキップ中であれば透明度255
                       _SET_ alpha: 255
                     end
-                    _CHECK_ :key_push do
+                    _CHECK_ key_push: K_SPACE do
                       #CTRLスキップ中でなければ透明度128
                       _SET_ alpha: 128
                     end
             end
             #トランジションが終了するまで待機
-            _WAIT_ [:command], command: :_MOVE_ 
+            _WAIT_ command: :_MOVE_ 
           end
           _SET_ size: 32
           _FLUSH_ #これが必ず必要
@@ -193,12 +191,12 @@ _DEFINE_ :TextWindow do |options|
         _SEND_ :last do
           _END_FRAME_
 
-          _WAIT_ [:count], count: 15
+          _WAIT_ count: 15
 
           _CALL_ options[:icon], id: :icon do
             #スペースキーあるいはCTRLキーの押下待機
-            _WAIT_ [:key_push, :key_down] , 
-                    key_down: K_RCONTROL
+            _WAIT_  key_down: K_RCONTROL,
+                    key_push: K_SPACE
 
             #クリック待ちアイコンの削除
             _SEND_ :icon do
@@ -269,19 +267,19 @@ _DEFINE_ :page_icon_func do |options|
             :id=>:test, 
             :x_count => 4, 
             :y_count => 1 do
-      _WHILE_ [:true] do
+      _WHILE_ stop: true do
         _SEND_(3){_SET_  visible: false}
         _SEND_(0){_SET_  visible: true}
-      	_WAIT_ [:count], count: 5
+      	_WAIT_  count: 5
         _SEND_(0){_SET_  visible: false}
         _SEND_(1){_SET_  visible: true}
-      	_WAIT_ [:count], count: 5
+      	_WAIT_  count: 5
         _SEND_(1){_SET_  visible: false}
         _SEND_(2){_SET_  visible: true}
-      	_WAIT_ [:count], count: 5
+      	_WAIT_  count: 5
         _SEND_(2){_SET_  visible: false}
         _SEND_(3){_SET_  visible: true}
-      	_WAIT_ [:count], count: 5
+      	_WAIT_  count: 5
       end
     end
     _YIELD_

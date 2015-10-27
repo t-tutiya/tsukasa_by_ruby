@@ -327,9 +327,9 @@ class TextPageControl < LayoutControl
       #:waitコマンドをスタックする
       ##TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
       command_list.push([:_WAIT_, 
-                        {:_ARGUMENT_ => [:count, :mode, :key_push, :key_down],
-                         :count => @wait_frame,
+                        {:count => @wait_frame,
                          :key_down => K_RCONTROL,
+                         :key_push => K_SPACE,
                          }, 
                          inner_options])
     end
@@ -381,9 +381,9 @@ class TextPageControl < LayoutControl
     #改行時のwaitを設定する
     ##TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
     interrupt_command([:_WAIT_, 
-                      {:_ARGUMENT_ => [:count, :mode, :key_push, :key_down],
-                       :count => @line_feed_wait_frame,
+                      {:count => @line_feed_wait_frame,
                        :key_down => K_RCONTROL,
+                       :key_push => K_SPACE,
                        }, 
                        inner_options])
 
@@ -491,9 +491,9 @@ class TextPageControl < LayoutControl
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
     #TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
     interrupt_command([:_WAIT_, 
-                          {:_WAIT_ => [:count, :mode, :key_push, :key_down],
-                           :count => @wait_frame,
+                          {:count => @wait_frame,
                            :key_down => K_RCONTROL,
+                           :key_push => K_SPACE,
                            }, inner_options])
 =end
   end

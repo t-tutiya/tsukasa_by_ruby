@@ -13,7 +13,7 @@ _CREATE_ :RenderTargetControl ,
 
   _WHILE_ :true do
     transition_rule :time => 240
-    _WAIT_ [:command], :command => :transition_rule
+    _WAIT_ :command => :transition_rule
   end
 end
 

@@ -10,6 +10,6 @@
 
 @	test0 {
 @		_MOVE_ 180, alpha: 0
-@		_WAIT_  [:command], command: :_MOVE_
+@		_WAIT_ command: :_MOVE_
 @		_MOVE_ 360, alpha: 255
 @	}

@@ -2,7 +2,7 @@
 @	img0 {_SET_ file_path: "./sozai/char/B-1.png", x_pos: 250}
 @	img1 {_SET_ file_path: "./sozai/char/B-2.png", x_pos: 250, visible: false}
 
-@	_WAIT_  [:key_push], key_push: K_SPACE
+@	_WAIT_ key_push: K_SPACE
 
 @	img0 {
 @		_MOVE_ 360, alpha: [255, 0]

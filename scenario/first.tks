@@ -11,4 +11,7 @@
 	#_INCLUDE_ "./sample/sample_1_11.tks"
 	#_INCLUDE_ "./sample/sample_1_12.tks"
 	#_INCLUDE_ "./sample/sample_1_13.tks"	#条件分岐
+	#_INCLUDE_ "./sample/sample_1_14.tks"	#ループ
+	#_INCLUDE_ "./sample/sample_1_15.tks"	#ボタン
+	_INCLUDE_ "./sample/sample_1_16.tks"	#サウンド
 

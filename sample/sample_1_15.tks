@@ -1,0 +1,20 @@
+@	button id: :button1, x: 50, y: 150 do
+@		on_key_up do
+@			_SET_ :_LOCAL_, click: :left
+@		end
+@	end
+@	button id: :button2, x: 450, y: 150 do
+@		on_key_up do
+@			_SET_ :_LOCAL_, click: :right
+@		end
+@	end
+
+@	_WAIT_ not_null: :click
+
+@	_CHECK_ equal:{click: :left} do
+@		_INCLUDE_ "./sample/sample_1_15a.tks"
+@	end
+
+@	_CHECK_ equal:{click: :right} do
+@		_INCLUDE_ "./sample/sample_1_15b.tks"
+@	end

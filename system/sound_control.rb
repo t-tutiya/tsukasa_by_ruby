@@ -66,6 +66,16 @@ class SoundControl  < Control
     @entity.set_volume(@volume, 0)
   end
 
+  attr_reader :play
+  def play=(args)
+    @play = args
+    if @play
+      @entity.play
+    else
+      @entity.stop
+    end
+  end
+
   attr_reader :file_path
   def file_path=(file_path)
     @file_path = file_path
@@ -111,22 +121,5 @@ class SoundControl  < Control
   def dispose
     @entity.dispose
     super
-  end
-
-  #音を再生します
-  def command_play(options, inner_options)
-    @entity.play
-  end
-
-  #ＳＥの停止
-  def command_stop(options, inner_options)
-    @entity.stop
-  end
-
-  #フェード
-  #TODO;上手く動いてないが理由が分からない
-  def command_fade(options, inner_options)
-    @entity.set_volume(options[:start] || @volume, 0)
-    @entity.set_volume(options[:last]  || 0, options[:fade_ms] || 0)
   end
 end

@@ -277,8 +277,6 @@ class Control #内部メソッド
 
       #キーが押下されている
       when :key_push
-        #対象キーが設定されていなければスペースキーとする
-        value = [K_SPACE] unless value
         #対象キーが配列で渡されていない場合配列に変換する
         value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
@@ -288,8 +286,6 @@ class Control #内部メソッド
 
       #キーが押下されていない
       when :not_key_push
-        #対象キーが設定されていなければスペースキーとする
-        value = [K_SPACE] unless value
         #対象キーが配列で渡されていない場合配列に変換する
         value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
@@ -299,8 +295,6 @@ class Control #内部メソッド
 
       #キーが押下されている（前回との比較付き）
       when :key_down
-        #対象キーが設定されていなければスペースキーとする
-        value = [K_SPACE] unless value
         #対象キーが配列で渡されていない場合配列に変換する
         value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
@@ -310,8 +304,6 @@ class Control #内部メソッド
 
       #キーが押下されていない（前回との比較付き）
       when :not_key_down
-        #対象キーが設定されていなければスペースキーとする
-        value = [K_SPACE] unless value
         #対象キーが配列で渡されていない場合配列に変換する
         value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
@@ -321,8 +313,6 @@ class Control #内部メソッド
 
       #キーが解除された
       when :key_up
-        #対象キーが設定されていなければスペースキーとする
-        value = [K_SPACE] unless value
         #対象キーが配列で渡されていない場合配列に変換する
         value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
@@ -332,8 +322,6 @@ class Control #内部メソッド
 
       #キーが解除されていない
       when :not_key_up
-        #対象キーが設定されていなければスペースキーとする
-        value = [K_SPACE] unless value
         #対象キーが配列で渡されていない場合配列に変換する
         value = [value] unless value.instance_of?(Array)
         #キーの入力チェック

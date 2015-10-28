@@ -79,7 +79,7 @@ module Clickable
     @collision_sprite.x = @x 
     @collision_sprite.y = @y
     @mouse_sprite.x = @cursol_x
-    @mouse_sprite.y = @cursol_x
+    @mouse_sprite.y = @cursol_y
 
     #描画範囲内かどうか
     if (@mouse_sprite === @collision_sprite)

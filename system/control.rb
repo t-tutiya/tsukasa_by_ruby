@@ -245,6 +245,12 @@ class Control #内部メソッド
   end
 
   def check_imple(options)
+    #条件の強制的な成立
+    return true if options[:_ARGUMENT_] === true
+    #条件の強制的な不成立
+    return false if options[:_ARGUMENT_] === false
+
+    #演算対象のデータ領域を設定
     args_name = options[:_ARGUMENT_] ? options[:_ARGUMENT_] : :_LOCAL_
 
     options.each do |key, value|
@@ -366,10 +372,6 @@ class Control #内部メソッド
         value.each do |key|
           return true if @root_control.send(args_name)[key] != nil
         end
-
-      when :stop
-        #必ず真を返す
-        return value
       end
     end
     

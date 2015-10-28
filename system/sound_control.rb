@@ -66,6 +66,18 @@ class SoundControl  < Control
     @entity.set_volume(@volume, 0)
   end
 
+  attr_reader :frequency
+  def frequency=(args)
+    @frequency = args
+    @entity.frequency = args
+  end
+
+  attr_reader :pan
+  def pan=(args)
+    @pan = args
+    @entity.pan = args
+  end
+
   attr_reader :play
   def play=(args)
     @play = args

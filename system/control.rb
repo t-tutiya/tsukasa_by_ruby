@@ -1023,6 +1023,7 @@ class Control #プロパティのパラメータ遷移
     
     #現在の経過カウントを初期化
     options[:option][:count] = 0 unless options[:option][:count]
+    options[:option][:type] = :spline unless options[:option][:type]
 
     #条件判定が存在し、かつその条件が成立した場合
     if options[:option][:check] and 
@@ -1045,9 +1046,6 @@ class Control #プロパティのパラメータ遷移
 
       #全ての座標を巡回し、それぞれの座標についてstep量に応じた重み付けを行い、その総和を現countでの座標とする
       values.size.times do |index|
-
-        options[:option][:type] = :spline unless options[:option][:type]
-
         case options[:option][:type]
         when :spline
           coefficent = b_spline_coefficent(step - index)

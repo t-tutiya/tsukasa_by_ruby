@@ -1,40 +1,16 @@
+キーを押してしばらくお待ちください。
+
 @	_CREATE_ :SoundControl, file_path: "./test/bell.wav", id: :test01
-
-初期化が終了しました。スペースキーを押すと再生します
-
-@	test01{_SET_ play: true}
-
-再生中。スペースキーを押すと停止します。
-
-@	test01{_SET_ play: false}
-
-停止。次は無限ループ
+初期化が終了しました。
+キーを押すと再生します
 
 @	test01{
 @		_SET_ loop_count: -1
-@		_SET_ play: true
-@	}
-
-無限ループ中。スペースキーを押すと停止します。
-
-@	test01{_SET_ play: false}
-
-停止。次はフェードイン
-
-@	test01{
 @		_MOVE_ 180, volume: [0,230]
 @		_SET_ play: true
 @	}
 
-フェードインしつつ無限ループ中
-スペースキーを押すとフェードアウトします
-
-@	test01{
-@		_SET_ play: false
-@		_MOVE_ 180, volume: [230, 0]
-@		_SET_ play: true
-@	}
-
-フェードアウトしつつ無限ループ中。スペースキーを押すと停止します
+無限ループ中。
+スペースキーを押すと停止します。
 
 @	test01{_SET_ play: false}

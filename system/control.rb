@@ -815,6 +815,7 @@ class Control #プロパティのパラメータ遷移
   def command__MOVE_(options, inner_options)
     raise unless options[:_ARGUMENT_] #必須要素
     
+    #オプションハッシュの初期化
     options[:option] =  {} unless options[:option]
     
     #現在の経過カウントを初期化

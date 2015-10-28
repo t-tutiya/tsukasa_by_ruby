@@ -1027,7 +1027,7 @@ class Control #プロパティのパラメータ遷移
 
     #条件判定が存在し、かつその条件が成立した場合
     if options[:option][:check] and 
-        check_imple(options[:option][:check])
+      check_imple(options[:option][:check])
       #ブロックがあれば実行し、コマンドを終了する
       if inner_options[:block]
         eval_block(options, &inner_options[:block]) 
@@ -1061,6 +1061,7 @@ class Control #プロパティのパラメータ遷移
       #移動先座標の決定
       send(key.to_s + "=", result.round)
     end
+
     #カウントが指定フレーム以下の場合
     if options[:option][:count] < options[:_ARGUMENT_]
       #カウントアップ
@@ -1069,7 +1070,6 @@ class Control #プロパティのパラメータ遷移
       push_command_to_next_frame(:_PATH_, options, inner_options)
     end
   end
-
 
   #３次Ｂスプライン重み付け関数
   def b_spline_coefficent(t)

@@ -230,6 +230,14 @@ class TextPageControl < LayoutControl
     @indent = options[:indent] || 0 
 
     super
+
+    #次のアクティブ行コントロールを追加  
+    interrupt_command([:_CREATE_, 
+                     {:_ARGUMENT_ => :LayoutControl, 
+                      :width => @width,
+                      :height => @line_height,
+                      :float_mode => :bottom}, 
+                      {}])
   end
 
   def siriarize(options = {})
@@ -419,11 +427,13 @@ class TextPageControl < LayoutControl
       control.interrupt_command([:_DELETE_, options, {}])
     end
 
-    #改行を挿入して新規列レイアウトコントロールを生成する
-    indent = @indent #一時的にインデントを退避＆クリアする
-    @indent = 0
-    command__LINE_FEED_(options, inner_options)
-    @indent = indent
+    #次のアクティブ行コントロールを追加  
+    interrupt_command([:_CREATE_, 
+                     {:_ARGUMENT_ => :LayoutControl, 
+                      :width => @width,
+                      :height => @line_height,
+                      :float_mode => :bottom}, 
+                      inner_options])
   end
 
   #############################################################################

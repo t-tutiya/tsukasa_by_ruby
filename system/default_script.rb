@@ -151,7 +151,6 @@ _DEFINE_ :TextWindow do |options|
             _WAIT_ command: :_MOVE_ 
           end
           _SET_ size: 32
-          _FLUSH_ #これが必ず必要
       end
     _DEFINE_ :style do |options|
       _SEND_ :last do

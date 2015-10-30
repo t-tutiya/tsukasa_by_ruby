@@ -33,7 +33,12 @@ require 'dxruby'
 class RenderTargetControl < Control
   include Drawable
   include Clickable
-  
+
+  def color=(arg)
+    @entity.bgcolor = arg
+    super
+  end
+
   def initialize(options, inner_options, root_control)
     #保持オブジェクトの初期化
     options[:entity] = RenderTarget.new(options[:width]  || 1, 

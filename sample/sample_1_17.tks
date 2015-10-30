@@ -1,0 +1,20 @@
+ＸかＺのキーを押してください
+@	_WAIT_ key_down: [K_X,K_Z]
+
+@	_CHECK_ key_down: [K_X] do
+@		_SET_ :_SYSTEM_ , data0: K_X
+@	end
+@	_CHECK_ key_down: [K_Z] do
+@		_SET_ :_SYSTEM_, data0: K_Z
+@	end
+
+@	_SAVE_  0
+@	_SET_ :_SYSTEM_, data0: "dummy"
+@	_LOAD_  0
+
+@	_CHECK_ :_SYSTEM_, equal: {data0: K_X} do
+Ｘキーが押されました
+@	end
+@	_CHECK_ :_SYSTEM_, equal: {data0: K_Z} do
+Ｚキーが押されました
+@	end

@@ -251,7 +251,7 @@ class Control #内部メソッド
     return false if options[:_ARGUMENT_] === false
 
     #演算対象のデータ領域を設定
-    args_name = options[:_ARGUMENT_] ? options[:_ARGUMENT_] : :_LOCAL_
+    args_name = options[:_ARGUMENT_] ? options[:_ARGUMENT_] : :_TEMP_
 
     options.each do |key, value|
       next if key == :_ARGUMENT_

@@ -1,17 +1,22 @@
-	#_INCLUDE_ "./sample/sample_1_1.tks"
-	#_INCLUDE_ "./sample/sample_1_2.tks"
-	#_INCLUDE_ "./sample/sample_1_3.tks"
-	#_INCLUDE_ "./sample/sample_1_4.tks"
-	#_INCLUDE_ "./sample/sample_1_5.tks"
-	#_INCLUDE_ "./sample/sample_1_6.tks"
-	#_INCLUDE_ "./sample/sample_1_7.tks"
-	#_INCLUDE_ "./sample/sample_1_8.tks"
-	#_INCLUDE_ "./sample/sample_1_9.tks"
-	#_INCLUDE_ "./sample/sample_1_10.tks"
-	#_INCLUDE_ "./sample/sample_1_11.tks"
-	#_INCLUDE_ "./sample/sample_1_12.tks"
-	#_INCLUDE_ "./sample/sample_1_13.tks"	#条件分岐
-	#_INCLUDE_ "./sample/sample_1_14.tks"	#ループ
-	#_INCLUDE_ "./sample/sample_1_15.tks"	#ボタン
-	_INCLUDE_ "./sample/sample_1_16.tks"	#サウンド
+	#_INCLUDE_ "./sample/sample_1_1.tks"		#文字の表示
+	#_INCLUDE_ "./sample/sample_1_2.tks"		#文字装飾
+	#_INCLUDE_ "./sample/sample_1_3.tks"		#コントロールの表示
+	#_INCLUDE_ "./sample/sample_1_4.tks"		#移動
+	#_INCLUDE_ "./sample/sample_1_5.tks"		#線形補間
+	#_INCLUDE_ "./sample/sample_1_6.tks"		#フェードイン・アウト
+	#_INCLUDE_ "./sample/sample_1_7.tks"		#レイアウト
+	#_INCLUDE_ "./sample/sample_1_8.tks"		#クロスフェード
+	#_INCLUDE_ "./sample/sample_1_9.tks"		#トランジション
+	#_INCLUDE_ "./sample/sample_1_10.tks"		#ルールトランジション
+	#_INCLUDE_ "./sample/sample_1_11.tks"		#ユーザー定義コマンド
+	#_INCLUDE_ "./sample/sample_1_12.tks"		#データ領域／インラインデータ
+	#_INCLUDE_ "./sample/sample_1_13.tks"		#条件分岐
+	#_INCLUDE_ "./sample/sample_1_14.tks"		#ループ
+	#_INCLUDE_ "./sample/sample_1_15.tks"		#ボタン
+	#_INCLUDE_ "./sample/sample_1_16.tks"		#サウンド
+	#_INCLUDE_ "./sample/sample_1_17.tks"		#セーブロード
 
+	#_INCLUDE_ "./sample/sample_1_101.tks"
+	#_INCLUDE_ "./test/0930test02.rb"
+	_INCLUDE_ "./test/1030test03.rb"
+	#_INCLUDE_ "./test/1020sozai_sample.rb"

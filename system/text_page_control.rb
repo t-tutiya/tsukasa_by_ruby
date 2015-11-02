@@ -319,6 +319,16 @@ class TextPageControl < LayoutControl
   def command__TEXT_(options, inner_options)
     command_list = Array.new
 
+    #第１引数が設定されていない場合
+    unless options[:_ARGUMENT_]
+      result = ""
+      #キーで指定されたデータストアのデータを文字列とする
+      options.each do |key, value|
+        result = @root_control.send(key)[value]
+      end
+      options[:_ARGUMENT_] = result
+    end
+
     #イメージフォントを使うかどうか
     if @use_image_font
       char_command = :image_char
@@ -373,12 +383,6 @@ class TextPageControl < LayoutControl
                 :command_list => [rubi_layout],
                 :float_mode => :right}, 
                {}])
-  end
-
-  #一時データ領域にあるデータをテキストとして出力する
-  def command__DATA_(options, inner_options)
-    options[:_ARGUMENT_] = @_TEMP_[options[:_ARGUMENT_]].to_s
-    command__TEXT_(options, inner_options)
   end
 
   #line_feedコマンド

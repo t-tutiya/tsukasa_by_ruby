@@ -660,7 +660,19 @@ class Control #スクリプト制御
 
   #スクリプトファイルを挿入する
   def command__INCLUDE_(options, inner_options)
-    self.script_file_path = options[:_ARGUMENT_]
+    #オプションが設定していなければ例外送出
+    raise if options.empty?
+    
+    #文字列が直接指定されていればそれをファイルパスとする
+    if options[:_ARGUMENT_]
+      self.script_file_path = options[:_ARGUMENT_]
+      return
+    end
+
+    #キーで指定されたデータストアのデータをファイルパスとする
+    options.each do |key, value|
+      self.script_file_path = @root_control.send(key)[value]
+    end
   end
 
   #文字列を評価する（デバッグ用）

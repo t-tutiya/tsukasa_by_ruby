@@ -561,10 +561,6 @@ class Control #ユーザー定義関数操作
       return
     end
 
-    #初期化
-    #TODO本来いらない
-    inner_options[:block] = nil unless inner_options[:block]
-
     #参照渡し汚染が起きないようにディープコピーで取得
     block_stack = inner_options[:block_stack].dup
     #スタックプッシュ
@@ -788,13 +784,7 @@ class Control #内部コマンド
     #関数の終端を設定
     interrupt_command([:_END_FUNCTION_, options, inner_options])
 
-    #YIELD用のブロックが渡されている場合、ここでスタックする
-    #TODO:_CALL_とロジックが被ってるのでなんとかしたい。
-
-    #初期化
-    #TODO本来いらない
-    inner_options[:block] = nil unless inner_options[:block]
-
+    #参照渡し汚染が起きないようにディープコピーで取得
     block_stack = inner_options[:block_stack].dup
 
     #関数を展開する

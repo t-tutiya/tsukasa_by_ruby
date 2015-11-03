@@ -34,18 +34,20 @@ class RenderTargetControl < Control
   include Drawable
   include Clickable
 
-  def color=(arg)
+  def bgcolor(arg)
+    @entity.bgcolor
+  end
+  def bgcolor=(arg)
     @entity.bgcolor = arg
-    super
   end
 
   def initialize(options, inner_options, root_control)
     #保持オブジェクトの初期化
     options[:entity] = RenderTarget.new(options[:width]  || 1, 
                                         options[:height] || 1, 
-                                        options[:color]  || [0,0,0,0])
-
+                                        options[:color]  || [0,0,0])
     super
+    self.bgcolor = options[:bgcolor] || [0,0,0,0]
   end
 
   def dispose()

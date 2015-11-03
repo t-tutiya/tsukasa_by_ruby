@@ -236,7 +236,7 @@ class Control #内部メソッド
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
-  def eval_block(options, block_stack = nil, &block)
+  def eval_block(options, block_stack = [], &block)
     return unless block
 
     eval_commands(@script_compiler.commands(options, 
@@ -565,16 +565,9 @@ class Control #ユーザー定義関数操作
     #TODO本来いらない
     inner_options[:block] = nil unless inner_options[:block]
 
-    #伝搬されているブロックがある場合
-    if inner_options[:block_stack]
-      #参照渡し汚染が起きないようにディープコピーで取得
-      block_stack = inner_options[:block_stack].dup
-    else
-      #初期化
-      #TODO本来いらない
-      block_stack =  []
-    end
-
+    #参照渡し汚染が起きないようにディープコピーで取得
+    block_stack = inner_options[:block_stack].dup
+    #スタックプッシュ
     block_stack.push(inner_options[:block]) 
 
     if options[:_FUNCTION_ARGUMENT_]
@@ -603,10 +596,6 @@ class Control #ユーザー定義関数操作
     #呼び出し元がブロックを持っていないなら終了
     block = block_stack.pop
     return unless block
-
-    #block_stackがnilになったらblock_stackを削除
-    #TODO：この処理は必要ない
-    block_stack = nil if block_stack.empty?
 
     eval_block(options, block_stack, &block)
   end
@@ -806,14 +795,7 @@ class Control #内部コマンド
     #TODO本来いらない
     inner_options[:block] = nil unless inner_options[:block]
 
-    #伝搬されているブロックがある場合
-    if inner_options[:block_stack]
-      block_stack = inner_options[:block_stack].dup
-    else
-      #初期化
-      #TODO本来いらない
-      block_stack =  []
-    end
+    block_stack = inner_options[:block_stack].dup
 
     #関数を展開する
     eval_block(options, block_stack, &inner_options[:block])

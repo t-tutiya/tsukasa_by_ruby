@@ -43,9 +43,10 @@ class ScriptCompiler
   end
 
   #ヘルパーメソッド群
-  def commands(argument, block_stack = nil, &block)
+  def commands(argument, block_stack = [], &block)
     @command_list = []
     @yield_block = nil
+    @block_stack = []
 
     if argument[:script_file_path]
       if File.extname(argument[:script_file_path]) == ".tks"

@@ -559,22 +559,23 @@ class Control #ユーザー定義関数操作
       #下位コントロールへの_SEND_であるとみなす
       command__SEND_(options, inner_options)
       return
-      #定義されていないfunctionが呼びだされたら例外を送出
-      #raise NameError, "undefined local variable or command or function `#{options[:_ARGUMENT_]}' for #{inner_options}"
     end
+
+    #初期化
+    #TODO本来いらない
+    inner_options[:block] = nil unless inner_options[:block]
 
     #伝搬されているブロックがある場合
     if inner_options[:block_stack]
+      #参照渡し汚染が起きないようにディープコピーで取得
       block_stack = inner_options[:block_stack].dup
-      if inner_options[:block]
-        block_stack.push(inner_options[:block]) 
-      end
-    #付与ブロックがある場合
-    elsif inner_options[:block]
-      block_stack = [inner_options[:block]]
     else
-      block_stack = nil
+      #初期化
+      #TODO本来いらない
+      block_stack =  []
     end
+
+    block_stack.push(inner_options[:block]) 
 
     if options[:_FUNCTION_ARGUMENT_]
       options[:_ARGUMENT_] = options[:_FUNCTION_ARGUMENT_] 
@@ -593,10 +594,18 @@ class Control #ユーザー定義関数操作
   #関数ブロックを実行する
   #TODO:この実装だと_YIELD_自身にはブロックを付与できないが、それは良いのか？
   def command__YIELD_(options, inner_options)
+    #ブロックスタックが無いなら終了
     return unless inner_options[:block_stack]
 
+    #ブロックスタックをディープコピーで取得
     block_stack = inner_options[:block_stack].dup
+
+    #呼び出し元がブロックを持っていないなら終了
     block = block_stack.pop
+    return unless block
+
+    #block_stackがnilになったらblock_stackを削除
+    #TODO：この処理は必要ない
     block_stack = nil if block_stack.empty?
 
     eval_block(options, block_stack, &block)
@@ -792,17 +801,18 @@ class Control #内部コマンド
 
     #YIELD用のブロックが渡されている場合、ここでスタックする
     #TODO:_CALL_とロジックが被ってるのでなんとかしたい。
+
+    #初期化
+    #TODO本来いらない
+    inner_options[:block] = nil unless inner_options[:block]
+
     #伝搬されているブロックがある場合
     if inner_options[:block_stack]
       block_stack = inner_options[:block_stack].dup
-      if inner_options[:block]
-        block_stack.push(inner_options[:block]) 
-      end
-    #付与ブロックがある場合
-    elsif inner_options[:block]
-      block_stack = [inner_options[:block]]
     else
-      block_stack = nil
+      #初期化
+      #TODO本来いらない
+      block_stack =  []
     end
 
     #関数を展開する

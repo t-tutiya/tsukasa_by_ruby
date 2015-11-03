@@ -46,7 +46,7 @@ class ScriptCompiler
   def commands(argument, block_stack = [], &block)
     @command_list = []
     @yield_block = nil
-    @block_stack = []
+    @block_stack = block_stack
 
     if argument[:script_file_path]
       if File.extname(argument[:script_file_path]) == ".tks"
@@ -62,9 +62,6 @@ class ScriptCompiler
       end
     else
       raise unless block
-
-      #yieldブロックが設定されている場合
-      @block_stack = block_stack
 
       self.instance_exec(**argument, &block)
     end

@@ -33,11 +33,18 @@ require 'pstore'
 
 class Control #公開インターフェイス
   #プロパティ
-  attr_accessor  :_SYSTEM_  #システム全体で共有されるデータ群。保存対象。
-  attr_accessor  :_LOCAL_   #個別のセーブデータを表すデータ群。保存対象。
-  attr_accessor  :_TEMP_    #一時的に管理するデータ群。保存対象ではない。
-
-  attr_accessor  :_MODE_STATUS_
+  #システム全体で共有されるデータ群。保存対象。
+  def _SYSTEM_
+    @root_control._SYSTEM_
+  end
+  #個別のセーブデータを表すデータ群。保存対象。
+  def _LOCAL_
+    @root_control._LOCAL_
+  end
+  #一時的に管理するデータ群。保存対象ではない。
+  def _TEMP_
+    @root_control._TEMP_
+  end
 
   attr_accessor  :id
 
@@ -59,16 +66,6 @@ class Control #公開インターフェイス
   def initialize(options, inner_options, root_control)
     #rootコントロールの保存
     @root_control = root_control
-    
-    #個別ユーザーデータ領域
-    @_LOCAL_ = @root_control._LOCAL_
-    #ゲーム全体で共有するセーブデータ
-    @_SYSTEM_ = @root_control._SYSTEM_
-    #保存されないデータ群
-    @_TEMP_ = @root_control._TEMP_
-    #各種モードの管理
-    @_MODE_STATUS_ =  @root_control._MODE_STATUS_
-
     # ユーザ定義関数
     @function_list = {} 
     #コントロールのID(省略時は自身のクラス名とする)

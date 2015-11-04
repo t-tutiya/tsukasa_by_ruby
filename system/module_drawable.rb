@@ -220,7 +220,7 @@ module Drawable
     target.draw_ex(x, y, @entity, @draw_option)
 
     #デバッグ用：コントロールの外枠を描画する
-    if @_SYSTEM_[:_DEBUG_]
+    if self._SYSTEM_[:_DEBUG_]
       target.draw_box_line( x, y, x + @real_width,  y + @real_height)
     end
 

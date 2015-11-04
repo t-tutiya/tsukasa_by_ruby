@@ -55,9 +55,19 @@ require_relative './script_compiler.rb'
 
 #TODO：モジュールであるべきか？
 class Tsukasa < RenderTargetControl
-  attr_reader  :_LOCAL_
-  attr_reader  :_SYSTEM_
-  attr_reader  :_TEMP_
+
+  #システム全体で共有されるデータ群。保存対象。
+  def _SYSTEM_
+    @_SYSTEM_
+  end
+  #個別のセーブデータを表すデータ群。保存対象。
+  def _LOCAL_
+    @_LOCAL_
+  end
+  #一時的に管理するデータ群。保存対象ではない。
+  def _TEMP_
+    @_TEMP_
+  end
 
   attr_reader  :default_control
   attr_reader  :function_list

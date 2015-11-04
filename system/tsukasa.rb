@@ -96,7 +96,9 @@ class Tsukasa < RenderTargetControl
     @label_id = options[:label_id] || 0
     @label_options = options[:label_options] || nil
 
-    super(options, {}, @root_control)
+    super(options, 
+          { :block_stack => []}, 
+          @root_control)
   end
 
   def siriarize(options = {})

@@ -69,11 +69,18 @@ class Tsukasa < RenderTargetControl
     @_TEMP_
   end
 
+  def close?
+    @close
+  end
+
   attr_reader  :default_control
   attr_reader  :function_list
   attr_accessor  :sleep_mode
 
   def initialize(options)
+    #アプリ終了フラグ
+    @close = false
+
     @root_control = self
     #ゲーム全体で共有するセーブデータ
     @_SYSTEM_ = {
@@ -129,6 +136,16 @@ class Tsukasa < RenderTargetControl
   def command__RESIZE_(options, inner_options)
     Window.resize(options[:width], 
                   options[:height])
+  end
+
+=begin
+  def command__FULL_SCREEN_(options, inner_options)
+    Window.full_screen = options[:_ARGUMENT_]
+  end
+=end
+
+  def command__EXIT_(options, inner_options)
+    @close = true
   end
 
   def command_label(options, inner_options)

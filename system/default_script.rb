@@ -152,19 +152,9 @@ _DEFINE_ :TextWindow do |options|
           end
           _SET_ size: 32
       end
-    _DEFINE_ :style do |options|
-      _SEND_ :last do
-        _SET_ options
-      end
-    end
     _DEFINE_ :_TEXT_ do |options|
       _SEND_ :last do
         _TEXT_ options
-      end
-    end
-    _DEFINE_ :_DATA_ do |options|
-      _SEND_ :last do
-        _DATA_ options
       end
     end
     _DEFINE_ :_LINE_FEED_ do

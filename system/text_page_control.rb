@@ -329,6 +329,12 @@ class TextPageControl < LayoutControl
       options[:_ARGUMENT_] = result
     end
 
+    #第１引数がシンボルの場合
+    if options[:_ARGUMENT_].instance_of?(Symbol)
+      #キーで指定された一時データストアのデータを文字列とする
+      options[:_ARGUMENT_] = @root_control.send(:_TEMP_)[options[:_ARGUMENT_]]
+    end
+
     #イメージフォントを使うかどうか
     if @use_image_font
       char_command = :image_char

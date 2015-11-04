@@ -234,7 +234,7 @@ class TKSParser < Parslet::Parser
       :inline_data => simple(:command)
     ) {
        "_SEND_(default: :TextLayer){" + 
-         "_DATA_ " + command.to_s +
+         "_TEXT_ " + command.to_s +
        "}" 
        }
 

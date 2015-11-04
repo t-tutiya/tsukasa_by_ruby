@@ -126,6 +126,11 @@ class Tsukasa < RenderTargetControl
     super
   end
 
+  def command__RESIZE_(options, inner_options)
+    Window.resize(options[:width], 
+                  options[:height])
+  end
+
   def command_label(options, inner_options)
     unless @_LOCAL_[:_READ_FRAG_]
       @_LOCAL_[:_READ_FRAG_] = {} 

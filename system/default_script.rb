@@ -222,12 +222,12 @@ TextWindow id: :text1, text_page_id: :default_text_page_control0,
 
 _DEFINE_ :line_icon_func do |options|
   _CREATE_ :RenderTargetControl, 
-          :x => 0, 
-          :y => 0, 
+          :x => options[:x] || 0, 
+          :y => options[:y] || 0, 
           :width => 24,
           :height => 24,
-          :align_y => :bottom,
-          :float_mode => :right,
+          :align_y => options[:align_y] || :bottom,
+          :float_mode => options[:float_mode] || :right,
           :id => options[:id] do
     _CREATE_ :TileImageControl, 
             :tiles => true,
@@ -243,12 +243,12 @@ end
 _DEFINE_ :page_icon_func do |options|
 
   _CREATE_ :RenderTargetControl, 
-          :x => 0, 
-          :y => 0, 
+          :x => options[:x] || 0, 
+          :y => options[:y] || 0, 
           :width => 24,
           :height => 24,
-          :align_y => :bottom,
-          :float_mode => :right,
+          :align_y => options[:align_y] || :bottom,
+          :float_mode => options[:float_mode] || :right,
           :id => options[:id] do
     _CREATE_ :TileImageControl, 
             :tiles => true, 

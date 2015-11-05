@@ -53,6 +53,7 @@ end
 #標準ポーズコマンド
 _DEFINE_ :pause do |options|
   _SEND_ default: :TextLayer do 
+    put_icon options[:icon]
     pause options
   end
 
@@ -64,6 +65,13 @@ _DEFINE_ :pause do |options|
   _WAIT_  key_down: K_RCONTROL, 
           sleep: false do
     _YIELD_
+  end
+
+  #クリック待ちアイコンを削除
+  _SEND_ default: :TextLayer do 
+    _SEND_ :icon do
+      _DELETE_
+    end
   end
 
   #１フレ分は必ず表示させる
@@ -115,7 +123,6 @@ _DEFINE_ :TextWindow do |options|
         x: 0,
         y: 0,
         width: options[:width],
-        id: options[:text_page_id],
         size: 32, 
         font_name: "ＭＳＰ ゴシック",
         wait_frame: 2 do
@@ -152,48 +159,55 @@ _DEFINE_ :TextWindow do |options|
           end
           _SET_ size: 32
       end
+    #文字列出力
     _DEFINE_ :_TEXT_ do |options|
-      _SEND_ :last do
+      _SEND_ 1 do
         _TEXT_ options
       end
     end
+    #改行
     _DEFINE_ :_LINE_FEED_ do
-      _SEND_ :last  do
+      _SEND_ 1  do
         _LINE_FEED_
       end
     end
     #_rubi_デフォルト送信
     _DEFINE_ :_RUBI_ do |options|
-      _SEND_ :last do
+      _SEND_ 1 do
         _RUBI_ options[:_ARGUMENT_], text: options[:text]
       end
     end
     #_flush_デフォルト送信
     _DEFINE_ :_FLUSH_ do
-      _SEND_ :last  do
+      _SEND_ 1  do
         _FLUSH_
       end
     end
+
+    #キー入力待ち処理
     _DEFINE_ :pause do |options|
-      _SEND_ :last do 
-        #クリック待ちアイコンの表示
-        _SEND_ :last do
-          _END_FRAME_
+      _SEND_ 1 do
+        _END_FRAME_
 
-          _WAIT_ count: 15
+        #スペースキーあるいはCTRLキーの押下待機
+        _WAIT_  key_down: K_RCONTROL,
+                key_push: K_SPACE
 
-          _CALL_ options[:icon], id: :icon do
-            #スペースキーあるいはCTRLキーの押下待機
-            _WAIT_  key_down: K_RCONTROL,
-                    key_push: K_SPACE
+        #ウェイクに移行
+        _SET_ sleep: false
+      end
+    end
 
-            #クリック待ちアイコンの削除
-            _SEND_ :icon do
-              _DELETE_
-            end
-
-            #ウェイクに移行
-            _SET_ sleep: false
+    #クリック待ちアイコン表示処理
+    _DEFINE_ :put_icon do |options|
+      #絶対座標表示
+      if options[:absolute]
+        _CALL_ options[:_ARGUMENT_], x:100, y:100, align_y: :none, float_mode: :none
+      #相対座標表示
+      else
+        _SEND_ 1 do
+          _SEND_ :last do
+            _CALL_ options[:_ARGUMENT_], align_y: :bottom, float_mode: :right
           end
         end
       end
@@ -228,7 +242,7 @@ _DEFINE_ :line_icon_func do |options|
           :height => 24,
           :align_y => options[:align_y] || :bottom,
           :float_mode => options[:float_mode] || :right,
-          :id => options[:id] do
+          :id => :icon do
     _CREATE_ :TileImageControl, 
             :tiles => true,
             :file_path=>"./sozai/icon/icon_8_a.png", 
@@ -249,7 +263,7 @@ _DEFINE_ :page_icon_func do |options|
           :height => 24,
           :align_y => options[:align_y] || :bottom,
           :float_mode => options[:float_mode] || :right,
-          :id => options[:id] do
+          :id => :icon do
     _CREATE_ :TileImageControl, 
             :tiles => true, 
             :file_path=>"./sozai/icon/icon_4_a.png", 

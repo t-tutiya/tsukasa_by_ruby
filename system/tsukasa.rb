@@ -73,6 +73,20 @@ class Tsukasa < RenderTargetControl
     @close
   end
 
+  def mouse_x
+    Input.mouse_x
+  end
+  def mouse_x=(args)
+    Input.set_mouse_pos(args, Input.mouse_y)
+  end
+
+  def mouse_y
+    Input.mouse_y
+  end
+  def mouse_y=(args)
+    Input.set_mouse_pos(Input.mouse_x, args)
+  end
+
   attr_reader  :default_control
   attr_reader  :function_list
   attr_accessor  :sleep_mode

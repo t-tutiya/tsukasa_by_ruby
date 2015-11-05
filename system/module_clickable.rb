@@ -67,10 +67,16 @@ module Clickable
   def update()
     @on_mouse_over  = false
     @on_mouse_out   = false
+
     @on_key_down    = false
     @on_key_down_out= false
     @on_key_up      = false
     @on_key_up_out  = false
+
+    @on_right_key_down    = false
+    @on_right_key_down_out= false
+    @on_right_key_up      = false
+    @on_right_key_up_out  = false
 
     #マウスカーソル座標を取得
     @cursol_x = Input.mouse_pos_x
@@ -113,6 +119,17 @@ module Clickable
       if Input.mouse_release?( M_LBUTTON )
         @on_key_up = true
       end
+
+      #右キー押下チェック
+      if Input.mouse_push?( M_RBUTTON )
+        @on_right_key_down = true
+      end
+
+      #右キー解除チェック
+      if Input.mouse_release?( M_RBUTTON )
+        @on_right_key_up = true
+      end
+
     else
       #イベント起動済みフラグクリア
       @over = false
@@ -129,6 +146,16 @@ module Clickable
       #キー解除チェック
       if Input.mouse_release?( M_LBUTTON )
         @on_key_up_out = true
+      end
+
+      #右キー押下チェック
+      if Input.mouse_push?( M_RBUTTON )
+        @on_right_key_down_out = true
+      end
+
+      #右キー解除チェック
+      if Input.mouse_release?( M_RBUTTON )
+        @on_right_key_up_out = true
       end
     end
 
@@ -182,4 +209,37 @@ module Clickable
     end
     push_command_to_next_frame(:on_key_up_out, options, inner_options)
   end
+
+  def command_on_right_key_down(options, inner_options)
+    #マウスボタンが押下された場合
+    if @on_right_key_down
+      eval_block(options, inner_options[:block_stack], &inner_options[:block])
+    end
+    push_command_to_next_frame(:on_right_key_down, options, inner_options)
+  end
+
+  def command_on_right_key_down_out(options, inner_options)
+    #マウスボタンが範囲外で押下された場合
+    if @on_right_key_down_out
+      eval_block(options, inner_options[:block_stack], &inner_options[:block])
+    end
+    push_command_to_next_frame(:on_right_key_down_out, options, inner_options)
+  end
+
+  def command_on_right_key_up(options, inner_options)
+    #マウスボタン押下が解除された場合
+    if @on_right_key_up
+      eval_block(options, inner_options[:block_stack], &inner_options[:block])
+    end
+    push_command_to_next_frame(:on_right_key_up, options, inner_options)
+  end
+
+  def command_on_right_key_up_out(options, inner_options)
+    #マウスボタン押下が範囲外で解除された場合
+    if @on_key_right_up_out
+      eval_block(options, inner_options[:block_stack], &inner_options[:block])
+    end
+    push_command_to_next_frame(:on_right_key_up_out, options, inner_options)
+  end
+
 end

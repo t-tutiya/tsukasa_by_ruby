@@ -1,0 +1,5 @@
+@	_CREATE_ :LayoutControl, width: 800, height: 600 do
+@		on_right_key_down do
+@			raise
+@		end
+@	end

@@ -629,7 +629,13 @@ class Control #スクリプト制御
       #TODO*ここの実装が歪んでいる。しかしどうしたものか。
       controls = [@control_list.last]
     else
-      controls = base_control.find_control(options[:_ARGUMENT_])
+      #第１引数が整数であれば、子要素を添え字検索する
+      if options[:_ARGUMENT_].instance_of?(Fixnum)
+        controls = [@control_list[options[:_ARGUMENT_]]]
+      #整数でなければ検索をかける
+      else
+        controls = base_control.find_control(options[:_ARGUMENT_])
+      end
     end
 
     if controls.empty?

@@ -51,9 +51,9 @@ class TileImageControl < Control
     entities = entity.slice_tiles(options[:x_count] || 1, 
                                  options[:y_count] || 1)
 
+    command_list = []
     entities.each.with_index(options[:start_index] || 0) do |image, index|
-      #TODO;インデックスと逆順に格納されている。直すべきか検討
-      interrupt_command([:_CREATE_, 
+      command_list.push([:_CREATE_, 
                         {
                           :_ARGUMENT_ => :ImageControl,
                           :entity => image,
@@ -63,6 +63,7 @@ class TileImageControl < Control
                         }, 
                         {}])
     end
+    eval_commands(command_list)
   end
 
   def dispose()

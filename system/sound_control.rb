@@ -40,43 +40,55 @@ class SoundControl  < Control
   attr_reader :start
   def start=(start)
     @start = start
-    #@entity.start = start
+    @entity.start = start if midi?
   end
 
   attr_reader :loop_start
   def loop_start=(loop_start)
     @loop_start = loop_start
-    #@entity.loop_start = loop_start if @midi
+    @entity.loop_start = loop_start if midi?
   end
 
   attr_reader :loop_end
   def loop_end=(loop_end)
     @loop_end = loop_end
-    #@entity.loop_end = loop_end if @midi
+    @entity.loop_end = loop_end if midi?
   end
 
   attr_reader :loop_count
   def loop_count=(loop_count)
     @loop_count = loop_count
-    #@entity.loop_count = loop_count
+    if midi?
+      @entity.loop_count = loop_count
+    else
+      @entity.loop_count = [0, loop_count].max
+    end
   end
 
   attr_reader :volume
   def volume=(volume)
     @volume = volume
-    @entity.set_volume(@volume, 0)
+    if midi?
+      @entity.set_volume(@volume * 255 / 100, 0)
+    else
+      @entity.set_volume(@volume, 0)
+    end
   end
 
   attr_reader :frequency
   def frequency=(args)
     @frequency = args
-    #@entity.frequency = args
+    @entity.frequency = args if midi?
   end
 
   attr_reader :pan
   def pan=(args)
     @pan = args
-    @entity.set_pan(@pan, 0)
+    if midi?
+      @entity.pan = @pan * 100
+    else
+      @entity.set_pan(@pan, 0)
+    end
   end
 
   attr_reader :play
@@ -94,6 +106,15 @@ class SoundControl  < Control
     @file_path = file_path
     @entity = Ayame.new(@file_path)
     @midi = true if File.extname(@file_path) == ".mid"
+    if midi?
+      @entity = Sound.new(@file_path)
+    else
+      @entity = Ayame.new(@file_path)
+    end
+  end
+
+  def midi?
+    @midi
   end
 
   def initialize(options, inner_options, root_control)
@@ -109,7 +130,7 @@ class SoundControl  < Control
     #ループ終了位置
     self.loop_end = options[:loop_end] || 0
 
-    #ループ回数（０なら無限ループ）
+    #ループ回数（－１なら無限ループ）
     self.loop_count = options[:loop_count] || 1
 
     #ボリューム／フェード指定

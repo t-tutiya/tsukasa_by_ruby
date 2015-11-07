@@ -1,6 +1,7 @@
 #! ruby -E utf-8
 
 require 'dxruby'
+require 'ayame'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -39,25 +40,25 @@ class SoundControl  < Control
   attr_reader :start
   def start=(start)
     @start = start
-    @entity.start = start
+    #@entity.start = start
   end
 
   attr_reader :loop_start
   def loop_start=(loop_start)
     @loop_start = loop_start
-    @entity.loop_start = loop_start if @midi
+    #@entity.loop_start = loop_start if @midi
   end
 
   attr_reader :loop_end
   def loop_end=(loop_end)
     @loop_end = loop_end
-    @entity.loop_end = loop_end if @midi
+    #@entity.loop_end = loop_end if @midi
   end
 
   attr_reader :loop_count
   def loop_count=(loop_count)
     @loop_count = loop_count
-    @entity.loop_count = loop_count
+    #@entity.loop_count = loop_count
   end
 
   attr_reader :volume
@@ -69,20 +70,20 @@ class SoundControl  < Control
   attr_reader :frequency
   def frequency=(args)
     @frequency = args
-    @entity.frequency = args
+    #@entity.frequency = args
   end
 
   attr_reader :pan
   def pan=(args)
     @pan = args
-    @entity.pan = args
+    @entity.set_pan(@pan, 0)
   end
 
   attr_reader :play
   def play=(args)
     @play = args
     if @play
-      @entity.play
+      @entity.play(@loop_count)
     else
       @entity.stop
     end
@@ -91,7 +92,7 @@ class SoundControl  < Control
   attr_reader :file_path
   def file_path=(file_path)
     @file_path = file_path
-    @entity = Sound.new(@file_path)
+    @entity = Ayame.new(@file_path)
     @midi = true if File.extname(@file_path) == ".mid"
   end
 
@@ -108,11 +109,11 @@ class SoundControl  < Control
     #ループ終了位置
     self.loop_end = options[:loop_end] || 0
 
-    #ループ回数（－１なら無限ループ）
+    #ループ回数（０なら無限ループ）
     self.loop_count = options[:loop_count] || 1
 
     #ボリューム／フェード指定
-    self.volume = options[:volume] || 230
+    self.volume = options[:volume] || 90
   end
 
   def siriarize(options = {})

@@ -104,13 +104,27 @@ class SoundControl  < Control
   attr_reader :file_path
   def file_path=(file_path)
     @file_path = file_path
-    @entity = Ayame.new(@file_path)
     @midi = true if File.extname(@file_path) == ".mid"
     if midi?
       @entity = Sound.new(@file_path)
     else
       @entity = Ayame.new(@file_path)
+      return if stream?
+      if File.extname(@file_path) == ".ogg"
+        @entity.predecode
+      else
+        @entity.prefetch
+      end
     end
+  end
+
+  attr_reader :stream
+  def stream=(stream)
+    @stream = stream
+  end
+
+  def stream?
+    !!stream
   end
 
   def midi?
@@ -119,6 +133,7 @@ class SoundControl  < Control
 
   def initialize(options, inner_options, root_control)
     super
+    self.stream = options[:stream] || true
     self.file_path = options[:file_path]
 
     #開始位置

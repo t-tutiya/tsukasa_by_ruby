@@ -132,7 +132,10 @@ class SoundControl  < Control
 
   #サウンドリソースを解放します
   def dispose
-    @entity.dispose
+    if @entity
+      @entity.dispose
+      @entity = nil
+    end
     super
   end
 end

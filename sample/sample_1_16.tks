@@ -5,9 +5,10 @@
 キーを押すと再生します
 
 @	test01{
-@		_SET_ loop_count: -1
-@		_MOVE_ 180, volume: [0,230]
+@		_SET_ loop_count: 0
+@		_MOVE_ 180, volume: [0,90]
 @		_SET_ play: true
+@		_MOVE_ 300, pan: [-100,0]
 @	}
 
 無限ループ中。

@@ -1,6 +1,7 @@
 #! ruby -E utf-8
 
 require 'dxruby'
+require 'ayame'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -39,50 +40,62 @@ class SoundControl  < Control
   attr_reader :start
   def start=(start)
     @start = start
-    @entity.start = start
+    @entity.start = start if midi?
   end
 
   attr_reader :loop_start
   def loop_start=(loop_start)
     @loop_start = loop_start
-    @entity.loop_start = loop_start if @midi
+    @entity.loop_start = loop_start if midi?
   end
 
   attr_reader :loop_end
   def loop_end=(loop_end)
     @loop_end = loop_end
-    @entity.loop_end = loop_end if @midi
+    @entity.loop_end = loop_end if midi?
   end
 
   attr_reader :loop_count
   def loop_count=(loop_count)
     @loop_count = loop_count
-    @entity.loop_count = loop_count
+    if midi?
+      @entity.loop_count = loop_count
+    else
+      @entity.loop_count = [0, loop_count].max
+    end
   end
 
   attr_reader :volume
   def volume=(volume)
     @volume = volume
-    @entity.set_volume(@volume, 0)
+    if midi?
+      @entity.set_volume(@volume * 255 / 100, 0)
+    else
+      @entity.set_volume(@volume, 0)
+    end
   end
 
   attr_reader :frequency
   def frequency=(args)
     @frequency = args
-    @entity.frequency = args
+    @entity.frequency = args if midi?
   end
 
   attr_reader :pan
   def pan=(args)
     @pan = args
-    @entity.pan = args
+    if midi?
+      @entity.pan = @pan * 100
+    else
+      @entity.set_pan(@pan, 0)
+    end
   end
 
   attr_reader :play
   def play=(args)
     @play = args
     if @play
-      @entity.play
+      @entity.play(@loop_count)
     else
       @entity.stop
     end
@@ -91,12 +104,36 @@ class SoundControl  < Control
   attr_reader :file_path
   def file_path=(file_path)
     @file_path = file_path
-    @entity = Sound.new(@file_path)
     @midi = true if File.extname(@file_path) == ".mid"
+    if midi?
+      @entity = Sound.new(@file_path)
+    else
+      @entity = Ayame.new(@file_path)
+      return if stream?
+      if File.extname(@file_path) == ".ogg"
+        @entity.predecode
+      else
+        @entity.prefetch
+      end
+    end
+  end
+
+  attr_reader :stream
+  def stream=(stream)
+    @stream = stream
+  end
+
+  def stream?
+    !!stream
+  end
+
+  def midi?
+    @midi
   end
 
   def initialize(options, inner_options, root_control)
     super
+    self.stream = options[:stream] || true
     self.file_path = options[:file_path]
 
     #開始位置
@@ -112,7 +149,7 @@ class SoundControl  < Control
     self.loop_count = options[:loop_count] || 1
 
     #ボリューム／フェード指定
-    self.volume = options[:volume] || 230
+    self.volume = options[:volume] || 90
   end
 
   def siriarize(options = {})
@@ -131,7 +168,10 @@ class SoundControl  < Control
 
   #サウンドリソースを解放します
   def dispose
-    @entity.dispose
+    if @entity
+      @entity.dispose
+      @entity = nil
+    end
     super
   end
 end

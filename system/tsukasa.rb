@@ -87,6 +87,35 @@ class Tsukasa < RenderTargetControl
     Input.set_mouse_pos(Input.mouse_x, args)
   end
 
+  #マウスカーソルの形状を設定する。
+    #マウスカーソル定数
+    #IDC_APPSTARTING 標準の矢印カーソルと小さい砂時計カーソル
+    #IDC_ARROW 標準の矢印カーソル
+    #IDC_CROSS 十字カーソル
+    #IDC_HAND ハンドカーソル
+    #IDC_HELP 矢印と疑問符
+    #IDC_IBEAM アイビーム（ 縦線）カーソル
+    #IDC_NO 禁止カーソル（ 円に左上から右下への斜線）
+    #IDC_SIZEALL 4 方向の矢印カーソル
+    #IDC_SIZENESW 右上と左下を指す両方向矢印カーソル
+    #IDC_SIZENS 上下を指す両方向矢印カーソル
+    #IDC_SIZENWSE 左上と右下を指す両方向矢印カーソル
+    #IDC_SIZEWE 左右を指す両方向矢印カーソル
+    #IDC_UPARROW 上を指す垂直の矢印カーソル
+    #IDC_WAIT 砂時計カーソル
+  attr_reader  :cursor_type
+  def cursor_type=(args)
+    @cursor_type = args
+    Input.set_cursor(args)
+  end
+
+  #マウスカーソルの表示／非表示を設定する
+  attr_reader  :cursor_visible
+  def cursor_visible=(args)
+    @cursor_visible = args
+    Input.mouse_enable = args
+  end
+
   attr_reader  :default_control
   attr_reader  :function_list
   attr_accessor  :sleep_mode

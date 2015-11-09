@@ -73,20 +73,6 @@ class Tsukasa < RenderTargetControl
     @close
   end
 
-  def mouse_x
-    Input.mouse_x
-  end
-  def mouse_x=(args)
-    Input.set_mouse_pos(args, Input.mouse_y)
-  end
-
-  def mouse_y
-    Input.mouse_y
-  end
-  def mouse_y=(args)
-    Input.set_mouse_pos(Input.mouse_x, args)
-  end
-
   #マウスカーソルの形状を設定する。
     #マウスカーソル定数
     #IDC_APPSTARTING 標準の矢印カーソルと小さい砂時計カーソル

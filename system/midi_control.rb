@@ -1,7 +1,6 @@
 #! ruby -E utf-8
 
 require 'dxruby'
-require 'ayame'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１
@@ -33,68 +32,82 @@ require 'ayame'
 
 
 #Soundコントロール
-class SoundControl  < Control
+class MidiControl  < Control
+
+  #開始位置
+  attr_reader :start
+  def start=(start)
+    @start = start
+    @entity.start = start
+  end
+
+  #ループスタート位置
+  attr_reader :loop_start
+  def loop_start=(loop_start)
+    @loop_start = loop_start
+    @entity.loop_start = loop_start
+  end
+
+  #ループ終了位置
+  attr_reader :loop_end
+  def loop_end=(loop_end)
+    @loop_end = loop_end
+    @entity.loop_end = loop_end
+  end
 
   #リピート回数
   attr_reader :loop_count
   def loop_count=(loop_count)
     @loop_count = loop_count
-    @entity.loop_count = [0, loop_count].max
+    @entity.loop_count = loop_count
   end
 
 #音量
   attr_reader :volume
   def volume=(volume)
     @volume = volume
-    @entity.set_volume(@volume, 0)
+    @entity.set_volume(@volume * 255 / 100, 0)
+  end
+
+  #周波数
+  attr_reader :frequency
+  def frequency=(args)
+    @frequency = args
+    @entity.frequency = args
   end
 
   #パン
   attr_reader :pan
   def pan=(args)
     @pan = args
-    @entity.set_pan(@pan, 0)
+    @entity.pan = @pan * 100
   end
 
   #再生／停止
   attr_reader :play
   def play=(args)
     @play = args
-    if @play
-      @entity.play(@loop_count)
-    else
-      @entity.stop
-    end
+    @entity.play(@loop_count)
   end
 
   attr_reader :file_path
   def file_path=(file_path)
     @file_path = file_path
-    #ayameでコントロールを初期化
-    @entity = Ayame.new(@file_path)
-    #ストリーム駆動であれば処理を終える
-    return if stream?
-    #oggファイルの場合
-    if File.extname(@file_path) == ".ogg"
-      @entity.predecode
-    else
-      @entity.prefetch
-    end
-  end
-
-  attr_reader :stream
-  def stream=(stream)
-    @stream = stream
-  end
-
-  def stream?
-    stream
+    #DXRuby::Soundでコントロールを初期化
+    @entity = Sound.new(@file_path)
   end
 
   def initialize(options, inner_options, root_control)
     super
-    self.stream = options[:stream] || true
     self.file_path = options[:file_path]
+
+    #開始位置
+    self.start = options[:start] || 0
+
+    #ループ開始位置
+    self.loop_start = options[:loop_start] || 0
+    #ループ終了位置
+    self.loop_end = options[:loop_end] || 0
 
     #ループ回数（－１なら無限ループ）
     self.loop_count = options[:loop_count] || 1

@@ -63,6 +63,24 @@ class Control #公開インターフェイス
       @command_list
   end
 
+  def mouse_x
+    Input.mouse_x
+  end
+  def mouse_x=(args)
+    Input.set_mouse_pos(args, Input.mouse_y)
+  end
+
+  def mouse_y
+    Input.mouse_y
+  end
+  def mouse_y=(args)
+    Input.set_mouse_pos(Input.mouse_x, args)
+  end
+
+end
+
+class Control #内部メソッド
+
   def initialize(options, inner_options, root_control)
     #rootコントロールの保存
     @root_control = root_control

@@ -116,6 +116,22 @@ class Tsukasa < RenderTargetControl
     Input.mouse_enable = args
   end
 
+  #タイトルバーののキャプション
+  def caption(args)
+    @caption = Window.caption
+  end
+  def caption=(args)
+    @caption = args
+    Window.caption = args
+  end
+
+  #タイトルバーのアイコン画像
+  attr_reader  :icon_file_path
+  def icon_file_path=(args)
+    @icon_file_path = args
+    Window.load_icon(path)
+  end
+
   attr_reader  :default_control
   attr_reader  :function_list
   attr_accessor  :sleep_mode
@@ -179,6 +195,12 @@ class Tsukasa < RenderTargetControl
   def command__RESIZE_(options, inner_options)
     Window.resize(options[:width], 
                   options[:height])
+  end
+
+  #スクリーンショットキャプチャ
+  def command__CAPTURE_SS_(options, inner_options)
+    Window.get_screen_shot("./data/" + options[:_ARGUMENT_], 
+                           options[:format] || FORMAT_PNG)
   end
 
 =begin

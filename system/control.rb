@@ -822,7 +822,9 @@ class Control #プロパティのパラメータ遷移
         check_imple(options[:option][:check])
       #ブロックがあれば実行し、コマンドを終了する
       if inner_options[:block]
-        eval_block(options, &inner_options[:block]) 
+        eval_block( {:_STOP_COUNT_ => options[:option][:count]}, 
+                    inner_options[:block_stack],
+                    &inner_options[:block])
       end
       return
     end

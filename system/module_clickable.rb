@@ -178,7 +178,9 @@ module Clickable
   def command_on_mouse_move(options, inner_options)
     #前フレと比較してカーソルが移動した場合
     if @on_mouse_move
-      eval_block({_X_: @cursol_x,_Y_: @cursol_y}, inner_options[:block_stack], &inner_options[:block])
+      eval_block( {:_X_ => @cursol_x, :_Y_ => @cursol_y}, 
+                  inner_options[:block_stack], 
+                  &inner_options[:block])
     end
     #イベントコマンドはコマンドリストに残り続ける
     push_command_to_next_frame(:on_mouse_move, options, inner_options)

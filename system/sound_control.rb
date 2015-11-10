@@ -74,7 +74,7 @@ class SoundControl  < Control
     @entity = Ayame.new(@file_path)
     #ストリーム駆動であれば処理を終える
     return if stream?
-    #oggファイルの場合
+    #音源ファイルを先読みする
     if File.extname(@file_path) == ".ogg"
       @entity.predecode
     else
@@ -82,13 +82,9 @@ class SoundControl  < Control
     end
   end
 
-  attr_reader :stream
-  def stream=(stream)
-    @stream = stream
-  end
-
+  attr_accessor :stream
   def stream?
-    stream
+    @stream
   end
 
   def initialize(options, inner_options, root_control)

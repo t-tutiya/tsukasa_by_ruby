@@ -62,9 +62,12 @@ module Clickable
     @over = false
     @out = true
 
+    @old_cursol_x = @old_cursol_y = nil
   end
 
   def update()
+    @on_mouse_move  = false
+
     @on_mouse_over  = false
     @on_mouse_out   = false
 
@@ -82,8 +85,18 @@ module Clickable
     @cursol_x = Input.mouse_pos_x
     @cursol_y = Input.mouse_pos_y
 
+    #前フレームと座標が異なる場合on_mouse_moveイベントを実行する
+    if(@old_cursol_x != @cursol_x) and (@old_cursol_y != @cursol_y)
+      @on_mouse_move = true
+    end
+
+    #カーソル座標を保存する
+    @old_cursol_x = @cursol_x
+    @old_cursol_y = @cursol_y
+
     @collision_sprite.x = @x 
     @collision_sprite.y = @y
+
     @mouse_sprite.x = @cursol_x
     @mouse_sprite.y = @cursol_y
 
@@ -162,11 +175,21 @@ module Clickable
     super
   end
 
+  def command_on_mouse_move(options, inner_options)
+    #前フレと比較してカーソルが移動した場合
+    if @on_mouse_move
+      eval_block({x: @cursol_x,y: @cursol_y}, inner_options[:block_stack], &inner_options[:block])
+    end
+    #イベントコマンドはコマンドリストに残り続ける
+    push_command_to_next_frame(:on_mouse_move, options, inner_options)
+  end
+
   def command_on_mouse_over(options, inner_options)
     #カーソルが指定範囲に侵入した場合
     if @on_mouse_over
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
+    #イベントコマンドはコマンドリストに残り続ける
     push_command_to_next_frame(:on_mouse_over, options, inner_options)
   end
   
@@ -175,6 +198,7 @@ module Clickable
     if @on_mouse_out
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
+    #イベントコマンドはコマンドリストに残り続ける
     push_command_to_next_frame(:on_mouse_out, options, inner_options)
   end
 
@@ -183,6 +207,7 @@ module Clickable
     if @on_key_down
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
+    #イベントコマンドはコマンドリストに残り続ける
     push_command_to_next_frame(:on_key_down, options, inner_options)
   end
 
@@ -191,6 +216,7 @@ module Clickable
     if @on_key_down_out
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
+    #イベントコマンドはコマンドリストに残り続ける
     push_command_to_next_frame(:on_key_down_out, options, inner_options)
   end
 
@@ -199,6 +225,7 @@ module Clickable
     if @on_key_up
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
+    #イベントコマンドはコマンドリストに残り続ける
     push_command_to_next_frame(:on_key_up, options, inner_options)
   end
 
@@ -207,6 +234,7 @@ module Clickable
     if @on_key_up_out
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
+    #イベントコマンドはコマンドリストに残り続ける
     push_command_to_next_frame(:on_key_up_out, options, inner_options)
   end
 
@@ -215,6 +243,7 @@ module Clickable
     if @on_right_key_down
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
+    #イベントコマンドはコマンドリストに残り続ける
     push_command_to_next_frame(:on_right_key_down, options, inner_options)
   end
 
@@ -223,6 +252,7 @@ module Clickable
     if @on_right_key_down_out
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
+    #イベントコマンドはコマンドリストに残り続ける
     push_command_to_next_frame(:on_right_key_down_out, options, inner_options)
   end
 
@@ -231,6 +261,7 @@ module Clickable
     if @on_right_key_up
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
+    #イベントコマンドはコマンドリストに残り続ける
     push_command_to_next_frame(:on_right_key_up, options, inner_options)
   end
 
@@ -239,7 +270,7 @@ module Clickable
     if @on_key_right_up_out
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
+    #イベントコマンドはコマンドリストに残り続ける
     push_command_to_next_frame(:on_right_key_up_out, options, inner_options)
   end
-
 end

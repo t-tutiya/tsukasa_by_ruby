@@ -259,4 +259,13 @@ class Tsukasa < RenderTargetControl
     end
     #pp @_LOCAL_[:_READ_FRAG_]
   end
+
+  def command_on_requested_close(options, inner_options)
+    #閉じるボタンがクリックされた場合
+    if Input.requested_close?
+      eval_block(options, inner_options[:block_stack], &inner_options[:block])
+    end
+    #イベントコマンドはコマンドリストに残り続ける
+    push_command_to_next_frame(:on_requested_close, options, inner_options)
+  end
 end

@@ -22,6 +22,4 @@ Window.loop(true) do
   
   #スクリプトで終了コマンドが実行された場合
   break if tsukasa.close?
-  #「閉じる」ボタンが押下された場合
-  break if Input.requested_close?
 end

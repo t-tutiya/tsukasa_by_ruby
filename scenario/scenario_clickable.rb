@@ -5,8 +5,6 @@ _CREATE_ :RenderTargetControl,
         :y => 150, 
         :width => 256,
         :height => 256,
-        :colorkey_file_path => "./sozai/star_button.png",
-        :colorkey_border => 200,
         :id=>:button1 do
   _CREATE_ :ImageControl, :file_path=>"./sozai/star_button.png", 
         :id=>:normal
@@ -14,7 +12,8 @@ _CREATE_ :RenderTargetControl,
         :id=>:over, :visible => false
   _CREATE_ :ImageControl, :file_path=>"./sozai/button_key_down.png", 
         :id=>:key_down, :visible => false
-
+  _CREATE_ :ColorkeyControl, :file_path=>"./sozai/star_button.png", :border => 200, id: :colorkey
+  _SET_ colorkey: :colorkey
   on_mouse_over do
     pp "over"
     normal  {_SET_ visible: false}

@@ -33,21 +33,19 @@ require 'dxruby'
 #クリックイベントが発生するコントロールの基底クラス
 module Clickable
 
-  attr_reader  :colorkey_file_path
-  def colorkey_file_path=(colorkey_file_path)
-    @colorkey_file_path = colorkey_file_path
-    @colorkey_entity = Image.load(colorkey_file_path)
-  end
-
   attr_accessor  :collision_shape
   attr_accessor  :colorkey_border
 
+  def colorkey=(arg)
+    @colorkey = find_control(arg)[0]
+  end
+
   def initialize(options, inner_options, root_control)
     super
+    
     @collision_shape = options[:collision_shape]
-
-    self.colorkey_file_path = options[:colorkey_file_path] if options[:colorkey_file_path]
-    @colorkey_border = options[:colorkey_border] || 255
+    
+    self.colorkey = options[:colorkey] if options[:colorkey]
 
     @collision_sprite = Sprite.new
     if @collision_shape
@@ -100,21 +98,17 @@ module Clickable
     @mouse_sprite.x = @cursol_x
     @mouse_sprite.y = @cursol_y
 
-    #描画範囲内かどうか
-    if (@mouse_sprite === @collision_sprite)
-      if @colorkey_entity
-        if @colorkey_entity[@cursol_x - @x, @cursol_y - @y][0] >= @colorkey_border
-          inner_control = true
-        else
-          inner_control = false
-        end
-      else
-        inner_control = true
-      end
-    else
+    #マウスカーソルがコリジョン範囲内に無い
+    if not (@mouse_sprite === @collision_sprite)
       inner_control = false
+    #マウスカーソルがコリジョン範囲内にあるがカラーキーボーダー内に無い
+    elsif @colorkey and (@colorkey.entity[@cursol_x - @x, @cursol_y - @y][0] < @colorkey.border)
+      inner_control = false
+    #マウスカーソルがコリジョン範囲内にある
+    else
+      inner_control = true
     end
-    
+
     if inner_control
       #イベント起動済みフラグクリア
       @out = false

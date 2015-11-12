@@ -42,7 +42,7 @@ _CREATE_ :RenderTargetControl,
         :width => 256,
         :height => 256,
         :id=>:button2,
-        :collision=>[128,0,0,255,255,255] do
+        :collision_shape=>[128,0,0,255,255,255] do
   _CREATE_ :ImageControl, :entity=>Image.new(256,256).triangle_fill(128,0,0,255,255,255,C_BLUE).draw_font(80, 120, "NORMAL", Font.default),
         :id=>:normal
   _CREATE_ :ImageControl, :entity=>Image.new(256,256).triangle_fill(128,0,0,255,255,255,C_YELLOW).draw_font(80, 120, "OVER", Font.default, C_BLACK),

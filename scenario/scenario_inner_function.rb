@@ -44,10 +44,10 @@ _CREATE_ :RenderTargetControl,
 
   # 「押す」を押すと2つのボタンのfunc関数を呼ぶが、それぞれ違う実装になっているので別々に動く
   on_key_down do
-    _SEND_ :button1, root:true do
+    _SEND_ROOT_ :button1 do
       func
     end
-    _SEND_ :button2, root:true do
+    _SEND_ROOT_ :button2 do
       func
     end
   end

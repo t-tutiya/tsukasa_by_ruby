@@ -601,38 +601,38 @@ class Control #スクリプト制御
 
   private
 
+  def command__SEND_ROOT_(options, inner_options)
+    base_control = @root_control
+    send_command(options, inner_options, base_control)
+  end
+
   #コマンドを下位コントロールに送信する
   def command__SEND_(options, inner_options)
-    if options[:root]
-      base_control = @root_control
-    else
-      base_control = self
-    end
+    base_control = self
+    send_command(options, inner_options, base_control)
+  end
 
+  def send_command(options, inner_options, base_control)
     #デフォルト指定があるならターゲットのコントロールを差し替える
     if options[:default]
       raise unless @root_control.default_control[options[:default]]
       options[:_ARGUMENT_] = @root_control.default_control[options[:default]]
     end
 
-    unless options[:_ARGUMENT_]
-      if options[:interrupt]
-        base_control.interrupt_command([:_SCOPE_, {}, inner_options])
-      else
-        base_control.push_command([:_SCOPE_, {}, inner_options])
-      end
-
-      return
-    end
-
     case options[:_ARGUMENT_]
+    #省略されている場合はベースコントロールに送信する
+    when nil
+      controls = base_control
+    #直下の全コントロールに送信する
     when :all
       controls = base_control.find_control(:all)
+    #最終要素に送信する
     when :last
-      #TODO*ここの実装が歪んでいる。しかしどうしたものか。
+      #TODO:ここの実装が歪んでいる。しかしどうしたものか。
       controls = [@control_list.last]
-    else
+    else 
       #第１引数が整数であれば、子要素を添え字検索する
+      #TODO:ここの実装が歪んでいる。しかしどうしたものか。
       if options[:_ARGUMENT_].instance_of?(Fixnum)
         controls = [@control_list[options[:_ARGUMENT_]]]
       #整数でなければ検索をかける

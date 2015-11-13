@@ -112,6 +112,9 @@ class Control #内部メソッド
   end
 
   def update
+    #スリープモード中であれば処理しない
+    return if @sleep_mode
+
     #次フレコマンド列クリア
     @next_frame_commands = []
 
@@ -132,9 +135,6 @@ class Control #内部メソッド
     #一時的にスタックしていたコマンドをコマンドリストに移す
     @command_list = @next_frame_commands + @command_list
 
-    #スリープモード中であれば処理しない
-    return if @sleep
-
     #子コントロールを巡回してupdateを実行
     @control_list.each do |control|
       control.update
@@ -148,6 +148,9 @@ class Control #内部メソッド
 
   #下位コントロールを描画する
   def render(offset_x, offset_y, target, parent_size)
+    #スリープモード中であれば処理しない
+    return if @sleep_mode
+
     #下位コントロール巡回
     @control_list.each do |child_control|
       #下位コントロールを上位ターゲットに直接描画
@@ -195,6 +198,12 @@ class Control #内部メソッド
     return @delete_flag
   end
 
+  def sleep_mode(mode)
+    @sleep_mode = mode
+  end
+  def sleep_mode?
+    @sleep_mode
+  end
 
   def siriarize(options = {})
 
@@ -594,6 +603,41 @@ class Control #ユーザー定義関数操作
     return unless block
 
     eval_block(options, block_stack, &block)
+  end
+end
+
+class Control #スリープ
+
+  #############################################################################
+  #非公開インターフェイス
+  #############################################################################
+
+  private
+
+  #コントロールをスリープ状態にする
+  def command__SLEEP_(options, inner_options)
+    unless options[:_ARGUMENT_]
+      @sleep_mode = true
+      return
+    end
+
+    #ルートコントロールをベースに探索
+    @root_control.find_control(options[:_ARGUMENT_]).each do |control|
+      control.sleep_mode(true)
+    end
+  end
+
+  #コントロールをスリープ状態から復帰させる
+  def command__WAKE_(options, inner_options)
+    unless options[:_ARGUMENT_]
+      @sleep_mode = false
+      return
+    end
+
+    #ルートコントロールをベースに探索
+    @root_control.find_control(options[:_ARGUMENT_]).each do |control|
+      control.sleep_mode(false)
+    end
   end
 end
 

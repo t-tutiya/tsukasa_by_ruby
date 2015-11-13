@@ -47,13 +47,7 @@ class Control #公開インターフェイス
   end
 
   attr_accessor  :id
-
-  def sleep=(sleep_mode)
-    @root_control.sleep_mode = sleep_mode
-  end 
-  def sleep
-    return @root_control.sleep_mode
-  end
+  attr_accessor  :sleep
 
   attr_reader  :script_file_path
   def script_file_path=(script_file_path)
@@ -77,6 +71,8 @@ class Control #内部メソッド
     @command_list = [] 
     #一時コマンドリスト
     @next_frame_commands = [] 
+    #スリープモード
+    @sleep_mode = false
 
     @script_compiler = ScriptCompiler.new(self, @root_control)
     @control_list = [] #コントロールリスト
@@ -135,6 +131,9 @@ class Control #内部メソッド
 
     #一時的にスタックしていたコマンドをコマンドリストに移す
     @command_list = @next_frame_commands + @command_list
+
+    #スリープモード中であれば処理しない
+    return if @sleep
 
     #子コントロールを巡回してupdateを実行
     @control_list.each do |control|
@@ -263,8 +262,6 @@ class Control #内部メソッド
     options.each do |key, value|
       next if key == :_ARGUMENT_
       case key
-      when :sleep
-        return true if @root_control.sleep_mode == value
 
       when :count
         #残りwaitフレーム数が０より大きい場合

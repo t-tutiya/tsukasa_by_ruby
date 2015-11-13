@@ -64,11 +64,11 @@ _DEFINE_ :pause do |options|
 
   #■ルートの待機処理
   #スリープ状態に移行
-  _SET_ sleep: true
+  _SET_ :_TEMP_, sleep: true
 
   #ウェイク状態まで待機
-  _WAIT_  key_down: K_RCONTROL, 
-          sleep: false do
+  _WAIT_ :_TEMP_,  key_down: K_RCONTROL, 
+          equal: {sleep: false} do
     _YIELD_
   end
 
@@ -140,9 +140,9 @@ _DEFINE_ :TextWindow do |options|
             #トランジションが終了するまで非アイドル状態
             _WAIT_  command: :_MOVE_ 
             #スリープ状態に移行
-            _SET_ sleep: true
+            _SET_ :_TEMP_, sleep: true
             #ウェイク状態になるまで待機
-            _WAIT_ sleep: false
+            _WAIT_ :_TEMP_, equal: {sleep: false}
             #キー入力伝搬を防ぐ為に１フレ送る
             _END_FRAME_
             #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
@@ -199,7 +199,7 @@ _DEFINE_ :TextWindow do |options|
                 key_push: K_SPACE
 
         #ウェイクに移行
-        _SET_ sleep: false
+        _SET_ :_TEMP_, sleep: false
       end
     end
 

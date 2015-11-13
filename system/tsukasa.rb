@@ -137,7 +137,6 @@ class Tsukasa < RenderTargetControl
 
   attr_reader  :default_control
   attr_reader  :function_list
-  attr_accessor  :sleep_mode
 
   def initialize(options)
     #アプリ終了フラグ
@@ -155,9 +154,6 @@ class Tsukasa < RenderTargetControl
 
     @_LOCAL_ = {}
     @_TEMP_ = {}
-
-    #スリープ状態にあるコントロールが存在するかどうかを示す
-    @sleep_mode = false
 
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @default_control = {

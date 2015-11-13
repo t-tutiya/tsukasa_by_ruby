@@ -16,7 +16,9 @@
 	#_INCLUDE_ "./sample/sample_1_16.tks"		#サウンド
 	#_INCLUDE_ "./sample/sample_1_17.tks"		#セーブロード
 
-	_INCLUDE_ "./sample/sample_2_1.tks"		#右クリックメニュー
+	#_INCLUDE_ "./sample/sample_2_1.tks"		#右クリックメニュー
+	#_INCLUDE_ "./sample/sample_2_2.tks"		#ボタン
+	_INCLUDE_ "./sample/sample_2_3.rb"		#ボタン
 
 	#_INCLUDE_ "./sample/sample_1_101.tks"
 	#_INCLUDE_ "./test/0930test02.rb"

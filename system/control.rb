@@ -166,21 +166,28 @@ class Control #内部メソッド
   end
 
   def find_control(id)
-    #自身が指定されたidか、allが指定されている場合
-    if id == @id or id == :all
-      #自身をスタックした配列を生成
-      controls = [self] 
-    else
-      #空の配列を生成する
-      controls = [] 
+
+    case id
+    #自身のidもしくは省略されている場合は自身を帰す
+    when @id, nil
+      return [self]
+
+    #子コントロールの最終要素を返す
+    when :last
+      return [@control_list.last]
     end
 
-    #所持しているコントロールを探査
+    #整数であれば、子要素を添え字検索する
+    if id.instance_of?(Fixnum)
+      return [@control_list[id]]
+    end
+
+    controls = []
+    #子コントロールを探査
     @control_list.each do |control|
       child = control.find_control(id)
       controls += child unless child.empty?
     end
-
     return controls
   end
 
@@ -601,50 +608,24 @@ class Control #スクリプト制御
 
   private
 
-  def command__SEND_ROOT_(options, inner_options)
-    base_control = @root_control
-    send_command(options, inner_options, base_control)
-  end
-
-  #コマンドを下位コントロールに送信する
+  #コントロールにコマンドブロックを送信する
   def command__SEND_(options, inner_options)
-    base_control = self
-    send_command(options, inner_options, base_control)
-  end
 
-  def send_command(options, inner_options, base_control)
     #デフォルト指定があるならターゲットのコントロールを差し替える
     if options[:default]
       raise unless @root_control.default_control[options[:default]]
       options[:_ARGUMENT_] = @root_control.default_control[options[:default]]
     end
 
-    case options[:_ARGUMENT_]
-    #省略されている場合はベースコントロールに送信する
-    when nil
-      controls = base_control
-    #直下の全コントロールに送信する
-    when :all
-      controls = base_control.find_control(:all)
-    #最終要素に送信する
-    when :last
-      #TODO:ここの実装が歪んでいる。しかしどうしたものか。
-      controls = [@control_list.last]
-    else 
-      #第１引数が整数であれば、子要素を添え字検索する
-      #TODO:ここの実装が歪んでいる。しかしどうしたものか。
-      if options[:_ARGUMENT_].instance_of?(Fixnum)
-        controls = [@control_list[options[:_ARGUMENT_]]]
-      #整数でなければ検索をかける
-      else
-        controls = base_control.find_control(options[:_ARGUMENT_])
-      end
+    if options[:_ROOT_]
+      #ルートコントロールをベースに探索
+      controls = @root_control.find_control(options[:_ARGUMENT_])
+    else
+      #自コントロールをベースに探索
+      controls = find_control(options[:_ARGUMENT_])
     end
 
-    if controls.empty?
-      pp "下位コントロール#{options[:_ARGUMENT_].to_s}は存在しません。削除されているか生成されていません"
-    end
-
+    #獲得した全てのコントロールにブロックを送信する
     controls.each do |control|
       if options[:interrupt]
         control.interrupt_command([:_SCOPE_, {}, inner_options])
@@ -652,6 +633,12 @@ class Control #スクリプト制御
         control.push_command([:_SCOPE_, {}, inner_options])
       end
     end
+  end
+
+  #ルートコントロールにコマンドブロックを送信する
+  def command__SEND_ROOT_(options, inner_options)
+    options[:_ROOT_] = true
+    command__SEND_(options, inner_options)
   end
 
   #スクリプトファイルを挿入する

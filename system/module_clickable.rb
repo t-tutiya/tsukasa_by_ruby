@@ -36,6 +36,14 @@ module Clickable
   attr_accessor  :collision_shape
   attr_accessor  :colorkey_border
 
+  def collision_x=(args)
+    @collision_sprite.x = args
+  end
+
+  def collision_y=(args)
+    @collision_sprite.y = args
+  end
+
   def colorkey=(arg)
     @colorkey = find_control(arg)[0]
   end
@@ -54,6 +62,9 @@ module Clickable
       @collision_sprite.collision = [0, 0, @width-1, @height-1]
     end
 
+    self.collision_x = options[:collision_x] || 0
+    self.collision_y = options[:collision_y] || 0
+
     @mouse_sprite = Sprite.new
     @mouse_sprite.collision = [0, 0]
 
@@ -64,8 +75,6 @@ module Clickable
   end
 
   def update()
-    @on_mouse_move  = false
-
     @on_mouse_over  = false
     @on_mouse_out   = false
 
@@ -80,23 +89,15 @@ module Clickable
     @on_right_key_up_out  = false
 
     #マウスカーソル座標を取得
-    @cursol_x = Input.mouse_pos_x
-    @cursol_y = Input.mouse_pos_y
+    @mouse_sprite.x = @cursol_x = Input.mouse_pos_x
+    @mouse_sprite.y = @cursol_y = Input.mouse_pos_y
 
     #前フレームと座標が異なる場合on_mouse_moveイベントを実行する
-    if(@old_cursol_x != @cursol_x) and (@old_cursol_y != @cursol_y)
-      @on_mouse_move = true
-    end
+    @on_mouse_move = (@old_cursol_x != @cursol_x)or(@old_cursol_y != @cursol_y)
 
     #カーソル座標を保存する
     @old_cursol_x = @cursol_x
     @old_cursol_y = @cursol_y
-
-    @collision_sprite.x = @x 
-    @collision_sprite.y = @y
-
-    @mouse_sprite.x = @cursol_x
-    @mouse_sprite.y = @cursol_y
 
     #マウスカーソルがコリジョン範囲内に無い
     if not (@mouse_sprite === @collision_sprite)

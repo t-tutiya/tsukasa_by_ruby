@@ -10,7 +10,6 @@
 @	end
 
 @	_WAIT_ :_TEMP_, not_null: :click
-@	_EVAL_ "pp 'test'"
 
 @	_CHECK_ equal:{click: :left} do
 @		_INCLUDE_ "./sample/sample_1_15a.tks"

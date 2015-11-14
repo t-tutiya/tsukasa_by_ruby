@@ -1,15 +1,16 @@
 @	button id: :button1, x: 50, y: 150 do
-@		on_key_up do
-@			_SET_ :_LOCAL_, click: :left
-@		end
+@			on_key_up do
+@				_SET_ :_TEMP_, click: :left
+@			end
 @	end
 @	button id: :button2, x: 450, y: 150 do
-@		on_key_up do
-@			_SET_ :_LOCAL_, click: :right
-@		end
+@			on_key_up do
+@				_SET_ :_TEMP_, click: :right
+@			end
 @	end
 
-@	_WAIT_ not_null: :click
+@	_WAIT_ :_TEMP_, not_null: :click
+@	_EVAL_ "pp 'test'"
 
 @	_CHECK_ equal:{click: :left} do
 @		_INCLUDE_ "./sample/sample_1_15a.tks"

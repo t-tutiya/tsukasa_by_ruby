@@ -149,7 +149,7 @@ class Control #内部メソッド
   #下位コントロールを描画する
   def render(offset_x, offset_y, target, parent_size)
     #スリープモード中であれば処理しない
-    return if @sleep_mode
+    #return if @sleep_mode
 
     #下位コントロール巡回
     @control_list.each do |child_control|
@@ -618,6 +618,8 @@ class Control #スリープ
   def command__SLEEP_(options, inner_options)
     unless options[:_ARGUMENT_]
       @sleep_mode = true
+      #フレーム終了疑似コマンドをスタックする
+      eval_commands([[:_END_FRAME_, {}, {}]])
       return
     end
 
@@ -625,6 +627,7 @@ class Control #スリープ
     @root_control.find_control(options[:_ARGUMENT_]).each do |control|
       control.sleep_mode(true)
     end
+
   end
 
   #コントロールをスリープ状態から復帰させる

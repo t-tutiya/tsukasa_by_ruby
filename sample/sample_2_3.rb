@@ -38,13 +38,14 @@ _CREATE_ :LayoutControl, width: 800, height: 600,
         id: :main_scene do
     on_right_key_down do
       _EVAL_ "pp 'main:on_right_key_down'"
-      _WAKE_ :menu_scene
-      _SEND_ROOT_ :menu_scene , interrupt: true do
-        start_menu
+      _SEND_ROOT_ do
+        def_menu_scene
       end
       _SLEEP_
     end
 end
+
+_DEFINE_ :def_menu_scene do
 #メニューシーン
 _CREATE_ :LayoutControl, width: 800, height: 600, 
         id: :menu_scene do
@@ -54,8 +55,7 @@ _CREATE_ :LayoutControl, width: 800, height: 600,
   TextSelect2 id: :select4, x:800, y:192, text: "CONFIG"
   TextSelect2 id: :select5, x:800, y:256, text: "???"
 
-  _DEFINE_ :start_menu do
-    select1{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
+   select1{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:3
     select2{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:3
@@ -67,7 +67,6 @@ _CREATE_ :LayoutControl, width: 800, height: 600,
     _WAIT_ count:3
     select6{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:7
-  end
 
   _DEFINE_ :end_menu do
     select1{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
@@ -83,14 +82,16 @@ _CREATE_ :LayoutControl, width: 800, height: 600,
     select6{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
     _WAIT_ count:5
     _WAKE_ :main_scene
-    _SLEEP_
+    _DELETE_
   end
-
-  _SLEEP_
 
   on_right_key_down do
     _SET_ :_TEMP_ , skip: true
     _EVAL_ "pp 'menu:on_right_key_down'"
-    end_menu
+    _SEND_ do
+      end_menu
+    end
   end
+end
+
 end

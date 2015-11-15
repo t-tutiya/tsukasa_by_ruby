@@ -204,9 +204,6 @@ module Drawable
 
     return 0, 0 unless @entity
 
-    #下位エンティティを自エンティティに描画
-    dx, dy = super(0, 0, @entity, {:width => @width, :height => @height})
-
     #描画座標のオフセット値を合算
     x = offset_x + @x + @offset_x
     y = offset_y + @y + @offset_y
@@ -215,6 +212,9 @@ module Drawable
     if @align_y == :bottom 
       y += parent_size[:height] - @height
     end
+
+    #下位エンティティを自エンティティに描画
+    dx, dy = super(0, 0, @entity, {:width => @width, :height => @height})
 
     #自エンティティを上位ターゲットに描画
     target.draw_ex(x, y, @entity, @draw_option)

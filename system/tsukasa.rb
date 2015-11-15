@@ -218,8 +218,7 @@ class Tsukasa < RenderTargetControl
 
   #スクリーンショットキャプチャ
   def command__CAPTURE_SS_(options, inner_options)
-    Window.get_screen_shot("./data/" + options[:_ARGUMENT_], 
-                           options[:format] || FORMAT_PNG)
+    Window.get_screen_shot(options[:_ARGUMENT_],options[:format] || FORMAT_PNG)
   end
 
 =begin

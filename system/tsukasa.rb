@@ -192,14 +192,15 @@ class Tsukasa < RenderTargetControl
 
   def update
     #mマウスカーソルが不可視で、かつカーソルが画像の外にある場合
-    if !@cursor_visible and 
-        Input.mouse_x < 0 or @width  < Input.mouse_x or 
-        Input.mouse_y < 0 or @height < Input.mouse_y
-      #カーソルを表示する
-      Input.mouse_enable = true
-    else
-      #カーソルを不可視に戻す
-      Input.mouse_enable = false
+    unless @cursor_visible
+      if  Input.mouse_x < 0 or @width  < Input.mouse_x or 
+          Input.mouse_y < 0 or @height < Input.mouse_y
+        #カーソルを表示する
+        Input.mouse_enable = true
+      else
+        #カーソルを不可視に戻す
+        Input.mouse_enable = false
+      end
     end
     super
   end

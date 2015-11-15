@@ -113,11 +113,7 @@ class Tsukasa < RenderTargetControl
   end
 
   #マウスカーソルの表示／非表示を設定する
-  attr_reader  :cursor_visible
-  def cursor_visible=(args)
-    @cursor_visible = args
-    Input.mouse_enable = args
-  end
+  attr_accessor  :cursor_visible
 
   #タイトルバーののキャプション
   def caption(args)
@@ -137,6 +133,9 @@ class Tsukasa < RenderTargetControl
 
   attr_reader  :default_control
   attr_reader  :function_list
+end
+
+class Tsukasa < RenderTargetControl
 
   def initialize(options)
     #アプリ終了フラグ
@@ -171,6 +170,10 @@ class Tsukasa < RenderTargetControl
     @label_id = options[:label_id] || 0
     @label_options = options[:label_options] || nil
 
+    #カーソル歌詞設定
+    @cursor_visible = true
+    @cursor_type = IDC_ARROW
+
     super(options, 
           { :block_stack => []}, 
           @root_control)
@@ -187,10 +190,26 @@ class Tsukasa < RenderTargetControl
     return super(options)
   end
 
-  def render(offset_x, offset_y, target, parent_size = {:width => Window.width, :height => Window.width})
+  def update
+    #mマウスカーソルが不可視で、かつカーソルが画像の外にある場合
+    if !@cursor_visible and 
+        Input.mouse_x < 0 or @width  < Input.mouse_x or 
+        Input.mouse_y < 0 or @height < Input.mouse_y
+      #カーソルを表示する
+      Input.mouse_enable = true
+    else
+      #カーソルを不可視に戻す
+      Input.mouse_enable = false
+    end
     super
   end
 
+  def render(offset_x, offset_y, target, parent_size = {:width => Window.width, :height => Window.width})
+    super
+  end
+end
+
+class Tsukasa < RenderTargetControl
   def command__RESIZE_(options, inner_options)
     Window.resize(options[:width], 
                   options[:height])

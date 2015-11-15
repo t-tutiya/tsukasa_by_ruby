@@ -36,17 +36,14 @@ end
 
 _CREATE_ :LayoutControl, width: 800, height: 600,
         id: :main_scene do
-  _LOOP_ false do
     on_right_key_down do
+      _EVAL_ "pp 'main:on_right_key_down'"
       _WAKE_ :menu_scene
       _SEND_ROOT_ :menu_scene , interrupt: true do
         start_menu
-        _EVAL_ "pp 'start_menu'"
       end
       _SLEEP_
     end
-    _END_FRAME_
-  end
 end
 #メニューシーン
 _CREATE_ :LayoutControl, width: 800, height: 600, 
@@ -86,16 +83,14 @@ _CREATE_ :LayoutControl, width: 800, height: 600,
     select6{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
     _WAIT_ count:5
     _WAKE_ :main_scene
-    _EVAL_ "pp 'end_menu'"
     _SLEEP_
   end
 
   _SLEEP_
 
-  _LOOP_ false do
-    on_right_key_down do
-      end_menu
-    end
-    _END_FRAME_
+  on_right_key_down do
+    _SET_ :_TEMP_ , skip: true
+    _EVAL_ "pp 'menu:on_right_key_down'"
+    end_menu
   end
 end

@@ -1,6 +1,6 @@
 #! ruby -E utf-8
 
-_CREATE_ :RenderTargetControl, 
+_CREATE_ :LayoutControl, 
         :x => 150, 
         :y => 150, 
         :width => 256,

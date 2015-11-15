@@ -32,7 +32,6 @@ require 'dxruby'
 
 class RenderTargetControl < Control
   include Drawable
-  include Clickable
 
   def bgcolor(arg)
     @entity.bgcolor

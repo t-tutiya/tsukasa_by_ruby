@@ -324,7 +324,7 @@ end
 
 #ボタンコントロール
 _DEFINE_ :button do |options|
-  _CREATE_ :RenderTargetControl, 
+  _CREATE_ :LayoutControl, 
           :x => options[:x] || 0,
           :y => options[:y] || 0,
           :width => 256,

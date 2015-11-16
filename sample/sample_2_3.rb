@@ -9,9 +9,8 @@ _DEFINE_ :TextSelect do |options|
     end
 
     _DEFINE_ :func_test do
-
+      _CHECK_ mouse: [:on_mouse_over] do
       #マウスが領域内に入ったら色を変え、文字をスクロールインさせる
-      on_mouse_over do
         _EVAL_ "pp 'over'"
         text_area{
           _SET_ bgcolor: [0,255,255]
@@ -22,7 +21,7 @@ _DEFINE_ :TextSelect do |options|
         }
       end
       #マウスが領域外に出たら色を戻し、文字をスクロールインさせる
-      on_mouse_out do
+      _CHECK_ mouse: [:on_mouse_out] do
         _EVAL_ "pp 'out'"
         text_area{
           _SET_ bgcolor: [255,255,255]
@@ -33,7 +32,7 @@ _DEFINE_ :TextSelect do |options|
         }
       end
       #マウスがクリックされたら文字列を出力する
-      on_key_down do
+      _CHECK_ mouse: [:on_key_down] do
         _EVAL_ "pp '[" + options[:text] + "]が押されました'"
         _RETURN_
       end
@@ -51,14 +50,12 @@ end
 #メインシーン
 _CREATE_ :LayoutControl, width: 800, height: 600, id: :main_scene do
   _DEFINE_ :func_test3 do
-    on_right_key_down do
-      _SEND_ROOT_ do
-        def_menu_scene
-      end
-        _EVAL_ "pp 'end MAIN scene'"
-      _SLEEP_
+    _WAIT_ mouse: [:on_right_key_down ]
+    _EVAL_ "pp 'end MAIN scene'"
+    _SEND_ROOT_ do
+      def_menu_scene
     end
-    _END_FRAME_
+    _SLEEP_
     func_test3
   end
   
@@ -75,15 +72,6 @@ _DEFINE_ :def_menu_scene do
     TextSelect id: :select4, x:800, y:256, text: "CONFIG"
     TextSelect id: :select5, x:800, y:256+64, text: "???"
 
-    _DEFINE_ :func_test do
-      on_right_key_down do
-        _EVAL_ "pp 'end menu scene'"
-        _RETURN_
-      end
-      _END_FRAME_
-      func_test
-    end
-
     #ボタンを順番にスクロールインさせる
     select1{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:3
@@ -98,7 +86,8 @@ _DEFINE_ :def_menu_scene do
     select6(interrupt: true){ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:10
 
-    func_test
+    _WAIT_ mouse: [:on_right_key_down ]
+    _EVAL_ "pp 'end menu scene'"
 
     select1{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
     _WAIT_ count:3

@@ -208,8 +208,6 @@ class LayoutControl < Control
                   inner_options[:block_stack], 
                   &inner_options[:block])
     end
-    #イベントコマンドはコマンドリストに残り続ける
-    push_command_to_next_frame(:on_mouse_move, options, inner_options)
   end
 
   def command_on_mouse_over(options, inner_options)
@@ -217,8 +215,6 @@ class LayoutControl < Control
     if @on_mouse_over
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
-    #イベントコマンドはコマンドリストに残り続ける
-    push_command_to_next_frame(:on_mouse_over, options, inner_options)
   end
   
   def command_on_mouse_out(options, inner_options)
@@ -226,8 +222,6 @@ class LayoutControl < Control
     if @on_mouse_out
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
-    #イベントコマンドはコマンドリストに残り続ける
-    push_command_to_next_frame(:on_mouse_out, options, inner_options)
   end
 
   def command_on_key_down(options, inner_options)
@@ -235,8 +229,6 @@ class LayoutControl < Control
     if @on_key_down
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
-    #イベントコマンドはコマンドリストに残り続ける
-    push_command_to_next_frame(:on_key_down, options, inner_options)
   end
 
   def command_on_key_down_out(options, inner_options)
@@ -244,8 +236,6 @@ class LayoutControl < Control
     if @on_key_down_out
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
-    #イベントコマンドはコマンドリストに残り続ける
-    push_command_to_next_frame(:on_key_down_out, options, inner_options)
   end
 
   def command_on_key_up(options, inner_options)
@@ -253,8 +243,6 @@ class LayoutControl < Control
     if @on_key_up
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
-    #イベントコマンドはコマンドリストに残り続ける
-    push_command_to_next_frame(:on_key_up, options, inner_options)
   end
 
   def command_on_key_up_out(options, inner_options)
@@ -262,8 +250,6 @@ class LayoutControl < Control
     if @on_key_up_out
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
-    #イベントコマンドはコマンドリストに残り続ける
-    push_command_to_next_frame(:on_key_up_out, options, inner_options)
   end
 
   def command_on_right_key_down(options, inner_options)
@@ -271,8 +257,6 @@ class LayoutControl < Control
     if @on_right_key_down
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
-    #イベントコマンドはコマンドリストに残り続ける
-    push_command_to_next_frame(:on_right_key_down, options, inner_options)
   end
 
   def command_on_right_key_down_out(options, inner_options)
@@ -280,8 +264,6 @@ class LayoutControl < Control
     if @on_right_key_down_out
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
-    #イベントコマンドはコマンドリストに残り続ける
-    push_command_to_next_frame(:on_right_key_down_out, options, inner_options)
   end
 
   def command_on_right_key_up(options, inner_options)
@@ -289,8 +271,6 @@ class LayoutControl < Control
     if @on_right_key_up
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
-    #イベントコマンドはコマンドリストに残り続ける
-    push_command_to_next_frame(:on_right_key_up, options, inner_options)
   end
 
   def command_on_right_key_up_out(options, inner_options)
@@ -298,7 +278,5 @@ class LayoutControl < Control
     if @on_key_right_up_out
       eval_block(options, inner_options[:block_stack], &inner_options[:block])
     end
-    #イベントコマンドはコマンドリストに残り続ける
-    push_command_to_next_frame(:on_right_key_up_out, options, inner_options)
   end
 end

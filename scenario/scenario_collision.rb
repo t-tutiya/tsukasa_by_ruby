@@ -14,26 +14,31 @@ _CREATE_ :LayoutControl,
         :id=>:over, :visible => false
   _CREATE_ :ImageControl, :entity=>Image.new(256,256).circle_fill(128,128,128,C_GREEN).draw_font(80, 120, "DOWN", Font.default),
         :id=>:key_down, :visible => false
-  on_mouse_over do
-    normal  {_SET_ visible: false}
-    over    {_SET_ visible: true}
-    key_down{_SET_ visible: false}
+  _DEFINE_ :button_func do
+    on_mouse_over do
+      normal  {_SET_ visible: false}
+      over    {_SET_ visible: true}
+      key_down{_SET_ visible: false}
+    end
+    on_mouse_out do
+      normal  {_SET_ visible: true}
+      over    {_SET_ visible: false}
+      key_down{_SET_ visible: false}
+    end
+    on_key_down do
+      normal  {_SET_ visible: false}
+      over    {_SET_ visible: false}
+      key_down{_SET_ visible: true}
+    end
+    on_key_up do
+      normal  {_SET_ visible: false}
+      over    {_SET_ visible: true}
+      key_down{_SET_ visible: false}
+    end
+    _END_FRAME_
+    button_func
   end
-  on_mouse_out do
-    normal  {_SET_ visible: true}
-    over    {_SET_ visible: false}
-    key_down{_SET_ visible: false}
-  end
-  on_key_down do
-    normal  {_SET_ visible: false}
-    over    {_SET_ visible: false}
-    key_down{_SET_ visible: true}
-  end
-  on_key_up do
-    normal  {_SET_ visible: false}
-    over    {_SET_ visible: true}
-    key_down{_SET_ visible: false}
-  end
+  button_func
 end
 
 _CREATE_ :LayoutControl, 
@@ -49,24 +54,29 @@ _CREATE_ :LayoutControl,
         :id=>:over, :visible => false
   _CREATE_ :ImageControl, :entity=>Image.new(256,256).triangle_fill(128,0,0,255,255,255,C_GREEN).draw_font(80, 120, "DOWN", Font.default),
         :id=>:key_down, :visible => false
-  on_mouse_over do
-    normal  {_SET_ visible: false}
-    over    {_SET_ visible: true}
-    key_down{_SET_ visible: false}
+  _DEFINE_ :button_func do
+    on_mouse_over do
+      normal  {_SET_ visible: false}
+      over    {_SET_ visible: true}
+      key_down{_SET_ visible: false}
+    end
+    on_mouse_out do
+      normal  {_SET_ visible: true}
+      over    {_SET_ visible: false}
+      key_down{_SET_ visible: false}
+    end
+    on_key_down do
+      normal  {_SET_ visible: false}
+      over    {_SET_ visible: false}
+      key_down{_SET_ visible: true}
+    end
+    on_key_up do
+      normal  {_SET_ visible: false}
+      over    {_SET_ visible: true}
+      key_down{_SET_ visible: false}
+    end
+    _END_FRAME_
+    button_func
   end
-  on_mouse_out do
-    normal  {_SET_ visible: true}
-    over    {_SET_ visible: false}
-    key_down{_SET_ visible: false}
-  end
-  on_key_down do
-    normal  {_SET_ visible: false}
-    over    {_SET_ visible: false}
-    key_down{_SET_ visible: true}
-  end
-  on_key_up do
-    normal  {_SET_ visible: false}
-    over    {_SET_ visible: true}
-    key_down{_SET_ visible: false}
-  end
+  button_func
 end

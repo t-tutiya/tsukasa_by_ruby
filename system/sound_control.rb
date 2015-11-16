@@ -1,7 +1,7 @@
 #! ruby -E utf-8
 
 require 'dxruby'
-require 'ayame'
+#require 'ayame'
 
 ###############################################################################
 #TSUKASA for DXRuby  α１

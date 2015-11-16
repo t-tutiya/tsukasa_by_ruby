@@ -339,27 +339,31 @@ _DEFINE_ :button do |options|
     _CREATE_ :ImageControl, 
       :file_path=>"./sozai/button_key_down.png", 
       :id=>:key_down, :visible => false
-    on_mouse_over do
-      normal  {_SET_ visible: false}
-      over    {_SET_ visible: true}
-      key_down{_SET_ visible: false}
+    _DEFINE_ :button_func do
+      on_mouse_over do
+        normal  {_SET_ visible: false}
+        over    {_SET_ visible: true}
+        key_down{_SET_ visible: false}
+      end
+      on_mouse_out do
+        normal  {_SET_ visible: true}
+        over    {_SET_ visible: false}
+        key_down{_SET_ visible: false}
+      end
+      on_key_down do
+        normal  {_SET_ visible: false}
+        over    {_SET_ visible: false}
+        key_down{_SET_ visible: true}
+      end
+      on_key_up do
+        normal  {_SET_ visible: false}
+        over    {_SET_ visible: true}
+        key_down{_SET_ visible: false}
+      end
+      _END_FRAME_
+      button_func
     end
-    on_mouse_out do
-      normal  {_SET_ visible: true}
-      over    {_SET_ visible: false}
-      key_down{_SET_ visible: false}
-    end
-    on_key_down do
-      normal  {_SET_ visible: false}
-      over    {_SET_ visible: false}
-      key_down{_SET_ visible: true}
-    end
-    on_key_up do
-      normal  {_SET_ visible: false}
-      over    {_SET_ visible: true}
-      key_down{_SET_ visible: false}
-    end
-    _YIELD_
+    button_func
   end
 end
 

@@ -3,3 +3,27 @@
 @			raise
 @		end
 @	end
+
+@	_SET_ cursor_type: IDC_SIZEALL
+@	#_SET_ cursor_visible: false
+
+	_CREATE_ :LayoutControl do
+		_CREATE_ :ImageControl do
+			_SET_ file_path: "./sozai/button_normal.png"
+		end
+		_DEFINE_ :button_func do
+			on_mouse_move do |options|
+				_SET_ x: options[:_X_], y: options[:_Y_]
+			end
+			_END_FRAME_
+			button_func
+		end
+		button_func
+	end
+
+@	_SET_ caption: "テスト"
+
+テスト
+@	_SET_ cursor_type: IDC_SIZEALL
+
+テスト

@@ -6,6 +6,8 @@ require './system/tsukasa.rb'
 width = 800
 height = 600
 
+#ベース背景色
+Window.bgcolor=[0,0,0]
 #初期化
 Window.resize(width, height)
 

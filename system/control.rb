@@ -661,8 +661,15 @@ class Control #スクリプト制御
       options[:_ARGUMENT_] = @root_control.default_control[options[:default]]
     end
 
+    controls = find_control(options[:_ARGUMENT_])
+    
+    if controls.empty?
+      pp options[:_ARGUMENT_].to_s + "は無効な識別子です"
+      return
+    end
+
     #獲得した全てのコントロールにブロックを送信する
-    find_control(options[:_ARGUMENT_]).each do |control|
+    controls.each do |control|
       control.push_command([:_SCOPE_, {}, inner_options])
     end
   end

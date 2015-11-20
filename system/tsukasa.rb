@@ -221,11 +221,9 @@ class Tsukasa < LayoutControl
     Window.get_screen_shot(options[:_ARGUMENT_],options[:format] || FORMAT_PNG)
   end
 
-=begin
   def command__FULL_SCREEN_(options, inner_options)
     Window.full_screen = options[:_ARGUMENT_]
   end
-=end
 
   def command__EXIT_(options, inner_options)
     @close = true

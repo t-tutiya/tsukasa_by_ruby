@@ -523,19 +523,19 @@ class Control #制御構文
       options[:count] = options[:count] - 1
     end
 
-    interrupt_command([:_END_LOOP_, options, inner_options])
-
     #while文全体をスクリプトストレージにスタック
-    eval_commands([[:_LOOP_, options, inner_options]])
+    push_command([:_END_FRAME_, {}, {}])
+    push_command([:_LOOP_, options, inner_options])
+
     #ブロックを実行時評価しコマンド列を生成する。
     eval_block(options, &inner_options[:block])
   end
 
   def command__BREAK_(options, inner_options)
-    #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
-    #_END_LOOP_タグが見つからない場合は@command_listを空にする
+    #_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
+    #_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
-      break if @command_list.shift[0] == :_END_LOOP_
+      break if @command_list.shift[0] == :_LOOP_
     end
   end
 
@@ -816,10 +816,6 @@ class Control #内部コマンド
 
     #関数を展開する
     eval_block(options, block_stack, &inner_options[:block])
-  end
-
-  #ループの終点を示す
-  def command__END_LOOP_(options, inner_options)
   end
 
   #ファンクションの終点を示す

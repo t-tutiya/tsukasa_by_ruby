@@ -49,17 +49,14 @@ end
 
 #メインシーン
 _CREATE_ :LayoutControl, width: 800, height: 600, id: :main_scene do
-  _DEFINE_ :func_test3 do
+  _LOOP_ false do
     _WAIT_ mouse: [:on_right_key_down ]
     _EVAL_ "pp 'end MAIN scene'"
     _SEND_ROOT_ do
       def_menu_scene
     end
     _SLEEP_
-    func_test3
   end
-  
-  func_test3
 end
 
 #メニューシーン
@@ -82,8 +79,6 @@ _DEFINE_ :def_menu_scene do
     select4{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:3
     select5{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
-    _WAIT_ count:3
-    select6{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:10
 
     _WAIT_ mouse: [:on_right_key_down ]
@@ -98,8 +93,6 @@ _DEFINE_ :def_menu_scene do
     select4{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
     _WAIT_ count:3
     select5{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
-    _WAIT_ count:3
-    select6{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
     _WAIT_ count:5
     _WAKE_ :main_scene
     _DELETE_

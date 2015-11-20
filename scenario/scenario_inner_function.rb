@@ -33,7 +33,7 @@ _CREATE_ :RenderTargetControl,
 end
 
 #ボタンコントロール
-_CREATE_ :RenderTargetControl, 
+_CREATE_ :LayoutControl, 
         :x => 0, 
         :y => 0, 
         :width => 100,
@@ -43,13 +43,18 @@ _CREATE_ :RenderTargetControl,
         :id=>:normal
 
   # 「押す」を押すと2つのボタンのfunc関数を呼ぶが、それぞれ違う実装になっているので別々に動く
-  on_key_down do
-    _SEND_ROOT_ :button1 do
-      func
+  _DEFINE_ :func do
+    _CHECK_ mouse: [:on_key_down] do
+      _SEND_ROOT_ do
+        button1{func}
+      end
+      _SEND_ROOT_ do
+        button2{func}
+      end
     end
-    _SEND_ROOT_ :button2 do
-      func
-    end
+    _END_FRAME_
+    func
   end
+  func
 end
 

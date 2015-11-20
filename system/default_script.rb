@@ -142,14 +142,14 @@ _DEFINE_ :TextWindow do |options|
           _CHAR_RENDERER_ do
             #フェードイン（スペースキーか右CTRLが押されたらスキップ）
             _MOVE_   15, alpha:[0,255],
-                  option: {check: {:key_down => K_RCONTROL, :key_push => K_SPACE}} do
+                  option: {check: {key_down: K_RCONTROL, key_push: K_SPACE}} do
                     _SET_ alpha: 255
                   end
-            #トランジションが終了するまで非アイドル状態
+            #トランジションが終了するまで待機
             _WAIT_  command: :_MOVE_ 
-            #スリープ状態に移行
+            #待機フラグを立てる
             _SET_ :_TEMP_, sleep: true
-            #ウェイク状態になるまで待機
+            #待機フラグが下がるまで待機
             _WAIT_ :_TEMP_, equal: {sleep: false}
             #キー入力伝搬を防ぐ為に１フレ送る
             _END_FRAME_
@@ -268,7 +268,6 @@ _DEFINE_ :line_icon_func do |options|
 end
 
 _DEFINE_ :page_icon_func do |options|
-
   _CREATE_ :RenderTargetControl, 
           :x => options[:x] || 0, 
           :y => options[:y] || 0, 
@@ -348,22 +347,22 @@ _DEFINE_ :button do |options|
       :file_path=>"./sozai/button_key_down.png", 
       :id=>:key_down, :visible => false
     _DEFINE_ :button_func do
-      on_mouse_over do
+      _CHECK_ mouse: [:on_mouse_over] do
         normal  {_SET_ visible: false}
         over    {_SET_ visible: true}
         key_down{_SET_ visible: false}
       end
-      on_mouse_out do
+      _CHECK_ mouse: [:on_mouse_out] do
         normal  {_SET_ visible: true}
         over    {_SET_ visible: false}
         key_down{_SET_ visible: false}
       end
-      on_key_down do
+      _CHECK_ mouse: [:on_key_down] do
         normal  {_SET_ visible: false}
         over    {_SET_ visible: false}
         key_down{_SET_ visible: true}
       end
-      on_key_up do
+      _CHECK_ mouse: [:on_key_up] do
         normal  {_SET_ visible: false}
         over    {_SET_ visible: true}
         key_down{_SET_ visible: false}

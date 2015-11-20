@@ -57,7 +57,7 @@ require_relative './text_page_control.rb'
 require_relative './script_compiler.rb'
 
 #TODO：モジュールであるべきか？
-class Tsukasa < RenderTargetControl
+class Tsukasa < LayoutControl
 
   #システム全体で共有されるデータ群。保存対象。
   def _SYSTEM_
@@ -135,7 +135,7 @@ class Tsukasa < RenderTargetControl
   attr_reader  :function_list
 end
 
-class Tsukasa < RenderTargetControl
+class Tsukasa < LayoutControl
 
   def initialize(options)
     #アプリ終了フラグ
@@ -210,7 +210,7 @@ class Tsukasa < RenderTargetControl
   end
 end
 
-class Tsukasa < RenderTargetControl
+class Tsukasa < LayoutControl
   def command__RESIZE_(options, inner_options)
     Window.resize(options[:width], 
                   options[:height])
@@ -275,14 +275,5 @@ class Tsukasa < RenderTargetControl
       @_LOCAL_[:_READ_FRAG_][@label_name][@label_id] = @label_title
     end
     #pp @_LOCAL_[:_READ_FRAG_]
-  end
-
-  def command_on_requested_close(options, inner_options)
-    #閉じるボタンがクリックされた場合
-    if Input.requested_close?
-      eval_block(options, inner_options[:block_stack], &inner_options[:block])
-    end
-    #イベントコマンドはコマンドリストに残り続ける
-    push_command_to_next_frame(:on_requested_close, options, inner_options)
   end
 end

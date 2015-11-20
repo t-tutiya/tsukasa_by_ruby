@@ -34,9 +34,17 @@ require 'dxruby'
 #システムサポート
 ###############################################################################
 
-#ウィンドウの閉じるボタンが押された場合に呼びだされる。
-on_requested_close do
-  _EXIT_ #アプリを終了する
+
+_CREATE_ :LayoutControl do
+  _LOOP_ false do
+    #ウィンドウの閉じるボタンが押された場合に呼びだされる。
+    _CHECK_ mouse: [:on_requested_close] do
+      _SEND_ROOT_ do
+        _EXIT_ #アプリを終了する
+      end
+    end
+    _END_FRAME_
+  end
 end
 
 #指定フレーム数ウェイト

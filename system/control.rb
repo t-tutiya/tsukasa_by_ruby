@@ -661,28 +661,15 @@ class Control #スクリプト制御
       options[:_ARGUMENT_] = @root_control.default_control[options[:default]]
     end
 
-    if options[:_ROOT_]
-      #ルートコントロールをベースに探索
-      controls = @root_control.find_control(options[:_ARGUMENT_])
-    else
-      #自コントロールをベースに探索
-      controls = find_control(options[:_ARGUMENT_])
-    end
-
     #獲得した全てのコントロールにブロックを送信する
-    controls.each do |control|
-      if options[:interrupt]
-        control.interrupt_command([:_SCOPE_, {}, inner_options])
-      else
-        control.push_command([:_SCOPE_, {}, inner_options])
-      end
+    find_control(options[:_ARGUMENT_]).each do |control|
+      control.push_command([:_SCOPE_, {}, inner_options])
     end
   end
 
   #ルートコントロールにコマンドブロックを送信する
   def command__SEND_ROOT_(options, inner_options)
-    options[:_ROOT_] = true
-    command__SEND_(options, inner_options)
+    @root_control.interrupt_command([:_SCOPE_, {}, inner_options])
   end
 
   #スクリプトファイルを挿入する

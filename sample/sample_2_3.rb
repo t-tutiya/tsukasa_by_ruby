@@ -75,15 +75,15 @@ _DEFINE_ :def_menu_scene do
     #ボタンを順番にスクロールインさせる
     select1{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:3
-    select2(interrupt: true){ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
+    select2{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:3
-    select3(interrupt: true){ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
+    select3{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:3
-    select4(interrupt: true){ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
+    select4{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:3
-    select5(interrupt: true){ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
+    select5{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:3
-    select6(interrupt: true){ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
+    select6{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:10
 
     _WAIT_ mouse: [:on_right_key_down ]
@@ -91,15 +91,15 @@ _DEFINE_ :def_menu_scene do
 
     select1{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
     _WAIT_ count:3
-    select2(interrupt: true){ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
+    select2{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
     _WAIT_ count:3
-    select3(interrupt: true){ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
+    select3{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
     _WAIT_ count:3
-    select4(interrupt: true){ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
+    select4{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
     _WAIT_ count:3
-    select5(interrupt: true){ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
+    select5{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
     _WAIT_ count:3
-    select6(interrupt: true){ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
+    select6{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}
     _WAIT_ count:5
     _WAKE_ :main_scene
     _DELETE_

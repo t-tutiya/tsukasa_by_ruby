@@ -516,8 +516,10 @@ class Control #制御構文
 
   #繰り返し
   def command__LOOP_(options, inner_options)
-    #チェック条件を満たさないなら終了する
-    return if check_imple(options)
+    unless options.empty?
+      #チェック条件を満たさないなら終了する
+      return if check_imple(options)
+    end
 
     if options[:count]
       options[:count] = options[:count] - 1

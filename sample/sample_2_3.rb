@@ -49,7 +49,7 @@ end
 
 #メインシーン
 _CREATE_ :LayoutControl, width: 800, height: 600, id: :main_scene do
-  _LOOP_ false do
+  _LOOP_ do
     _WAIT_ mouse: [:on_right_key_down ]
     _EVAL_ "pp 'end MAIN scene'"
     _SEND_ROOT_ do

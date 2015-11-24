@@ -74,7 +74,12 @@ module Layoutable
     return 0, 0 unless @visible
 
     #下位コントロールを上位ターゲットに直接描画
-    super(offset_x, offset_y, target, {:width => @width, :height => @height})
+    super(offset_x, offset_y, target, 
+          { :width => @width, 
+            :height => @height,
+            :mouse_pos_x => parent_size[:mouse_pos_x],
+            :mouse_pos_y => parent_size[:mouse_pos_y]
+          })
 
     #連結指定チェック
     case @float_mode

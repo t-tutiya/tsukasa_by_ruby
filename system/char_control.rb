@@ -223,7 +223,6 @@ class CharControl < ImageControl
   end
 
   def render(offset_x, offset_y, target, parent_size)
-
     if @option_update
 
       @font_obj = Font.new( @size, 

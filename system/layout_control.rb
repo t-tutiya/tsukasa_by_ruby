@@ -100,6 +100,9 @@ class LayoutControl < Control
     @out = true
 
     @old_cursol_x = @old_cursol_y = nil
+    
+    @mouse_pos_x = 0
+    @mouse_pos_y = 0
   end
 
   def update()
@@ -117,8 +120,8 @@ class LayoutControl < Control
     @on_right_key_up_out  = false
 
     #マウスカーソル座標を取得
-    @mouse_sprite.x = @cursol_x = Input.mouse_pos_x
-    @mouse_sprite.y = @cursol_y = Input.mouse_pos_y
+    @mouse_sprite.x = @cursol_x = @mouse_pos_x
+    @mouse_sprite.y = @cursol_y = @mouse_pos_y
 
     #前フレームと座標が異なる場合on_mouse_moveイベントを実行する
     @on_mouse_move = (@old_cursol_x != @cursol_x)or(@old_cursol_y != @cursol_y)

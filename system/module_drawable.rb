@@ -214,7 +214,11 @@ module Drawable
     end
 
     #下位エンティティを自エンティティに描画
-    dx, dy = super(0, 0, @entity, {:width => @width, :height => @height})
+    dx, dy = super(0, 0, @entity, 
+                    { :width => @width, 
+                      :height => @height, 
+                      :mouse_pos_x => parent_size[:mouse_pos_x],
+                      :mouse_pos_y => parent_size[:mouse_pos_y]})
 
     #自エンティティを上位ターゲットに描画
     target.draw_ex(x, y, @entity, @draw_option)

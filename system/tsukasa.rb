@@ -205,7 +205,11 @@ class Tsukasa < LayoutControl
     super
   end
 
-  def render(offset_x, offset_y, target, parent_size = {:width => Window.width, :height => Window.width})
+  def render(offset_x, offset_y, target, 
+              parent_size = { :width => Window.width, 
+                              :height => Window.width, 
+                              :mouse_pos_x => Input.mouse_pos_x,
+                              :mouse_pos_y => Input.mouse_pos_y})
     super
   end
 end

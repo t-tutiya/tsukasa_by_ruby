@@ -43,9 +43,9 @@ class ScriptCompiler
   end
 
   #ヘルパーメソッド群
-  def commands(argument, block_stack = [], &block)
+  def commands(argument, block_stack, yield_block_stack, &block)
     @command_list = []
-    @yield_block = nil
+    @yield_block_stack = yield_block_stack
     @block_stack = block_stack
 
     if argument[:script_file_path]
@@ -85,6 +85,7 @@ class ScriptCompiler
     end
 
     inner_options = {}
+    inner_options[:yield_block_stack] = @yield_block_stack
     inner_options[:block_stack] = @block_stack
     inner_options[:block] = block if block
 

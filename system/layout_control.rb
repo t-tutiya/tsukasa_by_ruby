@@ -261,6 +261,7 @@ class LayoutControl < Control
   def command__MOUSE_POS_(options, inner_options)
     eval_block( {:_X_ => @cursol_x, :_Y_ => @cursol_y}, 
                 inner_options[:block_stack], 
+                inner_options[:yield_block_stack], 
                 &inner_options[:block])
   end
 end

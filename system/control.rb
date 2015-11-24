@@ -53,7 +53,7 @@ class Control #公開インターフェイス
   def script_file_path=(script_file_path)
     @script_file_path = script_file_path 
     @command_list =  
-      @script_compiler.commands({:script_file_path => script_file_path}) +
+      @script_compiler.commands({:script_file_path => script_file_path},[],[]) +
       @command_list
   end
 end
@@ -80,7 +80,13 @@ class Control #内部メソッド
 
     #ブロックが付与されているなら読み込んで登録する
     if inner_options[:block]
-      eval_block(options, inner_options[:block_stack], &inner_options[:block])
+      inner_options[:block_stack] = [] unless inner_options[:block_stack]
+      inner_options[:yield_block_stack] = [] unless inner_options[:yield_block_stack]
+      
+      eval_block( options, 
+                  inner_options[:block_stack], 
+                  inner_options[:yield_block_stack], 
+                  &inner_options[:block])
     end
 
     #スクリプトパスが設定されているなら読み込んで登録する
@@ -251,11 +257,14 @@ class Control #内部メソッド
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
-  def eval_block(options, block_stack = [], &block)
-    return unless block
+  def eval_block(options, block_stack, yield_block_stack, &block)
+    raise unless block
+    raise unless block_stack
+    raise unless yield_block_stack
 
     eval_commands(@script_compiler.commands(options, 
                                             block_stack, 
+                                            yield_block_stack,
                                             &block))
   end
 
@@ -499,8 +508,10 @@ class Control #制御構文
     #フレーム終了疑似コマンドをスタックする
     eval_commands([[:_END_FRAME_, {}, {}]])
 
-    #waitにブロックが付与されているならそれを実行する
-    eval_block(options, inner_options[:block_stack], &inner_options[:block])
+    if inner_options[:block]
+      #waitにブロックが付与されているならそれを実行する
+      eval_block(options, inner_options[:block_stack], inner_options[:yield_block_stack], &inner_options[:block])
+    end
 
     push_command_to_next_frame(:_WAIT_, options, inner_options)
   end
@@ -509,15 +520,15 @@ class Control #制御構文
     #チェック条件を満たさない場合
     if check_imple(options)
       #checkにブロックが付与されているならそれを実行する
-      eval_block(options, &inner_options[:block])
+      eval_block(options, [], inner_options[:yield_block_stack], &inner_options[:block])
       return
     end
   end
 
   #繰り返し
-  def command__LOOP_(options, inner_options)
+  def command__LOOP_(options, inner_options) 
     unless options.empty?
-      #チェック条件を満たさないなら終了する
+      #チェック条件を満たしたら終了する
       return if check_imple(options)
     end
 
@@ -530,7 +541,7 @@ class Control #制御構文
     push_command([:_LOOP_, options, inner_options])
 
     #ブロックを実行時評価しコマンド列を生成する。
-    eval_block(options, &inner_options[:block])
+    eval_block(options, [], inner_options[:yield_block_stack], &inner_options[:block])
   end
 
   def command__BREAK_(options, inner_options)
@@ -578,8 +589,9 @@ class Control #ユーザー定義関数操作
 
     #参照渡し汚染が起きないようにディープコピーで取得
     block_stack = inner_options[:block_stack].dup
+    yield_block_stack = inner_options[:yield_block_stack].dup
     #スタックプッシュ
-    block_stack.push(inner_options[:block]) 
+    yield_block_stack.push(inner_options[:block])
 
     if options[:_FUNCTION_ARGUMENT_]
       options[:_ARGUMENT_] = options[:_FUNCTION_ARGUMENT_] 
@@ -592,19 +604,19 @@ class Control #ユーザー定義関数操作
     interrupt_command([:_END_FUNCTION_, options, inner_options])
 
     #functionを実行時評価しコマンド列を生成する。
-    eval_block(options, block_stack, &function_block)
+    eval_block(options, block_stack, yield_block_stack, &function_block)
   end
 
   #関数ブロックを実行する
   def command__YIELD_(options, inner_options)
     #ブロックスタックをディープコピーで取得
     block_stack = inner_options[:block_stack].dup
+    yield_block_stack = inner_options[:yield_block_stack].dup
 
-    #呼び出し元がブロックを持っていないなら終了
-    block = block_stack.pop
+    block = yield_block_stack.pop
     return unless block
 
-    eval_block(options, block_stack, &block)
+    eval_block(options, block_stack, yield_block_stack, &block)
   end
 end
 
@@ -815,9 +827,10 @@ class Control #内部コマンド
 
     #参照渡し汚染が起きないようにディープコピーで取得
     block_stack = inner_options[:block_stack].dup
+    yield_block_stack = inner_options[:yield_block_stack] ? inner_options[:yield_block_stack] : []
 
     #関数を展開する
-    eval_block(options, block_stack, &inner_options[:block])
+    eval_block(options, block_stack, yield_block_stack, &inner_options[:block])
   end
 
   #ファンクションの終点を示す
@@ -847,6 +860,7 @@ class Control #プロパティのパラメータ遷移
       if inner_options[:block]
         eval_block( {:_STOP_COUNT_ => options[:option][:count]}, 
                     inner_options[:block_stack],
+                    inner_options[:yield_block_stack],
                     &inner_options[:block])
       end
       return
@@ -1051,7 +1065,7 @@ class Control #プロパティのパラメータ遷移
       check_imple(options[:option][:check])
       #ブロックがあれば実行し、コマンドを終了する
       if inner_options[:block]
-        eval_block(options, &inner_options[:block]) 
+        eval_block(options, [], inner_options[:yiled_block_stack], &inner_options[:block]) 
       end
       return
     end

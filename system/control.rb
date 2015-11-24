@@ -532,12 +532,17 @@ class Control #制御構文
       return if check_imple(options)
     end
 
+    #カウンタを減算
     if options[:count]
       options[:count] = options[:count] - 1
     end
 
-    #while文全体をスクリプトストレージにスタック
-    push_command([:_END_FRAME_, {}, {}])
+    #継続フラグが立っているならフレーム区切りを入れない
+    unless options[:continuation]
+      #while文全体をスクリプトストレージにスタック
+      push_command([:_END_FRAME_, {}, {}])
+    end
+    #リストの末端に自分自身を追加する
     push_command([:_LOOP_, options, inner_options])
 
     #ブロックを実行時評価しコマンド列を生成する。

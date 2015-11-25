@@ -161,9 +161,14 @@ class Tsukasa < LayoutControl
       :RenderTargetContainer => :default_RenderTarget_container,
       :Anonymous       => :anonymous,
     }
-    options[:script_file_path] = "./system/bootstrap_script.rb"
+
     options[:id] = :default_rendertarget_container
-    options[:redenr_target] = false unless options[:redenr_target]
+
+    options[:command_list] = [[:_INCLUDE_,
+                        {:_ARGUMENT_=> "./system/bootstrap_script.rb"}, {
+                        :block_stack => [],
+                        :yield_block_stack => [],
+                        }]]
 
     #ラベル関連
     @label_name = options[:label_name] || nil

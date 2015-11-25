@@ -48,14 +48,6 @@ class Control #公開インターフェイス
 
   attr_accessor  :id
   attr_accessor  :sleep
-
-  attr_reader  :script_file_path
-  def script_file_path=(script_file_path)
-    @script_file_path = script_file_path 
-    @command_list =  
-      @script_compiler.commands({:script_file_path => script_file_path},[],[]) +
-      @command_list
-  end
 end
 
 class Control #内部メソッド
@@ -87,11 +79,6 @@ class Control #内部メソッド
                   inner_options[:block_stack], 
                   inner_options[:yield_block_stack], 
                   &inner_options[:block])
-    end
-
-    #スクリプトパスが設定されているなら読み込んで登録する
-    if options[:script_file_path]
-      self.script_file_path = options[:script_file_path] 
     end
 
     #コマンドセットがあるなら登録する
@@ -710,14 +697,19 @@ class Control #スクリプト制御
     
     #文字列が直接指定されていればそれをファイルパスとする
     if options[:_ARGUMENT_]
-      self.script_file_path = options[:_ARGUMENT_]
-      return
+      @script_file_path = options[:_ARGUMENT_]
+    else
+      #キーで指定されたデータストアのデータをファイルパスとする
+      options.each do |key, value|
+        @script_file_path = @root_control.send(key)[value]
+      end
     end
 
-    #キーで指定されたデータストアのデータをファイルパスとする
-    options.each do |key, value|
-      self.script_file_path = @root_control.send(key)[value]
-    end
+    @command_list =  
+      @script_compiler.commands({:script_file_path => @script_file_path}, 
+                                  inner_options[:block_stack], 
+                                  inner_options[:yield_block_stack]) + 
+                                   @command_list
   end
 
   #文字列を評価する（デバッグ用）

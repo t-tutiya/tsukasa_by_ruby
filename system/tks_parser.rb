@@ -211,10 +211,12 @@ class TKSParser < Parslet::Parser
     rule(
       :text => simple(:string)
     ) {
+      text = "#{string}".gsub(/"/, '\"')
       "_SEND_(default: :TextLayer){" + 
-        %Q'_TEXT_ "#{string}"' +
+        %Q'_TEXT_ "#{text}"' +
       "}" 
     }
+
     #コマンドブロック→そのまま返す
     rule(
       :command => simple(:command)

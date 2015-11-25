@@ -296,7 +296,7 @@ class TextPageControl < LayoutControl
                 :align_y => :bottom,
                 :charactor => options[:_ARGUMENT_],
                 :command_list=> options[:command_list],
-                :float_mode => :right,
+                :float_mode => :left,
                 }.merge(@char_option), 
                {:block => @char_renderer}])
 
@@ -306,7 +306,7 @@ class TextPageControl < LayoutControl
                 :width => @charactor_pitch,
                 :height => @line_height,
                 :align_y => :bottom,
-                :float_mode => :right}, 
+                :float_mode => :left}, 
                 {}])
   end
 
@@ -387,7 +387,7 @@ class TextPageControl < LayoutControl
                 :width => 0,
                 :height => @size,
                 :command_list => [rubi_layout],
-                :float_mode => :right}, 
+                :float_mode => :left}, 
                {}])
   end
 
@@ -415,7 +415,7 @@ class TextPageControl < LayoutControl
                                        {:_ARGUMENT_ => :LayoutControl, 
                                         :width => @indent,
                                         :height => @line_height,
-                                        :float_mode => :right}, 
+                                        :float_mode => :left}, 
                                         inner_options]] : nil, 
                       :float_mode => :bottom}, 
                       inner_options])

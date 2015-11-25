@@ -220,7 +220,7 @@ _DEFINE_ :TextWindow do |options|
       else
         _SEND_ 1 do
           _SEND_ :last do
-            _CALL_ options[:_ARGUMENT_], align_y: :bottom, float_mode: :right
+            _CALL_ options[:_ARGUMENT_], align_y: :bottom, float_mode: :left
           end
         end
       end
@@ -254,7 +254,7 @@ _DEFINE_ :line_icon_func do |options|
           :width => 24,
           :height => 24,
           :align_y => options[:align_y] || :bottom,
-          :float_mode => options[:float_mode] || :right,
+          :float_mode => options[:float_mode] || :left,
           :id => :icon do
     _CREATE_ :TileImageControl, 
             :tiles => true,
@@ -275,7 +275,7 @@ _DEFINE_ :page_icon_func do |options|
           :width => 24,
           :height => 24,
           :align_y => options[:align_y] || :bottom,
-          :float_mode => options[:float_mode] || :right,
+          :float_mode => options[:float_mode] || :left,
           :id => :icon do
     _CREATE_ :TileImageControl, 
             :tiles => true, 

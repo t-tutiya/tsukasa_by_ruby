@@ -84,7 +84,7 @@ module Layoutable
     #連結指定チェック
     case @float_mode
     #右連結
-    when :right
+    when :left
       dx = @width
       dy = @y
     #下連結

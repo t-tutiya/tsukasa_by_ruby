@@ -99,7 +99,7 @@ class TKSParser < Parslet::Parser
   #コマンドブロック
   rule(:command) {
     ( str(script_prefix) | indent) >> #スクリプト行接頭字orインデント
-    match['^\n'].repeat(1).as(:command) >> #改行までの１文字以上の文字列
+    match['^\n'].repeat.as(:command) >> #改行までの０文字以上の文字列
     newline.maybe #改行
   }
 
@@ -109,8 +109,7 @@ class TKSParser < Parslet::Parser
       ( inline_data | 
         inline_command | 
         text ).repeat(1).as(:printable) >>
-      newline.maybe.as(:line_feed) >> #改行
-      blankline.repeat.as(:blanklines) #空行
+      newline.maybe.as(:line_feed)
   }
 
   #文字列
@@ -183,8 +182,8 @@ class TKSParser < Parslet::Parser
 
   #空行（テキストウィンドウの改ページの明示）
   rule(:blankline) { 
-    #空白orタブ >> 改行
-    match[' \t'].repeat >> newline 
+    #改行
+    newline.repeat(1).as(:blanklines)
   }
 
   rule(:node) { 
@@ -243,27 +242,22 @@ class TKSParser < Parslet::Parser
     #textブロック→そのまま返す
     rule(
       :printable => sequence(:commands),
-      :line_feed => nil,
-      :blanklines => []
+      :line_feed => nil
     ) { commands }
 
     #textブロック＋改行→改行コマンド追加
     rule(
       :printable => sequence(:commands),
-      :line_feed => simple(:line_feed),
-      :blanklines => []
+      :line_feed => simple(:line_feed)
     ) { 
         commands + 
         ["_SEND_(default: :TextLayer){ _LINE_FEED_ }"]
     }
 
-    #textブロック＋改行＋空行→改行＋キー入力待ちコマンド追加追加
+    #空行→改行＋キー入力待ちコマンド追加追加
     rule(
-      :printable => sequence(:commands),
-      :line_feed => simple(:line_feed),
       :blanklines => simple(:blanklines)
     ) { 
-        commands + 
         ["page_pause"] 
     }
   end

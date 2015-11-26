@@ -196,6 +196,12 @@ _DEFINE_ :TextWindow do |options|
         _FLUSH_
       end
     end
+    #_flush_デフォルト送信
+    _DEFINE_ :_SET_FONT_ do |options|
+      _SEND_ 1  do
+        _SET_ options
+      end
+    end
 
     #キー入力待ち処理
     _DEFINE_ :pause do |options|

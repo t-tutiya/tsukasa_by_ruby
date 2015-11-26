@@ -367,7 +367,6 @@ class TextPageControl < LayoutControl
     rubi_layout =[:_CREATE_, 
                   { :_ARGUMENT_ => :TextPageControl, 
                     :command_list => [
-                      [:_LINE_FEED_, {},inner_options],
                       [:_TEXT_, {:_ARGUMENT_=> options[:_ARGUMENT_]},inner_options]],
                     :x => @rubi_option[:offset_x],
                     :y => @rubi_option[:offset_y],

@@ -209,47 +209,47 @@ class LayoutControl < Control
       options[:mouse].each do |key|
         case key
         #前フレと比較してカーソルが移動した場合
-        when :on_mouse_move
+        when :cursor_move
           return true if @on_mouse_move
 
         #カーソルが指定範囲に侵入した場合
-        when :on_mouse_over
+        when :cursor_over
           return true if @on_mouse_over
 
         #カーソルが指定範囲の外に移動した場合
-        when :on_mouse_out
+        when :cursor_out
           return true if @on_mouse_out
 
         #マウスボタンが押下された場合
-        when :on_key_down
+        when :key_down
           return true if @on_key_down
 
         #マウスボタンが範囲外で押下された場合
-        when :on_key_down_out
+        when :key_down_out
           return true if @on_key_down_out
 
         #マウスボタン押下が解除された場合
-        when :on_key_up
+        when :key_up
           return true if @on_key_up
 
         #マウスボタン押下が範囲外で解除された場合
-        when :on_key_up_out
+        when :key_up_out
           return true if @on_key_up_out
 
         #マウス右ボタンが押下された場合
-        when :on_right_key_down
+        when :right_key_down
           return true if @on_right_key_down
 
         #マウスボタンが範囲外で押下された場合
-        when :on_right_key_down_out
+        when :right_key_down_out
           return true if @on_right_key_down_out
 
         #マウスボタン押下が解除された場合
-        when :on_right_key_up
+        when :right_key_up
           return true if @on_right_key_up
 
         #マウスボタン押下が範囲外で解除された場合
-        when :on_key_right_up_out
+        when :key_right_up_out
           return true if @on_key_right_up_out
         end
       end

@@ -15,25 +15,25 @@ _CREATE_ :LayoutControl,
   _CREATE_ :ColorkeyControl, :file_path=>"./sozai/star_button.png", :border => 200, id: :colorkey
   _SET_ colorkey: :colorkey
   _DEFINE_ :button_func do
-    _CHECK_ mouse: [:on_mouse_over] do
+    _CHECK_ mouse: [:cursor_over] do
       pp "over"
       normal  {_SET_ visible: false}
       over    {_SET_ visible: true}
       key_down{_SET_ visible: false}
     end
-    _CHECK_ mouse: [:on_mouse_out] do
+    _CHECK_ mouse: [:cursor_out] do
       pp "out"
       normal  {_SET_ visible: true}
       over    {_SET_ visible: false}
       key_down{_SET_ visible: false}
     end
-    _CHECK_ mouse: [:on_key_down] do
+    _CHECK_ mouse: [:key_down] do
       pp "key_down"
       normal  {_SET_ visible: false}
       over    {_SET_ visible: false}
       key_down{_SET_ visible: true}
     end
-    _CHECK_ mouse: [:on_key_up] do
+    _CHECK_ mouse: [:key_up] do
       pp "key_up"
       normal  {_SET_ visible: false}
       over    {_SET_ visible: true}
@@ -41,18 +41,18 @@ _CREATE_ :LayoutControl,
     end
 
     #キー押下状態で判定範囲を超えた場合は、以下のイベントをフックして対応する
-    _CHECK_ mouse: [:on_key_down_out] do
+    _CHECK_ mouse: [:key_down_out] do
       pp "key_down_out"
     end
-    _CHECK_ mouse: [:on_key_up_out] do
+    _CHECK_ mouse: [:key_up_out] do
       pp "key_up_out"
     end
 
     #複数個のイベントを登録出来る
-    _CHECK_ mouse: [:on_mouse_over] do
+    _CHECK_ mouse: [:cursor_over] do
       pp "over 2nd"
     end
-    _CHECK_ mouse: [:on_key_down] do
+    _CHECK_ mouse: [:key_down] do
       pp "key down 2nd"
     end
     _END_FRAME_

@@ -15,22 +15,22 @@ _CREATE_ :LayoutControl,
   _CREATE_ :ImageControl, :entity=>Image.new(256,256).circle_fill(128,128,128,C_GREEN).draw_font(80, 120, "DOWN", Font.default),
         :id=>:key_down, :visible => false
   _DEFINE_ :button_func do
-    _CHECK_ mouse: [:on_mouse_over] do
+    _CHECK_ mouse: [:cursor_over] do
       normal  {_SET_ visible: false}
       over    {_SET_ visible: true}
       key_down{_SET_ visible: false}
     end
-    _CHECK_ mouse: [:on_mouse_out] do
+    _CHECK_ mouse: [:cursor_out] do
       normal  {_SET_ visible: true}
       over    {_SET_ visible: false}
       key_down{_SET_ visible: false}
     end
-    _CHECK_ mouse: [:on_key_down] do
+    _CHECK_ mouse: [:key_down] do
       normal  {_SET_ visible: false}
       over    {_SET_ visible: false}
       key_down{_SET_ visible: true}
     end
-    _CHECK_ mouse: [:on_key_up] do
+    _CHECK_ mouse: [:key_up] do
       normal  {_SET_ visible: false}
       over    {_SET_ visible: true}
       key_down{_SET_ visible: false}
@@ -55,22 +55,22 @@ _CREATE_ :LayoutControl,
   _CREATE_ :ImageControl, :entity=>Image.new(256,256).triangle_fill(128,0,0,255,255,255,C_GREEN).draw_font(80, 120, "DOWN", Font.default),
         :id=>:key_down, :visible => false
   _DEFINE_ :button_func do
-    _CHECK_ mouse: [:on_mouse_over] do
+    _CHECK_ mouse: [:cursor_over] do
       normal  {_SET_ visible: false}
       over    {_SET_ visible: true}
       key_down{_SET_ visible: false}
     end
-    _CHECK_ mouse: [:on_mouse_out] do
+    _CHECK_ mouse: [:cursor_out] do
       normal  {_SET_ visible: true}
       over    {_SET_ visible: false}
       key_down{_SET_ visible: false}
     end
-    _CHECK_ mouse: [:on_key_down] do
+    _CHECK_ mouse: [:key_down] do
       normal  {_SET_ visible: false}
       over    {_SET_ visible: false}
       key_down{_SET_ visible: true}
     end
-    _CHECK_ mouse: [:on_key_up] do
+    _CHECK_ mouse: [:key_up] do
       normal  {_SET_ visible: false}
       over    {_SET_ visible: true}
       key_down{_SET_ visible: false}

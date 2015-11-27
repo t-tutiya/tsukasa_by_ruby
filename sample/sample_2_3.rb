@@ -9,7 +9,7 @@ _DEFINE_ :TextSelect do |options|
     end
 
     _DEFINE_ :func_test do
-      _CHECK_ mouse: [:on_mouse_over] do
+      _CHECK_ mouse: [:cursor_over] do
       #マウスが領域内に入ったら色を変え、文字をスクロールインさせる
         _EVAL_ "pp 'over'"
         text_area{
@@ -21,7 +21,7 @@ _DEFINE_ :TextSelect do |options|
         }
       end
       #マウスが領域外に出たら色を戻し、文字をスクロールインさせる
-      _CHECK_ mouse: [:on_mouse_out] do
+      _CHECK_ mouse: [:cursor_out] do
         _EVAL_ "pp 'out'"
         text_area{
           _SET_ bgcolor: [255,255,255]
@@ -32,7 +32,7 @@ _DEFINE_ :TextSelect do |options|
         }
       end
       #マウスがクリックされたら文字列を出力する
-      _CHECK_ mouse: [:on_key_down] do
+      _CHECK_ mouse: [:key_down] do
         _EVAL_ "pp '[" + options[:text] + "]が押されました'"
         _RETURN_
       end
@@ -50,7 +50,7 @@ end
 #メインシーン
 _CREATE_ :LayoutControl, width: 800, height: 600, id: :main_scene do
   _LOOP_ do
-    _WAIT_ mouse: [:on_right_key_down ]
+    _WAIT_ mouse: [:right_key_down ]
     _EVAL_ "pp 'end MAIN scene'"
     _SEND_ROOT_ do
       def_menu_scene
@@ -81,7 +81,7 @@ _DEFINE_ :def_menu_scene do
     select5{ _MOVE_ 10, x: 600, option:{easing: :out_cubic}}
     _WAIT_ count:10
 
-    _WAIT_ mouse: [:on_right_key_down ]
+    _WAIT_ mouse: [:right_key_down ]
     _EVAL_ "pp 'end menu scene'"
 
     select1{ _MOVE_ 5, x: 800, option:{easing: :out_cubic}}

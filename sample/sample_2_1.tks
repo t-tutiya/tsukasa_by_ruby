@@ -1,15 +1,17 @@
+	button
 @	_CREATE_ :LayoutControl, width: 800, height: 600 do
-@		_WAIT_ mouse: [:on_right_key_down ]
+@		_WAIT_ mouse: [:right_key_down ]
 @		_EVAL_ "raise"
 @	end
 
 @	_SET_ cursor_type: IDC_SIZEALL
-@	#_SET_ cursor_visible: false
+@	_SET_ cursor_visible: false
 
 	_CREATE_ :LayoutControl do
 		_CREATE_ :ImageControl do
 			_SET_ file_path: "./sozai/button_normal.png"
 		end
+		line_icon_func
 		_DEFINE_ :button_func do
 			_MOUSE_POS_ do |options|
 				_SET_ x: options[:_X_], y: options[:_Y_]

@@ -35,7 +35,7 @@ raise #現仕様では恐らく動作しない。要修正
 button  id: :button1, 
         x: 150,
         y: 150 do
-  on_key_up do
+  key_up do
     normal  {_SET_ visible: false}
     over    {_SET_ visible: true}
     key_down{_SET_ visible: false}

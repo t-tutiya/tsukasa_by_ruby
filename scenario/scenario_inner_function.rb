@@ -44,7 +44,7 @@ _CREATE_ :LayoutControl,
 
   # 「押す」を押すと2つのボタンのfunc関数を呼ぶが、それぞれ違う実装になっているので別々に動く
   _DEFINE_ :func do
-    _CHECK_ mouse: [:on_key_down] do
+    _CHECK_ mouse: [:key_down] do
       _SEND_ROOT_ do
         button1{func}
       end

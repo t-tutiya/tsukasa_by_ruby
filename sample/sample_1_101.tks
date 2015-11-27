@@ -1,0 +1,22 @@
+@	_RESIZE_ width: 1024, height: 768
+
+テスト
+
+@	_FULL_SCREEN_ true
+
+
+テスト
+
+テスト
+
+
+@	_FULL_SCREEN_ false
+
+//@	_SET_ :_TEMP_, test: 225
+
+//[= :test]
+//[text0{_DATA_ :test}]test
+
+テスト
+
+	_EXIT_

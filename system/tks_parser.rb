@@ -165,32 +165,34 @@ class TKSParser < Parslet::Parser
 
   #コメント
   rule(:comment) {
-    #先頭を取り出しておく
+    #コメント行の第１候補をピックする
     first = _comment(comment_prefix.first)
-    #injectで動的に`|`のチェインを作る
-    #comment_stringsの要素数がひとつの場合はfirstを返すだけ
+
+    #comment_prefixの二つ目の要素から最後の要素までを巡回する
+    #（初期値は"//"のみなので実行されない）
     comment_prefix[1..-1].inject(first) {|prev, str|
+      #次点候補が該当するならそちらを採用とする
       prev | _comment(str)
     }
   }
 
   def _comment(comment_str)
-    str(comment_str) >> #コメント接頭字
-    match[' \t'].repeat >> #頭の空白orタブは無視
-    match['^\n'].repeat.as(:comment) #改行までをコメントとする
+    str(comment_str) >> #コメントプレフィクス
+    match[' \t'].repeat >> #空白もしくはタブの繰り返し
+    match['^\n'].repeat >> #改行までの０文字以上の文字列
+    newline.as(:comment) #改行
   end
 
-  #空行（テキストウィンドウの改ページの明示）
+  #空行ブロック（テキストウィンドウの改ページの明示）
   rule(:blankline) { 
     #改行
     newline.repeat(1).as(:blanklines)
   }
 
   rule(:node) { 
-    #空行
-    blankline.maybe >> (comment | 
-                        command | 
-                        printable) 
+    ( comment | 
+      command | 
+      printable) 
   }
 
   rule(:document) { 

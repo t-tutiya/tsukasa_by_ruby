@@ -38,7 +38,7 @@ require 'dxruby'
 _CREATE_ :LayoutControl do
   _LOOP_ do
     #ウィンドウの閉じるボタンが押された場合に呼びだされる。
-    _CHECK_ mouse: [:on_requested_close] do
+    _CHECK_ requested_close: true do
       _SEND_ROOT_ do
         _EXIT_ #アプリを終了する
       end

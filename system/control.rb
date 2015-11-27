@@ -374,6 +374,11 @@ class Control #内部メソッド
         value.each do |key|
           return true if @root_control.send(args_name)[key] != nil
         end
+
+      #ウィンドウの閉じるボタンが押下された場合
+      when :requested_close
+        return true if Input.requested_close? == value
+
       end
     end
     
@@ -710,6 +715,11 @@ class Control #スクリプト制御
                                   inner_options[:block_stack], 
                                   inner_options[:yield_block_stack]) + 
                                    @command_list
+  end
+
+  #アプリを終了する
+  def command__EXIT_(options, inner_options)
+    @root_control.close = true
   end
 
   #文字列を評価する（デバッグ用）

@@ -72,6 +72,7 @@ class Tsukasa < LayoutControl
     @_TEMP_
   end
 
+  attr_accessor  :close
   def close?
     @close
   end
@@ -232,10 +233,6 @@ class Tsukasa < LayoutControl
 
   def command__FULL_SCREEN_(options, inner_options)
     Window.full_screen = options[:_ARGUMENT_]
-  end
-
-  def command__EXIT_(options, inner_options)
-    @close = true
   end
 
   def command_label(options, inner_options)

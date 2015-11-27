@@ -66,7 +66,6 @@ end
 #標準ポーズコマンド
 _DEFINE_ :pause do |options|
   _SEND_ default: :TextLayer do 
-    put_icon options[:icon]
     pause options
   end
 
@@ -80,7 +79,7 @@ _DEFINE_ :pause do |options|
     _YIELD_
   end
 
-  #クリック待ちアイコンを削除
+#クリック待ちアイコンを削除
   _SEND_ default: :TextLayer do 
     _SEND_ :icon do
       _DELETE_
@@ -93,6 +92,13 @@ end
 
 #行クリック待ちポーズ
 _DEFINE_ :line_pause do
+  _SEND_ default: :TextLayer do 
+    _SEND_ 1 do
+      _SEND_ :last do
+        line_icon_func align_y: :bottom, float_mode: :left
+      end
+    end
+  end
   pause icon: :line_icon_func
 end
 
@@ -103,6 +109,14 @@ end
 
 #ページクリック待ちポーズ
 _DEFINE_ :page_pause do
+  _SEND_ default: :TextLayer do 
+    _SEND_ 1 do
+      _SEND_ -3 do
+        page_icon_func align_y: :bottom, float_mode: :left
+      end
+    end
+  end
+
   pause icon: :page_icon_func
   _SEND_ default: :TextLayer  do
     _FLUSH_
@@ -222,13 +236,6 @@ _DEFINE_ :TextWindow do |options|
       #絶対座標表示
       if options[:absolute]
         _CALL_ options[:_ARGUMENT_], x:100, y:100, align_y: :none, float_mode: :none
-      #相対座標表示
-      else
-        _SEND_ 1 do
-          _SEND_ :last do
-            _CALL_ options[:_ARGUMENT_], align_y: :bottom, float_mode: :left
-          end
-        end
       end
     end
     _YIELD_

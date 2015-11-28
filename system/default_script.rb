@@ -92,13 +92,6 @@ end
 
 #行クリック待ちポーズ
 _DEFINE_ :line_pause do
-  _SEND_ default: :TextLayer do 
-    _SEND_ 1 do
-      _SEND_ :last do
-        line_icon_func align_y: :bottom, float_mode: :left
-      end
-    end
-  end
   pause icon: :line_icon_func
 end
 
@@ -109,14 +102,6 @@ end
 
 #ページクリック待ちポーズ
 _DEFINE_ :page_pause do
-  _SEND_ default: :TextLayer do 
-    _SEND_ 1 do
-      _SEND_ -3 do
-        page_icon_func align_y: :bottom, float_mode: :left
-      end
-    end
-  end
-
   pause icon: :page_icon_func
   _SEND_ default: :TextLayer  do
     _FLUSH_
@@ -220,7 +205,16 @@ _DEFINE_ :TextWindow do |options|
     #キー入力待ち処理
     _DEFINE_ :pause do |options|
       _SEND_ 1 do
-        _END_FRAME_
+        _WAIT_ count:17
+        if options[:icon] == :line_icon_func
+          _SEND_ :last do
+            line_icon_func align_y: :bottom, float_mode: :left
+          end
+        else
+          _SEND_ -3 do
+            page_icon_func align_y: :bottom, float_mode: :left
+          end
+        end
 
         #スペースキーあるいはCTRLキーの押下待機
         _WAIT_  key_down: K_RCONTROL,

@@ -18,10 +18,11 @@
 @
 	#_INCLUDE_ "./sample/sample_2_1.tks"		#右クリックメニュー
 	#_INCLUDE_ "./sample/sample_2_2.tks"		#ボタン
-	_INCLUDE_ "./sample/sample_2_3.rb"		#ボタン
+	#_INCLUDE_ "./sample/sample_2_3.rb"		#ボタン
 @
 	#_INCLUDE_ "./sample/sample_3_1.rb"		#yield挙動テスト
 	#_INCLUDE_ "./sample/sample_3_2.tks"		#text挙動テスト
+	_INCLUDE_ "./sample/sample_3_3.tks"		#テキストウェイトバグテスト
 @
 	#_INCLUDE_ "./sample/sample_1_101.tks"
 	#_INCLUDE_ "./sample/sample_1_102.rb"

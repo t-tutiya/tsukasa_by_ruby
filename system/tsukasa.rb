@@ -60,17 +60,11 @@ require_relative './script_compiler.rb'
 class Tsukasa < LayoutControl
 
   #システム全体で共有されるデータ群。保存対象。
-  def _SYSTEM_
-    @_SYSTEM_
-  end
+  attr_accessor  :_SYSTEM_
   #個別のセーブデータを表すデータ群。保存対象。
-  def _LOCAL_
-    @_LOCAL_
-  end
+  attr_accessor  :_LOCAL_
   #一時的に管理するデータ群。保存対象ではない。
-  def _TEMP_
-    @_TEMP_
-  end
+  attr_accessor  :_TEMP_
 
   attr_accessor  :close
   def close?

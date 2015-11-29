@@ -1,13 +1,13 @@
 @	img0 {
 @		_SET_ file_path: "./sozai/bg_sample.png"
 @	}
-
+@
 @	_CREATE_ :RenderTargetControl, id: :test0,
 @		x: 100, y: 100, width: 512, height: 512, z: 4000 do
 @		_CREATE_ :ImageControl, file_path: "./sozai/button_over.png", x: 100
 @		_CREATE_ :ImageControl, file_path: "./sozai/button_normal.png", y: 100
 @	end
-
+@
 @	test0 {
 @		_MOVE_ 180, alpha: 0
 @		_WAIT_ command: :_MOVE_

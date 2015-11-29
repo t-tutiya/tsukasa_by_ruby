@@ -1,18 +1,17 @@
 @	base {
 @		_SET_ file_path: "./sozai/bg_sample.png"
 @	}
-
+@
 @	img0 {
 @		_SET_ file_path: "./sozai/button_over.png", x: 250, y: 100
 @		_MOVE_ 180, alpha: 0
 @		_WAIT_ command: :_MOVE_
 @		_MOVE_ 360, alpha: 255
 @	}
-
+@
 @	img1 {
 @		_SET_ file_path: "./sozai/button_normal.png", x: 150, y: 200
 @		_MOVE_ 180, alpha: 0
 @		_WAIT_ command: :_MOVE_
 @		_MOVE_ 360, alpha: 255
 @	}
-

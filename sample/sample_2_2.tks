@@ -15,32 +15,28 @@
 	    _CREATE_ :ImageControl, 
 	      file_path: "./sozai/button_key_down.png", 
 	      id: :key_down, visible: false
-	    _DEFINE_ :button_func do
-		    on_mouse_over do
-		      normal  {_SET_ visible: false}
-		      over    {_SET_ visible: true}
-		      key_down{_SET_ visible: false}
-		    end
-		    on_mouse_out do
-		      normal  {_SET_ visible: true}
-		      over    {_SET_ visible: false}
-		      key_down{_SET_ visible: false}
-		    end
-		    on_key_down do
-		      normal  {_SET_ visible: false}
-		      over    {_SET_ visible: false}
-		      key_down{_SET_ visible: true}
-		    end
-		    on_key_up do
-		      normal  {_SET_ visible: false}
-		      over    {_SET_ visible: true}
-		      key_down{_SET_ visible: false}
-		    end
-		    _END_FRAME_
-		    button_func
-		  end
-	    button_func	
+	    _LOOP_ do
+	      _CHECK_ mouse: [:cursor_over] do
+	        normal  {_SET_ visible: false}
+	        over    {_SET_ visible: true}
+	        key_down{_SET_ visible: false}
+	      end
+	      _CHECK_ mouse: [:cursor_out] do
+	        normal  {_SET_ visible: true}
+	        over    {_SET_ visible: false}
+	        key_down{_SET_ visible: false}
+	      end
+	      _CHECK_ mouse: [:key_down] do
+	        normal  {_SET_ visible: false}
+	        over    {_SET_ visible: false}
+	        key_down{_SET_ visible: true}
+	      end
+	      _CHECK_ mouse: [:key_up] do
+	        normal  {_SET_ visible: false}
+	        over    {_SET_ visible: true}
+	        key_down{_SET_ visible: false}
+	      end
+		end
 	  end
 	end
-
 	button3 id: :test01, x: 100, y: 100

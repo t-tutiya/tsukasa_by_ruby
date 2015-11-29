@@ -1,31 +1,20 @@
-=begin
 @	button id: :button1, x: 50, y: 150 do
-@			on_key_up do
-@				_SET_ :_TEMP_, click: :left
-@			end
+@		_CHECK_ mouse: [:key_up] do
+@			_SET_ :_TEMP_, click: :left
+@		end
 @	end
 @	button id: :button2, x: 450, y: 150 do
-@			on_key_up do
-@				_SET_ :_TEMP_, click: :right
-@			end
+@		_CHECK_ mouse: [:key_up] do
+@			_SET_ :_TEMP_, click: :right
+@		end
 @	end
-=end
-	_CREATE_ :LayoutControl, x:150, y:150 do
-		_EVAL_ "pp 'test'"
-		button id: :button3, x: 50, y: 50 do
-				on_key_up do
-					_SET_ :_TEMP_, click: :right
-				end
-		end
-	end
-
+@
 @	_WAIT_ :_TEMP_, not_null: :click
-
+@
 @	_CHECK_ equal:{click: :left} do
 @		_INCLUDE_ "./sample/sample_1_15a.tks"
 @	end
-
+@
 @	_CHECK_ equal:{click: :right} do
 @		_INCLUDE_ "./sample/sample_1_15b.tks"
 @	end
-

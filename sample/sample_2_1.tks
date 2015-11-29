@@ -3,10 +3,10 @@
 @		_WAIT_ mouse: [:right_key_down ]
 @		_EVAL_ "raise"
 @	end
-
+@
 @	_SET_ cursor_type: IDC_SIZEALL
 @	_SET_ cursor_visible: false
-
+@
 	_CREATE_ :LayoutControl do
 		_CREATE_ :ImageControl do
 			_SET_ file_path: "./sozai/button_normal.png"
@@ -21,9 +21,9 @@
 		end
 		button_func
 	end
-
+@
 @	_SET_ caption: "テスト"
-
+@
 テスト
 @	_SET_ cursor_type: IDC_SIZEALL
 

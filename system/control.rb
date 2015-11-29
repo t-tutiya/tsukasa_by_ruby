@@ -539,8 +539,14 @@ class Control #制御構文
       #while文全体をスクリプトストレージにスタック
       push_command([:_END_FRAME_, {}, {}])
     end
-    #リストの末端に自分自身を追加する
-    push_command([:_LOOP_, options, inner_options])
+    
+    if options[:interrupt]
+      #リストの先端に自分自身を追加する
+      interrupt_command([:_LOOP_, options, inner_options])
+    else
+      #リストの末端に自分自身を追加する
+      push_command([:_LOOP_, options, inner_options])
+    end
 
     #ブロックを実行時評価しコマンド列を生成する。
     eval_block(options, [], inner_options[:yield_block_stack], &inner_options[:block])

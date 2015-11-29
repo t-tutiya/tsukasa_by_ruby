@@ -57,7 +57,7 @@ require_relative './text_page_control.rb'
 require_relative './script_compiler.rb'
 
 #TODO：モジュールであるべきか？
-class Tsukasa < LayoutControl
+class Tsukasa < RenderTargetControl
 
   #システム全体で共有されるデータ群。保存対象。
   attr_accessor  :_SYSTEM_
@@ -130,7 +130,7 @@ class Tsukasa < LayoutControl
   attr_reader  :function_list
 end
 
-class Tsukasa < LayoutControl
+class Tsukasa < RenderTargetControl
 
   def initialize(options)
     #アプリ終了フラグ
@@ -214,7 +214,7 @@ class Tsukasa < LayoutControl
   end
 end
 
-class Tsukasa < LayoutControl
+class Tsukasa < RenderTargetControl
   def command__RESIZE_(options, inner_options)
     Window.resize(options[:width], 
                   options[:height])

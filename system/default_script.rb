@@ -34,7 +34,6 @@ require 'dxruby'
 #システムサポート
 ###############################################################################
 
-
 _CREATE_ :LayoutControl do
   _LOOP_ do
     #ウィンドウの閉じるボタンが押された場合に呼びだされる。
@@ -237,8 +236,8 @@ _DEFINE_ :TextWindow do |options|
 end
 
 TextWindow id: :text0, text_page_id: :default_text_page_control0,
-  x: 128,
-  y: 256 + 192,
+  x: 96,
+  y: 256 + 164,
   width: 1024,
   height: 192,
   z: 1000000 #描画順序
@@ -354,7 +353,7 @@ _DEFINE_ :button do |options|
     _CREATE_ :ImageControl, 
       :file_path=>"./sozai/button_key_down.png", 
       :id=>:key_down, :visible => false
-    _DEFINE_ :button_func do
+    _LOOP_ do
       _CHECK_ mouse: [:cursor_over] do
         normal  {_SET_ visible: false}
         over    {_SET_ visible: true}
@@ -375,10 +374,8 @@ _DEFINE_ :button do |options|
         over    {_SET_ visible: true}
         key_down{_SET_ visible: false}
       end
-      _END_FRAME_
-      button_func
+      _YIELD_
     end
-    button_func
   end
 end
 

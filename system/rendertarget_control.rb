@@ -57,7 +57,10 @@ class RenderTargetControl < Control
   #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
   def command__TO_IMAGE_(options, inner_options)
     rt = RenderTarget.new(@width, @height)
-    render( 0, 0, rt, {:width => @width, :height => @height})
+    render( 0, 0, rt, { :width => @width, 
+                        :height => @height,
+                        :mouse_pos_x => Input.mouse_pos_x,
+                        :mouse_pos_y => Input.mouse_pos_y})
     entity  = rt.to_image
     #イメージコントロールを生成する
     interrupt_command([:_CREATE_, 

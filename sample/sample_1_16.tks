@@ -1,17 +1,15 @@
-キーを押してしばらくお待ちください。
-
-@	_CREATE_ :SoundControl, file_path: "./test/bell.wav", id: :test01
+@	_CREATE_ :SoundControl, 
+@		file_path: "./sozai/music/easygoing.ogg",
+@		id: :test01 do
+@	end
 初期化が終了しました。
 キーを押すと再生します
 
 @	test01{
-@		_SET_ loop_count: 0
-@		_MOVE_ 180, volume: [0,90]
-@		_SET_ play: true
-@		_MOVE_ 300, pan: [-100,0]
+@		_PLAY_ 0, fadetime: 5
 @	}
-
+@
 無限ループ中。
 スペースキーを押すと停止します。
 
-@	test01{_SET_ play: false}
+@	test01{_STOP_ fadetime: 5}

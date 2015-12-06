@@ -51,7 +51,7 @@ class ScriptCompiler
     if argument[:script_file_path]
       if File.extname(argument[:script_file_path]) == ".tks"
         #評価対象がｔｋｓファイルの場合の場合
-        eval( @@replacer.apply(@@parser.parse(File.read(argument[:script_file_path], encoding: "UTF-8"))).flatten.join("\n").encode("Windows-31J"), 
+        eval( @@replacer.apply(@@parser.parse(File.read(argument[:script_file_path], encoding: "UTF-8"))).flatten.join("\n"), 
               nil, 
               File.expand_path(argument[:script_file_path]))
       else

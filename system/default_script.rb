@@ -136,10 +136,10 @@ _DEFINE_ :TextWindow do |options|
         width: options[:width],
         size: 32, 
         font_name: "ＭＳＰ ゴシック",
-        wait_frame: 2 do
+        wait_frame: 3 do
           _CHAR_RENDERER_ do
             #フェードイン（スペースキーか右CTRLが押されたらスキップ）
-            _MOVE_   15, alpha:[0,255],
+            _MOVE_   30, alpha:[0,255],
                   option: {check: {key_down: K_RCONTROL, key_push: K_SPACE}} do
                     _SET_ alpha: 255
                   end

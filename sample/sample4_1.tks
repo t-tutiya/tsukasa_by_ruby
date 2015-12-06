@@ -1,0 +1,24 @@
+//sample3_1.tks
+@	_INCLUDE_ "./sample/sample4_2.rb"
+@ _CREATE_ :LayoutControl, x: 128, y:128 do
+@ _CREATE_ :LayoutControl, x: 128, y:128 do
+@ 	TextSelect id: 6, text: "test"
+@ end
+@ end
+@ TextSelect id: 2, text: "test"
+[func_select " 建物に入る" , id: 3]か。君が選ぶといい」[lp]
+「どちらに逃げる？　[func_select " 階段を昇る", id: 1]か、それとも
+[func_select " 建物に入る" , id: 4]か。君が選ぶといい」[lp]
+「ところで『優先度二番の法則』というのを
+知っているかい？」[lp]
+「それは拳銃持ってる奴らから全力で逃げて
+る時にしなきゃいけない話なの！？」[lp]
+　私はモザイク通りを全速力で駆け下りなが
+ら怒鳴った。[lp]金田は良く通る声で答えた。[lp]
+「暴力を振るってくる輩の目的は、相手に恐
+怖を与えることだ。怖がっていては思う壺さ」[lp]
+「それで死んじゃったら意味無いでしょ！？」[lp]
+「それもそうだな」[lp]
+　金田は頷いてから前を指差す。[lp]
+「どちらに逃げる？　[func_select "　階段を昇る"]か、それとも
+[func_select "　建物に入る"]か。君が選ぶといい」[lp]

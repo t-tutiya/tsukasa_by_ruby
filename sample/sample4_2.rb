@@ -24,7 +24,7 @@ end
 _DEFINE_ :TextSelect do |options|
   _CREATE_ :LayoutControl,
       float_mode: :left,
-    x: 0, y: 0, width: 196, height: 32, id: options[:id] do
+    x: options[:x] || 0, y: options[:y] || 0, width: 196, height: 32, id: options[:id] do
     #テキストを描画するRenderTarget
     _CREATE_ :RenderTargetControl,
       float_mode: :left,
@@ -35,7 +35,6 @@ _DEFINE_ :TextSelect do |options|
               _SET_ alpha: 255
             end
     end
-
     _LOOP_ do
       _CHECK_ mouse: [:cursor_over] do
       #マウスが領域内に入ったら色を変え、文字をスクロールインさせる
@@ -53,6 +52,9 @@ _DEFINE_ :TextSelect do |options|
       _CHECK_ mouse: [:key_down] do
         _EVAL_ "pp '[" + options[:text] + "]が押されました'"
         _RETURN_
+      end
+      _MOUSE_POS_ do |options|
+        #pp options
       end
     end
   end

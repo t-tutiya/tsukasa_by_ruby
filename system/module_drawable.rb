@@ -198,7 +198,7 @@ module Drawable
   end
 
   #描画
-  def render(offset_x, offset_y, target, parent_size)
+  def render(offset_x, offset_y, target, parent)
     #TPDP:この行はLayoutableでも必要になってしまっていて、恐らく設計ミス
     return 0, 0 unless @visible
 
@@ -210,15 +210,15 @@ module Drawable
 
     #下揃えを考慮
     if @align_y == :bottom 
-      y += parent_size[:height] - @height
+      y += parent[:height] - @height
     end
 
     #下位エンティティを自エンティティに描画
     dx, dy = super(0, 0, @entity, 
                     { :width => @width, 
                       :height => @height, 
-                      :mouse_pos_x => parent_size[:mouse_pos_x],
-                      :mouse_pos_y => parent_size[:mouse_pos_y]})
+                      :mouse_pos_x => parent[:mouse_pos_x],
+                      :mouse_pos_y => parent[:mouse_pos_y]})
 
     #自エンティティを上位ターゲットに描画
     target.draw_ex(x, y, @entity, @draw_option)

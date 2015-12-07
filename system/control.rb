@@ -140,12 +140,12 @@ class Control #内部メソッド
   end
 
   #下位コントロールを描画する
-  def render(offset_x, offset_y, target, parent_size)
+  def render(offset_x, offset_y, target, parent)
     #スリープモード中であれば処理しない
     #return if @sleep_mode
 
-    @mouse_pos_x = parent_size[:mouse_pos_x]
-    @mouse_pos_y = parent_size[:mouse_pos_y]
+    @mouse_pos_x = parent[:mouse_pos_x]
+    @mouse_pos_y = parent[:mouse_pos_y]
 
     #下位コントロール巡回
     @control_list.each do |child_control|
@@ -155,7 +155,7 @@ class Control #内部メソッド
       width, height = child_control.render( offset_x, 
                                             offset_y, 
                                             target, 
-                                            parent_size)
+                                            parent)
       #次のコントロールの描画座標原点を設定する
       offset_x += width
       offset_y += height

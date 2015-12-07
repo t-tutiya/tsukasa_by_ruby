@@ -34,17 +34,17 @@ class LayoutControl < Control
   include Layoutable
 
   #描画
-  def render(offset_x, offset_y, target, parent_size)
+  def render(offset_x, offset_y, target, parent)
     #描画座標のオフセット値を合算
     x = offset_x + @x + @offset_x
     y = offset_y + @y + @offset_y
 
     #下揃えを考慮
     if @align_y == :bottom 
-      y += parent_size[:height] - @height
+      y += parent[:height] - @height
     end
 
-    return super(x, y, target, parent_size)
+    return super(x, y, target, parent)
   end
 
   def siriarize(options = {})

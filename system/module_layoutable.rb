@@ -70,15 +70,15 @@ module Layoutable
   end
 
   #描画
-  def render(offset_x, offset_y, target, parent_size)
+  def render(offset_x, offset_y, target, parent)
     return 0, 0 unless @visible
 
     #下位コントロールを上位ターゲットに直接描画
     super(offset_x, offset_y, target, 
           { :width => @width, 
             :height => @height,
-            :mouse_pos_x => parent_size[:mouse_pos_x],
-            :mouse_pos_y => parent_size[:mouse_pos_y]
+            :mouse_pos_x => parent[:mouse_pos_x],
+            :mouse_pos_y => parent[:mouse_pos_y]
           })
 
     #連結指定チェック

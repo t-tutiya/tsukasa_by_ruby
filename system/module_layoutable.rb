@@ -73,12 +73,16 @@ module Layoutable
   def render(offset_x, offset_y, target, parent)
     return 0, 0 unless @visible
 
+    #次フレームのクリッカブル判定に使うマウスカーソル座標を取得
+    @mouse_pos_x = parent[:mouse_pos_x]
+    @mouse_pos_y = parent[:mouse_pos_y]
+
     #下位コントロールを上位ターゲットに直接描画
     super(offset_x, offset_y, target, 
           { :width => @width, 
             :height => @height,
-            :mouse_pos_x => parent[:mouse_pos_x],
-            :mouse_pos_y => parent[:mouse_pos_y]
+            :mouse_pos_x => @mouse_pos_x - @x,
+            :mouse_pos_y => @mouse_pos_y - @y
           })
 
     #連結指定チェック

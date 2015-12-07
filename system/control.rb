@@ -144,13 +144,8 @@ class Control #内部メソッド
     #スリープモード中であれば処理しない
     #return if @sleep_mode
 
-    @mouse_pos_x = parent[:mouse_pos_x]
-    @mouse_pos_y = parent[:mouse_pos_y]
-
     #下位コントロール巡回
     @control_list.each do |child_control|
-      parent_size[:mouse_pos_x] = parent_size[:mouse_pos_x] - offset_x
-      parent_size[:mouse_pos_y] = parent_size[:mouse_pos_y] - offset_y
       #下位コントロールを上位ターゲットに直接描画
       width, height = child_control.render( offset_x, 
                                             offset_y, 
@@ -159,6 +154,9 @@ class Control #内部メソッド
       #次のコントロールの描画座標原点を設定する
       offset_x += width
       offset_y += height
+      #マウス座標のオフセットを更新する
+      parent[:mouse_pos_x] -= width
+      parent[:mouse_pos_y] -= height
     end
 
     #オフセット値を返す

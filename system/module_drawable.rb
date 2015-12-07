@@ -182,16 +182,11 @@ module Drawable
     @draw_option[:z] = options[:z] || 0
     @draw_option[:offset_sync] = options[:offset_sync] || false
 
-    @entity = options[:entity] if options[:entity]
+    @entity = options[:entity] || nil
 
     if @entity
-      @real_width = @entity.width
-      @real_height = @entity.height
-      @width  = options[:width] ? options[:width] : @real_width
-      @height = options[:height] ? options[:height] : @real_height
-    else
-      @real_width = @width  = options[:width] ? options[:width] : 0
-      @real_height = @height = options[:height] ? options[:height] : 0
+      options[:width] = @entity.width
+      options[:height] = @entity.height
     end
 
     super

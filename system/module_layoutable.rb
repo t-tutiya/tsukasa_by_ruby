@@ -60,7 +60,7 @@ module Layoutable
     @real_height = @height = options[:height] || 0 #高さ
 
     #可視フラグ（省略時はtrue）
-    @visible = options[:visible] == false ? false : true
+    @visible = (options[:visible] != false)
 
     #回り込み指定（省略時は:none）
     @float_mode = options[:float_mode] || :none

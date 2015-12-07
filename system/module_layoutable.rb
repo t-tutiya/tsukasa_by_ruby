@@ -56,15 +56,15 @@ module Layoutable
     @offset_x = options[:offset_x] || 0 #描画オフセットＸ座標
     @offset_y = options[:offset_y] || 0 #描画オフセットＹ座標
 
+    @real_width = @width  = options[:width] || 0 #幅
+    @real_height = @height = options[:height] || 0 #高さ
+
     #可視フラグ（省略時はtrue）
     @visible = options[:visible] == false ? false : true
 
     #回り込み指定（省略時は:none）
     @float_mode = options[:float_mode] || :none
     @align_y = options[:align_y] || :none
-
-    @real_width = @width  = options[:width] ? options[:width] : 0
-    @real_height = @height = options[:height] ? options[:height] : 0
 
     super
   end

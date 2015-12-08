@@ -207,11 +207,11 @@ _DEFINE_ :TextWindow do |options|
         _WAIT_ count:17
         if options[:icon] == :line_icon_func
           _SEND_ :last do
-            line_icon_func align_y: :bottom, float_mode: :left
+            line_icon_func align_y: :bottom, float_x: :left
           end
         else
           _SEND_ -3 do
-            page_icon_func align_y: :bottom, float_mode: :left
+            page_icon_func align_y: :bottom, float_x: :left
           end
         end
 
@@ -228,7 +228,7 @@ _DEFINE_ :TextWindow do |options|
     _DEFINE_ :put_icon do |options|
       #絶対座標表示
       if options[:absolute]
-        _CALL_ options[:_ARGUMENT_], x:100, y:100, align_y: :none, float_mode: :none
+        _CALL_ options[:_ARGUMENT_], x:100, y:100, align_y: :none, float_x: :none
       end
     end
     _YIELD_
@@ -260,7 +260,7 @@ _DEFINE_ :line_icon_func do |options|
           :width => 24,
           :height => 24,
           :align_y => options[:align_y] || :bottom,
-          :float_mode => options[:float_mode] || :left,
+          :float_x => options[:float_x] || :left,
           :id => :icon do
     _CREATE_ :TileImageControl, 
             :tiles => true,
@@ -280,7 +280,7 @@ _DEFINE_ :page_icon_func do |options|
           :width => 24,
           :height => 24,
           :align_y => options[:align_y] || :bottom,
-          :float_mode => options[:float_mode] || :left,
+          :float_x => options[:float_x] || :left,
           :id => :icon do
     _CREATE_ :TileImageControl, 
             :tiles => true, 

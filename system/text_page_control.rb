@@ -236,7 +236,8 @@ class TextPageControl < LayoutControl
                      {:_ARGUMENT_ => :LayoutControl, 
                       :width => @width,
                       :height => @line_height,
-                      :float_mode => :bottom}, 
+                      :float_x => :bottom, 
+                      :float_y => :bottom}, 
                       {}])
   end
 
@@ -296,7 +297,7 @@ class TextPageControl < LayoutControl
                 :align_y => :bottom,
                 :charactor => options[:_ARGUMENT_],
                 :command_list=> options[:command_list],
-                :float_mode => :left,
+                :float_x => :left,
                 }.merge(@char_option), 
                {:block => @char_renderer}])
 
@@ -306,7 +307,7 @@ class TextPageControl < LayoutControl
                 :width => @charactor_pitch,
                 :height => @line_height,
                 :align_y => :bottom,
-                :float_mode => :left}, 
+                :float_x => :left}, 
                 {}])
   end
 
@@ -386,7 +387,7 @@ class TextPageControl < LayoutControl
                 :width => 0,
                 :height => @size,
                 :command_list => [rubi_layout],
-                :float_mode => :left}, 
+                :float_x => :left}, 
                {}])
   end
 
@@ -414,9 +415,10 @@ class TextPageControl < LayoutControl
                                        {:_ARGUMENT_ => :LayoutControl, 
                                         :width => @indent,
                                         :height => @line_height,
-                                        :float_mode => :left}, 
+                                        :float_x => :left}, 
                                         inner_options]] : nil, 
-                      :float_mode => :bottom}, 
+                      :float_x => :bottom, 
+                      :float_y => :bottom}, 
                       inner_options])
 
     #行間ピッチ分の無形コントロールを追加
@@ -424,7 +426,8 @@ class TextPageControl < LayoutControl
                      {:_ARGUMENT_ => :LayoutControl, 
                       :width => @width,
                       :height => @line_spacing,
-                      :float_mode => :bottom}, 
+                      :float_x => :bottom, 
+                      :float_y => :bottom}, 
                       inner_options])
   end
 
@@ -441,7 +444,8 @@ class TextPageControl < LayoutControl
                      {:_ARGUMENT_ => :LayoutControl, 
                       :width => @width,
                       :height => @line_height,
-                      :float_mode => :bottom}, 
+                      :float_x => :bottom, 
+                      :float_y => :bottom}, 
                       inner_options])
   end
 

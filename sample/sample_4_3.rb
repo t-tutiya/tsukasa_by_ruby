@@ -5,7 +5,7 @@
     _CREATE_ :LayoutControl, x: 0, y:0, width:128, height:32, id: :lay1 do
 #      TextSelect id: 6, text: "test"
       _CREATE_ :LayoutControl, x: 0, y: 0, width:128, height:32, id: :lay2 do
-        _CREATE_ :LayoutControl, x: 0, y: 0, width:128, height:128, float_mode: :left do
+        _CREATE_ :LayoutControl, x: 0, y: 0, width:128, height:128, float_x: :left do
               _CREATE_ :RenderTargetControl,
           width: 196, height: 32, id: :text_area, bgcolor: [255,255,0]
           _LOOP_ do

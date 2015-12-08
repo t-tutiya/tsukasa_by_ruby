@@ -58,7 +58,8 @@ class TileImageControl < Control
                           :_ARGUMENT_ => :ImageControl,
                           :entity => image,
                           :id => index,
-                          :float_mode => options[:float_mode],
+                          :float_x => options[:float_x],
+                          :float_y => options[:float_y],
                           :visible => false
                         }, 
                         {}])

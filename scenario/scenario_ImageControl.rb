@@ -32,10 +32,10 @@ _CREATE_ :ImageControl ,
        id: :BG1
 _CREATE_ :ImageControl ,
        file_path: "./sozai/button_normal.png",
-       id: :BG2, float_mode: :bottom
+       id: :BG2, float_x: :bottom
 _CREATE_ :ImageControl ,
        file_path: "./sozai/button_normal.png",
-       id: :BG3, float_mode: :none
+       id: :BG3, float_x: :none
 
 text "スペースキーを押すごとにimageが更新されます"
 
@@ -43,7 +43,7 @@ pause
 
 _SEND_ :BG1 do
   _SET_ file_path: "./sozai/button_normal.png"
-  _SET_ x: 100, y: 100,  float_mode: :right
+  _SET_ x: 100, y: 100,  float_x: :right
 end
 
 pause

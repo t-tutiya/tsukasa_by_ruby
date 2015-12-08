@@ -58,7 +58,7 @@ class LayoutControl < Control
 
       :visible => @visible,
 
-      :float_mode => @float_mode,
+      :float_x => @float_x,
       :align_y => @align_y,
 
       :real_width => @real_width,

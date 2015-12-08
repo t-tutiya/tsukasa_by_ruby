@@ -32,26 +32,36 @@ require 'dxruby'
 
 module Layoutable
 
+  #座標
   attr_accessor  :x
   attr_accessor  :y
 
+  #オフセット座標
   attr_accessor  :offset_x
   attr_accessor  :offset_y
 
+  #可視フラグ
   attr_accessor  :visible
 
-  attr_accessor  :float_mode
+  #次のコントロールの接続方向指定
+  attr_accessor  :float_x
+  attr_accessor  :float_y
+
+  #寄せ指定
   attr_accessor  :align_y
 
+  #サイズ
   attr_accessor  :width
   attr_accessor  :height
 
+  #実サイズ（現状ではtext_page_controlのみで使用）
   attr_accessor  :real_width
   attr_accessor  :real_height
 
+  #コリジョンのエンティティ
   attr_accessor  :collision_shape
-  attr_accessor  :colorkey_border
 
+  #カラーキー設定
   def colorkey=(arg)
     @colorkey = find_control(arg)[0]
   end
@@ -69,8 +79,11 @@ module Layoutable
     #可視フラグ（省略時はtrue）
     @visible = (options[:visible] != false)
 
-    #回り込み指定（省略時は:none）
-    @float_mode = options[:float_mode] || :none
+    #次コントロールの接続方向指定
+    @float_x = options[:float_x]
+    @float_y = options[:float_y]
+
+    #下寄せ指定
     @align_y = options[:align_y] || :none
 
     @collision_shape = options[:collision_shape]
@@ -213,23 +226,26 @@ module Layoutable
             :mouse_pos_y => @mouse_pos_y - @y
           })
 
+    dx = dy = 0
+
     #連結指定チェック
-    case @float_mode
+    case @float_x
     #右連結
     when :left
       dx = @width
-      dy = @y
     #下連結
     when :bottom
       dx = @x
+    end
+
+    #連結指定チェック
+    case @float_y
+    #右連結
+    when :left
+      dy = @y
+    #下連結
+    when :bottom
       dy = @height
-    #連結解除
-    when :none
-      dx = 0
-      dy = 0
-    else
-      pp @float_mode
-      raise
     end
 
     return dx, dy

@@ -33,10 +33,10 @@ _CREATE_ :RenderTargetControl,
         :y => 150, 
         :width => 256,
         :height => 256 do
-  _CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png", float_mode: :right,
+  _CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png", float_x: :left,
          :x => 150,
          :y => 150
-  _CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png", float_mode: :right#,
+  _CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png", float_x: :left#,
          #:x => 100,
          #:y => 100
   #_CREATE_ :ImageControl, :file_path=>"./sozai/button_normal.png"

@@ -82,7 +82,7 @@ _DEFINE_ :TextWindow2 do |options|
     _DEFINE_ :_FLUSH_ do
       _SEND_ 1  do
         _SEND_ :Anonymous_CharControl do
-          _MOVE_ 60, y:[0,600], option:{easing: :in_quart}
+          _MOVE_ 30, y:[0,600], option:{easing: :in_back}
         end
         _WAIT_ count: 60
         _FLUSH_
@@ -101,11 +101,11 @@ _DEFINE_ :TextWindow2 do |options|
         _WAIT_ count:17
         if options[:icon] == :line_icon_func
           _SEND_ :last do
-            line_icon_func align_y: :bottom, float_mode: :left
+            line_icon_func align_y: :bottom, float_x: :left
           end
         else
           _SEND_ -3 do
-            page_icon_func align_y: :bottom, float_mode: :left
+            page_icon_func align_y: :bottom, float_x: :left
           end
         end
 
@@ -122,7 +122,7 @@ _DEFINE_ :TextWindow2 do |options|
     _DEFINE_ :put_icon do |options|
       #絶対座標表示
       if options[:absolute]
-        _CALL_ options[:_ARGUMENT_], x:100, y:100, align_y: :none, float_mode: :none
+        _CALL_ options[:_ARGUMENT_], x:100, y:100, align_y: :none, float_x: :none
       end
     end
     _YIELD_
@@ -154,11 +154,11 @@ end
 #テキストボタン定義
 _DEFINE_ :TextSelect do |options|
   _CREATE_ :LayoutControl,
-      float_mode: :left,
+      float_x: :left,
     x: options[:x] || 0, y: options[:y] || 0, width: 196, height: 32, id: :Anonymous_CharControl do
     #テキストを描画するRenderTarget
     _CREATE_ :RenderTargetControl,
-      float_mode: :left,
+      float_x: :left,
       width: 196, height: 32, id: :text_area, bgcolor: [255,255,0] do
       _CREATE_ :CharControl, size: 32, color:[255,255,0], font_name: "ＭＳ ゴシック", charactor: options[:text]
       _MOVE_   30, alpha:[0,255],

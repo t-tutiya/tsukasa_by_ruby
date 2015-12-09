@@ -43,7 +43,7 @@ class ScriptCompiler
   end
 
   #ヘルパーメソッド群
-  def commands(argument, block_stack, yield_block_stack, &block)
+  def commands(argument, block_stack, yield_block_stack, control, &block)
     @command_list = []
     @yield_block_stack = yield_block_stack
     @block_stack = block_stack
@@ -63,7 +63,7 @@ class ScriptCompiler
     else
       raise unless block
 
-      self.instance_exec(**argument, &block)
+      self.instance_exec(argument, control, &block)
     end
     return  @command_list
   end

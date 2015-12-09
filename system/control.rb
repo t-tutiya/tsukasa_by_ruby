@@ -254,7 +254,8 @@ class Control #内部メソッド
 
     eval_commands(@script_compiler.commands(options, 
                                             block_stack, 
-                                            yield_block_stack,
+                                            yield_block_stack, 
+                                            self,
                                             &block))
   end
 
@@ -717,7 +718,8 @@ class Control #スクリプト制御
     @command_list =  
       @script_compiler.commands({:script_file_path => @script_file_path}, 
                                   inner_options[:block_stack], 
-                                  inner_options[:yield_block_stack]) + 
+                                  inner_options[:yield_block_stack], 
+                                  self) + 
                                    @command_list
   end
 

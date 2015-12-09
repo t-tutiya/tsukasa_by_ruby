@@ -188,7 +188,7 @@ _DEFINE_ :TextSelect do |options|
       #マウスがクリックされたら文字列を出力する
       _CHECK_ mouse: [:key_down] do
         pp options
-        _SET_ :_TEMP_, flag: options[:text]
+        _SET_ :_TEMP_, flag: options[:id]
         _EVAL_ "pp '[" + options[:text].to_s + "]が押されました'"
         _RETURN_
       end

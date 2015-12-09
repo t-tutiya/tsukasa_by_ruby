@@ -1,0 +1,31 @@
+//■■■□■■■■□■■■■□■■■■□
+「英会話に必要なのは、何かわかるかい？」
+「語彙力じゃない？　でもその話も今する必
+要のある物じゃなくない！？」
+　最後の扉を開けるとそこは屋上だった。こ
+の初デートを彩る最後にふさわしい場所だ。
+その証拠に目の前にヘリコプターがある。
+「文学的な状況だな。選択肢はたったの二つ。
+文字通りヘリで[func_select "飛んで逃げる", id: 0]か、あるいは来た
+[func_select "道を戻る", id: 1]か。まあヘリなんて一つずつボタン
+を押せば後は勝手に飛んでくれるさ。さあ急
+がせてすまないが決めてくれ」
+  _SET_ :_TEMP_, flag: nil
+  #ウェイク状態まで待機
+  _WAIT_ :_TEMP_,  not_equal: {flag: nil} do
+  	_CHECK_ key_push: [K_A] do
+		  _SET_ :_TEMP_, flag: 2
+  	end
+  end
+  _SEND_ :text0  do
+    _FLUSH_
+  end
+  _CHECK_ equal: {flag: 0} do
+  	_INCLUDE_ "./script/4_0.tks"
+  end
+  _CHECK_ equal: {flag: 1} do
+  	_INCLUDE_ "./script/4_1.tks"
+  end
+  _CHECK_ equal: {flag: 2} do
+  	_INCLUDE_ "./script/4_2.tks"
+  end

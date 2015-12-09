@@ -730,6 +730,11 @@ class Control #スクリプト制御
   def command__EVAL_(options, inner_options)
     eval(options[:_ARGUMENT_])
   end
+
+  #文字列をコマンドラインに出力する（デバッグ用）
+  def command__PUTS_(options, inner_options)
+    pp options[:_ARGUMENT_]
+  end
 end
 
 class Control #セーブデータ制御

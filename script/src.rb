@@ -85,10 +85,6 @@ _DEFINE_ :TextWindow2 do |options|
     #_flush_デフォルト送信
     _DEFINE_ :_FLUSH_ do
       _SEND_ 1  do
-        _SEND_ :Anonymous_CharControl do
-          _MOVE_ 30, y:[0,600], option:{easing: :in_back}
-        end
-        _WAIT_ count: 60
         _FLUSH_
       end
     end

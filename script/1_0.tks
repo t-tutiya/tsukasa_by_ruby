@@ -1,0 +1,31 @@
+//sample3_1.tks
+@	_INCLUDE_ "./script/src.rb"
+「ところで『優先度二番の法則』というのを
+知っているかい？」
+「それは拳銃持ってる奴らから全力で逃げて
+る時にしなきゃいけない話なの！？」
+　私はモザイク通りを全速力で駆け下りなが
+ら怒鳴った。金田は良く通る声で答えた。
+「暴力を振るってくる輩の目的は、相手に恐
+怖を与えることだ。怖がっていては思う壺さ」
+「それで死んじゃったら意味無いでしょ！？」
+「それもそうだな」
+　金田は頷いてから前を指差す。
+「どちらに逃げる？　[func_select " 階段を昇る", id: 0]か、それとも
+[func_select " 建物に入る", id: 1]か。君が選ぶといい」
+  _SET_ :_TEMP_, flag: nil
+  #ウェイク状態まで待機
+  _WAIT_ :_TEMP_,  not_equal: {flag: nil}
+  _SEND_ :Anonymous_CharControl do
+    _MOVE_ 30, y:[0,600], option:{easing: :in_back}
+  end
+  _WAIT_ count: 60
+  _SEND_ :text0  do
+    _FLUSH_
+  end
+  _CHECK_ equal: {flag: 0} do
+  	_INCLUDE_ "./script/2_0.tks"
+  end
+  _CHECK_ equal: {flag: 1} do
+  	_INCLUDE_ "./script/2_1.tks"
+  end

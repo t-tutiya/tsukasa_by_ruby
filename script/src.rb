@@ -4,7 +4,7 @@ _SEND_ :text0 do
   _DELETE_
 end
 
-_DEFINE_ :TextWindow2 do |options|
+_DEFINE_ :TextWindow2 do |argument, options|
   _CREATE_ :RenderTargetControl,
     x: options[:x],
     y: options[:y],
@@ -65,9 +65,9 @@ _DEFINE_ :TextWindow2 do |options|
           _SET_ size: 32
       end
     #文字列出力
-    _DEFINE_ :_TEXT_ do |options|
+    _DEFINE_ :_TEXT_ do |argument, options|
       _SEND_ 1 do
-        _TEXT_ options
+        _TEXT_ argument
       end
     end
     #改行
@@ -77,9 +77,9 @@ _DEFINE_ :TextWindow2 do |options|
       end
     end
     #_rubi_デフォルト送信
-    _DEFINE_ :_RUBI_ do |options|
+    _DEFINE_ :_RUBI_ do |argument, options|
       _SEND_ 1 do
-        _RUBI_ options[:_ARGUMENT_], text: options[:text]
+        _RUBI_ argument, text: options[:text]
       end
     end
     #_flush_デフォルト送信
@@ -89,18 +89,18 @@ _DEFINE_ :TextWindow2 do |options|
       end
     end
     #_flush_デフォルト送信
-    _DEFINE_ :_SET_FONT_ do |options|
+    _DEFINE_ :_SET_FONT_ do |argument, options|
       _SEND_ 1  do
         _SET_ options
       end
     end
 
     #キー入力待ち処理
-    _DEFINE_ :pause do |options|
+    _DEFINE_ :pause do |argument, options|
       _SEND_ 1 do
         _WAIT_ count:17
         if options[:icon] == :line_icon_func
-          _SEND_ :last do
+          _SEND_ -1 do
             line_icon_func align_y: :bottom, float_x: :left
           end
         else
@@ -119,10 +119,10 @@ _DEFINE_ :TextWindow2 do |options|
     end
 
     #クリック待ちアイコン表示処理
-    _DEFINE_ :put_icon do |options|
+    _DEFINE_ :put_icon do |argument, options|
       #絶対座標表示
       if options[:absolute]
-        _CALL_ options[:_ARGUMENT_], x:100, y:100, align_y: :none, float_x: :none
+        _CALL_ argument, x:100, y:100, align_y: :none, float_x: :none
       end
     end
     _YIELD_
@@ -138,11 +138,11 @@ TextWindow2 id: :text0, text_page_id: :default_text_page_control0,
               _SET_FONT_  font_name: "ＭＳ ゴシック"
   end
 
-_DEFINE_ :func_select do |options, control|
+_DEFINE_ :func_select do |argument, options, control|
   _SEND_ default: :TextLayer do
     _SEND_ 1 do
-      _SEND_ :last do
-        TextSelect id: options[:id], text: options[:_ARGUMENT_]
+      _SEND_ -1 do
+        TextSelect id: options[:id], text: argument
         _WAIT_ count: 3, key_down: K_RCONTROL, key_push: K_SPACE
       end
     end
@@ -150,7 +150,7 @@ _DEFINE_ :func_select do |options, control|
 end
 
 #テキストボタン定義
-_DEFINE_ :TextSelect do |options|
+_DEFINE_ :TextSelect do |argument, options|
   _CREATE_ :LayoutControl,
       float_x: :left,
     x: options[:x] || 0, y: options[:y] || 0, width: 196, height: 32, id: :Anonymous_CharControl do

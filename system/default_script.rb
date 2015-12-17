@@ -206,7 +206,7 @@ _DEFINE_ :TextWindow do |argument, options|
       _SEND_ 1 do
         _WAIT_ count:17
         if options[:icon] == :line_icon_func
-          _SEND_ :last do
+          _SEND_ -1 do
             line_icon_func align_y: :bottom, float_x: :left
           end
         else

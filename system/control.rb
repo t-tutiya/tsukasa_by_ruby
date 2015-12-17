@@ -166,14 +166,9 @@ class Control #内部メソッド
 
   def find_control(id)
 
-    case id
     #自身のidもしくは省略されている場合は自身を帰す
-    when @id, nil
+    if id == @id or id == nil
       return [self]
-
-    #子コントロールの最終要素を返す
-    when :last
-      return [@control_list.last]
     end
 
     #整数であれば、子要素を添え字検索する

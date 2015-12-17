@@ -104,7 +104,7 @@ _DEFINE_ :TextWindow2 do |options|
       _SEND_ 1 do
         _WAIT_ count:17
         if options[:icon] == :line_icon_func
-          _SEND_ :last do
+          _SEND_ -1 do
             line_icon_func align_y: :bottom, float_x: :left
           end
         else
@@ -145,7 +145,7 @@ TextWindow2 id: :text0, text_page_id: :default_text_page_control0,
 _DEFINE_ :func_select do |options, control|
   _SEND_ default: :TextLayer do
     _SEND_ 1 do
-      _SEND_ :last do
+      _SEND_ -1 do
         TextSelect id: options[:id], text: options[:_ARGUMENT_]
         _WAIT_ count: 3, key_down: K_RCONTROL, key_push: K_SPACE
       end

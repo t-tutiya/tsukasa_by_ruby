@@ -160,9 +160,11 @@ class Tsukasa < RenderTargetControl
     options[:id] = :default_rendertarget_container
 
     options[:command_list] = [[:_INCLUDE_,
-                        {:_ARGUMENT_=> "./system/bootstrap_script.rb"}, {
-                        :block_stack => [],
-                        :yield_block_stack => [],
+                        "./system/bootstrap_script.rb",
+                        {}, 
+                        {
+                          :block_stack => [],
+                          :yield_block_stack => [],
                         }]]
 
     #ラベル関連
@@ -174,7 +176,8 @@ class Tsukasa < RenderTargetControl
     @cursor_visible = true
     @cursor_type = IDC_ARROW
 
-    super(options, 
+    super(nil, 
+          options, 
           { :block_stack => []}, 
           @root_control)
   end
@@ -215,21 +218,21 @@ class Tsukasa < RenderTargetControl
 end
 
 class Tsukasa < RenderTargetControl
-  def command__RESIZE_(options, inner_options)
+  def command__RESIZE_(argument, options, inner_options)
     Window.resize(options[:width], 
                   options[:height])
   end
 
   #スクリーンショットキャプチャ
-  def command__CAPTURE_SS_(options, inner_options)
-    Window.get_screen_shot(options[:_ARGUMENT_],options[:format] || FORMAT_PNG)
+  def command__CAPTURE_SS_(argument, options, inner_options)
+    Window.get_screen_shot(argument,options[:format] || FORMAT_PNG)
   end
 
-  def command__FULL_SCREEN_(options, inner_options)
-    Window.full_screen = options[:_ARGUMENT_]
+  def command__FULL_SCREEN_(argument, options, inner_options)
+    Window.full_screen = argument
   end
 
-  def command_label(options, inner_options)
+  def command_label(argument, options, inner_options)
     unless @_LOCAL_[:_READ_FRAG_]
       @_LOCAL_[:_READ_FRAG_] = {} 
     end

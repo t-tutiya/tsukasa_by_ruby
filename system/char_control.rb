@@ -193,7 +193,7 @@ class CharControl < ImageControl
   #公開インターフェイス
   #############################################################################
 
-  def initialize(options, inner_options, root_control)
+  def initialize(argument, options, inner_options, root_control)
     @font_draw_option = {}
     @font_obj = {}
 

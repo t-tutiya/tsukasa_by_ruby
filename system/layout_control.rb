@@ -46,7 +46,7 @@ class LayoutControl < Control
 
     return super(x, y, target, parent)
   end
-
+=begin
   def siriarize(options = {})
 
     options.update({
@@ -67,4 +67,5 @@ class LayoutControl < Control
 
     return super(options)
   end
+=end
 end

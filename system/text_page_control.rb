@@ -176,7 +176,7 @@ class TextPageControl < LayoutControl
   end
 
 
-  def initialize(options, inner_options, root_control)
+  def initialize(argument, options, inner_options, root_control)
     @char_renderer = options[:char_renderer] if options[:char_renderer]
 
     #レンダリング済みフォント使用中かどうか
@@ -233,8 +233,8 @@ class TextPageControl < LayoutControl
 
     #次のアクティブ行コントロールを追加  
     interrupt_command([:_CREATE_, 
-                     {:_ARGUMENT_ => :LayoutControl, 
-                      :width => @width,
+                      :LayoutControl,
+                     {:width => @width,
                       :height => @line_height,
                       :float_x => :bottom, 
                       :float_y => :bottom}, 
@@ -290,12 +290,12 @@ class TextPageControl < LayoutControl
 
   #charコマンド
   #指定文字（群）を描画チェインに連結する
-  def command__CHAR_(options, inner_options)
+  def command__CHAR_(argument, options, inner_options)
     #文字コントロールを生成する
     @control_list.last.push_command([:_CREATE_, 
-               {:_ARGUMENT_ => :CharControl, 
-                :align_y => :bottom,
-                :charactor => options[:_ARGUMENT_],
+                :CharControl, 
+               {:align_y => :bottom,
+                :charactor => argument,
                 :command_list=> options[:command_list],
                 :float_x => :left,
                 }.merge(@char_option), 
@@ -303,37 +303,37 @@ class TextPageControl < LayoutControl
 
     #文字幅スペーサーを生成する
     @control_list.last.push_command([:_CREATE_, 
-                {:_ARGUMENT_ => :LayoutControl, 
-                :width => @charactor_pitch,
+                  :LayoutControl, 
+                {:width => @charactor_pitch,
                 :height => @line_height,
                 :align_y => :bottom,
                 :float_x => :left}, 
                 {}])
   end
 
-  def command__CHAR_RENDERER_(options, inner_options)
+  def command__CHAR_RENDERER_(argument, options, inner_options)
     @char_renderer = inner_options[:block]
   end
 
   #textコマンド
   #指定文字列を描画チェインに連結する
-  def command__TEXT_(options, inner_options)
+  def command__TEXT_(argument, options, inner_options)
     command_list = Array.new
 
     #第１引数が設定されていない場合
-    unless options[:_ARGUMENT_]
+    unless argument
       result = ""
       #キーで指定されたデータストアのデータを文字列とする
       options.each do |key, value|
         result = @root_control.send(key)[value]
       end
-      options[:_ARGUMENT_] = result.to_s
+      argument = result.to_s
     end
 
     #第１引数がシンボルの場合
-    if options[:_ARGUMENT_].instance_of?(Symbol)
+    if argument.instance_of?(Symbol)
       #キーで指定された一時データストアのデータを文字列とする
-      options[:_ARGUMENT_] = @root_control.send(:_TEMP_)[options[:_ARGUMENT_]].to_s
+      argument = @root_control.send(:_TEMP_)[argument].to_s
     end
 
     #イメージフォントを使うかどうか
@@ -344,14 +344,16 @@ class TextPageControl < LayoutControl
     end
 
     #文字列を分解してcharコマンドに変換する
-    options[:_ARGUMENT_].each_char do |ch|
+    argument.each_char do |ch|
       #１文字分の出力コマンドをスタックする
       command_list.push([char_command, 
-                        {:_ARGUMENT_ => ch}, 
+                        ch,
+                        {}, 
                         inner_options])
       #:waitコマンドをスタックする
       ##TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
       command_list.push([:_WAIT_, 
+                          nil,
                         {:count => @wait_frame,
                          :key_down => K_RCONTROL,
                          :key_push => K_SPACE,
@@ -363,12 +365,12 @@ class TextPageControl < LayoutControl
     eval_commands(command_list)
   end
 
-  def command__RUBI_(options, inner_options)
+  def command__RUBI_(argument, options, inner_options)
     #ルビを出力するTextPageControlを生成する
     rubi_layout =[:_CREATE_, 
-                  { :_ARGUMENT_ => :TextPageControl, 
-                    :command_list => [
-                      [:_TEXT_, {:_ARGUMENT_=> options[:_ARGUMENT_]},inner_options]],
+                  :TextPageControl, 
+                  { :command_list => [
+                      [:_TEXT_, argument, {},inner_options]],
                     :x => @rubi_option[:offset_x],
                     :y => @rubi_option[:offset_y],
                     :height=> @rubi_option[:size],
@@ -383,8 +385,8 @@ class TextPageControl < LayoutControl
 
     #TextPageControlをベース文字に登録する。
     @control_list.last.push_command([:_CREATE_, 
-               {:_ARGUMENT_ => :LayoutControl, 
-                :width => 0,
+                :LayoutControl, 
+               {:width => 0,
                 :height => @size,
                 :command_list => [rubi_layout],
                 :float_x => :left}, 
@@ -393,12 +395,13 @@ class TextPageControl < LayoutControl
 
   #line_feedコマンド
   #改行処理（CR＋LF）
-  def command__LINE_FEED_(options, inner_options)
+  def command__LINE_FEED_(argument, options, inner_options)
     #以下逆順に登録
 
     #改行時のwaitを設定する
     ##TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
     interrupt_command([:_WAIT_, 
+                        nil,
                       {:count => @line_feed_wait_frame,
                        :key_down => K_RCONTROL,
                        :key_push => K_SPACE,
@@ -407,13 +410,13 @@ class TextPageControl < LayoutControl
 
     #次のアクティブ行コントロールを追加  
     interrupt_command([:_CREATE_, 
-                     {:_ARGUMENT_ => :LayoutControl, 
-                      :width => @width,
+                      :LayoutControl, 
+                     {:width => @width,
                       :height => @line_height,
                       #インデント用無形コントロール
                       :command_list => @indent > 0 ? [[:_CREATE_, 
-                                       {:_ARGUMENT_ => :LayoutControl, 
-                                        :width => @indent,
+                                        :LayoutControl, 
+                                       {:width => @indent,
                                         :height => @line_height,
                                         :float_x => :left}, 
                                         inner_options]] : nil, 
@@ -423,8 +426,8 @@ class TextPageControl < LayoutControl
 
     #行間ピッチ分の無形コントロールを追加
     interrupt_command([:_CREATE_, 
-                     {:_ARGUMENT_ => :LayoutControl, 
-                      :width => @width,
+                      :LayoutControl, 
+                     {:width => @width,
                       :height => @line_spacing,
                       :float_x => :bottom, 
                       :float_y => :bottom}, 
@@ -433,16 +436,16 @@ class TextPageControl < LayoutControl
 
   #flushコマンド
   #メッセージレイヤの消去
-  def command__FLUSH_(options, inner_options)
+  def command__FLUSH_(argument, options, inner_options)
     #子コントロールをクリアする
     @control_list.each do |control|
-      control.interrupt_command([:_DELETE_, options, {}])
+      control.interrupt_command([:_DELETE_, argument, options, {}])
     end
 
     #次のアクティブ行コントロールを追加  
     interrupt_command([:_CREATE_, 
-                     {:_ARGUMENT_ => :LayoutControl, 
-                      :width => @width,
+                      :LayoutControl, 
+                     {:width => @width,
                       :height => @line_height,
                       :float_x => :bottom, 
                       :float_y => :bottom}, 
@@ -455,7 +458,7 @@ class TextPageControl < LayoutControl
 
   #image_charコマンド
   #指定文字（群）のレンダリング済みフォントを描画チェインに連結する
-  def command_image_char(options, inner_options) #改修前
+  def command_image_char(argument, options, inner_options) #改修前
     raise
 #以下旧仕様なので動作しない
 #TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
@@ -482,7 +485,7 @@ class TextPageControl < LayoutControl
 
   #graphコマンド
   #指定画像を描画チェインに連結する
-  def command_graph(options, inner_options)#改修前
+  def command_graph(argument, options, inner_options)#改修前
     #以下旧仕様で動かない
     raise
 =begin
@@ -523,7 +526,7 @@ class TextPageControl < LayoutControl
 
 
   #レンダリング済みフォントデータファイルを登録する
-  def command_map_image_font(options, inner_options)#改修前
+  def command_map_image_font(argument, options, inner_options)#改修前
     raise
     #レンダリング済みフォントデータファイルを任意フォント名で登録
     Image_font.regist(options[:font_name].to_s, options[:file_path].to_s)

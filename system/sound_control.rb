@@ -34,11 +34,11 @@ require 'ayame'
 
 #Soundコントロール
 class SoundControl  < Control
-  def initialize(options, inner_options, root_control)
+  def initialize(argument, options, inner_options, root_control)
     super
     if options[:file_path]
-      options[:_ARGUMENT_] = options[:file_path]
-      command__LOAD_(options, inner_options)
+      argument = options[:file_path]
+      command__LOAD_(argument, options, inner_options)
     end
   end
 
@@ -46,7 +46,7 @@ class SoundControl  < Control
     Ayame.update
     super
   end
-
+=begin
   def siriarize(options = {})
     options.update({
       :file_path => @file_path,
@@ -59,7 +59,7 @@ class SoundControl  < Control
 
     return  super(options)
   end
-
+=end
   #サウンドリソースを解放します
   def dispose
     if @entity
@@ -70,42 +70,42 @@ class SoundControl  < Control
   end
   
   #ファイルの読み込み
-  def command__LOAD_(options, inner_options)
-    raise unless options[:_ARGUMENT_]
+  def command__LOAD_(argument, options, inner_options)
+    raise unless argument
     #ayameでコントロールを初期化
-    @entity = Ayame.new(options[:_ARGUMENT_])
+    @entity = Ayame.new(argument)
   end
 
   #再生
-  def command__PLAY_(options, inner_options)
-    @entity.play( options[:_ARGUMENT_] || 1, #ループ回数（０なら無限）
+  def command__PLAY_(argument, options, inner_options)
+    @entity.play( argument || 1, #ループ回数（０なら無限）
                   options[:fadetime].to_f || 0)
   end
 
   #停止
-  def command__STOP_(options, inner_options)
+  def command__STOP_(argument, options, inner_options)
     @entity.stop(options[:fadetime].to_f || 0)
   end
 
   #一時停止
-  def command__PAUSE_(options, inner_options)
+  def command__PAUSE_(argument, options, inner_options)
     @entity.pause(options[:fadetime].to_f || 0)
   end
 
   #再開
-  def command__RESUME_(options, inner_options)
+  def command__RESUME_(argument, options, inner_options)
     @entity.resume(options[:fadetime].to_f || 0)
   end
 
   #音量
-  def command__VOLUME_(options, inner_options)
-    @entity.set_volume( options[:_ARGUMENT_] || 90,
+  def command__VOLUME_(argument, options, inner_options)
+    @entity.set_volume( argument || 90,
                         options[:fadetime].to_f || 0)
   end
 
   #パン
-  def command__PAN_(options, inner_options)
-    @entity.set_pan( options[:_ARGUMENT_] || 0, #-100～100
+  def command__PAN_(argument, options, inner_options)
+    @entity.set_pan( argument || 0, #-100～100
                      options[:fadetime].to_f || 0)
   end
 end

@@ -52,7 +52,7 @@ end
 
 class Control #内部メソッド
 
-  def initialize(options, inner_options, root_control)
+  def initialize(argument, options, inner_options, root_control)
     #rootコントロールの保存
     @root_control = root_control
     # ユーザ定義関数
@@ -75,7 +75,8 @@ class Control #内部メソッド
       inner_options[:block_stack] = [] unless inner_options[:block_stack]
       inner_options[:yield_block_stack] = [] unless inner_options[:yield_block_stack]
       
-      eval_block( options, 
+      eval_block( argument,
+                  options, 
                   inner_options[:block_stack], 
                   inner_options[:yield_block_stack], 
                   &inner_options[:block])
@@ -100,8 +101,8 @@ class Control #内部メソッド
     @command_list.unshift(command)
   end
 
-  def push_command_to_next_frame(command, options, inner_options)
-    @next_frame_commands.push([command, options, inner_options])
+  def push_command_to_next_frame(command, argument, options, inner_options)
+    @next_frame_commands.push([command, argument, options, inner_options])
   end
 
   def update
@@ -116,13 +117,13 @@ class Control #内部メソッド
       #コマンドリストの先頭要素を取得
       command = @command_list.shift
       #コマンドを１時的に展開
-      command_name, options, inner_options = command
+      command_name, argument, options, inner_options = command
 
       #今フレーム処理終了判定
       break if command_name == :_END_FRAME_
 
       #コマンドを実行する
-      send("command_" + command_name.to_s, options, inner_options)
+      send("command_" + command_name.to_s, argument, options, inner_options)
     end
 
     #一時的にスタックしていたコマンドをコマンドリストに移す
@@ -200,7 +201,7 @@ class Control #内部メソッド
   def sleep_mode?
     @sleep_mode
   end
-
+=begin
   def siriarize(options = {})
 
     command_list = []
@@ -211,7 +212,6 @@ class Control #内部メソッド
     end
 
     options.update({
-      :_ARGUMENT_ => self.class.name.to_sym,
       :id => @id,
       :script_file_path => @script_file_path,
       :command_list => command_list,
@@ -222,7 +222,7 @@ class Control #内部メソッド
 
     return command
   end
-
+=end
 end
 
 class Control #内部メソッド
@@ -247,29 +247,29 @@ class Control #内部メソッド
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
-  def eval_block(options, block_stack, yield_block_stack, &block)
+  def eval_block(argument, options, block_stack, yield_block_stack, &block)
     raise unless block
     raise unless block_stack
     raise unless yield_block_stack
 
-    eval_commands(@script_compiler.commands(options, 
+    eval_commands(@script_compiler.commands(argument,
+                                            options, 
                                             block_stack, 
                                             yield_block_stack, 
                                             self,
                                             &block))
   end
 
-  def check_imple(options)
+  def check_imple(argument, options)
     #条件の強制的な成立
-    return true if options[:_ARGUMENT_] === true
+    return true if argument === true
     #条件の強制的な不成立
-    return false if options[:_ARGUMENT_] === false
+    return false if argument === false
 
     #演算対象のデータ領域を設定
-    args_name = options[:_ARGUMENT_] ? options[:_ARGUMENT_] : :_TEMP_
+    data_strore = argument ? argument : :_TEMP_
 
     options.each do |key, value|
-      next if key == :_ARGUMENT_
       case key
 
       when :count
@@ -348,14 +348,14 @@ class Control #内部メソッド
         return unless value
         #指定されたデータと値がイコールかどうか
         value.each do |key, val|
-          return true if @root_control.send(args_name)[key] == val
+          return true if @root_control.send(data_strore)[key] == val
         end
 
       when :not_equal
         return unless value
         #指定されたデータと値がイコールでない場合
         value.each do |key, val|
-          return true if @root_control.send(args_name)[key] != val
+          return true if @root_control.send(data_strore)[key] != val
         end
 
       when :null
@@ -363,7 +363,7 @@ class Control #内部メソッド
         value = [value] unless value.instance_of?(Array)
         #指定されたデータがnilの場合
         value.each do |key|
-          return true if @root_control.send(args_name)[key] == nil
+          return true if @root_control.send(data_strore)[key] == nil
         end
 
       when :not_null
@@ -371,7 +371,7 @@ class Control #内部メソッド
         value = [value] unless value.instance_of?(Array)
         #指定されたデータがnilで無い場合
         value.each do |key|
-          return true if @root_control.send(args_name)[key] != nil
+          return true if @root_control.send(data_strore)[key] != nil
         end
 
       #ウィンドウの閉じるボタンが押下された場合
@@ -395,18 +395,19 @@ class Control #コントロールの生成／破棄
   private
 
   #コントロールをリストに登録する
-  def command__CREATE_(options, inner_options)
+  def command__CREATE_(argument, options, inner_options)
     #コントロールを生成して子要素として登録する
-    @control_list.push(Module.const_get(options[:_ARGUMENT_]).new( options, 
-                                                               inner_options, 
-                                                               @root_control))
+    @control_list.push(Module.const_get(argument).new( argument,
+                                                       options, 
+                                                       inner_options, 
+                                                       @root_control))
     #付与ブロックを実行する
     @control_list.last.update()
   end
 
   #disposeコマンド
   #コントロールを削除する
-  def command__DELETE_(options, inner_options)
+  def command__DELETE_(argument, options, inner_options)
     #削除フラグを立てる
     dispose()
   end
@@ -422,20 +423,12 @@ class Control #セッター／ゲッター
 
   #コントロールのプロパティを更新する
   #TODO：複数の変数を一回で設定できるようにしてあるが、１個に限定すべきかもしれない。
-  def command__SET_(options, inner_options)
-    #対象ハッシュが指定されている場合
-    if options[:_ARGUMENT_]
-      variable = options[:_ARGUMENT_]
-      options.delete(:_ARGUMENT_)
-    else
-      variable = nil
-    end
-
+  def command__SET_(argument, options, inner_options)
     #オプション全探査
     options.each do |key, val|
-      if variable
+      if argument
         #ハッシュに値を代入する
-        send(variable.to_s)[key] = val
+        send(argument.to_s)[key] = val
       else
         #セッターが用意されている場合
         if  respond_to?(key.to_s + "=")
@@ -457,19 +450,12 @@ class Control #セッター／ゲッター
   ##  _GET_ :_RESULT_,  u3: 0, u4: 2
   ##  ユーザーデータ領域には以下のように格納される（u1はこれ以上中が読めない）
   ##  @user_data = {:u1=>{:nn1=>4, :nn2=>50}, :u3=>1, :u4=>300}
-  def command__GET_(options, inner_options)
-    if options[:_ARGUMENT_]
-      variable = options[:_ARGUMENT_]
-      options.delete(:_ARGUMENT_)
-    else
-      variable = nil
-    end
-
+  def command__GET_(argument, options, inner_options)
     #オプション全探査
     options.each do |key, val|
-      if variable
+      if argument
         if key == :_RESULT_
-          @_RESULT_ = send(variable.to_s)[val]
+          @_RESULT_ = send(argument.to_s)[val]
         else
           @root_control._TEMP_[key] = send(variable.to_s)[val]
         end
@@ -492,40 +478,48 @@ class Control #制御構文
 
   private
 
-  def command__WAIT_(options, inner_options)
+  def command__WAIT_(argument, options, inner_options)
 
     #チェック条件を満たしたら終了する
-    return if check_imple(options)
+    return if check_imple(argument, options)
 
     if options[:count]
       options[:count] = options[:count] - 1
     end
 
     #フレーム終了疑似コマンドをスタックする
-    eval_commands([[:_END_FRAME_, {}, {}]])
+    eval_commands([[:_END_FRAME_, nil, {}, {}]])
 
     if inner_options[:block]
       #waitにブロックが付与されているならそれを実行する
-      eval_block(options, inner_options[:block_stack], inner_options[:yield_block_stack], &inner_options[:block])
+      eval_block( argument, 
+                  options, 
+                  inner_options[:block_stack], 
+                  inner_options[:yield_block_stack], 
+                  &inner_options[:block])
     end
 
-    push_command_to_next_frame(:_WAIT_, options, inner_options)
+    push_command_to_next_frame(:_WAIT_, argument, options, inner_options)
   end
 
-  def command__CHECK_(options, inner_options)
+  def command__CHECK_(argument, options, inner_options)
     #チェック条件を満たさない場合
-    if check_imple(options)
+    if check_imple(argument, options)
       #checkにブロックが付与されているならそれを実行する
-      eval_block(options, [], inner_options[:yield_block_stack], &inner_options[:block])
+      eval_block( argument, 
+                  options, 
+                  [], 
+                  inner_options[:yield_block_stack], 
+                  &inner_options[:block])
       return
     end
   end
 
   #繰り返し
-  def command__LOOP_(options, inner_options) 
+  def command__LOOP_(argument, options, inner_options) 
     unless options.empty?
       #チェック条件を満たしたら終了する
-      return if check_imple(options)
+      return if check_imple(argument, options)
     end
 
     #カウンタを減算
@@ -536,22 +530,26 @@ class Control #制御構文
     #継続フラグが立っているならフレーム区切りを入れない
     unless options[:continuation]
       #while文全体をスクリプトストレージにスタック
-      push_command([:_END_FRAME_, {}, {}])
+      push_command([:_END_FRAME_, argument, {}, {}])
     end
     
     if options[:interrupt]
       #リストの先端に自分自身を追加する
-      interrupt_command([:_LOOP_, options, inner_options])
+      interrupt_command([:_LOOP_, argument, options, inner_options])
     else
       #リストの末端に自分自身を追加する
-      push_command([:_LOOP_, options, inner_options])
+      push_command([:_LOOP_, argument, options, inner_options])
     end
 
     #ブロックを実行時評価しコマンド列を生成する。
-    eval_block(options, [], inner_options[:yield_block_stack], &inner_options[:block])
+    eval_block( argument, 
+                options, 
+                [], 
+                inner_options[:yield_block_stack], 
+                &inner_options[:block])
   end
 
-  def command__BREAK_(options, inner_options)
+  def command__BREAK_(argument, options, inner_options)
     #_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -559,7 +557,7 @@ class Control #制御構文
     end
   end
 
-  def command__RETURN_(options, inner_options)
+  def command__RETURN_(argument, options, inner_options)
     #_END_FUNCTION_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_FUNCTION_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -577,20 +575,20 @@ class Control #ユーザー定義関数操作
   private
 
   #ユーザー定義コマンドを定義する
-  def command__DEFINE_(options, inner_options)
-    @function_list[options[:_ARGUMENT_]] = inner_options[:block]
+  def command__DEFINE_(argument, options, inner_options)
+    @function_list[argument] = inner_options[:block]
   end
 
   #関数呼び出し
-  def command__CALL_(options, inner_options)
+  def command__CALL_(argument, options, inner_options)
     #関数名に対応する関数ブロックを取得する
-    function_block =  @function_list[options[:_ARGUMENT_]] || 
-                      @root_control.function_list[options[:_ARGUMENT_]]
+    function_block =  @function_list[argument] || 
+                      @root_control.function_list[argument]
 
     #指定されたコマンドが定義されていない場合
     unless function_block
       #下位コントロールへの_SEND_であるとみなす
-      command__SEND_(options, inner_options)
+      command__SEND_(argument, options, inner_options)
       return
     end
 
@@ -601,21 +599,19 @@ class Control #ユーザー定義関数操作
     yield_block_stack.push(inner_options[:block])
 
     if options[:_FUNCTION_ARGUMENT_]
-      options[:_ARGUMENT_] = options[:_FUNCTION_ARGUMENT_] 
+      argument = options[:_FUNCTION_ARGUMENT_] 
       #下位伝搬を防ぐ為に要素を削除
       options.delete(:_FUNCTION_ARGUMENT_)
-    else
-      options.delete(:_ARGUMENT_)
     end
 
-    interrupt_command([:_END_FUNCTION_, options, inner_options])
+    interrupt_command([:_END_FUNCTION_, argument, options, inner_options])
 
     #functionを実行時評価しコマンド列を生成する。
-    eval_block(options, block_stack, yield_block_stack, &function_block)
+    eval_block(argument, options, block_stack, yield_block_stack, &function_block)
   end
 
   #関数ブロックを実行する
-  def command__YIELD_(options, inner_options)
+  def command__YIELD_(argument, options, inner_options)
     #ブロックスタックをディープコピーで取得
     block_stack = inner_options[:block_stack].dup
     yield_block_stack = inner_options[:yield_block_stack].dup
@@ -623,7 +619,11 @@ class Control #ユーザー定義関数操作
     block = yield_block_stack.pop
     return unless block
 
-    eval_block(options, block_stack, yield_block_stack, &block)
+    eval_block( argument, 
+                options, 
+                block_stack, 
+                yield_block_stack, 
+                &block)
   end
 end
 
@@ -636,8 +636,8 @@ class Control #スリープ
   private
 
   #コントロールをスリープ状態にする
-  def command__SLEEP_(options, inner_options)
-    unless options[:_ARGUMENT_]
+  def command__SLEEP_(argument, options, inner_options)
+    unless argument
       @sleep_mode = true
       #フレーム終了疑似コマンドをスタックする
       eval_commands([[:_END_FRAME_, {}, {}]])
@@ -645,21 +645,21 @@ class Control #スリープ
     end
 
     #ルートコントロールをベースに探索
-    @root_control.find_control(options[:_ARGUMENT_]).each do |control|
+    @root_control.find_control(argument).each do |control|
       control.sleep_mode(true)
     end
 
   end
 
   #コントロールをスリープ状態から復帰させる
-  def command__WAKE_(options, inner_options)
-    unless options[:_ARGUMENT_]
+  def command__WAKE_(argument, options, inner_options)
+    unless argument
       @sleep_mode = false
       return
     end
 
     #ルートコントロールをベースに探索
-    @root_control.find_control(options[:_ARGUMENT_]).each do |control|
+    @root_control.find_control(argument).each do |control|
       control.sleep_mode(false)
     end
   end
@@ -674,40 +674,39 @@ class Control #スクリプト制御
   private
 
   #コントロールにコマンドブロックを送信する
-  def command__SEND_(options, inner_options)
-
+  def command__SEND_(argument, options, inner_options)
     #デフォルト指定があるならターゲットのコントロールを差し替える
     if options[:default]
       raise unless @root_control.default_control[options[:default]]
-      options[:_ARGUMENT_] = @root_control.default_control[options[:default]]
+      argument = @root_control.default_control[options[:default]]
     end
 
-    controls = find_control(options[:_ARGUMENT_])
-    
+    controls = find_control(argument)
+
     if controls.empty?
-      pp options[:_ARGUMENT_].to_s + "は無効な識別子です"
+      pp argument.to_s + "は無効な識別子です"
       return
     end
 
     #獲得した全てのコントロールにブロックを送信する
     controls.each do |control|
-      control.push_command([:_SCOPE_, {}, inner_options])
+      control.push_command([:_SCOPE_, nil, {}, inner_options])
     end
   end
 
   #ルートコントロールにコマンドブロックを送信する
-  def command__SEND_ROOT_(options, inner_options)
-    @root_control.interrupt_command([:_SCOPE_, {}, inner_options])
+  def command__SEND_ROOT_(argument, options, inner_options)
+    @root_control.interrupt_command([:_SCOPE_, argument, {}, inner_options])
   end
 
   #スクリプトファイルを挿入する
-  def command__INCLUDE_(options, inner_options)
+  def command__INCLUDE_(argument, options, inner_options)
     #オプションが設定していなければ例外送出
-    raise if options.empty?
-    
+    raise unless argument
+
     #文字列が直接指定されていればそれをファイルパスとする
-    if options[:_ARGUMENT_]
-      @script_file_path = options[:_ARGUMENT_]
+    if argument
+      @script_file_path = argument
     else
       #キーで指定されたデータストアのデータをファイルパスとする
       options.each do |key, value|
@@ -716,26 +715,27 @@ class Control #スクリプト制御
     end
 
     @command_list =  
-      @script_compiler.commands({:script_file_path => @script_file_path}, 
-                                  inner_options[:block_stack], 
-                                  inner_options[:yield_block_stack], 
-                                  self) + 
-                                   @command_list
+      @script_compiler.commands(nil,
+                                {:script_file_path => @script_file_path}, 
+                                inner_options[:block_stack], 
+                                inner_options[:yield_block_stack], 
+                                self) + 
+                                 @command_list
   end
 
   #アプリを終了する
-  def command__EXIT_(options, inner_options)
+  def command__EXIT_(argument, options, inner_options)
     @root_control.close = true
   end
 
   #文字列を評価する（デバッグ用）
-  def command__EVAL_(options, inner_options)
-    eval(options[:_ARGUMENT_])
+  def command__EVAL_(argument, options, inner_options)
+    eval(argument)
   end
 
   #文字列をコマンドラインに出力する（デバッグ用）
-  def command__PUTS_(options, inner_options)
-    pp options[:_ARGUMENT_]
+  def command__PUTS_(argument, options, inner_options)
+    pp argument
   end
 end
 
@@ -749,10 +749,10 @@ class Control #セーブデータ制御
 
   #データセーブ
   #TODO：保存先パスや名称は将来的には外部から与えるようにしたい
-  def command__SAVE_(options, inner_options)
-    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
+  def command__SAVE_(argument, options, inner_options)
+    raise unless argument.kind_of?(Numeric)
     #グローバルデータ
-    if options[:_ARGUMENT_] == 0
+    if argument == 0
       db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
                       @_SYSTEM_[:_SYSTEM_FILENAME_])
       db.transaction do
@@ -760,9 +760,9 @@ class Control #セーブデータ制御
       end
     #ユーザーデータ
     #任意の接尾字を指定する
-    elsif options[:_ARGUMENT_]
+    elsif argument
       db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
-                      options[:_ARGUMENT_].to_s +
+                      argument.to_s +
                       @_SYSTEM_[:_LOCAL_FILENAME_])
       db.transaction do
         db["key"] = @root_control._LOCAL_
@@ -774,10 +774,10 @@ class Control #セーブデータ制御
     end
   end
 
-  def command__LOAD_(options, inner_options)
-    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
+  def command__LOAD_(argument, options, inner_options)
+    raise unless argument.kind_of?(Numeric)
     #グローバルデータ
-    if options[:_ARGUMENT_] == 0
+    if argument == 0
       db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
                       @_SYSTEM_[:_SYSTEM_FILENAME_])
       db.transaction do
@@ -785,9 +785,9 @@ class Control #セーブデータ制御
       end
     #ユーザーデータ
     #任意の接尾字を指定する
-    elsif options[:_ARGUMENT_]
+    elsif argument
       db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
-                      options[:_ARGUMENT_].to_s +
+                      argument.to_s +
                       @_SYSTEM_[:_LOCAL_FILENAME_])
       db.transaction do
         @root_control._LOCAL_ = db["key"]
@@ -799,8 +799,8 @@ class Control #セーブデータ制御
     end
   end
 
-  def command__QUICK_SAVE_(options, inner_options)
-    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
+  def command__QUICK_SAVE_(argument, options, inner_options)
+    raise unless argument.kind_of?(Numeric)
     command_list = []
     #子コントロールのシリアライズコマンドを取得
     @control_list.each do |control|
@@ -809,7 +809,7 @@ class Control #セーブデータ制御
 
   
     db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
-                    options[:_ARGUMENT_].to_s +
+                    argument.to_s +
                     @_SYSTEM_[:_QUICK_DATA_FILENAME_])
 
     db.transaction do
@@ -817,10 +817,10 @@ class Control #セーブデータ制御
     end
   end
 
-  def command__QUICK_LOAD_(options, inner_options)
-    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
+  def command__QUICK_LOAD_(argument, options, inner_options)
+    raise unless argument.kind_of?(Numeric)
     db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
-                    options[:_ARGUMENT_].to_s +
+                    argument.to_s +
                     @_SYSTEM_[:_QUICK_DATA_FILENAME_])
 
     code = ""
@@ -843,32 +843,32 @@ class Control #内部コマンド
   private
 
   #ブロックを実行する。無名関数として機能する
-  def command__SCOPE_(options, inner_options)
+  def command__SCOPE_(argument, options, inner_options)
 
     #関数の終端を設定
-    interrupt_command([:_END_FUNCTION_, options, inner_options])
+    interrupt_command([:_END_FUNCTION_, argument, options, inner_options])
 
     #参照渡し汚染が起きないようにディープコピーで取得
     block_stack = inner_options[:block_stack].dup
     yield_block_stack = inner_options[:yield_block_stack] ? inner_options[:yield_block_stack] : []
 
     #関数を展開する
-    eval_block(options, block_stack, yield_block_stack, &inner_options[:block])
+    eval_block(argument, options, block_stack, yield_block_stack, &inner_options[:block])
   end
 
   #ファンクションの終点を示す
-  def command__END_FUNCTION_(options, inner_options)
+  def command__END_FUNCTION_(argument, options, inner_options)
   end
   
   #フレームの終了を示す（ダミーコマンド。これ自体は実行されない）
-  def command__END_FRAME_(options, inner_options)
+  def command__END_FRAME_(argument, options, inner_options)
     raise
   end
 end
 
 class Control #プロパティのパラメータ遷移
-  def command__MOVE_(options, inner_options)
-    raise unless options[:_ARGUMENT_] #必須要素
+  def command__MOVE_(argument, options, inner_options)
+    raise unless argument #必須要素
     
     #オプションハッシュの初期化
     options[:option] =  {} unless options[:option]
@@ -878,10 +878,11 @@ class Control #プロパティのパラメータ遷移
 
     #条件判定が存在し、かつその条件が成立した場合
     if options[:option][:check] and 
-        check_imple(options[:option][:check])
+        check_imple(nil, options[:option][:check])
       #ブロックがあれば実行し、コマンドを終了する
       if inner_options[:block]
-        eval_block( {:_STOP_COUNT_ => options[:option][:count]}, 
+        eval_block( nil,
+                    {:_STOP_COUNT_ => options[:option][:count]}, 
                     inner_options[:block_stack],
                     inner_options[:yield_block_stack],
                     &inner_options[:block])
@@ -895,7 +896,6 @@ class Control #プロパティのパラメータ遷移
     options.each do |key, index|
 
       next if key == :option
-      next if key == :_ARGUMENT_
 
       #開始値が設定されていなければ現在の値で初期化
       unless options[key].instance_of?(Array)
@@ -907,17 +907,17 @@ class Control #プロパティのパラメータ遷移
             (options[key][0] + 
               (options[key][1] - options[key][0]).to_f * 
                 EasingProcHash[options[:option][:easing]].call(
-                  options[:option][:count].fdiv(options[:_ARGUMENT_])
+                  options[:option][:count].fdiv(argument)
               )
             ).to_i)
     end
 
     #カウントが指定フレーム未満の場合
-    if options[:option][:count] < options[:_ARGUMENT_]
+    if options[:option][:count] < argument
       #カウントアップ
       options[:option][:count] += 1
       #:_MOVE_コマンドをスタックし直す
-      push_command_to_next_frame(:_MOVE_, options, inner_options)
+      push_command_to_next_frame(:_MOVE_, argument, options, inner_options)
     end
   end
 
@@ -1073,8 +1073,8 @@ class Control #プロパティのパラメータ遷移
   #スプライン補間
   #これらの実装については以下のサイトを参考にさせて頂きました。感謝します。
   # http://www1.u-netsurf.ne.jp/~future/HTML/bspline.html
-  def command__PATH_(options, inner_options)
-    raise unless options[:_ARGUMENT_] #必須要素
+  def command__PATH_(argument, options, inner_options)
+    raise unless argument #必須要素
 
     #オプションハッシュの初期化
     options[:option] =  {} unless options[:option]
@@ -1085,20 +1085,23 @@ class Control #プロパティのパラメータ遷移
 
     #条件判定が存在し、かつその条件が成立した場合
     if options[:option][:check] and 
-      check_imple(options[:option][:check])
+      check_imple(nil, options[:option][:check])
       #ブロックがあれば実行し、コマンドを終了する
       if inner_options[:block]
-        eval_block(options, [], inner_options[:yiled_block_stack], &inner_options[:block]) 
+        eval_block( nil,
+                    options, 
+                    [], 
+                    inner_options[:yiled_block_stack], 
+                    &inner_options[:block]) 
       end
       return
     end
 
     options.each do |key, values|
       next if key == :option
-      next if key == :_ARGUMENT_
 
       #Ｂスプライン補間時に始点終点を通らない
-      step =(values.size - 1).fdiv(options[:_ARGUMENT_]) * options[:option][:count]
+      step =(values.size - 1).fdiv(argument) * options[:option][:count]
 
       result = 0.0
 
@@ -1121,11 +1124,11 @@ class Control #プロパティのパラメータ遷移
     end
 
     #カウントが指定フレーム以下の場合
-    if options[:option][:count] < options[:_ARGUMENT_]
+    if options[:option][:count] < argument
       #カウントアップ
       options[:option][:count] += 1
       #:move_lineコマンドをスタックし直す
-      push_command_to_next_frame(:_PATH_, options, inner_options)
+      push_command_to_next_frame(:_PATH_, argument, options, inner_options)
     end
   end
 

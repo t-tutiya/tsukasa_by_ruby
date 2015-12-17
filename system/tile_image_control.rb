@@ -40,7 +40,7 @@ class TileImageControl < Control
     hsh[key] = Image.load(key)
   }
 
-  def initialize(options, inner_options, root_control)
+  def initialize(argument, options, inner_options, root_control)
     super
     if options[:entity]
       entity = options[:entity]
@@ -54,9 +54,8 @@ class TileImageControl < Control
     command_list = []
     entities.each.with_index(options[:start_index] || 0) do |image, index|
       command_list.push([:_CREATE_, 
-                        {
-                          :_ARGUMENT_ => :ImageControl,
-                          :entity => image,
+                        :ImageControl,
+                        { :entity => image,
                           :id => index,
                           :float_x => options[:float_x],
                           :float_y => options[:float_y],

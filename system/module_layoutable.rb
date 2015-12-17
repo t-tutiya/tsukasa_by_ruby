@@ -66,7 +66,7 @@ module Layoutable
     @colorkey = find_control(arg)[0]
   end
 
-  def initialize(options, inner_options, root_control)
+  def initialize(argument, options, inner_options, root_control)
     @x = options[:x] || 0 #描画Ｘ座標
     @y = options[:y] || 0 #描画Ｙ座標
 
@@ -253,7 +253,7 @@ module Layoutable
 end
 
 module Layoutable
-  def check_imple(options)
+  def check_imple(argument, options)
     if options[:mouse]
       options[:mouse].each do |key|
         case key
@@ -306,8 +306,8 @@ module Layoutable
     return super
   end
 
-  def command__MOUSE_POS_(options, inner_options)
-    eval_block( {:_X_ => @cursol_x, :_Y_ => @cursol_y}, 
+  def command__MOUSE_POS_(argument, options, inner_options)
+    eval_block( argument, {:_X_ => @cursol_x, :_Y_ => @cursol_y}, 
                 inner_options[:block_stack], 
                 inner_options[:yield_block_stack], 
                 &inner_options[:block])

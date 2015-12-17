@@ -48,14 +48,14 @@ end
 
 #指定フレーム数ウェイト
 #ex. wait_count 60
-_DEFINE_ :wait_count do |options|
-  _WAIT_ count: options[:_ARGUMENT_]
+_DEFINE_ :wait_count do |argument, options|
+  _WAIT_ count: argument
 end
 
 #指定コマンドウェイト
 #ex. wait_command :_MOVE_ 
-_DEFINE_ :wait_command do |options|
-  _WAIT_ command: options[:_ARGUMENT_]
+_DEFINE_ :wait_command do |argument, options|
+  _WAIT_ command: argument
 end
 
 ###############################################################################
@@ -63,7 +63,7 @@ end
 ###############################################################################
 
 #標準ポーズコマンド
-_DEFINE_ :pause do |options|
+_DEFINE_ :pause do |argument, options|
   _SEND_ default: :TextLayer do 
     pause options
   end
@@ -112,7 +112,7 @@ end
 ###############################################################################
 
 #標準テキストウィンドウ
-_DEFINE_ :TextWindow do |options|
+_DEFINE_ :TextWindow do |argument, options|
   _CREATE_ :RenderTargetControl,
     x: options[:x],
     y: options[:y],
@@ -183,9 +183,9 @@ _DEFINE_ :TextWindow do |options|
       end
     end
     #_rubi_デフォルト送信
-    _DEFINE_ :_RUBI_ do |options|
+    _DEFINE_ :_RUBI_ do |argument, options|
       _SEND_ 1 do
-        _RUBI_ options[:_ARGUMENT_], text: options[:text]
+        _RUBI_ argument, text: options[:text]
       end
     end
     #_flush_デフォルト送信
@@ -202,7 +202,7 @@ _DEFINE_ :TextWindow do |options|
     end
 
     #キー入力待ち処理
-    _DEFINE_ :pause do |options|
+    _DEFINE_ :pause do |argument, options|
       _SEND_ 1 do
         _WAIT_ count:17
         if options[:icon] == :line_icon_func
@@ -225,10 +225,10 @@ _DEFINE_ :TextWindow do |options|
     end
 
     #クリック待ちアイコン表示処理
-    _DEFINE_ :put_icon do |options|
+    _DEFINE_ :put_icon do |argument, options|
       #絶対座標表示
       if options[:absolute]
-        _CALL_ options[:_ARGUMENT_], x:100, y:100, align_y: :none, float_x: :none
+        _CALL_ argument, x:100, y:100, align_y: :none, float_x: :none
       end
     end
     _YIELD_
@@ -253,7 +253,7 @@ TextWindow id: :text1, text_page_id: :default_text_page_control0,
   z: 1000000 #描画順序
 =end
 
-_DEFINE_ :line_icon_func do |options|
+_DEFINE_ :line_icon_func do |argument, options|
   _CREATE_ :RenderTargetControl, 
           :x => options[:x] || 0, 
           :y => options[:y] || 0, 
@@ -273,7 +273,7 @@ _DEFINE_ :line_icon_func do |options|
   end
 end
 
-_DEFINE_ :page_icon_func do |options|
+_DEFINE_ :page_icon_func do |argument, options|
   _CREATE_ :RenderTargetControl, 
           :x => options[:x] || 0, 
           :y => options[:y] || 0, 
@@ -335,7 +335,7 @@ end
 ###############################################################################
 
 #ボタンコントロール
-_DEFINE_ :button do |options|
+_DEFINE_ :button do |argument, options|
   _CREATE_ :LayoutControl, 
           :x => options[:x] || 0,
           :y => options[:y] || 0,

@@ -41,7 +41,7 @@ class ImageControl < Control
     @entity = @@image_cache[file_path]
   end
 
-  def initialize(options, inner_options, root_control)
+  def initialize(argument, options, inner_options, root_control)
     if options[:file_path]
       @file_path = options[:file_path]
       options[:entity] = @@image_cache[options[:file_path]]

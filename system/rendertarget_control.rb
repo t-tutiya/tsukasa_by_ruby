@@ -40,7 +40,7 @@ class RenderTargetControl < Control
     @entity.bgcolor = arg
   end
 
-  def initialize(options, inner_options, root_control)
+  def initialize(argument, options, inner_options, root_control)
     #保持オブジェクトの初期化
     options[:entity] = RenderTarget.new(options[:width]  || 1, 
                                         options[:height] || 1, 
@@ -55,7 +55,7 @@ class RenderTargetControl < Control
   end
 
   #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
-  def command__TO_IMAGE_(options, inner_options)
+  def command__TO_IMAGE_(argument, options, inner_options)
     rt = RenderTarget.new(@width, @height)
     render( 0, 0, rt, { :width => @width, 
                         :height => @height,
@@ -64,8 +64,8 @@ class RenderTargetControl < Control
     entity  = rt.to_image
     #イメージコントロールを生成する
     interrupt_command([:_CREATE_, 
-               {:_ARGUMENT_ => :ImageControl, 
-                :entity => entity,
+                :ImageControl, 
+               {:entity => entity,
                 :z => options[:z] || Float::INFINITY, #描画順を正の無限大とする
                 :id => options[:_ARGUMENT]
                 }, 

@@ -43,44 +43,41 @@ class ScriptCompiler
   end
 
   #ヘルパーメソッド群
-  def commands(argument, block_stack, yield_block_stack, control, &block)
+  def commands(argument, options, block_stack, yield_block_stack, control, &block)
     @command_list = []
     @yield_block_stack = yield_block_stack
     @block_stack = block_stack
 
-    if argument[:script_file_path]
-      if File.extname(argument[:script_file_path]) == ".tks"
+    if options[:script_file_path]
+      if File.extname(options[:script_file_path]) == ".tks"
         #評価対象がｔｋｓファイルの場合の場合
-        eval( @@replacer.apply(@@parser.parse(File.read(argument[:script_file_path], encoding: "UTF-8"))).flatten.join("\n"), 
+        eval( @@replacer.apply(@@parser.parse(File.read(options[:script_file_path], encoding: "UTF-8"))).flatten.join("\n"), 
               nil, 
-              File.expand_path(argument[:script_file_path]))
+              File.expand_path(options[:script_file_path]))
       else
         #評価対象がスクリプトファイルの場合の場合
-        eval( File.read(argument[:script_file_path], encoding: "UTF-8"), 
+        eval( File.read(options[:script_file_path], encoding: "UTF-8"), 
               nil, 
-              File.expand_path(argument[:script_file_path]))
+              File.expand_path(options[:script_file_path]))
       end
     else
       raise unless block
 
-      self.instance_exec(argument, control, &block)
+      self.instance_exec(argument, options, control, &block)
     end
     return  @command_list
   end
 
-  def method_missing(command_name, option = nil, **options, &block)
+  def method_missing(command_name, argument = nil, **options, &block)
     if [:_END_FUNCTION_].index(command_name)
       pp "#{command_name}コマンドは使用できません"
       raise
     end
 
-    if @control.respond_to?("command_" + command_name.to_s, true)
-      # 組み込みコマンドがある場合はそのまま呼ぶ
-      options[:_ARGUMENT_] = option if option
-    else
+    unless @control.respond_to?("command_" + command_name.to_s, true)
       # 組み込みコマンドが無い場合は_CALL_に差し替える
-      options[:_FUNCTION_ARGUMENT_] = option if option
-      options[:_ARGUMENT_] = command_name
+      options[:_FUNCTION_ARGUMENT_] = argument if argument
+      argument = command_name
       command_name = :_CALL_
     end
 
@@ -90,6 +87,6 @@ class ScriptCompiler
     inner_options[:block] = block if block
 
     #コマンドを登録する
-    @command_list.push([command_name, options, inner_options])
+    @command_list.push([command_name, argument, options, inner_options])
   end
 end

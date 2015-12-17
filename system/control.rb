@@ -452,7 +452,7 @@ class Control #セッター／ゲッター
         if key == :_RESULT_
           @_RESULT_ = send(argument.to_s)[val]
         else
-          @root_control._TEMP_[key] = send(variable.to_s)[val]
+          @root_control._TEMP_[key] = send(argument.to_s)[val]
         end
       else
         if respond_to?(val.to_s)

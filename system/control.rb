@@ -593,16 +593,24 @@ class Control #ユーザー定義関数操作
     #スタックプッシュ
     yield_block_stack.push(inner_options[:block])
 
+    function_argument = nil
     if options[:_FUNCTION_ARGUMENT_]
-      argument = options[:_FUNCTION_ARGUMENT_] 
+      function_argument = options[:_FUNCTION_ARGUMENT_] 
       #下位伝搬を防ぐ為に要素を削除
       options.delete(:_FUNCTION_ARGUMENT_)
     end
 
-    interrupt_command([:_END_FUNCTION_, argument, options, inner_options])
+    interrupt_command([:_END_FUNCTION_, 
+                        function_argument, 
+                        options, 
+                        inner_options])
 
     #functionを実行時評価しコマンド列を生成する。
-    eval_block(argument, options, block_stack, yield_block_stack, &function_block)
+    eval_block( function_argument, 
+                options, 
+                block_stack, 
+                yield_block_stack, 
+                &function_block)
   end
 
   #関数ブロックを実行する

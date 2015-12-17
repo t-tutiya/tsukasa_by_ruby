@@ -14,7 +14,7 @@
 @	test1{
 @		rule0 {
 @			_MOVE_ 240, counter:[0,255]
-@			_WAIT_ :command => :_MOVE_
+@			_WAIT_ command: :_MOVE_
 @			_DELETE_
 @		}
 @		_WAIT_ child: :rule0

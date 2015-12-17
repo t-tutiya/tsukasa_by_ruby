@@ -7,6 +7,6 @@
 @
 @	img0 {_SET_ file_path: "./sozai/char/B-2.png"}
 @
-@	last {
+@	_SEND_(-1) {
 @		_MOVE_ 360, alpha: [255, 0]
 @	}

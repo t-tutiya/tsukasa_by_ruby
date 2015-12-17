@@ -173,7 +173,7 @@ _DEFINE_ :TextWindow do |argument, options|
     #文字列出力
     _DEFINE_ :_TEXT_ do |argument, options|
       _SEND_ 1 do
-        _TEXT_ argument
+        _TEXT_ argument, options
       end
     end
     #改行

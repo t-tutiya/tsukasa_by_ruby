@@ -735,11 +735,10 @@ class Control #スクリプト制御
 
   #文字列をコマンドラインに出力する（デバッグ用）
   def command__PUTS_(argument, options, inner_options)
-    if options and !argument
-      pp options
-    else
-      pp argument
-    end
+    #第１引数を出力する
+    pp argument if argument 
+    #ハッシュを出力する
+    pp options unless options.empty?
   end
 end
 

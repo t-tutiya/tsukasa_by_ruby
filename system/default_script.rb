@@ -171,9 +171,9 @@ _DEFINE_ :TextWindow do |argument, options|
           _SET_ size: 32
       end
     #文字列出力
-    _DEFINE_ :_TEXT_ do |options|
+    _DEFINE_ :_TEXT_ do |argument, options|
       _SEND_ 1 do
-        _TEXT_ options
+        _TEXT_ argument
       end
     end
     #改行
@@ -195,7 +195,7 @@ _DEFINE_ :TextWindow do |argument, options|
       end
     end
     #_flush_デフォルト送信
-    _DEFINE_ :_SET_FONT_ do |options|
+    _DEFINE_ :_SET_FONT_ do |argument, options|
       _SEND_ 1  do
         _SET_ options
       end
@@ -223,14 +223,6 @@ _DEFINE_ :TextWindow do |argument, options|
         _SET_ :_TEMP_, sleep: false
       end
     end
-
-    #クリック待ちアイコン表示処理
-    _DEFINE_ :put_icon do |argument, options|
-      #絶対座標表示
-      if options[:absolute]
-        _CALL_ argument, x:100, y:100, align_y: :none, float_x: :none
-      end
-    end
     _YIELD_
   end
 end
@@ -241,7 +233,6 @@ TextWindow id: :text0, text_page_id: :default_text_page_control0,
   width: 1024,
   height: 192,
   z: 1000000 #描画順序
-
 
 =begin
 #全画面の場合

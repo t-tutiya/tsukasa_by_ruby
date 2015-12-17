@@ -1,5 +1,5 @@
 #テキストボタン定義
-_DEFINE_ :TextSelect do |options|
+_DEFINE_ :TextSelect do |argument, options|
   _CREATE_ :LayoutControl,
     x: options[:x], y: options[:y], width: 350, height: 32, id: options[:id] do
     #テキストを描画するRenderTarget
@@ -14,7 +14,7 @@ _DEFINE_ :TextSelect do |options|
         _EVAL_ "pp 'over'"
         text_area{
           _SET_ bgcolor: [0,255,255]
-          last{
+          _SEND_(-1){
             _MOVE_ 30, x:[350,0], option:{easing: :out_cubic}
             _SET_ color:  [255,0,0], edge_color: [255,255,255]
           }
@@ -25,7 +25,7 @@ _DEFINE_ :TextSelect do |options|
         _EVAL_ "pp 'out'"
         text_area{
           _SET_ bgcolor: [255,255,255]
-          last{
+          _SEND_(-1){
             _MOVE_ 30, x:[350,0], option:{easing: :out_cubic}
             _SET_ color:  [255,255,255], edge_color: [0,0,0]
           }

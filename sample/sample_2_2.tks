@@ -1,5 +1,5 @@
 	#ボタンコントロール
-	_DEFINE_ :button3 do |options|
+	_DEFINE_ :button3 do |argument, options|
 	  _CREATE_ :LayoutControl, 
 	          x: options[:x] || 0,
 	          y: options[:y] || 0,

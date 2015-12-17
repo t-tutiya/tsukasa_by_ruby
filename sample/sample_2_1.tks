@@ -13,7 +13,7 @@
 		end
 		line_icon_func
 		_DEFINE_ :button_func do
-			_MOUSE_POS_ do |options|
+			_MOUSE_POS_ do |argument, options|
 				_SET_ x: options[:_X_], y: options[:_Y_]
 			end
 			_END_FRAME_

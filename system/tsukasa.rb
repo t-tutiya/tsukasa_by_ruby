@@ -48,7 +48,6 @@ require_relative './tile_image_control.rb'
 
 require_relative './rule_shader_control.rb'
 
-require_relative './midi_control.rb'
 require_relative './sound_control.rb'
 
 require_relative './char_control.rb'

@@ -3,8 +3,8 @@
 require 'dxruby'
 
 ###############################################################################
-#TSUKASA for DXRuby  α１
-#汎用ゲームエンジン「司（TSUKASA）」 for DXRuby
+#TSUKASA for DXRuby ver1.0(2015/12/24)
+#メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby
 #
 #Copyright (c) <2013-2015> <tsukasa TSUCHIYA>
 #

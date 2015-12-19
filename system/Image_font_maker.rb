@@ -4,11 +4,11 @@ require 'dxruby'
 require "tmpdir"
 
 ###############################################################################
-#Image_font_maker/Image_font ver.1.0(2013/11/13)
-#レンダリング済みフォントデータ作成クラス／同利用クラス
+#TSUKASA for DXRuby ver1.0(2015/12/24)
+#メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby
 #original by mirichi(http://d.hatena.ne.jp/mirichi/20130430/p2)
 #
-#Copyright (c) <2013> <tsukasa TSUCHIYA>
+#Copyright (c) <2013-2015> <tsukasa TSUCHIYA>
 #
 #This software is provided 'as-is', without any express or implied
 #warranty. In no event will the authors be held liable for any damages

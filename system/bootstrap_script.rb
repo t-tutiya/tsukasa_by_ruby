@@ -29,27 +29,10 @@
 ###############################################################################
 
 #デバッグモードの設定
-_SET_ :_SYSTEM_, _DEBUG_: false
+#_SET_ :_SYSTEM_, _DEBUG_: false
 
 #デフォルトのユーザー定義関数群
 _INCLUDE_ "./system/default_script.rb"
 
-#デバッグ用のサンプル
-#_INCLUDE_ "./scenario/scenario_sound.rb"
-#_INCLUDE_ "./scenario/scenario_easing.rb"
-#_INCLUDE_ "./scenario/scenario_inner_function.rb"
-#_INCLUDE_ "./scenario/scenario_clickable.rb"
-#_INCLUDE_ "./scenario/scenario_yield.rb"
-#_INCLUDE_ "./scenario/scenario_while.rb"
-#_INCLUDE_ "./scenario/scenario_function.rb"
-#_INCLUDE_ "./scenario/scenario_layout.rb"
-#_INCLUDE_ "./scenario/scenario_scope.rb"
-#_INCLUDE_ "./scenario/scenario_change_script.rb"
-#_INCLUDE_ "./scenario/scenario_check.rb"
-#_INCLUDE_ "./scenario/scenario_collision.rb"
-#_INCLUDE_ "./scenario/scenario_ImageControl.rb"
-#_INCLUDE_ "./scenario/scenario_text.rb"
-#_INCLUDE_ "./scenario/scenario_label.rb"
-#_INCLUDE_ "./scenario/tks_test.tks"
-
-_INCLUDE_ "./scenario/first.tks"
+#最初に実行するスクリプトファイルを呼びだす
+_INCLUDE_ "./script/first.rb"

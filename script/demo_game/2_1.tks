@@ -22,8 +22,8 @@
     _FLUSH_
   end
   _CHECK_ equal: {flag: 0} do
-  	_INCLUDE_ "./script/3_0.tks"
+  	_INCLUDE_ "./script/demo_game/3_0.tks"
   end
   _CHECK_ equal: {flag: 1} do
-  	_INCLUDE_ "./script/3_1.tks"
+  	_INCLUDE_ "./script/demo_game/3_1.tks"
   end

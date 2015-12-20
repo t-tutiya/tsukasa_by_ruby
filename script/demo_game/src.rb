@@ -29,7 +29,7 @@ _DEFINE_ :TextWindow2 do |argument, options|
         size: 32, 
         font_name: "ＭＳＰ ゴシック",
         wait_frame: 3 do
-          _CHAR_RENDERER_ do
+          _CHAR_RENDERER_ do |argument, options,control|
             #フェードイン（スペースキーか右CTRLが押されたらスキップ）
             _MOVE_   30, x:[800,0], y:[-600,0],
                   option: {easing: :out_quart, check: {key_down: K_RCONTROL, key_push: K_SPACE}} do
@@ -37,30 +37,9 @@ _DEFINE_ :TextWindow2 do |argument, options|
                   end
             #トランジションが終了するまで待機
             _WAIT_  command: :_MOVE_ 
-            #待機フラグを立てる
-            _SET_ :_TEMP_, sleep: true
             #待機フラグが下がるまで待機
-            _WAIT_ :_TEMP_, equal: {sleep: false}, not_equal: {flag: nil}
-            #キー入力伝搬を防ぐ為に１フレ送る
-            _END_FRAME_
-=begin
-            #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
-            _MOVE_  60,  alpha:128,
-                  option: {
-                  check: {:key_down => K_RCONTROL, :key_push => K_SPACE}} do
-                    #スキップされた場合
-                    _CHECK_ key_down: K_RCONTROL do
-                      #CTRLスキップ中であれば透明度255
-                      _SET_ alpha: 255
-                    end
-                    _CHECK_ key_push: K_SPACE do
-                      #CTRLスキップ中でなければ透明度128
-                      _SET_ alpha: 128
-                    end
-            end
-            #トランジションが終了するまで待機
-            _WAIT_ command: :_MOVE_ 
-=end
+            _WAIT_ :_TEMP_, not_equal: {flag: nil}
+            _MOVE_ 30 + control.id * 3, y:[0,600], option:{easing: :in_back}
           end
           _SET_ size: 32
       end
@@ -188,6 +167,9 @@ _DEFINE_ :TextSelect do |argument, options|
         pp options
         _SET_ :_TEMP_, flag: options[:id]
         _EVAL_ "pp '[" + options[:text].to_s + "]が押されました'"
+      end
+      _CHECK_ :_TEMP_,  not_equal: {flag: nil} do
+        _MOVE_ 60, y:[0,600], option:{easing: :in_back}
         _RETURN_
       end
       _MOUSE_POS_ do |options|

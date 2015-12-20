@@ -1,6 +1,7 @@
 //sample3_1.tks
 @	_RESIZE_ width: 800, height: 600
 @	_INCLUDE_ "./script/demo_game/src.rb"
+  _SET_ :_TEMP_, flag: nil
 「ところで『優先度二番の法則』というのを
 知っているかい？」
 「それは拳銃持ってる奴らから全力で逃げて
@@ -14,13 +15,9 @@
 　金田は頷いてから前を指差す。
 「どちらに逃げる？　[func_select " 階段を昇る", id: 0]か、それとも
 [func_select " 建物に入る", id: 1]か。君が選ぶといい」
-  _SET_ :_TEMP_, flag: nil
   #ウェイク状態まで待機
   _WAIT_ :_TEMP_,  not_equal: {flag: nil}
-  _SEND_ :Anonymous_CharControl do
-    _MOVE_ 30, y:[0,600], option:{easing: :in_back}
-  end
-  _WAIT_ count: 60
+  _WAIT_ count: 90
   _SEND_ :text0  do
     _FLUSH_
   end

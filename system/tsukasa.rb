@@ -206,6 +206,8 @@ class Tsukasa < RenderTargetControl
   def command__RESIZE_(argument, options, inner_options)
     Window.resize(options[:width], 
                   options[:height])
+    self.width = options[:width]
+    self.height = options[:height]
   end
 
   #スクリーンショットキャプチャ

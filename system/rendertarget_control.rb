@@ -33,20 +33,41 @@ require 'dxruby'
 class RenderTargetControl < Control
   include Drawable
 
-  def bgcolor(arg)
-    @entity.bgcolor
+  #Ｘ幅
+  def width=(arg)
+    super
+    @update_flag = true
   end
+
+  #Ｙ幅
+  def height=(arg)
+    super
+    @update_flag = true
+  end
+
+  #アップデート時の背景色
+  attr_reader  :bgcolor 
   def bgcolor=(arg)
-    @entity.bgcolor = arg
+    @bgcolor = arg
+    @update_flag = true
   end
 
   def initialize(argument, options, inner_options, root_control)
+    @bgcolor = options[:bgcolor]  || [0,0,0]
     #保持オブジェクトの初期化
     options[:entity] = RenderTarget.new(options[:width]  || 1, 
                                         options[:height] || 1, 
-                                        options[:color]  || [0,0,0])
+                                        @bgcolor)
+    @update_flag = false
     super
-    self.bgcolor = options[:bgcolor] || [0,0,0,0]
+  end
+  
+  def render(offset_x, offset_y, target, parent)
+    if @update_flag
+      @entity = RenderTarget.new(@width, @height, @bgcolor)
+    end
+    @update_flag = false
+    super
   end
 
   def dispose()

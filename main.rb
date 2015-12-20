@@ -3,7 +3,7 @@
 require 'dxruby'
 require './system/tsukasa.rb'
 
-width = 800
+width = 1024
 height = 600
 
 #ベース背景色

@@ -1,4 +1,5 @@
 //sample3_1.tks
+@	_RESIZE_ width: 800, height: 600
 @	_INCLUDE_ "./script/demo_game/src.rb"
 「ところで『優先度二番の法則』というのを
 知っているかい？」

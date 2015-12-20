@@ -16,7 +16,7 @@ text0 do
         y:[-600,0],
         option: {easing: :out_quart, 
         check: {key_down: K_RCONTROL, key_push: K_SPACE}} do
-          _SET_ x: 0, y:0
+        _SET_ x: 0, y:0
       end
       #トランジションが終了するまで待機
       _WAIT_  command: :_MOVE_ 

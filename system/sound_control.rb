@@ -34,11 +34,16 @@ require 'ayame'
 
 #Soundコントロール
 class SoundControl  < Control
+  attr_reader :file_path
+  def file_path=(args)
+    #音源ファイルを読み込んで初期化する
+    @entity = Ayame.new(args)
+  end
+
   def initialize(argument, options, inner_options, root_control)
     super
     if options[:file_path]
-      argument = options[:file_path]
-      command__LOAD_(argument, options, inner_options)
+      self.file_path = options[:file_path]
     end
   end
 
@@ -69,42 +74,41 @@ class SoundControl  < Control
     super
   end
   
-  #ファイルの読み込み
-  def command__LOAD_(argument, options, inner_options)
-    raise unless argument
-    #ayameでコントロールを初期化
-    @entity = Ayame.new(argument)
-  end
-
   #再生
   def command__PLAY_(argument, options, inner_options)
+    raise unless @entity
     @entity.play( argument || 1, #ループ回数（０なら無限）
                   options[:fadetime].to_f || 0)
   end
 
   #停止
   def command__STOP_(argument, options, inner_options)
+    raise unless @entity
     @entity.stop(options[:fadetime].to_f || 0)
   end
 
   #一時停止
   def command__PAUSE_(argument, options, inner_options)
+    raise unless @entity
     @entity.pause(options[:fadetime].to_f || 0)
   end
 
   #再開
   def command__RESUME_(argument, options, inner_options)
+    raise unless @entity
     @entity.resume(options[:fadetime].to_f || 0)
   end
 
   #音量
   def command__VOLUME_(argument, options, inner_options)
+    raise unless @entity
     @entity.set_volume( argument || 90,
                         options[:fadetime].to_f || 0)
   end
 
   #パン
   def command__PAN_(argument, options, inner_options)
+    raise unless @entity
     @entity.set_pan( argument || 0, #-100～100
                      options[:fadetime].to_f || 0)
   end

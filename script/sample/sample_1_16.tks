@@ -1,5 +1,5 @@
 @	_CREATE_ :SoundControl, 
-@		file_path: "./sozai/music/easygoing.ogg",
+@		file_path: "./resource/music/easygoing.ogg",
 @		id: :test01 do
 @	end
 初期化が終了しました。

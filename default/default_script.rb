@@ -122,7 +122,7 @@ _DEFINE_ :TextWindow do |argument, options|
       ##ex.
       ##  _SEND_ :message0 do
       ##    _SEND_ :bg do
-      ##      _SET_ file_path: "./sozai/bg_test.jpg" 
+      ##      _SET_ file_path: "./resource/bg_test.jpg" 
       ##    end
       ##  end
 
@@ -252,10 +252,10 @@ _DEFINE_ :line_icon_func do |argument, options|
           :id => :icon do
     _CREATE_ :TileImageControl, 
             :tiles => true,
-            :file_path=>"./sozai/icon/icon_8_a.png", 
+            :file_path=>"./resource/icon/icon_8_a.png", 
             :x_count => 4, 
             :y_count => 2 do
-      _INCLUDE_ "./sozai/icon/icon_8_a.rb"
+      _INCLUDE_ "./resource/icon/icon_8_a.rb"
     end
     _YIELD_
   end
@@ -272,7 +272,7 @@ _DEFINE_ :page_icon_func do |argument, options|
           :id => :icon do
     _CREATE_ :TileImageControl, 
             :tiles => true, 
-            :file_path=>"./sozai/icon/icon_4_a.png", 
+            :file_path=>"./resource/icon/icon_4_a.png", 
             :x_count => 4, 
             :y_count => 1 do
       _LOOP_ do
@@ -331,13 +331,13 @@ _DEFINE_ :button do |argument, options|
           :height => 256,
           :id=>options[:id] do
     _CREATE_ :ImageControl, 
-      :file_path=>"./sozai/button_normal.png", 
+      :file_path=>"./resource/button_normal.png", 
       :id=>:normal
     _CREATE_ :ImageControl, 
-      :file_path=>"./sozai/button_over.png", 
+      :file_path=>"./resource/button_over.png", 
       :id=>:over, :visible => false
     _CREATE_ :ImageControl, 
-      :file_path=>"./sozai/button_key_down.png", 
+      :file_path=>"./resource/button_key_down.png", 
       :id=>:key_down, :visible => false
     _LOOP_ do
       _CHECK_ mouse: [:cursor_over] do

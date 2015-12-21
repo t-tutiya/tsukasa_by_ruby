@@ -7,13 +7,13 @@ _DEFINE_ :button3 do |argument, options|
           height: 256,
           id: options[:id] do
     _CREATE_ :ImageControl, 
-      file_path: "./sozai/button_normal.png", 
+      file_path: "./resource/button_normal.png", 
       id: :normal
     _CREATE_ :ImageControl, 
-      file_path: "./sozai/button_over.png", 
+      file_path: "./resource/button_over.png", 
       id: :over, visible: false
     _CREATE_ :ImageControl, 
-      file_path: "./sozai/button_key_down.png", 
+      file_path: "./resource/button_key_down.png", 
       id: :key_down, visible: false
     _LOOP_ do
       _CHECK_ mouse: [:cursor_over] do

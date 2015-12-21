@@ -1,6 +1,6 @@
-@	base {_SET_ file_path: "./sozai/bg_sample.png"}
-@	img0 {_SET_ file_path: "./sozai/char/B-1.png", x: 250}
-@	img1 {_SET_ file_path: "./sozai/char/B-2.png", x: 250, visible: false}
+@	base {_SET_ file_path: "./resource/bg_sample.png"}
+@	img0 {_SET_ file_path: "./resource/char/B-1.png", x: 250}
+@	img1 {_SET_ file_path: "./resource/char/B-2.png", x: 250, visible: false}
 @
 @	_WAIT_ key_push: K_SPACE
 @

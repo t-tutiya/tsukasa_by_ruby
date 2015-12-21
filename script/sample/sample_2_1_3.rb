@@ -3,13 +3,13 @@ _CREATE_ :RenderTargetControl,
         :width => 256,
         :height => 256,
         :id=>:button1 do
-  _CREATE_ :ImageControl, file_path: "./sozai/star_button.png", 
+  _CREATE_ :ImageControl, file_path: "./resource/star_button.png", 
     id: :normal
-  _CREATE_ :ImageControl, file_path: "./sozai/button_over.png", 
+  _CREATE_ :ImageControl, file_path: "./resource/button_over.png", 
     id: :over, visible: false
-  _CREATE_ :ImageControl, file_path: "./sozai/button_key_down.png", 
+  _CREATE_ :ImageControl, file_path: "./resource/button_key_down.png", 
     id: :key_down, visible: false
-  _CREATE_ :ColorkeyControl, file_path: "./sozai/star_button.png", 
+  _CREATE_ :ColorkeyControl, file_path: "./resource/star_button.png", 
       id: :colorkey, border: 200
   _SET_ colorkey: :colorkey
   _LOOP_ do

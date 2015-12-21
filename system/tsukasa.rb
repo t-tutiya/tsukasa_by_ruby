@@ -216,6 +216,15 @@ class Tsukasa < RenderTargetControl
     Window.full_screen = argument
   end
 
+  #フルスクリーン化可能な解像度のリストを取得する
+  def command__SCREEN_MODES_(argument, options, inner_options)
+    eval_block( Window.get_screen_modes, 
+                options, 
+                inner_options[:block_stack].dup, 
+                inner_options[:yield_block_stack].dup, 
+                &inner_options[:block])
+  end
+
   def command_label(argument, options, inner_options)
     unless @_LOCAL_[:_READ_FRAG_]
       @_LOCAL_[:_READ_FRAG_] = {} 

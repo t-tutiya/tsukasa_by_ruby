@@ -1,5 +1,7 @@
 #! ruby -E utf-8
 
+require 'dxruby'
+
 ###############################################################################
 #TSUKASA for DXRuby ver1.0(2015/12/24)
 #メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby
@@ -28,11 +30,13 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-#コンフィグファイル
-_INCLUDE_ "./default/config.rb"
+_SET_ :_SYSTEM_, _DEBUG_: false
 
-#デフォルトのユーザー定義関数群
-_INCLUDE_ "./default/default_script.rb"
+_SET_ :_SYSTEM_, _SAVE_DATA_PATH_: "./data/"
 
-#最初に実行するスクリプトファイルを呼びだす
-_INCLUDE_ "./script/first.rb"
+_SET_ :_SYSTEM_, _SYSTEM_FILENAME_: "system_data.bin"
+
+_SET_ :_SYSTEM_, _LOCAL_FILENAME_: "_local_data.bin"
+
+_SET_ :_SYSTEM_, _QUICK_DATA_FILENAME_: "_quick_data.bin"
+

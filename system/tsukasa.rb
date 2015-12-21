@@ -122,16 +122,12 @@ class Tsukasa < RenderTargetControl
     @close = false
 
     @root_control = self
-    #ゲーム全体で共有するセーブデータ
-    @_SYSTEM_ = {
-      :_DEBUG_ => false,
-      :_SAVE_DATA_PATH_ => "./data/",
-      :_SYSTEM_FILENAME_ => "system_data.bin",
-      :_LOCAL_FILENAME_ => "_local_data.bin",
-      :_QUICK_DATA_FILENAME_ => "_quick_data.bin",
-    }
 
+    #システムデータストア
+    @_SYSTEM_ = {}
+    #ローカルデータストア
     @_LOCAL_ = {}
+    #一時データストア
     @_TEMP_ = {}
 
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
@@ -145,6 +141,7 @@ class Tsukasa < RenderTargetControl
     options[:id] = :default_rendertarget_container
 
     options[:command_list] = [[:_INCLUDE_,
+                        "./default/bootstrap_script.rb",
                         {}, 
                         {
                           :block_stack => [],

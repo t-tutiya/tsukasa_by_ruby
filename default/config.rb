@@ -30,13 +30,26 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+#デバッグモード管理フラグ（現在未使用）
 _SET_ :_SYSTEM_, _DEBUG_: false
 
+#セーブデータの保存フォルダ
 _SET_ :_SYSTEM_, _SAVE_DATA_PATH_: "./data/"
 
+#システムデータのファイル名
 _SET_ :_SYSTEM_, _SYSTEM_FILENAME_: "system_data.bin"
 
+#ローカルデータのファイル名
 _SET_ :_SYSTEM_, _LOCAL_FILENAME_: "_local_data.bin"
 
+#一時データのファイル名
 _SET_ :_SYSTEM_, _QUICK_DATA_FILENAME_: "_quick_data.bin"
 
+#TextLayerデフォルトＩＤ
+_SET_ :_DEFAULT_CONTROL_, TextLayer: :text0
+
+#TextPageControlデフォルトＩＤ
+_SET_ :_DEFAULT_CONTROL_, TextPageControl: :default_text_page_control0
+
+#無名コントロールデフォルトＩＤ（未使用？）
+_SET_ :_DEFAULT_CONTROL_, Anonymous: :anonymous

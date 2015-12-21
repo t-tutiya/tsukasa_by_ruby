@@ -130,14 +130,8 @@ class Tsukasa < RenderTargetControl
     @_LOCAL_ = {}
     #一時データストア
     @_TEMP_ = {}
-
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
-    @_DEFAULT_CONTROL_ = {
-      :TextLayer => :text0,
-      :TextPageControl   => :default_text_page_control0,
-      :RenderTargetContainer => :default_RenderTarget_container,
-      :Anonymous       => :anonymous,
-    }
+    @_DEFAULT_CONTROL_ = {}
 
     options[:id] = :default_rendertarget_container
 

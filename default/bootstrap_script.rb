@@ -29,7 +29,7 @@
 ###############################################################################
 
 #デフォルトのユーザー定義関数群
-_INCLUDE_ "./system/default_script.rb"
+_INCLUDE_ "./default/default_script.rb"
 
 #最初に実行するスクリプトファイルを呼びだす
 _INCLUDE_ "./script/first.rb"

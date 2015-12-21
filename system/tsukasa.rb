@@ -145,7 +145,6 @@ class Tsukasa < RenderTargetControl
     options[:id] = :default_rendertarget_container
 
     options[:command_list] = [[:_INCLUDE_,
-                        "./system/bootstrap_script.rb",
                         {}, 
                         {
                           :block_stack => [],

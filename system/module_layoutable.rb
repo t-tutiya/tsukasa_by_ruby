@@ -111,7 +111,7 @@ module Layoutable
     super
   end
 
-  def update()
+  def update
     @on_mouse_over  = false
     @on_mouse_out   = false
 

@@ -675,8 +675,8 @@ class Control #スクリプト制御
   def command__SEND_(argument, options, inner_options)
     #デフォルト指定があるならターゲットのコントロールを差し替える
     if options[:default]
-      raise unless @root_control.default_control[options[:default]]
-      argument = @root_control.default_control[options[:default]]
+      raise unless @root_control._DEFAULT_CONTROL_[options[:default]]
+      argument = @root_control._DEFAULT_CONTROL_[options[:default]]
     end
 
     controls = find_control(argument)

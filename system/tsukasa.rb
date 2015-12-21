@@ -65,6 +65,8 @@ class Tsukasa < RenderTargetControl
   #一時的に管理するデータ群。保存対象ではない。
   attr_accessor  :_TEMP_
 
+  attr_reader  :_DEFAULT_CONTROL_
+
   attr_accessor  :close
   def close?
     @close
@@ -111,7 +113,6 @@ class Tsukasa < RenderTargetControl
     Window.load_icon(path)
   end
 
-  attr_reader  :default_control
   attr_reader  :function_list
 end
 
@@ -131,7 +132,7 @@ class Tsukasa < RenderTargetControl
     @_TEMP_ = {}
 
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
-    @default_control = {
+    @_DEFAULT_CONTROL_ = {
       :TextLayer => :text0,
       :TextPageControl   => :default_text_page_control0,
       :RenderTargetContainer => :default_RenderTarget_container,
@@ -148,7 +149,7 @@ class Tsukasa < RenderTargetControl
                           :yield_block_stack => [],
                         }]]
 
-    #ラベル関連
+    #ラベル関連（未検証）
     @label_name = options[:label_name] || nil
     @label_id = options[:label_id] || 0
     @label_options = options[:label_options] || nil

@@ -34,7 +34,7 @@ require 'dxruby'
 _SET_ :_SYSTEM_, _DEBUG_: false
 
 #セーブデータの保存フォルダ
-_SET_ :_SYSTEM_, _SAVE_DATA_PATH_: "./data/"
+_SET_ :_SYSTEM_, _SAVE_DATA_PATH_: "./datastore/"
 
 #システムデータのファイル名
 _SET_ :_SYSTEM_, _SYSTEM_FILENAME_: "system_data.bin"

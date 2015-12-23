@@ -29,5 +29,3 @@ _INCLUDE_ "./script/sample/sample_1_1.tks" 	#文字の表示
 #_INCLUDE_ "./script/sample/sample_2_1_1.rb" 	#ボタンサンプル１
 #_INCLUDE_ "./script/sample/sample_2_1_2.rb" 	#ボタンサンプル２
 #_INCLUDE_ "./script/sample/sample_2_1_3.rb" 	#ボタンサンプル３
-
-#_INCLUDE_ "./script/sample/sample_3_1.rb" 	#ウィンドウ枠サンプル

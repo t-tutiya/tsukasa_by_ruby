@@ -206,8 +206,9 @@ class Tsukasa < RenderTargetControl
     Window.get_screen_shot(argument,options[:format] || FORMAT_PNG)
   end
 
+  #フルスクリーンのオンオフ
   def command__FULL_SCREEN_(argument, options, inner_options)
-    Window.full_screen = argument
+    Window.full_screen = argument #bool
   end
 
   #フルスクリーン化可能な解像度のリストを取得する

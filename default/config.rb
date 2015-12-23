@@ -30,6 +30,8 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+_SET_ caption: "Tsukasa Engine powered by DXRuby"
+
 #デバッグモード管理フラグ（現在未使用）
 _SET_ :_SYSTEM_, _DEBUG_: false
 

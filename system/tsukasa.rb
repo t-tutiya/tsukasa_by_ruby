@@ -211,6 +211,15 @@ class Tsukasa < RenderTargetControl
     Window.full_screen = argument #bool
   end
 
+  #アプリを起動してからのミリ秒を取得する
+  def command__RUNNING_TIME_(argument, options, inner_options)
+    eval_block( Window.running_time, 
+                options, 
+                inner_options[:block_stack].dup, 
+                inner_options[:yield_block_stack].dup, 
+                &inner_options[:block])
+  end
+
   #フルスクリーン化可能な解像度のリストを取得する
   def command__SCREEN_MODES_(argument, options, inner_options)
     eval_block( Window.get_screen_modes, 

@@ -30,27 +30,6 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-#モンキーパッチ
-module Window
-  #外枠のみの四角形を描画する
-  def self.draw_box_line(x1, y1, x2, y2, color = [255,255,255], z = 0)
-    Window.draw_line( x1, y1, x2, y1, [255,255,255], z)
-    Window.draw_line( x2, y1, x2, y2, [255,255,255], z)
-    Window.draw_line( x1, y1, x1, y2, [255,255,255], z)
-    Window.draw_line( x1, y2, x2, y2, [255,255,255], z)
-  end
-end
-
-class RenderTarget
-  #外枠のみの四角形を描画する
-  def draw_box_line(x1, y1, x2, y2, color = [255,255,255], z = 0)
-    draw_line( x1, y1, x2, y1, [255,255,255], z)
-    draw_line( x2, y1, x2, y2, [255,255,255], z)
-    draw_line( x1, y1, x1, y2, [255,255,255], z)
-    draw_line( x1, y2, x2, y2, [255,255,255], z)
-  end
-end
-
 module Drawable
   include Layoutable
   #Imageのキャッシュ機構の簡易実装
@@ -217,11 +196,6 @@ module Drawable
 
     #自エンティティを上位ターゲットに描画
     target.draw_ex(x, y, @entity, @draw_option)
-
-    #デバッグ用：コントロールの外枠を描画する
-    if self._SYSTEM_[:_DEBUG_]
-      target.draw_box_line( x, y, x + @real_width,  y + @real_height)
-    end
 
     return dx, dy
   end

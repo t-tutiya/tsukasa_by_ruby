@@ -94,6 +94,21 @@ class Tsukasa < RenderTargetControl
     Input.set_cursor(args)
   end
 
+  #タイトルバーの文字列
+  def caption
+    Window.caption
+  end
+  def caption=(args)
+    Window.caption = args
+  end
+
+  #タイトルバーのアイコン
+  attr_reader  :icon_path
+  def icon_path=(args)
+    @icon_path = args
+    Window.load_icon(@icon_path)
+  end
+
   #マウスカーソルの表示／非表示を設定する
   attr_accessor  :cursor_visible
 

@@ -211,7 +211,7 @@ class TKSParser < Parslet::Parser
     rule(
       :command_line => simple(:target)
     ) {
-      [target.to_s]
+      target.to_s
     }
 
     #テキストノード→textコマンド
@@ -228,32 +228,31 @@ class TKSParser < Parslet::Parser
     rule(
       :inline_command_node => simple(:target)
     ) { 
-        target.to_s
+      target.to_s
     }
 
     #インラインデータ→textコマンド
     rule(
       :inline_data_node => simple(:target)
     ) {
-       "_SEND_(default: :TextLayer){" + 
-         "_TEXT_ " + target.to_s +
-       "}" 
-       }
+      "_SEND_(default: :TextLayer){" + 
+       "_TEXT_ " + target.to_s +
+      "}" 
+    }
 
     #text行→末端に改行コード追加
     rule(
-      :text_line => sequence(:target),
+      :text_line => sequence(:target)
     ) { 
-        target + 
-        ["_SEND_(default: :TextLayer){ _LINE_FEED_ }"]
+      target + 
+      ["_SEND_(default: :TextLayer){ _LINE_FEED_ }"]
     }
 
     #空行ブロック→キー入力待ちコマンド追加
     rule(
       :blankline_block => simple(:target)
     ) { 
-        ["page_pause"] 
+      "page_pause"
     }
   end
-
 end

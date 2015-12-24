@@ -99,8 +99,8 @@ class TKSParser < Parslet::Parser
   #コマンドブロック
   rule(:command) {
     ( str(script_prefix) | indent) >> #スクリプト行接頭字orインデント
-    match['^\n'].repeat.as(:command) >> #改行までの０文字以上の文字列
-    newline.maybe #改行
+    (newline.absent? >> any).repeat(0).as(:command_line) >>
+    newline #改行
   }
 
   #textコマンドブロック
@@ -108,8 +108,7 @@ class TKSParser < Parslet::Parser
       #１個以上のインラインコマンドor文字列集合
       ( inline_data | 
         inline_command | 
-        text ).repeat(1).as(:printable) >>
-      newline.maybe.as(:line_feed)
+        text ).repeat(1).as(:text_line) >> newline
   }
 
   #文字列
@@ -117,7 +116,7 @@ class TKSParser < Parslet::Parser
   rule(:text) {
     (
       str(inline_command_open).absent? >> newline.absent? >> any
-    ).repeat(1).as(:text) 
+    ).repeat(1).as(:text_node) 
   }
 
   #インラインコマンド
@@ -131,11 +130,11 @@ class TKSParser < Parslet::Parser
       #任意のエスケープシーケンス文字（ex. "\["）
       str('\\') >> any | 
       #配列
-      arrangement |
+      array |
       #インラインコマンド接尾字以外の任意一文字
       str(inline_command_close).absent? >> any
       
-    ).repeat.as(:inline_command) >> 
+    ).repeat.as(:inline_command_node) >> 
     #インラインコマンド接尾字
     str(inline_command_close) 
   }
@@ -149,17 +148,17 @@ class TKSParser < Parslet::Parser
       #任意のエスケープシーケンス文字（ex. "\["）
       str('\\') >> any | 
       #配列
-      arrangement |
+      array |
       #インラインコマンド接尾字以外の任意一文字
       str(inline_command_close).absent? >> any
       
-    ).repeat.as(:inline_data) >> 
+    ).repeat.as(:inline_data_node) >> 
     #インラインコマンド接尾字
     str(inline_command_close) 
   }
 
   #配列表記
-  rule(:arrangement) {
+  rule(:array) {
     str('[') >> (str(']').absent? >> any).repeat >> str(']')
   }
 
@@ -180,13 +179,13 @@ class TKSParser < Parslet::Parser
     str(comment_str) >> #コメントプレフィクス
     match[' \t'].repeat >> #空白もしくはタブの繰り返し
     match['^\n'].repeat >> #改行までの０文字以上の文字列
-    newline.as(:comment) #改行
+    newline.as(:comment_line) #改行
   end
 
   #空行ブロック（テキストウィンドウの改ページの明示）
   rule(:blankline) { 
     #改行
-    newline.repeat(1).as(:blanklines)
+    newline.repeat(1).as(:blankline_block)
   }
 
   rule(:node) { 
@@ -205,60 +204,53 @@ class TKSParser < Parslet::Parser
   class Replacer < Parslet::Transform
     #コメント行→無視
     rule(
-      :comment => simple(:comment)
+      :comment_line => simple(:target)
     ) { [] }
 
-    #テキスト行→textコマンド
+    #コマンド行→そのまま返す
     rule(
-      :text => simple(:string)
+      :command_line => simple(:target)
     ) {
-      text = "#{string}".gsub(/"/, '\"')
+      [target.to_s]
+    }
+
+    #テキストノード→textコマンド
+    rule(
+      :text_node => simple(:target)
+    ) {
+      text = "#{target}".gsub(/"/, '\"')
       "_SEND_(default: :TextLayer){" + 
         %Q'_TEXT_ "#{text}"' +
       "}" 
     }
 
-    #コマンドブロック→そのまま返す
-    rule(
-      :command => simple(:command)
-    ) {
-      [command.to_s]
-    }
-
     #インラインコマンド→そのまま返す
     rule(
-      :inline_command => simple(:command)
+      :inline_command_node => simple(:target)
     ) { 
-        command.to_s
+        target.to_s
     }
 
-    #インラインデータ→_DATA_コマンドに変換する
+    #インラインデータ→textコマンド
     rule(
-      :inline_data => simple(:command)
+      :inline_data_node => simple(:target)
     ) {
        "_SEND_(default: :TextLayer){" + 
-         "_TEXT_ " + command.to_s +
+         "_TEXT_ " + target.to_s +
        "}" 
        }
 
-    #textブロック→そのまま返す
+    #text行→末端に改行コード追加
     rule(
-      :printable => sequence(:commands),
-      :line_feed => nil
-    ) { commands }
-
-    #textブロック＋改行→改行コマンド追加
-    rule(
-      :printable => sequence(:commands),
-      :line_feed => simple(:line_feed)
+      :text_line => sequence(:target),
     ) { 
-        commands + 
+        target + 
         ["_SEND_(default: :TextLayer){ _LINE_FEED_ }"]
     }
 
-    #空行→改行＋キー入力待ちコマンド追加追加
+    #空行ブロック→キー入力待ちコマンド追加
     rule(
-      :blanklines => simple(:blanklines)
+      :blankline_block => simple(:target)
     ) { 
         ["page_pause"] 
     }

@@ -368,6 +368,23 @@ class Control #内部メソッド
         value.each do |key|
           return true if @root_control.send(data_strore)[key] != nil
         end
+
+      when :window
+        value.each do |key|
+          case key
+          #ウィンドウの閉じるボタンが押下された場合
+          when :requested_close
+            return true if Input.requested_close?
+          when :key_down
+            return true if Input.mouse_push?( M_LBUTTON )
+          when :key_up
+            return true if Input.mouse_release?( M_LBUTTON )
+          when :raight_key_down
+            return true if Input.mouse_push?( M_RBUTTON )
+          when :raight_key_up
+            return true if Input.mouse_release?( M_RBUTTON )
+          end
+        end
       end
     end
     

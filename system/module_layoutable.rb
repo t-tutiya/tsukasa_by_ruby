@@ -301,9 +301,6 @@ module Layoutable
         when :key_right_up_out
           return true if @on_key_right_up_out
 
-        #ウィンドウの閉じるボタンが押下された場合
-        when :requested_close
-          return true if Input.requested_close?
         end
       end
     end 

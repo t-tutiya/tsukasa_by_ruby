@@ -364,6 +364,7 @@ class TextPageControl < LayoutControl
                         {:count => @wait_frame,
                          :key_down => K_RCONTROL,
                          :key_push => K_SPACE,
+                         :window => [:key_down],
                          }, 
                          inner_options])
     end
@@ -412,6 +413,7 @@ class TextPageControl < LayoutControl
                       {:count => @line_feed_wait_frame,
                        :key_down => K_RCONTROL,
                        :key_push => K_SPACE,
+                       :window => [:key_down],
                        }, 
                        inner_options])
 

@@ -37,7 +37,7 @@ require 'dxruby'
 _CREATE_ :LayoutControl do
   _LOOP_ do
     #ウィンドウの閉じるボタンが押された場合に呼びだされる。
-    _CHECK_ mouse: [:requested_close] do
+    _CHECK_ window: [:requested_close] do
       _EXIT_ #アプリを終了する
     end
   end
@@ -131,13 +131,16 @@ _DEFINE_ :TextWindow do |argument, options|
         x: 0,
         y: 0,
         width: options[:width],
+        height: options[:height],
         size: 32, 
         font_name: "ＭＳＰ ゴシック",
         wait_frame: 3 do
           _CHAR_RENDERER_ do
             #フェードイン（スペースキーか右CTRLが押されたらスキップ）
             _MOVE_   30, alpha:[0,255],
-                  option: {check: {key_down: K_RCONTROL, key_push: K_SPACE}} do
+                  option: {check: { key_down: K_RCONTROL, 
+                                    key_push: K_SPACE,
+                                    window: [:key_down]}} do
                     _SET_ alpha: 255
                   end
             #トランジションが終了するまで待機
@@ -151,13 +154,17 @@ _DEFINE_ :TextWindow do |argument, options|
             #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
             _MOVE_  60,  alpha:128,
                   option: {
-                  check: {:key_down => K_RCONTROL, :key_push => K_SPACE}} do
+                  check: {key_down: K_RCONTROL, 
+                          key_push: K_SPACE,
+                          window: [:key_down]
+                          }} do
                     #スキップされた場合
                     _CHECK_ key_down: K_RCONTROL do
                       #CTRLスキップ中であれば透明度255
                       _SET_ alpha: 255
                     end
-                    _CHECK_ key_push: K_SPACE do
+                    _CHECK_ key_push: K_SPACE,
+                            window: [:key_down] do
                       #CTRLスキップ中でなければ透明度128
                       _SET_ alpha: 128
                     end
@@ -214,7 +221,8 @@ _DEFINE_ :TextWindow do |argument, options|
 
         #スペースキーあるいはCTRLキーの押下待機
         _WAIT_  key_down: K_RCONTROL,
-                key_push: K_SPACE
+                key_push: K_SPACE,
+                window: [:key_down]
 
         #ウェイクに移行
         _SET_ :_TEMP_, sleep: false

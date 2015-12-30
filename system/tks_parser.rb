@@ -185,7 +185,7 @@ class TKSParser < Parslet::Parser
   #空行ブロック（テキストウィンドウの改ページの明示）
   rule(:blankline) { 
     #改行
-    newline.repeat(1).as(:blankline_block)
+    newline.as(:flush)
   }
 
   rule(:node) { 
@@ -250,9 +250,9 @@ class TKSParser < Parslet::Parser
 
     #空行ブロック→キー入力待ちコマンド追加
     rule(
-      :blankline_block => simple(:target)
+      :flush => simple(:target)
     ) { 
-      "page_pause"
+      ["_SEND_(default: :TextLayer){ _FLUSH_ }"]
     }
   end
 end

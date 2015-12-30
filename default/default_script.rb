@@ -96,12 +96,12 @@ _DEFINE_ :lp do
   line_pause
 end
 
-#ページクリック待ちポーズ
-_DEFINE_ :page_pause do
+_DEFINE_ :end_pause do
   pause icon: :page_icon_func
-  _SEND_ default: :TextLayer  do
-    _FLUSH_
-  end
+end
+
+_DEFINE_ :ep do
+  end_pause
 end
 
 ###############################################################################
@@ -209,13 +209,11 @@ _DEFINE_ :TextWindow do |argument, options|
     _DEFINE_ :pause do |argument, options|
       _SEND_ 1 do
         _WAIT_ count:17
-        if options[:icon] == :line_icon_func
-          _SEND_ -1 do
-            line_icon_func align_y: :bottom, float_x: :left
-          end
-        else
-          _SEND_ -3 do
-            page_icon_func align_y: :bottom, float_x: :left
+        _SEND_ -1 do
+          if options[:icon] == :line_icon_func
+              line_icon_func align_y: :bottom, float_x: :left
+          else
+              page_icon_func align_y: :bottom, float_x: :left
           end
         end
 

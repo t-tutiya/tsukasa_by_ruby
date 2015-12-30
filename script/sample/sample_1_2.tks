@@ -1,14 +1,19 @@
 @	_RESIZE_ width: 1024, height: 600
 @ 
-文字装飾デモです。行の途中で[text0{_SET_FONT_  color:[255,0,0]}]フォントの色を変えます
+文字装飾デモです。行の途中で[text0{_SET_FONT_  color:[255,0,0]}]フォントの色を変えます[ep]
+
+
+
+
+
 @	text0{_SET_FONT_  font_name: "ＭＳ Ｐ明朝", color:[255,255,255]}
 フォントの種類を変えたり[text0{_SET_FONT_  line_height: 64, font_name: "ＭＳＰ ゴシック"}]
-文字サイズを[text0{_SET_FONT_ size:16}]変える事も[text0{_SET_FONT_  size:64}]できます。
+文字サイズを[text0{_SET_FONT_ size:16}]変える事も[text0{_SET_FONT_  size:64}]できます。[ep]
 @	text0{_SET_FONT_ size:32, line_height: 32}
 
 他にも様々な設定が可能です。[lp]
 @	text0{_SET_FONT_ wait_frame: 10}
 例えば文字の表示速度を変えたり、[lp]
 @	text0{_SET_FONT_ wait_frame: 2}
-[text0{_RUBI_ "エクスカリバ－"}]ルビを振る事もできます。
+[text0{_RUBI_ "エクスカリバ－"}]ルビを振る事もできます。[ep]
 

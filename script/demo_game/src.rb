@@ -64,7 +64,7 @@ _DEFINE_ :TextSelect do |argument, options|
     end
     #トランジションが終了するまで待機
     _WAIT_  command: :_MOVE_ 
-    _LOOP_ do
+    _NEXT_LOOP_ do
       _CHECK_ mouse: [:cursor_over] do
       #マウスが領域内に入ったら色を変え、文字をスクロールインさせる
         text_area{

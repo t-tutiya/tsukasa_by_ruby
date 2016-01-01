@@ -817,6 +817,12 @@ class Control #セーブデータ制御
     end
   end
 
+  #ネイティブコードを読み込む
+  def command__LOAD_NATIVE_(argument, options, inner_options)
+    raise unless argument
+    require argument
+  end
+
   def command__QUICK_SAVE_(argument, options, inner_options)
     raise unless argument.kind_of?(Numeric)
     command_list = []

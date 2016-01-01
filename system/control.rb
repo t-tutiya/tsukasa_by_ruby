@@ -534,19 +534,33 @@ class Control #制御構文
       options[:count] = options[:count] - 1
     end
 
-    #継続フラグが立っているならフレーム区切りを入れない
-    unless options[:continuation]
-      #while文全体をスクリプトストレージにスタック
-      push_command([:_END_FRAME_, argument, {}, {}])
+    #リストの先端に自分自身を追加する
+    interrupt_command([:_LOOP_, argument, options, inner_options])
+
+    #ブロックを実行時評価しコマンド列を生成する。
+    eval_block( argument, 
+                options, 
+                [], 
+                inner_options[:yield_block_stack], 
+                &inner_options[:block])
+  end
+
+  def command__NEXT_LOOP_(argument, options, inner_options) 
+    unless options.empty?
+      #チェック条件を満たしたら終了する
+      return if check_imple(argument, options)
     end
-    
-    if options[:interrupt]
-      #リストの先端に自分自身を追加する
-      interrupt_command([:_LOOP_, argument, options, inner_options])
-    else
-      #リストの末端に自分自身を追加する
-      push_command([:_LOOP_, argument, options, inner_options])
+
+    #カウンタを減算
+    if options[:count]
+      options[:count] = options[:count] - 1
     end
+
+    #while文全体をスクリプトストレージにスタック
+    push_command([:_END_FRAME_, argument, {}, {}])
+
+    #リストの末端に自分自身を追加する
+    push_command([:_NEXT_LOOP_, argument, options, inner_options])
 
     #ブロックを実行時評価しコマンド列を生成する。
     eval_block( argument, 
@@ -560,7 +574,8 @@ class Control #制御構文
     #_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
-      break if @command_list.shift[0] == :_LOOP_
+      break if  @command_list.shift[0] == :_LOOP_ or 
+                @command_list.shift[0] == :_NEXT_LOOP_
     end
   end
 

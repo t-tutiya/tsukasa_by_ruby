@@ -35,7 +35,7 @@ require 'dxruby'
 ###############################################################################
 
 _CREATE_ :LayoutControl do
-  _LOOP_ do
+  _NEXT_LOOP_ do
     #ウィンドウの閉じるボタンが押された場合に呼びだされる。
     _CHECK_ window: [:requested_close] do
       _EXIT_ #アプリを終了する
@@ -281,7 +281,7 @@ _DEFINE_ :page_icon_func do |argument, options|
             :file_path=>"./resource/icon/icon_4_a.png", 
             :x_count => 4, 
             :y_count => 1 do
-      _LOOP_ do
+      _NEXT_LOOP_ do
         _SEND_(3){_SET_  visible: false}
         _SEND_(0){_SET_  visible: true}
       	_WAIT_  count: 5
@@ -345,7 +345,7 @@ _DEFINE_ :button do |argument, options|
     _CREATE_ :ImageControl, 
       :file_path=>"./resource/button_key_down.png", 
       :id=>:key_down, :visible => false
-    _LOOP_ do
+    _NEXT_LOOP_ do
       _CHECK_ mouse: [:cursor_over] do
         normal  {_SET_ visible: false}
         over    {_SET_ visible: true}

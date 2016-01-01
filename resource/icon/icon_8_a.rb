@@ -1,4 +1,4 @@
-      _LOOP_ false do
+      _NEXT_LOOP_ do
         _SEND_(7){_SET_  visible: false}
         _SEND_(0){_SET_  visible: true}
       	_WAIT_ count: 5

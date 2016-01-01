@@ -1,5 +1,5 @@
 @	_LOOP_ count: 3 do
-@		_LOOP_ count: 3, interrupt: true do
+@		_LOOP_ count: 3 do
 @			text0{_TEXT_ "＊"}
 @		end
 @		text0{_LINE_FEED_}

@@ -159,7 +159,7 @@ class TKSParser < Parslet::Parser
 
   #配列表記
   rule(:array) {
-    str('[') >> (str(']').absent? >> any).repeat >> str(']')
+    str('[') >> (array | (str(']').absent? >> any)).repeat >> str(']') 
   }
 
   #コメント

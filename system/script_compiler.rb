@@ -34,12 +34,19 @@ require_relative "./tks_parser.rb"
 
 class ScriptCompiler
 
+  attr_reader :_TEMP_
+  attr_reader :_LOCAL_
+  attr_reader :_SYSTEM_
+
   @@parser = TKSParser.new
   @@replacer = TKSParser::Replacer.new
 
   def initialize(control, root_control)
     @control = control
     @root_control = root_control
+    @_TEMP_ = @root_control._TEMP_
+    @_LOCAL_ = @root_control._LOCAL_
+    @_SYSTEM_ = @root_control._SYSTEM_
   end
 
   #ヘルパーメソッド群

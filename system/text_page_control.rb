@@ -340,7 +340,7 @@ class TextPageControl < LayoutControl
     #第１引数がシンボルの場合
     if argument.instance_of?(Symbol)
       #キーで指定された一時データストアのデータを文字列とする
-      argument = @root_control.send(:_TEMP_)[argument].to_s
+      argument = @root_control.send(:_TEMP_)[argument]
     end
 
     #イメージフォントを使うかどうか
@@ -351,7 +351,7 @@ class TextPageControl < LayoutControl
     end
 
     #文字列を分解してcharコマンドに変換する
-    argument.each_char do |ch|
+    argument.to_s.each_char do |ch|
       #１文字分の出力コマンドをスタックする
       command_list.push([char_command, 
                         ch,

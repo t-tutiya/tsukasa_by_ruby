@@ -255,7 +255,7 @@ class Control #内部メソッド
                                             &block))
   end
 
-  def check_imple(argument, options)
+  def check_imple(argument, options, inner_options)
     #条件の強制的な成立
     return true if argument === true
     #条件の強制的な不成立
@@ -379,10 +379,12 @@ class Control #内部メソッド
             return true if Input.mouse_push?( M_LBUTTON )
           when :key_up
             return true if Input.mouse_release?( M_LBUTTON )
-          when :raight_key_down
+          when :right_key_down
             return true if Input.mouse_push?( M_RBUTTON )
-          when :raight_key_up
+          when :right_key_up
             return true if Input.mouse_release?( M_RBUTTON )
+          when :block_given
+            return true unless inner_options[:yield_block_stack][-1] == nil
           end
         end
       end
@@ -488,7 +490,7 @@ class Control #制御構文
   def command__WAIT_(argument, options, inner_options)
 
     #チェック条件を満たしたら終了する
-    return if check_imple(argument, options)
+    return if check_imple(argument, options, inner_options)
 
     if options[:count]
       options[:count] = options[:count] - 1
@@ -511,7 +513,7 @@ class Control #制御構文
 
   def command__CHECK_(argument, options, inner_options)
     #チェック条件を満たさない場合
-    if check_imple(argument, options)
+    if check_imple(argument, options, inner_options)
       #checkにブロックが付与されているならそれを実行する
       eval_block( argument, 
                   options, 
@@ -526,7 +528,7 @@ class Control #制御構文
   def command__LOOP_(argument, options, inner_options) 
     unless options.empty?
       #チェック条件を満たしたら終了する
-      return if check_imple(argument, options)
+      return if check_imple(argument, options, inner_options)
     end
 
     #カウンタを減算
@@ -548,7 +550,7 @@ class Control #制御構文
   def command__NEXT_LOOP_(argument, options, inner_options) 
     unless options.empty?
       #チェック条件を満たしたら終了する
-      return if check_imple(argument, options)
+      return if check_imple(argument, options, inner_options)
     end
 
     #カウンタを減算
@@ -647,7 +649,7 @@ class Control #ユーザー定義関数操作
     yield_block_stack = inner_options[:yield_block_stack].dup
 
     block = yield_block_stack.pop
-    return unless block
+    raise unless block
 
     eval_block( argument, 
                 options, 
@@ -917,7 +919,7 @@ class Control #プロパティのパラメータ遷移
 
     #条件判定が存在し、かつその条件が成立した場合
     if options[:option][:check] and 
-        check_imple(nil, options[:option][:check])
+        check_imple(nil, options[:option][:check], inner_options)
       #ブロックがあれば実行し、コマンドを終了する
       if inner_options[:block]
         eval_block( nil,
@@ -1124,7 +1126,7 @@ class Control #プロパティのパラメータ遷移
 
     #条件判定が存在し、かつその条件が成立した場合
     if options[:option][:check] and 
-      check_imple(nil, options[:option][:check])
+      check_imple(nil, options[:option][:check], inner_options)
       #ブロックがあれば実行し、コマンドを終了する
       if inner_options[:block]
         eval_block( nil,

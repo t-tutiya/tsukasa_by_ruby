@@ -72,7 +72,9 @@ _DEFINE_ :pause do |argument, options|
   #ウェイク状態まで待機
   _WAIT_ :_TEMP_,  key_down: K_RCONTROL, 
           equal: {sleep: false} do
-    _YIELD_
+    _CHECK_ window: [:block_given] do
+      _YIELD_
+    end
   end
 
 #クリック待ちアイコンを削除
@@ -226,7 +228,9 @@ _DEFINE_ :TextWindow do |argument, options|
         _SET_ :_TEMP_, sleep: false
       end
     end
-    _YIELD_
+    _CHECK_ window: [:block_given] do
+      _YIELD_
+    end
   end
 end
 
@@ -263,7 +267,9 @@ _DEFINE_ :line_icon_func do |argument, options|
             :y_count => 2 do
       _INCLUDE_ "./resource/icon/icon_8_a.rb"
     end
-    _YIELD_
+    _CHECK_ window: [:block_given] do
+      _YIELD_
+    end
   end
 end
 
@@ -296,7 +302,9 @@ _DEFINE_ :page_icon_func do |argument, options|
       	_WAIT_  count: 5
       end
     end
-    _YIELD_
+    _CHECK_ window: [:block_given] do
+      _YIELD_
+    end
   end
 end
 
@@ -366,7 +374,9 @@ _DEFINE_ :button do |argument, options|
         over    {_SET_ visible: true}
         key_down{_SET_ visible: false}
       end
-      _YIELD_
+      _CHECK_ window: [:block_given] do
+        _YIELD_
+      end
     end
   end
 end

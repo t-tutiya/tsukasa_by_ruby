@@ -253,7 +253,7 @@ module Layoutable
 end
 
 module Layoutable
-  def check_imple(argument, options)
+  def check_imple(argument, options, inner_options)
     if options[:mouse]
       options[:mouse].each do |key|
         case key

@@ -2,7 +2,7 @@
 
 require 'dxruby'
 
-require_relative "./tks_parser.rb"
+#require_relative "./tks_parser.rb"
 
 ###############################################################################
 #TSUKASA for DXRuby ver1.0(2015/12/24)
@@ -42,8 +42,8 @@ class ScriptCompiler
   alias :_L :_LOCAL_
   alias :_S :_SYSTEM_
 
-  @@parser = TKSParser.new
-  @@replacer = TKSParser::Replacer.new
+#  @@parser = TKSParser.new
+#  @@replacer = TKSParser::Replacer.new
 
   def initialize(control, root_control)
     @control = control
@@ -59,17 +59,13 @@ class ScriptCompiler
     @yield_block_stack = yield_block_stack
     @block_stack = block_stack
 
-    if options[:script_file_path]
-      if File.extname(options[:script_file_path]) == ".tks"
-        #評価対象がｔｋｓファイルの場合の場合
-        eval( @@replacer.apply(@@parser.parse(File.read(options[:script_file_path], encoding: "UTF-8"))).flatten.join("\n"), 
-              nil, 
+    if options[:script]
+      if options[:script_file_path]
+        eval( options[:script],
+              nil,
               File.expand_path(options[:script_file_path]))
       else
-        #評価対象がスクリプトファイルの場合の場合
-        eval( File.read(options[:script_file_path], encoding: "UTF-8"), 
-              nil, 
-              File.expand_path(options[:script_file_path]))
+        eval(options[:script])
       end
     else
       raise unless block

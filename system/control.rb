@@ -3,6 +3,8 @@
 require 'dxruby'
 require 'pstore'
 
+require_relative "./tks_parser.rb"
+
 ###############################################################################
 #TSUKASA for DXRuby ver1.0(2015/12/24)
 #メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby
@@ -32,6 +34,9 @@ require 'pstore'
 ###############################################################################
 
 class Control #公開インターフェイス
+  @@parser = TKSParser.new
+  @@replacer = TKSParser::Replacer.new
+
   #プロパティ
   #システム全体で共有されるデータ群。保存対象。
   def _SYSTEM_
@@ -745,13 +750,31 @@ class Control #スクリプト制御
       end
     end
 
-    @command_list =  
-      @script_compiler.commands(nil,
-                                {:script_file_path => @script_file_path}, 
-                                inner_options[:block_stack], 
-                                inner_options[:yield_block_stack], 
-                                self) + 
-                                 @command_list
+    if File.extname(@script_file_path) == ".tks"
+      #評価対象がｔｋｓファイルの場合の場合
+      script =  @@replacer.apply(
+                  @@parser.parse(
+                    File.read(
+                      @script_file_path, encoding: "UTF-8"
+                    )
+                  )
+                ).flatten.join("\n")
+    else
+      #評価対象がスクリプトファイルの場合の場合
+      script =   File.read(@script_file_path, encoding: "UTF-8")
+    end
+
+    commands = @script_compiler.commands(
+                  nil,
+                  {
+                    :script => script,
+                    :script_file_path => @script_file_path
+                  }, 
+                  inner_options[:block_stack], 
+                  inner_options[:yield_block_stack], 
+                  self)
+
+    @command_list = commands + @command_list
   end
 
   #アプリを終了する

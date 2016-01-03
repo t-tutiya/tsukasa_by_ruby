@@ -59,11 +59,11 @@ require_relative './script_compiler.rb'
 class Tsukasa < RenderTargetControl
 
   #システム全体で共有されるデータ群。保存対象。
-  attr_accessor  :_SYSTEM_
+  attr_reader  :_SYSTEM_
   #個別のセーブデータを表すデータ群。保存対象。
-  attr_accessor  :_LOCAL_
+  attr_reader  :_LOCAL_
   #一時的に管理するデータ群。保存対象ではない。
-  attr_accessor  :_TEMP_
+  attr_reader  :_TEMP_
 
   attr_reader  :_DEFAULT_CONTROL_
 

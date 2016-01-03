@@ -173,8 +173,6 @@ module Drawable
 
   #描画
   def render(offset_x, offset_y, target, parent)
-    #TPDP:この行はLayoutableでも必要になってしまっていて、恐らく設計ミス
-    return 0, 0 unless @visible
 
     return 0, 0 unless @entity
 
@@ -193,6 +191,8 @@ module Drawable
                       :height => @height, 
                       :mouse_pos_x => parent[:mouse_pos_x],
                       :mouse_pos_y => parent[:mouse_pos_y]})
+
+    return 0, 0 unless @visible
 
     #自エンティティを上位ターゲットに描画
     target.draw_ex(x, y, @entity, @draw_option)

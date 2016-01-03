@@ -212,8 +212,6 @@ module Layoutable
 
   #描画
   def render(offset_x, offset_y, target, parent)
-    return 0, 0 unless @visible
-
     #次フレームのクリッカブル判定に使うマウスカーソル座標を取得
     @mouse_pos_x = parent[:mouse_pos_x]
     @mouse_pos_y = parent[:mouse_pos_y]

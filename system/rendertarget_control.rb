@@ -111,12 +111,12 @@ class RenderTargetControl < Control
                         :mouse_pos_y => @mouse_pos_y})
     entity  = rt.to_image
     #イメージコントロールを生成する
-    interrupt_command([:_CREATE_, 
+    interrupt_command(:_CREATE_, 
                 :ImageControl, 
                {:entity => entity,
                 :z => options[:z] || Float::INFINITY, #描画順を正の無限大とする
                 :id => options[:_ARGUMENT]
                 }, 
-                inner_options])
+                inner_options)
   end
 end

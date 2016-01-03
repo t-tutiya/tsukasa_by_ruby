@@ -90,15 +90,15 @@ class Control #内部メソッド
   end
 
   #コマンドをスタックに格納する
-  def push_command(command)
+  def push_command(command, argument, options, inner_options)
     #コマンドをスタックの末端に挿入する
-    @command_list.push(command)
+    @command_list.push([command, argument, options, inner_options])
   end
 
   #コマンドをスタックに格納する
-  def interrupt_command(command)
+  def interrupt_command(command, argument, options, inner_options)
     #コマンドをスタックの先頭に挿入する
-    @command_list.unshift(command)
+    @command_list.unshift([command, argument, options, inner_options])
   end
 
   def push_command_to_next_frame(command, argument, options, inner_options)
@@ -536,7 +536,7 @@ class Control #制御構文
     end
 
     #リストの先端に自分自身を追加する
-    interrupt_command([:_LOOP_, argument, options, inner_options])
+    interrupt_command(:_LOOP_, argument, options, inner_options)
 
     #ブロックを実行時評価しコマンド列を生成する。
     eval_block( argument, 
@@ -558,10 +558,10 @@ class Control #制御構文
     end
 
     #while文全体をスクリプトストレージにスタック
-    push_command([:_END_FRAME_, argument, {}, {}])
+    push_command(:_END_FRAME_, argument, {}, {})
 
     #リストの末端に自分自身を追加する
-    push_command([:_NEXT_LOOP_, argument, options, inner_options])
+    push_command(:_NEXT_LOOP_, argument, options, inner_options)
 
     #ブロックを実行時評価しコマンド列を生成する。
     eval_block( argument, 
@@ -628,10 +628,10 @@ class Control #ユーザー定義関数操作
       options.delete(:_FUNCTION_ARGUMENT_)
     end
 
-    interrupt_command([:_END_FUNCTION_, 
-                        function_argument, 
-                        options, 
-                        inner_options])
+    interrupt_command(:_END_FUNCTION_, 
+                      function_argument, 
+                      options, 
+                      inner_options)
 
     #functionを実行時評価しコマンド列を生成する。
     eval_block( function_argument, 
@@ -721,13 +721,13 @@ class Control #スクリプト制御
 
     #獲得した全てのコントロールにブロックを送信する
     controls.each do |control|
-      control.push_command([:_SCOPE_, nil, {}, inner_options])
+      control.push_command(:_SCOPE_, nil, {}, inner_options)
     end
   end
 
   #ルートコントロールにコマンドブロックを送信する
   def command__SEND_ROOT_(argument, options, inner_options)
-    @root_control.interrupt_command([:_SCOPE_, argument, {}, inner_options])
+    @root_control.interrupt_command(:_SCOPE_, argument, {}, inner_options)
   end
 
   #スクリプトファイルを挿入する
@@ -886,7 +886,7 @@ class Control #内部コマンド
   def command__SCOPE_(argument, options, inner_options)
 
     #関数の終端を設定
-    interrupt_command([:_END_FUNCTION_, argument, options, inner_options])
+    interrupt_command(:_END_FUNCTION_, argument, options, inner_options)
 
     #参照渡し汚染が起きないようにディープコピーで取得
     block_stack = inner_options[:block_stack].dup

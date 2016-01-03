@@ -48,12 +48,13 @@ class ImageControl < Control
     end
     super
   end
-
-  def siriarize(options = {})
+=begin
+  def serialize(options = {})
     options.update({
       :file_path => @file_path,
     })
 
     return super(options)
   end
+=end
 end

@@ -47,7 +47,7 @@ class LayoutControl < Control
     return super(x, y, target, parent)
   end
 =begin
-  def siriarize(options = {})
+  def serialize(options = {})
 
     options.update({
       :x  => @x,

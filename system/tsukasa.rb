@@ -156,8 +156,8 @@ class Tsukasa < RenderTargetControl
           { :block_stack => []}, 
           @root_control)
   end
-
-  def siriarize(options = {})
+=begin
+  def serialize(options = {})
 
     options.update({
       :label_name => @label_name,
@@ -167,7 +167,7 @@ class Tsukasa < RenderTargetControl
 
     return super(options)
   end
-
+=end
   def update
     #mマウスカーソルが不可視で、かつカーソルが画像の外にある場合
     unless @cursor_visible

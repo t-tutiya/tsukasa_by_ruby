@@ -52,7 +52,7 @@ class SoundControl  < Control
     super
   end
 =begin
-  def siriarize(options = {})
+  def serialize(options = {})
     options.update({
       :file_path => @file_path,
       :start => @start,

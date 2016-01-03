@@ -199,8 +199,8 @@ module Drawable
 
     return dx, dy
   end
-
-  def siriarize(options = {})
+=begin
+  def serialize(options = {})
 
     options.update({
       :x  => @x,
@@ -222,5 +222,6 @@ module Drawable
 
     return super(options)
   end
+=end
 end
 

@@ -197,13 +197,13 @@ class Control #内部メソッド
     @sleep_mode
   end
 =begin
-  def siriarize(options = {})
+  def serialize(options = {})
 
     command_list = []
 
     #子コントロールのシリアライズコマンドを取得
     @control_list.each do |control|
-      command_list.push(control.siriarize)
+      command_list.push(control.serialize)
     end
 
     options.update({
@@ -843,7 +843,7 @@ class Control #セーブデータ制御
     command_list = []
     #子コントロールのシリアライズコマンドを取得
     @control_list.each do |control|
-      command_list.push(control.siriarize)
+      command_list.push(control.serialize)
     end
 
   

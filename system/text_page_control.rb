@@ -244,12 +244,12 @@ class TextPageControl < LayoutControl
                       {}])
   end
 
-  def siriarize(options = {})
+=begin
+  def serialize(options = {})
     pp "TextPageControlはシリアライズできません"
     raise
 
     options.update({
-=begin
       :font_config => @font_config,
 
       #未実装
@@ -275,11 +275,11 @@ class TextPageControl < LayoutControl
       :rubi_wait_frame => @rubi_wait_frame,
 
       :indent => @indent,
-=end
     })
 
     return super(options)
   end
+=end
 
   #############################################################################
   #非公開インターフェイス

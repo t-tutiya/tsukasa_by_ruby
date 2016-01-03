@@ -211,19 +211,19 @@ _LOOP_ count:7 do |arg, ops, control|
     _SEND_(default: :TextLayer){
       _FLUSH_
 
-      _TEXT_  "第#{_T_[:week] + 1 }週#{_T_[:day] + 1}日目。現在の所持金は$#{_T_[:gold]}。"
+      _TEXT_  "第#{_T[:week] + 1 }週#{_T[:day] + 1}日目。現在の所持金は$#{_T[:gold]}。"
       _LINE_FEED_
-      _TEXT_  "借金の返済まで後#{7 - _T_[:day]}日。"
+      _TEXT_  "借金の返済まで後#{7 - _T[:day]}日。"
       _LINE_FEED_
-      _TEXT_  "今週の返済額は$#{_T_[:debt][_TEMP_[:week]]}で、あと$#{ [_T_[:debt][_T_[:week]] - _T_[:gold],0].max}必要だ。"
+      _TEXT_  "今週の返済額は$#{_T[:debt][_TEMP_[:week]]}で、あと$#{ [_T[:debt][_T[:week]] - _T[:gold],0].max}必要だ。"
       _LINE_FEED_
       _TEXT_  "==="
       _LINE_FEED_
-      _TEXT_  "所持金：#{_T_[:gold]}  ＨＰ　：#{_T_[:helth_point]}/#{_T_[:helth_point_max]}  ＭＰ　：#{_T_[:mental_point]}/#{_T_[:mental_point_max]}"
+      _TEXT_  "所持金：#{_T[:gold]}  ＨＰ　：#{_T[:helth_point]}/#{_T[:helth_point_max]}  ＭＰ　：#{_T[:mental_point]}/#{_T[:mental_point_max]}"
       _LINE_FEED_
-      _TEXT_ "魅力：#{_T_[:charm]}  気品　：#{_T_[:noble]}  教養　：#{_T_[:culture]}"
+      _TEXT_ "魅力：#{_T[:charm]}  気品　：#{_T[:noble]}  教養　：#{_T[:culture]}"
       _LINE_FEED_
-      _TEXT_ "知性：#{_T_[:intelligence]}  恭順　：#{_T_[:allegiance]}  礼節　：#{_T_[:courtesy]}"
+      _TEXT_ "知性：#{_T[:intelligence]}  恭順　：#{_T[:allegiance]}  礼節　：#{_T[:courtesy]}"
     }
 
     _SET_ :_TEMP_, end_day: nil

@@ -38,9 +38,9 @@ class ScriptCompiler
   attr_reader :_LOCAL_
   attr_reader :_SYSTEM_
 
-  alias :_T_ :_TEMP_
-  alias :_L_ :_LOCAL_
-  alias :_S_ :_SYSTEM_
+  alias :_T :_TEMP_
+  alias :_L :_LOCAL_
+  alias :_S :_SYSTEM_
 
   @@parser = TKSParser.new
   @@replacer = TKSParser::Replacer.new

@@ -265,28 +265,37 @@ class Control #内部メソッド
     data_strore = argument ? argument : :_TEMP_
 
     options.each do |key, value|
+
+      return unless value
+      #対象キーが配列で渡されていない場合配列に変換する
+      value = [value] unless value.instance_of?(Array)
+
       case key
 
       when :count
         #残りwaitフレーム数が０より大きい場合
-        return true if value <= 0
+        value.each do |count|
+          return true if count <= 0
+        end
 
       #継続条件：コマンドがリスト上に存在している
       when :command
-        unless @next_frame_commands.index{|command|
-          command[0] == value}
-          return true 
+        value.each do |command|
+          unless @next_frame_commands.index{|command|
+            command[0] == command}
+            return true 
+          end
         end
 
       #継続条件：指定ＩＤの子要素が存在する
       when :child
-        return unless value
-        return true if find_control(value).count == 0
+        #キーの入力チェック
+        value.each do |id|
+          return true if find_control(id).count == 0
+        end
 
       #キーが押下されている
       when :key_push
-        #対象キーが配列で渡されていない場合配列に変換する
-        value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
         value.each do |key_code|
           return true if Input.key_push?(key_code)
@@ -294,8 +303,6 @@ class Control #内部メソッド
 
       #キーが押下されていない
       when :not_key_push
-        #対象キーが配列で渡されていない場合配列に変換する
-        value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
         value.each do |key_code|
           return true unless Input.key_push?(key_code)
@@ -303,8 +310,6 @@ class Control #内部メソッド
 
       #キーが押下されている（前回との比較付き）
       when :key_down
-        #対象キーが配列で渡されていない場合配列に変換する
-        value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
         value.each do |key_code|
           return true if Input.key_down?(key_code)
@@ -312,8 +317,6 @@ class Control #内部メソッド
 
       #キーが押下されていない（前回との比較付き）
       when :not_key_down
-        #対象キーが配列で渡されていない場合配列に変換する
-        value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
         value.each do |key_code|
           return true unless Input.key_down?(key_code)
@@ -321,8 +324,6 @@ class Control #内部メソッド
 
       #キーが解除された
       when :key_up
-        #対象キーが配列で渡されていない場合配列に変換する
-        value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
         value.each do |key_code|
           return true if Input.key_release?(key_code)
@@ -330,8 +331,6 @@ class Control #内部メソッド
 
       #キーが解除されていない
       when :not_key_up
-        #対象キーが配列で渡されていない場合配列に変換する
-        value = [value] unless value.instance_of?(Array)
         #キーの入力チェック
         value.each do |key_code|
           return true unless Input.key_release?(key_code)
@@ -340,30 +339,30 @@ class Control #内部メソッド
       #ユーザデータ確認系
 
       when :equal
-        return unless value
-        #指定されたデータと値がイコールかどうか
-        value.each do |key, val|
-          return true if @root_control.send(data_strore)[key] == val
+        #キーの入力チェック
+        value.each do |hash|
+          #指定されたデータと値がイコールかどうか
+          hash.each do |key, val|
+            return true if @root_control.send(data_strore)[key] == val
+          end
         end
 
       when :not_equal
-        return unless value
-        #指定されたデータと値がイコールでない場合
-        value.each do |key, val|
-          return true if @root_control.send(data_strore)[key] != val
+        #キーの入力チェック
+        value.each do |hash|
+          #指定されたデータと値がイコールでない場合
+          hash.each do |key, val|
+            return true if @root_control.send(data_strore)[key] != val
+          end
         end
 
       when :null
-        return unless value
-        value = [value] unless value.instance_of?(Array)
         #指定されたデータがnilの場合
         value.each do |key|
           return true if @root_control.send(data_strore)[key] == nil
         end
 
       when :not_null
-        return unless value
-        value = [value] unless value.instance_of?(Array)
         #指定されたデータがnilで無い場合
         value.each do |key|
           return true if @root_control.send(data_strore)[key] != nil

@@ -253,6 +253,10 @@ end
 module Layoutable
   def check_imple(argument, options, inner_options)
     if options[:mouse]
+
+      #対象キーが配列で渡されていない場合配列に変換する
+      options[:mouse] = [options[:mouse]] unless options[:mouse].instance_of?(Array)
+
       options[:mouse].each do |key|
         case key
         #前フレと比較してカーソルが移動した場合

@@ -181,11 +181,12 @@ text0 do
         
   _SEND_ 1  do
     #文字レンダラを削除する
-    #[解説]文字レンダラの設定方法については別の書式を検討中
-    _CHAR_RENDERER_ do
+    _DEFINE_ :_CHAR_RENDERER_ do
     end
-    _SET_ wait_frame: 0,
-          line_feed_wait_frame: 0
+    _DEFINE_ :_CHAR_WAIT_ do
+    end
+    _DEFINE_ :_LINE_WAIT_ do
+    end
   end
 end
 

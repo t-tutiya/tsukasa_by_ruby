@@ -9,7 +9,7 @@ text0 do
   z: 1000000
   _SET_FONT_  font_name: "ＭＳ ゴシック"
   _SEND_ 1  do
-    _CHAR_RENDERER_ do |argument, options,control|
+    _DEFINE_ :_CHAR_RENDERER_ do |argument, options,control|
       #フェードイン（スペースキーか右CTRLが押されたらスキップ）
       _MOVE_   30, 
         x:[800,0], 

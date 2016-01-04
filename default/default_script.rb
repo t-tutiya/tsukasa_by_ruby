@@ -149,7 +149,7 @@ _DEFINE_ :TextWindow do |argument, options|
                     key_push: K_SPACE,
                     window: [:key_down]
           end
-          _CHAR_RENDERER_ do
+          _DEFINE_ :_CHAR_RENDERER_ do
             #フェードイン（スペースキーか右CTRLが押されたらスキップ）
             _MOVE_   30, alpha:[0,255],
                   option: {check: { key_down: K_RCONTROL, 

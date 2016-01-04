@@ -177,7 +177,7 @@ class TextPageControl < LayoutControl
 
 
   def initialize(argument, options, inner_options, root_control)
-    @char_renderer = options[:char_renderer] if options[:char_renderer]
+    @char_renderer = options[:char_renderer]
 
     #レンダリング済みフォント使用中かどうか
     @use_image_font = options[:use_image_font] || false
@@ -307,7 +307,7 @@ class TextPageControl < LayoutControl
                                       :id => @charactor_id
                                     }.merge(@char_option), 
                                     {
-                                      :block => @char_renderer
+                                      :block =>@function_list[:_CHAR_RENDERER_]
                                     })
 
     #文字のＩＤを更新
@@ -322,10 +322,6 @@ class TextPageControl < LayoutControl
                                       :align_y => :bottom,
                                       :float_x => :left}, 
                                     {})
-  end
-
-  def command__CHAR_RENDERER_(argument, options, inner_options)
-    @char_renderer = inner_options[:block]
   end
 
   #textコマンド
@@ -381,7 +377,7 @@ class TextPageControl < LayoutControl
                     :font_name => @char_option[:font_name],
                     :line_spacing => 0,
                     :charactor_pitch => @rubi_option[:charactor_pitch],
-                    :char_renderer => @char_renderer,
+                    :char_renderer => @function_list[:_CHAR_RENDERER_],
                     :wait_frame => @rubi_option[:wait_frame]},
                   {}]
 
@@ -494,7 +490,7 @@ class TextPageControl < LayoutControl
                    :font_config => @font_config,
                    :graph => true,
                    },
-                   {:block => @char_renderer},
+                   {:block => @function_list[:_CHAR_RENDERER_]},
 #                   @font.glyph(options[:char].to_s)
                  )
 

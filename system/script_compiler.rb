@@ -61,12 +61,12 @@ class ScriptCompiler
 
     if options[:script]
       if options[:script_file_path]
-        eval( options[:script],
-              nil,
-              File.expand_path(options[:script_file_path]))
+        fname = File.expand_path(options[:script_file_path])
       else
-        eval(options[:script])
+        fname = "(eval)"
       end
+
+      eval( options[:script], nil, fname)
     else
       raise unless block
 

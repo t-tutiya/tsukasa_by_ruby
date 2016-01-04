@@ -24,6 +24,16 @@ text0 do
     #文字列をカスケードアウトさせる
     _MOVE_ 30 + control.id * 3, y:[0,600], option:{easing: :in_back}
   end
+  _DEFINE_ :_CHAR_WAIT_ do
+    _WAIT_  count: 2,
+            key_down: K_RCONTROL,
+            key_push: K_SPACE
+  end
+  _DEFINE_ :_LINE_WAIT_ do
+    _WAIT_  count: 2,
+            key_down: K_RCONTROL,
+            key_push: K_SPACE
+  end
 end
 
 #テキストボタン定義

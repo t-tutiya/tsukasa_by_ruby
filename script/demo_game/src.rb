@@ -7,24 +7,22 @@ text0 do
   width: 1024,
   height: 1024,
   z: 1000000
-  _SET_FONT_  font_name: "ＭＳ ゴシック"
-  _SEND_ 1  do
-    _DEFINE_ :_CHAR_RENDERER_ do |argument, options,control|
-      #フェードイン（スペースキーか右CTRLが押されたらスキップ）
-      _MOVE_   30, 
-        x:[800,0], 
-        y:[-600,0],
-        option: {easing: :out_quart, 
-        check: {key_down: K_RCONTROL, key_push: K_SPACE}} do
-        _SET_ x: 0, y:0
-      end
-      #トランジションが終了するまで待機
-      _WAIT_  command: :_MOVE_ 
-      #待機フラグが下がるまで待機
-      _WAIT_ :_TEMP_, not_equal: {flag: nil}
-      #文字列をカスケードアウトさせる
-      _MOVE_ 30 + control.id * 3, y:[0,600], option:{easing: :in_back}
+  _SET_  font_name: "ＭＳ ゴシック"
+  _DEFINE_ :_CHAR_RENDERER_ do |argument, options,control|
+    #フェードイン（スペースキーか右CTRLが押されたらスキップ）
+    _MOVE_   30, 
+      x:[800,0], 
+      y:[-600,0],
+      option: {easing: :out_quart, 
+      check: {key_down: K_RCONTROL, key_push: K_SPACE}} do
+      _SET_ x: 0, y:0
     end
+    #トランジションが終了するまで待機
+    _WAIT_  command: :_MOVE_ 
+    #待機フラグが下がるまで待機
+    _WAIT_ :_TEMP_, not_equal: {flag: nil}
+    #文字列をカスケードアウトさせる
+    _MOVE_ 30 + control.id * 3, y:[0,600], option:{easing: :in_back}
   end
 end
 
@@ -95,11 +93,9 @@ end
 #文字列中にボタンを埋め込む
 _DEFINE_ :func_select do |argument, options, control|
   _SEND_ default: :TextLayer do
-    _SEND_ 1 do
-      _SEND_ -1 do
-        TextSelect id: options[:id], text: argument
-        _WAIT_ count: 3, key_down: K_RCONTROL, key_push: K_SPACE
-      end
+    _SEND_ -1 do
+      TextSelect id: options[:id], text: argument
+      _WAIT_ count: 3, key_down: K_RCONTROL, key_push: K_SPACE
     end
   end
 end

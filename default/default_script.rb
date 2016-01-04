@@ -112,114 +112,71 @@ end
 
 #標準テキストウィンドウ
 _DEFINE_ :TextWindow do |argument, options|
-  _CREATE_ :RenderTargetControl,
-    x: options[:x],
-    y: options[:y],
+  #メッセージウィンドウ
+  _CREATE_ :TextPageControl, 
+    x: options[:x] || 0,
+    y: options[:y] || 0,
     width: options[:width],
     height: options[:height],
-    id: options[:id] do
-      #デフォルトの背景画像
-      _CREATE_ :ImageControl, id: :bg
-      ##このコントロールにload_imageを実行すると背景画像をセットできる。
-      ##ex.
-      ##  _SEND_ :message0 do
-      ##    _SEND_ :bg do
-      ##      _SET_ file_path: "./resource/bg_test.jpg" 
-      ##    end
-      ##  end
-
-      #メッセージウィンドウ
-      _CREATE_ :TextPageControl, 
-        x: 0,
-        y: 0,
-        width: options[:width],
-        height: options[:height],
-        size: 32, 
-        font_name: "ＭＳＰ ゴシック" do
-          _DEFINE_ :_CHAR_WAIT_ do
-            _WAIT_  count: 2,
-                    key_down: K_RCONTROL,
-                    key_push: K_SPACE,
-                    window: [:key_down]
-          end
-          _DEFINE_ :_LINE_WAIT_ do
-            _WAIT_  count: 2,
-                    key_down: K_RCONTROL,
-                    key_push: K_SPACE,
-                    window: [:key_down]
-          end
-          _DEFINE_ :_CHAR_RENDERER_ do
-            #フェードイン（スペースキーか右CTRLが押されたらスキップ）
-            _MOVE_   30, alpha:[0,255],
-                  option: {check: { key_down: K_RCONTROL, 
-                                    key_push: K_SPACE,
-                                    window: [:key_down]}} do
-                    _SET_ alpha: 255
-                  end
-            #トランジションが終了するまで待機
-            _WAIT_  command: :_MOVE_ 
-            #待機フラグを立てる
-            _SET_ :_TEMP_, sleep: true
-            #待機フラグが下がるまで待機
-            _WAIT_ :_TEMP_, equal: {sleep: false}
-            #キー入力伝搬を防ぐ為に１フレ送る
-            _END_FRAME_
-            #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
-            _MOVE_  60,  alpha:128,
-                  option: {
-                  check: {key_down: K_RCONTROL, 
-                          key_push: K_SPACE,
-                          window: [:key_down]
-                          }} do
-                    #スキップされた場合
-                    _CHECK_ key_down: K_RCONTROL do
-                      #CTRLスキップ中であれば透明度255
-                      _SET_ alpha: 255
-                    end
-                    _CHECK_ key_push: K_SPACE,
-                            window: [:key_down] do
-                      #CTRLスキップ中でなければ透明度128
-                      _SET_ alpha: 128
-                    end
-            end
-            #トランジションが終了するまで待機
-            _WAIT_ command: :_MOVE_ 
-          end
-          _SET_ size: 32
+    size: 32, 
+    id: options[:id],
+    font_name: "ＭＳＰ ゴシック" do
+      _DEFINE_ :_CHAR_WAIT_ do
+        _WAIT_  count: 2,
+                key_down: K_RCONTROL,
+                key_push: K_SPACE,
+                window: [:key_down]
       end
-    #文字列出力
-    _DEFINE_ :_TEXT_ do |argument, options|
-      _SEND_ 1 do
-        _TEXT_ argument, options
+      _DEFINE_ :_LINE_WAIT_ do
+        _WAIT_  count: 2,
+                key_down: K_RCONTROL,
+                key_push: K_SPACE,
+                window: [:key_down]
       end
-    end
-    #改行
-    _DEFINE_ :_LINE_FEED_ do
-      _SEND_ 1  do
-        _LINE_FEED_
+      _DEFINE_ :_CHAR_RENDERER_ do
+        #フェードイン（スペースキーか右CTRLが押されたらスキップ）
+        _MOVE_   30, alpha:[0,255],
+              option: {check: { key_down: K_RCONTROL, 
+                                key_push: K_SPACE,
+                                window: [:key_down]}} do
+                _SET_ alpha: 255
+              end
+        #トランジションが終了するまで待機
+        _WAIT_  command: :_MOVE_ 
+        #待機フラグを立てる
+        _SET_ :_TEMP_, sleep: true
+        #待機フラグが下がるまで待機
+        _WAIT_ :_TEMP_, equal: {sleep: false}
+        #キー入力伝搬を防ぐ為に１フレ送る
+        _END_FRAME_
+        #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
+        _MOVE_  60,  alpha:128,
+              option: {
+              check: {key_down: K_RCONTROL, 
+                      key_push: K_SPACE,
+                      window: [:key_down]
+                      }} do
+                #スキップされた場合
+                _CHECK_ key_down: K_RCONTROL do
+                  #CTRLスキップ中であれば透明度255
+                  _SET_ alpha: 255
+                end
+                _CHECK_ key_push: K_SPACE,
+                        window: [:key_down] do
+                  #CTRLスキップ中でなければ透明度128
+                  _SET_ alpha: 128
+                end
+        end
+        #トランジションが終了するまで待機
+        _WAIT_ command: :_MOVE_ 
       end
-    end
-    #_rubi_デフォルト送信
-    _DEFINE_ :_RUBI_ do |argument, options|
-      _SEND_ 1 do
-        _RUBI_ argument, text: options[:text]
-      end
-    end
-    #_flush_デフォルト送信
-    _DEFINE_ :_FLUSH_ do
-      _SEND_ 1  do
-        _FLUSH_
-      end
-    end
-    #_flush_デフォルト送信
-    _DEFINE_ :_SET_FONT_ do |argument, options|
-      _SEND_ 1  do
+      _SET_ size: 32
+      #_flush_デフォルト送信
+      _DEFINE_ :_SET_FONT_ do |argument, options|
         _SET_ options
       end
-    end
-    #文字間待ち時間
-    _DEFINE_ :_WAIT_FRAME_ do |argument, options|
-      _SEND_ 1  do
+      #文字間待ち時間
+      _DEFINE_ :_WAIT_FRAME_ do |argument, options|
         _DEFINE_ :_CHAR_WAIT_ do
           _WAIT_  count: argument,
                   key_down: K_RCONTROL,
@@ -227,11 +184,8 @@ _DEFINE_ :TextWindow do |argument, options|
                   window: [:key_down]
         end
       end
-    end
-
-    #キー入力待ち処理
-    _DEFINE_ :pause do |argument, options|
-      _SEND_ 1 do
+      #キー入力待ち処理
+      _DEFINE_ :pause do |argument, options|
         _WAIT_ count:17
         _SEND_ -1 do
           if options[:icon] == :line_icon_func
@@ -249,10 +203,9 @@ _DEFINE_ :TextWindow do |argument, options|
         #ウェイクに移行
         _SET_ :_TEMP_, sleep: false
       end
-    end
-    _CHECK_ window: [:block_given] do
-      _YIELD_
-    end
+      _CHECK_ window: [:block_given] do
+        _YIELD_
+      end
   end
 end
 

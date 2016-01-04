@@ -4,6 +4,14 @@
 _LOAD_NATIVE_ "./script/nomaid/nomaid.rb"
 _CREATE_ :NomaidControl, id: :maid
 
+=begin
+test = <<"EOF"
+テスト
+  _PUTS_ "test"
+EOF
+
+_PARSE_ test, parser: TKSParser
+=end
 #テキストボタン定義
 _DEFINE_ :TextSelect do |argument, options|
   _CREATE_ :LayoutControl,
@@ -168,28 +176,29 @@ end
 
 #ＯＰ用テキストレイアウト指定
 text0{
-  _SET_ x:32, y:32, width: 1024, height: 1024
-  _SET_FONT_  size:24}
+  _SET_ x:32, y:32, width: 1024, height: 1024, size:24
+}
   
 #ＯＰメッセージ表示
 _INCLUDE_ "./script/nomaid/op.tks"
 
 _END_FRAME_
+_TO_IMAGE_ scale: 0.5
+_SEND_(-1)do |a,b,c|
+  _SAVE_IMAGE_ "test.png"
+end
 
 #テキストウィンドウの際レイアウト
 text0 do
   _END_FRAME_
-  _SET_ x: 32, y: 256
-  _SET_FONT_ size:32
+  _SET_ x: 32, y: 256, size:32
         
-  _SEND_ 1  do
-    #文字レンダラを削除する
-    _DEFINE_ :_CHAR_RENDERER_ do
-    end
-    _DEFINE_ :_CHAR_WAIT_ do
-    end
-    _DEFINE_ :_LINE_WAIT_ do
-    end
+  #文字レンダラを削除する
+  _DEFINE_ :_CHAR_RENDERER_ do
+  end
+  _DEFINE_ :_CHAR_WAIT_ do
+  end
+  _DEFINE_ :_LINE_WAIT_ do
   end
 end
 

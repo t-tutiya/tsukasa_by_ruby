@@ -91,7 +91,7 @@ class Control #内部メソッド
   end
 
   #コマンドをスタックに格納する
-  def push_command(command, argument, options, inner_options)
+  def push_command(command, argument, options = {}, inner_options={block_stack: {}})
     #コマンドをスタックの末端に挿入する
     @command_list.push([command, argument, options, inner_options])
   end

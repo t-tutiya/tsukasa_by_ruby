@@ -137,6 +137,18 @@ _DEFINE_ :TextWindow do |argument, options|
         size: 32, 
         font_name: "ＭＳＰ ゴシック",
         wait_frame: 3 do
+          _DEFINE_ :_CHAR_WAIT_ do
+            _WAIT_  count: 2,
+                    key_down: K_RCONTROL,
+                    key_push: K_SPACE,
+                    window: [:key_down]
+          end
+          _DEFINE_ :_LINE_WAIT_ do
+            _WAIT_  count: 2,
+                    key_down: K_RCONTROL,
+                    key_push: K_SPACE,
+                    window: [:key_down]
+          end
           _CHAR_RENDERER_ do
             #フェードイン（スペースキーか右CTRLが押されたらスキップ）
             _MOVE_   30, alpha:[0,255],

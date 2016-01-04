@@ -360,19 +360,8 @@ class TextPageControl < LayoutControl
     argument.to_s.each_char do |ch|
       #１文字分の出力コマンドをスタックする
       command_list.push([char_command, ch, {}, inner_options])
-      #:waitコマンドをスタックする
-      ##TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
-      command_list.push([
-                          :_WAIT_, 
-                          nil,
-                          {
-                            :count => @wait_frame,
-                            :key_down => K_RCONTROL,
-                            :key_push => K_SPACE,
-                            :window => [:key_down],
-                          }, 
-                          inner_options
-                        ])
+      #文字待機処理をスタックする
+      command_list.push([:_CALL_, :_CHAR_WAIT_, {}, inner_options])
     end
 
     #展開したコマンドをスタックする
@@ -430,18 +419,8 @@ class TextPageControl < LayoutControl
     end
 
     eval_commands([
-                    #改行時のwaitを設定する
-                    ##TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
-                    [ :_WAIT_, 
-                      nil,
-                      {
-                        :count => @line_feed_wait_frame,
-                        :key_down => K_RCONTROL,
-                        :key_push => K_SPACE,
-                        :window => [:key_down],
-                      }, 
-                      inner_options
-                    ],
+                    #行間待機処理を設定する
+                    [:_CALL_, :_LINE_WAIT_, {}, inner_options],
                     #次のアクティブ行コントロールを追加  
                     [ :_CREATE_, 
                       :LayoutControl, 

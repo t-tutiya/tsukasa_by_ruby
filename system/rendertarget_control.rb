@@ -109,12 +109,26 @@ class RenderTargetControl < Control
                         :height => @height,
                         :mouse_pos_x => @mouse_pos_x,
                         :mouse_pos_y => @mouse_pos_y})
-    entity  = rt.to_image
+
+    #拡大率が設定されている場合
+    if options[:scale]
+      rt2 = RenderTarget.new( options[:scale] * @width, 
+                              options[:scale] * @height,)
+      rt2.draw_ex(-1 * options[:scale]**2 * @width,
+                  -1 * options[:scale]**2 * @height,
+                  rt,
+                  {:scale_x => options[:scale],
+                   :scale_y => options[:scale],})
+      entity  = rt2.to_image
+    else
+      entity  = rt.to_image
+    end
     #イメージコントロールを生成する
     interrupt_command(:_CREATE_, 
                 :ImageControl, 
                {:entity => entity,
                 :z => options[:z] || Float::INFINITY, #描画順を正の無限大とする
+                :visible => options[:visible] || true, #デフォルトでは可視
                 :id => options[:_ARGUMENT]
                 }, 
                 inner_options)

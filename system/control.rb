@@ -34,9 +34,6 @@ require_relative "./tks_parser.rb"
 ###############################################################################
 
 class Control #公開インターフェイス
-  @@parser = TKSParser.new
-  @@replacer = TKSParser::Replacer.new
-
   #プロパティ
   #システム全体で共有されるデータ群。保存対象。
   def _SYSTEM_
@@ -210,7 +207,6 @@ class Control #内部メソッド
 
     options.update({
       :id => @id,
-      :script_file_path => @script_file_path,
       :command_list => command_list,
     })
 
@@ -250,11 +246,11 @@ class Control #内部メソッド
     raise unless yield_block_stack
 
     eval_commands(@root_control.script_compiler.commands(argument,
-                                            options, 
-                                            block_stack, 
-                                            yield_block_stack, 
-                                            self,
-                                            &block))
+                                                          options, 
+                                                          block_stack, 
+                                                          yield_block_stack, 
+                                                          self,
+                                                          &block))
   end
 
   def check_imple(argument, options, inner_options)
@@ -737,41 +733,48 @@ class Control #スクリプト制御
     #オプションが設定していなければ例外送出
     raise unless argument
 
-    #文字列が直接指定されていればそれをファイルパスとする
-    if argument
-      @script_file_path = argument
-    else
-      #キーで指定されたデータストアのデータをファイルパスとする
-      options.each do |key, value|
-        @script_file_path = @root_control.send(key)[value]
-      end
+    #第１引数がシンボルの場合
+    if argument.instance_of?(Symbol)
+      #データストアの値を対象のファイルパスとする
+      argument = @root_control._TEMP_[argument]
     end
 
-    if File.extname(@script_file_path) == ".tks"
-      #評価対象がｔｋｓファイルの場合の場合
-      script =  @@replacer.apply(
-                  @@parser.parse(
-                    File.read(
-                      @script_file_path, encoding: "UTF-8"
-                    )
-                  )
-                ).flatten.join("\n")
-    else
-      #評価対象がスクリプトファイルの場合の場合
-      script =   File.read(@script_file_path, encoding: "UTF-8")
+    options[:file_path] = File.expand_path(argument)
+
+    #tksファイルであればparserのクラス名を初期化する。
+    if File.extname(options[:file_path]) == ".tks"
+      options[:parser] = TKSParser
     end
 
-    commands = @root_control.script_compiler.commands(
-                  nil,
-                  {
-                    :script => script,
-                    :script_file_path => @script_file_path
-                  }, 
-                  inner_options[:block_stack], 
-                  inner_options[:yield_block_stack], 
-                  self)
+    #文字列を取得する
+    options[:script] = File.read(options[:file_path], encoding: "UTF-8")
 
-    @command_list = commands + @command_list
+    #スクリプトをパースする
+    command__PARSE_(nil, options, inner_options)
+  end
+
+  #スクリプトをパースする
+  def command__PARSE_(argument, options, inner_options)
+    options[:script] = argument if argument
+    options[:file_path] = "(parse)" unless options[:file_path]
+
+    #パーサーが指定されている場合
+    if options[:parser]
+      #文字列を取得して変換をかける
+      options[:script] =  options[:parser]::Replacer.new.apply(
+                            options[:parser].new.parse(options[:script])
+                          ).flatten.join("\n")
+    end
+
+    #司スクリプトを評価してコマンド配列を取得し、コマンドリストの先頭に追加する
+    @command_list = @root_control.script_compiler.commands(
+                      nil,
+                      options,
+                      inner_options[:block_stack], 
+                      inner_options[:yield_block_stack], 
+                      self
+                    ) + 
+                    @command_list
   end
 
   #アプリを終了する

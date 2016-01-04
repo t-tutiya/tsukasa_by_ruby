@@ -54,8 +54,8 @@ class ScriptCompiler
     @block_stack = block_stack
 
     if options[:script]
-      if options[:script_file_path]
-        fname = File.expand_path(options[:script_file_path])
+      if options[:file_path]
+        fname = options[:file_path]
       else
         fname = "(eval)"
       end

@@ -119,9 +119,7 @@ class Control #内部メソッド
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
-      command = @command_list.shift
-      #コマンドを１時的に展開
-      command_name, argument, options, inner_options = command
+      command_name, argument, options, inner_options = @command_list.shift
 
       #今フレーム処理終了判定
       break if command_name == :_END_FRAME_

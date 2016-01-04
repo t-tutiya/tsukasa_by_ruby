@@ -71,7 +71,6 @@ class Control #内部メソッド
     #スリープモード
     @sleep_mode = false
 
-    @script_compiler = ScriptCompiler.new(self, @root_control)
     @control_list = [] #コントロールリスト
     @delete_flag = false       #削除フラグの初期化
 
@@ -252,7 +251,7 @@ class Control #内部メソッド
     raise unless block_stack
     raise unless yield_block_stack
 
-    eval_commands(@script_compiler.commands(argument,
+    eval_commands(@root_control.script_compiler.commands(argument,
                                             options, 
                                             block_stack, 
                                             yield_block_stack, 
@@ -764,7 +763,7 @@ class Control #スクリプト制御
       script =   File.read(@script_file_path, encoding: "UTF-8")
     end
 
-    commands = @script_compiler.commands(
+    commands = @root_control.script_compiler.commands(
                   nil,
                   {
                     :script => script,

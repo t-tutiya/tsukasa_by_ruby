@@ -113,6 +113,8 @@ class Tsukasa < RenderTargetControl
   attr_accessor  :cursor_visible
 
   attr_reader  :function_list
+
+  attr_reader  :script_compiler
 end
 
 class Tsukasa < RenderTargetControl
@@ -122,6 +124,8 @@ class Tsukasa < RenderTargetControl
     @close = false
 
     @root_control = self
+
+    @script_compiler = ScriptCompiler.new
 
     #システムデータストア
     @_SYSTEM_ = {}

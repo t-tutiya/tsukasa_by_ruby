@@ -42,19 +42,13 @@ class ScriptCompiler
   alias :_L :_LOCAL_
   alias :_S :_SYSTEM_
 
-#  @@parser = TKSParser.new
-#  @@replacer = TKSParser::Replacer.new
-
-  def initialize(control, root_control)
-    @control = control
-    @root_control = root_control
-    @_TEMP_ = @root_control._TEMP_
-    @_LOCAL_ = @root_control._LOCAL_
-    @_SYSTEM_ = @root_control._SYSTEM_
-  end
-
   #ヘルパーメソッド群
   def commands(argument, options, block_stack, yield_block_stack, control, &block)
+    @control = control
+    @_TEMP_ = control._TEMP_
+    @_LOCAL_ = control._LOCAL_
+    @_SYSTEM_ = control._SYSTEM_
+
     @command_list = []
     @yield_block_stack = yield_block_stack
     @block_stack = block_stack

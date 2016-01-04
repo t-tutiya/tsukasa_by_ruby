@@ -57,4 +57,9 @@ class ImageControl < Control
     return super(options)
   end
 =end
+
+  #画像を保存する
+  def command__SAVE_IMAGE_(argument, options, inner_options)
+    @entity.save(argument,options[:format] || FORMAT_PNG)
+  end
 end

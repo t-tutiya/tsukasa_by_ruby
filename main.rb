@@ -16,10 +16,9 @@ tsukasa = Tsukasa.new({ :width => width,
                         })
 #ゲームループ
 Window.loop(true) do
-  #pp "frame"
-  #Ragエンジン処理
+  #司エンジン処理
   tsukasa.update
-  #Ragエンジン描画
+  #司エンジン描画
   tsukasa.render(0, 0, Window)
   
   #スクリプトで終了コマンドが実行された場合

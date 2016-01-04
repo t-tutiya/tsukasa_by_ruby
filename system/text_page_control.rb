@@ -237,10 +237,12 @@ class TextPageControl < LayoutControl
     #次のアクティブ行コントロールを追加  
     interrupt_command(:_CREATE_, 
                       :LayoutControl,
-                     {:width => @width,
-                      :height => @line_height,
-                      :float_x => :bottom, 
-                      :float_y => :bottom}, 
+                      {
+                        :width => @width,
+                        :height => @line_height,
+                        :float_x => :bottom, 
+                        :float_y => :bottom
+                      }, 
                       {})
   end
 
@@ -296,26 +298,30 @@ class TextPageControl < LayoutControl
   def command__CHAR_(argument, options, inner_options)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
-                :CharControl, 
-               {:align_y => :bottom,
-                :charactor => argument,
-                :command_list=> options[:command_list],
-                :float_x => :left,
-                :id => @charactor_id
-                }.merge(@char_option), 
-               {:block => @char_renderer})
+                                    :CharControl, 
+                                    {
+                                      :align_y => :bottom,
+                                      :charactor => argument,
+                                      :command_list=> options[:command_list],
+                                      :float_x => :left,
+                                      :id => @charactor_id
+                                    }.merge(@char_option), 
+                                    {
+                                      :block => @char_renderer
+                                    })
 
     #文字のＩＤを更新
     @charactor_id += 1
 
     #文字幅スペーサーを生成する
     @control_list.last.push_command(:_CREATE_, 
-                  :LayoutControl, 
-                {:width => @charactor_pitch,
-                :height => @line_height,
-                :align_y => :bottom,
-                :float_x => :left}, 
-                {})
+                                    :LayoutControl, 
+                                    {
+                                      :width => @charactor_pitch,
+                                      :height => @line_height,
+                                      :align_y => :bottom,
+                                      :float_x => :left}, 
+                                    {})
   end
 
   def command__CHAR_RENDERER_(argument, options, inner_options)
@@ -353,20 +359,20 @@ class TextPageControl < LayoutControl
     #文字列を分解してcharコマンドに変換する
     argument.to_s.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      command_list.push([char_command, 
-                        ch,
-                        {}, 
-                        inner_options])
+      command_list.push([char_command, ch, {}, inner_options])
       #:waitコマンドをスタックする
       ##TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
-      command_list.push([:_WAIT_, 
+      command_list.push([
+                          :_WAIT_, 
                           nil,
-                        {:count => @wait_frame,
-                         :key_down => K_RCONTROL,
-                         :key_push => K_SPACE,
-                         :window => [:key_down],
-                         }, 
-                         inner_options])
+                          {
+                            :count => @wait_frame,
+                            :key_down => K_RCONTROL,
+                            :key_push => K_SPACE,
+                            :window => [:key_down],
+                          }, 
+                          inner_options
+                        ])
     end
 
     #展開したコマンドをスタックする
@@ -377,8 +383,7 @@ class TextPageControl < LayoutControl
     #ルビを出力するTextPageControlを生成する
     rubi_layout =[:_CREATE_, 
                   :TextPageControl, 
-                  { :command_list => [
-                      [:_TEXT_, argument, {},inner_options]],
+                  { :command_list => [[:_TEXT_, argument, {},inner_options]],
                     :x => @rubi_option[:offset_x],
                     :y => @rubi_option[:offset_y],
                     :height=> @rubi_option[:size],
@@ -393,55 +398,75 @@ class TextPageControl < LayoutControl
 
     #TextPageControlをベース文字に登録する。
     @control_list.last.push_command(:_CREATE_, 
-                :LayoutControl, 
-               {:width => 0,
-                :height => @size,
-                :command_list => [rubi_layout],
-                :float_x => :left}, 
-               {})
+                                    :LayoutControl, 
+                                    {
+                                      :width => 0,
+                                      :height => @size,
+                                      :command_list => [rubi_layout],
+                                      :float_x => :left
+                                    }, 
+                                    {})
   end
 
   #line_feedコマンド
   #改行処理（CR＋LF）
   def command__LINE_FEED_(argument, options, inner_options)
-    #以下逆順に登録
 
-    #改行時のwaitを設定する
-    ##TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
-    interrupt_command(:_WAIT_, 
+    #インデントスペーサーの作成
+    if @indent > 0
+      command_list =[
+                      [ :_CREATE_, 
+                        :LayoutControl, 
+                        {
+                          :width => @indent,
+                          :height => @line_height,
+                          :float_x => :left
+                        }, 
+                        inner_options
+                      ]
+                    ]
+    else
+      command_list = nil
+    end
+
+    eval_commands([
+                    #改行時のwaitを設定する
+                    ##TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ
+                    [ :_WAIT_, 
                       nil,
-                      {:count => @line_feed_wait_frame,
-                       :key_down => K_RCONTROL,
-                       :key_push => K_SPACE,
-                       :window => [:key_down],
-                       }, 
-                      inner_options)
-
-    #次のアクティブ行コントロールを追加  
-    interrupt_command(:_CREATE_, 
+                      {
+                        :count => @line_feed_wait_frame,
+                        :key_down => K_RCONTROL,
+                        :key_push => K_SPACE,
+                        :window => [:key_down],
+                      }, 
+                      inner_options
+                    ],
+                    #次のアクティブ行コントロールを追加  
+                    [ :_CREATE_, 
                       :LayoutControl, 
-                     {:width => @width,
-                      :height => @line_height,
-                      #インデント用無形コントロール
-                      :command_list => @indent > 0 ? [[:_CREATE_, 
-                                        :LayoutControl, 
-                                       {:width => @indent,
-                                        :height => @line_height,
-                                        :float_x => :left}, 
-                                        inner_options]] : nil, 
-                      :float_x => :bottom, 
-                      :float_y => :bottom}, 
-                      inner_options)
-
-    #行間ピッチ分の無形コントロールを追加
-    interrupt_command(:_CREATE_, 
+                      {
+                        :width => @width,
+                        :height => @line_spacing,
+                        :float_x => :bottom, 
+                        :float_y => :bottom
+                      }, 
+                      inner_options
+                    ],
+                    #行間ピッチ分の無形コントロールを追加
+                    [ :_CREATE_, 
                       :LayoutControl, 
-                     {:width => @width,
-                      :height => @line_spacing,
-                      :float_x => :bottom, 
-                      :float_y => :bottom}, 
-                      inner_options)
-
+                      {
+                        :width => @width,
+                        :height => @line_height,
+                        #インデント用無形コントロール
+                        :command_list => command_list, 
+                        :float_x => :bottom, 
+                        :float_y => :bottom
+                      }, 
+                      inner_options
+                    ],
+                  ])
     #文字ＩＤの連番をリセット
     @charactor_id = 0
   end
@@ -457,10 +482,12 @@ class TextPageControl < LayoutControl
     #次のアクティブ行コントロールを追加  
     interrupt_command(:_CREATE_, 
                       :LayoutControl, 
-                     {:width => @width,
-                      :height => @line_height,
-                      :float_x => :bottom, 
-                      :float_y => :bottom}, 
+                      {
+                        :width => @width,
+                        :height => @line_height,
+                        :float_x => :bottom, 
+                        :float_y => :bottom
+                      }, 
                       inner_options)
     
     #文字ＩＤの連番をリセット

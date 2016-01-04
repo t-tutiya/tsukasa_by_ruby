@@ -174,8 +174,6 @@ class TextPageControl < LayoutControl
 
 
   def initialize(argument, options, inner_options, root_control)
-    @char_renderer = options[:char_renderer]
-
     #レンダリング済みフォント使用中かどうか
     @use_image_font = options[:use_image_font] || false
     #レンダリング済みフォントのフォント名
@@ -227,8 +225,9 @@ class TextPageControl < LayoutControl
 
     super
 
-    @function_list[:_CHAR_WAIT_] = Proc.new(){}
-    @function_list[:_LINE_WAIT_] = Proc.new(){}
+    @function_list[:_CHAR_RENDERER_] =options[:_CHAR_RENDERER_] || Proc.new(){}
+    @function_list[:_CHAR_WAIT_] = options[:_CHAR_WAIT_] || Proc.new(){}
+    @function_list[:_LINE_WAIT_] = options[:_LINE_WAIT_] || Proc.new(){}
 
     #次のアクティブ行コントロールを追加  
     interrupt_command(:_CREATE_, 
@@ -373,7 +372,9 @@ class TextPageControl < LayoutControl
                     :font_name => @char_option[:font_name],
                     :line_spacing => 0,
                     :charactor_pitch => @rubi_option[:charactor_pitch],
-                    :char_renderer => @function_list[:_CHAR_RENDERER_]},
+                    :_LINE_WAIT_ => @function_list[:_LINE_WAIT_],
+                    :_CHAR_WAIT_ => @function_list[:_CHAR_WAIT_],
+                    :_CHAR_RENDERER_ => @function_list[:_CHAR_RENDERER_]},
                   {}]
 
     #TextPageControlをベース文字に登録する。

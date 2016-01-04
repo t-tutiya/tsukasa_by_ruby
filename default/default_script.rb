@@ -135,8 +135,7 @@ _DEFINE_ :TextWindow do |argument, options|
         width: options[:width],
         height: options[:height],
         size: 32, 
-        font_name: "ＭＳＰ ゴシック",
-        wait_frame: 3 do
+        font_name: "ＭＳＰ ゴシック" do
           _DEFINE_ :_CHAR_WAIT_ do
             _WAIT_  count: 2,
                     key_down: K_RCONTROL,

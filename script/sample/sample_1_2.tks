@@ -12,8 +12,20 @@
 @	text0{_SET_FONT_ size:32, line_height: 32}
 
 他にも様々な設定が可能です。[lp]
-@	text0{_SET_FONT_ wait_frame: 10}
+    text0{
+      _SEND_ 1  do
+        _DEFINE_ :_CHAR_WAIT_ do
+          _WAIT_  count: 10
+        end
+      end
+    }
 例えば文字の表示速度を変えたり、[lp]
-@	text0{_SET_FONT_ wait_frame: 2}
+    text0{
+      _SEND_ 1  do
+        _DEFINE_ :_CHAR_WAIT_ do
+          _WAIT_  count: 3
+        end
+      end
+    }
 [text0{_RUBI_ "エクスカリバ－"}]ルビを振る事もできます。[ep]
 

@@ -217,6 +217,17 @@ _DEFINE_ :TextWindow do |argument, options|
         _SET_ options
       end
     end
+    #文字間待ち時間
+    _DEFINE_ :_WAIT_FRAME_ do |argument, options|
+      _SEND_ 1  do
+        _DEFINE_ :_CHAR_WAIT_ do
+          _WAIT_  count: argument,
+                  key_down: K_RCONTROL,
+                  key_push: K_SPACE,
+                  window: [:key_down]
+        end
+      end
+    end
 
     #キー入力待ち処理
     _DEFINE_ :pause do |argument, options|

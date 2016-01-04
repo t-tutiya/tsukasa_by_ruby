@@ -234,6 +234,9 @@ class TextPageControl < LayoutControl
 
     super
 
+    @function_list[:_CHAR_WAIT_] = Proc.new(){}
+    @function_list[:_LINE_WAIT_] = Proc.new(){}
+
     #次のアクティブ行コントロールを追加  
     interrupt_command(:_CREATE_, 
                       :LayoutControl,

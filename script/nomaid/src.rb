@@ -174,8 +174,11 @@ text0{
 #ＯＰメッセージ表示
 _INCLUDE_ "./script/nomaid/op.tks"
 
+_END_FRAME_
+
 #テキストウィンドウの際レイアウト
 text0 do
+  _END_FRAME_
   _SET_ x: 32, y: 256
   _SET_FONT_ size:32
         

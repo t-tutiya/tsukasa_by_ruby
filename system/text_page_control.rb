@@ -47,9 +47,6 @@ class TextPageControl < LayoutControl
 
   #テキストページ情報
 
-  attr_accessor  :wait_frame  #一文字置きの待機フレーム
-  attr_accessor  :line_feed_wait_frame  #改行時の待機フレーム
-
   attr_accessor  :line_spacing  #行間
   attr_accessor  :charactor_pitch #文字間
   attr_accessor  :line_height #行の高さ
@@ -184,10 +181,6 @@ class TextPageControl < LayoutControl
     #レンダリング済みフォントのフォント名
     @image_face = options[:image_face] || nil
 
-    #文字描画後の待ちフレーム数
-    @wait_frame = options[:wait_frame] || 2 
-    #改行後の待ちフレーム数
-    @line_feed_wait_frame = options[:line_feed_wait_frame] || 0
     @line_spacing = options[:line_spacing] || 12   #行間の幅
     @charactor_pitch = options[:charactor_pitch ] || 3 #文字間の幅
     @line_height = options[:line_height] || 32    #行の高さ
@@ -380,8 +373,7 @@ class TextPageControl < LayoutControl
                     :font_name => @char_option[:font_name],
                     :line_spacing => 0,
                     :charactor_pitch => @rubi_option[:charactor_pitch],
-                    :char_renderer => @function_list[:_CHAR_RENDERER_],
-                    :wait_frame => @rubi_option[:wait_frame]},
+                    :char_renderer => @function_list[:_CHAR_RENDERER_]},
                   {}]
 
     #TextPageControlをベース文字に登録する。

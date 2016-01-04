@@ -183,10 +183,6 @@ text0{
 _INCLUDE_ "./script/nomaid/op.tks"
 
 _END_FRAME_
-_TO_IMAGE_ scale: 0.5
-_SEND_(-1)do |a,b,c|
-  _SAVE_IMAGE_ "test.png"
-end
 
 #テキストウィンドウの際レイアウト
 text0 do

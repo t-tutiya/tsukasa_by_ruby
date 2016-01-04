@@ -170,11 +170,6 @@ _DEFINE_ :TextWindow do |argument, options|
         #トランジションが終了するまで待機
         _WAIT_ command: :_MOVE_ 
       end
-      _SET_ size: 32
-      #_flush_デフォルト送信
-      _DEFINE_ :_SET_FONT_ do |argument, options|
-        _SET_ options
-      end
       #文字間待ち時間
       _DEFINE_ :_WAIT_FRAME_ do |argument, options|
         _DEFINE_ :_CHAR_WAIT_ do
@@ -203,6 +198,9 @@ _DEFINE_ :TextWindow do |argument, options|
         #ウェイクに移行
         _SET_ :_TEMP_, sleep: false
       end
+
+      _SET_ size: 32
+
       _CHECK_ window: [:block_given] do
         _YIELD_
       end

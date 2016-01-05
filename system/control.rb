@@ -941,7 +941,7 @@ class Control #プロパティのパラメータ遷移
 
     #条件判定が存在し、かつその条件が成立した場合
     if options[:option][:check] and 
-        check_imple(nil, options[:option][:check], inner_options)
+        check_imple(options[:option][:datastore], options[:option][:check], inner_options)
       #ブロックがあれば実行し、コマンドを終了する
       if inner_options[:block]
         eval_block( nil,

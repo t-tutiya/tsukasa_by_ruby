@@ -1,6 +1,6 @@
 #動作を確認したいサンプルファイルのコメントを外してください。
 
-_INCLUDE_ "./script/sample/sample_1_1.tks" 	#文字の表示
+#_INCLUDE_ "./script/sample/sample_1_1.tks" 	#文字の表示
 #_INCLUDE_ "./script/sample/sample_1_2.tks" 	#文字装飾
 
 #_INCLUDE_ "./script/sample/sample_1_3.tks" 	#コントロールの表示
@@ -24,6 +24,8 @@ _INCLUDE_ "./script/sample/sample_1_1.tks" 	#文字の表示
 #_INCLUDE_ "./script/sample/sample_1_15.tks"	#ボタン
 #_INCLUDE_ "./script/sample/sample_1_16.tks"	#サウンド
 #_INCLUDE_ "./script/sample/sample_1_17.tks"	#セーブロード
+
+_INCLUDE_ "./script/sample/sample_1_18.tks"	#ラベル
 
 #ボタンサンプル
 #_INCLUDE_ "./script/sample/sample_2_1_1.rb" 	#ボタンサンプル１

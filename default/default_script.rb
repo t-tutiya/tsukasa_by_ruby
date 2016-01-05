@@ -122,23 +122,27 @@ _DEFINE_ :TextWindow do |argument, options|
     id: options[:id],
     font_name: "ＭＳＰ ゴシック" do
       _DEFINE_ :_CHAR_WAIT_ do
-        _WAIT_  count: 2,
+        _WAIT_  :_TEMP_, count: 2,
                 key_down: K_RCONTROL,
                 key_push: K_SPACE,
-                window: [:key_down]
+                window: [:key_down],
+                equal: {_SKIP_: true}
       end
       _DEFINE_ :_LINE_WAIT_ do
-        _WAIT_  count: 2,
+        _WAIT_  :_TEMP_, count: 2,
                 key_down: K_RCONTROL,
                 key_push: K_SPACE,
-                window: [:key_down]
+                window: [:key_down],
+                equal: {_SKIP_: true}
       end
       _DEFINE_ :_CHAR_RENDERER_ do
         #フェードイン（スペースキーか右CTRLが押されたらスキップ）
         _MOVE_   30, alpha:[0,255],
               option: {check: { key_down: K_RCONTROL, 
                                 key_push: K_SPACE,
-                                window: [:key_down]}} do
+                                window: [:key_down],
+                                equal: {_SKIP_: true}},
+                       datastore: :_TEMP_} do
                 _SET_ alpha: 255
               end
         #トランジションが終了するまで待機
@@ -354,3 +358,30 @@ _DEFINE_ :button do |argument, options|
   end
 end
 
+#既読管理ラベル
+_DEFINE_ :_LABEL_ do |arugment, options|
+  #頭出しモードの場合
+  _CHECK_ equal: {_CHAPTER_START_MODE_: true} do
+    #ページが指定したＩＤでない場合
+    _CHECK_ :_LOCAL_, not_equal: {_START_: options[:id]} do
+      #ページを飛ばす
+      _RETURN_
+    end
+    #ラベルモードをノーマルに変更する
+    _SET_ :_TEMP_, _CHAPTER_START_MODE_: false
+  end
+
+  #既読スキップモードの場合
+  _CHECK_ equal: {_CHAPTER_SKIP_MODE_: true} do
+    if(_SYSTEM_[:_READ_CHAPTER_][options[:chapter]].index(options[:id]))
+      #スキップモードＯＮ
+      _SET_ :_TEMP_, _SKIP_: true
+    else
+      #スキップモードＯＦＦ
+      _SET_ :_TEMP_, _SKIP_: false
+    end
+  end
+
+  #テキスト評価
+  _YIELD_ 
+end

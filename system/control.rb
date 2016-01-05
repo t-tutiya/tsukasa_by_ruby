@@ -50,6 +50,7 @@ class Control #公開インターフェイス
 
   attr_accessor  :id
   attr_accessor  :sleep
+  attr_reader  :_RESULT_
 end
 
 class Control #内部メソッド

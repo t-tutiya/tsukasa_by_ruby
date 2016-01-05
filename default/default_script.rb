@@ -382,6 +382,25 @@ _DEFINE_ :_LABEL_ do |arugment, options|
     end
   end
 
+  #既読フラグを立てる処理
+
+  #既読フラグハッシュが無ければ新設
+  _CHECK_ :_SYSTEM_, equal: {_READ_CHAPTER_: nil} do
+    _SET_ :_SYSTEM_, _READ_CHAPTER_: {}
+  end
+
+  #既読フラグハッシュを取得
+  _GET_ :_SYSTEM_, _RESULT_: :_READ_CHAPTER_
+
+  #チャプターが登録されていない場合登録
+  _CHECK_ :_RESULT_, null: options[:chapter] do
+    _SET_ :_RESULT_, {options[:chapter] => []}
+  end
+
+  #既読フラグ追加
+  #TODO：これ無理矢理すぎるけど今の所pushを司スクリプトで処理できない
+  _EVAL_ "@_RESULT_[:#{options[:chapter].to_s}].push(#{options[:id]})"
+
   #テキスト評価
   _YIELD_ 
 end

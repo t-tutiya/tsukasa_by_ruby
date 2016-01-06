@@ -43,18 +43,6 @@ _CREATE_ :LayoutControl do
   end
 end
 
-#指定フレーム数ウェイト
-#ex. wait_count 60
-_DEFINE_ :wait_count do |argument, options|
-  _WAIT_ count: argument
-end
-
-#指定コマンドウェイト
-#ex. wait_command :_MOVE_ 
-_DEFINE_ :wait_command do |argument, options|
-  _WAIT_ command: argument
-end
-
 ###############################################################################
 #テキストレイヤ関連
 ###############################################################################
@@ -225,16 +213,6 @@ TextWindow id: :text0, text_page_id: :default_text_page_control0,
   width: 1024,
   height: 192,
   z: 1000000 #描画順序
-
-=begin
-#全画面の場合
-TextWindow id: :text1, text_page_id: :default_text_page_control0,
-  x: 64,
-  y: 64,
-  width: 1024,
-  height: 768,
-  z: 1000000 #描画順序
-=end
 
 _DEFINE_ :line_icon_func do |argument, options|
   _CREATE_ :RenderTargetControl, 

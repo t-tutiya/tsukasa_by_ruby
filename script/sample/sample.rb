@@ -25,9 +25,11 @@
 #_INCLUDE_ "./script/sample/sample_1_16.tks"	#サウンド
 #_INCLUDE_ "./script/sample/sample_1_17.tks"	#セーブロード
 
-_INCLUDE_ "./script/sample/sample_1_18.tks"	#ラベル
 
 #ボタンサンプル
 #_INCLUDE_ "./script/sample/sample_2_1_1.rb" 	#ボタンサンプル１
 #_INCLUDE_ "./script/sample/sample_2_1_2.rb" 	#ボタンサンプル２
 #_INCLUDE_ "./script/sample/sample_2_1_3.rb" 	#ボタンサンプル３
+
+#ラベル（既読フラグ管理）サンプル
+_INCLUDE_ "./script/sample/sample_2_2.tks"

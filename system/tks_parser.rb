@@ -223,7 +223,6 @@ class TKSParser < Parslet::Parser
     rule(
       :chapter => simple(:chapter)
     ) { 
-      pp chapter
       ["end"] + 
       ["_LABEL_ chapter: :#{chapter} do"]
     }

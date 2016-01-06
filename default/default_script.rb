@@ -161,7 +161,8 @@ _DEFINE_ :TextWindow do |argument, options|
                       window: [:key_down]
                       }} do
                 #スキップされた場合
-                _CHECK_ key_down: K_RCONTROL do
+                _CHECK_ key_down: K_RCONTROL,
+                        equal: {_SKIP_: true} do
                   #CTRLスキップ中であれば透明度255
                   _SET_ alpha: 255
                 end
@@ -197,7 +198,8 @@ _DEFINE_ :TextWindow do |argument, options|
         #スペースキーあるいはCTRLキーの押下待機
         _WAIT_  key_down: K_RCONTROL,
                 key_push: K_SPACE,
-                window: [:key_down]
+                window: [:key_down],
+                equal: {_SKIP_: true}
 
         #ウェイクに移行
         _SET_ :_TEMP_, sleep: false
@@ -385,8 +387,9 @@ _DEFINE_ :_LABEL_ do |arugment, options|
 
   unless _TEMP_[:_SCENARIO_CHAPTER_ID_][options[:chapter]]
     _TEMP_[:_ACTIVE_SCENARIO_CHAPTER_] = options[:chapter]
-    _TEMP_[:_SCENARIO_CHAPTER_ID_][options[:chapter]] = options[:id]
   end
+
+  _TEMP_[:_SCENARIO_CHAPTER_ID_][options[:chapter]] = options[:id]
 
   #新規チャプターであれば既読フラグに追加
   #TODO：結局チャプター名はゲーム全体で一意でなければならない

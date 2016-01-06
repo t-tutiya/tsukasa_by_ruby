@@ -184,10 +184,16 @@ _DEFINE_ :TextWindow do |argument, options|
                   window: [:key_down]
         end
       end
+      
+      _DEFINE_ :_SEND_TO_ACTIVE_LINE_ do
+        _SEND_ -1 do
+          _YIELD_
+        end
+      end
       #キー入力待ち処理
       _DEFINE_ :pause do |argument, options|
         _WAIT_ count:17
-        _SEND_ -1 do
+        _SEND_TO_ACTIVE_LINE_ do
           if options[:icon] == :line_icon_func
               line_icon_func align_y: :bottom, float_x: :left
           else

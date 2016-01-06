@@ -103,7 +103,7 @@ end
 #文字列中にボタンを埋め込む
 _DEFINE_ :func_select do |argument, options, control|
   _SEND_ default: :TextLayer do
-    _SEND_ -1 do
+    _SEND_TO_ACTIVE_LINE_ do
       TextSelect id: options[:id], text: argument
       _WAIT_ count: 3, key_down: K_RCONTROL, key_push: K_SPACE
     end

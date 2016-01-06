@@ -58,17 +58,20 @@ _DEFINE_ :pause do |argument, options|
   _SET_ :_TEMP_, sleep: true
 
   #ウェイク状態まで待機
-  _WAIT_ :_TEMP_,  key_down: K_RCONTROL, 
+  _WAIT_ :_TEMP_, 
+          key_down: K_RCONTROL, 
           equal: {sleep: false} do
     _CHECK_ window: [:block_given] do
       _YIELD_
     end
   end
 
-#クリック待ちアイコンを削除
-  _SEND_ default: :TextLayer do 
-    _SEND_ :icon do
-      _DELETE_
+  #クリック待ちアイコンを削除
+  _CHECK_ :_TEMP_, equal: {_SKIP_: false} do
+    _SEND_ default: :TextLayer do 
+      _SEND_ :icon do
+        _DELETE_
+      end
     end
   end
 
@@ -181,11 +184,14 @@ _DEFINE_ :TextWindow do |argument, options|
       #キー入力待ち処理
       _DEFINE_ :pause do |argument, options|
         _WAIT_ count:17
-        _SEND_TO_ACTIVE_LINE_ do
-          if options[:icon] == :line_icon_func
-              line_icon_func align_y: :bottom, float_x: :left
-          else
-              page_icon_func align_y: :bottom, float_x: :left
+
+        _CHECK_ :_TEMP_, equal: {_SKIP_: false} do
+          _SEND_TO_ACTIVE_LINE_ do
+            if options[:icon] == :line_icon_func
+                line_icon_func align_y: :bottom, float_x: :left
+            else
+                page_icon_func align_y: :bottom, float_x: :left
+            end
           end
         end
 

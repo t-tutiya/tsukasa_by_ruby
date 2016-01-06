@@ -49,7 +49,7 @@ class Control #公開インターフェイス
   end
 
   attr_accessor  :id
-  attr_accessor  :sleep
+
   attr_reader  :_RESULT_
 end
 

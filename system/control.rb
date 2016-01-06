@@ -744,7 +744,7 @@ class Control #スクリプト制御
 
     #tksファイルであればparserのクラス名を初期化する。
     if File.extname(options[:file_path]) == ".tks"
-      options[:parser] = TKSParser
+      options[:parser] = :tks
     end
 
     #文字列を取得する
@@ -762,9 +762,9 @@ class Control #スクリプト制御
     #パーサーが指定されている場合
     if options[:parser]
       #文字列を取得して変換をかける
-      options[:script] =  options[:parser]::Replacer.new.apply(
-                            options[:parser].new.parse(options[:script])
-                          ).flatten.join("\n")
+      options[:script]=@_PARSER_[options[:parser]][1].apply(
+                         @_PARSER_[options[:parser]][0].parse(options[:script])
+                       ).join("\n")
     end
 
     #司スクリプトを評価してコマンド配列を取得し、コマンドリストの先頭に追加する

@@ -67,6 +67,8 @@ class Tsukasa < RenderTargetControl
 
   attr_reader  :_DEFAULT_CONTROL_
 
+  attr_reader  :_PARSER_
+
   attr_accessor  :close
   def close?
     @close
@@ -135,6 +137,8 @@ class Tsukasa < RenderTargetControl
     @_TEMP_ = {}
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @_DEFAULT_CONTROL_ = {}
+    #パーサー
+    @_PARSER_ = { :tks => [TKSParser.new, TKSParser::Replacer.new]}
 
     options[:id] = :default_rendertarget_container
 

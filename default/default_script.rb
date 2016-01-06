@@ -360,7 +360,44 @@ end
 
 #既読管理ラベル
 _DEFINE_ :_LABEL_ do |arugment, options|
+
+  ###################################################################
+  #初期値更新
+  ###################################################################
+
+  #チャプターの更新
+  unless options[:chapter]
+    options[:chapter] = _TEMP_[:_ACTIVE_SCENARIO_CHAPTER_]
+  end
+  
+  #IDの更新
+  unless options[:id]
+    if _TEMP_[:_SCENARIO_CHAPTER_ID_][options[:chapter]]
+      options[:id] = _TEMP_[:_SCENARIO_CHAPTER_ID_][options[:chapter]] + 1
+    else
+      options[:id] = 0
+    end
+  end
+
+  ###################################################################
+  #現在のチャプターを保存
+  ###################################################################
+
+  unless _TEMP_[:_SCENARIO_CHAPTER_ID_][options[:chapter]]
+    _TEMP_[:_ACTIVE_SCENARIO_CHAPTER_] = options[:chapter]
+    _TEMP_[:_SCENARIO_CHAPTER_ID_][options[:chapter]] = options[:id]
+  end
+
+  #新規チャプターであれば既読フラグに追加
+  #TODO：結局チャプター名はゲーム全体で一意でなければならない
+  unless _SYSTEM_[:_READ_CHAPTER_][options[:chapter]]
+    _SYSTEM_[:_READ_CHAPTER_][options[:chapter]] = []
+  end
+
+  ###################################################################
   #頭出しモードの場合
+  ###################################################################
+
   _CHECK_ equal: {_CHAPTER_START_MODE_: true} do
     #ページが指定したＩＤでない場合
     _CHECK_ :_LOCAL_, not_equal: {_START_: options[:id]} do
@@ -371,7 +408,10 @@ _DEFINE_ :_LABEL_ do |arugment, options|
     _SET_ :_TEMP_, _CHAPTER_START_MODE_: false
   end
 
+  ###################################################################
   #既読スキップモードの場合
+  ###################################################################
+
   _CHECK_ equal: {_CHAPTER_SKIP_MODE_: true} do
     if(_SYSTEM_[:_READ_CHAPTER_][options[:chapter]].index(options[:id]))
       #スキップモードＯＮ
@@ -382,7 +422,9 @@ _DEFINE_ :_LABEL_ do |arugment, options|
     end
   end
 
+  ###################################################################
   #既読フラグを立てる処理
+  ###################################################################
 
   #既読フラグハッシュが無ければ新設
   _CHECK_ :_SYSTEM_, equal: {_READ_CHAPTER_: nil} do
@@ -397,10 +439,15 @@ _DEFINE_ :_LABEL_ do |arugment, options|
     _SET_ :_RESULT_, {options[:chapter] => []}
   end
 
+  ###################################################################
   #既読フラグ追加
+  ###################################################################
+
   #TODO：これ無理矢理すぎるけど今の所pushを司スクリプトで処理できない
   _EVAL_ "@_RESULT_[:#{options[:chapter].to_s}].push(#{options[:id]})"
 
+  ###################################################################
   #テキスト評価
+  ###################################################################
   _YIELD_ 
 end

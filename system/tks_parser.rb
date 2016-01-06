@@ -61,27 +61,25 @@ class TKSParser < Parslet::Parser
     @inline_command_open = inline_command_open
     @inline_command_close = inline_command_close
   end
-=begin
-  def indent_mode=(indent_mode)
-    @indent_mode = indent_mode
-    @indent_char = nil
-  end
 
-  def indent_width=(indent_width)
-    @indent_width = indent_width
-    @indent_char = nil
-  end
+  rule(:space)  { match('\s').repeat(1) }
+  rule(:space?) { space.maybe }
 
-  #インデント対象
-  def indent_char
-    @indent_char ||= case @indent_mode
-    when :tab
-      "\t" #タブ
-    when :spaces
-      " " * @indent_width #指定した文字数の空白
-    end
-  end
-=end
+  rule(:integer) { match('[0-9]').repeat(1).as(:int) }
+
+  rule(:label){
+    str("*") >>
+    space? >>
+    ( str("S").as(:label_start) | 
+      str("E").as(:label_end) | 
+      label_node) >>
+    str(" ").repeat(0) >> newline
+  }
+
+  rule(:label_node){
+    match('[a-zA-Z0-9_]').repeat(1).as(:chapter) >> space? >> match('[0-9]').repeat(1).as(:id) |
+    match('[a-zA-Z0-9_]').repeat(1).as(:chapter)
+  }
 
   #インデント
   rule(:indent) { 
@@ -94,26 +92,6 @@ class TKSParser < Parslet::Parser
   #改行
   rule(:newline) { 
     str("\n") 
-  }
-
-  rule(:label_prefix) { 
-    str("*")
-  }
-
-  rule(:label_start) { 
-    (label_prefix >> str("S")).as(:label_start) >>
-    newline #改行
-  }
-
-  rule(:label_end) { 
-    (label_prefix >> str("E")).as(:label_end) >>
-    newline #改行
-  }
-
-  rule(:label_node) { 
-    label_prefix >> 
-    ((newline | str(" ")).absent? >> any).repeat(0).as(:label_node) >>
-    newline #改行
   }
 
   #コマンドブロック
@@ -208,12 +186,6 @@ class TKSParser < Parslet::Parser
     newline.as(:flush)
   }
 
-  rule(:label) { 
-    ( label_start | 
-      label_end |
-      label_node) 
-  }
-
   rule(:node) { 
     ( comment | 
       command | 
@@ -226,7 +198,7 @@ class TKSParser < Parslet::Parser
       node).repeat
   }
 
-  root :document
+  root(:document)
 
   class Replacer < Parslet::Transform
     rule(
@@ -242,10 +214,18 @@ class TKSParser < Parslet::Parser
     }
 
     rule(
-      :label_node => simple(:target)
+      :chapter => simple(:chapter), :id => simple(:id)
     ) { 
       ["end"] + 
-      ["_LABEL_ chapter: :_START_, id: 0 do"]
+      ["_LABEL_ chapter: :#{chapter}, id: #{id} do"]
+    }
+
+    rule(
+      :chapter => simple(:chapter)
+    ) { 
+      pp chapter
+      ["end"] + 
+      ["_LABEL_ chapter: :#{chapter} do"]
     }
 
     #コメント行→無視

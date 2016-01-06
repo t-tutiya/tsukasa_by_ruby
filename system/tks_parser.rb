@@ -96,6 +96,26 @@ class TKSParser < Parslet::Parser
     str("\n") 
   }
 
+  rule(:label_prefix) { 
+    str("*")
+  }
+
+  rule(:label_start) { 
+    (label_prefix >> str("S")).as(:label_start) >>
+    newline #改行
+  }
+
+  rule(:label_end) { 
+    (label_prefix >> str("E")).as(:label_end) >>
+    newline #改行
+  }
+
+  rule(:label_node) { 
+    label_prefix >> 
+    ((newline | str(" ")).absent? >> any).repeat(0).as(:label_node) >>
+    newline #改行
+  }
+
   #コマンドブロック
   rule(:command) {
     ( str(script_prefix) | indent) >> #スクリプト行接頭字orインデント
@@ -188,6 +208,12 @@ class TKSParser < Parslet::Parser
     newline.as(:flush)
   }
 
+  rule(:label) { 
+    ( label_start | 
+      label_end |
+      label_node) 
+  }
+
   rule(:node) { 
     ( comment | 
       command | 
@@ -196,12 +222,32 @@ class TKSParser < Parslet::Parser
 
   rule(:document) { 
     ( blankline | 
-      node).repeat 
+      label | 
+      node).repeat
   }
 
   root :document
 
   class Replacer < Parslet::Transform
+    rule(
+      :label_start => simple(:target)
+    ) { 
+      ["_LABEL_ chapter: :_START_, id: 0 do"]
+    }
+
+    rule(
+      :label_end => simple(:target)
+    ) { 
+      ["end"]
+    }
+
+    rule(
+      :label_node => simple(:target)
+    ) { 
+      ["end"] + 
+      ["_LABEL_ chapter: :_START_, id: 0 do"]
+    }
+
     #コメント行→無視
     rule(
       :comment_line => simple(:target)

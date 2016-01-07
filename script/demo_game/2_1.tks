@@ -1,5 +1,4 @@
 //■■■□■■■■□■■■■□■■■■□
-  _SET_ :_TEMP_, flag: nil
 　ルミネの中を駆け回る。金田は汗一つかか
 ずに下らない話を続けていた。
 「優先度１の作業を終えても、次の優先度１
@@ -13,14 +12,17 @@
 「あれに乗って　[func_select " 屋上に行く", id: 1]か、突き当たりを
 曲がって[func_select " 外に出る ", id: 0]かだな。君が決めてくれ」
   #ウェイク状態まで待機
+  _SET_ :_TEMP_, flag: nil
   _WAIT_ :_TEMP_,  not_equal: {flag: nil}
   _WAIT_ count: 90
   _SEND_ :text0  do
     _FLUSH_
   end
   _CHECK_ equal: {flag: 0} do
+    _SET_ :_TEMP_, flag: nil
   	_INCLUDE_ "./script/demo_game/3_0.tks"
   end
   _CHECK_ equal: {flag: 1} do
+    _SET_ :_TEMP_, flag: nil
   	_INCLUDE_ "./script/demo_game/3_1.tks"
   end

@@ -67,7 +67,7 @@ _DEFINE_ :pause do |argument, options|
   end
 
   #クリック待ちアイコンを削除
-  _CHECK_ :_TEMP_, equal: {_SKIP_: false} do
+  _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
     _SEND_ default: :TextLayer do 
       _SEND_ :icon do
         _DELETE_
@@ -185,7 +185,7 @@ _DEFINE_ :TextWindow do |argument, options|
       _DEFINE_ :pause do |argument, options|
         _WAIT_ count:17
 
-        _CHECK_ :_TEMP_, equal: {_SKIP_: false} do
+        _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
           _SEND_TO_ACTIVE_LINE_ do
             if options[:icon] == :line_icon_func
                 line_icon_func align_y: :bottom, float_x: :left

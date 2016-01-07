@@ -162,10 +162,13 @@ class Tsukasa < RenderTargetControl
 
   def serialize(control_name = :Tsukasa, **options)
 
-    options.update({
-    })
+    command_list = []
 
-    return super(control_name, options)
+    @control_list.each do |control|
+      command_list.push(control.serialize())
+    end
+
+    return command_list
   end
 
   def update

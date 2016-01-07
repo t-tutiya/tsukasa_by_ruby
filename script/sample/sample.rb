@@ -32,4 +32,9 @@
 #_INCLUDE_ "./script/sample/sample_2_1_3.rb" 	#ボタンサンプル３
 
 #ラベル（既読フラグ管理）サンプル
-_INCLUDE_ "./script/sample/sample_2_2.tks"
+#_INCLUDE_ "./script/sample/sample_2_2.tks"
+
+#クイックセーブ／ロード
+#_INCLUDE_ "./script/sample/sample_2_3_1.rb" #クイックセーブ実行
+_INCLUDE_ "./script/sample/sample_2_3_2.rb" #クイックロード実行
+

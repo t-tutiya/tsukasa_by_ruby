@@ -203,11 +203,6 @@ class Tsukasa < RenderTargetControl
     self.height = options[:height]
   end
 
-  #スクリーンショットキャプチャ
-  def command__CAPTURE_SS_(argument, options, inner_options)
-    Window.get_screen_shot(argument,options[:format] || FORMAT_PNG)
-  end
-
   #フルスクリーンのオンオフ
   def command__FULL_SCREEN_(argument, options, inner_options)
     Window.full_screen = argument #bool

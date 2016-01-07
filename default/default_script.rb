@@ -43,6 +43,11 @@ _CREATE_ :LayoutControl do
   end
 end
 
+#スクリーンショットキャプチャ
+_DEFINE_ :_CAPTURE_SS_ do |file_path, options|
+  Window.get_screen_shot(file_path,options[:format] || FORMAT_PNG)
+end
+
 ###############################################################################
 #テキストレイヤ関連
 ###############################################################################

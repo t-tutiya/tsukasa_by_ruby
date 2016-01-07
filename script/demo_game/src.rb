@@ -13,8 +13,11 @@ text0 do
     _MOVE_   30, 
       x:[800,0], 
       y:[-600,0],
-      option: {easing: :out_quart, 
-      check: {key_down: K_RCONTROL, key_push: K_SPACE}} do
+      option: { easing: :out_quart, 
+                check: {key_down: K_RCONTROL, 
+                        key_push: K_SPACE,
+                        window: :key_down}
+              } do
       _SET_ x: 0, y:0
     end
     #トランジションが終了するまで待機
@@ -27,12 +30,14 @@ text0 do
   _DEFINE_ :_CHAR_WAIT_ do
     _WAIT_  count: 2,
             key_down: K_RCONTROL,
-            key_push: K_SPACE
+            key_push: K_SPACE,
+            window: :key_down
   end
   _DEFINE_ :_LINE_WAIT_ do
     _WAIT_  count: 2,
             key_down: K_RCONTROL,
-            key_push: K_SPACE
+            key_push: K_SPACE,
+            window: :key_down
   end
 end
 
@@ -59,22 +64,25 @@ _DEFINE_ :TextSelect do |argument, options|
         charactor: options[:text]
       _MOVE_ 30, 
         alpha:[0,255],
-        option: {check: {key_down: K_RCONTROL, key_push: K_SPACE}} do
+        option: {check:{key_down: K_RCONTROL, 
+                        key_push: K_SPACE,
+                        window: :key_down}} do
           _SET_ alpha: 255
       end
     end
     _MOVE_ 30, 
       x:[800,0],
-      option: { check: {easing: :out_quart, 
-                key_down: K_RCONTROL, 
-                key_push: K_SPACE}} do
+      option: { easing: :out_quart,
+                check:{ key_down: K_RCONTROL, 
+                        key_push: K_SPACE,
+                        window: :key_down}} do
       _SET_ x: 0
     end
     #トランジションが終了するまで待機
     _WAIT_  command: :_MOVE_ 
     _NEXT_LOOP_ do
-      _CHECK_ mouse: [:cursor_over] do
       #マウスが領域内に入ったら色を変え、文字をスクロールインさせる
+      _CHECK_ mouse: [:cursor_over] do
         text_area{
           _SET_ bgcolor: [255,0,255]
         }
@@ -105,7 +113,10 @@ _DEFINE_ :func_select do |argument, options, control|
   _SEND_ default: :TextLayer do
     _SEND_TO_ACTIVE_LINE_ do
       TextSelect id: options[:id], text: argument
-      _WAIT_ count: 3, key_down: K_RCONTROL, key_push: K_SPACE
+      _WAIT_  count: 3, 
+              key_down: K_RCONTROL, 
+              key_push: K_SPACE,
+              window: :key_down
     end
   end
 end

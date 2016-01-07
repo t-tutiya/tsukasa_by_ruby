@@ -193,9 +193,6 @@ class Control #内部メソッド
   def sleep_mode(mode)
     @sleep_mode = mode
   end
-  def sleep_mode?
-    @sleep_mode
-  end
 =begin
   def serialize(options = {})
 
@@ -681,7 +678,6 @@ class Control #スリープ
     @root_control.find_control(argument).each do |control|
       control.sleep_mode(true)
     end
-
   end
 
   #コントロールをスリープ状態から復帰させる

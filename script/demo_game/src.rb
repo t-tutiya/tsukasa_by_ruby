@@ -21,7 +21,7 @@ text0 do
       _SET_ x: 0, y:0
     end
     #トランジションが終了するまで待機
-    _WAIT_  command: :_MOVE_ 
+    _WAIT_  not_command_stack: :_MOVE_ 
     #待機フラグが下がるまで待機
     _WAIT_ :_TEMP_, not_equal: {flag: nil}
     #文字列をカスケードアウトさせる
@@ -79,7 +79,7 @@ _DEFINE_ :TextSelect do |argument, options|
       _SET_ x: 0
     end
     #トランジションが終了するまで待機
-    _WAIT_  command: :_MOVE_ 
+    _WAIT_  not_command_stack: :_MOVE_ 
     _NEXT_LOOP_ do
       #マウスが領域内に入ったら色を変え、文字をスクロールインさせる
       _CHECK_ mouse: [:cursor_over] do

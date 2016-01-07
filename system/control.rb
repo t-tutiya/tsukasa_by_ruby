@@ -255,11 +255,6 @@ class Control #内部メソッド
   end
 
   def check_imple(argument, options, inner_options)
-    #条件の強制的な成立
-    return true if argument === true
-    #条件の強制的な不成立
-    return false if argument === false
-
     #演算対象のデータ領域を設定
     data_strore = argument ? argument : :_TEMP_
 
@@ -278,7 +273,16 @@ class Control #内部メソッド
         end
 
       #継続条件：コマンドがリスト上に存在している
-      when :command
+      when :command_stack
+        value.each do |command|
+          if @next_frame_commands.index{|stack_command|
+            stack_command[0] == command}
+            return true 
+          end
+        end
+
+      #継続条件：コマンドがリスト上に存在していない
+      when :not_command_stack
         value.each do |command|
           unless @next_frame_commands.index{|stack_command|
             stack_command[0] == command}
@@ -518,7 +522,6 @@ class Control #制御構文
                   [], 
                   inner_options[:yield_block_stack], 
                   &inner_options[:block])
-      return
     end
   end
 

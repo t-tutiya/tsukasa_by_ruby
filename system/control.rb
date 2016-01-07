@@ -280,8 +280,8 @@ class Control #内部メソッド
       #継続条件：コマンドがリスト上に存在している
       when :command
         value.each do |command|
-          unless @next_frame_commands.index{|command|
-            command[0] == command}
+          unless @next_frame_commands.index{|stack_command|
+            stack_command[0] == command}
             return true 
           end
         end

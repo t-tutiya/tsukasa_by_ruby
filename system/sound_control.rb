@@ -51,20 +51,16 @@ class SoundControl  < Control
     Ayame.update
     super
   end
-=begin
-  def serialize(options = {})
+
+  def serialize(control_name = :SoundControl, **options)
+    
     options.update({
-      :file_path => @file_path,
-      :start => @start,
-      :loop_start => @loop_start,
-      :loop_end => @loop_end,
-      #:loop_count => @loop_count,
-      :volume => @volume,
+      :file_path  => @file_path,
     })
 
-    return  super(options)
+    return super(control_name, options)
   end
-=end
+
   #サウンドリソースを解放します
   def dispose
     if @entity

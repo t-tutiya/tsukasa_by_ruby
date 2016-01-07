@@ -150,11 +150,6 @@ class Tsukasa < RenderTargetControl
                           :yield_block_stack => [],
                         }]]
 
-    #ラベル関連（未検証）
-    @label_name = options[:label_name] || nil
-    @label_id = options[:label_id] || 0
-    @label_options = options[:label_options] || nil
-
     #カーソル歌詞設定
     @cursor_visible = true
     @cursor_type = IDC_ARROW
@@ -164,18 +159,15 @@ class Tsukasa < RenderTargetControl
           { :block_stack => []}, 
           @root_control)
   end
-=begin
-  def serialize(options = {})
+
+  def serialize(control_name = :Tsukasa, **options)
 
     options.update({
-      :label_name => @label_name,
-      :label_id => @label_id,
-      :label_options => @label_options,
     })
 
-    return super(options)
+    return super(control_name, options)
   end
-=end
+
   def update
     #mマウスカーソルが不可視で、かつカーソルが画像の外にある場合
     unless @cursor_visible

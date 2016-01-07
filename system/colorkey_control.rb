@@ -49,5 +49,15 @@ class ColorkeyControl < Control
 
     @border = options[:border] || 255
   end
+
+  def serialize(control_name = :ColorkeyControl, **options)
+    
+    options.update({
+      :file_path  => @file_path,
+      :border  => @border,
+    })
+
+    return super(control_name, options)
+  end
 end
 

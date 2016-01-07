@@ -40,30 +40,58 @@ class TileImageControl < Control
     hsh[key] = Image.load(key)
   }
 
+  attr_accessor :file_path
+  attr_accessor :x_count
+  attr_accessor :y_count
+  attr_accessor :start_index
+  attr_accessor :float_x
+  attr_accessor :float_y
+
   def initialize(argument, options, inner_options, root_control)
     super
+
+    @file_path = options[:file_path]
+    @x_count = options[:x_count] || 1
+    @y_count = options[:y_count] || 1
+    @start_index = options[:start_index] || 0
+    @float_x = options[:float_x]
+    @float_y = options[:float_y]
+
     if options[:entity]
       entity = options[:entity]
     else
-      entity = @@tile_image_cache[options[:file_path]]
+      entity = @@tile_image_cache[@file_path]
     end
 
-    entities = entity.slice_tiles(options[:x_count] || 1, 
-                                 options[:y_count] || 1)
+    entities = entity.slice_tiles(@x_count, @y_count)
 
     command_list = []
-    entities.each.with_index(options[:start_index] || 0) do |image, index|
+    entities.each.with_index(@start_index) do |image, index|
       command_list.push([:_CREATE_, 
                         :ImageControl,
                         { :entity => image,
                           :id => index,
-                          :float_x => options[:float_x],
-                          :float_y => options[:float_y],
+                          :float_x => @float_x,
+                          :float_y => @float_y,
                           :visible => false
                         }, 
                         {}])
     end
     eval_commands(command_list)
+  end
+
+  def serialize(control_name = :TileImageControl, **options)
+    
+    options.update({
+      :file_path => @file_path,
+      :x_count => @x_count,
+      :y_count => @y_count,
+      :start_index => @start_index,
+      :float_x => @float_x,
+      :float_y => @float_y,
+    })
+
+    return super(control_name, options)
   end
 
   def dispose()

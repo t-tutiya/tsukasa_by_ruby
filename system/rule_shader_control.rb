@@ -75,6 +75,17 @@ class RuleShaderControl < Control
     super
   end
 
+  def serialize(control_name = :RuleShaderControl, **options)
+    
+    options.update({
+      :file_path  => @file_path,
+      :counter  => @counter,
+      :vague=> @vague,
+    })
+
+    return super(control_name, options)
+  end
+
   class TransitionShader < DXRuby::Shader
     #ルールトランジションを実行するHLSLスクリプト
     hlsl = <<EOS

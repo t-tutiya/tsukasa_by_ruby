@@ -48,15 +48,13 @@ class ImageControl < Control
     end
     super
   end
-=begin
-  def serialize(options = {})
-    options.update({
-      :file_path => @file_path,
-    })
 
-    return super(options)
+  def serialize(control_name = :ImageControl, **options)
+    
+    options[:file_path] = @file_path
+
+    return super(control_name, options)
   end
-=end
 
   #画像を保存する
   def command__SAVE_IMAGE_(argument, options, inner_options)

@@ -46,26 +46,9 @@ class LayoutControl < Control
 
     return super(x, y, target, parent)
   end
-=begin
-  def serialize(options = {})
 
-    options.update({
-      :x  => @x,
-      :y => @y,
-
-      :offset_x => @offset_x,
-      :offset_y => @offset_y,
-
-      :visible => @visible,
-
-      :float_x => @float_x,
-      :align_y => @align_y,
-
-      :real_width => @real_width,
-      :real_height => @real_height,
-    })
-
-    return super(options)
+  def serialize(control_name = :LayoutControl, **options)
+    return super(control_name, options)
   end
-=end
+
 end

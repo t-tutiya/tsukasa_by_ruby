@@ -312,6 +312,36 @@ module Layoutable
     return super
   end
 
+  def serialize(control_name, **options)
+    
+    options.update({
+      :x  => @x,
+      :y => @y,
+
+      :offset_x => @offset_x,
+      :offset_y => @offset_y,
+
+      :visible => @visible,
+
+      :draw_option => @draw_option,
+
+      :float_x => @float_x,
+      :float_y => @float_y,
+
+      :align_y => @align_y,
+
+      :width => @width,
+      :height => @height,
+
+      :real_width => @real_width,
+      :real_height => @real_height,
+
+      :collision_shape => @collision_shape,
+    })
+
+    return super(control_name, options)
+  end
+
   def command__MOUSE_POS_(argument, options, inner_options)
     eval_block( argument, {:_X_ => @cursol_x, :_Y_ => @cursol_y}, 
                 inner_options[:block_stack], 

@@ -133,4 +133,16 @@ class RenderTargetControl < Control
                 }, 
                 inner_options)
   end
+
+  def serialize(control_name = :RenderTargetControl, **options)
+    
+    options.update({
+      :bgcolor  => @bgcolor,
+      :border  => @border,
+      :border_color=> @border_color,
+    })
+
+    return super(control_name, options)
+  end
+
 end

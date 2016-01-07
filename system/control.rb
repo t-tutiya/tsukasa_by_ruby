@@ -193,27 +193,25 @@ class Control #内部メソッド
   def sleep_mode(mode)
     @sleep_mode = mode
   end
-=begin
-  def serialize(options = {})
+
+  def serialize(control_name = nil, **options)
+    raise unless control_name
 
     command_list = []
 
     #子コントロールのシリアライズコマンドを取得
     @control_list.each do |control|
-      command_list.push(control.serialize)
+      command_list.push(control.serialize())
     end
 
-    options.update({
-      :id => @id,
-      :command_list => command_list,
-    })
+    options[:id] = @id
+    options[:command_list] = command_list unless command_list.empty?
 
     #オプションを生成
-    command = [:_CREATE_, options, {}]
+    command = [:_CREATE_, control_name, options, {}]
 
     return command
   end
-=end
 end
 
 class Control #内部メソッド
@@ -864,13 +862,9 @@ class Control #セーブデータ制御
 
   def command__QUICK_SAVE_(argument, options, inner_options)
     raise unless argument.kind_of?(Numeric)
-    command_list = []
-    #子コントロールのシリアライズコマンドを取得
-    @control_list.each do |control|
-      command_list.push(control.serialize)
-    end
 
-  
+    command_list = serialize()
+
     db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
                     argument.to_s +
                     @_SYSTEM_[:_QUICK_DATA_FILENAME_])

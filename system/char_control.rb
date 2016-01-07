@@ -281,8 +281,19 @@ class CharControl < ImageControl
 
   private
 
-  #############################################################################
-  #文字列関連コマンド
-  #############################################################################
+  def serialize(control_name = :CharControl, **options)
+    
+    options.update({
+      :size => @size,
+      :font_name => @font_name,
+      :weight => @weight,
+      :italic => @italic,
+      :charactor => @charactor,
+
+      :font_draw_option => @font_draw_option,
+    })
+
+    return super(control_name, options)
+  end
 
 end

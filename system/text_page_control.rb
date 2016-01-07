@@ -241,42 +241,21 @@ class TextPageControl < LayoutControl
                       {})
   end
 
-=begin
-  def serialize(options = {})
-    pp "TextPageControlはシリアライズできません"
-    raise
-
+  def serialize(control_name = :TextPageControl, **options)
+    
     options.update({
-      :font_config => @font_config,
-
-      #未実装
-      #:use_image_font => @use_image_font,
-      #:image_face => @image_face,
-
-      :size => @size,
-      :fontname => @fontname,
-      :bold => @bold,
-      :italic => @italic,
-
-      :wait_frame => @wait_frame,
-      :line_feed_wait_frame => @line_feed_wait_frame,
-
       :line_spacing => @line_spacing,
       :charactor_pitch => @charactor_pitch,
       :line_height => @line_height,
 
-      :rubi_size => @rubi_size,
-      :rubi_offset_x => @rubi_offset_x,
-      :rubi_offset_y => @rubi_offset_y,
-      :rubi_pitch => @rubi_pitch,
-      :rubi_wait_frame => @rubi_wait_frame,
-
       :indent => @indent,
+
+      :char_option => @char_option,
+      :rubi_option => @rubi_option,
     })
 
-    return super(options)
+    return super(control_name, options)
   end
-=end
 
   #############################################################################
   #非公開インターフェイス

@@ -105,8 +105,11 @@ module Layoutable
 
     @old_cursol_x = @old_cursol_y = nil
     
-    @mouse_pos_x = 0
-    @mouse_pos_y = 0
+    #TODO：オブジェクトの生成直後は@collision_spriteと@mouse_spriteはどちらも相対座標が[0,0]設定になっている。
+    #この座標は次のrenderタイミングに更新されるため、その前に実行されるupdateタイミングでは衝突扱いになってします。
+    #そのため、マウス座標を[-1, -1]に設定している。これは場当たり的な修正であり、本来はマウス座標の更新がrenderタイミングに行われているロジックを修正すべき
+    @mouse_pos_x = -1
+    @mouse_pos_y = -1
 
     super
   end

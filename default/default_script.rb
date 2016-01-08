@@ -37,7 +37,7 @@ require 'dxruby'
 _CREATE_ :LayoutControl do
   _NEXT_LOOP_ do
     #ウィンドウの閉じるボタンが押された場合に呼びだされる。
-    _CHECK_ window: [:requested_close] do
+    _CHECK_ system: [:requested_close] do
       _EXIT_ #アプリを終了する
     end
   end
@@ -66,7 +66,7 @@ _DEFINE_ :pause do |argument, options|
   _WAIT_ :_TEMP_, 
           key_down: K_RCONTROL, 
           equal: {sleep: false} do
-    _CHECK_ window: [:block_given] do
+    _CHECK_ system: [:block_given] do
       _YIELD_
     end
   end
@@ -118,14 +118,14 @@ _DEFINE_ :TextWindow do |argument, options|
         _WAIT_  :_TEMP_, count: 2,
                 key_down: K_RCONTROL,
                 key_push: K_SPACE,
-                window: [:key_down],
+                system: [:key_down],
                 equal: {_SKIP_: true}
       end
       _DEFINE_ :_LINE_WAIT_ do
         _WAIT_  :_TEMP_, count: 2,
                 key_down: K_RCONTROL,
                 key_push: K_SPACE,
-                window: [:key_down],
+                system: [:key_down],
                 equal: {_SKIP_: true}
       end
       _DEFINE_ :_CHAR_RENDERER_ do
@@ -133,7 +133,7 @@ _DEFINE_ :TextWindow do |argument, options|
         _MOVE_   30, alpha:[0,255],
               option: {check: { key_down: K_RCONTROL, 
                                 key_push: K_SPACE,
-                                window: [:key_down],
+                                system: [:key_down],
                                 equal: {_SKIP_: true}},
                        datastore: :_TEMP_} do
                 _SET_ alpha: 255
@@ -151,7 +151,7 @@ _DEFINE_ :TextWindow do |argument, options|
               option: {
               check: {key_down: K_RCONTROL, 
                       key_push: K_SPACE,
-                      window: [:key_down]
+                      system: [:key_down]
                       }} do
                 #スキップされた場合
                 _CHECK_ key_down: K_RCONTROL,
@@ -160,7 +160,7 @@ _DEFINE_ :TextWindow do |argument, options|
                   _SET_ alpha: 255
                 end
                 _CHECK_ key_push: K_SPACE,
-                        window: [:key_down] do
+                        system: [:key_down] do
                   #CTRLスキップ中でなければ透明度128
                   _SET_ alpha: 128
                 end
@@ -174,7 +174,7 @@ _DEFINE_ :TextWindow do |argument, options|
           _WAIT_  count: argument,
                   key_down: K_RCONTROL,
                   key_push: K_SPACE,
-                  window: [:key_down]
+                  system: [:key_down]
         end
       end
       
@@ -188,7 +188,7 @@ _DEFINE_ :TextWindow do |argument, options|
         _WAIT_  count:17,
                 key_down: K_RCONTROL,
                 key_push: K_SPACE,
-                window: [:key_down],
+                system: [:key_down],
                 equal: {_SKIP_: true}
 
         _END_FRAME_
@@ -206,7 +206,7 @@ _DEFINE_ :TextWindow do |argument, options|
         #スペースキーあるいはCTRLキーの押下待機
         _WAIT_  key_down: K_RCONTROL,
                 key_push: K_SPACE,
-                window: [:key_down],
+                system: [:key_down],
                 equal: {_SKIP_: true}
 
         #ウェイクに移行
@@ -215,7 +215,7 @@ _DEFINE_ :TextWindow do |argument, options|
 
       _SET_ size: 32
 
-      _CHECK_ window: [:block_given] do
+      _CHECK_ system: [:block_given] do
         _YIELD_
       end
   end
@@ -244,7 +244,7 @@ _DEFINE_ :line_icon_func do |argument, options|
             :y_count => 2 do
       _INCLUDE_ "./resource/icon/icon_8_a.rb"
     end
-    _CHECK_ window: [:block_given] do
+    _CHECK_ system: [:block_given] do
       _YIELD_
     end
   end
@@ -279,7 +279,7 @@ _DEFINE_ :page_icon_func do |argument, options|
       	_WAIT_  count: 5
       end
     end
-    _CHECK_ window: [:block_given] do
+    _CHECK_ system: [:block_given] do
       _YIELD_
     end
   end
@@ -351,7 +351,7 @@ _DEFINE_ :button do |argument, options|
         over    {_SET_ visible: true}
         key_down{_SET_ visible: false}
       end
-      _CHECK_ window: [:block_given] do
+      _CHECK_ system: [:block_given] do
         _YIELD_
       end
     end

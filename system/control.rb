@@ -366,7 +366,7 @@ class Control #内部メソッド
           return true if @root_control.send(data_strore)[key] != nil
         end
 
-      when :window
+      when :system
         value.each do |key|
           case key
           #ウィンドウの閉じるボタンが押下された場合

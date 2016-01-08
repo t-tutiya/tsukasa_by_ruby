@@ -16,7 +16,7 @@ text0 do
       option: { easing: :out_quart, 
                 check: {key_down: K_RCONTROL, 
                         key_push: K_SPACE,
-                        window: :key_down}
+                        system: :key_down}
               } do
       _SET_ x: 0, y:0
     end
@@ -31,13 +31,13 @@ text0 do
     _WAIT_  count: 2,
             key_down: K_RCONTROL,
             key_push: K_SPACE,
-            window: :key_down
+            system: :key_down
   end
   _DEFINE_ :_LINE_WAIT_ do
     _WAIT_  count: 2,
             key_down: K_RCONTROL,
             key_push: K_SPACE,
-            window: :key_down
+            system: :key_down
   end
 end
 
@@ -66,7 +66,7 @@ _DEFINE_ :TextSelect do |argument, options|
         alpha:[0,255],
         option: {check:{key_down: K_RCONTROL, 
                         key_push: K_SPACE,
-                        window: :key_down}} do
+                        system: :key_down}} do
           _SET_ alpha: 255
       end
     end
@@ -75,7 +75,7 @@ _DEFINE_ :TextSelect do |argument, options|
       option: { easing: :out_quart,
                 check:{ key_down: K_RCONTROL, 
                         key_push: K_SPACE,
-                        window: :key_down}} do
+                        system: :key_down}} do
       _SET_ x: 0
     end
     #トランジションが終了するまで待機
@@ -116,7 +116,7 @@ _DEFINE_ :func_select do |argument, options, control|
       _WAIT_  count: 3, 
               key_down: K_RCONTROL, 
               key_push: K_SPACE,
-              window: :key_down
+              system: :key_down
     end
   end
 end

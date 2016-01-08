@@ -65,3 +65,56 @@ http://mirichi.github.io/dxruby-doc/api/constant_keycode.html
     * githubからインストールする場合はこのフォルダが存在しないので、手動で空フォルダを作成してください。
 * main.rb 実行スクリプト。これ自体は司エンジンには含まれません。
 * readme.rd 簡易ドキュメント
+
+##更新履歴
+
+v1.1.0(2016/1/8)
+
+・Controlクラス
+　・追加コマンド
+　　・_LOAD_NATIVE_：ネイティブrubyコードの読み込み。
+　　・_NEXT_LOOP_：_LOOP_の特殊版
+　　・_PARSE_：tks/司スクリプトをパースする
+　　・_QUICK_SAVE_ / _QUICK_LOAD_ ：クイックセーブ／ロードを実現するメカニズム。　・追加条件判定項目
+　　・command_stack / not_command_stack（旧command）
+　　・システム全体の判定を行うsystemを追加。
+　　　・key_down/key_up/right_key_down/right_key_up
+　　　・block_given/requested_close(mouseから移動)
+　・機能追加／変更
+　　・_TO_IMAGE_コマンド：任意の拡大率でImageControlを作れるようにした
+　　・_YILED_コマンド：付与ブロック無しに呼びだされた場合は例外で落とすようにした
+　　・_INCLUDE_コマンド：任意のparserクラスをオプションで指定できるようにした
+　　・条件判定で単一要素を渡す際に、[]で囲まなくても良いようにした。
+　　・_PARSER_データストア追加
+
+・TextPageControlクラス
+　・文字間待機、行間待機をユーザー定義関数で定義する形式に変更
+　・文字レンダラをユーザー定義関数で定義する形式に変更（それに伴い_CHAR_RENDERER_コマンドを削除）
+　・TextPageControlのwait_frame/line_feed_wait_frame各プロパティを廃止。
+
+・ImageControlクラス
+　・_SAVE_IMAGE_（ImageControl）：ImageControlを画像保存する
+
+・司スクリプト
+　・_TEMP_/_SYSYTEM_/_LOCAL_の各データストアをスクリプト上から直接参照できるようにした。
+　・データストア_TEMP_/_LOCAL_/_SYSTEM_にそれぞれ_T_/_L_/_S_の短縮名を用意した
+
+・標準テキストウィンドウ
+　・構造を簡略化し、背景画像を廃止した。
+　・左クリックでウェイトスキップされるようにした。
+　・ページ送りアイコンの表示にend_page/epユーザー定義コマンドを用いる物とした（これにともないpage_pauseを廃止）
+　・スキップ時にクリック待ちアイコンを表示しないように修正
+　・ユーザー定義コマンド追加
+　・_SEND_TO_ACTIVE_LINE_：テキストウィンドウのアクティブ行にコマンドを送信する
+
+・追加ユーザー定義コマンド
+　・_LABEL_：既読フラグ管理機能（これに伴いlabel組み込みコマンドを削除）
+　・_CAPTURE_SS_：組み込みからユーザー定義に変更
+
+・サンプルコード
+　・ランチャーを用意
+　・既読フラグ管理のサンプルコードを追加
+　・シリアライズのサンプルコードを追加
+　・サンプルゲームにあおいたくさんの「野メイド」移植版を追加
+
+v1.0.0(2015/12/24)　1stリリース

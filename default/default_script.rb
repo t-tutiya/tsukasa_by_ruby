@@ -79,9 +79,6 @@ _DEFINE_ :pause do |argument, options|
       end
     end
   end
-
-  #１フレ分は必ず表示させる
-  _END_FRAME_ 
 end
 
 #行クリック待ちポーズ

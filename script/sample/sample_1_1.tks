@@ -22,5 +22,5 @@
 	text0{
 		_TEXT_ "インデントされた行もコマンドブロックと見なされます"
 		end_pause
+  	_FLUSH_
 	}
-	_FLUSH_

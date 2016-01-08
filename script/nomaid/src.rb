@@ -189,7 +189,6 @@ text0 do
   end
   _DEFINE_ :_LINE_WAIT_ do
   end
-  _FLUSH_
 end
 
 _END_FRAME_
@@ -212,6 +211,7 @@ _LOOP_ count:7 do |arg, ops, control|
     #_INCLUDE_ "./script/nomaid/start_week.tks"
 
     _SEND_(default: :TextLayer){
+      _FLUSH_
       _TEXT_  "第#{_T[:week] + 1 }週#{_T[:day] + 1}日目。現在の所持金は$#{_T[:gold]}。"
       _LINE_FEED_
       _TEXT_  "借金の返済まで後#{7 - _T[:day]}日。"
@@ -245,6 +245,7 @@ _LOOP_ count:7 do |arg, ops, control|
     maid{
       end_day
     }
+    _END_FRAME_
   end
 
   _SET_ :_TEMP_, gameover: nil

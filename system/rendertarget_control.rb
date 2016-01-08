@@ -58,7 +58,7 @@ class RenderTargetControl < Control
   attr_accessor  :border_color
 
   def initialize(argument, options, inner_options, root_control)
-    @bgcolor = options[:bgcolor]  || [0,0,0]
+    @bgcolor = options[:bgcolor]  || [0,0,0,0]
     #保持オブジェクトの初期化
     options[:entity] = RenderTarget.new(options[:width]  || 1, 
                                         options[:height] || 1, 

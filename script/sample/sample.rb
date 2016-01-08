@@ -1,6 +1,6 @@
 #動作を確認したいサンプルファイルのコメントを外してください。
 
-#_INCLUDE_ "./script/sample/sample_1_1.tks" 	#文字の表示
+_INCLUDE_ "./script/sample/sample_1_1.tks" 	#文字の表示
 #_INCLUDE_ "./script/sample/sample_1_2.tks" 	#文字装飾
 
 #_INCLUDE_ "./script/sample/sample_1_3.tks" 	#コントロールの表示
@@ -36,5 +36,5 @@
 
 #クイックセーブ／ロード
 #_INCLUDE_ "./script/sample/sample_2_3_1.rb" #クイックセーブ実行
-_INCLUDE_ "./script/sample/sample_2_3_2.rb" #クイックロード実行
+#_INCLUDE_ "./script/sample/sample_2_3_2.rb" #クイックロード実行
 

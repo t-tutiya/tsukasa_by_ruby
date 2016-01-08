@@ -10,7 +10,7 @@ _CREATE_ :RenderTargetControl,
         id: :over, visible: false
   _CREATE_ :ImageControl, entity: Image.new(256,256).circle_fill(128,128,128,C_GREEN).draw_font(80, 120, "DOWN", Font.default),
     id: :key_down, visible: false
-  _LOOP_ do
+  _NEXT_LOOP_ do
     _CHECK_ mouse: [:cursor_over] do
       normal  {_SET_ visible: false}
       over    {_SET_ visible: true}

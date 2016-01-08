@@ -110,16 +110,15 @@ _DEFINE_ :lesson_menu do
   _CHECK_ not_equal: {flag: :cancel} do
     maid{
       lesson
+      _SEND_ROOT_ do
+        _SEND_(default: :TextLayer){
+          _FLUSH_
+          _TEXT_ "習い事によってメイドは少し成長した。"
+        }
+        ep
+      end
     }
     _SET_ :_TEMP_, end_day: true
-    _END_FRAME_ #これやめたい
-
-    #_INCLUDE_ "./script/nomaid/lesson.tks"
-    _SEND_(default: :TextLayer){
-      _FLUSH_
-      _TEXT_ "習い事によってメイドは少し成長した。"
-    }
-    ep
   end
 end
 
@@ -144,16 +143,15 @@ _DEFINE_ :work_menu do
   _CHECK_ not_equal: {flag: :cancel} do
     maid{
       work
+      _SEND_ROOT_ do
+        _SEND_(default: :TextLayer){
+          _FLUSH_
+          _TEXT_ "労働の対価として$#{_TEMP_[:reward]}を得た。"
+        }
+        ep
+      end
     }
     _SET_ :_TEMP_, end_day: true
-    _END_FRAME_ #これやめたい
-
-    #_INCLUDE_ "./script/nomaid/work.tks"
-    _SEND_(default: :TextLayer){
-      _FLUSH_
-      _TEXT_ "労働の対価として$#{_TEMP_[:reward]}を得た。"
-    }
-    ep
   end
 end
 
@@ -161,17 +159,15 @@ end
 _DEFINE_ :rest do
   maid{
     rest
+    _SEND_ROOT_ do
+      _SEND_(default: :TextLayer){
+        _FLUSH_
+        _TEXT_ "メイドはゆっくりと身体を休めた……。"
+      }
+      ep
+    end
   }
   _SET_ :_TEMP_, end_day: true
-
-  _END_FRAME_ #これやめたい
-
-  #_INCLUDE_ "./script/nomaid/rest.tks"
-  _SEND_(default: :TextLayer){
-    _FLUSH_
-    _TEXT_ "メイドはゆっくりと身体を休めた……。"
-  }
-  ep
 end
 
 #ＯＰ用テキストレイアウト指定
@@ -182,11 +178,8 @@ text0{
 #ＯＰメッセージ表示
 _INCLUDE_ "./script/nomaid/op.tks"
 
-_END_FRAME_
-
 #テキストウィンドウの際レイアウト
 text0 do
-  _END_FRAME_
   _SET_ x: 32, y: 256, size:32
         
   #文字レンダラを削除する
@@ -196,7 +189,10 @@ text0 do
   end
   _DEFINE_ :_LINE_WAIT_ do
   end
+  _FLUSH_
 end
+
+_END_FRAME_
 
 #７週間リピート
 _LOOP_ count:7 do |arg, ops, control|
@@ -211,15 +207,11 @@ _LOOP_ count:7 do |arg, ops, control|
       day_init
     }
 
-    _END_FRAME_ #これやめたい
-
     #[解説]本来ならtksファイルの中にスクリプトを記述すれば良い筈だが、面倒なので逆にした。
     #読み込み時にがっつりウェイトが入るのは、多分ファイルアクセスが発生しているからかと思われる。
     #_INCLUDE_ "./script/nomaid/start_week.tks"
 
     _SEND_(default: :TextLayer){
-      _FLUSH_
-
       _TEXT_  "第#{_T[:week] + 1 }週#{_T[:day] + 1}日目。現在の所持金は$#{_T[:gold]}。"
       _LINE_FEED_
       _TEXT_  "借金の返済まで後#{7 - _T[:day]}日。"
@@ -234,6 +226,8 @@ _LOOP_ count:7 do |arg, ops, control|
       _LINE_FEED_
       _TEXT_ "知性：#{_T[:intelligence]}  恭順　：#{_T[:allegiance]}  礼節　：#{_T[:courtesy]}"
     }
+
+    _END_FRAME_
 
     _SET_ :_TEMP_, end_day: nil
 

@@ -129,7 +129,7 @@ class RenderTargetControl < Control
                {:entity => entity,
                 :z => options[:z] || Float::INFINITY, #描画順を正の無限大とする
                 :visible => options[:visible] || true, #デフォルトでは可視
-                :id => options[:_ARGUMENT]
+                :id => argument
                 }, 
                 inner_options)
   end

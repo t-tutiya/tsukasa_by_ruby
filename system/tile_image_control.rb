@@ -91,7 +91,11 @@ class TileImageControl < Control
       :float_y => @float_y,
     })
 
-    return super(control_name, options)
+    options[:id] = @id
+
+    #オプションを生成
+    return [:_CREATE_, control_name, options, {}]
+    #return super(control_name, options)
   end
 
   def dispose()

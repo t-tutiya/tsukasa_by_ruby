@@ -13,3 +13,6 @@
 スペースキーを押すとフェードアウト停止します。[ep]
 
 @	test01{_STOP_ fadetime: 5}
+
+@ end_pause
+@ test01{_DELETE_}

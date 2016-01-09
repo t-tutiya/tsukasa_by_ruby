@@ -19,8 +19,6 @@
 @ }
 @   line_pause #コマンドブロック内でのコメントは"#"を使います
 @   text0{_LINE_FEED_}
-	text0{
-		_TEXT_ "インデントされた行もコマンドブロックと見なされます"
-		end_pause
-  	_FLUSH_
-	}
+	text0{_TEXT_ "インデントされた行もコマンドブロックと見なされます"}
+	end_pause
+	text0{_FLUSH_}

@@ -13,8 +13,9 @@
 @	_LOAD_  0
 @
 @	_CHECK_ :_SYSTEM_, equal: {data0: K_X} do
-Ｘキーが押されました
+Ｘキーが押されました[ep]
 @	end
 @	_CHECK_ :_SYSTEM_, equal: {data0: K_Z} do
-Ｚキーが押されました
+Ｚキーが押されました[ep]
 @	end
+

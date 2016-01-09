@@ -2,3 +2,5 @@
 @		_SET_ file_path: "./resource/char/A-1.png"
 @		_MOVE_ 120, x: 500, y: -100
 @	}
+
+@ end_pause

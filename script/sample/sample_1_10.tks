@@ -20,3 +20,7 @@
 @		_WAIT_ child: :rule0
 @		_DELETE_
 @	}
+
+@ end_pause
+@ test0{_DELETE_}
+@ test1{_DELETE_}

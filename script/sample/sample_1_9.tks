@@ -3,10 +3,13 @@
 @
 @	_WAIT_ key_push: K_SPACE
 @
-@	_TO_IMAGE_
+@	_TO_IMAGE_ :test0
 @
 @	img0 {_SET_ file_path: "./resource/char/B-2.png"}
 @
 @	_SEND_(-1) {
 @		_MOVE_ 360, alpha: [255, 0]
 @	}
+
+@ end_pause
+@ test0{_DELETE_}

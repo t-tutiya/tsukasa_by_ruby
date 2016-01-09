@@ -36,3 +36,6 @@ _CREATE_ :RenderTargetControl,
   end
 end
 
+_LOOP_ do
+  _END_FRAME_
+end

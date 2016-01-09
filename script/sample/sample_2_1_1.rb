@@ -40,3 +40,7 @@ _DEFINE_ :button3 do |argument, options|
   end
 end
 button3 id: :test01, x: 100, y: 100
+
+_LOOP_ do
+  _END_FRAME_
+end

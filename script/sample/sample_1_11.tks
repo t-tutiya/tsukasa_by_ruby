@@ -27,9 +27,10 @@
 @			_DELETE_
 @		end
 @		_WAIT_ child: options[:rule_id]
-@		_DELETE_
 @	end
-@
-@	test1{
-@		go_rule rule_id: :rule0, time: 240
-@	}
+
+@	go_rule rule_id: :rule0, time: 240
+
+@ end_puase
+@ test0{_DELETE_}
+@ test1{_DELETE_}

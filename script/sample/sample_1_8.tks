@@ -11,3 +11,5 @@
 @		_SET_ visible: true
 @		_MOVE_ 360, alpha: [0,255]
 @	}
+
+@ end_pause

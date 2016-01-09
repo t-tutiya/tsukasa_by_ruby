@@ -15,3 +15,5 @@
 @		_WAIT_ not_command_stack: :_MOVE_
 @		_MOVE_ 360, alpha: 255
 @	}
+
+@ end_pause

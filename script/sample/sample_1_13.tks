@@ -2,8 +2,9 @@
 @	_WAIT_ key_down: [K_X,K_Z]
 @
 @	_CHECK_ key_down: [K_X] do
-Ｘキーが押されました
+Ｘキーが押されました[ep]
 @	end
 @	_CHECK_ key_down: [K_Z] do
-Ｚキーが押されました
+Ｚキーが押されました[ep]
 @	end
+

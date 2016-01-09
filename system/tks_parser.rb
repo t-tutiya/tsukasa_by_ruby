@@ -88,7 +88,9 @@ class TKSParser < Parslet::Parser
     str("\t") | 
     str(" " * @indent_width)
   }
-  
+
+  rule(:eof) { any.absent? }
+
   #改行
   rule(:newline) { 
     str("\n") 
@@ -98,7 +100,7 @@ class TKSParser < Parslet::Parser
   rule(:command) {
     ( str(script_prefix) | indent) >> #スクリプト行接頭字orインデント
     (newline.absent? >> any).repeat(0).as(:command_line) >>
-    newline #改行
+    (newline | eof)#改行
   }
 
   #textコマンドブロック
@@ -106,7 +108,8 @@ class TKSParser < Parslet::Parser
       #１個以上のインラインコマンドor文字列集合
       ( inline_data | 
         inline_command | 
-        text ).repeat(1).as(:text_line) >> newline
+        text ).repeat(1).as(:text_line) >> 
+      (newline | eof)#改行
   }
 
   #文字列
@@ -183,7 +186,7 @@ class TKSParser < Parslet::Parser
   #空行ブロック（テキストウィンドウの改ページの明示）
   rule(:blankline) { 
     #改行
-    newline.as(:flush)
+    match['$\n'].as(:flush)
   }
 
   rule(:node) { 

@@ -3,8 +3,9 @@
 @
 @	_CHECK_ key_down: [K_X] do
 Ｘキーが押されました[ep]
+
 @	end
 @	_CHECK_ key_down: [K_Z] do
 Ｚキーが押されました[ep]
-@	end
 
+@	end

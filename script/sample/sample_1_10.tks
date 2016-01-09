@@ -9,16 +9,12 @@
 @		_SET_ shader: :rule0
 @	end
 @
-@	_WAIT_ key_push: K_SPACE
+@	_WAIT_ key_push: K_SPACE, system: [:key_down]
 @
 @	test1{
 @		rule0 {
 @			_MOVE_ 240, counter:[0,255]
-@			_WAIT_ not_command_stack: :_MOVE_
-@			_DELETE_
 @		}
-@		_WAIT_ child: :rule0
-@		_DELETE_
 @	}
 
 @ end_pause

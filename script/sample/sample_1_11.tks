@@ -17,20 +17,17 @@
 @	end
 @
 @	#前回と同じ
-@	_WAIT_  key_push: K_SPACE
+@	_WAIT_  key_push: K_SPACE, system: [:key_down]
 @
 @	#ルールトランジションを実行するユーザー定義コマンド
 @	_DEFINE_ :go_rule do |argument, options|
 @		_SEND_ options[:rule_id] do
 @			_MOVE_ options[:time], counter:[0,255]
-@			_WAIT_ not_command_stack: :_MOVE_
-@			_DELETE_
 @		end
-@		_WAIT_ child: options[:rule_id]
 @	end
 
 @	go_rule rule_id: :rule0, time: 240
 
-@ end_puase
+@ end_pause
 @ test0{_DELETE_}
 @ test1{_DELETE_}

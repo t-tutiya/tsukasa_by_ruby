@@ -167,12 +167,6 @@ class TextPageControl < LayoutControl
     @rubi_option[:charactor_pitch] = arg
   end
 
-  attr_accessor  :rubi_wait_frame
-  def rubi_wait_frame=(arg)
-    @rubi_option[:wait_frame] = arg
-  end
-
-
   def initialize(argument, options, inner_options, root_control)
     #レンダリング済みフォント使用中かどうか
     @use_image_font = options[:use_image_font] || false

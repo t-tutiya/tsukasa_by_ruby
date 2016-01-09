@@ -140,8 +140,6 @@ _DEFINE_ :TextWindow do |argument, options|
               end
         #トランジションが終了するまで待機
         _WAIT_  not_command_stack: :_MOVE_ 
-        #待機フラグを立てる
-        _SET_ :_TEMP_, sleep: true
         #待機フラグが下がるまで待機
         _WAIT_ :_TEMP_, equal: {sleep: false}
         #キー入力伝搬を防ぐ為に１フレ送る
@@ -185,7 +183,7 @@ _DEFINE_ :TextWindow do |argument, options|
       end
       #キー入力待ち処理
       _DEFINE_ :pause do |argument, options|
-        _WAIT_  count:17,
+        _WAIT_  count:32,
                 key_down: K_RCONTROL,
                 key_push: K_SPACE,
                 system: [:key_down],

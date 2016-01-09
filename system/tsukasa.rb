@@ -131,8 +131,6 @@ class Tsukasa < RenderTargetControl
 
     @root_control = self
 
-    @script_compiler = ScriptCompiler.new
-
     #システムデータストア
     @_SYSTEM_ = {}
     #ローカルデータストア
@@ -145,6 +143,8 @@ class Tsukasa < RenderTargetControl
     @_PARSER_ = { :tks => [TKSParser.new, TKSParser::Replacer.new]}
 
     options[:id] = :default_rendertarget_container
+
+    @script_compiler = ScriptCompiler.new(self)
 
     options[:command_list] = [[:_INCLUDE_,
                         "./default/bootstrap_script.rb",

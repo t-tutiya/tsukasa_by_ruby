@@ -241,7 +241,7 @@ class Control #内部メソッド
     raise unless block_stack
     raise unless yield_block_stack
 
-    eval_commands(@root_control.script_compiler.commands(argument,
+    eval_commands(@root_control.script_compiler.eval_block(argument,
                                                           options, 
                                                           block_stack, 
                                                           yield_block_stack, 
@@ -744,30 +744,28 @@ class Control #スクリプト制御
       options[:parser] = :tks
     end
 
-    #文字列を取得する
-    options[:script] = File.read(options[:file_path], encoding: "UTF-8")
-
     #スクリプトをパースする
-    command__PARSE_(nil, options, inner_options)
+    command__PARSE_(File.read(options[:file_path], encoding: "UTF-8"),
+                    options, 
+                    inner_options)
   end
 
   #スクリプトをパースする
   def command__PARSE_(argument, options, inner_options)
-    options[:script] = argument if argument
     options[:file_path] = "(parse)" unless options[:file_path]
 
     #パーサーが指定されている場合
     if options[:parser]
       #文字列を取得して変換をかける
-      options[:script]=@_PARSER_[options[:parser]][1].apply(
-                         @_PARSER_[options[:parser]][0].parse(options[:script])
-                       ).join("\n")
+      argument = @_PARSER_[options[:parser]][1].apply(
+                   @_PARSER_[options[:parser]][0].parse(argument)
+                 ).join("\n")
     end
 
     #司スクリプトを評価してコマンド配列を取得し、コマンドリストの先頭に追加する
-    @command_list = @root_control.script_compiler.commands(
-                      nil,
-                      options,
+    @command_list = @root_control.script_compiler.eval_commands(
+                      argument,
+                      options[:file_path],
                       inner_options[:block_stack], 
                       inner_options[:yield_block_stack], 
                       self

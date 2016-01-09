@@ -42,30 +42,37 @@ class ScriptCompiler
   alias :_L :_LOCAL_
   alias :_S :_SYSTEM_
 
-  #ヘルパーメソッド群
-  def commands(argument, options, block_stack, yield_block_stack, control, &block)
+  def initialize(root_control)
+    @_TEMP_ = root_control._TEMP_
+    @_LOCAL_ = root_control._LOCAL_
+    @_SYSTEM_ = root_control._SYSTEM_
+  end
+
+  def eval_commands(script, fname = "(eval)", 
+                    block_stack, yield_block_stack, control, &block)
     @control = control
-    @_TEMP_ = control._TEMP_
-    @_LOCAL_ = control._LOCAL_
-    @_SYSTEM_ = control._SYSTEM_
 
     @command_list = []
     @yield_block_stack = yield_block_stack
     @block_stack = block_stack
 
-    if options[:script]
-      if options[:file_path]
-        fname = options[:file_path]
-      else
-        fname = "(eval)"
-      end
+    eval(script, nil, fname)
 
-      eval( options[:script], nil, fname)
-    else
-      raise unless block
+    return  @command_list
+  end
 
-      self.instance_exec(argument, options, control, &block)
-    end
+  def eval_block( argument, options, 
+                  block_stack, yield_block_stack, control, &block)
+    @control = control
+
+    @command_list = []
+    @yield_block_stack = yield_block_stack
+    @block_stack = block_stack
+
+    raise unless block
+
+    self.instance_exec(argument, options, control, &block)
+
     return  @command_list
   end
 

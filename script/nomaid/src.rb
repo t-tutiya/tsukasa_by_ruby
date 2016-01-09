@@ -188,15 +188,12 @@ _END_FRAME_
 #７週間リピート
 _LOOP_ count:7 do |arg, ops, control|
   #週開始処理
-  maid{
-    week_init
-  }
-  
+  maid{ week_init }
+
   _LOOP_ count:7 do |arg, ops, control|
     #曜日開始処理
-    maid{
-      day_init
-    }
+    maid{ day_init }
+    _END_FRAME_
 
     #[解説]本来ならtksファイルの中にスクリプトを記述すれば良い筈だが、面倒なので逆にした。
     #読み込み時にがっつりウェイトが入るのは、多分ファイルアクセスが発生しているからかと思われる。
@@ -219,8 +216,6 @@ _LOOP_ count:7 do |arg, ops, control|
       _TEXT_ "知性：#{_T[:intelligence]}  恭順　：#{_T[:allegiance]}  礼節　：#{_T[:courtesy]}"
     }
 
-    _END_FRAME_
-
     _SET_ :_TEMP_, end_day: nil
 
     #トップメニューの表示と処理
@@ -237,7 +232,6 @@ _LOOP_ count:7 do |arg, ops, control|
     maid{
       end_day
     }
-    _END_FRAME_
   end
 
   _SET_ :_TEMP_, gameover: nil

@@ -4,14 +4,6 @@
 _LOAD_NATIVE_ "./script/nomaid/nomaid.rb"
 _CREATE_ :NomaidControl, id: :maid
 
-=begin
-test = <<"EOF"
-テスト
-  _PUTS_ "test"
-EOF
-
-_PARSE_ test, parser: TKSParser
-=end
 #テキストボタン定義
 _DEFINE_ :TextSelect do |argument, options|
   _CREATE_ :LayoutControl,

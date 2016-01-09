@@ -861,7 +861,11 @@ class Control #セーブデータ制御
   def command__QUICK_SAVE_(argument, options, inner_options)
     raise unless argument.kind_of?(Numeric)
 
-    command_list = serialize()
+    command_list = []
+
+    @control_list.each do |control|
+      command_list.push(control.serialize())
+    end
 
     db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
                     argument.to_s +

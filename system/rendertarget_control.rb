@@ -78,8 +78,8 @@ class RenderTargetControl < Control
                                             mouse_pos_y )
     if @update_flag
       @entity = RenderTarget.new(@width, @height, @bgcolor)
+      @update_flag = false
     end
-    @update_flag = false
     
     #枠線を引く
     if @border > 0

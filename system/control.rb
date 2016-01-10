@@ -127,7 +127,7 @@ class Control #内部メソッド
     end
 
     #一時的にスタックしていたコマンドをコマンドリストに移す
-    @command_list = @next_frame_commands + @command_list
+    @command_list = @next_frame_commands.concat(@command_list)
 
     #子コントロールを巡回してupdateを実行
     @control_list.each do |control|
@@ -232,7 +232,7 @@ class Control #内部メソッド
   def eval_commands(commands)
     return unless commands
     #コマンドをリストにスタックする
-    @command_list = commands +  @command_list
+    @command_list = commands.concat(@command_list)
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
@@ -509,7 +509,7 @@ class Control #制御構文
   end
 
   def command__CHECK_(argument, options, inner_options)
-    #チェック条件を満たさない場合
+    #チェック条件を満たす場合
     if check_imple(argument, options, inner_options)
       #checkにブロックが付与されているならそれを実行する
       eval_block( argument, 

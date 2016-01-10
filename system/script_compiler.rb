@@ -82,19 +82,28 @@ class ScriptCompiler
       raise
     end
 
-    unless @control.respond_to?("command_" + command_name.to_s, true)
+    if @control.respond_to?("command_" + command_name.to_s, true)
+      #コマンドを登録する
+      @command_list.push([
+        command_name, 
+        argument, 
+        options, 
+        {
+          :yield_block_stack => @yield_block_stack,
+          :block_stack => @block_stack,
+          :block => block || nil ,
+        }])
+    else
       # 組み込みコマンドが無い場合は_CALL_に差し替える
-      options[:_FUNCTION_ARGUMENT_] = argument if argument
-      argument = command_name
-      command_name = :_CALL_
+      @command_list.push([
+        :_CALL_, 
+        command_name, 
+        options.update({:_FUNCTION_ARGUMENT_ => argument || nil}), 
+        {
+          :yield_block_stack => @yield_block_stack,
+          :block_stack => @block_stack,
+          :block => block || nil ,
+        }])
     end
-
-    inner_options = {}
-    inner_options[:yield_block_stack] = @yield_block_stack
-    inner_options[:block_stack] = @block_stack
-    inner_options[:block] = block if block
-
-    #コマンドを登録する
-    @command_list.push([command_name, argument, options, inner_options])
   end
 end

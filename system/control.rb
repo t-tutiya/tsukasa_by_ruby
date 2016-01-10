@@ -514,7 +514,8 @@ class Control #制御構文
                   &inner_options[:block])
     end
 
-    push_command_to_next_frame(:_WAIT_, argument, options, inner_options)
+    #push_command_to_next_frame(:_WAIT_, argument, options, inner_options)
+    @next_frame_commands.push([:_WAIT_, argument, options, inner_options])
   end
 
   def command__CHECK_(argument, options, inner_options)
@@ -542,7 +543,8 @@ class Control #制御構文
     end
 
     #リストの先端に自分自身を追加する
-    interrupt_command(:_LOOP_, argument, options, inner_options)
+    #interrupt_command(:_LOOP_, argument, options, inner_options)
+    @command_list.unshift([:_LOOP_, argument, options, inner_options])
 
     #ブロックを実行時評価しコマンド列を生成する。
     eval_block( argument, 
@@ -636,10 +638,14 @@ class Control #ユーザー定義関数操作
       options.delete(:_FUNCTION_ARGUMENT_)
     end
 
-    interrupt_command(:_END_FUNCTION_, 
-                      function_argument, 
-                      options, 
-                      inner_options)
+#    interrupt_command(:_END_FUNCTION_, 
+#                      function_argument, 
+#                      options, 
+#                      inner_options)
+    @command_list.unshift([:_END_FUNCTION_, 
+                            function_argument, 
+                            options, 
+                            inner_options])
 
     #functionを実行時評価しコマンド列を生成する。
     eval_block( function_argument, 
@@ -913,9 +919,9 @@ class Control #内部コマンド
 
   #ブロックを実行する。無名関数として機能する
   def command__SCOPE_(argument, options, inner_options)
-
     #関数の終端を設定
-    interrupt_command(:_END_FUNCTION_, argument, options, inner_options)
+    #interrupt_command(:_END_FUNCTION_, argument, options, inner_options)
+    @command_list.unshift([:_END_FUNCTION_, argument, options, inner_options])
 
     #参照渡し汚染が起きないようにディープコピーで取得
     block_stack = inner_options[:block_stack].dup
@@ -986,7 +992,8 @@ class Control #プロパティのパラメータ遷移
       #カウントアップ
       options[:option][:count] += 1
       #:_MOVE_コマンドをスタックし直す
-      push_command_to_next_frame(:_MOVE_, argument, options, inner_options)
+      #push_command_to_next_frame(:_MOVE_, argument, options, inner_options)
+      @next_frame_commands.push([:_MOVE_, argument, options, inner_options])
     end
   end
 
@@ -1197,7 +1204,8 @@ class Control #プロパティのパラメータ遷移
       #カウントアップ
       options[:option][:count] += 1
       #:move_lineコマンドをスタックし直す
-      push_command_to_next_frame(:_PATH_, argument, options, inner_options)
+      #push_command_to_next_frame(:_PATH_, argument, options, inner_options)
+      @next_frame_commands.push([:_PATH_, argument, options, inner_options])
     end
   end
 

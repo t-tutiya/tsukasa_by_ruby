@@ -152,7 +152,7 @@ class Control #内部メソッド
     #下位コントロール巡回
     @control_list.each do |child_control|
       #下位コントロールを上位ターゲットに直接描画
-      width, height = child_control.render( offset_x, 
+      add_x, add_y = child_control.render( offset_x, 
                                             offset_y, 
                                             target, 
                                             width , 
@@ -160,11 +160,11 @@ class Control #内部メソッド
                                             mouse_pos_x,
                                             mouse_pos_y )
       #次のコントロールの描画座標原点を設定する
-      offset_x += width
-      offset_y += height
+      offset_x += add_x
+      offset_y += add_y
       #マウス座標のオフセットを更新する
-      mouse_pos_x -= width
-      mouse_pos_y -= height
+      mouse_pos_x -= add_x
+      mouse_pos_y -= add_y
     end
 
     #オフセット値を返す

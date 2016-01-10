@@ -260,7 +260,7 @@ class Control #内部メソッド
 
   def check_imple(argument, options, inner_options)
     #演算対象のデータ領域を設定
-    data_strore = argument ? argument : :_TEMP_
+    argument = :_TEMP_ unless argument
 
     options.each do |key, value|
 
@@ -350,7 +350,7 @@ class Control #内部メソッド
         value.each do |hash|
           #指定されたデータと値がイコールかどうか
           hash.each do |key, val|
-            return true if @root_control.send(data_strore)[key] == val
+            return true if @root_control.send(argument)[key] == val
           end
         end
 
@@ -359,20 +359,20 @@ class Control #内部メソッド
         value.each do |hash|
           #指定されたデータと値がイコールでない場合
           hash.each do |key, val|
-            return true if @root_control.send(data_strore)[key] != val
+            return true if @root_control.send(argument)[key] != val
           end
         end
 
       when :null
         #指定されたデータがnilの場合
         value.each do |key|
-          return true if @root_control.send(data_strore)[key] == nil
+          return true if @root_control.send(argument)[key] == nil
         end
 
       when :not_null
         #指定されたデータがnilで無い場合
         value.each do |key|
-          return true if @root_control.send(data_strore)[key] != nil
+          return true if @root_control.send(argument)[key] != nil
         end
 
       when :system
@@ -564,10 +564,12 @@ class Control #制御構文
     end
 
     #while文全体をスクリプトストレージにスタック
-    push_command(:_END_FRAME_, argument, {}, {})
+    #push_command(:_END_FRAME_, argument, {}, {})
+    @command_list.push([:_END_FRAME_, argument, {}, {}])
 
     #リストの末端に自分自身を追加する
-    push_command(:_NEXT_LOOP_, argument, options, inner_options)
+    #push_command(:_NEXT_LOOP_, argument, options, inner_options)
+    @command_list.push([:_NEXT_LOOP_, argument, options, inner_options])
 
     #ブロックを実行時評価しコマンド列を生成する。
     eval_block( argument, 

@@ -172,30 +172,33 @@ module Drawable
   end
 
   #描画
-  def render(offset_x, offset_y, target, parent)
+  def render(offset_x, offset_y, target, 
+              width , 
+              height , 
+              mouse_pos_x,
+              mouse_pos_y )
 
-    return 0, 0 unless @entity
-
-    #描画座標のオフセット値を合算
-    x = offset_x + @x + @offset_x
-    y = offset_y + @y + @offset_y
+    #描画オブジェクトを持ち、かつ可視でなければ戻る
+    return 0, 0 unless @entity and @visible
 
     #下揃えを考慮
     if @align_y == :bottom 
-      y += parent[:height] - @height
+      offset_y += height - @height
     end
 
     #下位エンティティを自エンティティに描画
-    dx, dy = super(0, 0, @entity, 
-                    { :width => @width, 
-                      :height => @height, 
-                      :mouse_pos_x => parent[:mouse_pos_x],
-                      :mouse_pos_y => parent[:mouse_pos_y]})
-
-    return 0, 0 unless @visible
+    dx, dy = super(0, 0, 
+                    @entity, 
+                    @width, 
+                    @height, 
+                    mouse_pos_x,
+                    mouse_pos_y)
 
     #自エンティティを上位ターゲットに描画
-    target.draw_ex(x, y, @entity, @draw_option)
+    target.draw_ex( @x + @offset_x + offset_x,
+                    @y + @offset_y + offset_y, 
+                    @entity, 
+                    @draw_option)
 
     return dx, dy
   end

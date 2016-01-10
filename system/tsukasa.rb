@@ -36,6 +36,7 @@ require_relative './control.rb'
 
 require_relative './module_layoutable.rb'
 require_relative './module_drawable.rb'
+require_relative './module_clickable.rb'
 
 require_relative './image_control.rb'
 
@@ -184,10 +185,10 @@ class Tsukasa < RenderTargetControl
   end
 
   def render(offset_x, offset_y, target, 
-              parent = {:width => Window.width, 
-                        :height => Window.width, 
-                        :mouse_pos_x => Input.mouse_x,
-                        :mouse_pos_y => Input.mouse_y})
+              width = Window.width, 
+              height = Window.width, 
+              mouse_pos_x = Input.mouse_x,
+              mouse_pos_y = Input.mouse_y)
     super
   end
 end

@@ -214,23 +214,23 @@ module Layoutable
   end
 
   #描画
-  def render(offset_x, offset_y, target, parent)
-    #次フレームのクリッカブル判定に使うマウスカーソル座標を取得
-    @mouse_pos_x = parent[:mouse_pos_x]
-    @mouse_pos_y = parent[:mouse_pos_y]
-
+  def render(offset_x, offset_y, target, 
+              width , 
+              height , 
+              mouse_pos_x,
+              mouse_pos_y )
     #下位コントロールを上位ターゲットに直接描画
     super(offset_x, offset_y, target, 
-          { :width => @width, 
-            :height => @height,
-            :mouse_pos_x => @mouse_pos_x - @x,
-            :mouse_pos_y => @mouse_pos_y - @y
-          })
-
-    dx = dy = 0
+          @width, 
+          @height,
+          mouse_pos_x - @x,
+          mouse_pos_y - @y
+          )
 
     #連結指定チェック
     case @float_x
+    when nil
+      dx = 0
     #右連結
     when :left
       dx = @width
@@ -241,6 +241,8 @@ module Layoutable
 
     #連結指定チェック
     case @float_y
+    when nil
+      dy = 0
     #右連結
     when :left
       dy = @y

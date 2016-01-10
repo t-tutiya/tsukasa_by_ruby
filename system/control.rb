@@ -141,7 +141,11 @@ class Control #内部メソッド
   end
 
   #下位コントロールを描画する
-  def render(offset_x, offset_y, target, parent)
+  def render(offset_x, offset_y, target, 
+              width , 
+              height , 
+              mouse_pos_x,
+              mouse_pos_y )
     #スリープモード中であれば処理しない
     #return if @sleep_mode
 
@@ -151,13 +155,16 @@ class Control #内部メソッド
       width, height = child_control.render( offset_x, 
                                             offset_y, 
                                             target, 
-                                            parent)
+                                            width , 
+                                            height , 
+                                            mouse_pos_x,
+                                            mouse_pos_y )
       #次のコントロールの描画座標原点を設定する
       offset_x += width
       offset_y += height
       #マウス座標のオフセットを更新する
-      parent[:mouse_pos_x] -= width
-      parent[:mouse_pos_y] -= height
+      mouse_pos_x -= width
+      mouse_pos_y -= height
     end
 
     #オフセット値を返す

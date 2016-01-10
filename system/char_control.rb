@@ -222,7 +222,11 @@ class CharControl < ImageControl
     super
   end
 
-  def render(offset_x, offset_y, target, parent)
+  def render(offset_x, offset_y, target, 
+                                        width , 
+                                        height , 
+                                        mouse_pos_x,
+                                        mouse_pos_y )
     if @option_update
 
       @font_obj = Font.new( @size, 

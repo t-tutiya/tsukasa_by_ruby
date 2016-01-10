@@ -244,16 +244,18 @@ class Control #内部メソッド
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
   def eval_block(argument, options, block_stack, yield_block_stack, &block)
-    raise unless block
-    raise unless block_stack
-    raise unless yield_block_stack
+#    raise unless block
+#    raise unless block_stack
+#    raise unless yield_block_stack
 
-    eval_commands(@root_control.script_compiler.eval_block(argument,
-                                                          options, 
-                                                          block_stack, 
-                                                          yield_block_stack, 
-                                                          self,
-                                                          &block))
+    @command_list = @root_control.script_compiler.eval_block(
+                      argument,
+                      options, 
+                      block_stack, 
+                      yield_block_stack, 
+                      self,
+                      &block
+                    ).concat(@command_list)
   end
 
   def check_imple(argument, options, inner_options)
@@ -776,8 +778,7 @@ class Control #スクリプト制御
                       inner_options[:block_stack], 
                       inner_options[:yield_block_stack], 
                       self
-                    ) + 
-                    @command_list
+                    ).concat(@command_list)
   end
 
   #アプリを終了する

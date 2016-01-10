@@ -181,11 +181,6 @@ module Drawable
     #描画オブジェクトを持ち、かつ可視でなければ戻る
     return 0, 0 unless @entity and @visible
 
-    #下揃えを考慮
-    if @align_y == :bottom 
-      offset_y += height - @height
-    end
-
     #下位エンティティを自エンティティに描画
     dx, dy = super(0, 0, 
                     @entity, 
@@ -193,6 +188,11 @@ module Drawable
                     @height, 
                     mouse_pos_x,
                     mouse_pos_y)
+
+    #下揃えを考慮
+    if @align_y == :bottom 
+      offset_y += height - @height
+    end
 
     #自エンティティを上位ターゲットに描画
     target.draw_ex( @x + @offset_x + offset_x,

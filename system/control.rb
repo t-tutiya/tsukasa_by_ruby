@@ -244,10 +244,6 @@ class Control #内部メソッド
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
   def eval_block(argument, options, block_stack, yield_block_stack, &block)
-#    raise unless block
-#    raise unless block_stack
-#    raise unless yield_block_stack
-
     @command_list = @root_control.script_compiler.eval_block(
                       argument,
                       options, 
@@ -503,15 +499,18 @@ class Control #制御構文
     end
 
     #フレーム終了疑似コマンドをスタックする
-    eval_commands([[:_END_FRAME_, nil, {}, {}]])
+    @command_list.unshift([:_END_FRAME_, nil, {}, {}])
 
     if inner_options[:block]
       #waitにブロックが付与されているならそれを実行する
-      eval_block( argument, 
-                  options, 
-                  inner_options[:block_stack], 
-                  inner_options[:yield_block_stack], 
-                  &inner_options[:block])
+      @command_list = @root_control.script_compiler.eval_block(
+                        argument,
+                        options, 
+                        inner_options[:block_stack], 
+                        inner_options[:yield_block_stack], 
+                        self,
+                        &inner_options[:block]
+                      ).concat(@command_list)
     end
 
     #push_command_to_next_frame(:_WAIT_, argument, options, inner_options)
@@ -522,11 +521,14 @@ class Control #制御構文
     #チェック条件を満たす場合
     if check_imple(argument, options, inner_options)
       #checkにブロックが付与されているならそれを実行する
-      eval_block( argument, 
-                  options, 
-                  [], 
-                  inner_options[:yield_block_stack], 
-                  &inner_options[:block])
+      @command_list = @root_control.script_compiler.eval_block(
+                        argument,
+                        options, 
+                        [], 
+                        inner_options[:yield_block_stack], 
+                        self,
+                        &inner_options[:block]
+                      ).concat(@command_list)
     end
   end
 
@@ -543,15 +545,18 @@ class Control #制御構文
     end
 
     #リストの先端に自分自身を追加する
-    #interrupt_command(:_LOOP_, argument, options, inner_options)
     @command_list.unshift([:_LOOP_, argument, options, inner_options])
 
     #ブロックを実行時評価しコマンド列を生成する。
-    eval_block( argument, 
-                options, 
-                [], 
-                inner_options[:yield_block_stack], 
-                &inner_options[:block])
+    @command_list = @root_control.script_compiler.eval_block(
+                      argument,
+                      options, 
+                      [], 
+                      inner_options[:yield_block_stack], 
+                      self,
+                      &inner_options[:block]
+                    ).concat(@command_list)
+
   end
 
   def command__NEXT_LOOP_(argument, options, inner_options) 
@@ -566,19 +571,20 @@ class Control #制御構文
     end
 
     #while文全体をスクリプトストレージにスタック
-    #push_command(:_END_FRAME_, argument, {}, {})
     @command_list.push([:_END_FRAME_, argument, {}, {}])
 
     #リストの末端に自分自身を追加する
-    #push_command(:_NEXT_LOOP_, argument, options, inner_options)
     @command_list.push([:_NEXT_LOOP_, argument, options, inner_options])
 
     #ブロックを実行時評価しコマンド列を生成する。
-    eval_block( argument, 
-                options, 
-                [], 
-                inner_options[:yield_block_stack], 
-                &inner_options[:block])
+    @command_list = @root_control.script_compiler.eval_block(
+                      argument,
+                      options, 
+                      [], 
+                      inner_options[:yield_block_stack], 
+                      self,
+                      &inner_options[:block]
+                    ).concat(@command_list)
   end
 
   def command__BREAK_(argument, options, inner_options)
@@ -638,10 +644,6 @@ class Control #ユーザー定義関数操作
       options.delete(:_FUNCTION_ARGUMENT_)
     end
 
-#    interrupt_command(:_END_FUNCTION_, 
-#                      function_argument, 
-#                      options, 
-#                      inner_options)
     @command_list.unshift([:_END_FUNCTION_, 
                             function_argument, 
                             options, 
@@ -685,7 +687,7 @@ class Control #スリープ
     unless argument
       @sleep_mode = true
       #フレーム終了疑似コマンドをスタックする
-      eval_commands([[:_END_FRAME_, {}, {}]])
+      @command_list.unshift([[:_END_FRAME_, {}, {}]])
       return
     end
 
@@ -992,7 +994,6 @@ class Control #プロパティのパラメータ遷移
       #カウントアップ
       options[:option][:count] += 1
       #:_MOVE_コマンドをスタックし直す
-      #push_command_to_next_frame(:_MOVE_, argument, options, inner_options)
       @next_frame_commands.push([:_MOVE_, argument, options, inner_options])
     end
   end

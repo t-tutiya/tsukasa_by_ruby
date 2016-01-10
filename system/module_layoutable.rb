@@ -84,7 +84,7 @@ module Layoutable
     @float_y = options[:float_y]
 
     #下寄せ指定
-    @align_y = options[:align_y] || nil
+    @align_y = options[:align_y]
 
     super
   end

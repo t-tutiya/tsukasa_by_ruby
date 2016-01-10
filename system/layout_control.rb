@@ -32,6 +32,7 @@ require 'dxruby'
 
 class LayoutControl < Control
   include Layoutable
+  include Clickable
 
   #描画
   def render(offset_x, offset_y, target, 

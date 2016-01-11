@@ -46,34 +46,44 @@ class ScriptCompiler
     @_TEMP_ = root_control._TEMP_
     @_LOCAL_ = root_control._LOCAL_
     @_SYSTEM_ = root_control._SYSTEM_
+
+    @command_list = []
   end
 
   def eval_commands(script, fname = "(eval)", 
-                    block_stack, yield_block_stack, control, &block)
+                    block_stack, yield_block_stack, control, command_list, &block)
     @control = control
 
-    @command_list = []
     @yield_block_stack = yield_block_stack
     @block_stack = block_stack
 
+    @command_list, command_list = command_list, @command_list
+
     eval(script, nil, fname)
 
-    return  @command_list
+    command_list.concat(@command_list)
+    @command_list.clear
+
+    return  command_list
   end
 
   def eval_block( argument, options, 
-                  block_stack, yield_block_stack, control, &block)
+                  block_stack, yield_block_stack, control, command_list, &block)
     @control = control
 
-    @command_list = []
     @yield_block_stack = yield_block_stack
     @block_stack = block_stack
 
     raise unless block
 
+    @command_list, command_list = command_list, @command_list
+
     self.instance_exec(argument, options, control, &block)
 
-    return  @command_list
+    command_list.concat(@command_list)
+    @command_list.clear
+
+    return  command_list
   end
 
   def method_missing(command_name, argument = nil, **options, &block)

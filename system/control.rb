@@ -111,9 +111,6 @@ class Control #内部メソッド
     #スリープモード中であれば処理しない
     return if @sleep_mode
 
-    #次フレコマンド列クリア
-    @next_frame_commands = []
-
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
@@ -126,8 +123,13 @@ class Control #内部メソッド
       send("command_" + command_name.to_s, argument, options, inner_options)
     end
 
-    #一時的にスタックしていたコマンドをコマンドリストに移す
-    @command_list = @next_frame_commands.concat(@command_list)
+    #一時的にスタックしていたコマンドをコマンドリストに再スタックする
+    #※スワップさせた後に連結している
+    @command_list, @next_frame_commands = @next_frame_commands, @command_list
+    @command_list.concat(@next_frame_commands)
+
+    #次フレコマンド列を初期化
+    @next_frame_commands.clear
 
     #子コントロールを巡回してupdateを実行
     @control_list.each do |control|
@@ -250,8 +252,9 @@ class Control #内部メソッド
                       block_stack, 
                       yield_block_stack, 
                       self,
+                      @command_list,
                       &block
-                    ).concat(@command_list)
+                    )
   end
 
   def check_imple(argument, options, inner_options)
@@ -499,7 +502,7 @@ class Control #制御構文
     end
 
     #フレーム終了疑似コマンドをスタックする
-    @command_list.unshift([:_END_FRAME_, nil, {}, {}])
+    @command_list.unshift([:_END_FRAME_, nil, options, inner_options])
 
     if inner_options[:block]
       #waitにブロックが付与されているならそれを実行する
@@ -509,8 +512,9 @@ class Control #制御構文
                         inner_options[:block_stack], 
                         inner_options[:yield_block_stack], 
                         self,
+                      @command_list,
                         &inner_options[:block]
-                      ).concat(@command_list)
+                      )
     end
 
     #push_command_to_next_frame(:_WAIT_, argument, options, inner_options)
@@ -524,11 +528,12 @@ class Control #制御構文
       @command_list = @root_control.script_compiler.eval_block(
                         argument,
                         options, 
-                        [], 
+                        nil, 
                         inner_options[:yield_block_stack], 
                         self,
+                      @command_list,
                         &inner_options[:block]
-                      ).concat(@command_list)
+                      )
     end
   end
 
@@ -551,11 +556,12 @@ class Control #制御構文
     @command_list = @root_control.script_compiler.eval_block(
                       argument,
                       options, 
-                      [], 
+                      nil, 
                       inner_options[:yield_block_stack], 
                       self,
+                      @command_list,
                       &inner_options[:block]
-                    ).concat(@command_list)
+                    )
 
   end
 
@@ -571,7 +577,7 @@ class Control #制御構文
     end
 
     #while文全体をスクリプトストレージにスタック
-    @command_list.push([:_END_FRAME_, argument, {}, {}])
+    @command_list.push([:_END_FRAME_, argument, options, inner_options])
 
     #リストの末端に自分自身を追加する
     @command_list.push([:_NEXT_LOOP_, argument, options, inner_options])
@@ -580,11 +586,12 @@ class Control #制御構文
     @command_list = @root_control.script_compiler.eval_block(
                       argument,
                       options, 
-                      [], 
+                      nil, 
                       inner_options[:yield_block_stack], 
                       self,
+                      @command_list,
                       &inner_options[:block]
-                    ).concat(@command_list)
+                    )
   end
 
   def command__BREAK_(argument, options, inner_options)
@@ -736,13 +743,13 @@ class Control #スクリプト制御
 
     #獲得した全てのコントロールにブロックを送信する
     controls.each do |control|
-      control.push_command(:_SCOPE_, nil, {}, inner_options)
+      control.push_command(:_SCOPE_, nil, nil, inner_options)
     end
   end
 
   #ルートコントロールにコマンドブロックを送信する
   def command__SEND_ROOT_(argument, options, inner_options)
-    @root_control.interrupt_command(:_SCOPE_, argument, {}, inner_options)
+    @root_control.interrupt_command(:_SCOPE_, argument, nil, inner_options)
   end
 
   #スクリプトファイルを挿入する
@@ -787,8 +794,9 @@ class Control #スクリプト制御
                       options[:file_path],
                       inner_options[:block_stack], 
                       inner_options[:yield_block_stack], 
-                      self
-                    ).concat(@command_list)
+                      self,
+                      @command_list
+                    )
   end
 
   #アプリを終了する
@@ -926,8 +934,10 @@ class Control #内部コマンド
     @command_list.unshift([:_END_FUNCTION_, argument, options, inner_options])
 
     #参照渡し汚染が起きないようにディープコピーで取得
-    block_stack = inner_options[:block_stack].dup
-    yield_block_stack = inner_options[:yield_block_stack] ? inner_options[:yield_block_stack] : []
+    block_stack = inner_options[:block_stack] ? 
+                    inner_options[:block_stack].dup : []
+    yield_block_stack = inner_options[:yield_block_stack] ? 
+                          inner_options[:yield_block_stack] : []
 
     #関数を展開する
     eval_block(argument, options, block_stack, yield_block_stack, &inner_options[:block])

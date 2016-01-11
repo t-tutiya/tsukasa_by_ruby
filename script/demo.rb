@@ -36,7 +36,7 @@ _DEFINE_ :TextSelect do |argument, options|
       #マウスがクリックされたらフラグを立てる
       _CHECK_ mouse: [:key_down] do
         _SET_ :_TEMP_, file_path: options[:path]
-        #_EVAL_ "pp '[" + options[:text].to_s + "]が押されました'"
+        _EVAL_ "pp '[" + options[:text].to_s + "]が押されました'"
         _RETURN_
       end
     end
@@ -89,7 +89,7 @@ _DEFINE_ :system_menu do
   end
 end
 
-_NEXT_LOOP_ do
+_NEXT_LOOP_ do |a,b,c|
 
  _CREATE_ :ImageControl,
    z: 0,
@@ -109,6 +109,7 @@ _NEXT_LOOP_ do
   system_menu
 
   _WAIT_ :_TEMP_,  not_equal: {file_path: nil}
+  _EVAL_ "pp _TEMP_[:file_path]"
   _SEND_ :top_menu do
     _DELETE_
   end

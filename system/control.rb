@@ -553,6 +553,7 @@ class Control #制御構文
     @command_list.unshift([:_LOOP_, argument, options, inner_options])
 
     #ブロックを実行時評価しコマンド列を生成する。
+    #TODO：この実行時評価はできればキャッシュしたい
     @command_list = @root_control.script_compiler.eval_block(
                       argument,
                       options, 
@@ -576,13 +577,8 @@ class Control #制御構文
       options[:count] = options[:count] - 1
     end
 
-    #while文全体をスクリプトストレージにスタック
-    @command_list.push([:_END_FRAME_, argument, options, inner_options])
-
-    #リストの末端に自分自身を追加する
-    @command_list.push([:_NEXT_LOOP_, argument, options, inner_options])
-
     #ブロックを実行時評価しコマンド列を生成する。
+    #TODO：この実行時評価はできればキャッシュしたい
     @command_list = @root_control.script_compiler.eval_block(
                       argument,
                       options, 
@@ -592,6 +588,11 @@ class Control #制御構文
                       @command_list,
                       &inner_options[:block]
                     )
+    #while文全体をスクリプトストレージにスタック
+    @command_list.push([:_END_FRAME_, argument, options, inner_options])
+
+    #リストの末端に自分自身を追加する
+    @command_list.push([:_NEXT_LOOP_, argument, options, inner_options])
   end
 
   def command__BREAK_(argument, options, inner_options)
@@ -639,6 +640,7 @@ class Control #ユーザー定義関数操作
     end
 
     #参照渡し汚染が起きないようにディープコピーで取得
+    inner_options[:block_stack] = [] unless inner_options[:block_stack]
     block_stack = inner_options[:block_stack].dup
     yield_block_stack = inner_options[:yield_block_stack].dup
     #スタックプッシュ

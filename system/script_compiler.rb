@@ -57,14 +57,14 @@ class ScriptCompiler
     @yield_block_stack = yield_block_stack
     @block_stack = block_stack
 
-    @command_list, command_list = command_list, @command_list
 
     eval(script, nil, fname)
 
+    @command_list, command_list = command_list, @command_list
     command_list.concat(@command_list)
     @command_list.clear
 
-    return  command_list
+    return command_list
   end
 
   def eval_block( argument, options, 
@@ -76,14 +76,13 @@ class ScriptCompiler
 
     raise unless block
 
-    @command_list, command_list = command_list, @command_list
-
     self.instance_exec(argument, options, control, &block)
 
+    @command_list, command_list = command_list, @command_list
     command_list.concat(@command_list)
     @command_list.clear
 
-    return  command_list
+    return command_list
   end
 
   def method_missing(command_name, argument = nil, **options, &block)

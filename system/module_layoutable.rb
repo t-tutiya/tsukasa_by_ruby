@@ -96,12 +96,21 @@ module Layoutable
               mouse_pos_x,
               mouse_pos_y )
 
+    offset_x += @x + @offset_x
+    offset_y += @y + @offset_y
+
+    #下揃えを考慮
+    if @align_y == :bottom 
+      offset_y += height - @height
+    end
+
     mouse_pos_x -= @x
     mouse_pos_y -= @y
+
     #下位コントロール巡回
     @control_list.each do |child_control|
       #下位コントロールを上位ターゲットに直接描画
-      child_dx, child_dy = child_control.render( offset_x, 
+      child_dx, child_dy = child_control.render(offset_x, 
                                                 offset_y, 
                                                 target, 
                                                 @width , 

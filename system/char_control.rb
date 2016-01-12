@@ -273,10 +273,7 @@ class CharControl < ImageControl
       @option_update = false
     end
 
-    dx, dy = super
-
-    return dx, dy
-
+    return super
   end
 
   def serialize(control_name = :CharControl, **options)

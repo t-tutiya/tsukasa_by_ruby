@@ -45,13 +45,10 @@ class LayoutControl < Control
       offset_y += height - @height
     end
 
-    return super( offset_x + @x + @offset_x,
-                  offset_y + @y + @offset_y, 
-                  target, 
-                  width , 
-                  height , 
-                  mouse_pos_x,
-                  mouse_pos_y )
+    offset_x += @x + @offset_x
+    offset_y += @y + @offset_y
+
+    return super
   end
 
   def serialize(control_name = :LayoutControl, **options)

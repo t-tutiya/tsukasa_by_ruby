@@ -95,24 +95,31 @@ module Layoutable
               height , 
               mouse_pos_x,
               mouse_pos_y )
+
+    mouse_pos_x -= @x
+    mouse_pos_y -= @y
     #下位コントロール巡回
     @control_list.each do |child_control|
       #下位コントロールを上位ターゲットに直接描画
-      add_x, add_y = child_control.render( offset_x, 
-                                            offset_y, 
-                                            target, 
-                                            @width , 
-                                            @height , 
-                                            mouse_pos_x- @x,
-                                            mouse_pos_y- @y )
+      child_dx, cild_dy = child_control.render( offset_x, 
+                                                offset_y, 
+                                                target, 
+                                                @width , 
+                                                @height , 
+                                                mouse_pos_x,
+                                                mouse_pos_y )
       #次のコントロールの描画座標原点を設定する
-      offset_x += add_x
-      offset_y += add_y
+      offset_x += child_dx
+      offset_y += cild_dy
       #マウス座標のオフセットを更新する
-      mouse_pos_x -= add_x
-      mouse_pos_y -= add_y
+      mouse_pos_x -= child_dx
+      mouse_pos_y -= cild_dy
     end
 
+    return check_float
+  end
+  
+  def check_float
     #連結指定チェック
     case @float_x
     when nil
@@ -137,7 +144,6 @@ module Layoutable
       dy = @height
     end
 
-    super
     return dx, dy
   end
 end

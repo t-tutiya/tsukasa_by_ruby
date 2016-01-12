@@ -155,14 +155,14 @@ class Control #内部メソッド
   end
 
   def find_control(id)
+    #整数であれば 子要素の添え字と見なす
+    if id.instance_of?(Fixnum)
+      return @control_list[id]
+    end
+
     #自身のidなら自身を帰す
     if id == @id
       return self
-    end
-
-    #整数であれば添え字と見なして子要素を返す
-    if id.instance_of?(Fixnum)
-      return @control_list[id]
     end
 
     #子コントロールを探査する

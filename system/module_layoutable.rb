@@ -66,7 +66,9 @@ module Layoutable
     @colorkey = find_control(arg)
   end
 
-  def initialize(argument, options, inner_options, root_control)
+  def initialize(argument, options, 
+                  block_stack = [], yield_block_stack = [], block = nil, 
+                  root_control)
     @x = options[:x] || 0 #描画Ｘ座標
     @y = options[:y] || 0 #描画Ｙ座標
 

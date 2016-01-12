@@ -55,7 +55,9 @@ end
 
 class Control #内部メソッド
 
-  def initialize(argument, options, inner_options, root_control)
+  def initialize(argument, options, 
+                  block_stack = [], yield_block_stack = [], block = nil, 
+                  root_control)
     #rootコントロールの保存
     @root_control = root_control
     # ユーザ定義関数
@@ -73,15 +75,12 @@ class Control #内部メソッド
     @delete_flag = false       #削除フラグの初期化
 
     #ブロックが付与されているなら読み込んで登録する
-    if inner_options[:block]
-      inner_options[:block_stack] = [] unless inner_options[:block_stack]
-      inner_options[:yield_block_stack] = [] unless inner_options[:yield_block_stack]
-      
+    if block
       eval_block( argument,
                   options, 
-                  inner_options[:block_stack], 
-                  inner_options[:yield_block_stack], 
-                  &inner_options[:block])
+                  block_stack, 
+                  yield_block_stack, 
+                  &block)
     end
 
     #コマンドセットがあるなら登録する
@@ -168,7 +167,7 @@ class Control #内部メソッド
     #子コントロールを探査する
     result = nil
     @control_list.each do |control|
-      result =  control.find_control(id)
+      result = control.find_control(id)
       break if result
     end
     return result
@@ -391,10 +390,14 @@ class Control #コントロールの生成／破棄
   #コントロールをリストに登録する
   def command__CREATE_(argument, options, inner_options)
     #コントロールを生成して子要素として登録する
-    @control_list.push(Module.const_get(argument).new( argument,
-                                                       options, 
-                                                       inner_options, 
-                                                       @root_control))
+    @control_list.push(
+      Module.const_get(argument).new( argument,
+                                      options, 
+                                      inner_options[:block_stack], 
+                                      inner_options[:yield_block_stack], 
+                                      inner_options[:block],
+                                      @root_control)
+    )
     #付与ブロックを実行する
     @control_list.last.update()
   end

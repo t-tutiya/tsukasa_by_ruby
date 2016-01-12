@@ -42,7 +42,9 @@ class ColorkeyControl < Control
   attr_accessor  :entity
   attr_accessor  :border
 
-  def initialize(argument, options, inner_options, root_control)
+  def initialize(argument, options, 
+                  block_stack = [], yield_block_stack = [], block = nil, 
+                  root_control)
     super
 
     self.file_path = options[:file_path] if options[:file_path]

@@ -45,7 +45,9 @@ class NomaidControl < Control
   attr_accessor  :allegiance #恭順
   attr_accessor  :courtesy #礼節
 
-  def initialize(argument, options, inner_options, root_control)
+  def initialize(argument, options, 
+                  block_stack = [], yield_block_stack = [], block = nil, 
+                  root_control)
     @debt = [1000, 2500, 5000, 10000, 25000, 50000, 100000]
     
     @gold = options[:gold] || 0

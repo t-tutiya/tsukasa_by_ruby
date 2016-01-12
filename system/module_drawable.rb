@@ -190,7 +190,7 @@ module Drawable
     #下位コントロール巡回
     @control_list.each do |child_control|
       #下位コントロールを上位ターゲットに直接描画
-      child_dx, cild_dy = child_control.render( child_offset_x, 
+      child_dx, child_dy = child_control.render( child_offset_x, 
                                                 child_offset_y, 
                                                 @entity, 
                                                 @width , 
@@ -199,10 +199,10 @@ module Drawable
                                                 mouse_pos_y)
       #次のコントロールの描画座標原点を設定する
       child_offset_x += child_dx
-      child_offset_y += cild_dy
+      child_offset_y += child_dy
       #マウス座標のオフセットを更新する
       mouse_pos_x -= child_dx
-      mouse_pos_y -= cild_dy
+      mouse_pos_y -= child_dy
     end
 
     #下揃えを考慮

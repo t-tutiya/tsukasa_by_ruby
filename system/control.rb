@@ -649,7 +649,12 @@ class Control #ユーザー定義関数操作
   #関数ブロックを実行する
   def command__YIELD_(argument, options, inner_options)
     #ブロックスタックをディープコピーで取得
-    block_stack = inner_options[:block_stack].dup
+    if inner_options[:block_stack]
+      block_stack = inner_options[:block_stack].dup
+    else
+      block_stack = []
+    end
+
     yield_block_stack = inner_options[:yield_block_stack].dup
 
     block = yield_block_stack.pop

@@ -492,7 +492,7 @@ class Control #制御構文
                         inner_options[:block_stack], 
                         inner_options[:yield_block_stack], 
                         self,
-                      @command_list,
+                        @command_list,
                         &inner_options[:block]
                       )
     end
@@ -511,7 +511,7 @@ class Control #制御構文
                         nil, 
                         inner_options[:yield_block_stack], 
                         self,
-                      @command_list,
+                        @command_list,
                         &inner_options[:block]
                       )
     end
@@ -681,7 +681,7 @@ class Control #スリープ
     unless argument
       @sleep_mode = true
       #フレーム終了疑似コマンドをスタックする
-      @command_list.unshift([[:_END_FRAME_, {}, {}]])
+      @command_list.unshift([:_END_FRAME_, nil, nil])
       return
     end
 

@@ -123,21 +123,20 @@ class Control #内部メソッド
       send("command_" + command_name.to_s, argument, options, inner_options)
     end
 
-    #一時的にスタックしていたコマンドをコマンドリストに再スタックする
-    #※スワップさせた後に連結している
-    @command_list, @next_frame_commands = @next_frame_commands, @command_list
-    @command_list.concat(@next_frame_commands)
+    unless @next_frame_commands.empty?
+      #一時的にスタックしていたコマンドをコマンドリストに再スタックする
+      #※スワップさせた後に連結している
+      @command_list, @next_frame_commands = @next_frame_commands, @command_list
+      @command_list.concat(@next_frame_commands)
 
-    #次フレコマンド列を初期化
-    @next_frame_commands.clear
-
-    #子コントロールを巡回してupdateを実行
-    @control_list.each do |control|
-      control.update
+      #次フレコマンド列を初期化
+      @next_frame_commands.clear
     end
 
-    #削除フラグが立っているコントロールをリストから削除する
+    #子コントロールを巡回
+    #削除フラグが立ったらコントロールをリストから削除する
     @control_list.delete_if do |control|
+      control.update
       control.delete?
     end
   end

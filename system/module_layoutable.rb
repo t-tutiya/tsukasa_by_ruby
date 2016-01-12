@@ -101,7 +101,7 @@ module Layoutable
     #下位コントロール巡回
     @control_list.each do |child_control|
       #下位コントロールを上位ターゲットに直接描画
-      child_dx, cild_dy = child_control.render( offset_x, 
+      child_dx, child_dy = child_control.render( offset_x, 
                                                 offset_y, 
                                                 target, 
                                                 @width , 
@@ -110,10 +110,10 @@ module Layoutable
                                                 mouse_pos_y )
       #次のコントロールの描画座標原点を設定する
       offset_x += child_dx
-      offset_y += cild_dy
+      offset_y += child_dy
       #マウス座標のオフセットを更新する
       mouse_pos_x -= child_dx
-      mouse_pos_y -= cild_dy
+      mouse_pos_y -= child_dy
     end
 
     return check_float

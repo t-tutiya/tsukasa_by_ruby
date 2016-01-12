@@ -174,24 +174,23 @@ class Control #内部メソッド
   end
 
   def find_control(id)
-
-    #自身のidもしくは省略されている場合は自身を帰す
-    if id == @id or id == nil
-      return [self]
+    #自身のidなら自身を帰す
+    if id == @id
+      return self
     end
 
-    #整数であれば、子要素を添え字検索する
+    #整数であれば添え字と見なして子要素を返す
     if id.instance_of?(Fixnum)
-      return [@control_list[id]]
+      return @control_list[id]
     end
 
-    controls = []
-    #子コントロールを探査
+    #子コントロールを探査する
+    result = nil
     @control_list.each do |control|
-      child = control.find_control(id)
-      controls += child unless child.empty?
+      result =  control.find_control(id)
+      break if result
     end
-    return controls
+    return result
   end
 
   #コントロールを削除して良いかどうか
@@ -297,7 +296,7 @@ class Control #内部メソッド
       when :child
         #キーの入力チェック
         value.each do |id|
-          return true if find_control(id).count == 0
+          return true if find_control(id)
         end
 
       #キーが押下されている
@@ -701,9 +700,7 @@ class Control #スリープ
     end
 
     #ルートコントロールをベースに探索
-    @root_control.find_control(argument).each do |control|
-      control.sleep_mode(true)
-    end
+    @root_control.find_control(argument).sleep_mode(true)
   end
 
   #コントロールをスリープ状態から復帰させる
@@ -714,9 +711,7 @@ class Control #スリープ
     end
 
     #ルートコントロールをベースに探索
-    @root_control.find_control(argument).each do |control|
-      control.sleep_mode(false)
-    end
+    @root_control.find_control(argument).sleep_mode(false)
   end
 end
 
@@ -735,17 +730,13 @@ class Control #スクリプト制御
       raise unless @root_control._DEFAULT_CONTROL_[options[:default]]
       argument = @root_control._DEFAULT_CONTROL_[options[:default]]
     end
+    
+    control = find_control(argument)
 
-    controls = find_control(argument)
-
-    if controls.empty?
-      pp argument.to_s + "は無効な識別子です"
-      return
-    end
-
-    #獲得した全てのコントロールにブロックを送信する
-    controls.each do |control|
+    if control
       control.push_command(:_SCOPE_, nil, nil, inner_options)
+    else
+      pp argument.to_s + "は無効な識別子です"
     end
   end
 

@@ -44,7 +44,7 @@ _DEFINE_ :TextSelect do |argument, options|
 end
 
 _DEFINE_ :system_menu do
-  _CREATE_ :LayoutControl, id: :top_menu, x:0, y:0 do
+  _CREATE_ :LayoutControl, id: :top_menu1, x:0, y:0 do
     _CREATE_ :LayoutControl, id: 0, x:0, y:0, width: 256, float_x: :left  do
       TextSelect text: "sample_1_1", path: "./script/sample/sample_1_1.tks"
       TextSelect text: "sample_1_2", path: "./script/sample/sample_1_2.tks"
@@ -76,13 +76,13 @@ _DEFINE_ :system_menu do
     end
   end
 
-  _CREATE_ :LayoutControl, id: :top_menu, x:0, y:256 + 64 do
+  _CREATE_ :LayoutControl, id: :top_menu2, x:0, y:256 + 64 do
     TextSelect  text: "デモゲーム：ノベルゲーム", 
                 path: "./script/demo_game/1_0.tks", 
                 width: 512
   end
 
-  _CREATE_ :LayoutControl, id: :top_menu, x:0, y:256 + 128  do
+  _CREATE_ :LayoutControl, id: :top_menu3, x:0, y:256 + 128  do
     TextSelect  text: "デモゲーム：野メイド", 
                 path: "./script/nomaid/src.rb", 
                 width: 512
@@ -110,7 +110,13 @@ _NEXT_LOOP_ do |a,b,c|
 
   _WAIT_ :_TEMP_,  not_equal: {file_path: nil}
   _EVAL_ "pp _TEMP_[:file_path]"
-  _SEND_ :top_menu do
+  _SEND_ :top_menu1 do
+    _DELETE_
+  end
+  _SEND_ :top_menu2 do
+    _DELETE_
+  end
+  _SEND_ :top_menu3 do
     _DELETE_
   end
 

@@ -134,7 +134,7 @@ module Drawable
   end
 
   def shader=(arg)
-    @draw_option[:shader] = find_control(arg)[0].entity
+    @draw_option[:shader] = find_control(arg).entity
   end
 
   #描画時の指定座標x/yに、画像のcenter_x/yで指定した位置が来るように補正されます

@@ -1,5 +1,5 @@
 #ボタンコントロール
-_CREATE_ :RenderTargetControl, 
+_CREATE_ :LayoutControl, 
         :width => 256,
         :height => 256,
         :id=>:button1 do

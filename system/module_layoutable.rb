@@ -63,7 +63,7 @@ module Layoutable
 
   #カラーキー設定
   def colorkey=(arg)
-    @colorkey = find_control(arg)[0]
+    @colorkey = find_control(arg)
   end
 
   def initialize(argument, options, inner_options, root_control)

@@ -96,13 +96,10 @@ module Layoutable
               mouse_pos_x,
               mouse_pos_y )
 
-    offset_x += @x + @offset_x
-    offset_y += @y + @offset_y
+    dx, dy = check_align(width, height)
 
-    #下揃えを考慮
-    if @align_y == :bottom 
-      offset_y += height - @height
-    end
+    offset_x += @x + @offset_x + dx
+    offset_y += @y + @offset_y + dy
 
     mouse_pos_x -= @x
     mouse_pos_y -= @y
@@ -126,6 +123,15 @@ module Layoutable
     end
 
     return check_float
+  end
+  
+  def check_align(width, height)
+    offest_x = offset_y = 0
+    #下揃えを考慮
+    if @align_y == :bottom 
+      offset_y = height - @height
+    end
+    return offest_x, offset_y
   end
   
   def check_float

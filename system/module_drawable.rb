@@ -190,7 +190,7 @@ module Drawable
     #下位コントロール巡回
     @control_list.each do |child_control|
       #下位コントロールを上位ターゲットに直接描画
-      child_dx, child_dy = child_control.render( child_offset_x, 
+      child_dx, child_dy = child_control.render(child_offset_x, 
                                                 child_offset_y, 
                                                 @entity, 
                                                 @width , 
@@ -205,14 +205,11 @@ module Drawable
       mouse_pos_y -= child_dy
     end
 
-    #下揃えを考慮
-    if @align_y == :bottom 
-      offset_y += height - @height
-    end
+    dx, dy = check_align(width, height)
 
     #自エンティティを上位ターゲットに描画
-    target.draw_ex( @x + @offset_x + offset_x,
-                    @y + @offset_y + offset_y, 
+    target.draw_ex( @x + @offset_x + offset_x + dy,
+                    @y + @offset_y + offset_y + dx, 
                     @entity, 
                     @draw_option)
 

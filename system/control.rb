@@ -750,7 +750,7 @@ class Control #スクリプト制御
       #文字列を取得して変換をかける
       argument = @_PARSER_[options[:parser]][1].apply(
                    @_PARSER_[options[:parser]][0].parse(argument)
-                 ).join("\n")
+                 )
     end
 
     #司スクリプトを評価してコマンド配列を取得し、コマンドリストの先頭に追加する

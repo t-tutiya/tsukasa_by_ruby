@@ -198,7 +198,7 @@ class TKSParser < Parslet::Parser
   rule(:document) { 
     ( blankline | 
       label | 
-      node).repeat
+      node).repeat.as(:output)
   }
 
   root(:document)
@@ -207,39 +207,46 @@ class TKSParser < Parslet::Parser
     rule(
       :label_start => simple(:target)
     ) { 
-      ["_LABEL_ chapter: :_START_, id: 0 do"]
+      "_LABEL_ chapter: :_START_, id: 0 do\n"
     }
 
     rule(
       :label_end => simple(:target)
     ) { 
-      ["end"]
+      "end\n"
     }
 
     rule(
       :chapter => simple(:chapter), :id => simple(:id)
     ) { 
-      ["end"] + 
-      ["_LABEL_ chapter: :#{chapter}, id: #{id} do"]
+      "end\n" + 
+      "_LABEL_ chapter: :#{chapter}, id: #{id} do\n"
     }
 
     rule(
       :chapter => simple(:chapter)
     ) { 
-      ["end"] + 
-      ["_LABEL_ chapter: :#{chapter} do"]
+      "end\n" + 
+      "_LABEL_ chapter: :#{chapter} do\n"
     }
 
     #コメント行→無視
     rule(
       :comment_line => simple(:target)
-    ) { [] }
+    ) {  }
 
     #コマンド行→そのまま返す
     rule(
       :command_line => simple(:target)
     ) {
-      target.to_s
+      target.to_s + "\n"
+    }
+
+    #コマンド行→そのまま返す
+    rule(
+      :command_line => sequence(:target)
+    ) {
+      target.join
     }
 
     #テキストノード→textコマンド
@@ -247,16 +254,16 @@ class TKSParser < Parslet::Parser
       :text_node => simple(:target)
     ) {
       text = "#{target}".gsub(/"/, '\"')
-      "_SEND_(default: :TextLayer){" + 
+       "_SEND_(default: :TextLayer){" + 
         %Q'_TEXT_ "#{text}"' +
-      "}" 
+      "}\n" 
     }
 
     #インラインコマンド→そのまま返す
     rule(
       :inline_command_node => simple(:target)
     ) { 
-      target.to_s
+      target.to_s + "\n"
     }
 
     #インラインデータ→textコマンド
@@ -265,22 +272,28 @@ class TKSParser < Parslet::Parser
     ) {
       "_SEND_(default: :TextLayer){" + 
        "_TEXT_ " + target.to_s +
-      "}" 
+      "}\n" 
     }
 
     #text行→末端に改行コード追加
     rule(
       :text_line => sequence(:target)
     ) { 
-      target + 
-      ["_SEND_(default: :TextLayer){ _LINE_FEED_ }"]
+      target.join + 
+      "_SEND_(default: :TextLayer){ _LINE_FEED_ }\n"
+    }
+
+    rule(
+      :output => sequence(:target)
+    ) { 
+      target.join
     }
 
     #空行ブロック→キー入力待ちコマンド追加
     rule(
       :flush => simple(:target)
     ) { 
-      ["_SEND_(default: :TextLayer){ _FLUSH_ }"]
+      "_SEND_(default: :TextLayer){ _FLUSH_ }\n"
     }
   end
 end

@@ -97,8 +97,8 @@ class ScriptCompiler
         command_name, 
         argument, 
         options, 
-        @yield_block_stack,
         @block_stack,
+        @yield_block_stack,
         block || nil ,
       ])
     else
@@ -107,8 +107,8 @@ class ScriptCompiler
         :_CALL_, 
         command_name, 
         options.update({:_FUNCTION_ARGUMENT_ => argument || nil}), 
-        @yield_block_stack,
         @block_stack,
+        @yield_block_stack,
         block || nil ,
       ])
     end

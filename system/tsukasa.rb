@@ -194,7 +194,7 @@ class Tsukasa < RenderTargetControl
 end
 
 class Tsukasa < RenderTargetControl
-  def command__RESIZE_(argument, options, inner_options)
+  def _RESIZE_(argument, options, inner_options)
     Window.resize(options[:width], 
                   options[:height])
     self.width = options[:width]
@@ -202,12 +202,12 @@ class Tsukasa < RenderTargetControl
   end
 
   #フルスクリーンのオンオフ
-  def command__FULL_SCREEN_(argument, options, inner_options)
+  def _FULL_SCREEN_(argument, options, inner_options)
     Window.full_screen = argument #bool
   end
 
   #アプリを起動してからのミリ秒を取得する
-  def command__RUNNING_TIME_(argument, options, inner_options)
+  def _RUNNING_TIME_(argument, options, inner_options)
     eval_block( Window.running_time, 
                 options, 
                 inner_options[:block_stack].dup, 
@@ -216,7 +216,7 @@ class Tsukasa < RenderTargetControl
   end
 
   #フルスクリーン化可能な解像度のリストを取得する
-  def command__SCREEN_MODES_(argument, options, inner_options)
+  def _SCREEN_MODES_(argument, options, inner_options)
     eval_block( Window.get_screen_modes, 
                 options, 
                 inner_options[:block_stack].dup, 

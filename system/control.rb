@@ -119,7 +119,7 @@ class Control #内部メソッド
       break if command_name == :_END_FRAME_
 
       #コマンドを実行する
-      send("command_" + command_name.to_s, argument, options, inner_options)
+      send(command_name, argument, options, inner_options)
     end
 
     unless @next_frame_commands.empty?
@@ -388,7 +388,7 @@ class Control #コントロールの生成／破棄
   private
 
   #コントロールをリストに登録する
-  def command__CREATE_(argument, options, inner_options)
+  def _CREATE_(argument, options, inner_options)
     #コントロールを生成して子要素として登録する
     @control_list.push(
       Module.const_get(argument).new( argument,
@@ -404,7 +404,7 @@ class Control #コントロールの生成／破棄
 
   #disposeコマンド
   #コントロールを削除する
-  def command__DELETE_(argument, options, inner_options)
+  def _DELETE_(argument, options, inner_options)
     #削除フラグを立てる
     dispose()
   end
@@ -420,7 +420,7 @@ class Control #セッター／ゲッター
 
   #コントロールのプロパティを更新する
   #TODO：複数の変数を一回で設定できるようにしてあるが、１個に限定すべきかもしれない。
-  def command__SET_(argument, options, inner_options)
+  def _SET_(argument, options, inner_options)
     #オプション全探査
     options.each do |key, val|
       if argument
@@ -447,7 +447,7 @@ class Control #セッター／ゲッター
   ##  _GET_ :_RESULT_,  u3: 0, u4: 2
   ##  ユーザーデータ領域には以下のように格納される（u1はこれ以上中が読めない）
   ##  @user_data = {:u1=>{:nn1=>4, :nn2=>50}, :u3=>1, :u4=>300}
-  def command__GET_(argument, options, inner_options)
+  def _GET_(argument, options, inner_options)
     #オプション全探査
     options.each do |key, val|
       if argument
@@ -475,7 +475,7 @@ class Control #制御構文
 
   private
 
-  def command__WAIT_(argument, options, inner_options)
+  def _WAIT_(argument, options, inner_options)
 
     #チェック条件を満たしたら終了する
     return if check_imple(argument, options, inner_options)
@@ -504,7 +504,7 @@ class Control #制御構文
     @next_frame_commands.push([:_WAIT_, argument, options, inner_options])
   end
 
-  def command__CHECK_(argument, options, inner_options)
+  def _CHECK_(argument, options, inner_options)
     #チェック条件を満たす場合
     if check_imple(argument, options, inner_options)
       #checkにブロックが付与されているならそれを実行する
@@ -521,7 +521,7 @@ class Control #制御構文
   end
 
   #繰り返し
-  def command__LOOP_(argument, options, inner_options) 
+  def _LOOP_(argument, options, inner_options) 
     unless options.empty?
       #チェック条件を満たしたら終了する
       return if check_imple(argument, options, inner_options)
@@ -549,7 +549,7 @@ class Control #制御構文
 
   end
 
-  def command__NEXT_LOOP_(argument, options, inner_options) 
+  def _NEXT_LOOP_(argument, options, inner_options) 
     unless options.empty?
       #チェック条件を満たしたら終了する
       return if check_imple(argument, options, inner_options)
@@ -578,7 +578,7 @@ class Control #制御構文
     @command_list.push([:_NEXT_LOOP_, argument, options, inner_options])
   end
 
-  def command__BREAK_(argument, options, inner_options)
+  def _BREAK_(argument, options, inner_options)
     #_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -587,7 +587,7 @@ class Control #制御構文
     end
   end
 
-  def command__RETURN_(argument, options, inner_options)
+  def _RETURN_(argument, options, inner_options)
     #_END_FUNCTION_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_FUNCTION_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -605,12 +605,12 @@ class Control #ユーザー定義関数操作
   private
 
   #ユーザー定義コマンドを定義する
-  def command__DEFINE_(argument, options, inner_options)
+  def _DEFINE_(argument, options, inner_options)
     @function_list[argument] = inner_options[:block]
   end
 
   #関数呼び出し
-  def command__CALL_(argument, options, inner_options)
+  def _CALL_(argument, options, inner_options)
     #関数名に対応する関数ブロックを取得する
     function_block =  @function_list[argument] || 
                       @root_control.function_list[argument]
@@ -618,7 +618,7 @@ class Control #ユーザー定義関数操作
     #指定されたコマンドが定義されていない場合
     unless function_block
       #下位コントロールへの_SEND_であるとみなす
-      command__SEND_(argument, options, inner_options)
+      _SEND_(argument, options, inner_options)
       return
     end
 
@@ -650,7 +650,7 @@ class Control #ユーザー定義関数操作
   end
 
   #関数ブロックを実行する
-  def command__YIELD_(argument, options, inner_options)
+  def _YIELD_(argument, options, inner_options)
     #ブロックスタックをディープコピーで取得
     if inner_options[:block_stack]
       block_stack = inner_options[:block_stack].dup
@@ -680,7 +680,7 @@ class Control #スリープ
   private
 
   #コントロールをスリープ状態にする
-  def command__SLEEP_(argument, options, inner_options)
+  def _SLEEP_(argument, options, inner_options)
     unless argument
       @sleep_mode = true
       #フレーム終了疑似コマンドをスタックする
@@ -693,7 +693,7 @@ class Control #スリープ
   end
 
   #コントロールをスリープ状態から復帰させる
-  def command__WAKE_(argument, options, inner_options)
+  def _WAKE_(argument, options, inner_options)
     unless argument
       @sleep_mode = false
       return
@@ -713,7 +713,7 @@ class Control #スクリプト制御
   private
 
   #コントロールにコマンドブロックを送信する
-  def command__SEND_(argument, options, inner_options)
+  def _SEND_(argument, options, inner_options)
     #デフォルト指定があるならターゲットのコントロールを差し替える
     if options[:default]
       raise unless @root_control._DEFAULT_CONTROL_[options[:default]]
@@ -730,12 +730,12 @@ class Control #スクリプト制御
   end
 
   #ルートコントロールにコマンドブロックを送信する
-  def command__SEND_ROOT_(argument, options, inner_options)
+  def _SEND_ROOT_(argument, options, inner_options)
     @root_control.interrupt_command(:_SCOPE_, argument, nil, inner_options)
   end
 
   #スクリプトファイルを挿入する
-  def command__INCLUDE_(argument, options, inner_options)
+  def _INCLUDE_(argument, options, inner_options)
     #オプションが設定していなければ例外送出
     raise unless argument
 
@@ -753,13 +753,13 @@ class Control #スクリプト制御
     end
 
     #スクリプトをパースする
-    command__PARSE_(File.read(options[:file_path], encoding: "UTF-8"),
+    _PARSE_(File.read(options[:file_path], encoding: "UTF-8"),
                     options, 
                     inner_options)
   end
 
   #スクリプトをパースする
-  def command__PARSE_(argument, options, inner_options)
+  def _PARSE_(argument, options, inner_options)
     options[:file_path] = "(parse)" unless options[:file_path]
 
     #パーサーが指定されている場合
@@ -782,17 +782,17 @@ class Control #スクリプト制御
   end
 
   #アプリを終了する
-  def command__EXIT_(argument, options, inner_options)
+  def _EXIT_(argument, options, inner_options)
     @root_control.close = true
   end
 
   #文字列を評価する（デバッグ用）
-  def command__EVAL_(argument, options, inner_options)
+  def _EVAL_(argument, options, inner_options)
     eval(argument)
   end
 
   #文字列をコマンドラインに出力する（デバッグ用）
-  def command__PUTS_(argument, options, inner_options)
+  def _PUTS_(argument, options, inner_options)
     #第１引数を出力する
     pp argument if argument 
     #ハッシュを出力する
@@ -810,7 +810,7 @@ class Control #セーブデータ制御
 
   #データセーブ
   #TODO：保存先パスや名称は将来的には外部から与えるようにしたい
-  def command__SAVE_(argument, options, inner_options)
+  def _SAVE_(argument, options, inner_options)
     raise unless argument.kind_of?(Numeric)
     #グローバルデータ
     if argument == 0
@@ -835,7 +835,7 @@ class Control #セーブデータ制御
     end
   end
 
-  def command__LOAD_(argument, options, inner_options)
+  def _LOAD_(argument, options, inner_options)
     raise unless argument.kind_of?(Numeric)
     #グローバルデータ
     if argument == 0
@@ -861,12 +861,12 @@ class Control #セーブデータ制御
   end
 
   #ネイティブコードを読み込む
-  def command__LOAD_NATIVE_(argument, options, inner_options)
+  def _LOAD_NATIVE_(argument, options, inner_options)
     raise unless argument
     require argument
   end
 
-  def command__QUICK_SAVE_(argument, options, inner_options)
+  def _QUICK_SAVE_(argument, options, inner_options)
     raise unless argument.kind_of?(Numeric)
 
     command_list = []
@@ -884,7 +884,7 @@ class Control #セーブデータ制御
     end
   end
 
-  def command__QUICK_LOAD_(argument, options, inner_options)
+  def _QUICK_LOAD_(argument, options, inner_options)
     raise unless argument.kind_of?(Numeric)
     db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
                     argument.to_s +
@@ -910,7 +910,7 @@ class Control #内部コマンド
   private
 
   #ブロックを実行する。無名関数として機能する
-  def command__SCOPE_(argument, options, inner_options)
+  def _SCOPE_(argument, options, inner_options)
     #関数の終端を設定
     #interrupt_command(:_END_FUNCTION_, argument, options, inner_options)
     @command_list.unshift([:_END_FUNCTION_, argument, options, inner_options])
@@ -926,17 +926,17 @@ class Control #内部コマンド
   end
 
   #ファンクションの終点を示す
-  def command__END_FUNCTION_(argument, options, inner_options)
+  def _END_FUNCTION_(argument, options, inner_options)
   end
   
   #フレームの終了を示す（ダミーコマンド。これ自体は実行されない）
-  def command__END_FRAME_(argument, options, inner_options)
+  def _END_FRAME_(argument, options, inner_options)
     raise
   end
 end
 
 class Control #プロパティのパラメータ遷移
-  def command__MOVE_(argument, options, inner_options)
+  def _MOVE_(argument, options, inner_options)
     raise unless argument #必須要素
     
     #オプションハッシュの初期化
@@ -1142,7 +1142,7 @@ class Control #プロパティのパラメータ遷移
   #スプライン補間
   #これらの実装については以下のサイトを参考にさせて頂きました。感謝します。
   # http://www1.u-netsurf.ne.jp/~future/HTML/bspline.html
-  def command__PATH_(argument, options, inner_options)
+  def _PATH_(argument, options, inner_options)
     raise unless argument #必須要素
 
     #オプションハッシュの初期化

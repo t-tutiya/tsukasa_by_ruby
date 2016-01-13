@@ -265,7 +265,7 @@ class TextPageControl < LayoutControl
 
   #charコマンド
   #指定文字（群）を描画チェインに連結する
-  def command__CHAR_(argument, options, inner_options)
+  def _CHAR_(argument, options, inner_options)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
                                     :CharControl, 
@@ -296,7 +296,7 @@ class TextPageControl < LayoutControl
 
   #textコマンド
   #指定文字列を描画チェインに連結する
-  def command__TEXT_(argument, options, inner_options)
+  def _TEXT_(argument, options, inner_options)
     command_list = Array.new
 
     #第１引数が設定されていない場合
@@ -334,7 +334,7 @@ class TextPageControl < LayoutControl
     eval_commands(command_list)
   end
 
-  def command__RUBI_(argument, options, inner_options)
+  def _RUBI_(argument, options, inner_options)
     #ルビを出力するTextPageControlを生成する
     rubi_layout =[:_CREATE_, 
                   :TextPageControl, 
@@ -366,7 +366,7 @@ class TextPageControl < LayoutControl
 
   #line_feedコマンド
   #改行処理（CR＋LF）
-  def command__LINE_FEED_(argument, options, inner_options)
+  def _LINE_FEED_(argument, options, inner_options)
 
     #インデントスペーサーの作成
     if @indent > 0
@@ -419,7 +419,7 @@ class TextPageControl < LayoutControl
 
   #flushコマンド
   #メッセージレイヤの消去
-  def command__FLUSH_(argument, options, inner_options)
+  def _FLUSH_(argument, options, inner_options)
     #子コントロールをクリアする
     @control_list.each do |control|
       control.interrupt_command(:_DELETE_, argument, options, {})
@@ -446,7 +446,7 @@ class TextPageControl < LayoutControl
 
   #image_charコマンド
   #指定文字（群）のレンダリング済みフォントを描画チェインに連結する
-  def command_image_char(argument, options, inner_options) #改修前
+  def image_char(argument, options, inner_options) #改修前
     raise
 #以下旧仕様なので動作しない
 #TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
@@ -473,7 +473,7 @@ class TextPageControl < LayoutControl
 
   #graphコマンド
   #指定画像を描画チェインに連結する
-  def command_graph(argument, options, inner_options)#改修前
+  def graph(argument, options, inner_options)#改修前
     #以下旧仕様で動かない
     raise
 =begin
@@ -514,7 +514,7 @@ class TextPageControl < LayoutControl
 
 
   #レンダリング済みフォントデータファイルを登録する
-  def command_map_image_font(argument, options, inner_options)#改修前
+  def map_image_font(argument, options, inner_options)#改修前
     raise
     #レンダリング済みフォントデータファイルを任意フォント名で登録
     Image_font.regist(options[:font_name].to_s, options[:file_path].to_s)

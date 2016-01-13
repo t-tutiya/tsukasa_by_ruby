@@ -91,7 +91,7 @@ class ScriptCompiler
       raise
     end
 
-    if @control.respond_to?("command_" + command_name.to_s, true)
+    if @control.respond_to?(command_name, true)
       #コマンドを登録する
       @command_list.push([
         command_name, 

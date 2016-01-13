@@ -154,23 +154,10 @@ class Control #内部メソッド
   end
 
   def find_control(id)
-    #整数であれば 子要素の添え字と見なす
-    if id.instance_of?(Fixnum)
-      return @control_list[id]
-    end
-
-    #自身のidなら自身を帰す
-    if id == @id
-      return self
-    end
-
-    #子コントロールを探査する
-    result = nil
-    @control_list.each do |control|
-      result = control.find_control(id)
-      break if result
-    end
-    return result
+    #整数であれば子要素の添え字と見なす
+    return @control_list[id] if id.instance_of?(Fixnum)
+    #子コントロールを探査して返す。存在しなければnil
+    return @control_list.find {|control| control.id == id }
   end
 
   #コントロールを削除して良いかどうか

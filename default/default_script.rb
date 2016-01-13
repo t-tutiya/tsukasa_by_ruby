@@ -74,8 +74,10 @@ _DEFINE_ :pause do |argument, options|
   #クリック待ちアイコンを削除
   _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
     _SEND_ default: :TextLayer do 
-      _SEND_ :icon do
-        _DELETE_
+      _SEND_TO_ACTIVE_LINE_ do 
+        _SEND_ :icon do
+          _DELETE_
+        end
       end
     end
   end

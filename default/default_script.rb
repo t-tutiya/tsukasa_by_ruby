@@ -443,7 +443,7 @@ _DEFINE_ :_LABEL_ do |arugment, options|
   ###################################################################
 
   #TODO：これ無理矢理すぎるけど今の所pushを司スクリプトで処理できない
-  _EVAL_ "@_RESULT_[:#{options[:chapter].to_s}].push(#{options[:id]})"
+  _EVAL_ "@_RESULT_[:#{options[:chapter].to_s}].push(#{options[:id]}).uniq!"
 
   ###################################################################
   #テキスト評価

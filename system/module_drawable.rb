@@ -191,7 +191,7 @@ module Drawable
 
     #下位コントロール巡回
     @control_list.each do |child_control|
-      #下位コントロールを上位ターゲットに直接描画
+      #下位コントロールを自ターゲットに直接描画
       child_dx, child_dy = child_control.render(child_offset_x, 
                                                 child_offset_y, 
                                                 @entity, 

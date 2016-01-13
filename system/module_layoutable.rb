@@ -130,7 +130,8 @@ module Layoutable
   def check_align(width, height)
     offest_x = offset_y = 0
     #下揃えを考慮
-    if @align_y == :bottom 
+    case @align_y
+    when :bottom 
       offset_y = height - @height
     end
     return offest_x, offset_y

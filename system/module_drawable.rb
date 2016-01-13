@@ -210,8 +210,8 @@ module Drawable
     dx, dy = check_align(width, height)
 
     #自エンティティを上位ターゲットに描画
-    target.draw_ex( @x + @offset_x + offset_x + dy,
-                    @y + @offset_y + offset_y + dx, 
+    target.draw_ex( @x + @offset_x + offset_x + dx,
+                    @y + @offset_y + offset_y + dy, 
                     @entity, 
                     @draw_option)
 

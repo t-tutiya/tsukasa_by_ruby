@@ -150,10 +150,7 @@ class Tsukasa < RenderTargetControl
     options[:command_list] = [[:_INCLUDE_,
                         "./default/bootstrap_script.rb",
                         {}, 
-                        {
-                          :block_stack => [],
-                          :yield_block_stack => [],
-                        }]]
+                        nil, nil, nil]]
 
     #カーソル歌詞設定
     @cursor_visible = true
@@ -194,7 +191,7 @@ class Tsukasa < RenderTargetControl
 end
 
 class Tsukasa < RenderTargetControl
-  def _RESIZE_(argument, options, inner_options)
+  def _RESIZE_(argument, options, block_stack, yield_block_stack, block)
     Window.resize(options[:width], 
                   options[:height])
     self.width = options[:width]
@@ -202,25 +199,25 @@ class Tsukasa < RenderTargetControl
   end
 
   #フルスクリーンのオンオフ
-  def _FULL_SCREEN_(argument, options, inner_options)
+  def _FULL_SCREEN_(argument, options, block_stack, yield_block_stack, block)
     Window.full_screen = argument #bool
   end
 
   #アプリを起動してからのミリ秒を取得する
-  def _RUNNING_TIME_(argument, options, inner_options)
+  def _RUNNING_TIME_(argument, options, block_stack, yield_block_stack, block)
     eval_block( Window.running_time, 
                 options, 
-                inner_options[:block_stack].dup, 
-                inner_options[:yield_block_stack].dup, 
-                &inner_options[:block])
+                block_stack.dup, 
+                yield_block_stack.dup, 
+                &block)
   end
 
   #フルスクリーン化可能な解像度のリストを取得する
-  def _SCREEN_MODES_(argument, options, inner_options)
+  def _SCREEN_MODES_(argument, options, block_stack, yield_block_stack, block)
     eval_block( Window.get_screen_modes, 
                 options, 
-                inner_options[:block_stack].dup, 
-                inner_options[:yield_block_stack].dup, 
-                &inner_options[:block])
+                block_stack.dup, 
+                yield_block_stack.dup, 
+                &block)
   end
 end

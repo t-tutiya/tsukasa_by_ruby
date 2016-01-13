@@ -71,7 +71,7 @@ class NomaidControl < Control
     _TEMP_[:day] = 0
   end
   
-  def lesson(argument, options, inner_options)
+  def lesson(argument, options, block_stack, yield_block_stack, block)
     case _TEMP_[:flag]
     when :pray
 
@@ -182,7 +182,7 @@ class NomaidControl < Control
 =end
   end
 
-  def work(argument, options, inner_options)
+  def work(argument, options, block_stack, yield_block_stack, block)
     case _TEMP_[:flag]
     when :cleaning
       hp_cost = [ @mental_point_max - @mental_point + 10, 
@@ -275,7 +275,7 @@ class NomaidControl < Control
 =end
   end
 
-  def rest(argument, options, inner_options)
+  def rest(argument, options, block_stack, yield_block_stack, block)
     @helth_point += [
                       100 - @helth_point, 
                       @mental_point
@@ -295,11 +295,11 @@ class NomaidControl < Control
 =end
   end
 
-  def week_init(argument, options, inner_options)
+  def week_init(argument, options, block_stack, yield_block_stack, block)
     _TEMP_[:day] = 0
   end
 
-  def day_init(argument, options, inner_options)
+  def day_init(argument, options, block_stack, yield_block_stack, block)
     _TEMP_[:gold] = @gold
 
     _TEMP_[:helth_point] = @helth_point
@@ -315,11 +315,11 @@ class NomaidControl < Control
 
   end
 
-  def end_day(argument, options, inner_options)
+  def end_day(argument, options, block_stack, yield_block_stack, block)
     _TEMP_[:day] += 1
   end
   
-  def end_week(argument, options, inner_options)
+  def end_week(argument, options, block_stack, yield_block_stack, block)
     @gold -= @debt[_TEMP_[:week]]
 
     _TEMP_[:week] += 1
@@ -335,7 +335,7 @@ class NomaidControl < Control
     end
   end
 =begin
-  def maid_debug(argument, options, inner_options)
+  def maid_debug(argument, options, block_stack, yield_block_stack, block)
     pp "所持金：#{@gold}  ＨＰ　：#{@helth_point}/#{@helth_point_max}  ＭＰ　：#{@mental_point}/#{@mental_point_max}"
     pp "魅力：#{@charm}  気品　：#{@noble}  教養　：#{@culture}"
     pp "知性：#{@intelligence}  恭順　：#{@allegiance}  礼節　：#{@courtesy}"

@@ -97,22 +97,20 @@ class ScriptCompiler
         command_name, 
         argument, 
         options, 
-        {
-          :yield_block_stack => @yield_block_stack,
-          :block_stack => @block_stack,
-          :block => block || nil ,
-        }])
+        @yield_block_stack,
+        @block_stack,
+        block || nil ,
+      ])
     else
       # 組み込みコマンドが無い場合は_CALL_に差し替える
       @command_list.push([
         :_CALL_, 
         command_name, 
         options.update({:_FUNCTION_ARGUMENT_ => argument || nil}), 
-        {
-          :yield_block_stack => @yield_block_stack,
-          :block_stack => @block_stack,
-          :block => block || nil ,
-        }])
+        @yield_block_stack,
+        @block_stack,
+        block || nil ,
+      ])
     end
   end
 end

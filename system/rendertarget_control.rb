@@ -109,7 +109,7 @@ class RenderTargetControl < Control
   end
 
   #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
-  def _TO_IMAGE_(argument, options, inner_options)
+  def _TO_IMAGE_(argument, options, block_stack, yield_block_stack, block)
     rt = RenderTarget.new(@width, @height)
     render( 0, 0, rt, { :width => @width, 
                         :height => @height,
@@ -137,7 +137,7 @@ class RenderTargetControl < Control
                 :visible => options[:visible] || true, #デフォルトでは可視
                 :id => argument
                 }, 
-                inner_options)
+                block_stack, yield_block_stack, block)
   end
 
   def serialize(control_name = :RenderTargetControl, **options)

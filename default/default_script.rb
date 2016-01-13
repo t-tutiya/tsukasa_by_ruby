@@ -211,8 +211,6 @@ _DEFINE_ :TextWindow do |argument, options|
         _SET_ :_TEMP_, sleep: false
       end
 
-      _SET_ size: 32
-
       _CHECK_ system: [:block_given] do
         _YIELD_
       end

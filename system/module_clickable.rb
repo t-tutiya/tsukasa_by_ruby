@@ -178,7 +178,7 @@ module Clickable
     super
   end
 
-  def check_imple(argument, options, inner_options)
+  def check_imple(argument, options, block_stack, yield_block_stack, block)
     if options[:mouse]
 
       #対象キーが配列で渡されていない場合配列に変換する

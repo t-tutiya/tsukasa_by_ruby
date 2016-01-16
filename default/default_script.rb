@@ -228,18 +228,20 @@ TextWindow id: :text0, text_page_id: :default_text_page_control0,
 
 _DEFINE_ :line_icon_func do |argument, options|
   _CREATE_ :RenderTargetControl, 
-          :x => options[:x] || 0, 
-          :y => options[:y] || 0, 
-          :width => 24,
-          :height => 24,
-          :align_y => options[:align_y] || :bottom,
-          :float_x => options[:float_x] || :left,
-          :id => :icon do
-    _CREATE_ :TileImageControl, 
-            :tiles => true,
-            :file_path=>"./resource/icon/icon_8_a.png", 
-            :x_count => 4, 
-            :y_count => 2 do
+          x: options[:x] || 0, 
+          y: options[:y] || 0, 
+          width: 24,
+          height: 24,
+          align_y: options[:align_y] || :bottom,
+          float_x: options[:float_x] || :left,
+          id: :icon do
+    _CREATE_ :TileMapControl, 
+      file_path: "./resource/icon/icon_8_a.png",
+      map_base_x_count: 4, 
+      map_base_y_count: 2,
+      image_array: [[0]],
+      size_x: 1,
+      size_y: 1 do
       _INCLUDE_ "./resource/icon/icon_8_a.rb"
     end
     _CHECK_ system: [:block_given] do
@@ -250,31 +252,29 @@ end
 
 _DEFINE_ :page_icon_func do |argument, options|
   _CREATE_ :RenderTargetControl, 
-          :x => options[:x] || 0, 
-          :y => options[:y] || 0, 
-          :width => 24,
-          :height => 24,
-          :align_y => options[:align_y] || :bottom,
-          :float_x => options[:float_x] || :left,
-          :id => :icon do
-    _CREATE_ :TileImageControl, 
-            :tiles => true, 
-            :file_path=>"./resource/icon/icon_4_a.png", 
-            :x_count => 4, 
-            :y_count => 1 do
+          x: options[:x] || 0, 
+          y: options[:y] || 0, 
+          width: 24,
+          height: 24,
+          align_y: options[:align_y] || :bottom,
+          float_x: options[:float_x] || :left,
+          id: :icon do
+    _CREATE_ :TileMapControl, 
+      file_path: "./resource/icon/icon_4_a.png",
+      map_base_x_count: 4, 
+      map_base_y_count: 1,
+      image_array: [[0]],
+      size_x: 1,
+      size_y: 1 do
       _NEXT_LOOP_ do
-        _SEND_(3){_SET_  visible: false}
-        _SEND_(0){_SET_  visible: true}
-      	_WAIT_  count: 5
-        _SEND_(0){_SET_  visible: false}
-        _SEND_(1){_SET_  visible: true}
-      	_WAIT_  count: 5
-        _SEND_(1){_SET_  visible: false}
-        _SEND_(2){_SET_  visible: true}
-      	_WAIT_  count: 5
-        _SEND_(2){_SET_  visible: false}
-        _SEND_(3){_SET_  visible: true}
-      	_WAIT_  count: 5
+        _SET_TILE_ x:0, y:0, id:0
+        _WAIT_ count: 5
+        _SET_TILE_ x:0, y:0, id:1
+        _WAIT_ count: 5
+        _SET_TILE_ x:0, y:0, id:2
+        _WAIT_ count: 5
+        _SET_TILE_ x:0, y:0, id:3
+        _WAIT_ count: 5
       end
     end
     _CHECK_ system: [:block_given] do

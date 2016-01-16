@@ -1,26 +1,18 @@
       _NEXT_LOOP_ do
-        _SEND_(7){_SET_  visible: false}
-        _SEND_(0){_SET_  visible: true}
-      	_WAIT_ count: 5
-        _SEND_(0){_SET_  visible: false}
-        _SEND_(1){_SET_  visible: true}
-      	_WAIT_ count: 5
-        _SEND_(1){_SET_  visible: false}
-        _SEND_(2){_SET_  visible: true}
-      	_WAIT_ count: 5
-        _SEND_(2){_SET_  visible: false}
-        _SEND_(3){_SET_  visible: true}
-      	_WAIT_ count: 5
-        _SEND_(3){_SET_  visible: false}
-        _SEND_(4){_SET_  visible: true}
-      	_WAIT_ count: 5
-        _SEND_(4){_SET_  visible: false}
-        _SEND_(5){_SET_  visible: true}
-      	_WAIT_ count: 5
-        _SEND_(5){_SET_  visible: false}
-        _SEND_(6){_SET_  visible: true}
-      	_WAIT_ count: 5
-        _SEND_(6){_SET_  visible: false}
-        _SEND_(7){_SET_  visible: true}
-      	_WAIT_ count: 30
+        _SET_TILE_ x:0, y:0, id:0
+        _WAIT_ count: 5
+        _SET_TILE_ x:0, y:0, id:1
+        _WAIT_ count: 5
+        _SET_TILE_ x:0, y:0, id:2
+        _WAIT_ count: 5
+        _SET_TILE_ x:0, y:0, id:3
+        _WAIT_ count: 5
+        _SET_TILE_ x:0, y:0, id:4
+        _WAIT_ count: 5
+        _SET_TILE_ x:0, y:0, id:5
+        _WAIT_ count: 5
+        _SET_TILE_ x:0, y:0, id:6
+        _WAIT_ count: 5
+        _SET_TILE_ x:0, y:0, id:7
+        _WAIT_ count: 30
       end

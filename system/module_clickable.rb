@@ -168,8 +168,8 @@ module Clickable
   end
 
   def render(offset_x, offset_y, target, 
-              width , 
-              height , 
+              parent_control_width, 
+              parent_control_height, 
               mouse_pos_x,
               mouse_pos_y )
     #次フレームのクリッカブル判定に使うマウスカーソル座標を取得

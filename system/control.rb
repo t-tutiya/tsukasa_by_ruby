@@ -142,8 +142,8 @@ class Control #内部メソッド
 
   #下位コントロールを描画する
   def render(offset_x, offset_y, target, 
-              width , 
-              height , 
+              parent_control_width, 
+              parent_control_height, 
               mouse_pos_x,
               mouse_pos_y )
     #スリープモード中であれば処理しない

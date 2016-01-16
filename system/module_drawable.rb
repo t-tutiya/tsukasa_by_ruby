@@ -175,8 +175,8 @@ module Drawable
 
   #描画
   def render(offset_x, offset_y, target, 
-              width , 
-              height , 
+              parent_control_width, 
+              parent_control_height, 
               mouse_pos_x,
               mouse_pos_y )
 
@@ -207,7 +207,7 @@ module Drawable
       mouse_pos_y -= child_dy
     end
 
-    dx, dy = check_align(width, height)
+    dx, dy = check_align(parent_control_width, parent_control_height)
 
     #自エンティティを上位ターゲットに描画
     target.draw_ex( @x + @offset_x + offset_x + dx,

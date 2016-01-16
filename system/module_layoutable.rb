@@ -58,9 +58,6 @@ module Layoutable
   attr_accessor  :real_width
   attr_accessor  :real_height
 
-  #コリジョンのエンティティ
-  attr_accessor  :collision_shape
-
   #カラーキー設定
   def colorkey=(arg)
     @colorkey = find_control(arg)
@@ -93,12 +90,12 @@ module Layoutable
 
   #描画
   def render(offset_x, offset_y, target, 
-              width , 
-              height , 
+              parent_control_width, 
+              parent_control_height, 
               mouse_pos_x,
               mouse_pos_y )
 
-    dx, dy = check_align(width, height)
+    dx, dy = check_align(parent_control_width, parent_control_height)
 
     offset_x += @x + @offset_x + dx
     offset_y += @y + @offset_y + dy

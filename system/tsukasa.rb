@@ -182,8 +182,8 @@ class Tsukasa < RenderTargetControl
   end
 
   def render(offset_x, offset_y, target, 
-              width = Window.width, 
-              height = Window.width, 
+              parent_control_width = Window.width, 
+              parent_control_height = Window.width, 
               mouse_pos_x = Input.mouse_x,
               mouse_pos_y = Input.mouse_y)
     super

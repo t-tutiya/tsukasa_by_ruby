@@ -45,7 +45,6 @@ require_relative './layout_control.rb'
 require_relative './rendertarget_control.rb'
 require_relative './colorkey_control.rb'
 
-require_relative './tile_image_control.rb'
 require_relative './tile_map_control.rb'
 
 require_relative './rule_shader_control.rb'

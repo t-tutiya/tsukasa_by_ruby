@@ -127,6 +127,8 @@ class TileMapControl < Control
     return super(control_name, options)
   end
 
-  #TPDP：image_arrayの一部を書き換えるコマンドが必要かもしれない
+  def _SET_TILE_(argument, options, block_stack, yield_block_stack, block)
+    @map_array[options[:x]][options[:y]] = options[:id]
+  end
 
 end

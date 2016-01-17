@@ -472,7 +472,7 @@ class Control #制御構文
     end
 
     #フレーム終了疑似コマンドをスタックする
-    @command_list.unshift([:_END_FRAME_, nil, options, block_stack, yield_block_stack, block])
+    @command_list.unshift(:_END_FRAME_)
 
     if block
       #waitにブロックが付与されているならそれを実行する
@@ -557,8 +557,7 @@ class Control #制御構文
                       @command_list,
                       &block
                     )
-    #while文全体をスクリプトストレージにスタック
-    @command_list.push([:_END_FRAME_, argument, options, block_stack, yield_block_stack, block])
+    @command_list.push(:_END_FRAME_)
 
     #リストの末端に自分自身を追加する
     @command_list.push([:_NEXT_LOOP_, argument, options, block_stack, yield_block_stack, block])
@@ -619,12 +618,7 @@ class Control #ユーザー定義関数操作
     #下位伝搬を防ぐ為に要素を削除
     options.delete(:_FUNCTION_ARGUMENT_)
 
-    @command_list.unshift([:_END_FUNCTION_, 
-                            function_argument, 
-                            options, 
-                            block_stack, 
-                            yield_block_stack, 
-                            block])
+    @command_list.unshift(:_END_FUNCTION_)
 
     #functionを実行時評価しコマンド列を生成する。
     eval_block( function_argument, 
@@ -665,7 +659,7 @@ class Control #スリープ
     unless argument
       @sleep_mode = true
       #フレーム終了疑似コマンドをスタックする
-      @command_list.unshift([:_END_FRAME_, nil, nil])
+      @command_list.unshift(:_END_FRAME_)
       return
     end
 
@@ -893,7 +887,7 @@ class Control #内部コマンド
   #ブロックを実行する。無名関数として機能する
   def _SCOPE_(argument, options, block_stack, yield_block_stack, block)
     #関数の終端を設定
-    @command_list.unshift([:_END_FUNCTION_, argument, options, block_stack, yield_block_stack, block])
+    @command_list.unshift(:_END_FUNCTION_)
 
     #参照渡し汚染が起きないようにディープコピーで取得
     block_stack = block_stack ? block_stack.dup : []

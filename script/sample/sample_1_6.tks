@@ -5,14 +5,14 @@
 @	img0 {
 @		_SET_ file_path: "./resource/button_over.png", x: 250, y: 100
 @		_MOVE_ 180, alpha: 0
-@		_WAIT_ not_command_stack: :_MOVE_
+@		_WAIT_ not_stack_command: :_MOVE_
 @		_MOVE_ 360, alpha: 255
 @	}
 @
 @	img1 {
 @		_SET_ file_path: "./resource/button_normal.png", x: 150, y: 200
 @		_MOVE_ 180, alpha: 0
-@		_WAIT_ not_command_stack: :_MOVE_
+@		_WAIT_ not_stack_command: :_MOVE_
 @		_MOVE_ 360, alpha: 255
 @	}
 

@@ -10,9 +10,9 @@
 @
 @	test0 {
 @		_MOVE_ 180, alpha: 0
-@		_WAIT_ not_command_stack: :_MOVE_, system: [:key_down]
+@		_WAIT_ not_stack_command: :_MOVE_, system: [:key_down]
 @		_MOVE_ 360, alpha: 255
-@		_WAIT_ not_command_stack: :_MOVE_, system: [:key_down]
+@		_WAIT_ not_stack_command: :_MOVE_, system: [:key_down]
 @	}
 
 @ end_pause

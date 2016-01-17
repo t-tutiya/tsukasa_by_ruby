@@ -141,7 +141,7 @@ _DEFINE_ :TextWindow do |argument, options|
                 _SET_ alpha: 255
               end
         #トランジションが終了するまで待機
-        _WAIT_  not_command_stack: :_MOVE_ 
+        _WAIT_  not_stack_command: :_MOVE_ 
         #待機フラグが下がるまで待機
         _WAIT_ :_TEMP_, equal: {sleep: false}
         #キー入力伝搬を防ぐ為に１フレ送る
@@ -166,7 +166,7 @@ _DEFINE_ :TextWindow do |argument, options|
                 end
         end
         #トランジションが終了するまで待機
-        _WAIT_ not_command_stack: :_MOVE_ 
+        _WAIT_ not_stack_command: :_MOVE_ 
       end
       #文字間待ち時間
       _DEFINE_ :_WAIT_FRAME_ do |argument, options|

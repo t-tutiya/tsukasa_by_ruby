@@ -242,7 +242,7 @@ class Control #内部メソッド
         end
 
       #継続条件：コマンドがリスト上に存在している
-      when :command_stack
+      when :stack_command
         value.each do |command|
           if @next_frame_commands.index{|stack_command|
             stack_command[0] == command}
@@ -251,7 +251,7 @@ class Control #内部メソッド
         end
 
       #継続条件：コマンドがリスト上に存在していない
-      when :not_command_stack
+      when :not_stack_command
         value.each do |command|
           unless @next_frame_commands.index{|stack_command|
             stack_command[0] == command}

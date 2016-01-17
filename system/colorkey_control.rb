@@ -42,8 +42,7 @@ class ColorkeyControl < Control
   attr_accessor  :entity
   attr_accessor  :border
 
-  def initialize(argument, options, 
-                  block_stack = [], yield_block_stack = [], block = nil, 
+  def initialize(argument, options, yield_block_stack = [], block = nil, 
                   root_control)
     super
 

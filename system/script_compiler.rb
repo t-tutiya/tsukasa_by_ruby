@@ -51,12 +51,10 @@ class ScriptCompiler
   end
 
   def eval_commands(script, fname = "(eval)", 
-                    block_stack, yield_block_stack, control, command_list, &block)
+                    yield_block_stack, control, command_list, &block)
     @control = control
 
     @yield_block_stack = yield_block_stack
-    @block_stack = block_stack
-
 
     eval(script, nil, fname)
 
@@ -68,11 +66,10 @@ class ScriptCompiler
   end
 
   def eval_block( argument, options, 
-                  block_stack, yield_block_stack, control, command_list, &block)
+                  yield_block_stack, control, command_list, &block)
     @control = control
 
     @yield_block_stack = yield_block_stack
-    @block_stack = block_stack
 
     raise unless block
 
@@ -97,7 +94,6 @@ class ScriptCompiler
         command_name, 
         argument, 
         options, 
-        @block_stack,
         @yield_block_stack,
         block || nil ,
       ])
@@ -107,7 +103,6 @@ class ScriptCompiler
         :_CALL_, 
         command_name, 
         options.update({:_FUNCTION_ARGUMENT_ => argument || nil}), 
-        @block_stack,
         @yield_block_stack,
         block || nil ,
       ])

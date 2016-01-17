@@ -35,8 +35,7 @@ module Clickable
   #コリジョンのエンティティ
   attr_accessor  :collision_shape
 
-  def initialize(argument, options, 
-                  block_stack = [], yield_block_stack = [], block = nil, 
+  def initialize(argument, options, yield_block_stack = [], block = nil, 
                   root_control)
     @collision_shape = options[:collision_shape]
     
@@ -178,7 +177,7 @@ module Clickable
     super
   end
 
-  def check_imple(argument, options, block_stack, yield_block_stack, block)
+  def check_imple(argument, options, yield_block_stack, block)
     if options[:mouse]
 
       #対象キーが配列で渡されていない場合配列に変換する

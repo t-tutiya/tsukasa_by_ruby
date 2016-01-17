@@ -57,8 +57,7 @@ class RenderTargetControl < Control
   #枠線のRGB配列（初期値[255,255,255]）
   attr_accessor  :border_color
 
-  def initialize(argument, options, 
-                  block_stack = [], yield_block_stack = [], block = nil, 
+  def initialize(argument, options, yield_block_stack = [], block = nil, 
                   root_control)
     @bgcolor = options[:bgcolor]  || [0,0,0,0]
     #保持オブジェクトの初期化
@@ -109,7 +108,7 @@ class RenderTargetControl < Control
   end
 
   #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
-  def _TO_IMAGE_(argument, options, block_stack, yield_block_stack, block)
+  def _TO_IMAGE_(argument, options, yield_block_stack, block)
     rt = RenderTarget.new(@width, @height)
     render( 0, 0, rt, { :width => @width, 
                         :height => @height,
@@ -137,7 +136,7 @@ class RenderTargetControl < Control
                 :visible => options[:visible] || true, #デフォルトでは可視
                 :id => argument
                 }, 
-                block_stack, yield_block_stack, block)
+                yield_block_stack, block)
   end
 
   def serialize(control_name = :RenderTargetControl, **options)

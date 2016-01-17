@@ -41,8 +41,7 @@ class ImageControl < Control
     @entity = @@image_cache[file_path]
   end
 
-  def initialize(argument, options, 
-                  block_stack = [], yield_block_stack = [], block = nil, 
+  def initialize(argument, options, yield_block_stack = [], block = nil, 
                   root_control)
     if options[:file_path]
       @file_path = options[:file_path]
@@ -59,7 +58,7 @@ class ImageControl < Control
   end
 
   #画像を保存する
-  def _SAVE_IMAGE_(argument, options, block_stack, yield_block_stack, block)
+  def _SAVE_IMAGE_(argument, options, yield_block_stack, block)
     @entity.save(argument,options[:format] || FORMAT_PNG)
   end
 end

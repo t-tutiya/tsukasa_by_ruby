@@ -66,8 +66,7 @@ class TileMapControl < Control
   attr_accessor :size_y
   attr_accessor :z
 
-  def initialize(argument, options, 
-                  block_stack = [], yield_block_stack = [], block = nil, 
+  def initialize(argument, options, yield_block_stack = [], block = nil, 
                   root_control)
 
     @file_path = options[:file_path]
@@ -127,7 +126,7 @@ class TileMapControl < Control
     return super(control_name, options)
   end
 
-  def _SET_TILE_(argument, options, block_stack, yield_block_stack, block)
+  def _SET_TILE_(argument, options, yield_block_stack, block)
     @map_array[options[:x]][options[:y]] = options[:id]
   end
 

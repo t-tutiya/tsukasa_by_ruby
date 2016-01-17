@@ -58,7 +58,7 @@ class ImageControl < Control
   end
 
   #画像を保存する
-  def _SAVE_IMAGE_(argument, options, yield_block_stack, block)
+  def _SAVE_IMAGE_(argument, options, yield_block_stack)
     @entity.save(argument,options[:format] || FORMAT_PNG)
   end
 end

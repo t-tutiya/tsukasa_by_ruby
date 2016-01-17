@@ -126,7 +126,7 @@ class TileMapControl < Control
     return super(control_name, options)
   end
 
-  def _SET_TILE_(argument, options, yield_block_stack, block)
+  def _SET_TILE_(argument, options, yield_block_stack)
     @map_array[options[:x]][options[:y]] = options[:id]
   end
 

@@ -264,7 +264,7 @@ class TextPageControl < LayoutControl
 
   #charコマンド
   #指定文字（群）を描画チェインに連結する
-  def _CHAR_(argument, options, yield_block_stack, block)
+  def _CHAR_(argument, options, yield_block_stack)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
                                     :CharControl, 
@@ -296,7 +296,7 @@ class TextPageControl < LayoutControl
 
   #textコマンド
   #指定文字列を描画チェインに連結する
-  def _TEXT_(argument, options, yield_block_stack, block)
+  def _TEXT_(argument, options, yield_block_stack)
     command_list = Array.new
 
     #第１引数が設定されていない場合
@@ -325,20 +325,20 @@ class TextPageControl < LayoutControl
     #文字列を分解してcharコマンドに変換する
     argument.to_s.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      command_list.push([char_command, ch, {}, yield_block_stack, block])
+      command_list.push([char_command, ch, {}, yield_block_stack, nil])
       #文字待機処理をスタックする
-      command_list.push([:_CALL_, :_CHAR_WAIT_, {}, yield_block_stack, block])
+      command_list.push([:_CALL_, :_CHAR_WAIT_, {}, yield_block_stack, nil])
     end
 
     #展開したコマンドをスタックする
     eval_commands(command_list)
   end
 
-  def _RUBI_(argument, options, yield_block_stack, block)
+  def _RUBI_(argument, options, yield_block_stack)
     #ルビを出力するTextPageControlを生成する
     rubi_layout =[:_CREATE_, 
                   :TextPageControl, 
-                  { :command_list => [[:_TEXT_, argument, {}, yield_block_stack, block]],
+                  { :command_list => [[:_TEXT_, argument, {}, yield_block_stack, nil]],
                     :x => @rubi_option[:offset_x],
                     :y => @rubi_option[:offset_y],
                     :height=> @rubi_option[:size],
@@ -368,7 +368,7 @@ class TextPageControl < LayoutControl
 
   #line_feedコマンド
   #改行処理（CR＋LF）
-  def _LINE_FEED_(argument, options, yield_block_stack, block)
+  def _LINE_FEED_(argument, options, yield_block_stack)
 
     #インデントスペーサーの作成
     if @indent > 0
@@ -380,7 +380,7 @@ class TextPageControl < LayoutControl
                           :height => @line_height,
                           :float_x => :left
                         }, 
-                        yield_block_stack, block
+                        yield_block_stack, nil
                       ]
                     ]
     else
@@ -389,7 +389,7 @@ class TextPageControl < LayoutControl
 
     eval_commands([
                     #行間待機処理を設定する
-                    [:_CALL_, :_LINE_WAIT_, {}, yield_block_stack, block],
+                    [:_CALL_, :_LINE_WAIT_, {}, yield_block_stack, nil],
                     #次のアクティブ行コントロールを追加  
                     [ :_CREATE_, 
                       :LayoutControl, 
@@ -399,7 +399,7 @@ class TextPageControl < LayoutControl
                         :float_x => :bottom, 
                         :float_y => :bottom
                       }, 
-                      yield_block_stack, block
+                      yield_block_stack, nil
                     ],
                     #行間ピッチ分の無形コントロールを追加
                     [ :_CREATE_, 
@@ -412,7 +412,7 @@ class TextPageControl < LayoutControl
                         :float_x => :bottom, 
                         :float_y => :bottom
                       }, 
-                      yield_block_stack, block
+                      yield_block_stack, nil
                     ],
                   ])
     #文字ＩＤの連番をリセット
@@ -421,10 +421,10 @@ class TextPageControl < LayoutControl
 
   #flushコマンド
   #メッセージレイヤの消去
-  def _FLUSH_(argument, options, yield_block_stack, block)
+  def _FLUSH_(argument, options, yield_block_stack)
     #子コントロールをクリアする
     @control_list.each do |control|
-      control.interrupt_command(:_DELETE_, argument, options, yield_block_stack, block)
+      control.interrupt_command(:_DELETE_, argument, options, yield_block_stack, nil)
     end
 
     #次のアクティブ行コントロールを追加  
@@ -436,7 +436,7 @@ class TextPageControl < LayoutControl
                         :float_x => :bottom, 
                         :float_y => :bottom
                       }, 
-                      yield_block_stack, block)
+                      yield_block_stack, nil)
     
     #文字ＩＤの連番をリセット
     @charactor_id = 0
@@ -448,7 +448,7 @@ class TextPageControl < LayoutControl
 
   #image_charコマンド
   #指定文字（群）のレンダリング済みフォントを描画チェインに連結する
-  def image_char(argument, options, yield_block_stack, block) #改修前
+  def image_char(argument, options, yield_block_stack) #改修前
     raise
 #以下旧仕様なので動作しない
 #TODO：イメージフォントデータ関連が現仕様と乖離しているので一旦コメントアウト
@@ -475,7 +475,7 @@ class TextPageControl < LayoutControl
 
   #graphコマンド
   #指定画像を描画チェインに連結する
-  def graph(argument, options, yield_block_stack, block)#改修前
+  def graph(argument, options, yield_block_stack)#改修前
     #以下旧仕様で動かない
     raise
 =begin
@@ -516,7 +516,7 @@ class TextPageControl < LayoutControl
 
 
   #レンダリング済みフォントデータファイルを登録する
-  def map_image_font(argument, options, yield_block_stack, block)#改修前
+  def map_image_font(argument, options, yield_block_stack)#改修前
     raise
     #レンダリング済みフォントデータファイルを任意フォント名で登録
     Image_font.regist(options[:font_name].to_s, options[:file_path].to_s)

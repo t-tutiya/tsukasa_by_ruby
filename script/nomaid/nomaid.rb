@@ -45,8 +45,7 @@ class NomaidControl < Control
   attr_accessor  :allegiance #恭順
   attr_accessor  :courtesy #礼節
 
-  def initialize(argument, options, 
-                  block_stack = [], yield_block_stack = [], block = nil, 
+  def initialize(argument, options, yield_block_stack = [], block = nil, 
                   root_control)
     @debt = [1000, 2500, 5000, 10000, 25000, 50000, 100000]
     
@@ -71,7 +70,7 @@ class NomaidControl < Control
     _TEMP_[:day] = 0
   end
   
-  def lesson(argument, options, block_stack, yield_block_stack, block)
+  def lesson(argument, options, yield_block_stack)
     case _TEMP_[:flag]
     when :pray
 
@@ -170,19 +169,9 @@ class NomaidControl < Control
 
     @helth_point -= hp_cost
     @mental_point -= mp_cost
-=begin
-    eval_block( argument, 
-                {
-                  hp_cost: hp_cost,
-                  mp_cost: mp_cost,
-                }, 
-                inner_options[:block_stack], 
-                inner_options[:yield_block_stack], 
-                &inner_options[:block])
-=end
   end
 
-  def work(argument, options, block_stack, yield_block_stack, block)
+  def work(argument, options, yield_block_stack)
     case _TEMP_[:flag]
     when :cleaning
       hp_cost = [ @mental_point_max - @mental_point + 10, 
@@ -260,19 +249,6 @@ class NomaidControl < Control
     @gold += reward
 
     _TEMP_[:reward] = reward
-
-=begin
-
-    eval_block( argument, 
-                {
-                  hp_cost: hp_cost,
-                  mp_cost: mp_cost,
-                  reward: reward,
-                }, 
-                inner_options[:block_stack], 
-                inner_options[:yield_block_stack], 
-                &inner_options[:block])
-=end
   end
 
   def rest(argument, options, block_stack, yield_block_stack, block)
@@ -285,21 +261,13 @@ class NomaidControl < Control
                       100 - @mental_point, 
                       50
                      ].min
-=begin
-
-    eval_block( argument, 
-                {}, 
-                inner_options[:block_stack], 
-                inner_options[:yield_block_stack], 
-                &inner_options[:block])
-=end
   end
 
-  def week_init(argument, options, block_stack, yield_block_stack, block)
+  def week_init(argument, options, yield_block_stack)
     _TEMP_[:day] = 0
   end
 
-  def day_init(argument, options, block_stack, yield_block_stack, block)
+  def day_init(argument, options, yield_block_stack)
     _TEMP_[:gold] = @gold
 
     _TEMP_[:helth_point] = @helth_point
@@ -315,11 +283,11 @@ class NomaidControl < Control
 
   end
 
-  def end_day(argument, options, block_stack, yield_block_stack, block)
+  def end_day(argument, options, yield_block_stack)
     _TEMP_[:day] += 1
   end
   
-  def end_week(argument, options, block_stack, yield_block_stack, block)
+  def end_week(argument, options, yield_block_stack)
     @gold -= @debt[_TEMP_[:week]]
 
     _TEMP_[:week] += 1

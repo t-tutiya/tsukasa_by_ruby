@@ -614,12 +614,10 @@ class Control #ユーザー定義関数操作
     #スタックプッシュ
     yield_block_stack.push(block)
 
-    function_argument = nil
-    if options[:_FUNCTION_ARGUMENT_]
-      function_argument = options[:_FUNCTION_ARGUMENT_] 
-      #下位伝搬を防ぐ為に要素を削除
-      options.delete(:_FUNCTION_ARGUMENT_)
-    end
+    #保存していた第１引数を取得（nilの場合もある）
+    function_argument = options[:_FUNCTION_ARGUMENT_] 
+    #下位伝搬を防ぐ為に要素を削除
+    options.delete(:_FUNCTION_ARGUMENT_)
 
     @command_list.unshift([:_END_FUNCTION_, 
                             function_argument, 

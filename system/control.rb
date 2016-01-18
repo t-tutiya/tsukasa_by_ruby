@@ -380,8 +380,6 @@ class Control #コントロールの生成／破棄
                                       @root_control, 
                                       &block)
     )
-    #付与ブロックを実行する
-    @control_list.last.update()
   end
 
   #disposeコマンド

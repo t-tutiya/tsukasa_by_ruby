@@ -228,7 +228,10 @@ class CharControl < ImageControl
               mouse_pos_x,
               mouse_pos_y )
     if @option_update
+      #文字が設定されていなければ戻る
+      return super unless @charactor
 
+      #フォントオブジェクトの初期化
       @font_obj = Font.new( @size, 
                             @font_name, 
                             { :weight=>@weight, 

@@ -12,7 +12,7 @@ _CREATE_ :LayoutControl,
   _CREATE_ :ColorkeyControl, file_path: "./resource/star_button.png", 
       id: :colorkey, border: 200
   _SET_ colorkey: :colorkey
-  _NEXT_LOOP_ do
+  _STACK_LOOP_ do
     _CHECK_ mouse: [:cursor_over] do
       normal  {_SET_ visible: false}
       over    {_SET_ visible: true}

@@ -527,7 +527,7 @@ class Control #制御構文
 
   end
 
-  def _NEXT_LOOP_(argument, options, yield_block_stack, &block) 
+  def _STACK_LOOP_(argument, options, yield_block_stack, &block) 
     unless options.empty?
       #チェック条件を満たしたら終了する
       return if check_imple(argument, options, yield_block_stack)
@@ -551,7 +551,7 @@ class Control #制御構文
     @command_list.push(:_END_FRAME_)
 
     #リストの末端に自分自身を追加する
-    @command_list.push([:_NEXT_LOOP_, argument, options, yield_block_stack, block])
+    @command_list.push([:_STACK_LOOP_, argument, options, yield_block_stack, block])
   end
 
   def _BREAK_(argument, options, yield_block_stack)
@@ -559,7 +559,7 @@ class Control #制御構文
     #_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
       break if  @command_list.shift[0] == :_LOOP_ or 
-                @command_list.shift[0] == :_NEXT_LOOP_
+                @command_list.shift[0] == :_STACK_LOOP_
     end
   end
 

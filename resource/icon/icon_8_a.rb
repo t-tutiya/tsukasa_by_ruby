@@ -1,4 +1,4 @@
-      _NEXT_LOOP_ do
+      _STACK_LOOP_ do
         _SET_TILE_ x:0, y:0, id:0
         _WAIT_ count: 5
         _SET_TILE_ x:0, y:0, id:1

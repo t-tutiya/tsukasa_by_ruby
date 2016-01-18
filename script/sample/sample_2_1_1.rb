@@ -15,7 +15,7 @@ _DEFINE_ :button3 do |argument, options|
     _CREATE_ :ImageControl, 
       file_path: "./resource/button_key_down.png", 
       id: :key_down, visible: false
-    _NEXT_LOOP_ do
+    _STACK_LOOP_ do
       _CHECK_ mouse: [:cursor_over] do
         normal  {_SET_ visible: false}
         over    {_SET_ visible: true}

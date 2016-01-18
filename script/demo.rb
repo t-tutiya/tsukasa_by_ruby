@@ -29,7 +29,7 @@ _DEFINE_ :TextSelect do |argument, options|
         font_name: "ＭＳ ゴシック", 
         charactor: options[:text]
     end
-    _NEXT_LOOP_ do
+    _STACK_LOOP_ do
       _CHECK_ mouse: [:cursor_over] do
       #マウスが領域内に入ったら色を変え、
         text_area{
@@ -129,7 +129,7 @@ _DEFINE_ :system_menu do
   end
 end
 
-_NEXT_LOOP_ do |a,b,c|
+_STACK_LOOP_ do |a,b,c|
 
  _CREATE_ :ImageControl,
    z: 0,

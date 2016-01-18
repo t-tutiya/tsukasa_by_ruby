@@ -1,3 +1,12 @@
+_CREATE_ :CharControl, 
+  id: :comment_area,
+  size: 32, 
+  y: 256+196,
+  color:[255,255,0], 
+  font_name: "ＭＳ ゴシック",
+  charactor: " "
+
+
 #テキストボタン定義
 _DEFINE_ :TextSelect do |argument, options|
   _CREATE_ :LayoutControl,
@@ -26,6 +35,11 @@ _DEFINE_ :TextSelect do |argument, options|
         text_area{
           _SET_ bgcolor: [255,0,255]
         }
+        _SEND_ROOT_ do
+        comment_area{
+          _SET_ charactor: options[:comment]
+        }
+        end
       end
       #マウスが領域外に出たら色を戻す
       _CHECK_ mouse: [:cursor_out] do
@@ -45,47 +59,73 @@ end
 
 _DEFINE_ :system_menu do
   _CREATE_ :LayoutControl, id: :top_menu1, x:0, y:0 do
+    path = "./script/sample/"
     _CREATE_ :LayoutControl, id: 0, x:0, y:0, width: 256, float_x: :left  do
-      TextSelect text: "sample_1_1", path: "./script/sample/sample_1_1.tks"
-      TextSelect text: "sample_1_2", path: "./script/sample/sample_1_2.tks"
-      TextSelect text: "sample_1_3", path: "./script/sample/sample_1_3.tks"
-      TextSelect text: "sample_1_4", path: "./script/sample/sample_1_4.tks"
-      TextSelect text: "sample_1_5", path: "./script/sample/sample_1_5.tks"
-      TextSelect text: "sample_1_6", path: "./script/sample/sample_1_6.tks"
-      TextSelect text: "sample_1_7", path: "./script/sample/sample_1_7.tks"
-      TextSelect text: "sample_1_8", path: "./script/sample/sample_1_8.tks"
-      TextSelect text: "sample_1_9", path: "./script/sample/sample_1_9.tks"
+      TextSelect text: "sample_1_1", path: path + "sample_1_1.tks", 
+                 comment: "文字列の表示"
+      TextSelect text: "sample_1_2", path: path + "sample_1_2.tks", 
+                 comment: "文字列の表示：応用"
+      TextSelect text: "sample_1_3", path: path + "sample_1_3.tks", 
+                 comment: "画像の表示"
+      TextSelect text: "sample_1_4", path: path + "sample_1_4.tks", 
+                 comment: "画像の直線移動"
+      TextSelect text: "sample_1_5", path: path + "sample_1_5.tks", 
+                 comment: "画像のスプライン移動"
+      TextSelect text: "sample_1_6", path: path + "sample_1_6.tks", 
+                 comment: "フェードイン・アウト"
+      TextSelect text: "sample_1_7", path: path + "sample_1_7.tks", 
+                 comment: "より自然なフェードイン・アウト"
+      TextSelect text: "sample_1_8", path: path + "sample_1_8.tks", 
+                 comment: "フェードトランジション"
+      TextSelect text: "sample_1_9", path: path + "sample_1_9.tks", 
+                 comment: "より自然なフェードトランジション"
     end
     _CREATE_ :LayoutControl, id: 1, x:0, y:0, width: 256, float_x: :left   do
-      TextSelect text: "sample_1_10", path: "./script/sample/sample_1_10.tks"
-      TextSelect text: "sample_1_11", path: "./script/sample/sample_1_11.tks"
-      TextSelect text: "sample_1_12", path: "./script/sample/sample_1_12.tks"
-      TextSelect text: "sample_1_13", path: "./script/sample/sample_1_13.tks"
-      TextSelect text: "sample_1_14", path: "./script/sample/sample_1_14.tks"
-      TextSelect text: "sample_1_15", path: "./script/sample/sample_1_15.tks"
-      TextSelect text: "sample_1_16", path: "./script/sample/sample_1_16.tks"
-      TextSelect text: "sample_1_17", path: "./script/sample/sample_1_17.tks"
+      TextSelect text: "sample_1_10", path: path + "sample_1_10.tks", 
+                 comment: "ルールトランジション"
+      TextSelect text: "sample_1_11", path: path + "sample_1_11.tks", 
+                 comment: "ユーザー定義コマンドを使う"
+      TextSelect text: "sample_1_12", path: path + "sample_1_12.tks", 
+                 comment: "データストアとインラインデータ記法"
+      TextSelect text: "sample_1_13", path: path + "sample_1_13.tks", 
+                 comment: "条件判定"
+      TextSelect text: "sample_1_14", path: path + "sample_1_14.tks", 
+                 comment: "繰り返し構文"
+      TextSelect text: "sample_1_15", path: path + "sample_1_15.tks", 
+                 comment: "ボタンの表示"
+      TextSelect text: "sample_1_16", path: path + "sample_1_16.tks", 
+                 comment: "サウンド"
+      TextSelect text: "sample_1_17", path: path + "sample_1_17.tks", 
+                 comment: "セーブ／ロード"
     end
     _CREATE_ :LayoutControl, id: 2 do
-      TextSelect text: "sample_2_1_1", path: "./script/sample/sample_2_1_1.rb"
-      TextSelect text: "sample_2_1_2", path: "./script/sample/sample_2_1_2.rb"
-      TextSelect text: "sample_2_1_3", path: "./script/sample/sample_2_1_3.rb"
-      TextSelect text: "sample_2_2",   path: "./script/sample/sample_2_2.tks"
-      TextSelect text: "sample_2_3_1", path: "./script/sample/sample_2_3_1.rb"
-      TextSelect text: "sample_2_3_2", path: "./script/sample/sample_2_3_2.rb"
+      TextSelect text: "sample_2_1_1", path: path + "sample_2_1_1.rb", 
+                 comment: "ボタンサンプル１：通常"
+      TextSelect text: "sample_2_1_2", path: path + "sample_2_1_2.rb", 
+                 comment: "ボタンサンプル２：多角形コリジョン"
+      TextSelect text: "sample_2_1_3", path: path + "sample_2_1_3.rb", 
+                 comment: "ボタンサンプル３：抜き色"
+      TextSelect text: "sample_2_2",   path: path + "sample_2_2.tks", 
+                 comment: "既読フラグサンプル"
+      TextSelect text: "sample_2_3_1", path: path + "sample_2_3_1.rb", 
+                 comment: "シリアライズサンプル：セーブ"
+      TextSelect text: "sample_2_3_2", path: path + "sample_2_3_2.rb", 
+                 comment: "シリアライズサンプル：ロード"
     end
   end
 
   _CREATE_ :LayoutControl, id: :top_menu2, x:0, y:256 + 64 do
-    TextSelect  text: "デモゲーム：ノベルゲーム", 
+    TextSelect  text: "デモゲーム：ノベル脱出ゲーム", 
                 path: "./script/demo_game/1_0.tks", 
-                width: 512
+                width: 512, 
+                comment: "ノベルゲーム形式のサンプルデモです。"
   end
 
   _CREATE_ :LayoutControl, id: :top_menu3, x:0, y:256 + 128  do
     TextSelect  text: "デモゲーム：野メイド", 
                 path: "./script/nomaid/src.rb", 
-                width: 512
+                width: 512, 
+                comment: "育成ＳＬＧ形式のサンプルデモです。"
   end
 end
 
@@ -119,6 +159,7 @@ _NEXT_LOOP_ do |a,b,c|
   _SEND_ :top_menu3 do
     _DELETE_
   end
+  comment_area{_SET_ charactor: ""}
 
   _END_FRAME_
 

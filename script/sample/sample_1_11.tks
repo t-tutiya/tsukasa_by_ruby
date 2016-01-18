@@ -21,9 +21,11 @@
 @
 @	#ルールトランジションを実行するユーザー定義コマンド
 @	_DEFINE_ :go_rule do |argument, options|
-@		_SEND_ options[:rule_id] do
-@			_MOVE_ options[:time], counter:[0,255]
-@		end
+@   _SEND_ :test1 do
+@		  _SEND_ options[:rule_id] do
+@			  _MOVE_ options[:time], counter:[0,255]
+@		  end
+@   end
 @	end
 
 @	go_rule rule_id: :rule0, time: 240

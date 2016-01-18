@@ -107,7 +107,7 @@ class RenderTargetControl < Control
   end
 
   #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
-  def _TO_IMAGE_(argument, options, yield_block_stack, block)
+  def _TO_IMAGE_(argument, options, yield_block_stack, &block)
     rt = RenderTarget.new(@width, @height)
     render( 0, 0, rt, { :width => @width, 
                         :height => @height,

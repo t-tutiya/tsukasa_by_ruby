@@ -117,9 +117,18 @@ class TileMapControl < Control
     return check_float
   end
 
-  def serialize(control_name = :RenderTargetControl, **options)
+  def serialize(control_name = :TileMapControl, **options)
     
     options.update({
+      :file_path => @file_path,
+      :map_base_x_count => @map_base_x_count,
+      :map_base_y_count => @map_base_y_count,
+      :share_switch => @share_switch,
+      :map_x => @map_x,
+      :map_y => @map_y,
+      :size_x => @size_x,
+      :size_y => @size_y,
+      :z => @z,
     })
 
     return super(control_name, options)

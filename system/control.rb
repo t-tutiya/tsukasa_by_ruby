@@ -219,7 +219,7 @@ class Control #内部メソッド
                     )
   end
 
-  def check_imple(argument, options, yield_block_stack, block)
+  def check_imple(argument, options, yield_block_stack)
     #演算対象のデータ領域を設定
     argument = :_TEMP_ unless argument
 
@@ -460,7 +460,7 @@ class Control #制御構文
   def _WAIT_(argument, options, yield_block_stack, &block)
 
     #チェック条件を満たしたら終了する
-    return if check_imple(argument, options, yield_block_stack, block)
+    return if check_imple(argument, options, yield_block_stack)
 
     if options[:count]
       options[:count] = options[:count] - 1
@@ -486,7 +486,7 @@ class Control #制御構文
 
   def _CHECK_(argument, options, yield_block_stack, &block)
     #チェック条件を満たす場合
-    if check_imple(argument, options, yield_block_stack, block)
+    if check_imple(argument, options, yield_block_stack)
       #checkにブロックが付与されているならそれを実行する
       @command_list = @root_control.script_compiler.eval_block(
                         argument,
@@ -503,7 +503,7 @@ class Control #制御構文
   def _LOOP_(argument, options, yield_block_stack, &block) 
     unless options.empty?
       #チェック条件を満たしたら終了する
-      return if check_imple(argument, options, yield_block_stack, block)
+      return if check_imple(argument, options, yield_block_stack)
     end
 
     #カウンタを減算
@@ -530,7 +530,7 @@ class Control #制御構文
   def _NEXT_LOOP_(argument, options, yield_block_stack, &block) 
     unless options.empty?
       #チェック条件を満たしたら終了する
-      return if check_imple(argument, options, yield_block_stack, block)
+      return if check_imple(argument, options, yield_block_stack)
     end
 
     #カウンタを減算
@@ -903,7 +903,7 @@ class Control #プロパティのパラメータ遷移
 
     #条件判定が存在し、かつその条件が成立した場合
     if options[:option][:check] and 
-        check_imple(options[:option][:datastore], options[:option][:check], yield_block_stack, block)
+        check_imple(options[:option][:datastore], options[:option][:check], yield_block_stack)
       #ブロックがあれば実行し、コマンドを終了する
       if block
         eval_block( nil,
@@ -1109,7 +1109,7 @@ class Control #プロパティのパラメータ遷移
 
     #条件判定が存在し、かつその条件が成立した場合
     if options[:option][:check] and 
-      check_imple(nil, options[:option][:check], yield_block_stack, block)
+      check_imple(nil, options[:option][:check], yield_block_stack)
       #ブロックがあれば実行し、コマンドを終了する
       if block
         eval_block( nil,

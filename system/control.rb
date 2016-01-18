@@ -618,17 +618,15 @@ class Control #ユーザー定義関数操作
   end
 
   #関数ブロックを実行する
-  def _YIELD_(argument, options, yield_block_stack, &block)
-
-    yield_block_stack = yield_block_stack.dup
-
-    block = yield_block_stack.pop
-    raise unless block
+  def _YIELD_(argument, options, yield_block_stack)
+    new_yield_block_stack = yield_block_stack.dup
+    yield_block = new_yield_block_stack.pop
+    raise unless yield_block
 
     eval_block( argument, 
                 options, 
-                yield_block_stack, 
-                &block)
+                new_yield_block_stack, 
+                &yield_block)
   end
 end
 

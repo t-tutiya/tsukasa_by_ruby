@@ -35,8 +35,7 @@ module Clickable
   #コリジョンのエンティティ
   attr_accessor  :collision_shape
 
-  def initialize(argument, options, yield_block_stack = [], block = nil, 
-                  root_control)
+  def initialize(argument, options, yield_block_stack, root_control, &block)
     @collision_shape = options[:collision_shape]
     
     self.colorkey = options[:colorkey] if options[:colorkey]

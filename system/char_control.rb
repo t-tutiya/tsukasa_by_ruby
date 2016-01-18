@@ -193,8 +193,7 @@ class CharControl < ImageControl
   #公開インターフェイス
   #############################################################################
 
-  def initialize(argument, options, yield_block_stack = [], block = nil, 
-                  root_control)
+  def initialize(argument, options, yield_block_stack, root_control, &block)
     @font_draw_option = {}
     @font_obj = {}
 

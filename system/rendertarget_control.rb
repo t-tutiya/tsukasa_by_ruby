@@ -57,8 +57,7 @@ class RenderTargetControl < Control
   #枠線のRGB配列（初期値[255,255,255]）
   attr_accessor  :border_color
 
-  def initialize(argument, options, yield_block_stack = [], block = nil, 
-                  root_control)
+  def initialize(argument, options, yield_block_stack, root_control, &block)
     @bgcolor = options[:bgcolor]  || [0,0,0,0]
     #保持オブジェクトの初期化
     options[:entity] = RenderTarget.new(options[:width]  || 1, 

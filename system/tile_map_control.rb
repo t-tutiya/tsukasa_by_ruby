@@ -66,8 +66,7 @@ class TileMapControl < Control
   attr_accessor :size_y
   attr_accessor :z
 
-  def initialize(argument, options, yield_block_stack = [], block = nil, 
-                  root_control)
+  def initialize(argument, options, yield_block_stack, root_control, &block)
 
     @file_path = options[:file_path]
     @map_base_x_count = options[:map_base_x_count] || 1

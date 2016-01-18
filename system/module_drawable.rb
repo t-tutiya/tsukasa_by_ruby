@@ -146,8 +146,7 @@ module Drawable
     @draw_option[:offset_sync]
   end
 
-  def initialize(argument, options, yield_block_stack = [], block = nil, 
-                  root_control)
+  def initialize(argument, options, yield_block_stack, root_control, &block)
     #描画オプションの初期化
     @draw_option = options[:draw_option] || {}
 

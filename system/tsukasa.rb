@@ -156,7 +156,7 @@ class Tsukasa < RenderTargetControl
     @cursor_visible = true
     @cursor_type = IDC_ARROW
 
-    super(nil, options, nil, nil, @root_control)
+    super(nil, options, nil, @root_control)
   end
 
   def serialize(control_name = :Tsukasa, **options)

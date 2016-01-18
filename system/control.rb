@@ -55,9 +55,7 @@ end
 
 class Control #内部メソッド
 
-  def initialize(argument, options, 
-                  yield_block_stack, block, 
-                  root_control)
+  def initialize(argument, options, yield_block_stack, root_control, &block)
     #rootコントロールの保存
     @root_control = root_control
     # ユーザ定義関数
@@ -379,8 +377,8 @@ class Control #コントロールの生成／破棄
       Module.const_get(argument).new( argument,
                                       options, 
                                       yield_block_stack, 
-                                      block,
-                                      @root_control)
+                                      @root_control, 
+                                      &block)
     )
     #付与ブロックを実行する
     @control_list.last.update()

@@ -250,7 +250,7 @@ class NomaidControl < Control
     _TEMP_[:reward] = reward
   end
 
-  def rest(argument, options, block_stack, yield_block_stack, block)
+  def rest(argument, options, yield_block_stack)
     @helth_point += [
                       100 - @helth_point, 
                       @mental_point

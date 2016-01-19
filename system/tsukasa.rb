@@ -58,6 +58,7 @@ require_relative './script_compiler.rb'
 
 #TODO：モジュールであるべきか？
 class Tsukasa < RenderTargetControl
+  include Clickable
 
   #システム全体で共有されるデータ群。保存対象。
   #_LOAD_で初期化するためにwrite属性あり

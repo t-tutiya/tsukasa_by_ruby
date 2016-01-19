@@ -638,18 +638,26 @@ class Control #スクリプト制御
 
   #コントロールにコマンドブロックを送信する
   def _SEND_(argument, options, yield_block_stack, &block)
+    argument = [argument] unless argument.instance_of?(Array)
+
     #デフォルト指定があるならターゲットのコントロールを差し替える
     if options[:default]
       raise unless @root_control._DEFAULT_CONTROL_[options[:default]]
-      argument = @root_control._DEFAULT_CONTROL_[options[:default]]
+      argument.unshift(@root_control._DEFAULT_CONTROL_[options[:default]])
+      options.delete(:default)
     end
     
-    control = find_control(argument)
+    control = find_control(argument.shift)
 
-    if control
+    unless control
+      pp argument.to_s + "は無効な識別子です"
+      return
+    end
+
+    if argument.empty?
       control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
     else
-      pp argument.to_s + "は無効な識別子です"
+      control.push_command(:_SEND_, argument, options, yield_block_stack, block)
     end
   end
 

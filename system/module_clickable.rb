@@ -83,8 +83,8 @@ module Clickable
     @on_right_key_up_out  = false
 
     #前フレームと座標が異なる場合on_mouse_moveイベントを実行する
-    @on_mouse_move =  (@old_cursol_x != @mouse_pos_x) or
-                      (@old_cursol_y != @mouse_pos_y)
+    @on_mouse_move =  ((@old_cursol_x != @mouse_pos_x) or
+                      (@old_cursol_y != @mouse_pos_y))
 
     #カーソル座標を保存する
     @old_cursol_x = @mouse_sprite.x = @mouse_pos_x
@@ -178,7 +178,6 @@ module Clickable
 
   def check_imple(argument, options, yield_block_stack)
     if options[:mouse]
-
       #対象キーが配列で渡されていない場合配列に変換する
       options[:mouse] = [options[:mouse]] unless options[:mouse].instance_of?(Array)
 

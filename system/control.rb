@@ -628,39 +628,6 @@ class Control #ユーザー定義関数操作
   end
 end
 
-class Control #スリープ
-
-  #############################################################################
-  #非公開インターフェイス
-  #############################################################################
-
-  private
-
-  #コントロールをスリープ状態にする
-  def _SLEEP_(argument, options, yield_block_stack)
-    unless argument
-      @sleep_mode = true
-      #フレーム終了疑似コマンドをスタックする
-      @command_list.unshift(:_END_FRAME_)
-      return
-    end
-
-    #ルートコントロールをベースに探索
-    @root_control.find_control(argument).sleep_mode(true)
-  end
-
-  #コントロールをスリープ状態から復帰させる
-  def _WAKE_(argument, options, yield_block_stack)
-    unless argument
-      @sleep_mode = false
-      return
-    end
-
-    #ルートコントロールをベースに探索
-    @root_control.find_control(argument).sleep_mode(false)
-  end
-end
-
 class Control #スクリプト制御
 
   #############################################################################

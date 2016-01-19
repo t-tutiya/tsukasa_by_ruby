@@ -655,7 +655,11 @@ class Control #スクリプト制御
 
   #ルートコントロールにコマンドブロックを送信する
   def _SEND_ROOT_(argument, options, yield_block_stack, &block)
-    @root_control.interrupt_command(:_SCOPE_, argument, nil, yield_block_stack, block)
+    if argument
+      @root_control.interrupt_command(:_SEND_, argument, options, yield_block_stack, block)
+    else
+      @root_control.interrupt_command(:_SCOPE_, argument, nil, yield_block_stack, block)
+    end
   end
 
   #スクリプトファイルを挿入する

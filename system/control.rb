@@ -232,7 +232,7 @@ class Control #内部メソッド
       case key
 
       when :count
-        #残りwaitフレーム数が０より大きい場合
+        #count数が０以下の場合に成立
         value.each do |count|
           return true if count <= 0
         end
@@ -638,13 +638,13 @@ class Control #スクリプト制御
 
   #コントロールにコマンドブロックを送信する
   def _SEND_(argument, options, yield_block_stack, &block)
-    argument = [argument] unless argument.instance_of?(Array)
-
     #デフォルト指定があるならターゲットのコントロールを差し替える
     if options[:default]
       raise unless @root_control._DEFAULT_CONTROL_[options[:default]]
-      argument.unshift(@root_control._DEFAULT_CONTROL_[options[:default]])
+      argument = [@root_control._DEFAULT_CONTROL_[options[:default]]]
       options.delete(:default)
+    else
+      argument = [argument] unless argument.instance_of?(Array)
     end
     
     control = find_control(argument.shift)

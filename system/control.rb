@@ -872,28 +872,32 @@ class Control #プロパティのパラメータ遷移
     
     #オプションハッシュの初期化
     options[:option] =  {} unless options[:option]
+    options[:option][:check] =  {} unless options[:option][:check]
     
     #現在の経過カウントを初期化
-    options[:option][:count] = 0 unless options[:option][:count]
-
-    #条件判定が存在し、かつその条件が成立した場合
-    if options[:option][:check] and 
-        check_imple(options[:option][:datastore], options[:option][:check], yield_block_stack)
+    unless options[:option][:check][:count]
+      options[:option][:check][:count] = argument 
+    end
+   
+    #条件が成立した場合
+    if check_imple(options[:option][:datastore], options[:option][:check], yield_block_stack)
       #ブロックがあれば実行し、コマンドを終了する
       if block
         eval_block( nil,
-                    {:_STOP_COUNT_ => options[:option][:count]}, 
+                    {:_STOP_COUNT_ => options[:option][:check][:count]}, 
                     yield_block_stack,
                     &block)
       end
       return
     end
 
+    #カウントダウン
+    options[:option][:check][:count] -= 1
+
     # Easingパラメータが設定されていなければ線形移動を設定
     options[:option][:easing] = :liner unless options[:option][:easing]
 
     options.each do |key, index|
-
       next if key == :option
 
       #開始値が設定されていなければ現在の値で初期化
@@ -906,18 +910,13 @@ class Control #プロパティのパラメータ遷移
             (options[key][0] + 
               (options[key][1] - options[key][0]).to_f * 
                 EasingProcHash[options[:option][:easing]].call(
-                  options[:option][:count].fdiv(argument)
+                  (argument - options[:option][:check][:count]).fdiv(argument)
               )
             ).to_i)
     end
 
-    #カウントが指定フレーム未満の場合
-    if options[:option][:count] < argument
-      #カウントアップ
-      options[:option][:count] += 1
-      #:_MOVE_コマンドをスタックし直す
-      @next_frame_commands.push([:_MOVE_, argument, options, yield_block_stack, block])
-    end
+    #:_MOVE_コマンドをスタックし直す
+    @next_frame_commands.push([:_MOVE_, argument, options, yield_block_stack, block])
   end
 
   # jQuery + jQueryEasingPluginより32種類の内蔵イージング関数。それぞれの動きはサンプルを実行して確認のこと。
@@ -1077,14 +1076,15 @@ class Control #プロパティのパラメータ遷移
 
     #オプションハッシュの初期化
     options[:option] =  {} unless options[:option]
-    
+    options[:option][:check] =  {} unless options[:option][:check]
+
     #現在の経過カウントを初期化
-    options[:option][:count] = 0 unless options[:option][:count]
-    options[:option][:type] = :spline unless options[:option][:type]
+    unless options[:option][:check][:count]
+      options[:option][:check][:count] = argument 
+    end
 
     #条件判定が存在し、かつその条件が成立した場合
-    if options[:option][:check] and 
-      check_imple(nil, options[:option][:check], yield_block_stack)
+    if check_imple(nil, options[:option][:check], yield_block_stack)
       #ブロックがあれば実行し、コマンドを終了する
       if block
         eval_block( nil,
@@ -1095,11 +1095,15 @@ class Control #プロパティのパラメータ遷移
       return
     end
 
+    options[:option][:check][:count] -= 1
+
+    options[:option][:type] = :spline unless options[:option][:type]
+
     options.each do |key, values|
       next if key == :option
 
       #Ｂスプライン補間時に始点終点を通らない
-      step =(values.size - 1).fdiv(argument) * options[:option][:count]
+      step =(values.size - 1).fdiv(argument) * (argument - options[:option][:check][:count])
 
       result = 0.0
 
@@ -1121,13 +1125,8 @@ class Control #プロパティのパラメータ遷移
       send(key.to_s + "=", result.round)
     end
 
-    #カウントが指定フレーム以下の場合
-    if options[:option][:count] < argument
-      #カウントアップ
-      options[:option][:count] += 1
-      #:move_lineコマンドをスタックし直す
-      @next_frame_commands.push([:_PATH_, argument, options, yield_block_stack, block])
-    end
+    #:move_lineコマンドをスタックし直す
+    @next_frame_commands.push([:_PATH_, argument, options, yield_block_stack, block])
   end
 
   #３次Ｂスプライン重み付け関数

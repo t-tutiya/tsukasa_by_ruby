@@ -643,22 +643,24 @@ class Control #スクリプト制御
       raise unless @root_control._DEFAULT_CONTROL_[options[:default]]
       argument = [@root_control._DEFAULT_CONTROL_[options[:default]]]
       options.delete(:default)
-    else
-      argument = [argument] unless argument.instance_of?(Array)
     end
     
-    control = find_control(argument.shift)
+    control = self
+    
+    if argument.instance_of?(Array)
+      argument.each do |control_id|
+        control = control.find_control(control_id)
+      end
+    else
+      control = control.find_control(argument)
+    end
 
     unless control
       pp argument.to_s + "は無効な識別子です"
       return
     end
 
-    if argument.empty?
-      control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
-    else
-      control.push_command(:_SEND_, argument, options, yield_block_stack, block)
-    end
+    control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
   end
 
   #ルートコントロールにコマンドブロックを送信する

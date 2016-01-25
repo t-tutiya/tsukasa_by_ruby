@@ -508,10 +508,10 @@ class Control #制御構文
     if options[:count]
       options[:count] = options[:count] - 1
     end
-    @command_list.unshift([:_END_LOOP_])
+
     #リストの先端に自分自身を追加する
     @command_list.unshift([:_LOOP_, argument, options, yield_block_stack, block])
-
+    @command_list.unshift([:_END_LOOP_])
     #ブロックを実行時評価しコマンド列を生成する。
     #TODO：この実行時評価はできればキャッシュしたい
     @command_list = @root_control.script_compiler.eval_block(

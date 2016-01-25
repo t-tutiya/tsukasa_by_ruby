@@ -552,12 +552,27 @@ class Control #制御構文
     @command_list.push([:_STACK_LOOP_, argument, options, yield_block_stack, block])
   end
 
+  def _NEXT_(argument, options, yield_block_stack)
+    #_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
+    #_LOOP_タグが見つからない場合は@command_listを空にする
+    until @command_list.empty? do
+      break if  @command_list[0] == :_END_FRAME_ or
+                @command_list[0][0] == :_LOOP_ #or 
+                #ひとまず_STACK_LOOP_は考慮しない
+                #@command_list[0][0] == :_STACK_LOOP_
+      @command_list.shift
+    end
+  end
+
   def _BREAK_(argument, options, yield_block_stack)
     #_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
-      break if  @command_list.shift[0] == :_LOOP_ or 
-                @command_list.shift[0] == :_STACK_LOOP_
+      command = @command_list.shift
+      break if  command == :_END_FRAME_ or
+                command[0] == :_LOOP_ #or 
+                #ひとまず_STACK_LOOP_は考慮しない
+                #command[0] == :_STACK_LOOP_ 
     end
   end
 

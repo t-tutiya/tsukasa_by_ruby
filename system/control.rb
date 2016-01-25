@@ -465,7 +465,7 @@ class Control #制御構文
     end
 
     #フレーム終了疑似コマンドをスタックする
-    @command_list.unshift(:_END_FRAME_)
+    @command_list.unshift([:_END_FRAME_])
 
     if block
       #waitにブロックが付与されているならそれを実行する
@@ -508,7 +508,7 @@ class Control #制御構文
     if options[:count]
       options[:count] = options[:count] - 1
     end
-
+    @command_list.unshift([:_END_LOOP_])
     #リストの先端に自分自身を追加する
     @command_list.unshift([:_LOOP_, argument, options, yield_block_stack, block])
 
@@ -546,33 +546,29 @@ class Control #制御構文
                       @command_list,
                       &block
                     )
-    @command_list.push(:_END_FRAME_)
 
+    @command_list.push([:_END_FRAME_])
+    @command_list.push([:_END_LOOP_ ])
     #リストの末端に自分自身を追加する
     @command_list.push([:_STACK_LOOP_, argument, options, yield_block_stack, block])
   end
 
   def _NEXT_(argument, options, yield_block_stack)
-    #_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
-    #_LOOP_タグが見つからない場合は@command_listを空にする
+    #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
+    #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
-      break if  @command_list[0] == :_END_FRAME_ or
-                @command_list[0][0] == :_LOOP_ #or 
-                #ひとまず_STACK_LOOP_は考慮しない
-                #@command_list[0][0] == :_STACK_LOOP_
-      @command_list.shift
+      break if @command_list.shift[0] == :_END_LOOP_ 
     end
   end
 
   def _BREAK_(argument, options, yield_block_stack)
-    #_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
-    #_LOOP_タグが見つからない場合は@command_listを空にする
+    #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
+    #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
-      command = @command_list.shift
-      break if  command == :_END_FRAME_ or
-                command[0] == :_LOOP_ #or 
-                #ひとまず_STACK_LOOP_は考慮しない
-                #command[0] == :_STACK_LOOP_ 
+      if @command_list.shift[0] == :_END_LOOP_ 
+        @command_list.shift #_LOOP_をpopする
+        break 
+      end
     end
   end
 
@@ -871,6 +867,10 @@ class Control #内部コマンド
 
     #関数を展開する
     eval_block(argument, options, yield_block_stack, &block)
+  end
+
+  #ファンクションの終点を示す
+  def _END_LOOP_(argument, options, yield_block_stack)
   end
 
   #ファンクションの終点を示す

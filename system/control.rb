@@ -55,7 +55,7 @@ end
 
 class Control #内部メソッド
 
-  def initialize(argument, options, yield_block_stack, root_control, &block)
+  def initialize(options, yield_block_stack, root_control, &block)
     #rootコントロールの保存
     @root_control = root_control
     # ユーザ定義関数
@@ -74,7 +74,7 @@ class Control #内部メソッド
 
     #ブロックが付与されているなら読み込んで登録する
     if block
-      eval_block( argument,
+      eval_block( nil,
                   options, 
                   yield_block_stack, 
                   &block)
@@ -374,8 +374,7 @@ class Control #コントロールの生成／破棄
   def _CREATE_(argument, options, yield_block_stack, &block)
     #コントロールを生成して子要素として登録する
     @control_list.push(
-      Module.const_get(argument).new( argument,
-                                      options, 
+      Module.const_get(argument).new( options, 
                                       yield_block_stack, 
                                       @root_control, 
                                       &block)

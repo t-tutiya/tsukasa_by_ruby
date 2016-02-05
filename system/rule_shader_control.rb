@@ -68,7 +68,7 @@ class RuleShaderControl < Control
   #ルールトランジション：曖昧さ
   attr_accessor :vague
 
-  def initialize(argument, options, yield_block_stack, root_control, &block)
+  def initialize(options, yield_block_stack, root_control, &block)
     @vague = options[:vague] || 40
     self.file_path = options[:file_path] if options[:file_path]
     self.counter = options[:counter] || 0

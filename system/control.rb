@@ -535,7 +535,6 @@ class Control #制御構文
       options[:count] = options[:count] - 1
     end
 
-    @command_list.unshift([:_END_LOOP_])
     #ブロックを実行時評価しコマンド列を生成する。
     #TODO：この実行時評価はできればキャッシュしたい
     @command_list = @root_control.script_compiler.eval_block(
@@ -548,6 +547,7 @@ class Control #制御構文
                     )
 
     @command_list.push([:_END_FRAME_])
+    @command_list.push([:_END_LOOP_])
     #リストの末端に自分自身を追加する
     @command_list.push([:_STACK_LOOP_, argument, options, yield_block_stack, block])
   end

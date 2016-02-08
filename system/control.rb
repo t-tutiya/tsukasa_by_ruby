@@ -82,7 +82,7 @@ class Control #内部メソッド
 
     #コマンドセットがあるなら登録する
     if options[:command_list]
-      eval_commands(options[:command_list]) 
+      @command_list = options[:command_list] + @command_list
     end
 
   end
@@ -198,13 +198,6 @@ class Control #内部メソッド
   #継承先で必要に応じてオーバーライドする
   def dispose
     @delete_flag = true
-  end
-
-  #配列のコマンド列をスクリプトストレージに積む
-  def eval_commands(commands)
-    return unless commands
-    #コマンドをリストにスタックする
-    @command_list = commands.concat(@command_list)
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
@@ -809,7 +802,7 @@ class Control #セーブデータ制御
 
     db.transaction do
       command_list = Marshal.load(db["key"])
-      eval_commands(command_list)
+      @command_list = command_list + @command_list
     end
 
   end

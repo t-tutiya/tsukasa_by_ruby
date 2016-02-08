@@ -160,12 +160,6 @@ class Tsukasa < RenderTargetControl
     super(options, nil, @root_control)
   end
 
-  #コマンドをスタックに格納する
-  def interrupt_command(command, argument, options, yield_block_stack, block)
-    #コマンドをスタックの先頭に挿入する
-    @command_list.unshift([command, argument, options, yield_block_stack, block])
-  end
-
   def serialize(control_name = :Tsukasa, **options)
     return control.serialize()
   end

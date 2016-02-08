@@ -90,12 +90,6 @@ class Control #内部メソッド
     @command_list.push([command, argument, options, yield_block_stack, block])
   end
 
-  #コマンドをスタックに格納する
-  def interrupt_command(command, argument, options, yield_block_stack, block)
-    #コマンドをスタックの先頭に挿入する
-    @command_list.unshift([command, argument, options, yield_block_stack, block])
-  end
-
   def push_command_to_next_frame(command, argument, options, yield_block_stack, block)
     @next_frame_commands.push([command, argument, options, yield_block_stack, block])
   end

@@ -224,7 +224,7 @@ class TextPageControl < LayoutControl
     @function_list[:_LINE_WAIT_] = options[:_LINE_WAIT_] || Proc.new(){}
 
     #次のアクティブ行コントロールを追加  
-    interrupt_command(:_CREATE_, 
+    @command_list.unshift([:_CREATE_, 
                       :LayoutControl,
                       {
                         :width => @width,
@@ -232,7 +232,7 @@ class TextPageControl < LayoutControl
                         :float_x => :bottom, 
                         :float_y => :bottom
                       }, 
-                      yield_block_stack, block)
+                      yield_block_stack, block])
   end
 
   def serialize(control_name = :TextPageControl, **options)
@@ -330,7 +330,7 @@ class TextPageControl < LayoutControl
     end
 
     #展開したコマンドをスタックする
-    eval_commands(command_list)
+    @command_list = command_list + @command_list
   end
 
   def _RUBI_(argument, options, yield_block_stack)
@@ -386,7 +386,22 @@ class TextPageControl < LayoutControl
       command_list = nil
     end
 
-    eval_commands([
+    @command_list.unshift(
+                    #行間ピッチ分の無形コントロールを追加
+                    [ :_CREATE_, 
+                      :LayoutControl, 
+                      {
+                        :width => @width,
+                        :height => @line_height,
+                        #インデント用無形コントロール
+                        :command_list => command_list, 
+                        :float_x => :bottom, 
+                        :float_y => :bottom
+                      }, 
+                      yield_block_stack, nil
+                    ])
+
+    @command_list.unshift(
                     #行間待機処理を設定する
                     [:_CALL_, :_LINE_WAIT_, {}, yield_block_stack, nil],
                     #次のアクティブ行コントロールを追加  
@@ -400,20 +415,8 @@ class TextPageControl < LayoutControl
                       }, 
                       yield_block_stack, nil
                     ],
-                    #行間ピッチ分の無形コントロールを追加
-                    [ :_CREATE_, 
-                      :LayoutControl, 
-                      {
-                        :width => @width,
-                        :height => @line_height,
-                        #インデント用無形コントロール
-                        :command_list => command_list, 
-                        :float_x => :bottom, 
-                        :float_y => :bottom
-                      }, 
-                      yield_block_stack, nil
-                    ],
-                  ])
+    )
+
     #文字ＩＤの連番をリセット
     @charactor_id = 0
   end
@@ -423,11 +426,11 @@ class TextPageControl < LayoutControl
   def _FLUSH_(argument, options, yield_block_stack)
     #子コントロールをクリアする
     @control_list.each do |control|
-      control.interrupt_command(:_DELETE_, argument, options, yield_block_stack, nil)
+      control._DELETE_(argument, options, yield_block_stack)
     end
 
     #次のアクティブ行コントロールを追加  
-    interrupt_command(:_CREATE_, 
+    @command_list.unshift([:_CREATE_, 
                       :LayoutControl, 
                       {
                         :width => @width,
@@ -435,7 +438,7 @@ class TextPageControl < LayoutControl
                         :float_x => :bottom, 
                         :float_y => :bottom
                       }, 
-                      yield_block_stack, nil)
+                      yield_block_stack])
     
     #文字ＩＤの連番をリセット
     @charactor_id = 0

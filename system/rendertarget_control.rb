@@ -128,14 +128,14 @@ class RenderTargetControl < Control
       entity  = rt.to_image
     end
     #イメージコントロールを生成する
-    interrupt_command(:_CREATE_, 
+    @command_list.unshift([:_CREATE_, 
                 :ImageControl, 
                {:entity => entity,
                 :z => options[:z] || Float::INFINITY, #描画順を正の無限大とする
                 :visible => options[:visible] || true, #デフォルトでは可視
                 :id => argument
                 }, 
-                yield_block_stack, block)
+                yield_block_stack, block])
   end
 
   def serialize(control_name = :RenderTargetControl, **options)

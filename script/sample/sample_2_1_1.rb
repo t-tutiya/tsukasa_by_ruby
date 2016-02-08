@@ -36,7 +36,8 @@ _DEFINE_ :button3 do |argument, options|
         over    {_SET_ visible: true}
         key_down{_SET_ visible: false}
       end
-	end
+      _END_FRAME_
+    end
   end
 end
 button3 id: :test01, x: 100, y: 100

@@ -546,7 +546,6 @@ class Control #制御構文
                       &block
                     )
 
-    @command_list.push([:_END_FRAME_])
     @command_list.push([:_END_LOOP_])
     #リストの末端に自分自身を追加する
     @command_list.push([:_STACK_LOOP_, argument, options, yield_block_stack, block])

@@ -40,6 +40,7 @@ _CREATE_ :LayoutControl do
     _CHECK_ system: [:requested_close] do
       _EXIT_ #アプリを終了する
     end
+    _END_FRAME_
   end
 end
 
@@ -352,6 +353,7 @@ _DEFINE_ :button do |argument, options|
       _CHECK_ system: [:block_given] do
         _YIELD_
       end
+      _END_FRAME_
     end
   end
 end

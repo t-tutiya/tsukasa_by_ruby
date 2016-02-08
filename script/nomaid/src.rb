@@ -45,6 +45,7 @@ _DEFINE_ :TextSelect do |argument, options|
         #_EVAL_ "pp '[" + options[:text].to_s + "]が押されました'"
         _RETURN_
       end
+      _END_FRAME_
     end
   end
 end

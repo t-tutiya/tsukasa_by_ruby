@@ -104,6 +104,7 @@ _DEFINE_ :TextSelect do |argument, options|
         _MOVE_ 60, y:[0,600], option:{easing: :in_back}
         _RETURN_
       end
+      _END_FRAME_
     end
   end
 end

@@ -31,6 +31,7 @@ _CREATE_ :LayoutControl,
       over    {_SET_ visible: true}
       key_down{_SET_ visible: false}
     end
+    _END_FRAME_
   end
 end
 

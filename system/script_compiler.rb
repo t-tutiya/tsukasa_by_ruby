@@ -51,31 +51,29 @@ class ScriptCompiler
   def eval_commands(script, fname = "(eval)", 
                     yield_block_stack, control, command_list, &block)
     @control = control
-
     @yield_block_stack = yield_block_stack
+    @command_list.clear
 
     eval(script, nil, fname)
 
     @command_list, command_list = command_list, @command_list
     command_list.concat(@command_list)
-    @command_list.clear
 
     return command_list
   end
 
   def eval_block( argument, options, 
                   yield_block_stack, control, command_list, &block)
-    @control = control
-
-    @yield_block_stack = yield_block_stack
-
     raise unless block
+
+    @control = control
+    @yield_block_stack = yield_block_stack
+    @command_list.clear
 
     self.instance_exec(argument, options, control, &block)
 
     @command_list, command_list = command_list, @command_list
     command_list.concat(@command_list)
-    @command_list.clear
 
     return command_list
   end

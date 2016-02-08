@@ -209,14 +209,14 @@ class Control #内部メソッド
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
   def eval_block(argument, options, yield_block_stack, &block)
-    @command_list = @root_control.script_compiler.eval_block(
+    command_list = @root_control.script_compiler.eval_block(
                       argument,
                       options, 
                       yield_block_stack, 
                       self,
-                      @command_list,
                       &block
                     )
+    @command_list = command_list + @command_list
   end
 
   def check_imple(argument, options, yield_block_stack)
@@ -687,13 +687,13 @@ class Control #スクリプト制御
     end
 
     #司スクリプトを評価してコマンド配列を取得し、コマンドリストの先頭に追加する
-    @command_list = @root_control.script_compiler.eval_commands(
+    command_list = @root_control.script_compiler.eval_commands(
                       argument,
                       options[:file_path],
                       yield_block_stack, 
                       self,
-                      @command_list
                     )
+    @command_list = command_list + @command_list
   end
 
   #アプリを終了する

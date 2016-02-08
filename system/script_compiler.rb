@@ -49,21 +49,18 @@ class ScriptCompiler
   end
 
   def eval_commands(script, fname = "(eval)", 
-                    yield_block_stack, control, command_list, &block)
+                    yield_block_stack, control, &block)
     @control = control
     @yield_block_stack = yield_block_stack
     @command_list.clear
 
     eval(script, nil, fname)
 
-    @command_list, command_list = command_list, @command_list
-    command_list.concat(@command_list)
-
-    return command_list
+    return @command_list
   end
 
   def eval_block( argument, options, 
-                  yield_block_stack, control, command_list, &block)
+                  yield_block_stack, control, &block)
     raise unless block
 
     @control = control
@@ -72,10 +69,7 @@ class ScriptCompiler
 
     self.instance_exec(argument, options, control, &block)
 
-    @command_list, command_list = command_list, @command_list
-    command_list.concat(@command_list)
-
-    return command_list
+    return @command_list
   end
 
   def method_missing(command_name, argument = nil, **options, &block)

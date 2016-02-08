@@ -58,11 +58,6 @@ module Layoutable
   attr_accessor  :real_width
   attr_accessor  :real_height
 
-  #カラーキー設定
-  def colorkey=(arg)
-    @colorkey = find_control(arg)
-  end
-
   def initialize(options, yield_block_stack, root_control, &block)
     @x = options[:x] || 0 #描画Ｘ座標
     @y = options[:y] || 0 #描画Ｙ座標

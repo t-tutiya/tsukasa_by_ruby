@@ -35,6 +35,11 @@ module Clickable
   #コリジョンのエンティティ
   attr_accessor  :collision_shape
 
+  #カラーキー設定
+  def colorkey=(arg)
+    @colorkey = find_control(arg)
+  end
+
   def initialize(options, yield_block_stack, root_control, &block)
     @collision_shape = options[:collision_shape]
     

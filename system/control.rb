@@ -74,10 +74,7 @@ class Control #内部メソッド
 
     #ブロックが付与されているなら読み込んで登録する
     if block
-      eval_block( nil,
-                  options, 
-                  yield_block_stack, 
-                  &block)
+      parse_block(nil, options, yield_block_stack, &block)
     end
 
     #コマンドセットがあるなら登録する
@@ -201,7 +198,7 @@ class Control #内部メソッド
   end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
-  def eval_block(argument, options, yield_block_stack, &block)
+  def parse_block(argument, options, yield_block_stack, &block)
     command_list = @root_control.script_compiler.eval_block(
                       argument,
                       options, 
@@ -461,7 +458,7 @@ class Control #制御構文
 
     if block
       #waitにブロックが付与されているならそれを実行する
-      eval_block(argument, options, yield_block_stack, &block)
+      parse_block(argument, options, yield_block_stack, &block)
     end
 
     @next_frame_commands.push([:_WAIT_, argument, options, yield_block_stack, block])
@@ -471,7 +468,7 @@ class Control #制御構文
     #チェック条件を満たす場合
     if check_imple(argument, options, yield_block_stack)
       #checkにブロックが付与されているならそれを実行する
-      eval_block(argument, options, yield_block_stack, &block)
+      parse_block(argument, options, yield_block_stack, &block)
     end
   end
 
@@ -491,7 +488,7 @@ class Control #制御構文
     @command_list.unshift([:_LOOP_, argument, options, yield_block_stack, block])
     @command_list.unshift([:_END_LOOP_])
     #ブロックを実行時評価しコマンド列を生成する。
-    eval_block(argument, options, yield_block_stack, &block)
+    parse_block(argument, options, yield_block_stack, &block)
   end
 
   def _STACK_LOOP_(argument, options, yield_block_stack, &block) 
@@ -506,7 +503,7 @@ class Control #制御構文
     end
 
     #ブロックを実行時評価しコマンド列を生成する。
-    eval_block(argument, options, yield_block_stack, &block)
+    parse_block(argument, options, yield_block_stack, &block)
 
     @command_list.push([:_END_LOOP_])
     #リストの末端に自分自身を追加する
@@ -580,10 +577,7 @@ class Control #ユーザー定義関数操作
     @command_list.unshift(:_END_FUNCTION_)
 
     #functionを実行時評価しコマンド列を生成する。
-    eval_block( function_argument, 
-                options, 
-                yield_block_stack, 
-                &function_block)
+    parse_block(function_argument, options, yield_block_stack, &function_block)
   end
 
   #関数ブロックを実行する
@@ -592,10 +586,7 @@ class Control #ユーザー定義関数操作
     yield_block = new_yield_block_stack.pop
     raise unless yield_block
 
-    eval_block( argument, 
-                options, 
-                new_yield_block_stack, 
-                &yield_block)
+    parse_block(argument, options, new_yield_block_stack, &yield_block)
   end
 end
 
@@ -826,7 +817,7 @@ class Control #内部コマンド
     yield_block_stack = yield_block_stack ? yield_block_stack : []
 
     #関数を展開する
-    eval_block(argument, options, yield_block_stack, &block)
+    parse_block(argument, options, yield_block_stack, &block)
   end
 
   #ファンクションの終点を示す
@@ -860,7 +851,7 @@ class Control #プロパティのパラメータ遷移
     if check_imple(options[:option][:datastore], options[:option][:check], yield_block_stack)
       #ブロックがあれば実行し、コマンドを終了する
       if block
-        eval_block( nil,
+        parse_block( nil,
                     {:_STOP_COUNT_ => options[:option][:check][:count]}, 
                     yield_block_stack,
                     &block)
@@ -1064,10 +1055,7 @@ class Control #プロパティのパラメータ遷移
     if check_imple(nil, options[:option][:check], yield_block_stack)
       #ブロックがあれば実行し、コマンドを終了する
       if block
-        eval_block( nil,
-                    options, 
-                    yiled_block_stack, 
-                    &block) 
+        parse_block(nil, options, yiled_block_stack, &block) 
       end
       return
     end

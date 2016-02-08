@@ -468,14 +468,7 @@ class Control #制御構文
 
     if block
       #waitにブロックが付与されているならそれを実行する
-      @command_list = @root_control.script_compiler.eval_block(
-                        argument,
-                        options, 
-                        yield_block_stack, 
-                        self,
-                        @command_list,
-                        &block
-                      )
+      eval_block(argument, options, yield_block_stack, &block)
     end
 
     @next_frame_commands.push([:_WAIT_, argument, options, yield_block_stack, block])
@@ -485,14 +478,7 @@ class Control #制御構文
     #チェック条件を満たす場合
     if check_imple(argument, options, yield_block_stack)
       #checkにブロックが付与されているならそれを実行する
-      @command_list = @root_control.script_compiler.eval_block(
-                        argument,
-                        options, 
-                        yield_block_stack, 
-                        self,
-                        @command_list,
-                        &block
-                      )
+      eval_block(argument, options, yield_block_stack, &block)
     end
   end
 
@@ -512,16 +498,7 @@ class Control #制御構文
     @command_list.unshift([:_LOOP_, argument, options, yield_block_stack, block])
     @command_list.unshift([:_END_LOOP_])
     #ブロックを実行時評価しコマンド列を生成する。
-    #TODO：この実行時評価はできればキャッシュしたい
-    @command_list = @root_control.script_compiler.eval_block(
-                      argument,
-                      options, 
-                      yield_block_stack, 
-                      self,
-                      @command_list,
-                      &block
-                    )
-
+    eval_block(argument, options, yield_block_stack, &block)
   end
 
   def _STACK_LOOP_(argument, options, yield_block_stack, &block) 
@@ -536,15 +513,7 @@ class Control #制御構文
     end
 
     #ブロックを実行時評価しコマンド列を生成する。
-    #TODO：この実行時評価はできればキャッシュしたい
-    @command_list = @root_control.script_compiler.eval_block(
-                      argument,
-                      options, 
-                      yield_block_stack, 
-                      self,
-                      @command_list,
-                      &block
-                    )
+    eval_block(argument, options, yield_block_stack, &block)
 
     @command_list.push([:_END_LOOP_])
     #リストの末端に自分自身を追加する

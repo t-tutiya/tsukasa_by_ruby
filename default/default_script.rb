@@ -34,7 +34,7 @@ require 'dxruby'
 #システムサポート
 ###############################################################################
 
-_CREATE_ :LayoutControl do
+_CREATE_ :LayoutControl, id: :requested_close do
   _STACK_LOOP_ do
     #ウィンドウの閉じるボタンが押された場合に呼びだされる。
     _CHECK_ system: [:requested_close] do
@@ -67,10 +67,22 @@ end
 _DEFINE_ :line_pause do
   #テキストレイヤのクリック待ち
   _SEND_ default: :TextLayer do 
-    _PAUSE_ icon: :line_icon_func
+    _PAUSE_ do
+      _CREATE_ :RenderTargetControl, id: :icon, 
+        width: 24, height: 24, align_y: :bottom, float_x: :left do
+        _CREATE_ :TileMapControl, 
+          file_path: "./resource/icon/icon_8_a.png",
+          map_base_x_count: 4, map_base_y_count: 2, image_array: [[0]],
+          size_x: 1, size_y: 1 do
+          _INCLUDE_ "./resource/icon/icon_8_a.rb"
+        end
+      end
+    end
   end
+
   #ルートのクリック待ち
   pause 
+
   #クリック待ちアイコンを削除
   _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
     _SEND_ default: :TextLayer do 
@@ -91,10 +103,31 @@ end
 _DEFINE_ :end_pause do
   #テキストレイヤのクリック待ち
   _SEND_ default: :TextLayer do 
-    _PAUSE_ icon: :page_icon_func
+    _PAUSE_ do
+      _CREATE_ :RenderTargetControl, id: :icon, 
+        width: 24, height: 24, align_y: :bottom, float_x: :left do
+        _CREATE_ :TileMapControl, 
+          file_path: "./resource/icon/icon_4_a.png",
+          map_base_x_count: 4, map_base_y_count: 1, image_array: [[0]],
+          size_x: 1, size_y: 1 do
+          _STACK_LOOP_ do
+            _SET_TILE_ x:0, y:0, id:0
+            _WAIT_ count: 5
+            _SET_TILE_ x:0, y:0, id:1
+            _WAIT_ count: 5
+            _SET_TILE_ x:0, y:0, id:2
+            _WAIT_ count: 5
+            _SET_TILE_ x:0, y:0, id:3
+            _WAIT_ count: 5
+          end
+        end
+      end
+    end
   end
+
   #ルートのクリック待ち
   pause 
+
   #クリック待ちアイコンを削除
   _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
     _SEND_ default: :TextLayer do 
@@ -124,7 +157,7 @@ _DEFINE_ :TextWindow do |argument, options|
     width: options[:width],
     height: options[:height],
     size: 32, 
-    id: options[:id],
+    id: argument,
     font_name: "ＭＳＰ ゴシック" do
       #文字間ウェイト
       _DEFINE_ :_CHAR_WAIT_ do
@@ -183,7 +216,7 @@ _DEFINE_ :TextWindow do |argument, options|
       end
 
       #文字間ウェイトの更新
-      _DEFINE_ :_WAIT_FRAME_ do |argument, options|
+      _DEFINE_ :_WAIT_FRAME_ do |argument|
         _DEFINE_ :_CHAR_WAIT_ do
           _WAIT_  count: argument,
                   key_down: K_RCONTROL,
@@ -200,7 +233,7 @@ _DEFINE_ :TextWindow do |argument, options|
       end
 
       #キー入力待ち処理
-      _DEFINE_ :_PAUSE_ do |argument, options|
+      _DEFINE_ :_PAUSE_ do 
         _WAIT_  count:32,
                 key_down: K_RCONTROL,
                 key_push: K_SPACE,
@@ -211,36 +244,9 @@ _DEFINE_ :TextWindow do |argument, options|
 
         #クリック待ちアイコンの表示
         _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
-          _SEND_TO_ACTIVE_LINE_ do
-            if options[:icon] == :line_icon_func
-              _CREATE_ :RenderTargetControl, id: :icon, 
-                width: 24, height: 24, align_y: :bottom, float_x: :left do
-                _CREATE_ :TileMapControl, 
-                  file_path: "./resource/icon/icon_8_a.png",
-                  map_base_x_count: 4, map_base_y_count: 2, image_array: [[0]],
-                  size_x: 1, size_y: 1 do
-                  _INCLUDE_ "./resource/icon/icon_8_a.rb"
-                end
-              end
-            else
-              _CREATE_ :RenderTargetControl, id: :icon, 
-                width: 24, height: 24, align_y: :bottom, float_x: :left do
-                _CREATE_ :TileMapControl, 
-                  file_path: "./resource/icon/icon_4_a.png",
-                  map_base_x_count: 4, map_base_y_count: 1, image_array: [[0]],
-                  size_x: 1, size_y: 1 do
-                  _STACK_LOOP_ do
-                    _SET_TILE_ x:0, y:0, id:0
-                    _WAIT_ count: 5
-                    _SET_TILE_ x:0, y:0, id:1
-                    _WAIT_ count: 5
-                    _SET_TILE_ x:0, y:0, id:2
-                    _WAIT_ count: 5
-                    _SET_TILE_ x:0, y:0, id:3
-                    _WAIT_ count: 5
-                  end
-                end
-              end
+          _CHECK_ system: [:block_given] do
+            _SEND_TO_ACTIVE_LINE_ do
+              _YIELD_
             end
           end
         end
@@ -254,15 +260,11 @@ _DEFINE_ :TextWindow do |argument, options|
         #ウェイクに移行
         _SET_ :_TEMP_, _SLEEP_: false
       end
-
-      _CHECK_ system: [:block_given] do
-        _YIELD_
-      end
   end
 end
 
 #初期テキストウィンドウ
-TextWindow id: :text0, text_page_id: :default_text_page_control0,
+TextWindow :text0, text_page_id: :default_text_page_control0,
   x: 96,
   y: 256 + 164,
   width: 1024,
@@ -300,11 +302,11 @@ end
 #ボタンコントロール
 _DEFINE_ :button do |argument, options|
   _CREATE_ :LayoutControl, 
-          :x => options[:x] || 0,
-          :y => options[:y] || 0,
-          :width => 256,
-          :height => 256,
-          :id=>options[:id] do
+          x: options[:x] || 0,
+          y: options[:y] || 0,
+          width: 256,
+          height: 256,
+          id: argument do
     _CREATE_ :ImageControl, 
       :file_path=>"./resource/button_normal.png", 
       :id=>:normal

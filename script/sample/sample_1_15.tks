@@ -1,11 +1,11 @@
 @	_SET_ :_TEMP_, click: nil
 
-@	button id: :button1, x: 50, y: 150 do
+@	button :button1, x: 50, y: 150 do
 @		_CHECK_ mouse: [:key_up] do
 @			_SET_ :_TEMP_, click: :left
 @		end
 @	end
-@	button id: :button2, x: 450, y: 150 do
+@	button :button2, x: 450, y: 150 do
 @		_CHECK_ mouse: [:key_up] do
 @			_SET_ :_TEMP_, click: :right
 @		end

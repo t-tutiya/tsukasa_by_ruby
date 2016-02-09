@@ -54,24 +54,23 @@ end
 ###############################################################################
 
 #標準ポーズコマンド
-_DEFINE_ :pause do |argument, options|
-  _SEND_ default: :TextLayer do 
-    pause options
-  end
-
-  #■ルートの待機処理
-  #スリープ状態に移行
-  _SET_ :_TEMP_, sleep: true
-
-  #ウェイク状態まで待機
+_DEFINE_ :pause do
+  #スリープフラグを立てる
+  _SET_ :_TEMP_, _SLEEP_: true
+  #スリープフラグが下りるまで待機
   _WAIT_ :_TEMP_, 
           key_down: K_RCONTROL, 
-          equal: {sleep: false} do
-    _CHECK_ system: [:block_given] do
-      _YIELD_
-    end
-  end
+          equal: {_SLEEP_: false}
+end
 
+#行クリック待ちポーズ
+_DEFINE_ :line_pause do
+  #テキストレイヤのクリック待ち
+  _SEND_ default: :TextLayer do 
+    _PAUSE_ icon: :line_icon_func
+  end
+  #ルートのクリック待ち
+  pause 
   #クリック待ちアイコンを削除
   _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
     _SEND_ default: :TextLayer do 
@@ -84,18 +83,28 @@ _DEFINE_ :pause do |argument, options|
   end
 end
 
-#行クリック待ちポーズ
-_DEFINE_ :line_pause do
-  pause icon: :line_icon_func
-end
-
 #行クリック待ちポーズ(line_pauseの省略板)
 _DEFINE_ :lp do
   line_pause
 end
 
 _DEFINE_ :end_pause do
-  pause icon: :page_icon_func
+  #テキストレイヤのクリック待ち
+  _SEND_ default: :TextLayer do 
+    _PAUSE_ icon: :page_icon_func
+  end
+  #ルートのクリック待ち
+  pause 
+  #クリック待ちアイコンを削除
+  _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
+    _SEND_ default: :TextLayer do 
+      _SEND_TO_ACTIVE_LINE_ do 
+        _SEND_ :icon do
+          _DELETE_
+        end
+      end
+    end
+  end
 end
 
 _DEFINE_ :ep do
@@ -117,6 +126,7 @@ _DEFINE_ :TextWindow do |argument, options|
     size: 32, 
     id: options[:id],
     font_name: "ＭＳＰ ゴシック" do
+      #文字間ウェイト
       _DEFINE_ :_CHAR_WAIT_ do
         _WAIT_  :_TEMP_, count: 2,
                 key_down: K_RCONTROL,
@@ -124,6 +134,7 @@ _DEFINE_ :TextWindow do |argument, options|
                 system: [:key_down],
                 equal: {_SKIP_: true}
       end
+      #行間ウェイト
       _DEFINE_ :_LINE_WAIT_ do
         _WAIT_  :_TEMP_, count: 2,
                 key_down: K_RCONTROL,
@@ -131,6 +142,7 @@ _DEFINE_ :TextWindow do |argument, options|
                 system: [:key_down],
                 equal: {_SKIP_: true}
       end
+      #文字レンダラ
       _DEFINE_ :_CHAR_RENDERER_ do
         #フェードイン（スペースキーか右CTRLが押されたらスキップ）
         _MOVE_   30, alpha:[0,255],
@@ -144,7 +156,7 @@ _DEFINE_ :TextWindow do |argument, options|
         #トランジションが終了するまで待機
         _WAIT_  not_stack_command: :_MOVE_ 
         #待機フラグが下がるまで待機
-        _WAIT_ :_TEMP_, equal: {sleep: false}
+        _WAIT_ :_TEMP_, equal: {_SLEEP_: false}
         #キー入力伝搬を防ぐ為に１フレ送る
         _END_FRAME_
         #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
@@ -169,7 +181,8 @@ _DEFINE_ :TextWindow do |argument, options|
         #トランジションが終了するまで待機
         _WAIT_ not_stack_command: :_MOVE_ 
       end
-      #文字間待ち時間
+
+      #文字間ウェイトの更新
       _DEFINE_ :_WAIT_FRAME_ do |argument, options|
         _DEFINE_ :_CHAR_WAIT_ do
           _WAIT_  count: argument,
@@ -179,13 +192,15 @@ _DEFINE_ :TextWindow do |argument, options|
         end
       end
       
+      #アクティブ行への送信
       _DEFINE_ :_SEND_TO_ACTIVE_LINE_ do
         _SEND_ -1 do
           _YIELD_
         end
       end
+
       #キー入力待ち処理
-      _DEFINE_ :pause do |argument, options|
+      _DEFINE_ :_PAUSE_ do |argument, options|
         _WAIT_  count:32,
                 key_down: K_RCONTROL,
                 key_push: K_SPACE,
@@ -194,12 +209,38 @@ _DEFINE_ :TextWindow do |argument, options|
 
         _END_FRAME_
 
+        #クリック待ちアイコンの表示
         _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
           _SEND_TO_ACTIVE_LINE_ do
             if options[:icon] == :line_icon_func
-                line_icon_func align_y: :bottom, float_x: :left
+              _CREATE_ :RenderTargetControl, id: :icon, 
+                width: 24, height: 24, align_y: :bottom, float_x: :left do
+                _CREATE_ :TileMapControl, 
+                  file_path: "./resource/icon/icon_8_a.png",
+                  map_base_x_count: 4, map_base_y_count: 2, image_array: [[0]],
+                  size_x: 1, size_y: 1 do
+                  _INCLUDE_ "./resource/icon/icon_8_a.rb"
+                end
+              end
             else
-                page_icon_func align_y: :bottom, float_x: :left
+              _CREATE_ :RenderTargetControl, id: :icon, 
+                width: 24, height: 24, align_y: :bottom, float_x: :left do
+                _CREATE_ :TileMapControl, 
+                  file_path: "./resource/icon/icon_4_a.png",
+                  map_base_x_count: 4, map_base_y_count: 1, image_array: [[0]],
+                  size_x: 1, size_y: 1 do
+                  _STACK_LOOP_ do
+                    _SET_TILE_ x:0, y:0, id:0
+                    _WAIT_ count: 5
+                    _SET_TILE_ x:0, y:0, id:1
+                    _WAIT_ count: 5
+                    _SET_TILE_ x:0, y:0, id:2
+                    _WAIT_ count: 5
+                    _SET_TILE_ x:0, y:0, id:3
+                    _WAIT_ count: 5
+                  end
+                end
+              end
             end
           end
         end
@@ -211,7 +252,7 @@ _DEFINE_ :TextWindow do |argument, options|
                 equal: {_SKIP_: true}
 
         #ウェイクに移行
-        _SET_ :_TEMP_, sleep: false
+        _SET_ :_TEMP_, _SLEEP_: false
       end
 
       _CHECK_ system: [:block_given] do
@@ -220,69 +261,13 @@ _DEFINE_ :TextWindow do |argument, options|
   end
 end
 
+#初期テキストウィンドウ
 TextWindow id: :text0, text_page_id: :default_text_page_control0,
   x: 96,
   y: 256 + 164,
   width: 1024,
   height: 192,
   z: 1000000 #描画順序
-
-_DEFINE_ :line_icon_func do |argument, options|
-  _CREATE_ :RenderTargetControl, 
-          x: options[:x] || 0, 
-          y: options[:y] || 0, 
-          width: 24,
-          height: 24,
-          align_y: options[:align_y] || :bottom,
-          float_x: options[:float_x] || :left,
-          id: :icon do
-    _CREATE_ :TileMapControl, 
-      file_path: "./resource/icon/icon_8_a.png",
-      map_base_x_count: 4, 
-      map_base_y_count: 2,
-      image_array: [[0]],
-      size_x: 1,
-      size_y: 1 do
-      _INCLUDE_ "./resource/icon/icon_8_a.rb"
-    end
-    _CHECK_ system: [:block_given] do
-      _YIELD_
-    end
-  end
-end
-
-_DEFINE_ :page_icon_func do |argument, options|
-  _CREATE_ :RenderTargetControl, 
-          x: options[:x] || 0, 
-          y: options[:y] || 0, 
-          width: 24,
-          height: 24,
-          align_y: options[:align_y] || :bottom,
-          float_x: options[:float_x] || :left,
-          id: :icon do
-    _CREATE_ :TileMapControl, 
-      file_path: "./resource/icon/icon_4_a.png",
-      map_base_x_count: 4, 
-      map_base_y_count: 1,
-      image_array: [[0]],
-      size_x: 1,
-      size_y: 1 do
-      _STACK_LOOP_ do
-        _SET_TILE_ x:0, y:0, id:0
-        _WAIT_ count: 5
-        _SET_TILE_ x:0, y:0, id:1
-        _WAIT_ count: 5
-        _SET_TILE_ x:0, y:0, id:2
-        _WAIT_ count: 5
-        _SET_TILE_ x:0, y:0, id:3
-        _WAIT_ count: 5
-      end
-    end
-    _CHECK_ system: [:block_given] do
-      _YIELD_
-    end
-  end
-end
 
 #初期レイヤ（背景）
 _CREATE_ :ImageControl,

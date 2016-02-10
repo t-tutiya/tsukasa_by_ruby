@@ -73,8 +73,6 @@ class Tsukasa < RenderTargetControl
 
   attr_reader  :_DEFAULT_CONTROL_
 
-  attr_reader  :_PARSER_
-
   attr_accessor  :close
   def close?
     @close
@@ -142,7 +140,7 @@ class Tsukasa < RenderTargetControl
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @_DEFAULT_CONTROL_ = {}
     #パーサー
-    @_PARSER_ = { :tks => [TKSParser.new, TKSParser::Replacer.new]}
+    @script_parser = {}
 
     options[:id] = :default_rendertarget_container
 
@@ -215,5 +213,11 @@ class Tsukasa < RenderTargetControl
                 options, 
                 yield_block_stack.dup, 
                 &block)
+  end
+  
+  def _SCRIPT_PARSER_(argument, options, yield_block_stack)
+    @script_parser[options[:ext_name]] = [
+      Module.const_get(options[:parser]).new,
+      Module.const_get(options[:parser])::Replacer.new]
   end
 end

@@ -641,9 +641,12 @@ class Control #スクリプト制御
 
     options[:file_path] = File.expand_path(argument)
 
-    #tksファイルであればparserのクラス名を初期化する。
-    if File.extname(options[:file_path]) == ".tks"
-      options[:parser] = :tks
+    ext_name = File.extname(options[:file_path])
+
+    #rbファイルでなければparserのクラス名を初期化する。
+    unless ext_name == ".rb"
+      ext_name.slice!(0)
+      options[:parser] = ext_name.to_sym
     end
 
     #スクリプトをパースする
@@ -659,8 +662,8 @@ class Control #スクリプト制御
     #パーサーが指定されている場合
     if options[:parser]
       #文字列を取得して変換をかける
-      argument = @_PARSER_[options[:parser]][1].apply(
-                   @_PARSER_[options[:parser]][0].parse(argument)
+      argument = @script_parser[options[:parser]][1].apply(
+                   @script_parser[options[:parser]][0].parse(argument)
                  )
     end
 

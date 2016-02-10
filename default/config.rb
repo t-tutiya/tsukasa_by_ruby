@@ -30,6 +30,9 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+#tksスクリプト用のパーサーを登録
+_SCRIPT_PARSER_ ext_name: :tks, parser: :TKSParser
+
 _SET_ caption: "Tsukasa Engine powered by DXRuby"
 
 #デバッグモード管理フラグ（現在未使用）

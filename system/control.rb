@@ -662,8 +662,8 @@ class Control #スクリプト制御
     #パーサーが指定されている場合
     if options[:parser]
       #文字列を取得して変換をかける
-      argument = @script_parser[options[:parser]][1].apply(
-                   @script_parser[options[:parser]][0].parse(argument)
+      argument = @root_control.script_parser[options[:parser]][1].apply(
+                   @root_control.script_parser[options[:parser]][0].parse(argument)
                  )
     end
 

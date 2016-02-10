@@ -121,6 +121,7 @@ class Tsukasa < RenderTargetControl
   attr_reader  :function_list
 
   attr_reader  :script_compiler
+  attr_reader  :script_parser
 end
 
 class Tsukasa < RenderTargetControl
@@ -139,12 +140,12 @@ class Tsukasa < RenderTargetControl
     @_TEMP_ = {}
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @_DEFAULT_CONTROL_ = {}
-    #パーサー
-    @script_parser = {}
 
     options[:id] = :default_rendertarget_container
 
     @script_compiler = ScriptCompiler.new(self)
+    #パーサー
+    @script_parser = {}
 
     options[:command_list] = [[:_INCLUDE_,
                         "./default/bootstrap_script.rb",

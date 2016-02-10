@@ -3,8 +3,6 @@
 require 'dxruby'
 require 'pstore'
 
-require_relative "./tks_parser.rb"
-
 ###############################################################################
 #TSUKASA for DXRuby ver1.0(2015/12/24)
 #メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby

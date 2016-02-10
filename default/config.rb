@@ -31,7 +31,7 @@ require 'dxruby'
 ###############################################################################
 
 #tksスクリプト用のパーサーを登録
-_SCRIPT_PARSER_ ext_name: :tks, parser: :TKSParser
+_SCRIPT_PARSER_ ext_name: :tks, file_path: "./tks_parser.rb",parser: :TKSParser
 
 _SET_ caption: "Tsukasa Engine powered by DXRuby"
 

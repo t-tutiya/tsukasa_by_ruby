@@ -5,10 +5,10 @@ require 'dxruby'
 require_relative './Image_font_maker'
 
 ###############################################################################
-#TSUKASA for DXRuby ver1.0(2015/12/24)
+#TSUKASA for DXRuby ver1.2(2016/3/1)
 #メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby
 #
-#Copyright (c) <2013-2015> <tsukasa TSUCHIYA>
+#Copyright (c) <2013-2016> <tsukasa TSUCHIYA>
 #
 #This software is provided 'as-is', without any express or implied
 #warranty. In no event will the authors be held liable for any damages

@@ -35,30 +35,7 @@ require 'dxruby'
 class TileMapControl < Control
   include Layoutable
 
-  attr_reader :file_path
-  def file_path=(arg)
-    @file_path = arg
-    @update_flag = true
-  end
-
-  attr_reader :map_base_x_count
-  def map_base_x_count=(arg)
-    @map_base_x_count = arg
-    @update_flag = true
-  end
-
-  attr_reader :map_base_y_count
-  def map_base_y_count=(arg)
-    @map_base_y_count = arg
-    @update_flag = true
-  end
-
-  attr_reader :share_switch
-  def share_switch=(arg)
-    @share_switch = arg
-    @update_flag = true
-  end
-
+  attr_accessor :map_array
   attr_accessor :image_array
   attr_accessor :map_x
   attr_accessor :map_y
@@ -68,13 +45,13 @@ class TileMapControl < Control
 
   def initialize(options, yield_block_stack, root_control, &block)
 
-    @file_path = options[:file_path]
-    @map_base_x_count = options[:map_base_x_count] || 1
-    @map_base_y_count = options[:map_base_y_count] || 1
-    @share_switch = options[:share_switch] || true
-    @update_flag = true
+    @map_array = options[:map_array] || []
 
-    @map_array = options[:image_array]
+    if options[:file_path] 
+      _SET_IMAGE_MAPPING_(nil, options, yield_block_stack)
+    else
+      @image_array = []
+    end
 
     @map_x = options[:map_x] || 0
     @map_y = options[:map_y] || 0
@@ -91,13 +68,6 @@ class TileMapControl < Control
               parent_control_height, 
               mouse_pos_x,
               mouse_pos_y )
-    if @update_flag and @file_path
-      @image_array = Image.load_tiles(@file_path, 
-                                    @map_base_x_count, 
-                                    @map_base_y_count, 
-                                    @share_switch)
-      @update_flag = false
-    end
 
     #描画オブジェクトを持ち、かつ可視でなければ戻る
     return 0, 0 unless @image_array and @visible
@@ -118,12 +88,8 @@ class TileMapControl < Control
   end
 
   def serialize(control_name = :TileMapControl, **options)
-    
+    raise #このコントロールはまともにシリアライズできない
     options.update({
-      :file_path => @file_path,
-      :map_base_x_count => @map_base_x_count,
-      :map_base_y_count => @map_base_y_count,
-      :share_switch => @share_switch,
       :map_x => @map_x,
       :map_y => @map_y,
       :size_x => @size_x,
@@ -132,6 +98,17 @@ class TileMapControl < Control
     })
 
     return super(control_name, options)
+  end
+  
+  def _SET_IMAGE_(argument, options, yield_block_stack)
+    @image_array[argument] = Image.load(options[:file_path])
+  end
+
+  def _SET_IMAGE_MAPPING_(argument, options, yield_block_stack)
+    @image_array = Image.load_tiles(options[:file_path], 
+                                    options[:map_base_x_count] || 1, 
+                                    options[:map_base_y_count] || 1, 
+                                    options[:share_switch] || true)
   end
 
   def _SET_TILE_(argument, options, yield_block_stack)

@@ -46,13 +46,7 @@ class TileMapControl < Control
   def initialize(options, yield_block_stack, root_control, &block)
 
     @map_array = options[:map_array] || []
-
-    if options[:file_path] 
-      _SET_IMAGE_MAPPING_(nil, options, yield_block_stack)
-    else
-      @image_array = []
-    end
-
+    @image_array = options[:image_array] || []
     @map_x = options[:map_x] || 0
     @map_y = options[:map_y] || 0
     @size_x = options[:size_x] || 1

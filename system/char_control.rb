@@ -218,6 +218,7 @@ class CharControl < ImageControl
     self.shadow_color = options[:shadow_color] || [0, 0, 0] #影：影の色
     self.shadow_x = options[:shadow_x] || 0 #影:オフセットＸ座標
     self.shadow_y = options[:shadow_y] || 0 #影:オフセットＹ座標
+    self.shadow_edge = options[:shadow_edge] || false #影：影の縁文字
 
     super
   end

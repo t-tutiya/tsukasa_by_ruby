@@ -71,9 +71,9 @@ _DEFINE_ :line_pause do
       _CREATE_ :RenderTargetControl, id: :icon, 
         width: 24, height: 24, align_y: :bottom, float_x: :left do
         _CREATE_ :TileMapControl, 
-          file_path: "./resource/icon/icon_8_a.png",
-          map_base_x_count: 4, map_base_y_count: 2, image_array: [[0]],
-          size_x: 1, size_y: 1 do
+          map_array: [[0]], size_x: 1, size_y: 1 do
+            _SET_IMAGE_MAPPING_ file_path: "./resource/icon/icon_8_a.png",
+              x_count: 4, y_count: 2
           _INCLUDE_ "./resource/icon/icon_8_a.rb"
         end
       end
@@ -107,9 +107,9 @@ _DEFINE_ :end_pause do
       _CREATE_ :RenderTargetControl, id: :icon, 
         width: 24, height: 24, align_y: :bottom, float_x: :left do
         _CREATE_ :TileMapControl, 
-          file_path: "./resource/icon/icon_4_a.png",
-          map_base_x_count: 4, map_base_y_count: 1, image_array: [[0]],
-          size_x: 1, size_y: 1 do
+          map_array: [[0]], size_x: 1, size_y: 1 do
+          _SET_IMAGE_MAPPING_ file_path: "./resource/icon/icon_4_a.png",
+            x_count: 4, y_count: 1
           _STACK_LOOP_ do
             _SET_TILE_ x:0, y:0, id:0
             _WAIT_ count: 5
@@ -302,45 +302,36 @@ end
 #ボタンコントロール
 _DEFINE_ :button do |argument, options|
   _CREATE_ :LayoutControl, 
-          x: options[:x] || 0,
-          y: options[:y] || 0,
-          width: 256,
-          height: 256,
-          id: argument do
-    _CREATE_ :ImageControl, 
-      :file_path=>"./resource/button_normal.png", 
-      :id=>:normal
-    _CREATE_ :ImageControl, 
-      :file_path=>"./resource/button_over.png", 
-      :id=>:over, :visible => false
-    _CREATE_ :ImageControl, 
-      :file_path=>"./resource/button_key_down.png", 
-      :id=>:key_down, :visible => false
+    x: options[:x] || 0,
+    y: options[:y] || 0,
+    width:256, 
+    height:256,
+    id: argument do
+    _CREATE_ :TileMapControl, 
+      width: 256,
+      height: 256 do
+      _SET_ map_array: [[0]]
+      _SET_IMAGE_ 0, file_path: "./resource/button_normal.png"
+      _SET_IMAGE_ 1, file_path: "./resource/button_over.png"
+      _SET_IMAGE_ 2, file_path: "./resource/button_key_down.png"
+    end
     _STACK_LOOP_ do
+      _END_FRAME_
       _CHECK_ mouse: [:cursor_over] do
-        normal  {_SET_ visible: false}
-        over    {_SET_ visible: true}
-        key_down{_SET_ visible: false}
+        _SEND_(0){ _SET_TILE_ x:0, y:0, id: 1}
       end
       _CHECK_ mouse: [:cursor_out] do
-        normal  {_SET_ visible: true}
-        over    {_SET_ visible: false}
-        key_down{_SET_ visible: false}
+        _SEND_(0){ _SET_TILE_ x:0, y:0, id: 0}
       end
       _CHECK_ mouse: [:key_down] do
-        normal  {_SET_ visible: false}
-        over    {_SET_ visible: false}
-        key_down{_SET_ visible: true}
+        _SEND_(0){ _SET_TILE_ x:0, y:0, id: 2}
       end
       _CHECK_ mouse: [:key_up] do
-        normal  {_SET_ visible: false}
-        over    {_SET_ visible: true}
-        key_down{_SET_ visible: false}
+        _SEND_(0){ _SET_TILE_ x:0, y:0, id: 1}
       end
       _CHECK_ system: [:block_given] do
         _YIELD_
       end
-      _END_FRAME_
     end
   end
 end
@@ -439,39 +430,3 @@ _DEFINE_ :_LABEL_ do |arugment, options|
   ###################################################################
   _YIELD_ 
 end
-
-
-#ボタンコントロール
-_DEFINE_ :button_1 do |argument, options|
-  _CREATE_ :LayoutControl, 
-    width:256, 
-    height:256 do
-    _CREATE_ :TileMapControl, 
-      width: 256,
-      height: 256 do
-      _SET_ map_array: [[0]]
-      _SET_IMAGE_ 0, file_path: "./resource/button_normal.png"
-      _SET_IMAGE_ 1, file_path: "./resource/button_over.png"
-      _SET_IMAGE_ 2, file_path: "./resource/button_key_down.png"
-    end
-    _STACK_LOOP_ do
-      _END_FRAME_
-      _CHECK_ mouse: [:cursor_over] do
-        _SEND_(0){ _SET_TILE_ x:0, y:0, id: 1}
-      end
-      _CHECK_ mouse: [:cursor_out] do
-        _SEND_(0){ _SET_TILE_ x:0, y:0, id: 0}
-      end
-      _CHECK_ mouse: [:key_down] do
-        _SEND_(0){ _SET_TILE_ x:0, y:0, id: 2}
-      end
-      _CHECK_ mouse: [:key_up] do
-        _SEND_(0){ _SET_TILE_ x:0, y:0, id: 1}
-      end
-      _CHECK_ system: [:block_given] do
-        _YIELD_
-      end
-    end
-  end
-end
-

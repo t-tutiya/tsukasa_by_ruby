@@ -100,8 +100,8 @@ class TileMapControl < Control
 
   def _SET_IMAGE_MAPPING_(argument, options, yield_block_stack)
     @image_array = Image.load_tiles(options[:file_path], 
-                                    options[:map_base_x_count] || 1, 
-                                    options[:map_base_y_count] || 1, 
+                                    options[:x_count] || 1, 
+                                    options[:y_count] || 1, 
                                     options[:share_switch] || true)
   end
 

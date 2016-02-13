@@ -1,8 +1,8 @@
 #ボタンコントロール
 _CREATE_ :LayoutControl, 
-        :width => 256,
-        :height => 256,
-        :id=>:button1 do
+        width: 256,
+        height: 256,
+        id: :button1 do
   _CREATE_ :ImageControl, file_path: "./resource/star_button.png", 
     id: :normal
   _CREATE_ :ImageControl, file_path: "./resource/button_over.png", 

@@ -118,7 +118,25 @@ module Layoutable
 
     return check_float
   end
-  
+
+  def serialize(control_name = :Layoutable, **options)
+    
+    options[:x] = @x
+    options[:y] = @y
+    options[:offset_x] = @offset_x
+    options[:offset_y] = @offset_y
+    options[:visible] = @visible
+    options[:float_x] = @float_x
+    options[:float_y] = @float_y
+    options[:align_y] = @align_y
+    options[:width] = @width
+    options[:height] = @height
+    options[:real_width] = @real_width
+    options[:real_height] = @real_height
+
+    return super(control_name, options)
+  end
+
   def check_align(width, height)
     offest_x = offset_y = 0
     #下揃えを考慮

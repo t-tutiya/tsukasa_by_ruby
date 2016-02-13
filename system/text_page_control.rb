@@ -204,7 +204,7 @@ class TextPageControl < LayoutControl
       :size => options[:rubi_size] || 12,            #ルビ文字のフォントサイズ
       #ルビの表示開始オフセット値
       :offset_x => options[:rubi_offset_x] || 0,
-      :offset_y => options[:rubi_offset_y] || -1 * (options[:rubi_size] || 12),
+      :offset_y => options[:rubi_offset_y] || -12,
       #ルビ文字のベース文字からのピッチ幅
       :charactor_pitch => options[:rubi_pitch] || 12,
       #ルビの待ちフレーム数

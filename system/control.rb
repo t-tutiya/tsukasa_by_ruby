@@ -110,7 +110,7 @@ class Control #内部メソッド
         send(command_name, argument, options, yield_block_stack, &block)
       else
         #ユーザー定義コマンドとみなして実行する
-        call_command(command_name, argument, options, yield_block_stack,&block)
+        call_user_command(command_name, argument, options, yield_block_stack,&block)
       end
     end
 
@@ -158,8 +158,9 @@ class Control #内部メソッド
     function_block =  @function_list[command_name] || 
                       @root_control.function_list[command_name]
 
+    #ユーザー定義コマンドが存在しない場合、コマンド送信文であるとみなす
     unless function_block
-      pp command_name.to_s + "ユーザー定義コマンドは存在しません2"
+      _SEND_(command_name, options, yield_block_stack, &block)
       return
     end
 
@@ -167,7 +168,7 @@ class Control #内部メソッド
     yield_block_stack = yield_block_stack ? yield_block_stack.dup : []
     #スタックプッシュ
     yield_block_stack.push(block)
-
+    #終端コマンドを挿入
     @command_list.unshift(:_END_FUNCTION_)
 
     #functionを実行時評価しコマンド列を生成する。

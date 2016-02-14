@@ -153,7 +153,7 @@ class Control #内部メソッド
   end
 
   #ユーザー定義コマンドの実行
-  def call_command(command_name, argument, options, yield_block_stack, &block)
+  def call_user_command(command_name, argument, options, yield_block_stack, &block)
     #関数名に対応する関数ブロックを取得する
     function_block =  @function_list[command_name] || 
                       @root_control.function_list[command_name]

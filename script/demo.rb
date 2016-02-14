@@ -32,20 +32,20 @@ _DEFINE_ :TextSelect do |argument, options|
     _STACK_LOOP_ do
       _CHECK_ mouse: [:cursor_over] do
       #マウスが領域内に入ったら色を変え、
-        text_area{
+        _SEND_ :text_area do
           _SET_ bgcolor: [255,0,255]
-        }
+        end
         _SEND_ROOT_ do
-        comment_area{
-          _SET_ charactor: options[:comment]
-        }
+          _SEND_ :comment_area do
+            _SET_ charactor: options[:comment]
+          end
         end
       end
       #マウスが領域外に出たら色を戻す
       _CHECK_ mouse: [:cursor_out] do
-        text_area{
+        _SEND_ :text_area do
           _SET_ bgcolor: [0,255,255]
-        }
+        end
       end
       #マウスがクリックされたらフラグを立てる
       _CHECK_ mouse: [:key_down] do
@@ -160,14 +160,22 @@ _STACK_LOOP_ do |a,b,c|
   _SEND_ :top_menu3 do
     _DELETE_
   end
-  comment_area{_SET_ charactor: ""}
+  _SEND_ :comment_area do
+    _SET_ charactor: ""
+  end
 
   _END_FRAME_
 
   _INCLUDE_ :file_path
 
-	base{_DELETE_}
-	img0{_DELETE_}
-	img1{_DELETE_}
+	_SEND_ :base do
+	  _DELETE_
+	end
+	_SEND_ :img0 do
+	  _DELETE_
+	end
+	_SEND_ :img1 do
+	  _DELETE_
+	end
 
 end

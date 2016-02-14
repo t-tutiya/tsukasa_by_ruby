@@ -326,7 +326,7 @@ class TextPageControl < LayoutControl
       #１文字分の出力コマンドをスタックする
       command_list.push([char_command, ch, {}, yield_block_stack, nil])
       #文字待機処理をスタックする
-      command_list.push([:_CALL_, :_CHAR_WAIT_, {}, yield_block_stack, nil])
+      command_list.push([:_CHAR_WAIT_, nil, {}, yield_block_stack, nil])
     end
 
     #展開したコマンドをスタックする
@@ -403,7 +403,7 @@ class TextPageControl < LayoutControl
 
     @command_list.unshift(
                     #行間待機処理を設定する
-                    [:_CALL_, :_LINE_WAIT_, {}, yield_block_stack, nil],
+                    [:_LINE_WAIT_, nil, {}, yield_block_stack, nil],
                     #次のアクティブ行コントロールを追加  
                     [ :_CREATE_, 
                       :LayoutControl, 

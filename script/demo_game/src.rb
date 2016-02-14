@@ -1,7 +1,7 @@
 #! ruby -E utf-8
 
 #テキストウィンドウを再作成する
-text0 do
+_SEND_(:text0) do
   _SET_ x: 32,
   y: 32,
   width: 1024,
@@ -83,13 +83,13 @@ _DEFINE_ :TextSelect do |argument, options|
     _STACK_LOOP_ do
       #マウスが領域内に入ったら色を変え、文字をスクロールインさせる
       _CHECK_ mouse: [:cursor_over] do
-        text_area{
+        _SEND_(:text_area){
           _SET_ bgcolor: [255,0,255]
         }
       end
       #マウスが領域外に出たら色を戻し、文字をスクロールインさせる
       _CHECK_ mouse: [:cursor_out] do
-        text_area{
+        _SEND_(:text_area){
           _SET_ bgcolor: [0,255,255]
         }
       end

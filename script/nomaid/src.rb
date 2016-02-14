@@ -29,13 +29,13 @@ _DEFINE_ :TextSelect do |argument, options|
     _STACK_LOOP_ do
       _CHECK_ mouse: [:cursor_over] do
       #マウスが領域内に入ったら色を変え、
-        text_area{
+        _SEND_(:text_area){
           _SET_ bgcolor: [255,0,255]
         }
       end
       #マウスが領域外に出たら色を戻す
       _CHECK_ mouse: [:cursor_out] do
-        text_area{
+        _SEND_(:text_area){
           _SET_ bgcolor: [0,255,255]
         }
       end
@@ -101,7 +101,7 @@ _DEFINE_ :lesson_menu do
 
   #押されたのが「戻る」以外であれば、処理を実行して曜日終了フラグを立てる
   _CHECK_ not_equal: {flag: :cancel} do
-    maid{
+    _SEND_(:maid){
       lesson
       _SEND_ROOT_ do
         _SEND_(default: :TextLayer){
@@ -134,7 +134,7 @@ _DEFINE_ :work_menu do
 
   #押されたのが「戻る」以外であれば、処理を実行して曜日終了フラグを立てる
   _CHECK_ not_equal: {flag: :cancel} do
-    maid{
+    _SEND_(:maid){
       work
       _SEND_ROOT_ do
         _SEND_(default: :TextLayer){
@@ -150,7 +150,7 @@ end
 
 #「休ませる」処理
 _DEFINE_ :rest do
-  maid{
+  _SEND_(:maid){
     rest
     _SEND_ROOT_ do
       _SEND_(default: :TextLayer){
@@ -164,7 +164,7 @@ _DEFINE_ :rest do
 end
 
 #ＯＰ用テキストレイアウト指定
-text0{
+_SEND_(:text0){
   _SET_ x:32, y:32, width: 1024, height: 1024, size:24
 }
   
@@ -172,7 +172,7 @@ text0{
 _INCLUDE_ "./script/nomaid/op.tks"
 
 #テキストウィンドウの際レイアウト
-text0 do
+_SEND_(:text0) do
   _SET_ x: 32, y: 256, size:32
         
   #文字レンダラを削除する
@@ -189,11 +189,11 @@ _END_FRAME_
 #７週間リピート
 _LOOP_ count:7 do |arg, ops, control|
   #週開始処理
-  maid{ week_init }
+  _SEND_(:maid){ week_init }
 
   _LOOP_ count:7 do |arg, ops, control|
     #曜日開始処理
-    maid{ day_init }
+    _SEND_(:maid){ day_init }
     _END_FRAME_
 
     #[解説]本来ならtksファイルの中にスクリプトを記述すれば良い筈だが、面倒なので逆にした。
@@ -230,7 +230,7 @@ _LOOP_ count:7 do |arg, ops, control|
       end
     end
 
-    maid{
+    _SEND_(:maid){
       end_day
     }
   end
@@ -238,7 +238,7 @@ _LOOP_ count:7 do |arg, ops, control|
   _SET_ :_TEMP_, gameover: nil
 
   #週終了処理（※１）
-  maid{
+  _SEND_(:maid){
     end_week #gameoverならtrue、そうでなければfalseが返る
   }
 

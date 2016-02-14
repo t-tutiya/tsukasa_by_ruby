@@ -104,8 +104,14 @@ class Control #内部メソッド
       #今フレーム処理終了判定
       break if command_name == :_END_FRAME_
 
-      #コマンドを実行する
-      send(command_name, argument, options, yield_block_stack, &block)
+      #コマンドがメソッドとして存在する場合
+      if self.respond_to?(command_name, true)
+        #コマンドを実行する
+        send(command_name, argument, options, yield_block_stack, &block)
+      else
+        #ユーザー定義コマンドとみなして実行する
+        call_command(command_name, argument, options, yield_block_stack,&block)
+      end
     end
 
     unless @next_frame_commands.empty?
@@ -144,6 +150,28 @@ class Control #内部メソッド
     return @control_list[id] if id.instance_of?(Fixnum)
     #子コントロールを探査して返す。存在しなければnil
     return @control_list.find {|control| control.id == id }
+  end
+
+  #ユーザー定義コマンドの実行
+  def call_command(command_name, argument, options, yield_block_stack, &block)
+    #関数名に対応する関数ブロックを取得する
+    function_block =  @function_list[command_name] || 
+                      @root_control.function_list[command_name]
+
+    unless function_block
+      pp command_name.to_s + "ユーザー定義コマンドは存在しません2"
+      return
+    end
+
+    #参照渡し汚染が起きないようにディープコピーで取得
+    yield_block_stack = yield_block_stack ? yield_block_stack.dup : []
+    #スタックプッシュ
+    yield_block_stack.push(block)
+
+    @command_list.unshift(:_END_FUNCTION_)
+
+    #functionを実行時評価しコマンド列を生成する。
+    parse_block(argument, options, yield_block_stack, &function_block)
   end
 
   #コントロールを削除して良いかどうか
@@ -541,35 +569,6 @@ class Control #ユーザー定義関数操作
   #ユーザー定義コマンドを定義する
   def _DEFINE_(argument, options, yield_block_stack, &block)
     @function_list[argument] = block
-  end
-
-  #関数呼び出し
-  def _CALL_(argument, options, yield_block_stack, &block)
-    #関数名に対応する関数ブロックを取得する
-    function_block =  @function_list[argument] || 
-                      @root_control.function_list[argument]
-
-    #指定されたコマンドが定義されていない場合
-    unless function_block
-      #下位コントロールへの_SEND_であるとみなす
-      _SEND_(argument, options, yield_block_stack, &block)
-      return
-    end
-
-    #参照渡し汚染が起きないようにディープコピーで取得
-    yield_block_stack = yield_block_stack ? yield_block_stack.dup : []
-    #スタックプッシュ
-    yield_block_stack.push(block)
-
-    #保存していた第１引数を取得（nilの場合もある）
-    function_argument = options[:_FUNCTION_ARGUMENT_] 
-    #下位伝搬を防ぐ為に要素を削除
-    options.delete(:_FUNCTION_ARGUMENT_)
-
-    @command_list.unshift(:_END_FUNCTION_)
-
-    #functionを実行時評価しコマンド列を生成する。
-    parse_block(function_argument, options, yield_block_stack, &function_block)
   end
 
   #関数ブロックを実行する

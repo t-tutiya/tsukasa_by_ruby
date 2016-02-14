@@ -864,7 +864,14 @@ class Control #プロパティのパラメータ遷移
 
       #開始値が設定されていなければ現在の値で初期化
       unless options[key].instance_of?(Array)
-        options[key] = [send(key), options[key]]
+        #オフセットオプションが設定されている場合
+        if options[:option][:offset]
+          #相対座標移動
+          options[key] = [send(key), send(key) + options[key]]
+        else
+          #絶対座標移動
+          options[key] = [send(key), options[key]]
+        end
       end
 
       #値を更新する

@@ -202,7 +202,7 @@ class Tsukasa < RenderTargetControl
 
   #アプリを起動してからのミリ秒を取得する
   def _RUNNING_TIME_(argument, options, yield_block_stack, &block)
-    eval_block( Window.running_time, 
+    parse_block(Window.running_time, 
                 options, 
                 yield_block_stack.dup, 
                 &block)
@@ -210,7 +210,7 @@ class Tsukasa < RenderTargetControl
 
   #フルスクリーン化可能な解像度のリストを取得する
   def _SCREEN_MODES_(argument, options, yield_block_stack, &block)
-    eval_block( Window.get_screen_modes, 
+    parse_block(Window.get_screen_modes, 
                 options, 
                 yield_block_stack.dup, 
                 &block)

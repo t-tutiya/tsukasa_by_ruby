@@ -279,7 +279,7 @@ end
 
 #初期レイヤ０
 _CREATE_ :ImageControl,
-  z: 100, #描画順序
+  z: 1000, #描画順序
   id: :img0 do
 end
 

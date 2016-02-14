@@ -137,7 +137,7 @@ _STACK_LOOP_ do |a,b,c|
    id: :base do
  end
  _CREATE_ :ImageControl,
-   z: 100,
+   z: 1000,
    id: :img0 do
  end
  _CREATE_ :ImageControl,

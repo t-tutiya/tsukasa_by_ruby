@@ -475,7 +475,7 @@ class Control #制御構文
     end
 
     #フレーム終了疑似コマンドをスタックする
-    @command_list.unshift([:_END_FRAME_])
+    @command_list.unshift(:_END_FRAME_)
 
     if block
       #waitにブロックが付与されているならそれを実行する
@@ -507,7 +507,7 @@ class Control #制御構文
 
     #リストの先端に自分自身を追加する
     @command_list.unshift([:_LOOP_, argument, options, yield_block_stack, block])
-    @command_list.unshift([:_END_LOOP_])
+    @command_list.unshift(:_END_LOOP_)
     #ブロックを実行時評価しコマンド列を生成する。
     parse_block(argument, options, yield_block_stack, &block)
   end
@@ -526,7 +526,7 @@ class Control #制御構文
     #ブロックを実行時評価しコマンド列を生成する。
     parse_block(argument, options, yield_block_stack, &block)
 
-    @command_list.push([:_END_LOOP_])
+    @command_list.push(:_END_LOOP_)
     #リストの末端に自分自身を追加する
     @command_list.push([:_STACK_LOOP_, argument, options, yield_block_stack, block])
   end
@@ -808,7 +808,7 @@ class Control #内部コマンド
     @command_list.unshift(:_END_FUNCTION_)
 
     #参照渡し汚染が起きないようにディープコピーで取得
-    yield_block_stack = yield_block_stack ? yield_block_stack : []
+    yield_block_stack = yield_block_stack ? yield_block_stack.dup : []
 
     #関数を展開する
     parse_block(argument, options, yield_block_stack, &block)

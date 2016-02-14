@@ -670,7 +670,6 @@ class Control #スクリプト制御
                       argument,
                       options[:file_path],
                       yield_block_stack, 
-                      self,
                     )
     @command_list = command_list + @command_list
   end

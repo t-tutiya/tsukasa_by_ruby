@@ -48,8 +48,7 @@ class ScriptCompiler
     @command_list = []
   end
 
-  def eval_commands(script, fname = "(eval)", 
-                    yield_block_stack, control, &block)
+  def eval_commands(script, fname = "(eval)", yield_block_stack)
     @yield_block_stack = yield_block_stack
     @command_list.clear
 
@@ -58,8 +57,7 @@ class ScriptCompiler
     return @command_list
   end
 
-  def eval_block( argument, options, 
-                  yield_block_stack, control, &block)
+  def eval_block( argument, options, yield_block_stack, control, &block)
     raise unless block
 
     @yield_block_stack = yield_block_stack

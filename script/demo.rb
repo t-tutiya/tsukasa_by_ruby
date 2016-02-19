@@ -106,11 +106,13 @@ _DEFINE_ :system_menu do
                  comment: "ボタンサンプル２：多角形コリジョン"
       TextSelect text: "sample_2_1_3", path: path + "sample_2_1_3.rb", 
                  comment: "ボタンサンプル３：抜き色"
-      TextSelect text: "sample_2_2",   path: path + "sample_2_2.tks", 
+      TextSelect text: "sample_2_2",   path: path + "sample_2_2.rb", 
+                 comment: "アニメーションサンプル"
+      TextSelect text: "sample_3_1", path: path + "sample_3_1.tks", 
                  comment: "既読フラグサンプル"
-      TextSelect text: "sample_2_3_1", path: path + "sample_2_3_1.rb", 
+      TextSelect text: "sample_3_2_1", path: path + "sample_3_2_1.rb", 
                  comment: "シリアライズサンプル：セーブ"
-      TextSelect text: "sample_2_3_2", path: path + "sample_2_3_2.rb", 
+      TextSelect text: "sample_3_2_2", path: path + "sample_3_2_2.rb", 
                  comment: "シリアライズサンプル：ロード"
     end
   end

@@ -1,6 +1,6 @@
 @	img0 {
 @		_SET_ file_path: "./resource/char/A-1.png"
-@		_MOVE_ 120, x: 500, y: -100
+@		_MOVE_ 120, x: 500, y: -100, option:{easing: :out_quart}
 @	}
 
 @ end_pause

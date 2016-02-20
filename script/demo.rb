@@ -114,6 +114,8 @@ _DEFINE_ :system_menu do
                  comment: "シリアライズサンプル：セーブ"
       TextSelect text: "sample_3_2_2", path: path + "sample_3_2_2.rb", 
                  comment: "シリアライズサンプル：ロード"
+      TextSelect text: "sample_3_3", path: path + "sample_3_3.rb", 
+                 comment: "起動時間サンプル：ロード"
     end
   end
 

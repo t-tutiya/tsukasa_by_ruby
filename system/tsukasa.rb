@@ -204,7 +204,7 @@ class Tsukasa < RenderTargetControl
   def _RUNNING_TIME_(argument, options, yield_block_stack, &block)
     parse_block(Window.running_time, 
                 options, 
-                yield_block_stack.dup, 
+                yield_block_stack, 
                 &block)
   end
 
@@ -212,7 +212,7 @@ class Tsukasa < RenderTargetControl
   def _SCREEN_MODES_(argument, options, yield_block_stack, &block)
     parse_block(Window.get_screen_modes, 
                 options, 
-                yield_block_stack.dup, 
+                yield_block_stack, 
                 &block)
   end
   

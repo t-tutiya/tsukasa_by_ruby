@@ -36,10 +36,8 @@ class LayoutControl < Control
 
   #描画
   def render(offset_x, offset_y, target, 
-              parent_control_width, 
-              parent_control_height, 
-              mouse_pos_x,
-              mouse_pos_y )
+              parent_control_width, parent_control_height, 
+              mouse_pos_x, mouse_pos_y)
     #可視でなければ戻る
     return 0, 0 unless @visible
 
@@ -48,7 +46,8 @@ class LayoutControl < Control
     super(offset_x + @x + @offset_x + dx, 
           offset_y + @y + @offset_y + dy, 
           target, 
-          @width , @height , mouse_pos_x - @x, mouse_pos_y - @y)
+          @width, @height, 
+          mouse_pos_x - @x, mouse_pos_y - @y)
 
     #次フレームのクリッカブル判定に使うマウスカーソル座標を取得
     @mouse_pos_x = mouse_pos_x

@@ -280,21 +280,6 @@ class CharControl < ImageControl
     return super
   end
 
-  def serialize(control_name = :CharControl, **options)
-    
-    options.update({
-      :size => @size,
-      :font_name => @font_name,
-      :weight => @weight,
-      :italic => @italic,
-      :charactor => @charactor,
-
-      :font_draw_option => @font_draw_option,
-    })
-
-    return super(control_name, options)
-  end
-
   #############################################################################
   #非公開インターフェイス
   #############################################################################

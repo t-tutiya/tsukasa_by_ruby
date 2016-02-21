@@ -62,11 +62,11 @@ class Tsukasa < RenderTargetControl
 
   #システム全体で共有されるデータ群。保存対象。
   #_LOAD_で初期化するためにwrite属性あり
-  attr_accessor  :_SYSTEM_
+  attr_reader  :_SYSTEM_
 
   #個別のセーブデータを表すデータ群。保存対象。
   #_LOAD_で初期化するためにwrite属性あり
-  attr_accessor  :_LOCAL_
+  attr_reader  :_LOCAL_
 
   #一時的に管理するデータ群。保存対象ではない。
   attr_reader  :_TEMP_
@@ -157,10 +157,6 @@ class Tsukasa < RenderTargetControl
     @cursor_type = IDC_ARROW
 
     super(options, nil, @root_control)
-  end
-
-  def serialize(control_name = :Tsukasa, **options)
-    return control.serialize()
   end
 
   def update(offset_x, offset_y, target, 

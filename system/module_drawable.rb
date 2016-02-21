@@ -40,7 +40,7 @@ module Drawable
     hsh[key] = Image.load(key)
   }
 
-  attr_accessor  :entity
+  attr_reader  :entity
 
   #横の拡大率 
   #Float (default: 1)
@@ -132,11 +132,11 @@ module Drawable
   def z()
     @draw_option[:z]
   end
-
+=begin
   def shader=(arg)
     @draw_option[:shader] = find_control(arg).entity
   end
-
+=end
   #描画時の指定座標x/yに、画像のcenter_x/yで指定した位置が来るように補正されます
   #bool (default: false)
   def offset_sync=(arg)
@@ -193,13 +193,6 @@ module Drawable
                     @draw_option)
 
     return check_float
-  end
-
-  def serialize(control_name, **options)
-    
-    options[:draw_option] = @draw_option
-
-    return super(control_name, options)
   end
 end
 

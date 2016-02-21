@@ -190,7 +190,13 @@ class Control #内部メソッド
   end
 
   def serialize(control_name = nil, **options)
-    raise unless control_name
+  
+    methods.each do |method|
+      method = method.to_s
+      if method[-1] == "=" and not(["===", "==", "!="].index(method))
+        options[method.chop!.to_sym] = send(method)
+      end
+    end
 
     command_list = []
 
@@ -199,11 +205,10 @@ class Control #内部メソッド
       command_list.push(control.serialize())
     end
 
-    options[:id] = @id
     options[:command_list] = command_list unless command_list.empty?
 
     #オプションを生成
-    command = [:_CREATE_, control_name, options, {}]
+    command = [:_CREATE_, self.class.name.to_sym, options, {}]
 
     return command
   end

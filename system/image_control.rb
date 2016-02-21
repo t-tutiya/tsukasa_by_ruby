@@ -49,13 +49,6 @@ class ImageControl < Control
     super
   end
 
-  def serialize(control_name = :ImageControl, **options)
-    
-    options[:file_path] = @file_path
-
-    return super(control_name, options)
-  end
-
   #画像を保存する
   def _SAVE_IMAGE_(argument, options, yield_block_stack)
     @entity.save(argument,options[:format] || FORMAT_PNG)

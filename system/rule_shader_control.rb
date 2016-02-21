@@ -39,7 +39,7 @@ class RuleShaderControl < Control
     hsh[key] = Image.load(key)
   }
 
-  attr_accessor :entity
+  attr_reader :entity
 
   #ルールトラジンション：ルール画像設定
   attr_reader :file_path
@@ -73,17 +73,6 @@ class RuleShaderControl < Control
     self.file_path = options[:file_path] if options[:file_path]
     self.counter = options[:counter] || 0
     super
-  end
-
-  def serialize(control_name = :RuleShaderControl, **options)
-    
-    options.update({
-      :file_path  => @file_path,
-      :counter  => @counter,
-      :vague=> @vague,
-    })
-
-    return super(control_name, options)
   end
 
   class TransitionShader < DXRuby::Shader

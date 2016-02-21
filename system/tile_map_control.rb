@@ -81,19 +81,6 @@ class TileMapControl < LayoutControl
     return check_float
   end
 
-  def serialize(control_name = :TileMapControl, **options)
-    raise #このコントロールはまともにシリアライズできない
-    options.update({
-      :map_x => @map_x,
-      :map_y => @map_y,
-      :size_x => @size_x,
-      :size_y => @size_y,
-      :z => @z,
-    })
-
-    return super(control_name, options)
-  end
-  
   def _SET_IMAGE_(argument, options, yield_block_stack)
     @image_array[argument] = Image.load(options[:file_path])
   end

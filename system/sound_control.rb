@@ -52,15 +52,6 @@ class SoundControl  < Control
     super
   end
 
-  def serialize(control_name = :SoundControl, **options)
-    
-    options.update({
-      :file_path  => @file_path,
-    })
-
-    return super(control_name, options)
-  end
-
   #サウンドリソースを解放します
   def dispose
     if @entity

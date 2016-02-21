@@ -235,22 +235,6 @@ class TextPageControl < LayoutControl
                       yield_block_stack, block])
   end
 
-  def serialize(control_name = :TextPageControl, **options)
-    
-    options.update({
-      :line_spacing => @line_spacing,
-      :charactor_pitch => @charactor_pitch,
-      :line_height => @line_height,
-
-      :indent => @indent,
-
-      :char_option => @char_option,
-      :rubi_option => @rubi_option,
-    })
-
-    return super(control_name, options)
-  end
-
   #############################################################################
   #非公開インターフェイス
   #############################################################################

@@ -55,9 +55,4 @@ class LayoutControl < Control
 
     return check_float
   end
-
-
-  def serialize(control_name = :LayoutControl, **options)
-    return super(control_name, options)
-  end
 end

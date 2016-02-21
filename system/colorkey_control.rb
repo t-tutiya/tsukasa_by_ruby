@@ -39,7 +39,7 @@ class ColorkeyControl < Control
     @entity = Image.load(args)
   end
 
-  attr_accessor  :entity
+  attr_reader  :entity
   attr_accessor  :border
 
   def initialize(options, yield_block_stack, root_control, &block)
@@ -48,16 +48,6 @@ class ColorkeyControl < Control
     self.file_path = options[:file_path] if options[:file_path]
 
     @border = options[:border] || 255
-  end
-
-  def serialize(control_name = :ColorkeyControl, **options)
-    
-    options.update({
-      :file_path  => @file_path,
-      :border  => @border,
-    })
-
-    return super(control_name, options)
   end
 end
 

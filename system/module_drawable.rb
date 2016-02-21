@@ -132,11 +132,13 @@ module Drawable
   def z()
     @draw_option[:z]
   end
-=begin
+
   def shader=(arg)
-    @draw_option[:shader] = find_control(arg).entity
+    @shader = arg
+    @draw_option[:shader] = find_control(@shader).entity
   end
-=end
+  attr_reader  :shader
+
   #描画時の指定座標x/yに、画像のcenter_x/yで指定した位置が来るように補正されます
   #bool (default: false)
   def offset_sync=(arg)

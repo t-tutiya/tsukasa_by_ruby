@@ -34,12 +34,14 @@ module Clickable
 
   #コリジョンのエンティティ
   attr_accessor  :collision_shape
-=begin
+
   #カラーキー設定
   def colorkey=(arg)
-    @colorkey = find_control(arg)
+    @colorkey = arg
+    @colorkey_control = find_control(@colorkey)
   end
-=end
+  attr_reader :colorkey
+
   def initialize(options, yield_block_stack, root_control, &block)
     @collision_shape = options[:collision_shape]
     
@@ -105,7 +107,7 @@ module Clickable
       inner_control = false
     #マウスカーソルがコリジョン範囲内にあるがカラーキーボーダー内に無い
     elsif @colorkey and 
-          (@colorkey.entity[@mouse_pos_x - @x, @mouse_pos_y - @y][0] < @colorkey.border)
+          (@colorkey_control.entity[@mouse_pos_x - @x, @mouse_pos_y - @y][0] < @colorkey_control.border)
       inner_control = false
     #マウスカーソルがコリジョン範囲内にある
     else

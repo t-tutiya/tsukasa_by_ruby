@@ -35,7 +35,7 @@ class LayoutControl < Control
   include Clickable
 
   #描画
-  def render(offset_x, offset_y, target, 
+  def update(offset_x, offset_y, target, 
               parent_control_width, parent_control_height, 
               mouse_pos_x, mouse_pos_y)
     #可視でなければ戻る
@@ -43,15 +43,15 @@ class LayoutControl < Control
 
     dx, dy = check_align(parent_control_width, parent_control_height)
 
+    #次フレームのクリッカブル判定に使うマウスカーソル座標を取得
+    @mouse_pos_x = mouse_pos_x
+    @mouse_pos_y = mouse_pos_y
+
     super(offset_x + @x + @offset_x + dx, 
           offset_y + @y + @offset_y + dy, 
           target, 
           @width, @height, 
           mouse_pos_x - @x, mouse_pos_y - @y)
-
-    #次フレームのクリッカブル判定に使うマウスカーソル座標を取得
-    @mouse_pos_x = mouse_pos_x
-    @mouse_pos_y = mouse_pos_y
 
     return check_float
   end

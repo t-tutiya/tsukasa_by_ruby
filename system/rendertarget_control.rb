@@ -71,7 +71,7 @@ class RenderTargetControl < Control
     super
   end
   
-  def render(offset_x, offset_y, target, 
+  def update(offset_x, offset_y, target, 
               parent_control_width, 
               parent_control_height, 
               mouse_pos_x,
@@ -109,7 +109,7 @@ class RenderTargetControl < Control
   #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
   def _TO_IMAGE_(argument, options, yield_block_stack, &block)
     rt = RenderTarget.new(@width, @height)
-    render( 0, 0, rt, { :width => @width, 
+    update( 0, 0, rt, { :width => @width, 
                         :height => @height,
                         :mouse_pos_x => @mouse_pos_x,
                         :mouse_pos_y => @mouse_pos_y})

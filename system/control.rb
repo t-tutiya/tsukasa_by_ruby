@@ -92,7 +92,9 @@ class Control #内部メソッド
     @next_frame_commands.push([command, argument, options, yield_block_stack, block])
   end
 
-  def update
+  def update(offset_x, offset_y, target, 
+              parent_control_width, parent_control_height, 
+              mouse_pos_x,mouse_pos_y )
     #スリープモード中であれば処理しない
     return if @sleep_mode
 
@@ -124,29 +126,10 @@ class Control #内部メソッド
       @next_frame_commands.clear
     end
 
-    #子コントロールを巡回
-    #削除フラグが立ったらコントロールをリストから削除する
-    @control_list.delete_if do |control|
-      control.update
-      control.delete?
-    end
-  end
-
-  #下位コントロールを描画する
-  def render(offset_x, offset_y, target, 
-              parent_control_width, 
-              parent_control_height, 
-              mouse_pos_x,
-              mouse_pos_y )
-    #スリープモード中であれば処理しない
-    #return if @sleep_mode
-
     #下位コントロール巡回
-    @control_list.each do |child_control|
+    @control_list.delete_if do |child_control|
       #下位コントロールを自ターゲットに直接描画
-      child_dx, child_dy = child_control.render(offset_x, 
-                                                offset_y, 
-                                                target, 
+      child_dx, child_dy = child_control.update(offset_x, offset_y, target, 
                                                 parent_control_width , 
                                                 parent_control_height , 
                                                 mouse_pos_x,
@@ -157,6 +140,9 @@ class Control #内部メソッド
       #マウス座標のオフセットを更新する
       mouse_pos_x -= child_dx
       mouse_pos_y -= child_dy
+
+      #コントロールの削除チェック
+      child_control.delete?
     end
 
     #オフセット値を返す
@@ -202,6 +188,16 @@ class Control #内部メソッド
     @sleep_mode = mode
   end
 
+  #リソースを解放する
+  def dispose
+    @delete_flag = true
+    @control_list.each do |child_control|
+      child_control.dispose
+    end
+    @control_list.clear
+    @command_list.clear
+  end
+
   def serialize(control_name = nil, **options)
     raise unless control_name
 
@@ -229,12 +225,6 @@ class Control #内部メソッド
   #############################################################################
 
   private
-
-  #リソースを解放する
-  #継承先で必要に応じてオーバーライドする
-  def dispose
-    @delete_flag = true
-  end
 
   #rubyブロックのコマンド列を配列化してスクリプトストレージに積む
   def parse_block(argument, options, yield_block_stack, &block)

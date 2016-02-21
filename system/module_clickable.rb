@@ -73,7 +73,9 @@ module Clickable
     super
   end
 
-  def update
+  def update(offset_x, offset_y, target, 
+              parent_control_width, parent_control_height, 
+              mouse_pos_x,mouse_pos_y )
     @on_mouse_over  = false
     @on_mouse_out   = false
 

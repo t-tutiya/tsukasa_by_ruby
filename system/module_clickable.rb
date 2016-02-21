@@ -170,17 +170,6 @@ module Clickable
     super
   end
 
-  def render(offset_x, offset_y, target, 
-              parent_control_width, 
-              parent_control_height, 
-              mouse_pos_x,
-              mouse_pos_y )
-    #次フレームのクリッカブル判定に使うマウスカーソル座標を取得
-    @mouse_pos_x = mouse_pos_x
-    @mouse_pos_y = mouse_pos_y
-    super
-  end
-
   def check_imple(argument, options, yield_block_stack)
     if options[:mouse]
       #対象キーが配列で渡されていない場合配列に変換する

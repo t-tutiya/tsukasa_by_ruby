@@ -177,33 +177,15 @@ module Drawable
               parent_control_height, 
               mouse_pos_x,
               mouse_pos_y )
-    super
+
     #描画オブジェクトを持ち、かつ可視でなければ戻る
     return 0, 0 unless @entity and @visible
 
-    child_offset_x = 0
-    child_offset_y = 0
-
-    mouse_pos_x -= @x
-    mouse_pos_y -= @y
-
-    #下位コントロール巡回
-    @control_list.each do |child_control|
-      #下位コントロールを自ターゲットに直接描画
-      child_dx, child_dy = child_control.render(child_offset_x, 
-                                                child_offset_y, 
-                                                @entity, 
-                                                @width , 
-                                                @height , 
-                                                mouse_pos_x,
-                                                mouse_pos_y)
-      #次のコントロールの描画座標原点を設定する
-      child_offset_x += child_dx
-      child_offset_y += child_dy
-      #マウス座標のオフセットを更新する
-      mouse_pos_x -= child_dx
-      mouse_pos_y -= child_dy
-    end
+    super(0, 0, @entity, 
+          @width, 
+          @height, 
+          mouse_pos_x - @x, 
+          mouse_pos_y - @y)
 
     dx, dy = check_align(parent_control_width, parent_control_height)
 

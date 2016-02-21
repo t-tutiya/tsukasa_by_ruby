@@ -184,6 +184,10 @@ class Tsukasa < RenderTargetControl
               mouse_pos_x = Input.mouse_x,
               mouse_pos_y = Input.mouse_y)
     super
+
+    #次フレームのクリッカブル判定に使うマウスカーソル座標を取得
+    @mouse_pos_x = mouse_pos_x
+    @mouse_pos_y = mouse_pos_y
   end
 end
 

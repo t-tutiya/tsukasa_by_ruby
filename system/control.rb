@@ -141,6 +141,24 @@ class Control #内部メソッド
     #スリープモード中であれば処理しない
     #return if @sleep_mode
 
+    #下位コントロール巡回
+    @control_list.each do |child_control|
+      #下位コントロールを自ターゲットに直接描画
+      child_dx, child_dy = child_control.render(offset_x, 
+                                                offset_y, 
+                                                target, 
+                                                parent_control_width , 
+                                                parent_control_height , 
+                                                mouse_pos_x,
+                                                mouse_pos_y)
+      #次のコントロールの描画座標原点を設定する
+      offset_x += child_dx
+      offset_y += child_dy
+      #マウス座標のオフセットを更新する
+      mouse_pos_x -= child_dx
+      mouse_pos_y -= child_dy
+    end
+
     #オフセット値を返す
     return offset_x, offset_y
   end

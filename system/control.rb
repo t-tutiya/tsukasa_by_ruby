@@ -65,8 +65,6 @@ class Control #内部メソッド
     #一時コマンドリスト
     @next_frame_commands = [] 
     #スリープモード
-    @sleep_mode = false
-
     @control_list = [] #コントロールリスト
     @delete_flag = false       #削除フラグの初期化
 
@@ -95,9 +93,6 @@ class Control #内部メソッド
   def update(offset_x, offset_y, target, 
               parent_control_width, parent_control_height, 
               mouse_pos_x,mouse_pos_y )
-    #スリープモード中であれば処理しない
-    return if @sleep_mode
-
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
@@ -182,10 +177,6 @@ class Control #内部メソッド
   #コントロールを削除して良いかどうか
   def delete?
     return @delete_flag
-  end
-
-  def sleep_mode(mode)
-    @sleep_mode = mode
   end
 
   #リソースを解放する

@@ -165,10 +165,6 @@ class Tsukasa < RenderTargetControl
               mouse_pos_x = Input.mouse_x,
               mouse_pos_y = Input.mouse_y)
 
-    #次フレームのクリッカブル判定に使うマウスカーソル座標を取得
-    @mouse_pos_x = mouse_pos_x
-    @mouse_pos_y = mouse_pos_y
-
     #mマウスカーソルが不可視で、かつカーソルが画像の外にある場合
     unless @cursor_visible
       if  Input.mouse_x < 0 or @width  < Input.mouse_x or 

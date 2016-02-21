@@ -43,10 +43,6 @@ class LayoutControl < Control
 
     dx, dy = check_align(parent_control_width, parent_control_height)
 
-    #次フレームのクリッカブル判定に使うマウスカーソル座標を取得
-    @mouse_pos_x = mouse_pos_x
-    @mouse_pos_y = mouse_pos_y
-
     super(offset_x + @x + @offset_x + dx, 
           offset_y + @y + @offset_y + dy, 
           target, 

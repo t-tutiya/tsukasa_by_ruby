@@ -64,10 +64,7 @@ module Clickable
     @over = false
     @out = true
 
-    @old_cursol_x = @old_cursol_y = nil
-    
-    @mouse_pos_x = 0
-    @mouse_pos_y = 0
+    @mouse_pos_x = @mouse_pos_y = nil
 
     super
   end
@@ -89,12 +86,12 @@ module Clickable
     @on_right_key_up_out  = false
 
     #前フレームと座標が異なる場合on_mouse_moveイベントを実行する
-    @on_mouse_move =  ((@old_cursol_x != @mouse_pos_x) or
-                      (@old_cursol_y != @mouse_pos_y))
+    @on_mouse_move =  ((@mouse_pos_x != mouse_pos_x) or
+                      (@mouse_pos_y != mouse_pos_y))
 
     #カーソル座標を保存する
-    @old_cursol_x = @mouse_sprite.x = @mouse_pos_x
-    @old_cursol_y = @mouse_sprite.y = @mouse_pos_y
+    @mouse_pos_x = @mouse_sprite.x = mouse_pos_x
+    @mouse_pos_y = @mouse_sprite.y = mouse_pos_y
 
     @collision_sprite.x = @x
     @collision_sprite.y = @y
@@ -104,7 +101,7 @@ module Clickable
       inner_control = false
     #マウスカーソルがコリジョン範囲内にあるがカラーキーボーダー内に無い
     elsif @colorkey and 
-          (@colorkey_control.entity[@mouse_pos_x - @x, @mouse_pos_y - @y][0] < @colorkey_control.border)
+          (@colorkey_control.entity[mouse_pos_x - @x, mouse_pos_y - @y][0] < @colorkey_control.border)
       inner_control = false
     #マウスカーソルがコリジョン範囲内にある
     else

@@ -177,7 +177,7 @@ module Drawable
               parent_control_height, 
               mouse_pos_x,
               mouse_pos_y )
-
+    super
     #描画オブジェクトを持ち、かつ可視でなければ戻る
     return 0, 0 unless @entity and @visible
 

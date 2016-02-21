@@ -32,8 +32,7 @@ require 'dxruby'
 
 #※子コントロール群は描画対象にならないので注意
 
-class TileMapControl < Control
-  include Layoutable
+class TileMapControl < LayoutControl
 
   attr_accessor :map_array
   attr_accessor :image_array

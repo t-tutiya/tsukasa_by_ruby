@@ -34,6 +34,46 @@ class LayoutControl < Control
   include Layoutable
   include Clickable
 
+  #描画
+  def render(offset_x, offset_y, target, 
+              parent_control_width, 
+              parent_control_height, 
+              mouse_pos_x,
+              mouse_pos_y )
+    super
+    #可視でなければ戻る
+    return 0, 0 unless @visible
+
+    dx, dy = check_align(parent_control_width, parent_control_height)
+
+    offset_x += @x + @offset_x + dx
+    offset_y += @y + @offset_y + dy
+
+    mouse_pos_x -= @x
+    mouse_pos_y -= @y
+
+    #下位コントロール巡回
+    @control_list.each do |child_control|
+      #下位コントロールを上位ターゲットに直接描画
+      child_dx, child_dy = child_control.render(offset_x, 
+                                                offset_y, 
+                                                target, 
+                                                @width , 
+                                                @height , 
+                                                mouse_pos_x,
+                                                mouse_pos_y )
+      #次のコントロールの描画座標原点を設定する
+      offset_x += child_dx
+      offset_y += child_dy
+      #マウス座標のオフセットを更新する
+      mouse_pos_x -= child_dx
+      mouse_pos_y -= child_dy
+    end
+
+    return check_float
+  end
+
+
   def serialize(control_name = :LayoutControl, **options)
     return super(control_name, options)
   end

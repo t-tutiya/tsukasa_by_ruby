@@ -144,6 +144,23 @@ class Control #内部メソッド
     return offset_x, offset_y
   end
 
+  #_TO_IMAGE_用
+  def render(offset_x, offset_y, target, 
+              parent_control_width, parent_control_height)
+    #下位コントロール巡回
+    @control_list.each do |child_control|
+      #下位コントロールを自ターゲットに直接描画
+      child_dx, child_dy = child_control.render(offset_x, offset_y, target, 
+                                                parent_control_width , 
+                                                parent_control_height)
+      #次のコントロールの描画座標原点を設定する
+      offset_x += child_dx
+      offset_y += child_dy
+    end
+    #オフセット値を返す
+    return offset_x, offset_y
+  end
+
   def find_control(id)
     #整数であれば子要素の添え字と見なす
     return @control_list[id] if id.instance_of?(Fixnum)

@@ -196,5 +196,24 @@ module Drawable
 
     return check_float
   end
-end
 
+  #_TO_IMAGE_用
+  def render(offset_x, offset_y, target, 
+              parent_control_width, parent_control_height)
+    super(0, 0, @entity, @width, @height)
+
+    #描画オブジェクトを持ち、かつ可視でなければ戻る
+    return 0, 0 unless @entity and @visible
+    return 0, 0 if @entity.disposed?
+
+    dx, dy = check_align(parent_control_width, parent_control_height)
+
+    #自エンティティを上位ターゲットに描画
+    target.draw_ex( @x + @offset_x + offset_x + dx,
+                    @y + @offset_y + offset_y + dy, 
+                    @entity, 
+                    @draw_option)
+
+    return check_float
+  end
+end

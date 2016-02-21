@@ -109,11 +109,7 @@ class RenderTargetControl < Control
   #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
   def _TO_IMAGE_(argument, options, yield_block_stack, &block)
     rt = RenderTarget.new(@width, @height)
-    update( 0, 0, rt, { :width => @width, 
-                        :height => @height,
-                        :mouse_pos_x => @mouse_pos_x,
-                        :mouse_pos_y => @mouse_pos_y})
-
+    render( 0, 0, rt, @width, @height)
     #拡大率が設定されている場合
     if options[:scale]
       rt2 = RenderTarget.new( options[:scale] * @width, 

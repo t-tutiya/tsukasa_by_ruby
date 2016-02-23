@@ -35,23 +35,8 @@ class Control #公開インターフェイス
   #プロセスのカレントディレクトリを保存する
   @@system_path = File.expand_path('../../', __FILE__)
 
-  #プロパティ
-  #システム全体で共有されるデータ群。保存対象。
-  def _SYSTEM_
-    @root_control._SYSTEM_
-  end
-  #個別のセーブデータを表すデータ群。保存対象。
-  def _LOCAL_
-    @root_control._LOCAL_
-  end
-  #一時的に管理するデータ群。保存対象ではない。
-  def _TEMP_
-    @root_control._TEMP_
-  end
-
-  attr_accessor  :id
-
-  attr_reader  :_RESULT_
+  attr_accessor :id
+  attr_reader :_RESULT_
 end
 
 class Control #内部メソッド
@@ -439,7 +424,7 @@ class Control #セッター／ゲッター
     options.each do |key, val|
       if argument
         #ハッシュに値を代入する
-        send(argument.to_s)[key] = val
+        @root_control.send(argument.to_s)[key] = val
       else
         #セッターが用意されている場合
         if  respond_to?(key.to_s + "=")
@@ -466,7 +451,7 @@ class Control #セッター／ゲッター
     options.each do |key, val|
       if argument
         if key == :_RESULT_
-          @_RESULT_ = send(argument.to_s)[val]
+          @_RESULT_ = @root_control.send(argument.to_s)[val]
         else
           @root_control._TEMP_[key] = send(argument.to_s)[val]
         end
@@ -738,9 +723,9 @@ class Control #セーブデータ制御
       command_list.push(control.serialize())
     end
 
-    db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
+    db = PStore.new(@root_control._SYSTEM_[:_SAVE_DATA_PATH_] + 
                     argument.to_s +
-                    @_SYSTEM_[:_QUICK_DATA_FILENAME_])
+                    @root_control._SYSTEM_[:_QUICK_DATA_FILENAME_])
 
     db.transaction do
       db["key"] = Marshal.dump(command_list)
@@ -749,9 +734,9 @@ class Control #セーブデータ制御
 
   def _QUICK_LOAD_(argument, options, yield_block_stack)
     raise unless argument.kind_of?(Numeric)
-    db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
+    db = PStore.new(@root_control._SYSTEM_[:_SAVE_DATA_PATH_] + 
                     argument.to_s +
-                    @_SYSTEM_[:_QUICK_DATA_FILENAME_])
+                    @root_control._SYSTEM_[:_QUICK_DATA_FILENAME_])
 
     code = ""
 

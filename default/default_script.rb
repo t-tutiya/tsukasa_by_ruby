@@ -125,6 +125,11 @@ _DEFINE_ :_WINDOW_STATUS_ do |argumnet, options|
   Input.set_cursor(options[:cursor_type]) if options[:cursor_type]
 end
 
+_DEFINE_ :_CURSOR_VISIBLE_ do |argumnet|
+  @_SYSTEM_[:_CURSOR_VISIBLE_] = argumnet
+  Input.mouse_enable = argumnet
+end
+
 ###############################################################################
 #テキストレイヤ関連
 ###############################################################################

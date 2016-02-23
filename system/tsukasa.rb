@@ -73,9 +73,6 @@ class Tsukasa < RenderTargetControl
 
   attr_reader  :_DEFAULT_CONTROL_
 
-  #マウスカーソルの表示／非表示を設定する
-  attr_accessor  :cursor_visible
-
   attr_reader  :function_list
 
   attr_reader  :script_compiler
@@ -108,9 +105,6 @@ class Tsukasa < RenderTargetControl
     options[:command_list] = [[ :_INCLUDE_, 
                                 "./default/bootstrap_script.rb",{}]]
 
-    #カーソル歌詞設定
-    @cursor_visible = true
-
     super(options, nil, @root_control)
   end
 
@@ -119,18 +113,6 @@ class Tsukasa < RenderTargetControl
               parent_control_height = Window.width, 
               mouse_pos_x = Input.mouse_x,
               mouse_pos_y = Input.mouse_y)
-
-    #mマウスカーソルが不可視で、かつカーソルが画像の外にある場合
-    unless @cursor_visible
-      if  Input.mouse_x < 0 or @width  < Input.mouse_x or 
-          Input.mouse_y < 0 or @height < Input.mouse_y
-        #カーソルを表示する
-        Input.mouse_enable = true
-      else
-        #カーソルを不可視に戻す
-        Input.mouse_enable = false
-      end
-    end
     super
   end
 

@@ -40,6 +40,19 @@ _CREATE_ :LayoutControl, id: :requested_close do
     _CHECK_ system: [:requested_close] do
       _EXIT_ #アプリを終了する
     end
+    
+    _SEND_ROOT_ do
+      _CHECK_ mouse: :cursor_out do
+        #カーソルを表示する
+        Input.mouse_enable = true unless @_SYSTEM_[:_CURSOR_VISIBLE_]
+      end
+
+      _CHECK_ mouse: :cursor_over do
+        #カーソルを不可視に戻す
+        Input.mouse_enable = false unless @_SYSTEM_[:_CURSOR_VISIBLE_]
+      end
+    end
+    
     _END_FRAME_
   end
 end

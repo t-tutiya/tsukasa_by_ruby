@@ -48,6 +48,9 @@ _SET_ :_SYSTEM_, _LOCAL_FILENAME_: "_local_data.bin"
 #一時データのファイル名
 _SET_ :_SYSTEM_, _QUICK_DATA_FILENAME_: "_quick_data.bin"
 
+#カーソル可視設定
+_SET_ :_SYSTEM_, _CURSOR_VISIBLE_: true
+
 #TextLayerデフォルトＩＤ
 _SET_ :_DEFAULT_CONTROL_, TextLayer: :text0
 

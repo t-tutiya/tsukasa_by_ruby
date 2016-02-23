@@ -112,7 +112,6 @@ class Tsukasa < RenderTargetControl
 
     #カーソル歌詞設定
     @cursor_visible = true
-    @cursor_type = IDC_ARROW
 
     super(options, nil, @root_control)
   end

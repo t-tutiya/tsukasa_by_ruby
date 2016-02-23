@@ -34,5 +34,7 @@ _INCLUDE_ "./default/config.rb"
 #デフォルトのユーザー定義関数群
 _INCLUDE_ "./default/default_script.rb"
 
+_TITLE_BAR_STATUS caption: "Tsukasa Engine powered by DXRuby" #文字列
+
 #最初に実行するスクリプトファイルを呼びだす
 _INCLUDE_ "./script/first.rb"

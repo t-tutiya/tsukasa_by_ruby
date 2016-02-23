@@ -73,11 +73,6 @@ class Tsukasa < RenderTargetControl
 
   attr_reader  :_DEFAULT_CONTROL_
 
-  attr_accessor  :close
-  def close?
-    @close
-  end
-
   #マウスカーソルの表示／非表示を設定する
   attr_accessor  :cursor_visible
 
@@ -141,6 +136,15 @@ class Tsukasa < RenderTargetControl
     end
     super
   end
+
+  def close
+    @close = true
+  end
+
+  def close?
+    @close
+  end
+
 end
 
 class Tsukasa < RenderTargetControl

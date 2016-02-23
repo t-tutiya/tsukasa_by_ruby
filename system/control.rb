@@ -704,7 +704,7 @@ class Control #スクリプト制御
 
   #アプリを終了する
   def _EXIT_(argument, options, yield_block_stack)
-    @root_control.close = true
+    @root_control.close
   end
 
   #文字列を評価する（デバッグ用）

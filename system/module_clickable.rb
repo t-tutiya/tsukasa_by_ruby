@@ -47,22 +47,22 @@ module Clickable
     
     self.colorkey = options[:colorkey] if options[:colorkey]
 
-    witdh = options[:width] || 0
+    witdh  = options[:width]  || 0
     height = options[:height] || 0
 
     @collision_sprite = Sprite.new
+
     if @collision_shape
       @collision_sprite.collision = @collision_shape
     else
-      @collision_sprite.collision = [0, 0, 
-                                      witdh-1, height-1]
+      @collision_sprite.collision = [0, 0, witdh-1, height-1]
     end
 
     @mouse_sprite = Sprite.new
     @mouse_sprite.collision = [0, 0]
 
     @over = false
-    @out = true
+    @out  = true
 
     @mouse_pos_x = @mouse_pos_y = nil
 
@@ -87,7 +87,7 @@ module Clickable
 
     #前フレームと座標が異なる場合on_mouse_moveイベントを実行する
     @on_mouse_move =  ((@mouse_pos_x != mouse_pos_x) or
-                      (@mouse_pos_y != mouse_pos_y))
+                       (@mouse_pos_y != mouse_pos_y))
 
     #カーソル座標を保存する
     @mouse_pos_x = @mouse_sprite.x = mouse_pos_x

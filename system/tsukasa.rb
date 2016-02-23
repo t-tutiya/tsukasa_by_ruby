@@ -105,10 +105,8 @@ class Tsukasa < RenderTargetControl
     #パーサー
     @script_parser = {}
 
-    options[:command_list] = [[:_INCLUDE_,
-                        "./default/bootstrap_script.rb",
-                        {}, 
-                        nil, nil, nil]]
+    options[:command_list] = [[ :_INCLUDE_, 
+                                "./default/bootstrap_script.rb",{}]]
 
     #カーソル歌詞設定
     @cursor_visible = true

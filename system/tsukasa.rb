@@ -150,4 +150,61 @@ class Tsukasa < RenderTargetControl
       Module.const_get(options[:parser]).new,
       Module.const_get(options[:parser])::Replacer.new]
   end
+
+  #ネイティブコードを読み込む
+  def _LOAD_NATIVE_(argument, options, yield_block_stack)
+    raise unless argument
+    require argument
+  end
+
+  #データセーブ
+  #TODO：保存先パスや名称は将来的には外部から与えるようにしたい
+  def _SAVE_(argument, options, yield_block_stack)
+    raise unless argument.kind_of?(Numeric)
+    #グローバルデータ
+    if argument == 0
+      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
+                      @_SYSTEM_[:_SYSTEM_FILENAME_])
+      db.transaction do
+        db["key"] = @_SYSTEM_
+      end
+    #ユーザーデータ
+    #任意の接尾字を指定する
+    elsif argument
+      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + argument.to_s +
+                      @_SYSTEM_[:_LOCAL_FILENAME_])
+      db.transaction do
+        db["key"] = @_LOCAL_
+      end
+    else
+      #セーブファイル指定エラー
+      pp "対象セーブファイルが指定されていません"
+      raise 
+    end
+  end
+
+  def _LOAD_(argument, options, yield_block_stack)
+    raise unless argument.kind_of?(Numeric)
+    #グローバルデータ
+    if argument == 0
+      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
+                      @_SYSTEM_[:_SYSTEM_FILENAME_])
+      db.transaction do
+        @_SYSTEM_ = db["key"]
+      end
+    #ユーザーデータ
+    #任意の接尾字を指定する
+    elsif argument
+      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + argument.to_s +
+                      @_SYSTEM_[:_LOCAL_FILENAME_])
+      db.transaction do
+        @_LOCAL_ = db["key"]
+      end
+    else
+      #セーブファイル指定エラー
+      pp "対象セーブファイルが指定されていません"
+      raise 
+    end
+  end
+
 end

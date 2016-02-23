@@ -181,34 +181,6 @@ class Tsukasa < RenderTargetControl
 end
 
 class Tsukasa < RenderTargetControl
-  def _RESIZE_(argument, options, yield_block_stack)
-    Window.resize(options[:width], 
-                  options[:height])
-    self.width = options[:width]
-    self.height = options[:height]
-  end
-
-  #フルスクリーンのオンオフ
-  def _FULL_SCREEN_(argument, options, yield_block_stack)
-    Window.full_screen = argument #bool
-  end
-
-  #アプリを起動してからのミリ秒を取得する
-  def _RUNNING_TIME_(argument, options, yield_block_stack, &block)
-    parse_block(Window.running_time, 
-                options, 
-                yield_block_stack, 
-                &block)
-  end
-
-  #フルスクリーン化可能な解像度のリストを取得する
-  def _SCREEN_MODES_(argument, options, yield_block_stack, &block)
-    parse_block(Window.get_screen_modes, 
-                options, 
-                yield_block_stack, 
-                &block)
-  end
-  
   def _SCRIPT_PARSER_(argument, options, yield_block_stack)
     require_relative options[:file_path]
     @script_parser[options[:ext_name]] = [

@@ -64,6 +64,29 @@ _DEFINE_ :_FOLDER_DIALOG_ do |title , options|
   _YIELD_ Window.folder_dialog(title || "", options[:default_dir ] || "", )
 end
 
+#アプリを起動してからのミリ秒を取得する
+_DEFINE_ :_RUNNING_TIME_ do 
+  _YIELD_ Window.running_time
+end
+
+#フルスクリーンのオンオフ
+_DEFINE_ :_FULL_SCREEN_ do |argument|
+      Window.full_screen = argument #bool
+end
+
+#フルスクリーン化可能な解像度のリストを取得する
+_DEFINE_ :_SCREEN_MODES_ do 
+  _YIELD_ Window.get_screen_modes
+end
+
+#画面サイズの変更
+_DEFINE_ :_RESIZE_ do |argumnet, options|
+  Window.resize(options[:width], options[:height])
+  _SEND_ROOT_ do
+    _SET_ width: options[:width], height: options[:height]
+  end
+end
+
 ###############################################################################
 #テキストレイヤ関連
 ###############################################################################

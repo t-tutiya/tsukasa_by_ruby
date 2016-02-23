@@ -120,6 +120,8 @@ _DEFINE_ :system_menu do
                  comment: "起動時間サンプル：ロード"
       TextSelect text: "sample_3_4", path: path + "sample_3_4.rb", 
                  comment: "フルスクリーン化"
+      TextSelect text: "sample_3_5", path: path + "sample_3_5.rb", 
+                 comment: "マウス画像のカスタマイズ"
     end
   end
 

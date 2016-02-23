@@ -46,7 +46,22 @@ end
 
 #スクリーンショットキャプチャ
 _DEFINE_ :_CAPTURE_SS_ do |file_path, options|
-  Window.get_screen_shot(file_path,options[:format] || FORMAT_PNG)
+  Window.get_screen_shot(file_path, options[:format] || FORMAT_PNG)
+end
+
+#ファイルオープンダイアログ
+_DEFINE_ :_OPEN_FILENAME_ do |title , options|
+  _YIELD_ Window.open_filename(options[:filter ] || [], title || "")
+end
+
+#ファイルセーブダイアログ
+_DEFINE_ :_SAVE_FILENAME_ do |title , options|
+  _YIELD_ Window.save_filename(options[:filter ] || [], title || "")
+end
+
+#フォルダダイアログ
+_DEFINE_ :_FOLDER_DIALOG_ do |title , options|
+  _YIELD_ Window.folder_dialog(title || "", options[:default_dir ] || "", )
 end
 
 ###############################################################################

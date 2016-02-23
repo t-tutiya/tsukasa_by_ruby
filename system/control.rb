@@ -32,6 +32,9 @@ require 'pstore'
 ###############################################################################
 
 class Control #公開インターフェイス
+  #プロセスのカレントディレクトリを保存する
+  @@system_path = File.expand_path('../../', __FILE__)
+
   #プロパティ
   #システム全体で共有されるデータ群。保存対象。
   def _SYSTEM_
@@ -658,10 +661,14 @@ class Control #スクリプト制御
       argument = @root_control._TEMP_[argument]
     end
 
+    #プロセスのカレントディレクトリを強制的に更新する
+    #TODO：Window.open_filenameが使用された場合の対策だが、他に方法はないか？
+    FileUtils.chdir(@@system_path)
+    #ファイルのフルパスを取得
     options[:file_path] = File.expand_path(argument)
 
+    #拡張子取得
     ext_name = File.extname(options[:file_path])
-
     #rbファイルでなければparserのクラス名を初期化する。
     unless ext_name == ".rb"
       ext_name.slice!(0)

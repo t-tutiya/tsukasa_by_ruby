@@ -99,7 +99,7 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_1_17", path: path + "sample_1_17.tks", 
                  comment: "セーブ／ロード"
     end
-    _CREATE_ :LayoutControl, id: 2 do
+    _CREATE_ :LayoutControl, id: 2, x:0, y:0, width: 256, float_x: :left    do
       TextSelect text: "sample_2_1_1", path: path + "sample_2_1_1.rb", 
                  comment: "ボタンサンプル１：通常"
       TextSelect text: "sample_2_1_2", path: path + "sample_2_1_2.rb", 
@@ -108,6 +108,8 @@ _DEFINE_ :system_menu do
                  comment: "ボタンサンプル３：抜き色"
       TextSelect text: "sample_2_2",   path: path + "sample_2_2.rb", 
                  comment: "アニメーションサンプル"
+    end
+    _CREATE_ :LayoutControl, id: 3, x:0, y:0, width: 256, float_x: :left    do
       TextSelect text: "sample_3_1", path: path + "sample_3_1.tks", 
                  comment: "既読フラグサンプル"
       TextSelect text: "sample_3_2_1", path: path + "sample_3_2_1.rb", 
@@ -116,6 +118,8 @@ _DEFINE_ :system_menu do
                  comment: "シリアライズサンプル：ロード"
       TextSelect text: "sample_3_3", path: path + "sample_3_3.rb", 
                  comment: "起動時間サンプル：ロード"
+      TextSelect text: "sample_3_4", path: path + "sample_3_4.rb", 
+                 comment: "フルスクリーン化"
     end
   end
 

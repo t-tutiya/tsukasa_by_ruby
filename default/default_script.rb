@@ -87,7 +87,7 @@ _DEFINE_ :_RESIZE_ do |argumnet, options|
   end
 end
 
-_DEFINE_ :_TITLE_BAR_STATUS do |argumnet, options|
+_DEFINE_ :_WINDOW_STATUS_ do |argumnet, options|
   #タイトルバーの文字列を設定する
   Window.caption = options[:caption] if options[:caption]
   #タイトルバーのアイコン画像を設定する

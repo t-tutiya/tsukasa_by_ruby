@@ -88,9 +88,9 @@ _DEFINE_ :_RESIZE_ do |argumnet, options|
 end
 
 _DEFINE_ :_TITLE_BAR_STATUS do |argumnet, options|
-  
+  #タイトルバーの文字列を設定する
   Window.caption = options[:caption] if options[:caption]
-  
+  #タイトルバーのアイコン画像を設定する
   Window.load_icon(options[:icon_path])if options[:icon_path]
   
   #マウスカーソルの形状を設定する。
@@ -111,6 +111,7 @@ _DEFINE_ :_TITLE_BAR_STATUS do |argumnet, options|
     #IDC_WAIT 砂時計カーソル
   Input.set_cursor(options[:cursor_type]) if options[:cursor_type]
 end
+
 ###############################################################################
 #テキストレイヤ関連
 ###############################################################################

@@ -150,7 +150,7 @@ _DEFINE_ :line_pause do
   _SEND_ default: :TextLayer do 
     _PAUSE_ do
       _CREATE_ :RenderTargetControl, id: :icon, 
-        width: 24, height: 24, align_y: :bottom, float_x: :left do
+        width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
         _CREATE_ :TileMapControl, 
           map_array: [[0]], size_x: 1, size_y: 1 do
             _SET_IMAGE_MAPPING_ file_path: "./resource/icon/icon_8_a.png",
@@ -186,7 +186,7 @@ _DEFINE_ :end_pause do
   _SEND_ default: :TextLayer do 
     _PAUSE_ do
       _CREATE_ :RenderTargetControl, id: :icon, 
-        width: 24, height: 24, align_y: :bottom, float_x: :left do
+        width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
         _CREATE_ :TileMapControl, 
           map_array: [[0]], size_x: 1, size_y: 1 do
           _SET_IMAGE_MAPPING_ file_path: "./resource/icon/icon_4_a.png",
@@ -345,13 +345,6 @@ _DEFINE_ :TextWindow do |argument, options|
 end
 
 #初期テキストウィンドウ
-TextWindow :text0, text_page_id: :default_text_page_control0,
-  x: 96,
-  y: 256 + 164,
-  width: 1024,
-  height: 192,
-  z: 1000000 #描画順序
-
 #初期レイヤ（背景）
 _CREATE_ :ImageControl,
   z: 0, #描画順序
@@ -375,6 +368,13 @@ _CREATE_ :ImageControl,
   z: 3000, #描画順序
   id: :img2 do
 end
+
+TextWindow :text0, text_page_id: :default_text_page_control0,
+  x: 96,
+  y: 256 + 164,
+  width: 1024,
+  height: 192,
+  z: 1000000 #描画順序
 
 ###############################################################################
 #汎用コントロール

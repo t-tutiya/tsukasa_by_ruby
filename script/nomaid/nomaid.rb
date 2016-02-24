@@ -63,14 +63,14 @@ class NomaidControl < Control
     
     super
 
-    _TEMP_[:debt] = @debt
+    @root_control._TEMP_[:debt] = @debt
 
-    _TEMP_[:week] = 0
-    _TEMP_[:day] = 0
+    @root_control._TEMP_[:week] = 0
+    @root_control._TEMP_[:day] = 0
   end
   
   def lesson(argument, options, yield_block_stack)
-    case _TEMP_[:flag]
+    case @root_control._TEMP_[:flag]
     when :pray
 
       hp_cost = [
@@ -171,7 +171,7 @@ class NomaidControl < Control
   end
 
   def work(argument, options, yield_block_stack)
-    case _TEMP_[:flag]
+    case @root_control._TEMP_[:flag]
     when :cleaning
       hp_cost = [ @mental_point_max - @mental_point + 10, 
                   [ @helth_point - @mental_point_max - @mental_point + 10, 
@@ -247,7 +247,7 @@ class NomaidControl < Control
     @mental_point -= mp_cost
     @gold += reward
 
-    _TEMP_[:reward] = reward
+    @root_control._TEMP_[:reward] = reward
   end
 
   def rest(argument, options, yield_block_stack)
@@ -263,42 +263,42 @@ class NomaidControl < Control
   end
 
   def week_init(argument, options, yield_block_stack)
-    _TEMP_[:day] = 0
+    @root_control._TEMP_[:day] = 0
   end
 
   def day_init(argument, options, yield_block_stack)
-    _TEMP_[:gold] = @gold
+    @root_control._TEMP_[:gold] = @gold
 
-    _TEMP_[:helth_point] = @helth_point
-    _TEMP_[:helth_point_max] = @helth_point_max
-    _TEMP_[:mental_point] = @mental_point
-    _TEMP_[:mental_point_max] = @mental_point_max
-    _TEMP_[:charm] = @charm
-    _TEMP_[:noble] = @noble
-    _TEMP_[:culture] = @culture
-    _TEMP_[:intelligence] = @intelligence
-    _TEMP_[:allegiance] = @allegiance
-    _TEMP_[:courtesy] = @courtesy
+    @root_control._TEMP_[:helth_point] = @helth_point
+    @root_control._TEMP_[:helth_point_max] = @helth_point_max
+    @root_control._TEMP_[:mental_point] = @mental_point
+    @root_control._TEMP_[:mental_point_max] = @mental_point_max
+    @root_control._TEMP_[:charm] = @charm
+    @root_control._TEMP_[:noble] = @noble
+    @root_control._TEMP_[:culture] = @culture
+    @root_control._TEMP_[:intelligence] = @intelligence
+    @root_control._TEMP_[:allegiance] = @allegiance
+    @root_control._TEMP_[:courtesy] = @courtesy
 
   end
 
   def end_day(argument, options, yield_block_stack)
-    _TEMP_[:day] += 1
+    @root_control._TEMP_[:day] += 1
   end
   
   def end_week(argument, options, yield_block_stack)
-    @gold -= @debt[_TEMP_[:week]]
+    @gold -= @debt[@root_control._TEMP_[:week]]
 
-    _TEMP_[:week] += 1
+    @root_control._TEMP_[:week] += 1
 
     if @gold < 0
-      _TEMP_[:gameover] = true
+      @root_control._TEMP_[:gameover] = true
     else
-      _TEMP_[:gameover] = false
+      @root_control._TEMP_[:gameover] = false
     end
 
-    if _TEMP_[:week] == 7
-      _TEMP_[:gameclear] = true
+    if @root_control._TEMP_[:week] == 7
+      @root_control._TEMP_[:gameclear] = true
     end
   end
 =begin

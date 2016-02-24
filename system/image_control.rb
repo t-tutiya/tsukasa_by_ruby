@@ -31,8 +31,7 @@ require 'dxruby'
 ###############################################################################
 
 #画像コントロール
-class ImageControl < Control
-  include Drawable
+class ImageControl < DrawableControl
   
   attr_reader :file_path
   def file_path=(file_path)

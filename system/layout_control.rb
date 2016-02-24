@@ -31,8 +31,6 @@ require 'dxruby'
 ###############################################################################
 
 class LayoutControl < LayoutableControl
-  include Clickable
-
   #描画
   def update(offset_x, offset_y, target, 
               parent_control_width, parent_control_height, 
@@ -67,5 +65,197 @@ class LayoutControl < LayoutableControl
           @width, @height)
 
     return check_float
+  end
+end
+
+class LayoutControl < LayoutableControl
+
+  #コリジョンのエンティティ
+  attr_accessor  :collision_shape
+
+  #カラーキー設定
+  def colorkey=(arg)
+    @colorkey = arg
+    @colorkey_control = find_control(@colorkey)
+  end
+  attr_reader :colorkey
+
+  def initialize(options, yield_block_stack, root_control, &block)
+    @collision_shape = options[:collision_shape]
+    
+    self.colorkey = options[:colorkey] if options[:colorkey]
+
+    witdh  = options[:width]  || 0
+    height = options[:height] || 0
+
+    @collision_sprite = Sprite.new
+
+    if @collision_shape
+      @collision_sprite.collision = @collision_shape
+    else
+      @collision_sprite.collision = [0, 0, witdh-1, height-1]
+    end
+
+    @mouse_sprite = Sprite.new
+    @mouse_sprite.collision = [0, 0]
+
+    @over = false
+    @out  = true
+
+    @mouse_pos_x = @mouse_pos_y = nil
+
+    super
+  end
+
+  def collision_update(mouse_pos_x, mouse_pos_y)
+    @on_mouse_over  = false
+    @on_mouse_out   = false
+
+    @on_key_down    = false
+    @on_key_down_out= false
+    @on_key_up      = false
+    @on_key_up_out  = false
+
+    @on_right_key_down    = false
+    @on_right_key_down_out= false
+    @on_right_key_up      = false
+    @on_right_key_up_out  = false
+
+    #前フレームと座標が異なる場合on_mouse_moveイベントを実行する
+    @on_mouse_move =  ((@mouse_pos_x != mouse_pos_x) or
+                       (@mouse_pos_y != mouse_pos_y))
+
+    #カーソル座標を保存する
+    @mouse_pos_x = @mouse_sprite.x = mouse_pos_x
+    @mouse_pos_y = @mouse_sprite.y = mouse_pos_y
+
+    @collision_sprite.x = @x
+    @collision_sprite.y = @y
+
+    #マウスカーソルがコリジョン範囲内に無い
+    if not (@mouse_sprite === @collision_sprite)
+      inner_control = false
+    #マウスカーソルがコリジョン範囲内にあるがカラーキーボーダー内に無い
+    elsif @colorkey and 
+          (@colorkey_control.entity[mouse_pos_x - @x, mouse_pos_y - @y][0] < @colorkey_control.border)
+      inner_control = false
+    #マウスカーソルがコリジョン範囲内にある
+    else
+      inner_control = true
+    end
+
+    if inner_control
+      #イベント起動済みフラグクリア
+      @out = false
+
+      #イベント起動前であれば起動し、クリアフラグを立てる
+      @on_mouse_over = true unless @over
+      @over = true
+
+      #キー押下チェック
+      if Input.mouse_push?( M_LBUTTON )
+        @on_key_down = true
+      end
+
+      #キー解除チェック
+      if Input.mouse_release?( M_LBUTTON )
+        @on_key_up = true
+      end
+
+      #右キー押下チェック
+      if Input.mouse_push?( M_RBUTTON )
+        @on_right_key_down = true
+      end
+
+      #右キー解除チェック
+      if Input.mouse_release?( M_RBUTTON )
+        @on_right_key_up = true
+      end
+
+    else
+      #イベント起動済みフラグクリア
+      @over = false
+
+      #イベント起動前であれば起動し、クリアフラグを立てる
+      @on_mouse_out = true unless @out
+      @out = true
+
+      #キー押下チェック
+      if Input.mouse_push?( M_LBUTTON )
+        @on_key_down_out = true
+      end
+
+      #キー解除チェック
+      if Input.mouse_release?( M_LBUTTON )
+        @on_key_up_out = true
+      end
+
+      #右キー押下チェック
+      if Input.mouse_push?( M_RBUTTON )
+        @on_right_key_down_out = true
+      end
+
+      #右キー解除チェック
+      if Input.mouse_release?( M_RBUTTON )
+        @on_right_key_up_out = true
+      end
+    end
+  end
+
+  def check_imple(argument, options, yield_block_stack)
+    if options[:mouse]
+      #対象キーが配列で渡されていない場合配列に変換する
+      options[:mouse] = [options[:mouse]] unless options[:mouse].instance_of?(Array)
+
+      options[:mouse].each do |key|
+        case key
+        #前フレと比較してカーソルが移動した場合
+        when :cursor_move
+          return true if @on_mouse_move
+
+        #カーソルが指定範囲に侵入した場合
+        when :cursor_over
+          return true if @on_mouse_over
+
+        #カーソルが指定範囲の外に移動した場合
+        when :cursor_out
+          return true if @on_mouse_out
+
+        #マウスボタンが押下された場合
+        when :key_down
+          return true if @on_key_down
+
+        #マウスボタンが範囲外で押下された場合
+        when :key_down_out
+          return true if @on_key_down_out
+
+        #マウスボタン押下が解除された場合
+        when :key_up
+          return true if @on_key_up
+
+        #マウスボタン押下が範囲外で解除された場合
+        when :key_up_out
+          return true if @on_key_up_out
+
+        #マウス右ボタンが押下された場合
+        when :right_key_down
+          return true if @on_right_key_down
+
+        #マウスボタンが範囲外で押下された場合
+        when :right_key_down_out
+          return true if @on_right_key_down_out
+
+        #マウスボタン押下が解除された場合
+        when :right_key_up
+          return true if @on_right_key_up
+
+        #マウスボタン押下が範囲外で解除された場合
+        when :key_right_up_out
+          return true if @on_key_right_up_out
+
+        end
+      end
+    end 
+    return super
   end
 end

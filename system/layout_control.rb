@@ -30,8 +30,7 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class LayoutControl < Control
-  include Layoutable
+class LayoutControl < LayoutableControl
   include Clickable
 
   #描画

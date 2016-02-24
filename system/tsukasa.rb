@@ -33,10 +33,10 @@ require 'dxruby'
 require 'pp'
 
 
-require_relative './module_layoutable.rb'
 require_relative './module_clickable.rb'
 
 require_relative './control.rb'
+require_relative './layoutable_control.rb'
 require_relative './drawable_control.rb'
 
 require_relative './image_control.rb'

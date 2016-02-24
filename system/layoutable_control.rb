@@ -30,7 +30,7 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-module Layoutable
+class LayoutableControl < Control
 
   #座標
   attr_accessor  :x

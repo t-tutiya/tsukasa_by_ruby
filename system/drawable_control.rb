@@ -30,8 +30,7 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class DrawableControl < Control
-  include Layoutable
+class DrawableControl < LayoutableControl
   #Imageのキャッシュ機構の簡易実装
   #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
   @@image_cache = Hash.new

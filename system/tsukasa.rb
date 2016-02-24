@@ -123,6 +123,8 @@ class Tsukasa < RenderTargetControl
               parent_control_height = Window.width, 
               mouse_pos_x = Input.mouse_x,
               mouse_pos_y = Input.mouse_y)
+
+    collision_update(mouse_pos_x, mouse_pos_y)
     super
   end
 

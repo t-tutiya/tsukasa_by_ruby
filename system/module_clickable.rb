@@ -69,9 +69,7 @@ module Clickable
     super
   end
 
-  def update(offset_x, offset_y, target, 
-              parent_control_width, parent_control_height, 
-              mouse_pos_x,mouse_pos_y )
+  def collision_update(mouse_pos_x, mouse_pos_y)
     @on_mouse_over  = false
     @on_mouse_out   = false
 
@@ -164,8 +162,6 @@ module Clickable
         @on_right_key_up_out = true
       end
     end
-
-    super
   end
 
   def check_imple(argument, options, yield_block_stack)

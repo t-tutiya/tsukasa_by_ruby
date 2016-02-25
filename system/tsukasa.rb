@@ -35,8 +35,9 @@ require 'pp'
 
 
 require_relative './control.rb'
-require_relative './layout_control.rb'
+require_relative './layoutable_control.rb'
 require_relative './drawable_control.rb'
+require_relative './layout_control.rb'
 
 require_relative './image_control.rb'
 

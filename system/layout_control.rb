@@ -30,57 +30,7 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class LayoutControl < Control
-
-  #座標
-  attr_accessor  :x
-  attr_accessor  :y
-
-  #オフセット座標
-  attr_accessor  :offset_x
-  attr_accessor  :offset_y
-
-  #可視フラグ
-  attr_accessor  :visible
-
-  #次のコントロールの接続方向指定
-  attr_accessor  :float_x
-  attr_accessor  :float_y
-
-  #寄せ指定
-  attr_accessor  :align_y
-
-  #サイズ
-  attr_accessor  :width
-  attr_accessor  :height
-
-  #実サイズ（現状ではtext_page_controlのみで使用）
-  attr_accessor  :real_width
-  attr_accessor  :real_height
-
-  def initialize(options, yield_block_stack, root_control, &block)
-    @x = options[:x] || 0 #描画Ｘ座標
-    @y = options[:y] || 0 #描画Ｙ座標
-
-    @offset_x = options[:offset_x] || 0 #描画オフセットＸ座標
-    @offset_y = options[:offset_y] || 0 #描画オフセットＹ座標
-
-    @real_width = @width  = options[:width] || 0 #幅
-    @real_height = @height = options[:height] || 0 #高さ
-
-    #可視フラグ（省略時はtrue）
-    @visible = (options[:visible] != false)
-
-    #次コントロールの接続方向指定
-    @float_x = options[:float_x]
-    @float_y = options[:float_y]
-
-    #下寄せ指定
-    @align_y = options[:align_y]
-
-    super
-  end
-
+class LayoutControl < LayoutableControl
   #描画
   def update(offset_x, offset_y, target, 
               parent_control_width, parent_control_height, 
@@ -115,42 +65,4 @@ class LayoutControl < Control
     return check_float
   end
 
-  def check_align(width, height)
-    offest_x = offset_y = 0
-    #下揃えを考慮
-    case @align_y
-    when :bottom 
-      offset_y = height - @height
-    end
-    return offest_x, offset_y
-  end
-  
-  def check_float
-    #連結指定チェック
-    case @float_x
-    when nil
-      dx = 0
-    #右連結
-    when :left
-      dx = @width
-    #下連結
-    when :bottom
-      dx = @x
-    end
-
-    #連結指定チェック
-    case @float_y
-    when nil
-      dy = 0
-    #右連結
-    when :left
-      dy = @y
-    #下連結
-    when :bottom
-      dy = @height
-    end
-
-    return dx, dy
-  end
 end
-

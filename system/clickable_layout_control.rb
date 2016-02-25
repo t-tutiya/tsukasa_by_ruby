@@ -74,7 +74,7 @@ class ClickableLayoutControl < LayoutControl
   def update(offset_x, offset_y, target, 
               parent_control_width, parent_control_height, 
               mouse_pos_x, mouse_pos_y)
-
+    @inner_control = false
     @on_mouse_over  = false
     @on_mouse_out   = false
 
@@ -101,17 +101,17 @@ class ClickableLayoutControl < LayoutControl
 
     #マウスカーソルがコリジョン範囲内に無い
     if not (@mouse_sprite === @collision_sprite)
-      inner_control = false
+      @inner_control = false
     #マウスカーソルがコリジョン範囲内にあるがカラーキーボーダー内に無い
     elsif @colorkey and 
           (@colorkey_control.entity[mouse_pos_x - @x, mouse_pos_y - @y][0] < @colorkey_control.border)
-      inner_control = false
+      @inner_control = false
     #マウスカーソルがコリジョン範囲内にある
     else
-      inner_control = true
+      @inner_control = true
     end
 
-    if inner_control
+    if @inner_control
       #イベント起動済みフラグクリア
       @out = false
 
@@ -178,6 +178,12 @@ class ClickableLayoutControl < LayoutControl
 
       options[:mouse].each do |key|
         case key
+        when :cursor_on
+          return true if @inner_control
+
+        when :cursor_off
+          return true unless @inner_control
+
         #前フレと比較してカーソルが移動した場合
         when :cursor_move
           return true if @on_mouse_move

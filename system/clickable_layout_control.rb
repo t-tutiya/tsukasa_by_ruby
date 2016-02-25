@@ -40,6 +40,19 @@ class ClickableLayoutControl < LayoutControl
     @colorkey_control = find_control(@colorkey)
   end
   attr_reader :colorkey
+
+  def width=(arg)
+    unless @collision_shape
+      @collision_sprite.collision = [ 0, 0, arg, @height]
+    end
+    super
+  end
+  def height=(arg)
+    unless @collision_shape
+      @collision_sprite.collision = [ 0, 0, @width, arg]
+    end
+    super
+  end
 end
 
 class ClickableLayoutControl < LayoutControl

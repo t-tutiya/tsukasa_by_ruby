@@ -65,7 +65,7 @@ class LayoutableControl < Control
     @offset_x = options[:offset_x] || 0 #描画オフセットＸ座標
     @offset_y = options[:offset_y] || 0 #描画オフセットＹ座標
 
-    @real_width = @width  = options[:width] || 0 #幅
+    @real_width = @width = options[:width] || 0 #幅
     @real_height = @height = options[:height] || 0 #高さ
 
     #可視フラグ（省略時はtrue）

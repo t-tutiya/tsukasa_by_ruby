@@ -48,15 +48,15 @@ class ClickableLayoutControl < LayoutControl
     
     self.colorkey = options[:colorkey] if options[:colorkey]
 
-    witdh  = options[:width]  || 0
-    height = options[:height] || 0
-
     @collision_sprite = Sprite.new
 
     if @collision_shape
       @collision_sprite.collision = @collision_shape
     else
-      @collision_sprite.collision = [0, 0, witdh-1, height-1]
+      @collision_sprite.collision = [ 0, 
+                                      0, 
+                                      options[:width]  || 0, 
+                                      options[:height] || 0]
     end
 
     @mouse_sprite = Sprite.new

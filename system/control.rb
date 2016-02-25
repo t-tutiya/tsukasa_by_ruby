@@ -563,7 +563,7 @@ class Control #制御構文
     #_END_FUNCTION_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_FUNCTION_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
-      break if @command_list.shift[0] == :_END_FUNCTION_
+      break if @command_list.shift == :_END_FUNCTION_
     end
   end
 end

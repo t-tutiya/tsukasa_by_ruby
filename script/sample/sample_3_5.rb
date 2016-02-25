@@ -8,7 +8,7 @@ _CREATE_ :CharControl,
   font_name: "ＭＳ ゴシック",
   charactor: " "
 
-_CREATE_ :LayoutControl, x: 640-256, y: 480-256, width:256, height: 256 do
+_CREATE_ :ClickableLayoutControl, x: 640-256, y: 480-256, width:256, height: 256 do
   _CREATE_ :ImageControl, file_path: "./resource/button_normal.png"
   _STACK_LOOP_ do |a,b,c|
     _CHECK_ mouse: [:cursor_over] do 

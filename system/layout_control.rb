@@ -31,6 +31,45 @@ require 'dxruby'
 ###############################################################################
 
 class LayoutControl < LayoutableControl
+  #コリジョンのエンティティ
+  attr_accessor  :collision_shape
+
+  #カラーキー設定
+  def colorkey=(arg)
+    @colorkey = arg
+    @colorkey_control = find_control(@colorkey)
+  end
+  attr_reader :colorkey
+end
+
+class LayoutControl < LayoutableControl
+  def initialize(options, yield_block_stack, root_control, &block)
+    @collision_shape = options[:collision_shape]
+    
+    self.colorkey = options[:colorkey] if options[:colorkey]
+
+    witdh  = options[:width]  || 0
+    height = options[:height] || 0
+
+    @collision_sprite = Sprite.new
+
+    if @collision_shape
+      @collision_sprite.collision = @collision_shape
+    else
+      @collision_sprite.collision = [0, 0, witdh-1, height-1]
+    end
+
+    @mouse_sprite = Sprite.new
+    @mouse_sprite.collision = [0, 0]
+
+    @over = false
+    @out  = true
+
+    @mouse_pos_x = @mouse_pos_y = nil
+
+    super
+  end
+
   #描画
   def update(offset_x, offset_y, target, 
               parent_control_width, parent_control_height, 
@@ -65,46 +104,6 @@ class LayoutControl < LayoutableControl
           @width, @height)
 
     return check_float
-  end
-end
-
-class LayoutControl < LayoutableControl
-
-  #コリジョンのエンティティ
-  attr_accessor  :collision_shape
-
-  #カラーキー設定
-  def colorkey=(arg)
-    @colorkey = arg
-    @colorkey_control = find_control(@colorkey)
-  end
-  attr_reader :colorkey
-
-  def initialize(options, yield_block_stack, root_control, &block)
-    @collision_shape = options[:collision_shape]
-    
-    self.colorkey = options[:colorkey] if options[:colorkey]
-
-    witdh  = options[:width]  || 0
-    height = options[:height] || 0
-
-    @collision_sprite = Sprite.new
-
-    if @collision_shape
-      @collision_sprite.collision = @collision_shape
-    else
-      @collision_sprite.collision = [0, 0, witdh-1, height-1]
-    end
-
-    @mouse_sprite = Sprite.new
-    @mouse_sprite.collision = [0, 0]
-
-    @over = false
-    @out  = true
-
-    @mouse_pos_x = @mouse_pos_y = nil
-
-    super
   end
 
   def collision_update(mouse_pos_x, mouse_pos_y)

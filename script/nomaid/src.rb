@@ -6,7 +6,7 @@ _CREATE_ :NomaidControl, id: :maid
 
 #テキストボタン定義
 _DEFINE_ :TextSelect do |argument, options|
-  _CREATE_ :LayoutControl,
+  _CREATE_ :ClickableLayoutControl,
     float_y: :bottom,
     x: options[:x] || 0, 
     y: options[:y] || 0, 

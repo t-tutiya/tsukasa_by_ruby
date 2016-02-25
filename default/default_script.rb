@@ -382,7 +382,7 @@ TextWindow :text0, text_page_id: :default_text_page_control0,
 
 #ボタンコントロール
 _DEFINE_ :button do |argument, options|
-  _CREATE_ :LayoutControl, 
+  _CREATE_ :ClickableLayoutControl, 
     x: options[:x] || 0,
     y: options[:y] || 0,
     width:256, 

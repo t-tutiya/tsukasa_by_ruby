@@ -43,7 +43,7 @@ end
 
 #テキストボタン定義
 _DEFINE_ :TextSelect do |argument, options|
-  _CREATE_ :LayoutControl,
+  _CREATE_ :ClickableLayoutControl,
     float_x: :left,
     x: options[:x] || 0, 
     y: options[:y] || 0, 

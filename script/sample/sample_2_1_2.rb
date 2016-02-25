@@ -1,5 +1,5 @@
 #ボタンコントロール
-_CREATE_ :LayoutControl, 
+_CREATE_ :ClickableLayoutControl, 
   width: 256,
   height: 256,
   id: :button1,

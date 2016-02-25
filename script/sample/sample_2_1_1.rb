@@ -1,6 +1,6 @@
 #ボタンコントロール
 _DEFINE_ :button3 do |argument, options|
-  _CREATE_ :LayoutControl, 
+  _CREATE_ :ClickableLayoutControl, 
           x: options[:x] || 0,
           y: options[:y] || 0,
           width: 256,

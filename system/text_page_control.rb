@@ -108,14 +108,17 @@ class TextPageControl < LayoutControl
   def edge=(arg)
     @char_option[:edge] = arg
   end
+
   attr_reader :edge_color  # 袋文字の枠色を指定します。配列で[R, G, B]それぞれ0～255
   def edge_color=(arg)
     @char_option[:edge_color] = arg
   end
-  attr_reader :edge_width  # 袋文字の枠の幅を0～の数値で指定します。1で1ピクセル
+
+  attr_reader :edge_width  # 袋文字の枠の幅を0～の数値で指定します。1で1pixcel
   def edge_width=(arg)
     @char_option[:edge_width] = arg
   end
+
   attr_reader :edge_level  # 袋文字の枠の濃さを0～の数値で指定します。大きいほど濃くなりますが、幅が大きいほど薄くなります。値の制限はありませんが、目安としては一桁ぐらいが実用範囲でしょう。
   def edge_level=(arg)
     @char_option[:edge_level] = arg
@@ -127,18 +130,22 @@ class TextPageControl < LayoutControl
   def shadow=(arg)
     @char_option[:shadow] = arg
   end
+
   attr_reader :shadow_edge   # edgeがtrueの場合に、枠の部分に対して影を付けるかどうかをtrue/falseで指定します。trueで枠の影が描かれます
   def shadow_edge=(arg)
     @char_option[:shadow_edge] = arg
   end
+
   attr_reader :shadow_color    # 影の色を指定します。配列で[R, G, B]、それぞれ0～255
   def shadow_color=(arg)
     @char_option[:shadow_color] = arg
   end
+
   attr_reader :shadow_x    # 影の位置を相対座標で指定します。+1は1ピクセル右になります
   def shadow_x=(arg)
     @char_option[:shadow_x] = arg
   end
+
   attr_reader :shadow_y    # 影の位置を相対座標で指定します。+1は1ピクセル下になります
   def shadow_y=(arg)
     @char_option[:shadow_y] = arg

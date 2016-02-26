@@ -35,8 +35,6 @@ class LayoutControl < LayoutableControl
   def update(offset_x, offset_y, target, 
               parent_control_width, parent_control_height, 
               mouse_pos_x, mouse_pos_y)
-    #可視でなければ戻る
-    return 0, 0 unless @visible
 
     dx, dy = check_align(parent_control_width, parent_control_height)
 

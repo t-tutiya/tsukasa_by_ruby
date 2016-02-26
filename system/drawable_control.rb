@@ -41,6 +41,9 @@ class DrawableControl < LayoutableControl
 
   attr_reader  :entity
 
+  #可視フラグ
+  attr_accessor  :visible
+
   #横の拡大率 
   #Float (default: 1)
   def scale_x=(arg)
@@ -161,6 +164,9 @@ class DrawableControl < LayoutableControl
     @draw_option[:angle] = options[:angle] || 0
     @draw_option[:z] = options[:z] || 0
     @draw_option[:offset_sync] = options[:offset_sync] || false
+
+    #可視フラグ（省略時はtrue）
+    @visible = (options[:visible] != false)
 
     @entity = options[:entity] || nil
 

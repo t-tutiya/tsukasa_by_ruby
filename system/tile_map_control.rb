@@ -64,7 +64,7 @@ class TileMapControl < LayoutControl
     super
 
     #描画オブジェクトを持ち、かつ可視でなければ戻る
-    return 0, 0 unless @image_array and @visible
+    return 0, 0 unless @image_array
 
     dx, dy = check_align(parent_control_width, parent_control_height)
 

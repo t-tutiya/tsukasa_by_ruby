@@ -40,9 +40,6 @@ class LayoutableControl < Control
   attr_accessor  :offset_x
   attr_accessor  :offset_y
 
-  #可視フラグ
-  attr_accessor  :visible
-
   #次のコントロールの接続方向指定
   attr_accessor  :float_x
   attr_accessor  :float_y
@@ -67,9 +64,6 @@ class LayoutableControl < Control
 
     @real_width = @width = options[:width] || 0 #幅
     @real_height = @height = options[:height] || 0 #高さ
-
-    #可視フラグ（省略時はtrue）
-    @visible = (options[:visible] != false)
 
     #次コントロールの接続方向指定
     @float_x = options[:float_x]

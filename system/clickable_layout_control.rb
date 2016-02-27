@@ -87,9 +87,7 @@ class ClickableLayoutControl < LayoutControl
   end
 
   #描画
-  def update(offset_x, offset_y, target, 
-              parent_control_width, parent_control_height, 
-              mouse_pos_x, mouse_pos_y)
+  def update(mouse_pos_x, mouse_pos_y)
     @inner_control = false
     @on_mouse_over  = false
     @on_mouse_out   = false

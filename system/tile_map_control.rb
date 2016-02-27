@@ -55,17 +55,6 @@ class TileMapControl < LayoutControl
     super
   end
 
-  #描画
-  def update(offset_x, offset_y, target, 
-              parent_control_width, 
-              parent_control_height, 
-              mouse_pos_x,
-              mouse_pos_y )
-    super
-
-    return check_float
-  end
-
   def render(offset_x, offset_y, target, 
               parent_control_width, 
               parent_control_height)

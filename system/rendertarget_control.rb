@@ -69,16 +69,13 @@ class RenderTargetControl < DrawableControl
     super
   end
   
-  def update(offset_x, offset_y, target, 
-              parent_control_width, 
-              parent_control_height, 
-              mouse_pos_x,
-              mouse_pos_y )
+  def render(offset_x, offset_y, target, 
+              parent_control_width, parent_control_height)
     if @update_flag
       @entity = RenderTarget.new(@width, @height, @bgcolor)
       @update_flag = false
     end
-    
+
     #枠線を引く
     if @border > 0
       width = @width - 1
@@ -96,6 +93,7 @@ class RenderTargetControl < DrawableControl
                             width          , height        , 
                             @border_color, @z)
     end
+
     super
   end
 

@@ -78,9 +78,7 @@ class Control #内部メソッド
     @next_frame_commands.push([command, argument, options, yield_block_stack, block])
   end
 
-  def update(offset_x, offset_y, target, 
-              parent_control_width, parent_control_height, 
-              mouse_pos_x,mouse_pos_y )
+  def update(mouse_pos_x, mouse_pos_y)
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
@@ -112,14 +110,7 @@ class Control #内部メソッド
     #下位コントロール巡回
     @control_list.delete_if do |child_control|
       #下位コントロールを自ターゲットに直接描画
-      child_dx, child_dy = child_control.update(offset_x, offset_y, target, 
-                                                parent_control_width , 
-                                                parent_control_height , 
-                                                mouse_pos_x,
-                                                mouse_pos_y)
-      #次のコントロールの描画座標原点を設定する
-      offset_x += child_dx
-      offset_y += child_dy
+      child_dx, child_dy = child_control.update(mouse_pos_x, mouse_pos_y)
       #マウス座標のオフセットを更新する
       mouse_pos_x -= child_dx
       mouse_pos_y -= child_dy
@@ -128,8 +119,7 @@ class Control #内部メソッド
       child_control.delete?
     end
 
-    #オフセット値を返す
-    return offset_x, offset_y
+    return 0, 0
   end
 
   #_TO_IMAGE_用

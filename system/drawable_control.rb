@@ -178,16 +178,6 @@ class DrawableControl < LayoutableControl
     super
   end
 
-  #描画
-  def update(offset_x, offset_y, target, 
-              parent_control_width, parent_control_height, 
-              mouse_pos_x, mouse_pos_y )
-    super(0, 0, @entity, 
-          @width, @height, 
-          mouse_pos_x - @x, mouse_pos_y - @y)
-    return check_float
-  end
-
   #_TO_IMAGE_用
   def render(offset_x, offset_y, target, 
               parent_control_width, parent_control_height)

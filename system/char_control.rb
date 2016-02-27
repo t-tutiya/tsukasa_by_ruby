@@ -221,11 +221,7 @@ class CharControl < ImageControl
     super
   end
 
-  def update(offset_x, offset_y, target, 
-              parent_control_width, 
-              parent_control_height, 
-              mouse_pos_x,
-              mouse_pos_y )
+  def update(mouse_pos_x, mouse_pos_y)
     if @option_update
       #文字が設定されていなければ戻る
       return super unless @charactor

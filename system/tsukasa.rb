@@ -117,17 +117,14 @@ class Tsukasa < ClickableLayoutControl
     super(options, nil, @root_control)
   end
 
-  def update(offset_x, offset_y, target, 
-              parent_control_width = Window.width, 
-              parent_control_height = Window.width, 
-              mouse_pos_x = Input.mouse_x,
-              mouse_pos_y = Input.mouse_y)
+  def update(mouse_pos_x = Input.mouse_x,
+             mouse_pos_y = Input.mouse_y)
     super
   end
 
   def render(offset_x, offset_y, target, 
-              parent_control_width = Window.width, 
-              parent_control_height = Window.width)
+             parent_control_width = Window.width, 
+             parent_control_height = Window.width)
     super
   end
 

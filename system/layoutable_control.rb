@@ -75,6 +75,11 @@ class LayoutableControl < Control
     super
   end
 
+  def update(mouse_pos_x, mouse_pos_y)
+    super(mouse_pos_x - @x, mouse_pos_y - @y)
+    return check_float
+  end
+
   def check_align(width, height)
     offest_x = offset_y = 0
     #下揃えを考慮

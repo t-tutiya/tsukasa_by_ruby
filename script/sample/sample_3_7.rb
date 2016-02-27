@@ -20,8 +20,8 @@ _CREATE_ :ClickableLayoutControl,
     end
     _CHECK_ mouse: [:key_down] do
       _SEND_(0){ _SET_TILE_ x:0, y:0, id: 2}
-      _WAIT_ mouse: [:key_up] do |a,b,c|
-        _MOVE_ 1, x: c.cursor_offset_x, y: c.cursor_offset_y, option:{offset: true}
+      _WAIT_ mouse: [:key_up] do |arg,options,control|
+        _MOVE_ 1, x: control.cursor_offset_x, y: control.cursor_offset_y, option:{offset: true}
       end
     end
     _CHECK_ mouse: [:key_up] do

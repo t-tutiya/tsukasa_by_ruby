@@ -41,6 +41,9 @@ class ClickableLayoutControl < LayoutControl
   end
   attr_reader :colorkey
 
+  attr_reader :cursor_offset_x
+  attr_reader :cursor_offset_y
+
   def width=(arg)
     unless @collision_shape
       @collision_sprite.collision = [ 0, 0, arg, @height]
@@ -78,7 +81,7 @@ class ClickableLayoutControl < LayoutControl
     @over = false
     @out  = true
 
-    @mouse_pos_x = @mouse_pos_y = nil
+    @mouse_pos_x = @mouse_pos_y = 0
 
     super
   end
@@ -101,9 +104,12 @@ class ClickableLayoutControl < LayoutControl
     @on_right_key_up      = false
     @on_right_key_up_out  = false
 
-    #前フレームと座標が異なる場合on_mouse_moveイベントを実行する
-    @on_mouse_move =  ((@mouse_pos_x != mouse_pos_x) or
-                       (@mouse_pos_y != mouse_pos_y))
+    #前フレームとのカーソル座標更新差分を取得
+    @cursor_offset_x = mouse_pos_x - @mouse_pos_x
+    @cursor_offset_y = mouse_pos_y - @mouse_pos_y
+
+    #カーソルが移動しているかどうかのフラグを格納
+    @on_cursor_move = (@cursor_offset_x == 0) and (@cursor_offset_y == 0)
 
     #カーソル座標を保存する
     @mouse_pos_x = @mouse_sprite.x = mouse_pos_x
@@ -199,7 +205,7 @@ class ClickableLayoutControl < LayoutControl
 
         #前フレと比較してカーソルが移動した場合
         when :cursor_move
-          return true if @on_mouse_move
+          return true if @on_cursor_move
 
         #カーソルが指定範囲に侵入した場合
         when :cursor_over

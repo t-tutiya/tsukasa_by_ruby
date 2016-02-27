@@ -122,6 +122,10 @@ _DEFINE_ :system_menu do
                  comment: "フルスクリーン化"
       TextSelect text: "sample_3_5", path: path + "sample_3_5.rb", 
                  comment: "マウス画像のカスタマイズ"
+      TextSelect text: "sample_3_6", path: path + "sample_3_6.rb", 
+                 comment: "疑似if文（コンソールに結果を出力）"
+      TextSelect text: "sample_3_7", path: path + "sample_3_7.rb", 
+                 comment: "ドラッグによるコントロール移動"
     end
   end
 

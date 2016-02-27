@@ -63,6 +63,14 @@ class TileMapControl < LayoutControl
               mouse_pos_y )
     super
 
+    return check_float
+  end
+
+  def render(offset_x, offset_y, target, 
+              parent_control_width, 
+              parent_control_height)
+    super
+
     #描画オブジェクトを持ち、かつ可視でなければ戻る
     return 0, 0 unless @image_array
 

@@ -50,9 +50,6 @@ class LayoutControl < LayoutableControl
   #_TO_IMAGE_用
   def render(offset_x, offset_y, target, 
               parent_control_width, parent_control_height)
-    #可視でなければ戻る
-    return 0, 0 unless @visible
-
     dx, dy = check_align(parent_control_width, parent_control_height)
 
     super(offset_x + @x + @offset_x + dx, 

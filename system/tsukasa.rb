@@ -125,6 +125,12 @@ class Tsukasa < ClickableLayoutControl
     super
   end
 
+  def render(offset_x, offset_y, target, 
+              parent_control_width = Window.width, 
+              parent_control_height = Window.width)
+    super
+  end
+
   def close
     @close = true
   end

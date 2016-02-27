@@ -182,23 +182,9 @@ class DrawableControl < LayoutableControl
   def update(offset_x, offset_y, target, 
               parent_control_width, parent_control_height, 
               mouse_pos_x, mouse_pos_y )
-
     super(0, 0, @entity, 
           @width, @height, 
           mouse_pos_x - @x, mouse_pos_y - @y)
-
-    #描画オブジェクトを持ち、かつ可視でなければ戻る
-    return 0, 0 unless @entity and @visible
-    return 0, 0 if @entity.disposed?
-
-    dx, dy = check_align(parent_control_width, parent_control_height)
-
-    #自エンティティを上位ターゲットに描画
-    target.draw_ex( @x + @offset_x + offset_x + dx,
-                    @y + @offset_y + offset_y + dy, 
-                    @entity, 
-                    @draw_option)
-
     return check_float
   end
 

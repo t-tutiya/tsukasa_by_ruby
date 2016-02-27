@@ -18,6 +18,7 @@ tsukasa = Tsukasa.new({ :width => width,
 Window.loop(true) do
   #司エンジン処理
   tsukasa.update(0, 0, Window)
+  tsukasa.render(0, 0, Window)
 
   #スクリプトで終了コマンドが実行された場合
   break if tsukasa.close?

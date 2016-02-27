@@ -66,7 +66,7 @@ class RenderTargetControl < DrawableControl
     self.border = options[:border]  || 0
     self.border_color = options[:border_color]  || [255,255,255]
 
-    super
+    return super
   end
   
   def render(offset_x, offset_y, target, 

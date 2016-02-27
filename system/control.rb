@@ -99,9 +99,7 @@ class Control #内部メソッド
 
     unless @next_frame_commands.empty?
       #一時的にスタックしていたコマンドをコマンドリストに再スタックする
-      #※スワップさせた後に連結している
-      @command_list, @next_frame_commands = @next_frame_commands, @command_list
-      @command_list.concat(@next_frame_commands)
+      @command_list = @next_frame_commands + @command_list
 
       #次フレコマンド列を初期化
       @next_frame_commands.clear

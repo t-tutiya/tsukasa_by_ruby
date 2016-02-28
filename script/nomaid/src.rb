@@ -137,7 +137,7 @@ _DEFINE_ :work_menu do
     _SEND_(:maid){
       work
       _SEND_ROOT_ do
-        _SEND_(default: :TextLayer){
+        text0{
           _FLUSH_
           _TEXT_ "労働の対価として$#{_TEMP_[:reward]}を得た。"
         }
@@ -153,7 +153,7 @@ _DEFINE_ :rest do
   _SEND_(:maid){
     rest
     _SEND_ROOT_ do
-      _SEND_(default: :TextLayer){
+      text0{
         _FLUSH_
         _TEXT_ "メイドはゆっくりと身体を休めた……。"
       }
@@ -200,7 +200,7 @@ _LOOP_ count:7 do |arg, ops, control|
     #読み込み時にがっつりウェイトが入るのは、多分ファイルアクセスが発生しているからかと思われる。
     #_INCLUDE_ "./script/nomaid/start_week.tks"
 
-    _SEND_(default: :TextLayer){
+    text0{
       _FLUSH_
       _TEXT_  "第#{_T[:week] + 1 }週#{_T[:day] + 1}日目。現在の所持金は$#{_T[:gold]}。"
       _LINE_FEED_
@@ -249,7 +249,7 @@ _LOOP_ count:7 do |arg, ops, control|
   #ゲームオーバーならテキストを出力して終了
   _CHECK_ equal: {gameover: true} do
     #_INCLUDE_ "./script/nomaid/bad_end.tks"
-    _SEND_(default: :TextLayer){
+    text0{
       _FLUSH_
       _TEXT_ "　あなたはメイドの借金を返すことができなかった。"
       _LINE_FEED_
@@ -264,7 +264,7 @@ _LOOP_ count:7 do |arg, ops, control|
   #ゲームクリアならテキストを出力して終了
   _CHECK_ equal: {gameclear: true} do
     #_INCLUDE_ "./script/nomaid/happy_end.tks"
-    _SEND_(default: :TextLayer){
+    text0{
       _FLUSH_
       _TEXT_ "　無事にメイドの借金を返済し終えたあなたには、"
       _LINE_FEED_

@@ -45,7 +45,7 @@ class DrawableControl < LayoutableControl
   attr_accessor  :visible
 
   #横の拡大率 
-  #Float (default: 1)
+  #Float (初期値： 1)
   def scale_x=(arg)
     @draw_option[:scale_x] = arg
   end
@@ -54,7 +54,7 @@ class DrawableControl < LayoutableControl
   end
 
   #縦の拡大率  
-  #Float (default: 1)
+  #Float (初期値： 1)
   def scale_y=(arg)
     @draw_option[:scale_y] = arg
   end
@@ -64,7 +64,7 @@ class DrawableControl < LayoutableControl
 
   #回転、拡大の中心X座標。
   #nilで画像の中心になります。
-  #Integer (default: nil)
+  #Integer (初期値： nil)
   def center_x=(arg)
     @draw_option[:center_x] = arg
   end
@@ -74,7 +74,7 @@ class DrawableControl < LayoutableControl
 
   #回転、拡大の中心Y座標。
   #nilで画像の中心になります。
-  #Integer (default: nil)
+  #Integer (初期値： nil)
   def center_y=(arg)
     @draw_option[:center_y] = arg
   end
@@ -83,7 +83,7 @@ class DrawableControl < LayoutableControl
   end
 
   #アルファ値(0～255)。
-  #Integer (default: 255)
+  #Integer (初期値： 255)
   def alpha=(arg)
     @draw_option[:alpha] = arg
   end
@@ -97,7 +97,7 @@ class DrawableControl < LayoutableControl
   #:add2は背景に255-アルファ値を適用します。
   #:subはアルファ値を全ての色の合成に、
   #:sub2はRGBの色をそれぞれ別々に合成に適用します。
-  #Symbol (default: :alpha)
+  #Symbol (初期値： :alpha)
   def blend=(arg)
     @draw_option[:blend] = arg
   end
@@ -107,7 +107,7 @@ class DrawableControl < LayoutableControl
 
   #色
   #[R, G, B]で、それぞれ0～255、省略すると[255, 255, 255]になります。
-  #Array (default: [255,255,255])
+  #Array (初期値： [255,255,255])
   def color=(arg)
     @draw_option[:color] = arg
   end
@@ -117,7 +117,7 @@ class DrawableControl < LayoutableControl
 
   #360度系で画像の回転角度を指定します。
   #拡大率と同時に指定した場合は拡大率が先に適用されます。
-  #Integer (default: 0)
+  #Integer (初期値： 0)
   def angle=(arg)
     @draw_option[:angle] = arg
   end
@@ -127,7 +127,7 @@ class DrawableControl < LayoutableControl
 
   #描画順序。
   #小さいほど奥になり、同じ値の場合は最初にdrawしたものが一番奥になります。
-  #Integer|Float (default: 0)
+  #Integer|Float (初期値： 0)
   def z=(arg)
     @draw_option[:z] = arg
   end
@@ -142,7 +142,7 @@ class DrawableControl < LayoutableControl
   attr_reader  :shader
 
   #描画時の指定座標x/yに、画像のcenter_x/yで指定した位置が来るように補正されます
-  #bool (default: false)
+  #bool (初期値： false)
   def offset_sync=(arg)
     @draw_option[:offset_sync] = arg
   end

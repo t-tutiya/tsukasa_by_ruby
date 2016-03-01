@@ -41,6 +41,9 @@ class ClickableLayoutControl < LayoutControl
   end
   attr_reader :colorkey
 
+  attr_accessor  :mouse_pos_x
+  attr_accessor  :mouse_pos_y
+
   attr_reader :cursor_offset_x
   attr_reader :cursor_offset_y
 

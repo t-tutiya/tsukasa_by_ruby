@@ -110,7 +110,7 @@ class ClickableLayoutControl < LayoutControl
     @cursor_offset_y = mouse_pos_y - @cursor_y
 
     #カーソルが移動しているかどうかのフラグを格納
-    @on_cursor_move = (@cursor_offset_x == 0) and (@cursor_offset_y == 0)
+    @on_cursor_move = !((@cursor_offset_x == 0) and (@cursor_offset_y == 0))
 
     #カーソル座標を保存する
     @cursor_x = @mouse_sprite.x = mouse_pos_x

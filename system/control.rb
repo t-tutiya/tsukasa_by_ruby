@@ -614,6 +614,12 @@ class Control #スクリプト制御
     control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
   end
 
+  def _SEND_ALL_(argument, options, yield_block_stack, &block)
+    @control_list.each do |control|
+      control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
+    end
+  end
+
   #ルートコントロールにコマンドブロックを送信する
   def _SEND_ROOT_(argument, options, yield_block_stack, &block)
     if argument

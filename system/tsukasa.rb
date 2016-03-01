@@ -73,18 +73,14 @@ class Tsukasa < ClickableLayoutControl
   attr_reader  :script_compiler
   attr_reader  :script_parser
 
-  def cursor_x
-    Input.mouse_x
-  end
   def cursor_x=(arg)
     Input.set_mouse_pos(arg, Input.mouse_y)
+    super
   end
 
-  def cursor_y
-    Input.mouse_y
-  end
   def cursor_y=(arg)
     Input.set_mouse_pos(Input.mouse_x, arg)
+    super
   end
 end
 

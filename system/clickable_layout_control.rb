@@ -41,8 +41,8 @@ class ClickableLayoutControl < LayoutControl
   end
   attr_reader :colorkey
 
-  attr_accessor  :mouse_pos_x
-  attr_accessor  :mouse_pos_y
+  attr_accessor  :cursor_x
+  attr_accessor  :cursor_y
 
   attr_reader :cursor_offset_x
   attr_reader :cursor_offset_y
@@ -84,7 +84,7 @@ class ClickableLayoutControl < LayoutControl
     @over = false
     @out  = true
 
-    @mouse_pos_x = @mouse_pos_y = 0
+    @cursor_x = @cursor_y = 0
 
     super
   end
@@ -106,15 +106,15 @@ class ClickableLayoutControl < LayoutControl
     @on_right_key_up_out  = false
 
     #前フレームとのカーソル座標更新差分を取得
-    @cursor_offset_x = mouse_pos_x - @mouse_pos_x
-    @cursor_offset_y = mouse_pos_y - @mouse_pos_y
+    @cursor_offset_x = mouse_pos_x - @cursor_x
+    @cursor_offset_y = mouse_pos_y - @cursor_y
 
     #カーソルが移動しているかどうかのフラグを格納
     @on_cursor_move = (@cursor_offset_x == 0) and (@cursor_offset_y == 0)
 
     #カーソル座標を保存する
-    @mouse_pos_x = @mouse_sprite.x = mouse_pos_x
-    @mouse_pos_y = @mouse_sprite.y = mouse_pos_y
+    @cursor_x = @mouse_sprite.x = mouse_pos_x
+    @cursor_y = @mouse_sprite.y = mouse_pos_y
 
     @collision_sprite.x = @x
     @collision_sprite.y = @y

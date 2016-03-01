@@ -254,7 +254,7 @@ class TKSParser < Parslet::Parser
       :text_node => simple(:target)
     ) {
       text = "#{target}".gsub(/"/, '\"')
-       "_SEND_(default: :TextLayer){" + 
+       "_SEND_DEFAULT_(:TextLayer){" + 
         %Q'_TEXT_ "#{text}"' +
       "}\n" 
     }
@@ -270,7 +270,7 @@ class TKSParser < Parslet::Parser
     rule(
       :inline_data_node => simple(:target)
     ) {
-      "_SEND_(default: :TextLayer){" + 
+      "_SEND_DEFAULT_(:TextLayer){" + 
        "_TEXT_ " + target.to_s +
       "}\n" 
     }
@@ -280,7 +280,7 @@ class TKSParser < Parslet::Parser
       :text_line => sequence(:target)
     ) { 
       target.join + 
-      "_SEND_(default: :TextLayer){ _LINE_FEED_ }\n"
+      "_SEND_DEFAULT_(:TextLayer){ _LINE_FEED_ }\n"
     }
 
     rule(
@@ -293,7 +293,7 @@ class TKSParser < Parslet::Parser
     rule(
       :flush => simple(:target)
     ) { 
-      "_SEND_(default: :TextLayer){ _FLUSH_ }\n"
+      "_SEND_DEFAULT_(:TextLayer){ _FLUSH_ }\n"
     }
   end
 end

@@ -589,13 +589,6 @@ class Control #スクリプト制御
 
   #コントロールにコマンドブロックを送信する
   def _SEND_(argument, options, yield_block_stack, &block)
-    #デフォルト指定があるならターゲットのコントロールを差し替える
-    if options[:default]
-      raise unless @root_control._DEFAULT_CONTROL_[options[:default]]
-      argument = [@root_control._DEFAULT_CONTROL_[options[:default]]]
-      options.delete(:default)
-    end
-    
     control = self
     
     if argument.instance_of?(Array)
@@ -612,6 +605,11 @@ class Control #スクリプト制御
     end
 
     control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
+  end
+
+  def _SEND_DEFAULT_(argument, options, yield_block_stack, &block)
+    argument = @root_control._DEFAULT_CONTROL_[argument]
+    _SEND_(argument, options, yield_block_stack, &block)
   end
 
   def _SEND_ALL_(argument, options, yield_block_stack, &block)

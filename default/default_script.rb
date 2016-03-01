@@ -147,7 +147,7 @@ end
 #行クリック待ちポーズ
 _DEFINE_ :line_pause do
   #テキストレイヤのクリック待ち
-  _SEND_ default: :TextLayer do 
+  _SEND_DEFAULT_ :TextLayer do 
     _PAUSE_ do
       _CREATE_ :RenderTargetControl, id: :icon, 
         width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
@@ -166,7 +166,7 @@ _DEFINE_ :line_pause do
 
   #クリック待ちアイコンを削除
   _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
-    _SEND_ default: :TextLayer do 
+    _SEND_DEFAULT_ :TextLayer do 
       _SEND_TO_ACTIVE_LINE_ do 
         _SEND_ :icon do
           _DELETE_
@@ -183,7 +183,7 @@ end
 
 _DEFINE_ :end_pause do
   #テキストレイヤのクリック待ち
-  _SEND_ default: :TextLayer do 
+  _SEND_DEFAULT_ :TextLayer do 
     _PAUSE_ do
       _CREATE_ :RenderTargetControl, id: :icon, 
         width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
@@ -211,7 +211,7 @@ _DEFINE_ :end_pause do
 
   #クリック待ちアイコンを削除
   _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
-    _SEND_ default: :TextLayer do 
+    _SEND_DEFAULT_ :TextLayer do 
       _SEND_TO_ACTIVE_LINE_ do 
         _SEND_ :icon do
           _DELETE_

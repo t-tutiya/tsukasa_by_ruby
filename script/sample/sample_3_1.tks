@@ -2,8 +2,8 @@
 //  _SET_ :_TEMP_, _CHAPTER_START_MODE_: true
   _SET_ :_SYSTEM_, _READ_CHAPTER_: {:test0 => [0,1,2,4]}
 //  _SET_ :_LOCAL_, _START_: 1
-  _TEMP_[:_ACTIVE_SCENARIO_CHAPTER_] = {}
-  _TEMP_[:_SCENARIO_CHAPTER_ID_] = {}
+  _SET_ :_TEMP_,  _ACTIVE_SCENARIO_CHAPTER_: {},
+                  _SCENARIO_CHAPTER_ID_: {}
 
 @	_LABEL_ chapter: :test0, id: 0 do
 ページ０ページ０ページ０ページ０ページ０

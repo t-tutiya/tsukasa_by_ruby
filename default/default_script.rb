@@ -42,14 +42,17 @@ _CREATE_ :LayoutControl, id: :requested_close do
     end
     
     _SEND_ROOT_ do
-      _CHECK_ mouse: :cursor_out do
-        #カーソルを表示する
-        Input.mouse_enable = true unless @_SYSTEM_[:_CURSOR_VISIBLE_]
-      end
+      _GET_ :_CURSOR_VISIBLE_, datastore: :_SYSTEM_ do |arg, options|
+        pp options
+        _CHECK_ mouse: :cursor_out do
+          #カーソルを表示する
+          Input.mouse_enable = true unless options[:_CURSOR_VISIBLE_]
+        end
 
-      _CHECK_ mouse: :cursor_over do
-        #カーソルを不可視に戻す
-        Input.mouse_enable = false unless @_SYSTEM_[:_CURSOR_VISIBLE_]
+        _CHECK_ mouse: :cursor_over do
+          #カーソルを不可視に戻す
+          Input.mouse_enable = false unless options[:_CURSOR_VISIBLE_]
+        end
       end
     end
     
@@ -126,7 +129,7 @@ _DEFINE_ :_WINDOW_STATUS_ do |argumnet, options|
 end
 
 _DEFINE_ :_CURSOR_VISIBLE_ do |argumnet|
-  @_SYSTEM_[:_CURSOR_VISIBLE_] = argumnet
+  _SET_ :_SYSTEM_, _CURSOR_VISIBLE_: argumnet
   Input.mouse_enable = argumnet
 end
 

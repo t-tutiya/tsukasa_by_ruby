@@ -32,19 +32,7 @@ require 'dxruby'
 
 class ScriptCompiler
 
-  attr_reader :_TEMP_
-  attr_reader :_LOCAL_
-  attr_reader :_SYSTEM_
-
-  alias :_T :_TEMP_
-  alias :_L :_LOCAL_
-  alias :_S :_SYSTEM_
-
-  def initialize(root_control)
-    @_TEMP_ = root_control._TEMP_
-    @_LOCAL_ = root_control._LOCAL_
-    @_SYSTEM_ = root_control._SYSTEM_
-
+  def initialize()
     @command_list = []
   end
 

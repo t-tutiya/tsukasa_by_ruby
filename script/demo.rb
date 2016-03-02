@@ -164,7 +164,9 @@ _STACK_LOOP_ do |a,b,c|
   system_menu
 
   _WAIT_ :_TEMP_,  not_equal: {file_path: nil}
-  _EVAL_ "pp _TEMP_[:file_path]"
+  _GET_ :file_path, datastore: :_TEMP_ do |arg, options|
+    _PUTS_ options[:file_path]
+  end
   _SEND_ :top_menu1 do
     _DELETE_
   end

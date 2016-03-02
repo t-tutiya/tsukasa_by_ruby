@@ -103,7 +103,7 @@ class Tsukasa < ClickableLayoutControl
 
     options[:id] = :default_rendertarget_container
 
-    @script_compiler = ScriptCompiler.new(self)
+    @script_compiler = ScriptCompiler.new
     #パーサー
     @script_parser = {}
 

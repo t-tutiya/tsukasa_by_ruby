@@ -491,20 +491,19 @@ _DEFINE_ :_LABEL_ do |arugment, options|
     _SET_ :_SYSTEM_, _READ_CHAPTER_: {}
   end
 
+  #TODO：今の所pushを司スクリプトで処理できないためネイティブコードで処理する
+  chapter = options[:chapter]
+  id = options[:id]
   #既読フラグハッシュを取得
-  _GET_ :_SYSTEM_, _RESULT_: :_READ_CHAPTER_
-
-  #チャプターが登録されていない場合登録
-  _CHECK_ :_RESULT_, null: options[:chapter] do
-    _SET_ :_RESULT_, {options[:chapter] => []}
+  _GET_ :_READ_CHAPTER_, datastore: :_SYSTEM_ do |arg, options|
+    #チャプターが登録されていない場合登録
+    unless options[:_READ_CHAPTER_][chapter]
+      options[:_READ_CHAPTER_][chapter] = []
+    end
+    #既読フラグ追加
+    options[:_READ_CHAPTER_][chapter].push(id).uniq!
+    pp options[:_READ_CHAPTER_]
   end
-
-  ###################################################################
-  #既読フラグ追加
-  ###################################################################
-
-  #TODO：これ無理矢理すぎるけど今の所pushを司スクリプトで処理できない
-  _EVAL_ "@_RESULT_[:#{options[:chapter].to_s}].push(#{options[:id]}).uniq!"
 
   ###################################################################
   #テキスト評価

@@ -431,7 +431,7 @@ class Control #セッター／ゲッター
     #オプション全探査
     argument.each do |property|
       if options[:datastore]
-          result[property] = send(options[:datastore])[property]
+          result[property] = @root_control.send(options[:datastore])[property]
       else
         if respond_to?(property.to_s)
           result[property] = send(property)

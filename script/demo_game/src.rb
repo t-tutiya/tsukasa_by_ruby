@@ -25,7 +25,9 @@ _SEND_(:text0) do
     #待機フラグが下がるまで待機
     _WAIT_ :_TEMP_, not_equal: {flag: nil}
     #文字列をカスケードアウトさせる
-    _MOVE_ 30 + control.id * 3, y:[0,600], option:{easing: :in_back}
+    _GET_ :id do |arg, options|
+      _MOVE_ 30 + options[:id] * 3, y:[0,600], option:{easing: :in_back}
+    end
   end
   _DEFINE_ :_CHAR_WAIT_ do
     _WAIT_  count: 2,

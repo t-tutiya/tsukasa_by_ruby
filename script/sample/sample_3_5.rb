@@ -38,22 +38,25 @@ end
 
 _CURSOR_VISIBLE_ false
 
-_LOOP_ do |a,b,c|
-  _SEND_ :comment_area do
-    _SET_ charactor: c.cursor_x.to_s + ":" + c.cursor_y.to_s
-  end
-  #pp c.cursor_x.to_s + ":" + c.cursor_y.to_s
-  _SEND_ :cursor do
-    _SET_ x: c.cursor_x, y: c.cursor_y
+_LOOP_ do
+  _GET_ [:cursor_x, :cursor_y] do |arg, options|
+    _SEND_ :comment_area do
+      _SET_ charactor: options[:cursor_x].to_s + ":" + options[:cursor_y].to_s
+    end
+    _SEND_ :cursor do
+      _SET_ x: options[:cursor_x], y: options[:cursor_y]
+    end
   end
   _CHECK_ :_SYSTEM_, equal: {data0: true},key_down: [K_Z] do
     _SEND_ :cursor do 
       _MOVE_ 30, x:0, y:0, option:{easing: :out_quart}
     end
     _MOVE_ 30, cursor_x:0, cursor_y:0
-    _WAIT_ count: 30 do |a,b,c2|
-      _SEND_ :comment_area do
-        _SET_ charactor: c2.cursor_x.to_s + ":" + c2.cursor_y.to_s
+    _WAIT_ count: 30 do
+      _GET_ [:cursor_x, :cursor_y] do |arg, options|
+        _SEND_ :comment_area do
+          _SET_ charactor: options[:cursor_x].to_s + ":" + options[:cursor_y].to_s
+        end
       end
     end
     _SET_ cursor_x:0, cursor_y:0

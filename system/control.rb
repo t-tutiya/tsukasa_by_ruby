@@ -220,7 +220,6 @@ class Control #内部メソッド
                       argument,
                       options, 
                       yield_block_stack, 
-                      self,
                       &block
                     )
     @command_list = command_list + @command_list
@@ -434,10 +433,10 @@ class Control #セッター／ゲッター
       if options[:datastore]
           result[property] = send(options[:datastore])[property]
       else
-        if respond_to?(property)
+        if respond_to?(property.to_s)
           result[property] = send(property)
         else
-          pp "クラス[" + self.class.to_s + "]：変数[" + "@" + val.to_s + "]は存在しません"
+          pp "クラス[" + self.class.to_s + "]：変数[" + "@" + property.to_s + "]は存在しません"
         end
       end
     end

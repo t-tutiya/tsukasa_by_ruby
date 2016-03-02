@@ -43,7 +43,6 @@ _CREATE_ :LayoutControl, id: :requested_close do
     
     _SEND_ROOT_ do
       _GET_ :_CURSOR_VISIBLE_, datastore: :_SYSTEM_ do |arg, options|
-        pp options
         _CHECK_ mouse: :cursor_out do
           #カーソルを表示する
           Input.mouse_enable = true unless options[:_CURSOR_VISIBLE_]

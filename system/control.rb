@@ -226,24 +226,21 @@ class Control #内部メソッド
   end
 
   def check_imple(argument, options, yield_block_stack)
-    #演算対象のデータ領域を設定
-    argument = :_TEMP_ unless argument
-
     options.each do |key, value|
-
       return unless value
+
       #対象キーが配列で渡されていない場合配列に変換する
       value = [value] unless value.instance_of?(Array)
 
       case key
 
+      #count数が０以下の場合
       when :count
-        #count数が０以下の場合に成立
         value.each do |count|
           return true if count <= 0
         end
 
-      #継続条件：コマンドがリスト上に存在している
+      #コマンドがリスト上に存在している
       when :stack_command
         value.each do |command|
           if @next_frame_commands.index{|stack_command|
@@ -252,7 +249,7 @@ class Control #内部メソッド
           end
         end
 
-      #継続条件：コマンドがリスト上に存在していない
+      #コマンドがリスト上に存在していない
       when :not_stack_command
         value.each do |command|
           unless @next_frame_commands.index{|stack_command|
@@ -261,85 +258,100 @@ class Control #内部メソッド
           end
         end
 
-      #継続条件：指定ＩＤの子要素が存在する
+      #指定ＩＤの子要素が存在する
       when :child
-        #キーの入力チェック
         value.each do |id|
           return true if find_control(id)
         end
 
       #キーが押下されている
       when :key_push
-        #キーの入力チェック
         value.each do |key_code|
           return true if Input.key_push?(key_code)
         end
 
       #キーが押下されていない
       when :not_key_push
-        #キーの入力チェック
         value.each do |key_code|
           return true unless Input.key_push?(key_code)
         end
 
       #キーが押下されている（前回との比較付き）
       when :key_down
-        #キーの入力チェック
         value.each do |key_code|
           return true if Input.key_down?(key_code)
         end
 
       #キーが押下されていない（前回との比較付き）
       when :not_key_down
-        #キーの入力チェック
         value.each do |key_code|
           return true unless Input.key_down?(key_code)
         end
 
       #キーが解除された
       when :key_up
-        #キーの入力チェック
         value.each do |key_code|
           return true if Input.key_release?(key_code)
         end
 
       #キーが解除されていない
       when :not_key_up
-        #キーの入力チェック
         value.each do |key_code|
           return true unless Input.key_release?(key_code)
         end
 
       #ユーザデータ確認系
 
+      #指定されたデータと値がイコールかどうか
       when :equal
-        #キーの入力チェック
         value.each do |hash|
-          #指定されたデータと値がイコールかどうか
           hash.each do |key, val|
-            return true if @root_control.send(argument)[key] == val
+            if argument
+              #データストアとの比較
+              return true if @root_control.send(argument)[key] == val
+            else
+              #コントロールプロパティとの比較
+              return true if send(key) == val
+            end
           end
         end
 
+      #指定されたデータと値がイコールでない場合
       when :not_equal
-        #キーの入力チェック
         value.each do |hash|
-          #指定されたデータと値がイコールでない場合
           hash.each do |key, val|
-            return true if @root_control.send(argument)[key] != val
+            if argument
+              #データストアとの比較
+              return true if @root_control.send(argument)[key] != val
+            else
+              #コントロールプロパティとの比較
+              return true if send(key) != val
+            end
           end
         end
 
+      #指定されたデータがnilの場合
       when :null
-        #指定されたデータがnilの場合
         value.each do |key|
-          return true if @root_control.send(argument)[key] == nil
+          if argument
+            #データストアとの比較
+            return true if @root_control.send(argument)[key] == nil
+          else
+            #コントロールプロパティとの比較
+            return true if send(key) == nil
+          end
         end
 
+      #指定されたデータがnilで無い場合
       when :not_null
-        #指定されたデータがnilで無い場合
         value.each do |key|
-          return true if @root_control.send(argument)[key] != nil
+          if argument
+            #データストアとの比較
+            return true if @root_control.send(argument)[key] != nil
+          else
+            #コントロールプロパティとの比較
+            return true if send(key) != nil
+          end
         end
 
       when :system

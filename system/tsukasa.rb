@@ -97,7 +97,10 @@ class Tsukasa < ClickableLayoutControl
     #ローカルデータストア
     @_LOCAL_ = {}
     #一時データストア
-    @_TEMP_ = {}
+    @_TEMP_ = {
+      #_INCLUDE_したファイルパスをスタックする
+      :_LOADED_FEATURES_ => []
+    }
     #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
     @_DEFAULT_CONTROL_ = {}
 

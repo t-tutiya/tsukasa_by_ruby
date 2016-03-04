@@ -648,6 +648,15 @@ class Control #スクリプト制御
     #ファイルのフルパスを取得
     options[:file_path] = File.expand_path(argument)
 
+    #強制フラグが無く、一度_INCLUDE_しているファイルなら終了
+    if !(options[:force]) and 
+        @root_control._TEMP_[:_LOADED_FEATURES_].index(options[:file_path])
+      return
+    end
+
+    #ファイルパスをリストに追加する。
+    @root_control._TEMP_[:_LOADED_FEATURES_].push(options[:file_path])
+
     #拡張子取得
     ext_name = File.extname(options[:file_path])
     #rbファイルでなければparserのクラス名を初期化する。

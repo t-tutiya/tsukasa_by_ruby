@@ -54,7 +54,6 @@ _CREATE_ :LayoutControl, id: :requested_close do
         end
       end
     end
-    
     _END_FRAME_
   end
 end
@@ -92,6 +91,14 @@ end
 #フルスクリーン化可能な解像度のリストを取得する
 _DEFINE_ :_SCREEN_MODES_ do 
   _YIELD_ Window.get_screen_modes
+end
+
+#FPSカウンタ
+_DEFINE_ :_FPS_ do |fps|
+  if fps
+    Window.fps = fps
+  end
+  _YIELD_ Window.real_fps
 end
 
 #画面サイズの変更

@@ -283,7 +283,7 @@ _DEFINE_ :TextWindow do |argument, options|
                       system: [:key_down]
                       }} do
                 #スキップされた場合
-                _CHECK_ key_down: K_RCONTROL,
+                _CHECK_ :_TEMP_, key_down: K_RCONTROL,
                         equal: {_SKIP_: true} do
                   #CTRLスキップ中であれば透明度255
                   _SET_ alpha: 255
@@ -317,7 +317,7 @@ _DEFINE_ :TextWindow do |argument, options|
 
       #キー入力待ち処理
       _DEFINE_ :_PAUSE_ do 
-        _WAIT_  count:32,
+        _WAIT_  :_TEMP_, count:32,
                 key_down: K_RCONTROL,
                 key_push: K_SPACE,
                 system: [:key_down],
@@ -335,10 +335,10 @@ _DEFINE_ :TextWindow do |argument, options|
         end
 
         #スペースキーあるいはCTRLキーの押下待機
-        _WAIT_  key_down: K_RCONTROL,
-                key_push: K_SPACE,
-                system: [:key_down],
-                equal: {_SKIP_: true}
+        _WAIT_  :_TEMP_, key_down: K_RCONTROL,
+                          key_push: K_SPACE,
+                          system: [:key_down],
+                          equal: {_SKIP_: true}
 
         #ウェイクに移行
         _SET_ :_TEMP_, _SLEEP_: false
@@ -474,7 +474,7 @@ _DEFINE_ :_LABEL_ do |arugment, options|
   #既読スキップモードの場合
   ###################################################################
 
-  _CHECK_ equal: {_CHAPTER_SKIP_MODE_: true} do
+  _CHECK_ :_TEMP_, equal: {_CHAPTER_SKIP_MODE_: true} do
     if(_SYSTEM_[:_READ_CHAPTER_][options[:chapter]].index(options[:id]))
       #スキップモードＯＮ
       _SET_ :_TEMP_, _SKIP_: true

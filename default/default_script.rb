@@ -146,6 +146,12 @@ _DEFINE_ :_MOUSE_WHEEL_POS_ do |argumnet|
   end
 end
 
+_DEFINE_ :_PAD_ do |argumnet|
+  _CHECK_ system: :block_given do
+    _YIELD_ x: Input.x(argumnet || 0), y: Input.y(argumnet || 0)
+  end
+end
+
 ###############################################################################
 #テキストレイヤ関連
 ###############################################################################

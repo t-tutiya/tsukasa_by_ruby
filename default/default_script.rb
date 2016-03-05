@@ -134,11 +134,13 @@ _DEFINE_ :_WINDOW_STATUS_ do |argumnet, options|
   Input.set_cursor(options[:cursor_type]) if options[:cursor_type]
 end
 
+#マウスカーソルの可視設定
 _DEFINE_ :_CURSOR_VISIBLE_ do |argumnet|
   _SET_ :_SYSTEM_, _CURSOR_VISIBLE_: argumnet
   Input.mouse_enable = argumnet
 end
 
+#マウスホイールの値を設定／取得する
 _DEFINE_ :_MOUSE_WHEEL_POS_ do |argumnet|
   Input.mouse_wheel_pos = argumnet if argumnet
   _CHECK_ system: :block_given do
@@ -146,10 +148,18 @@ _DEFINE_ :_MOUSE_WHEEL_POS_ do |argumnet|
   end
 end
 
-_DEFINE_ :_PAD_ do |argumnet|
+#パッドの方向キーを-1,0,1で取得する
+_DEFINE_ :_PAD_ARROW_ do |argumnet|
   _CHECK_ system: :block_given do
     _YIELD_ x: Input.x(argumnet || 0), y: Input.y(argumnet || 0)
   end
+end
+
+#パッドのキーコンフィグを設定する
+_DEFINE_ :_PAD_CONFIG_ do |argumnet, options|
+  Input.set_config( option[:pad_code], 
+                    option[:key_code], 
+                    option[:pad_number] = 0)
 end
 
 ###############################################################################

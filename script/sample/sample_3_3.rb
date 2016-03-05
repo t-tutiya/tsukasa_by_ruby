@@ -39,7 +39,7 @@ _LOOP_ do
         _SET_ charactor: pos.to_s
       end
     end
-    _PAD_ 0 do |x:, y:|
+    _PAD_ARROW_ 0 do |x:, y:|
       _SEND_  :comment_area4_b do
         _SET_ charactor: x.to_s
       end

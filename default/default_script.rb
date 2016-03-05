@@ -95,10 +95,10 @@ end
 
 #FPSカウンタ
 _DEFINE_ :_FPS_ do |fps|
-  if fps
-    Window.fps = fps
+  Window.fps = fps if fps
+  _CHECK_ system: :block_given do
+    _YIELD_ Window.real_fps
   end
-  _YIELD_ Window.real_fps
 end
 
 #画面サイズの変更
@@ -137,6 +137,13 @@ end
 _DEFINE_ :_CURSOR_VISIBLE_ do |argumnet|
   _SET_ :_SYSTEM_, _CURSOR_VISIBLE_: argumnet
   Input.mouse_enable = argumnet
+end
+
+_DEFINE_ :_MOUSE_WHEEL_POS_ do |argumnet|
+  Input.mouse_wheel_pos = argumnet if argumnet
+  _CHECK_ system: :block_given do
+    _YIELD_ Input.mouse_wheel_pos
+  end
 end
 
 ###############################################################################

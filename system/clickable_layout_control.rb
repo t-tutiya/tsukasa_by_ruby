@@ -86,6 +86,8 @@ class ClickableLayoutControl < LayoutControl
 
     @cursor_x = @cursor_y = 0
 
+    @key_blocked = false
+
     super
   end
 
@@ -129,6 +131,17 @@ class ClickableLayoutControl < LayoutControl
     #マウスカーソルがコリジョン範囲内にある
     else
       @inner_control = true
+    end
+
+    #自身がキーブロックを行っている場合、フラグをクリアする
+    if @key_blocked
+      @key_blocked = false
+      @root_control._TEMP_[:_KEY_BLOCKED_] = false
+    end
+
+    #キーブロック中であれば処理を飛ばす
+    if @root_control._TEMP_[:_KEY_BLOCKED_]
+      return super
     end
 
     if @inner_control
@@ -252,5 +265,11 @@ class ClickableLayoutControl < LayoutControl
       end
     end 
     return super
+  end
+
+  #１フレームの間、他のClickableLayoutControlでクリックイベントを無視する
+  def _KEY_BLOCK_(argument, options, yield_block_stack)
+    @key_blocked = true
+    @root_control._TEMP_[:_KEY_BLOCKED_] = true
   end
 end

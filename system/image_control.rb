@@ -38,14 +38,69 @@ class ImageControl < DrawableControl
     @file_path = file_path
     #画像ファイルをキャッシュから読み込んで初期化する
     @entity = @@image_cache[file_path]
+    @width = @entity.width
+    @height = @entity.height
   end
 
   def initialize(options, yield_block_stack, root_control, &block)
     if options[:file_path]
       @file_path = options[:file_path]
       options[:entity] = @@image_cache[options[:file_path]]
+    else
+      options[:entity] = Image.new( options[:width]  || 1,
+                                    options[:height] || 1,
+                                    options[:color]  || [0,0,0,0])
     end
     super
+  end
+
+  def _LINE_(argument, options, yield_block_stack)
+    @entity.line( 
+      options[:x1], options[:y1], options[:x2], options[:y2], options[:color])
+  end
+
+  def _BOX_(argument, options, yield_block_stack)
+    if options[:fill]
+      @entity.box_fill( 
+        options[:x1], options[:y1], options[:x2], options[:y2], 
+        options[:color])
+    else
+      @entity.box(
+        options[:x1], options[:y1], options[:x2], options[:y2], 
+        options[:color])
+    end
+  end
+
+  def _CIRCLE_(argument, options, yield_block_stack)
+    if options[:fill]
+      @entity.circle_fill(
+        options[:x], options[:y], options[:r], options[:color])
+    else
+      @entity.circle( 
+        options[:x], options[:y], options[:r], options[:color])
+    end
+  end
+
+  def _TRIANGLE_(argument, options, yield_block_stack)
+    if options[:fill]
+      @entity.triangle_fill(
+        options[:x1], options[:y1], options[:x2], options[:y2], 
+        options[:x3], options[:y3], 
+        options[:color])
+    else
+      @entity.triangle( 
+        options[:x1], options[:y1], options[:x2], options[:y2], 
+        options[:x3], options[:y3], 
+        options[:color])
+    end
+  end
+
+  def _TEXT_(argument, options, yield_block_stack)
+    @entity.draw_font_ex(
+      options[:x], options[:y],
+      options[:text],
+      options[:font] || Font.default,
+      options[:option] || {})
   end
 
   #画像を保存する

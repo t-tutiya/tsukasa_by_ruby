@@ -1,4 +1,4 @@
-#! ruby -E utf-8
+﻿#! ruby -E utf-8
 
 ###############################################################################
 #TSUKASA for DXRuby ver1.2(2016/3/1)
@@ -30,6 +30,12 @@
 
 #コンフィグファイル
 _INCLUDE_ "./default/config.rb"
+
+_GET_ :_QUICK_DATA_FILENAME_, datastore: :_SYSTEM_ do |_QUICK_DATA_FILENAME_:|
+  Dir.glob(_QUICK_DATA_FILENAME_).each do |file_path|
+    _INCLUDE_ file_path
+  end
+end
 
 #デフォルトのユーザー定義関数群
 _INCLUDE_ "./default/default_script.rb"

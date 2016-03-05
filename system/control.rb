@@ -416,7 +416,6 @@ class Control #セッター／ゲッター
 #  private
 
   #コントロールのプロパティを更新する
-  #TODO：複数の変数を一回で設定できるようにしてあるが、１個に限定すべきかもしれない。
   def _SET_(argument, options, yield_block_stack)
     #オプション全探査
     options.each do |key, val|

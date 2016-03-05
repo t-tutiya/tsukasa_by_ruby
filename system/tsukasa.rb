@@ -57,7 +57,6 @@ require_relative './text_page_control.rb'
 
 require_relative './script_compiler.rb'
 
-#TODO：モジュールであるべきか？
 class Tsukasa < ClickableLayoutControl
   #システム全体で共有されるデータ群。保存対象。
   attr_reader  :_SYSTEM_
@@ -152,7 +151,6 @@ class Tsukasa < ClickableLayoutControl
   end
 
   #データセーブ
-  #TODO：保存先パスや名称は将来的には外部から与えるようにしたい
   def _SAVE_(argument, options, yield_block_stack)
     raise unless argument.kind_of?(Numeric)
     #グローバルデータ

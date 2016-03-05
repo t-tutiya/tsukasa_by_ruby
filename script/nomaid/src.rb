@@ -80,15 +80,15 @@ _DEFINE_ :top_menu do
     _DELETE_
   end
 
-  _CHECK_ equal: {flag: :lesson} do
+  _CHECK_ :_TEMP_, equal: {flag: :lesson} do
     lesson_menu
   end
 
-  _CHECK_ equal: {flag: :work} do
+  _CHECK_ :_TEMP_, equal: {flag: :work} do
     work_menu
   end
 
-  _CHECK_ equal: {flag: :rest} do
+  _CHECK_ :_TEMP_, equal: {flag: :rest} do
     rest
   end
 end
@@ -112,7 +112,7 @@ _DEFINE_ :lesson_menu do
   end
 
   #押されたのが「戻る」以外であれば、処理を実行して曜日終了フラグを立てる
-  _CHECK_ not_equal: {flag: :cancel} do
+  _CHECK_ :_TEMP_, not_equal: {flag: :cancel} do
     _GET_ [ :mental_point_max, 
             :mental_point,
             :helth_point,
@@ -201,7 +201,7 @@ _DEFINE_ :work_menu do
   end
 
   #押されたのが「戻る」以外であれば、処理を実行して曜日終了フラグを立てる
-  _CHECK_ not_equal: {flag: :cancel} do
+  _CHECK_ :_TEMP_, not_equal: {flag: :cancel} do
     _GET_ [ :mental_point_max, 
             :mental_point,
             :helth_point,
@@ -388,7 +388,7 @@ _LOOP_ count:7 do |arg, ops, control|
 
       top_menu
 
-      _CHECK_ equal: {end_day: true} do
+      _CHECK_ :_TEMP_, equal: {end_day: true} do
         _BREAK_
       end
     end
@@ -427,7 +427,7 @@ end
   _WAIT_ :_TEMP_,  not_equal: {gameover: nil}
 
   #ゲームオーバーならテキストを出力して終了
-  _CHECK_ equal: {gameover: true} do
+  _CHECK_ :_TEMP_, equal: {gameover: true} do
     #_INCLUDE_ "./script/nomaid/bad_end.tks"
     text1{
       _FLUSH_
@@ -442,7 +442,7 @@ end
   end
 
   #ゲームクリアならテキストを出力して終了
-  _CHECK_ equal: {gameclear: true} do
+  _CHECK_ :_TEMP_, equal: {gameclear: true} do
     #_INCLUDE_ "./script/nomaid/happy_end.tks"
     text1{
       _FLUSH_

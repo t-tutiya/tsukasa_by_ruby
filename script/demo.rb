@@ -117,7 +117,7 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_3_2_2", path: path + "sample_3_2_2.rb", 
                  comment: "シリアライズサンプル：ロード"
       TextSelect text: "sample_3_3", path: path + "sample_3_3.rb", 
-                 comment: "起動時間サンプル：ロード"
+                 comment: "システムステータスの取得"
       TextSelect text: "sample_3_4", path: path + "sample_3_4.rb", 
                  comment: "フルスクリーン化"
       TextSelect text: "sample_3_5", path: path + "sample_3_5.rb", 

@@ -300,6 +300,26 @@ class Control #内部メソッド
           return true unless Input.key_release?(key_code)
         end
 
+      #パッドボタン処理系
+
+      when :pad_down
+        value.each do |pad_code|
+          return true if Input.pad_down?(pad_code,
+                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
+        end
+
+      when :pad_push
+        value.each do |pad_code|
+          return true if Input.pad_push?(pad_code,
+                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
+        end
+
+      when :pad_release
+        value.each do |pad_code|
+          return true if Input.pad_release?(pad_code,
+                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
+        end
+
       #ユーザデータ確認系
 
       #指定されたデータと値がイコールかどうか
@@ -1082,5 +1102,4 @@ class Control #プロパティのパラメータ遷移
       return 0.0
     end
   end
-
 end

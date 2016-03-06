@@ -55,11 +55,13 @@ class ImageControl < DrawableControl
     super
   end
 
+  #ImageControl上に直線を引く
   def _LINE_(argument, options, yield_block_stack)
     @entity.line( 
       options[:x1], options[:y1], options[:x2], options[:y2], options[:color])
   end
 
+  #ImageControl上に矩形を描く
   def _BOX_(argument, options, yield_block_stack)
     if options[:fill]
       @entity.box_fill( 
@@ -72,6 +74,7 @@ class ImageControl < DrawableControl
     end
   end
 
+  #ImageControl上に円を描く
   def _CIRCLE_(argument, options, yield_block_stack)
     if options[:fill]
       @entity.circle_fill(
@@ -82,6 +85,7 @@ class ImageControl < DrawableControl
     end
   end
 
+  #ImageControl上に三角形を描く
   def _TRIANGLE_(argument, options, yield_block_stack)
     if options[:fill]
       @entity.triangle_fill(
@@ -96,12 +100,44 @@ class ImageControl < DrawableControl
     end
   end
 
+  #ImageControl上に文字を描く
   def _TEXT_(argument, options, yield_block_stack)
     @entity.draw_font_ex(
       options[:x], options[:y],
       options[:text],
       options[:font] || Font.default,
       options[:option] || {})
+  end
+
+  #ImageControlを指定色で塗りつぶす
+  def _FILL_(argument, options, yield_block_stack)
+    @entity.fill(argument)
+  end
+
+  #ImageControlを[0,0,0,0]で塗りつぶす
+  def _CLEAR_(argument, options, yield_block_stack)
+    @entity.clear
+  end
+
+  #ImageControlの指定座標への色の取得／設定
+  def _PIXEL_(argument, options, yield_block_stack, &block)
+    if options[:color]
+      @entity[options[:x], options[:y]] = options[:color]
+    end
+    if block
+      #ブロックが付与されているならそれを実行する
+      parse_block(@entity[options[:x], options[:y]], nil, 
+                  yield_block_stack, &block)
+    end
+  end
+
+  #ImageControlを指定座標の色を比較し、同値ならブロックを実行する
+  def _COMPARE_(argument, options, yield_block_stack, &block)
+    if @entity.compare(options[:x], options[:y], options[:color])
+      #ブロックが付与されているならそれを実行する
+      parse_block(@entity[options[:x], options[:y]], nil, 
+                  yield_block_stack, &block)
+    end
   end
 
   #画像を保存する

@@ -498,7 +498,7 @@ class Control #制御構文
     @command_list.unshift(:_END_FRAME_)
 
     if block
-      #waitにブロックが付与されているならそれを実行する
+      #ブロックが付与されているならそれを実行する
       parse_block(argument, options, yield_block_stack, &block)
     end
 

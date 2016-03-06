@@ -44,8 +44,7 @@ class ImageControl < DrawableControl
 
   def initialize(options, yield_block_stack, root_control, &block)
     if options[:file_path]
-      @file_path = options[:file_path]
-      options[:entity] = @@image_cache[options[:file_path]]
+      self.file_path = options[:file_path]
     else
       options[:entity] = Image.new( options[:width]  || 1,
                                     options[:height] || 1,

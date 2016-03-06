@@ -168,13 +168,6 @@ class DrawableControl < LayoutableControl
     #可視フラグ（省略時はtrue）
     @visible = (options[:visible] != false)
 
-    @entity = options[:entity] || nil
-
-    if @entity
-      options[:width] = @entity.width
-      options[:height] = @entity.height
-    end
-
     super
   end
 

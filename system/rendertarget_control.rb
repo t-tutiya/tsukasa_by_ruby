@@ -58,9 +58,13 @@ class RenderTargetControl < DrawableControl
   def initialize(options, yield_block_stack, root_control, &block)
     @bgcolor = options[:bgcolor]  || [0,0,0,0]
     #保持オブジェクトの初期化
-    options[:entity] = RenderTarget.new(options[:width]  || 1, 
-                                        options[:height] || 1, 
-                                        @bgcolor)
+    @entity = RenderTarget.new( options[:width]  || 1, 
+                                options[:height] || 1, 
+                                @bgcolor)
+
+    @width = options[:width]
+    @height = options[:height]
+
     @update_flag = false
 
     self.border = options[:border]  || 0

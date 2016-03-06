@@ -46,9 +46,11 @@ class ImageControl < DrawableControl
     if options[:file_path]
       self.file_path = options[:file_path]
     else
-      options[:entity] = Image.new( options[:width]  || 1,
-                                    options[:height] || 1,
-                                    options[:color]  || [0,0,0,0])
+      @entity = Image.new(options[:width]  || 1,
+                          options[:height] || 1,
+                          options[:color]  || [0,0,0,0])
+      @width = options[:width]
+      @height = options[:height]
     end
     super
   end

@@ -185,7 +185,7 @@ _DEFINE_ :line_pause do
         width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
         _CREATE_ :TileMapControl, 
           map_array: [[0]], size_x: 1, size_y: 1 do
-            _SET_IMAGE_MAPPING_ file_path: "./resource/icon/icon_8_a.png",
+            _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_8_a.png",
               x_count: 4, y_count: 2
           _INCLUDE_ "./resource/icon/icon_8_a.rb"
         end
@@ -221,16 +221,16 @@ _DEFINE_ :end_pause do
         width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
         _CREATE_ :TileMapControl, 
           map_array: [[0]], size_x: 1, size_y: 1 do
-          _SET_IMAGE_MAPPING_ file_path: "./resource/icon/icon_4_a.png",
+          _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
             x_count: 4, y_count: 1
           _STACK_LOOP_ do
-            _SET_TILE_ x:0, y:0, id:0
+            _MAP_STATUS_ x:0, y:0, id:0
             _WAIT_ count: 5
-            _SET_TILE_ x:0, y:0, id:1
+            _MAP_STATUS_ x:0, y:0, id:1
             _WAIT_ count: 5
-            _SET_TILE_ x:0, y:0, id:2
+            _MAP_STATUS_ x:0, y:0, id:2
             _WAIT_ count: 5
-            _SET_TILE_ x:0, y:0, id:3
+            _MAP_STATUS_ x:0, y:0, id:3
             _WAIT_ count: 5
           end
         end
@@ -424,9 +424,9 @@ _DEFINE_ :button do |argument, options|
       width: 256,
       height: 256 do
       _SET_ map_array: [[0]]
-      _SET_IMAGE_ 0, file_path: "./resource/button_normal.png"
-      _SET_IMAGE_ 1, file_path: "./resource/button_over.png"
-      _SET_IMAGE_ 2, file_path: "./resource/button_key_down.png"
+      _ADD_TILE_ 0, file_path: "./resource/button_normal.png"
+      _ADD_TILE_ 1, file_path: "./resource/button_over.png"
+      _ADD_TILE_ 2, file_path: "./resource/button_key_down.png"
     end
     _STACK_LOOP_ do
       _END_FRAME_

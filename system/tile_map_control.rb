@@ -78,19 +78,29 @@ class TileMapControl < LayoutControl
     return check_float
   end
 
-  def _SET_IMAGE_(argument, options, yield_block_stack)
-    @image_array[argument] = Image.load(options[:file_path])
+  def _ADD_TILE_(argument, options, yield_block_stack)
+    if argument
+      @image_array[argument] = Image.load(options[:file_path])
+    else
+      @image_array.push(Image.load(options[:file_path]))
+    end
   end
 
-  def _SET_IMAGE_MAPPING_(argument, options, yield_block_stack)
-    @image_array = Image.load_tiles(options[:file_path], 
+  def _ADD_TILE_GROUP_(argument, options, yield_block_stack)
+    @image_array.push(Image.load_tiles(options[:file_path], 
                                     options[:x_count] || 1, 
                                     options[:y_count] || 1, 
-                                    options[:share_switch] || true)
+                                    options[:share_switch] || true))
   end
 
-  def _SET_TILE_(argument, options, yield_block_stack)
-    @map_array[options[:x]][options[:y]] = options[:id]
+  def _MAP_STATUS_(argument, options, yield_block_stack, &block)
+    if options[:id]
+      @map_array[options[:x]][options[:y]] = options[:id]
+    else
+      #ブロックが付与されているならそれを実行する
+      parse_block(@map_array[options[:x]][options[:y]], nil,
+                  yield_block_stack, &block)
+    end
   end
 
 end

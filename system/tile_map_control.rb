@@ -87,10 +87,10 @@ class TileMapControl < LayoutControl
   end
 
   def _ADD_TILE_GROUP_(argument, options, yield_block_stack)
-    @image_array.push(Image.load_tiles(options[:file_path], 
+    @image_array += Image.load_tiles(options[:file_path], 
                                     options[:x_count] || 1, 
                                     options[:y_count] || 1, 
-                                    options[:share_switch] || true))
+                                    options[:share_switch] || true)
   end
 
   def _MAP_STATUS_(argument, options, yield_block_stack, &block)

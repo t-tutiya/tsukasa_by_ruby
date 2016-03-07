@@ -51,10 +51,6 @@ class LayoutableControl < Control
   attr_accessor  :width
   attr_accessor  :height
 
-  #実サイズ（現状ではtext_page_controlのみで使用）
-  attr_accessor  :real_width
-  attr_accessor  :real_height
-
   def initialize(options, yield_block_stack, root_control, &block)
     @x = options[:x] || 0 #描画Ｘ座標
     @y = options[:y] || 0 #描画Ｙ座標
@@ -62,8 +58,8 @@ class LayoutableControl < Control
     @offset_x = options[:offset_x] || 0 #描画オフセットＸ座標
     @offset_y = options[:offset_y] || 0 #描画オフセットＹ座標
 
-    @real_width = @width = options[:width] || 0 #幅
-    @real_height = @height = options[:height] || 0 #高さ
+    @width = options[:width] || 0 #幅
+    @height = options[:height] || 0 #高さ
 
     #次コントロールの接続方向指定
     @float_x = options[:float_x]

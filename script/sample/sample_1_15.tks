@@ -13,11 +13,11 @@
 @
 @	_WAIT_ :_TEMP_, not_null: :click
 @
-@	_CHECK_ equal:{click: :left} do
+@	_CHECK_ :_TEMP_, equal:{click: :left} do
 @		_INCLUDE_ "./script/sample/sample_1_15a.tks"
 @	end
 @
-@	_CHECK_ equal:{click: :right} do
+@	_CHECK_ :_TEMP_,equal:{click: :right} do
 @		_INCLUDE_ "./script/sample/sample_1_15b.tks"
 @	end
 

@@ -431,16 +431,16 @@ _DEFINE_ :button do |argument, options|
     _STACK_LOOP_ do
       _END_FRAME_
       _CHECK_ mouse: [:cursor_over] do
-        _SEND_(0){ _SET_TILE_ x:0, y:0, id: 1}
+        _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 1}
       end
       _CHECK_ mouse: [:cursor_out] do
-        _SEND_(0){ _SET_TILE_ x:0, y:0, id: 0}
+        _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 0}
       end
       _CHECK_ mouse: [:key_down] do
-        _SEND_(0){ _SET_TILE_ x:0, y:0, id: 2}
+        _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 2}
       end
       _CHECK_ mouse: [:key_up] do
-        _SEND_(0){ _SET_TILE_ x:0, y:0, id: 1}
+        _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 1}
       end
       _CHECK_ system: [:block_given] do
         _YIELD_

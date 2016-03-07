@@ -458,15 +458,21 @@ _DEFINE_ :_LABEL_ do |arugment, options|
 
   #チャプターの更新
   unless options[:chapter]
-    options[:chapter] = _TEMP_[:_ACTIVE_SCENARIO_CHAPTER_]
+    _GET_ :_ACTIVE_SCENARIO_CHAPTER_, 
+          datastore: :_TEMP_ do |_ACTIVE_SCENARIO_CHAPTER_:|
+      options[:chapter] = _ACTIVE_SCENARIO_CHAPTER_
+    end
   end
   
   #IDの更新
   unless options[:id]
-    if _TEMP_[:_SCENARIO_CHAPTER_ID_][options[:chapter]]
-      options[:id] = _TEMP_[:_SCENARIO_CHAPTER_ID_][options[:chapter]] + 1
-    else
-      options[:id] = 0
+    _GET_ :_SCENARIO_CHAPTER_ID_, 
+          datastore: :_TEMP_ do |_SCENARIO_CHAPTER_ID_:|
+      if _SCENARIO_CHAPTER_ID_[options[:chapter]]
+        options[:id] = _SCENARIO_CHAPTER_ID_[options[:chapter]] + 1
+      else
+        options[:id] = 0
+      end
     end
   end
 
@@ -474,23 +480,25 @@ _DEFINE_ :_LABEL_ do |arugment, options|
   #現在のチャプターを保存
   ###################################################################
 
-  unless _TEMP_[:_SCENARIO_CHAPTER_ID_][options[:chapter]]
-    _TEMP_[:_ACTIVE_SCENARIO_CHAPTER_] = options[:chapter]
+  _GET_ :_SCENARIO_CHAPTER_ID_, datastore: :_TEMP_ do |_SCENARIO_CHAPTER_ID_:|
+    unless _SCENARIO_CHAPTER_ID_[options[:chapter]]
+      _SET_ :_TEMP_, _ACTIVE_SCENARIO_CHAPTER_: options[:chapter]
+    end
+
+    _SCENARIO_CHAPTER_ID_[options[:chapter]] = options[:id]
   end
-
-  _TEMP_[:_SCENARIO_CHAPTER_ID_][options[:chapter]] = options[:id]
-
   #新規チャプターであれば既読フラグに追加
   #TODO：結局チャプター名はゲーム全体で一意でなければならない
-  unless _SYSTEM_[:_READ_CHAPTER_][options[:chapter]]
-    _SYSTEM_[:_READ_CHAPTER_][options[:chapter]] = []
+  _GET_ :_READ_CHAPTER_, datastore: :_SYSTEM_ do |_READ_CHAPTER_:|
+    unless _READ_CHAPTER_[options[:chapter]]
+      _READ_CHAPTER_[options[:chapter]] = []
+    end
   end
-
   ###################################################################
   #頭出しモードの場合
   ###################################################################
 
-  _CHECK_ equal: {_CHAPTER_START_MODE_: true} do
+  _CHECK_ :_TEMP_, equal: {_CHAPTER_START_MODE_: true} do
     #ページが指定したＩＤでない場合
     _CHECK_ :_LOCAL_, not_equal: {_START_: options[:id]} do
       #ページを飛ばす
@@ -505,12 +513,15 @@ _DEFINE_ :_LABEL_ do |arugment, options|
   ###################################################################
 
   _CHECK_ :_TEMP_, equal: {_CHAPTER_SKIP_MODE_: true} do
-    if(_SYSTEM_[:_READ_CHAPTER_][options[:chapter]].index(options[:id]))
-      #スキップモードＯＮ
-      _SET_ :_TEMP_, _SKIP_: true
-    else
-      #スキップモードＯＦＦ
-      _SET_ :_TEMP_, _SKIP_: false
+    _GET_ :_READ_CHAPTER_, 
+          datastore: :_SYSTEM_ do |_READ_CHAPTER_:|
+      if(_READ_CHAPTER_[options[:chapter]].index(options[:id]))
+        #スキップモードＯＮ
+        _SET_ :_TEMP_, _SKIP_: true
+      else
+        #スキップモードＯＦＦ
+        _SET_ :_TEMP_, _SKIP_: false
+      end
     end
   end
 

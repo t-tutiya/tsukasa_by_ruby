@@ -452,26 +452,119 @@ end
 #既読管理ラベル
 _DEFINE_ :_LABEL_ do |arugment, options|
 
+  #既読フラグハッシュが無ければ新設
+  _CHECK_ :_SYSTEM_, equal: {_READ_CHAPTER_: nil} do
+    _SET_ :_SYSTEM_, _READ_CHAPTER_: {}
+  end
+
   ###################################################################
   #初期値更新
   ###################################################################
 
   #チャプターの更新
-  unless options[:chapter]
-    _GET_ :_ACTIVE_SCENARIO_CHAPTER_, 
-          datastore: :_TEMP_ do |_ACTIVE_SCENARIO_CHAPTER_:|
-      options[:chapter] = _ACTIVE_SCENARIO_CHAPTER_
+  #ラベルにチャプターが記述されている場合
+  if  options[:chapter]
+    #ラベルにＩＤが記述されている場合
+    if options[:id]
+      #アクティブIDを設定値で更新
+      _SET_ :_TEMP_, _ACTIVE_CHAPTER_ID_: options[:id]
+      #アクティブチャプターを設定値で更新
+      _SET_ :_TEMP_, _ACTIVE_CHAPTER_NAME_: options[:chapter]
+    #ラベルにＩＤが記述されていない場合
+    else
+      _GET_ :_ACTIVE_CHAPTER_NAME_, 
+            datastore: :_TEMP_ do |_ACTIVE_CHAPTER_NAME_:|
+        #直前のアクティブチャプターと設定値が同じ場合
+        if _ACTIVE_CHAPTER_NAME_ == options[:chapter]
+          #アクティブIDをインクリメント
+          _GET_ :_ACTIVE_CHAPTER_ID_, 
+                datastore: :_TEMP_ do |_ACTIVE_CHAPTER_ID_:|
+            _SET_ :_TEMP_, _ACTIVE_CHAPTER_ID_: _ACTIVE_CHAPTER_ID_ + 1
+          end
+        #直前のアクティブチャプターと設定値が異なる場合
+        else
+          #アクティブIDをゼロで初期化
+          _SET_ :_TEMP_, _ACTIVE_CHAPTER_ID_: 0
+        end
+      end
+      #アクティブチャプターを設定値で更新
+      _SET_ :_TEMP_, _ACTIVE_CHAPTER_NAME_: options[:chapter]
+    end
+  else
+    #ラベルにＩＤが記述されている場合
+    if options[:id]
+      #アクティブチャプター名が設定されていない場合
+      _CHECK_ :_TEMP_, null: :_ACTIVE_CHAPTER_NAME_ do
+        raise
+      end
+      #idを設定
+      _SET_ :_TEMP_, _ACTIVE_CHAPTER_ID_: options[:id]
+    #ラベルにＩＤが記述されていない場合
+    else
+      #アクティブチャプター名が設定されていない場合
+      _CHECK_ :_TEMP_, null: :_ACTIVE_CHAPTER_NAME_ do
+        #例外発生
+        raise
+      end
+      #アクティブIDが既に設定されている場合
+      _CHECK_ :_TEMP_, not_null: :_ACTIVE_CHAPTER_ID_ do
+        #アクティブIDをインクリメント
+        _GET_ :_ACTIVE_CHAPTER_ID_, 
+              datastore: :_TEMP_ do |_ACTIVE_CHAPTER_ID_:|
+          _SET_ :_TEMP_, _ACTIVE_CHAPTER_ID_: _ACTIVE_CHAPTER_ID_ + 1
+        end
+      end
+      #アクティブIDが既に設定されていない場合
+      _CHECK_ :_TEMP_, null: :_ACTIVE_CHAPTER_ID_ do
+        #アクティブIDをゼロで初期化
+        _SET_ :_TEMP_, _ACTIVE_CHAPTER_ID_: 0
+      end
     end
   end
-  
-  #IDの更新
-  unless options[:id]
-    _GET_ :_SCENARIO_CHAPTER_ID_, 
-          datastore: :_TEMP_ do |_SCENARIO_CHAPTER_ID_:|
-      if _SCENARIO_CHAPTER_ID_[options[:chapter]]
-        options[:id] = _SCENARIO_CHAPTER_ID_[options[:chapter]] + 1
-      else
-        options[:id] = 0
+
+  ###################################################################
+  #頭出しモードの場合
+  ###################################################################
+
+  _GET_ [:_ACTIVE_CHAPTER_ID_], datastore: :_TEMP_ do |
+             _ACTIVE_CHAPTER_ID_:|
+    _CHECK_ :_TEMP_, equal: {_CHAPTER_START_MODE_: true} do
+      #ページが指定したＩＤでない場合
+      _CHECK_ :_LOCAL_, not_equal: {_START_: _ACTIVE_CHAPTER_ID_} do
+        #ページを飛ばす
+        _RETURN_
+      end
+      #ラベルモードをノーマルに変更する
+      _SET_ :_TEMP_, _CHAPTER_START_MODE_: false
+    end
+  end
+
+  ###################################################################
+  #既読スキップモードの場合
+  ###################################################################
+
+  #スキップモードの場合
+  _CHECK_ :_TEMP_, equal: {_CHAPTER_SKIP_MODE_: true} do
+    _GET_ [:_ACTIVE_CHAPTER_ID_, :_ACTIVE_CHAPTER_NAME_],
+          datastore: :_TEMP_ do |
+             _ACTIVE_CHAPTER_ID_:, _ACTIVE_CHAPTER_NAME_:|
+
+      _GET_ :_READ_CHAPTER_, 
+            datastore: :_SYSTEM_ do |_READ_CHAPTER_:|
+
+        #初出のチャプターであればハッシュに書庫を作成
+        unless _READ_CHAPTER_[_ACTIVE_CHAPTER_NAME_]
+          _READ_CHAPTER_[_ACTIVE_CHAPTER_NAME_] = []
+        end
+
+        #アクティブＩＤが既に書庫に格納されている場合
+        if(_READ_CHAPTER_[_ACTIVE_CHAPTER_NAME_].index(_ACTIVE_CHAPTER_ID_))
+          #スキップモードＯＮ
+          _SET_ :_TEMP_, _SKIP_: true
+        else
+          #スキップモードＯＦＦ
+          _SET_ :_TEMP_, _SKIP_: false
+        end
       end
     end
   end
@@ -480,72 +573,17 @@ _DEFINE_ :_LABEL_ do |arugment, options|
   #現在のチャプターを保存
   ###################################################################
 
-  _GET_ :_SCENARIO_CHAPTER_ID_, datastore: :_TEMP_ do |_SCENARIO_CHAPTER_ID_:|
-    unless _SCENARIO_CHAPTER_ID_[options[:chapter]]
-      _SET_ :_TEMP_, _ACTIVE_SCENARIO_CHAPTER_: options[:chapter]
-    end
-
-    _SCENARIO_CHAPTER_ID_[options[:chapter]] = options[:id]
-  end
-  #新規チャプターであれば既読フラグに追加
-  #TODO：結局チャプター名はゲーム全体で一意でなければならない
-  _GET_ :_READ_CHAPTER_, datastore: :_SYSTEM_ do |_READ_CHAPTER_:|
-    unless _READ_CHAPTER_[options[:chapter]]
-      _READ_CHAPTER_[options[:chapter]] = []
-    end
-  end
-  ###################################################################
-  #頭出しモードの場合
-  ###################################################################
-
-  _CHECK_ :_TEMP_, equal: {_CHAPTER_START_MODE_: true} do
-    #ページが指定したＩＤでない場合
-    _CHECK_ :_LOCAL_, not_equal: {_START_: options[:id]} do
-      #ページを飛ばす
-      _RETURN_
-    end
-    #ラベルモードをノーマルに変更する
-    _SET_ :_TEMP_, _CHAPTER_START_MODE_: false
-  end
-
-  ###################################################################
-  #既読スキップモードの場合
-  ###################################################################
-
-  _CHECK_ :_TEMP_, equal: {_CHAPTER_SKIP_MODE_: true} do
-    _GET_ :_READ_CHAPTER_, 
-          datastore: :_SYSTEM_ do |_READ_CHAPTER_:|
-      if(_READ_CHAPTER_[options[:chapter]].index(options[:id]))
-        #スキップモードＯＮ
-        _SET_ :_TEMP_, _SKIP_: true
+  _GET_ :_READ_CHAPTER_,  datastore: :_SYSTEM_ do |_READ_CHAPTER_:|
+    _GET_ [:_ACTIVE_CHAPTER_ID_, :_ACTIVE_CHAPTER_NAME_],
+          datastore: :_TEMP_ do |
+            _ACTIVE_CHAPTER_ID_:, _ACTIVE_CHAPTER_NAME_:|
+      if _READ_CHAPTER_[_ACTIVE_CHAPTER_NAME_]
+        _READ_CHAPTER_[_ACTIVE_CHAPTER_NAME_].push(_ACTIVE_CHAPTER_ID_).uniq!
       else
-        #スキップモードＯＦＦ
-        _SET_ :_TEMP_, _SKIP_: false
+        _READ_CHAPTER_[_ACTIVE_CHAPTER_NAME_] = []
+        _READ_CHAPTER_[_ACTIVE_CHAPTER_NAME_].push(_ACTIVE_CHAPTER_ID_)
       end
     end
-  end
-
-  ###################################################################
-  #既読フラグを立てる処理
-  ###################################################################
-
-  #既読フラグハッシュが無ければ新設
-  _CHECK_ :_SYSTEM_, equal: {_READ_CHAPTER_: nil} do
-    _SET_ :_SYSTEM_, _READ_CHAPTER_: {}
-  end
-
-  #TODO：今の所pushを司スクリプトで処理できないためネイティブコードで処理する
-  chapter = options[:chapter]
-  id = options[:id]
-  #既読フラグハッシュを取得
-  _GET_ :_READ_CHAPTER_, datastore: :_SYSTEM_ do |arg, options|
-    #チャプターが登録されていない場合登録
-    unless options[:_READ_CHAPTER_][chapter]
-      options[:_READ_CHAPTER_][chapter] = []
-    end
-    #既読フラグ追加
-    options[:_READ_CHAPTER_][chapter].push(id).uniq!
-    pp options[:_READ_CHAPTER_]
   end
 
   ###################################################################

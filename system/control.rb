@@ -494,6 +494,8 @@ class Control #制御構文
       options[:count] = options[:count] - 1
     end
 
+    @command_list.unshift([:_WAIT_, argument, options, yield_block_stack, block])
+
     #フレーム終了疑似コマンドをスタックする
     @command_list.unshift(:_END_FRAME_)
 
@@ -501,8 +503,6 @@ class Control #制御構文
       #ブロックが付与されているならそれを実行する
       parse_block(argument, options, yield_block_stack, &block)
     end
-
-    @next_frame_commands.push([:_WAIT_, argument, options, yield_block_stack, block])
   end
 
   def _CHECK_(argument, options, yield_block_stack, &block)

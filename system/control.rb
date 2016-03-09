@@ -1030,13 +1030,7 @@ class Control #プロパティのパラメータ遷移
     end
 
     #条件判定が存在し、かつその条件が成立した場合
-    if check_imple(nil, options[:option][:check], yield_block_stack)
-      #ブロックがあれば実行し、コマンドを終了する
-      if block
-        parse_block(nil, options, yiled_block_stack, &block) 
-      end
-      return
-    end
+    return if check_imple(nil, options[:option][:check], yield_block_stack)
 
     options[:option][:check][:count] -= 1
 
@@ -1068,8 +1062,15 @@ class Control #プロパティのパラメータ遷移
       send(key.to_s + "=", result.round)
     end
 
-    #:move_lineコマンドをスタックし直す
-    @next_frame_commands.push([:_PATH_, argument, options, yield_block_stack, block])
+    @command_list.unshift([:_PATH_, argument, options, yield_block_stack, block])
+
+    #フレーム終了疑似コマンドをスタックする
+    @command_list.unshift(:_END_FRAME_)
+
+    if block
+      #ブロックが付与されているならそれを実行する
+      parse_block(argument, options, yield_block_stack, &block)
+    end
   end
 
   #３次Ｂスプライン重み付け関数

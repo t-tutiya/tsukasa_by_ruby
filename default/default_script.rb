@@ -298,11 +298,8 @@ _DEFINE_ :TextWindow do |argument, options|
                                 key_push: K_SPACE,
                                 system: [:key_down],
                                 equal: {_SKIP_: true}},
-                       datastore: :_TEMP_} do
-                _SET_ alpha: 255
-              end
-        #トランジションが終了するまで待機
-        _WAIT_  not_stack_command: :_MOVE_ 
+                       datastore: :_TEMP_}
+        _SET_ alpha: 255
         #待機フラグが下がるまで待機
         _WAIT_ :_TEMP_, equal: {_SLEEP_: false}
         #キー入力伝搬を防ぐ為に１フレ送る
@@ -313,21 +310,18 @@ _DEFINE_ :TextWindow do |argument, options|
               check: {key_down: K_RCONTROL, 
                       key_push: K_SPACE,
                       system: [:key_down]
-                      }} do
-                #スキップされた場合
-                _CHECK_ :_TEMP_, key_down: K_RCONTROL,
-                        equal: {_SKIP_: true} do
-                  #CTRLスキップ中であれば透明度255
-                  _SET_ alpha: 255
-                end
-                _CHECK_ key_push: K_SPACE,
-                        system: [:key_down] do
-                  #CTRLスキップ中でなければ透明度128
-                  _SET_ alpha: 128
-                end
+                      }}
+        #スキップされた場合
+        _CHECK_ :_TEMP_, key_down: K_RCONTROL,
+                equal: {_SKIP_: true} do
+          #CTRLスキップ中であれば透明度255
+          _SET_ alpha: 255
         end
-        #トランジションが終了するまで待機
-        _WAIT_ not_stack_command: :_MOVE_ 
+        _CHECK_ key_push: K_SPACE,
+                system: [:key_down] do
+          #CTRLスキップ中でなければ透明度128
+          _SET_ alpha: 128
+        end
       end
 
       #文字間ウェイトの更新

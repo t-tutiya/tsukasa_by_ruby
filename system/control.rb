@@ -49,9 +49,7 @@ class Control #内部メソッド
     @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
     #コマンドリスト
     @command_list = [] 
-    #一時コマンドリスト
-    @next_frame_commands = [] 
-    #スリープモード
+
     @control_list = [] #コントロールリスト
     @delete_flag = false       #削除フラグの初期化
 
@@ -73,10 +71,6 @@ class Control #内部メソッド
     @command_list.push([command, argument, options, yield_block_stack, block])
   end
 
-  def push_command_to_next_frame(command, argument, options, yield_block_stack, block)
-    @next_frame_commands.push([command, argument, options, yield_block_stack, block])
-  end
-
   def update(mouse_pos_x, mouse_pos_y)
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
@@ -94,14 +88,6 @@ class Control #内部メソッド
         #ユーザー定義コマンドとみなして実行する
         call_user_command(command_name, argument, options, yield_block_stack,&block)
       end
-    end
-
-    unless @next_frame_commands.empty?
-      #一時的にスタックしていたコマンドをコマンドリストに再スタックする
-      @command_list = @next_frame_commands + @command_list
-
-      #次フレコマンド列を初期化
-      @next_frame_commands.clear
     end
 
     #下位コントロール巡回
@@ -239,7 +225,7 @@ class Control #内部メソッド
         value.each do |count|
           return true if count <= 0
         end
-
+=begin
       #コマンドがリスト上に存在している
       when :stack_command
         value.each do |command|
@@ -257,7 +243,7 @@ class Control #内部メソッド
             return true 
           end
         end
-
+=end
       #指定ＩＤの子要素が存在する
       when :child
         value.each do |id|

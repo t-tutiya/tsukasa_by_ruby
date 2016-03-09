@@ -819,18 +819,9 @@ class Control #プロパティのパラメータ遷移
     unless options[:option][:check][:count]
       options[:option][:check][:count] = argument 
     end
-   
+
     #条件が成立した場合
-    if check_imple(options[:option][:datastore], options[:option][:check], yield_block_stack)
-      #ブロックがあれば実行し、コマンドを終了する
-      if block
-        parse_block( nil,
-                    {:_STOP_COUNT_ => options[:option][:check][:count]}, 
-                    yield_block_stack,
-                    &block)
-      end
-      return
-    end
+    return if check_imple(options[:option][:datastore], options[:option][:check], yield_block_stack)
 
     #カウントダウン
     options[:option][:check][:count] -= 1
@@ -863,8 +854,15 @@ class Control #プロパティのパラメータ遷移
             ).to_i)
     end
 
-    #:_MOVE_コマンドをスタックし直す
-    @next_frame_commands.push([:_MOVE_, argument, options, yield_block_stack, block])
+    @command_list.unshift([:_MOVE_, argument, options, yield_block_stack, block])
+
+    #フレーム終了疑似コマンドをスタックする
+    @command_list.unshift(:_END_FRAME_)
+
+    if block
+      #ブロックが付与されているならそれを実行する
+      parse_block(argument, options, yield_block_stack, &block)
+    end
   end
 
   # jQuery + jQueryEasingPluginより32種類の内蔵イージング関数。それぞれの動きはサンプルを実行して確認のこと。

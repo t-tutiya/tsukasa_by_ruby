@@ -176,6 +176,8 @@ _DEFINE_ :pause do
           equal: {_SLEEP_: false}
 end
 
+_INCLUDE_ "./resource/icon/icon_8_a.rb"
+
 #行クリック待ちポーズ
 _DEFINE_ :line_pause do
   #テキストレイヤのクリック待ち
@@ -187,7 +189,7 @@ _DEFINE_ :line_pause do
           map_array: [[0]], size_x: 1, size_y: 1 do
             _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_8_a.png",
               x_count: 4, y_count: 2
-          _INCLUDE_ "./resource/icon/icon_8_a.rb"
+          _ICON_8_
         end
       end
     end

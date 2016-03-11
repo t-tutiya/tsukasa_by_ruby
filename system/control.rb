@@ -405,15 +405,31 @@ class Control #セッター／ゲッター
 
   #コントロールのプロパティを更新する
   def _SET_(argument, options, yield_block_stack)
+    #オプションハッシュの初期化
+    options[:option] =  {} unless options[:option]
+
     #オプション全探査
     options.each do |key, val|
+      next if key == :option
+
       if argument
-        #ハッシュに値を代入する
-        @root_control.send(argument.to_s)[key] = val
+        #オフセットオプションが設定されている場合
+        if options[:option][:offset]
+          #ハッシュに値を代入する
+          @root_control.send(argument.to_s)[key] += val
+        else
+          #ハッシュに値を代入する
+          @root_control.send(argument.to_s)[key] = val
+        end
       else
         #セッターが用意されている場合
         if  respond_to?(key.to_s + "=")
-          send(key.to_s + "=", val)
+          #オフセットオプションが設定されている場合
+          if options[:option][:offset]
+            send(key.to_s + "=", send(key.to_s) + val)
+          else
+            send(key.to_s + "=", val)
+          end
         #どちらも無い場合はwarningを出して処理を続行する
         else
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + key.to_s + "]は存在しません"

@@ -157,9 +157,9 @@ end
 
 #パッドのキーコンフィグを設定する
 _DEFINE_ :_PAD_CONFIG_ do |argumnet, options|
-  Input.set_config( option[:pad_code], 
-                    option[:key_code], 
-                    option[:pad_number] = 0)
+  Input.set_config( options[:pad_code], 
+                    options[:key_code], 
+                    options[:pad_number] = 0)
 end
 
 ###############################################################################

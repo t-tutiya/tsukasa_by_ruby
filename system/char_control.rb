@@ -233,7 +233,9 @@ class CharControl < ImageControl
                               :italic=>@italic})
 
       #現状での縦幅、横幅を取得
-      @real_width = @width  = @font_obj.get_width(@charactor)
+      width = @font_obj.get_width(@charactor)
+      width = 1 if width == 0
+      @real_width = @width  = width
       @real_height = @height = @font_obj.size
 
       #イタリックの場合、文字サイズの半分を横幅に追加する。

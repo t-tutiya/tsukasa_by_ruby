@@ -31,8 +31,8 @@
 #コンフィグファイル
 _INCLUDE_ "./default/config.rb"
 
-_GET_ :_QUICK_DATA_FILENAME_, datastore: :_SYSTEM_ do |_QUICK_DATA_FILENAME_:|
-  Dir.glob(_QUICK_DATA_FILENAME_).each do |file_path|
+_GET_ :_PLUGIN_PATH_, datastore: :_SYSTEM_ do |_PLUGIN_PATH_:|
+  Dir.glob(_PLUGIN_PATH_).each do |file_path|
     _INCLUDE_ file_path
   end
 end

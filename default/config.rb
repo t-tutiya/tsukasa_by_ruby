@@ -49,7 +49,7 @@ _SET_ :_SYSTEM_, _LOCAL_FILENAME_: "_local_data.bin"
 _SET_ :_SYSTEM_, _QUICK_DATA_FILENAME_: "_quick_data.bin"
 
 #プラグインファイルの配置フォルダと検索対象
-_SET_ :_SYSTEM_, _QUICK_DATA_FILENAME_: "./plugin/*.rb"
+_SET_ :_SYSTEM_, _PLUGIN_PATH_: "./plugin/*.rb"
 
 #パッド番号
 _SET_ :_SYSTEM_, _PAD_NUMBER_: 0

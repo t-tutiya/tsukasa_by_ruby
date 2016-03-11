@@ -407,24 +407,13 @@ class Control #セッター／ゲッター
   def _SET_(argument, options, yield_block_stack)
     #オプション全探査
     options.each do |key, val|
-      next if key == :option
-
       if argument
-        if options[:option] and options[:option][:offset]
-          #ハッシュに値を代入する
-          @root_control.send(argument.to_s)[key] += val
-        else
-          #ハッシュに値を代入する
-          @root_control.send(argument.to_s)[key] = val
-        end
+        #ハッシュに値を代入する
+        @root_control.send(argument.to_s)[key] = val
       else
         #セッターが用意されている場合
         if  respond_to?(key.to_s + "=")
-          if options[:option] and options[:option][:offset]
-            send(key.to_s + "=", send(key.to_s) + val)
-          else
-            send(key.to_s + "=", val)
-          end
+          send(key.to_s + "=", val)
         #どちらも無い場合はwarningを出して処理を続行する
         else
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + key.to_s + "]は存在しません"

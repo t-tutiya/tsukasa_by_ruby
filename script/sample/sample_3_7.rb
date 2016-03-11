@@ -21,10 +21,10 @@ _CREATE_ :ClickableLayoutControl,
     _CHECK_ mouse: [:key_down] do
       _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 2}
       _WAIT_ mouse: [:key_up] do
-        _GET_ [:cursor_offset_x, :cursor_offset_y] do |arg, options|
-          _MOVE_ 1, x: options[:cursor_offset_x], 
-                    y: options[:cursor_offset_y], 
-                    option:{offset: true}
+        _GET_ [:cursor_offset_x, :cursor_offset_y, :x, :y] do 
+          |cursor_offset_x:, cursor_offset_y:, x:, y:|
+          _SET_ x: cursor_offset_x + x, 
+                y: cursor_offset_y + y
         end
       end
     end

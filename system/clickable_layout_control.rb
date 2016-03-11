@@ -118,8 +118,8 @@ class ClickableLayoutControl < LayoutControl
     @cursor_x = @mouse_sprite.x = mouse_pos_x
     @cursor_y = @mouse_sprite.y = mouse_pos_y
 
-    @collision_sprite.x = @x
-    @collision_sprite.y = @y
+    @collision_sprite.x = @x + @offset_x
+    @collision_sprite.y = @y + @offset_y
 
     #マウスカーソルがコリジョン範囲内に無い
     if not (@mouse_sprite === @collision_sprite)

@@ -58,8 +58,8 @@ class LayoutableControl < Control
     @offset_x = options[:offset_x] || 0 #描画オフセットＸ座標
     @offset_y = options[:offset_y] || 0 #描画オフセットＹ座標
 
-    @width = options[:width] || 0 #幅
-    @height = options[:height] || 0 #高さ
+    @width = options[:width] || 1 #幅
+    @height = options[:height] || 1 #高さ
 
     #次コントロールの接続方向指定
     @float_x = options[:float_x]

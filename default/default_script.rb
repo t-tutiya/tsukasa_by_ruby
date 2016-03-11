@@ -382,20 +382,17 @@ end
 #初期レイヤ０
 _CREATE_ :ImageControl,
   z: 1000, #描画順序
-  id: :img0 do
-end
+  id: :img0
 
 #初期レイヤ１
 _CREATE_ :ImageControl,
   z: 2000, #描画順序
-  id: :img1 do
-end
+  id: :img1
 
 #初期レイヤ２
 _CREATE_ :ImageControl,
   z: 3000, #描画順序
-  id: :img2 do
-end
+  id: :img2
 
 TextWindow :text0, text_page_id: :default_text_page_control0,
   x: 96,

@@ -225,25 +225,7 @@ class Control #内部メソッド
         value.each do |count|
           return true if count <= 0
         end
-=begin
-      #コマンドがリスト上に存在している
-      when :stack_command
-        value.each do |command|
-          if @next_frame_commands.index{|stack_command|
-            stack_command[0] == command}
-            return true 
-          end
-        end
 
-      #コマンドがリスト上に存在していない
-      when :not_stack_command
-        value.each do |command|
-          unless @next_frame_commands.index{|stack_command|
-            stack_command[0] == command}
-            return true 
-          end
-        end
-=end
       #指定ＩＤの子要素が存在する
       when :child
         value.each do |id|

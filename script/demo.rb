@@ -182,7 +182,7 @@ _STACK_LOOP_ do |a,b,c|
 
   _END_FRAME_
 
-  _INCLUDE_ :file_path
+  _INCLUDE_ :file_path, force: true
 
 	_SEND_ :base do
 	  _DELETE_

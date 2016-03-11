@@ -17,11 +17,8 @@ _SEND_(:text0) do
                 check: {key_down: K_RCONTROL, 
                         key_push: K_SPACE,
                         system: :key_down}
-              } do
-      _SET_ x: 0, y:0
-    end
-    #トランジションが終了するまで待機
-    _WAIT_  not_stack_command: :_MOVE_ 
+              }
+    _SET_ x: 0, y:0
     #待機フラグが下がるまで待機
     _WAIT_ :_TEMP_, not_equal: {flag: nil}
     #文字列をカスケードアウトさせる
@@ -68,20 +65,16 @@ _DEFINE_ :TextSelect do |argument, options|
         alpha:[0,255],
         option: {check:{key_down: K_RCONTROL, 
                         key_push: K_SPACE,
-                        system: :key_down}} do
-          _SET_ alpha: 255
-      end
+                        system: :key_down}}
+      _SET_ alpha: 255
     end
     _MOVE_ 30, 
       x:[800,0],
       option: { easing: :out_quart,
                 check:{ key_down: K_RCONTROL, 
                         key_push: K_SPACE,
-                        system: :key_down}} do
-      _SET_ x: 0
-    end
-    #トランジションが終了するまで待機
-    _WAIT_  not_stack_command: :_MOVE_ 
+                        system: :key_down}}
+    _SET_ x: 0
     _STACK_LOOP_ do
       #マウスが領域内に入ったら色を変え、文字をスクロールインさせる
       _CHECK_ mouse: [:cursor_over] do

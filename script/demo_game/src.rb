@@ -13,7 +13,7 @@ _SEND_(:text0) do
     _MOVE_   30, 
       x:[800,0], 
       y:[-600,0],
-      option: { easing: :out_quart, 
+      _OPTION_: { easing: :out_quart, 
                 check: {key_down: K_RCONTROL, 
                         key_push: K_SPACE,
                         system: :key_down}
@@ -23,7 +23,7 @@ _SEND_(:text0) do
     _WAIT_ :_TEMP_, not_equal: {flag: nil}
     #文字列をカスケードアウトさせる
     _GET_ :id do |arg, options|
-      _MOVE_ 30 + options[:id] * 3, y:[0,600], option:{easing: :in_back}
+      _MOVE_ 30 + options[:id] * 3, y:[0,600], _OPTION_:{easing: :in_back}
     end
   end
   _DEFINE_ :_CHAR_WAIT_ do
@@ -63,14 +63,14 @@ _DEFINE_ :TextSelect do |argument, options|
         charactor: options[:text]
       _MOVE_ 30, 
         alpha:[0,255],
-        option: {check:{key_down: K_RCONTROL, 
+        _OPTION_: {check:{key_down: K_RCONTROL, 
                         key_push: K_SPACE,
                         system: :key_down}}
       _SET_ alpha: 255
     end
     _MOVE_ 30, 
       x:[800,0],
-      option: { easing: :out_quart,
+      _OPTION_: { easing: :out_quart,
                 check:{ key_down: K_RCONTROL, 
                         key_push: K_SPACE,
                         system: :key_down}}
@@ -96,7 +96,7 @@ _DEFINE_ :TextSelect do |argument, options|
       end
       #フラグが立っていればボタンをアウトさせてループを終了する
       _CHECK_ :_TEMP_,  not_equal: {flag: nil} do
-        _MOVE_ 60, y:[0,600], option:{easing: :in_back}
+        _MOVE_ 60, y:[0,600], _OPTION_:{easing: :in_back}
         _RETURN_
       end
       _END_FRAME_

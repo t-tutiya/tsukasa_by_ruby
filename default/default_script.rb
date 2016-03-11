@@ -294,7 +294,7 @@ _DEFINE_ :TextWindow do |argument, options|
       _DEFINE_ :_CHAR_RENDERER_ do
         #フェードイン（スペースキーか右CTRLが押されたらスキップ）
         _MOVE_   30, alpha:[0,255],
-              option: {check: { key_down: K_RCONTROL, 
+              _OPTION_: {check: { key_down: K_RCONTROL, 
                                 key_push: K_SPACE,
                                 system: [:key_down],
                                 equal: {_SKIP_: true}},
@@ -306,7 +306,7 @@ _DEFINE_ :TextWindow do |argument, options|
         _END_FRAME_
         #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
         _MOVE_  60,  alpha:128,
-              option: {
+              _OPTION_: {
               check: {key_down: K_RCONTROL, 
                       key_push: K_SPACE,
                       system: [:key_down]

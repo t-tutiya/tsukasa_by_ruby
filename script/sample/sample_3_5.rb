@@ -49,7 +49,7 @@ _LOOP_ do
   end
   _CHECK_ :_SYSTEM_, equal: {data0: true},key_down: [K_Z] do
     _SEND_ :cursor do 
-      _MOVE_ 30, x:0, y:0, option:{easing: :out_quart}
+      _MOVE_ 30, x:0, y:0, _OPTION_:{easing: :out_quart}
     end
     _MOVE_ 30, cursor_x:0, cursor_y:0 do
       _GET_ [:cursor_x, :cursor_y] do |arg, options|

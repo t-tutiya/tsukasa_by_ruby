@@ -406,15 +406,15 @@ class Control #セッター／ゲッター
   #コントロールのプロパティを更新する
   def _SET_(argument, options, yield_block_stack)
     #オプションハッシュの初期化
-    options[:option] =  {} unless options[:option]
+    options[:_OPTION_] =  {} unless options[:_OPTION_]
 
     #オプション全探査
     options.each do |key, val|
-      next if key == :option
+      next if key == :_OPTION_
 
       if argument
         #オフセットオプションが設定されている場合
-        if options[:option][:offset]
+        if options[:_OPTION_][:offset]
           #ハッシュに値を代入する
           @root_control.send(argument.to_s)[key] += val
         else
@@ -425,7 +425,7 @@ class Control #セッター／ゲッター
         #セッターが用意されている場合
         if  respond_to?(key.to_s + "=")
           #オフセットオプションが設定されている場合
-          if options[:option][:offset]
+          if options[:_OPTION_][:offset]
             send(key.to_s + "=", send(key.to_s) + val)
           else
             send(key.to_s + "=", val)
@@ -804,30 +804,30 @@ class Control #プロパティのパラメータ遷移
     raise unless argument #必須要素
     
     #オプションハッシュの初期化
-    options[:option] =  {} unless options[:option]
-    options[:option][:check] =  {} unless options[:option][:check]
+    options[:_OPTION_] =  {} unless options[:_OPTION_]
+    options[:_OPTION_][:check] =  {} unless options[:_OPTION_][:check]
     
     #現在の経過カウントを初期化
-    unless options[:option][:check][:count]
-      options[:option][:check][:count] = argument 
+    unless options[:_OPTION_][:check][:count]
+      options[:_OPTION_][:check][:count] = argument 
     end
 
     #条件が成立した場合
-    return if check_imple(options[:option][:datastore], options[:option][:check], yield_block_stack)
+    return if check_imple(options[:_OPTION_][:datastore], options[:_OPTION_][:check], yield_block_stack)
 
     #カウントダウン
-    options[:option][:check][:count] -= 1
+    options[:_OPTION_][:check][:count] -= 1
 
     # Easingパラメータが設定されていなければ線形移動を設定
-    options[:option][:easing] = :liner unless options[:option][:easing]
+    options[:_OPTION_][:easing] = :liner unless options[:_OPTION_][:easing]
 
     options.each do |key, index|
-      next if key == :option
+      next if key == :_OPTION_
 
       #開始値が設定されていなければ現在の値で初期化
       unless options[key].instance_of?(Array)
         #オフセットオプションが設定されている場合
-        if options[:option][:offset]
+        if options[:_OPTION_][:offset]
           #相対座標移動
           options[key] = [send(key), send(key) + options[key]]
         else
@@ -840,8 +840,8 @@ class Control #プロパティのパラメータ遷移
       send(key.to_s + "=", 
             (options[key][0] + 
               (options[key][1] - options[key][0]).to_f * 
-                EasingProcHash[options[:option][:easing]].call(
-                  (argument - options[:option][:check][:count]).fdiv(argument)
+                EasingProcHash[options[:_OPTION_][:easing]].call(
+                  (argument - options[:_OPTION_][:check][:count]).fdiv(argument)
               )
             ).to_i)
     end
@@ -1013,32 +1013,32 @@ class Control #プロパティのパラメータ遷移
     raise unless argument #必須要素
 
     #オプションハッシュの初期化
-    options[:option] =  {} unless options[:option]
-    options[:option][:check] =  {} unless options[:option][:check]
+    options[:_OPTION_] =  {} unless options[:_OPTION_]
+    options[:_OPTION_][:check] =  {} unless options[:_OPTION_][:check]
 
     #現在の経過カウントを初期化
-    unless options[:option][:check][:count]
-      options[:option][:check][:count] = argument 
+    unless options[:_OPTION_][:check][:count]
+      options[:_OPTION_][:check][:count] = argument 
     end
 
     #条件判定が存在し、かつその条件が成立した場合
-    return if check_imple(nil, options[:option][:check], yield_block_stack)
+    return if check_imple(nil, options[:_OPTION_][:check], yield_block_stack)
 
-    options[:option][:check][:count] -= 1
+    options[:_OPTION_][:check][:count] -= 1
 
-    options[:option][:type] = :spline unless options[:option][:type]
+    options[:_OPTION_][:type] = :spline unless options[:_OPTION_][:type]
 
     options.each do |key, values|
-      next if key == :option
+      next if key == :_OPTION_
 
       #Ｂスプライン補間時に始点終点を通らない
-      step =(values.size - 1).fdiv(argument) * (argument - options[:option][:check][:count])
+      step =(values.size - 1).fdiv(argument) * (argument - options[:_OPTION_][:check][:count])
 
       result = 0.0
 
       #全ての座標を巡回し、それぞれの座標についてstep量に応じた重み付けを行い、その総和を現countでの座標とする
       values.size.times do |index|
-        case options[:option][:type]
+        case options[:_OPTION_][:type]
         when :spline
           coefficent = b_spline_coefficent(step - index)
         when :line

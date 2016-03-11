@@ -595,7 +595,11 @@ class Control #スクリプト制御
       return
     end
 
-    control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
+    if options[:interrupt]
+      control._SCOPE_(nil, nil, yield_block_stack, &block)
+    else
+      control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
+    end
   end
 
   def _SEND_DEFAULT_(argument, options, yield_block_stack, &block)
@@ -605,7 +609,11 @@ class Control #スクリプト制御
 
   def _SEND_ALL_(argument, options, yield_block_stack, &block)
     @control_list.each do |control|
-      control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
+      if options[:interrupt]
+        control._SCOPE_(nil, nil, yield_block_stack, &block)
+      else
+        control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
+      end
     end
   end
 
@@ -614,7 +622,7 @@ class Control #スクリプト制御
     if argument
       @root_control._SEND_(argument, options, yield_block_stack, &block)
     else
-      @root_control._SCOPE_(argument, nil, yield_block_stack, &block)
+      @root_control._SCOPE_(nil, nil, yield_block_stack, &block)
     end
   end
 

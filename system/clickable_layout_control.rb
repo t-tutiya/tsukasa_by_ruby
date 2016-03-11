@@ -272,32 +272,4 @@ class ClickableLayoutControl < LayoutControl
     @key_blocked = true
     @root_control._TEMP_[:_KEY_BLOCKED_] = true
   end
-
-  #ツリー配下のコントロールをImageに書き出しコントロールリストの末端に追加する
-  def _TO_IMAGE_(argument, options, yield_block_stack, &block)
-    rt = RenderTarget.new(@width, @height)
-    render( 0, 0, rt, @width, @height)
-    #拡大率が設定されている場合
-    if options[:scale]
-      rt2 = RenderTarget.new( options[:scale] * @width, 
-                              options[:scale] * @height,)
-      rt2.draw_ex(-1 * options[:scale]**2 * @width,
-                  -1 * options[:scale]**2 * @height,
-                  rt,
-                  {:scale_x => options[:scale],
-                   :scale_y => options[:scale],})
-      entity  = rt2.to_image
-    else
-      entity  = rt.to_image
-    end
-    #イメージコントロールを生成する
-    @command_list.unshift([:_CREATE_, 
-                :ImageControl, 
-               {:entity => entity,
-                :z => options[:z] || Float::INFINITY, #描画順を正の無限大とする
-                :visible => options[:visible] || true, #デフォルトでは可視
-                :id => argument
-                }, 
-                yield_block_stack, block])
-  end
 end

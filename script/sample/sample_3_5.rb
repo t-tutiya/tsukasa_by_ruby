@@ -51,14 +51,14 @@ _LOOP_ do
     _SEND_ :cursor do 
       _MOVE_ 30, x:0, y:0, _OPTION_:{easing: :out_quart}
     end
-    _MOVE_ 30, cursor_x:0, cursor_y:0 do
+    _MOVE_ 30, mouse_x:0, mouse_y:0 do
       _GET_ [:cursor_x, :cursor_y] do |arg, options|
         _SEND_ :comment_area do
           _SET_ charactor: options[:cursor_x].to_s + ":" + options[:cursor_y].to_s
         end
       end
     end
-    _SET_ cursor_x:0, cursor_y:0
+    _SET_ mouse_x:0, mouse_y:0
     _SET_ :_SYSTEM_ , data0: false
   end
   _END_FRAME_

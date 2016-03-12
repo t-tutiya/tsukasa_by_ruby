@@ -405,31 +405,34 @@ class Control #セッター／ゲッター
 
   #コントロールのプロパティを更新する
   def _SET_(argument, options, yield_block_stack)
-    #オプションハッシュの初期化
-    options[:_OPTION_] =  {} unless options[:_OPTION_]
-
     #オプション全探査
     options.each do |key, val|
-      next if key == :_OPTION_
-
       if argument
-        #オフセットオプションが設定されている場合
-        if options[:_OPTION_][:offset]
-          #ハッシュに値を代入する
-          @root_control.send(argument.to_s)[key] += val
-        else
-          #ハッシュに値を代入する
-          @root_control.send(argument.to_s)[key] = val
-        end
+        #ハッシュに値を代入する
+        @root_control.send(argument.to_s)[key] = val
       else
         #セッターが用意されている場合
         if  respond_to?(key.to_s + "=")
-          #オフセットオプションが設定されている場合
-          if options[:_OPTION_][:offset]
-            send(key.to_s + "=", send(key.to_s) + val)
-          else
-            send(key.to_s + "=", val)
-          end
+          send(key.to_s + "=", val)
+        #どちらも無い場合はwarningを出して処理を続行する
+        else
+          pp "クラス[" + self.class.to_s + "]：変数[" + "@" + key.to_s + "]は存在しません"
+        end
+      end
+    end
+  end
+
+  #コントロールのプロパティを更新する
+  def _SET_OFFSET_(argument, options, yield_block_stack)
+    #オプション全探査
+    options.each do |key, val|
+      if argument
+        #ハッシュに値を代入する
+        @root_control.send(argument.to_s)[key] += val
+      else
+        #セッターが用意されている場合
+        if  respond_to?(key.to_s + "=")
+          send(key.to_s + "=", send(key.to_s) + val)
         #どちらも無い場合はwarningを出して処理を続行する
         else
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + key.to_s + "]は存在しません"

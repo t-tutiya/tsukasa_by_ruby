@@ -133,17 +133,6 @@ class ClickableLayoutControl < LayoutControl
       @inner_control = true
     end
 
-    #自身がキーブロックを行っている場合、フラグをクリアする
-    if @key_blocked
-      @key_blocked = false
-      @root_control._TEMP_[:_KEY_BLOCKED_] = false
-    end
-
-    #キーブロック中であれば処理を飛ばす
-    if @root_control._TEMP_[:_KEY_BLOCKED_]
-      return super
-    end
-
     if @inner_control
       #イベント起動済みフラグクリア
       @out = false
@@ -265,11 +254,5 @@ class ClickableLayoutControl < LayoutControl
       end
     end 
     return super
-  end
-
-  #１フレームの間、他のClickableLayoutControlでクリックイベントを無視する
-  def _KEY_BLOCK_(argument, options, yield_block_stack)
-    @key_blocked = true
-    @root_control._TEMP_[:_KEY_BLOCKED_] = true
   end
 end

@@ -597,40 +597,55 @@ class Control #スクリプト制御
 
 #  private
 
-  #コントロールにコマンドブロックを送信する
+  #子コントロールを検索してコマンドブロックを送信する
   def _SEND_(argument, options, yield_block_stack, &block)
     control = self
     
+    #第１引数に配列が設定されている場合
     if argument.instance_of?(Array)
+      #子コントロールを再帰的に検索
       argument.each do |control_id|
         control = control.find_control(control_id)
       end
     else
+      #直下の子コントロールから検索
       control = control.find_control(argument)
     end
 
+    #候補が見つからなかった場合
     unless control
       pp argument.to_s + "は無効な識別子です"
       return
     end
 
+    #インタラプト指定されている
     if options[:interrupt]
+      #子コントロールのコマンドリスト先頭に挿入
       control._SCOPE_(nil, nil, yield_block_stack, &block)
     else
+      #子コントロールのコマンドリスト末端に挿入
       control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
     end
   end
 
+  #子コントロールをデフォルト指定で検索してコマンドを送信する
   def _SEND_DEFAULT_(argument, options, yield_block_stack, &block)
+    #デフォルト名からidを取得
     argument = @root_control._DEFAULT_CONTROL_[argument]
+    #_SEND_を再実行
     _SEND_(argument, options, yield_block_stack, &block)
   end
 
+  #直下の子コントロール全てにコマンドを送信する
   def _SEND_ALL_(argument, options, yield_block_stack, &block)
+    #子コントロール全てを探査対象とする
     @control_list.each do |control|
+      #インタラプト指定されている
       if options[:interrupt]
+        #子コントロールのコマンドリスト先頭に挿入
         control._SCOPE_(nil, nil, yield_block_stack, &block)
       else
+        #子コントロールのコマンドリスト末端に挿入
         control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
       end
     end
@@ -638,9 +653,12 @@ class Control #スクリプト制御
 
   #ルートコントロールにコマンドブロックを送信する
   def _SEND_ROOT_(argument, options, yield_block_stack, &block)
+    #第１引数が設定されている場合
     if argument
+      #ルートコントロールから_SEND_を再実行する
       @root_control._SEND_(argument, options, yield_block_stack, &block)
     else
+      #ルートコントロールのコマンドリスト先頭に挿入
       @root_control._SCOPE_(nil, nil, yield_block_stack, &block)
     end
   end

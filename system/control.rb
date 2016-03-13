@@ -635,14 +635,6 @@ class Control #スクリプト制御
     end
   end
 
-  #子コントロールをデフォルト指定で検索してコマンドを送信する
-  def _SEND_DEFAULT_(argument, options, yield_block_stack, &block)
-    #デフォルト名からidを取得
-    argument = @root_control._DEFAULT_CONTROL_[argument]
-    #_SEND_を再実行
-    _SEND_(argument, options, yield_block_stack, &block)
-  end
-
   #直下の子コントロール全てにコマンドを送信する
   def _SEND_ALL_(argument, options, yield_block_stack, &block)
     #子コントロール全てを探査対象とする

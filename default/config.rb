@@ -57,11 +57,3 @@ _SET_ :_SYSTEM_, _PAD_NUMBER_: 0
 #カーソル可視設定
 _SET_ :_SYSTEM_, _CURSOR_VISIBLE_: true
 
-#TextLayerデフォルトＩＤ
-_SET_ :_DEFAULT_CONTROL_, TextLayer: :text0
-
-#TextPageControlデフォルトＩＤ
-_SET_ :_DEFAULT_CONTROL_, TextPageControl: :default_text_page_control0
-
-#無名コントロールデフォルトＩＤ（未使用？）
-_SET_ :_DEFAULT_CONTROL_, Anonymous: :anonymous

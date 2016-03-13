@@ -181,15 +181,17 @@ _INCLUDE_ "./resource/icon/icon_8_a.rb"
 #行クリック待ちポーズ
 _DEFINE_ :line_pause do
   #テキストレイヤのクリック待ち
-  _SEND_DEFAULT_ :TextLayer do 
-    _PAUSE_ do
-      _CREATE_ :RenderTargetControl, id: :icon, 
-        width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
-        _CREATE_ :TileMapControl, 
-          map_array: [[0]], size_x: 1, size_y: 1 do
-            _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_8_a.png",
-              x_count: 4, y_count: 2
-          _ICON_8_
+  _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
+    _SEND_ _DEFAULT_TEXT_PAGE_ do
+      _PAUSE_ do
+        _CREATE_ :RenderTargetControl, id: :icon, 
+          width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
+          _CREATE_ :TileMapControl, 
+            map_array: [[0]], size_x: 1, size_y: 1 do
+              _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_8_a.png",
+                x_count: 4, y_count: 2
+            _ICON_8_
+          end
         end
       end
     end
@@ -200,10 +202,12 @@ _DEFINE_ :line_pause do
 
   #クリック待ちアイコンを削除
   _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
-    _SEND_DEFAULT_ :TextLayer do 
-      _SEND_TO_ACTIVE_LINE_ do 
-        _SEND_ :icon do
-          _DELETE_
+    _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
+      _SEND_ _DEFAULT_TEXT_PAGE_ do
+        _SEND_TO_ACTIVE_LINE_ do 
+          _SEND_ :icon do
+            _DELETE_
+          end
         end
       end
     end
@@ -217,38 +221,41 @@ end
 
 _DEFINE_ :end_pause do
   #テキストレイヤのクリック待ち
-  _SEND_DEFAULT_ :TextLayer do 
-    _PAUSE_ do
-      _CREATE_ :RenderTargetControl, id: :icon, 
-        width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
-        _CREATE_ :TileMapControl, 
-          map_array: [[0]], size_x: 1, size_y: 1 do
-          _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
-            x_count: 4, y_count: 1
-          _STACK_LOOP_ do
-            _MAP_STATUS_ x:0, y:0, id:0
-            _WAIT_ count: 5
-            _MAP_STATUS_ x:0, y:0, id:1
-            _WAIT_ count: 5
-            _MAP_STATUS_ x:0, y:0, id:2
-            _WAIT_ count: 5
-            _MAP_STATUS_ x:0, y:0, id:3
-            _WAIT_ count: 5
+  _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
+    _SEND_ _DEFAULT_TEXT_PAGE_ do
+      _PAUSE_ do
+        _CREATE_ :RenderTargetControl, id: :icon, 
+          width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
+          _CREATE_ :TileMapControl, 
+            map_array: [[0]], size_x: 1, size_y: 1 do
+            _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
+              x_count: 4, y_count: 1
+            _STACK_LOOP_ do
+              _MAP_STATUS_ x:0, y:0, id:0
+              _WAIT_ count: 5
+              _MAP_STATUS_ x:0, y:0, id:1
+              _WAIT_ count: 5
+              _MAP_STATUS_ x:0, y:0, id:2
+              _WAIT_ count: 5
+              _MAP_STATUS_ x:0, y:0, id:3
+              _WAIT_ count: 5
+            end
           end
         end
       end
     end
   end
-
   #ルートのクリック待ち
   pause 
 
   #クリック待ちアイコンを削除
   _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
-    _SEND_DEFAULT_ :TextLayer do 
-      _SEND_TO_ACTIVE_LINE_ do 
-        _SEND_ :icon do
-          _DELETE_
+    _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
+      _SEND_ _DEFAULT_TEXT_PAGE_ do
+        _SEND_TO_ACTIVE_LINE_ do 
+          _SEND_ :icon do
+            _DELETE_
+          end
         end
       end
     end
@@ -394,12 +401,16 @@ _CREATE_ :ImageControl,
   z: 3000, #描画順序
   id: :img2
 
-TextWindow :text0, text_page_id: :default_text_page_control0,
+#初期テキストウィンドウ
+TextWindow :text0, 
   x: 96,
   y: 256 + 164,
   width: 1024,
   height: 192,
   z: 1000000 #描画順序
+
+#初期テキストウィンドウのidを格納
+_SET_ :_TEMP_, _DEFAULT_TEXT_PAGE_: :text0
 
 ###############################################################################
 #汎用コントロール

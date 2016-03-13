@@ -254,9 +254,11 @@ class TKSParser < Parslet::Parser
       :text_node => simple(:target)
     ) {
       text = "#{target}".gsub(/"/, '\"')
-       "_SEND_DEFAULT_(:TextLayer){" + 
-        %Q'_TEXT_ "#{text}"' +
-      "}\n" 
+  "_GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|\n"+
+  "  _SEND_ _DEFAULT_TEXT_PAGE_ do\n" + 
+      %Q'_TEXT_ "#{text}"' +
+  "  end\n" + 
+  "end\n" 
     }
 
     #インラインコマンド→そのまま返す
@@ -270,9 +272,11 @@ class TKSParser < Parslet::Parser
     rule(
       :inline_data_node => simple(:target)
     ) {
-      "_SEND_DEFAULT_(:TextLayer){" + 
+  "_GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|\n"+
+  "  _SEND_ _DEFAULT_TEXT_PAGE_ do\n" + 
        "_TEXT_ " + target.to_s +
-      "}\n" 
+  "  end\n" + 
+  "end\n" 
     }
 
     #text行→末端に改行コード追加
@@ -280,7 +284,11 @@ class TKSParser < Parslet::Parser
       :text_line => sequence(:target)
     ) { 
       target.join + 
-      "_SEND_DEFAULT_(:TextLayer){ _LINE_FEED_ }\n"
+  "_GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|\n"+
+  "  _SEND_ _DEFAULT_TEXT_PAGE_ do\n" + 
+  "    _LINE_FEED_\n" + 
+  "  end\n" + 
+  "end\n" 
     }
 
     rule(
@@ -293,7 +301,11 @@ class TKSParser < Parslet::Parser
     rule(
       :flush => simple(:target)
     ) { 
-      "_SEND_DEFAULT_(:TextLayer){ _FLUSH_ }\n"
+  "_GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|\n"+
+  "  _SEND_ _DEFAULT_TEXT_PAGE_ do\n" + 
+  "    _FLUSH_\n" + 
+  "  end\n" + 
+  "end\n" 
     }
   end
 end

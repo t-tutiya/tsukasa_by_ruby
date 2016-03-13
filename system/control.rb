@@ -129,29 +129,6 @@ class Control #内部メソッド
     return @control_list.find {|control| control.id == id }
   end
 
-  #ユーザー定義コマンドの実行
-  def call_user_command(command_name, argument, options, yield_block_stack, &block)
-    #関数名に対応する関数ブロックを取得する
-    function_block =  @function_list[command_name] || 
-                      @root_control.function_list[command_name]
-
-    #ユーザー定義コマンドが存在しない場合、コマンド送信文であるとみなす
-    unless function_block
-      _SEND_(command_name, options, yield_block_stack, &block)
-      return
-    end
-
-    #参照渡し汚染が起きないようにディープコピーで取得
-    yield_block_stack = yield_block_stack ? yield_block_stack.dup : []
-    #スタックプッシュ
-    yield_block_stack.push(block)
-    #終端コマンドを挿入
-    @command_list.unshift(:_END_FUNCTION_)
-
-    #functionを実行時評価しコマンド列を生成する。
-    parse_block(argument, options, yield_block_stack, &function_block)
-  end
-
   #コントロールを削除して良いかどうか
   def delete?
     return @delete_flag
@@ -209,6 +186,29 @@ class Control #内部メソッド
                       &block
                     )
     @command_list = command_list + @command_list
+  end
+
+  #ユーザー定義コマンドの実行
+  def call_user_command(command_name, argument, options, yield_block_stack, &block)
+    #関数名に対応する関数ブロックを取得する
+    function_block =  @function_list[command_name] || 
+                      @root_control.function_list[command_name]
+
+    #ユーザー定義コマンドが存在しない場合、コマンド送信文であるとみなす
+    unless function_block
+      _SEND_(command_name, options, yield_block_stack, &block)
+      return
+    end
+
+    #参照渡し汚染が起きないようにディープコピーで取得
+    yield_block_stack = yield_block_stack ? yield_block_stack.dup : []
+    #スタックプッシュ
+    yield_block_stack.push(block)
+    #終端コマンドを挿入
+    @command_list.unshift(:_END_FUNCTION_)
+
+    #functionを実行時評価しコマンド列を生成する。
+    parse_block(argument, options, yield_block_stack, &function_block)
   end
 
   def check_imple(argument, options, yield_block_stack)
@@ -365,11 +365,9 @@ class Control #内部メソッド
     
     return false
   end
-
 end
 
 class Control #コントロールの生成／破棄
-
   #コントロールをリストに登録する
   def _CREATE_(argument, options, yield_block_stack, &block)
     #コントロールを生成して子要素として登録する
@@ -390,7 +388,6 @@ class Control #コントロールの生成／破棄
 end
 
 class Control #セッター／ゲッター
-
   #コントロールのプロパティを更新する
   def _SET_(argument, options, yield_block_stack)
     #オプション全探査
@@ -460,7 +457,6 @@ class Control #セッター／ゲッター
 end
 
 class Control #制御構文
-
   def _WAIT_(argument, options, yield_block_stack, &block)
 
     #チェック条件を満たしたら終了する
@@ -556,7 +552,6 @@ class Control #制御構文
 end
 
 class Control #ユーザー定義関数操作
-
   #ユーザー定義コマンドを定義する
   def _DEFINE_(argument, options, yield_block_stack, &block)
     @function_list[argument] = block
@@ -573,7 +568,6 @@ class Control #ユーザー定義関数操作
 end
 
 class Control #スクリプト制御
-
   #子コントロールを検索してコマンドブロックを送信する
   def _SEND_(argument, options, yield_block_stack, &block)
     control = self
@@ -713,7 +707,6 @@ class Control #スクリプト制御
 end
 
 class Control #セーブデータ制御
-
   def _QUICK_SAVE_(argument, options, yield_block_stack)
     raise unless argument.kind_of?(Numeric)
 
@@ -750,7 +743,6 @@ class Control #セーブデータ制御
 end
 
 class Control #内部コマンド
-
   #ブロックを実行する。無名関数として機能する
   def _SCOPE_(argument, options, yield_block_stack, &block)
     #関数の終端を設定

@@ -99,12 +99,11 @@ class Tsukasa < ClickableLayoutControl
       :_LOADED_FEATURES_ => [],
     }
 
-    options[:id] = :default_rendertarget_container
-
-    @script_compiler = ScriptCompiler.new
     #パーサー
+    @script_compiler = ScriptCompiler.new
     @script_parser = {}
 
+    options[:id] = :default_rendertarget_container
     options[:command_list] = [[ :_INCLUDE_, 
                                 "./default/bootstrap_script.rb",{}]]
 

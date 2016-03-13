@@ -32,8 +32,6 @@
 require 'dxruby'
 require 'pp'
 
-
-
 require_relative './control.rb'
 require_relative './layoutable_control.rb'
 require_relative './drawable_control.rb'
@@ -91,8 +89,6 @@ class Tsukasa < ClickableLayoutControl
     #アプリ終了フラグ
     @close = false
 
-    @root_control = self
-
     #システムデータストア
     @_SYSTEM_ = {}
     #ローカルデータストア
@@ -112,7 +108,7 @@ class Tsukasa < ClickableLayoutControl
     options[:command_list] = [[ :_INCLUDE_, 
                                 "./default/bootstrap_script.rb",{}]]
 
-    super(options, nil, @root_control)
+    super(options, nil, self)
   end
 
   def update(mouse_pos_x = Input.mouse_x,

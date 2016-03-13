@@ -407,15 +407,17 @@ class Control #セッター／ゲッター
   def _SET_(argument, options, yield_block_stack)
     #オプション全探査
     options.each do |key, val|
+      #データストアが設定されている場合
       if argument
-        #ハッシュに値を代入する
+        #指定データストアのキーに値を代入する
         @root_control.send(argument.to_s)[key] = val
       else
-        #セッターが用意されている場合
+        #セッターが存在する場合
         if  respond_to?(key.to_s + "=")
+          #コントロールプロパティに値を代入
           send(key.to_s + "=", val)
-        #どちらも無い場合はwarningを出して処理を続行する
         else
+          #warningを出して処理を続行する
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + key.to_s + "]は存在しません"
         end
       end
@@ -426,15 +428,17 @@ class Control #セッター／ゲッター
   def _SET_OFFSET_(argument, options, yield_block_stack)
     #オプション全探査
     options.each do |key, val|
+      #データストアが設定されている場合
       if argument
-        #ハッシュに値を代入する
+        #指定データストアのキーに値をオフセット値を加算して代入
         @root_control.send(argument.to_s)[key] += val
       else
-        #セッターが用意されている場合
+        #セッターが存在する場合
         if  respond_to?(key.to_s + "=")
+          #コントロールプロパティに値をオフセット加算して代入
           send(key.to_s + "=", send(key.to_s) + val)
-        #どちらも無い場合はwarningを出して処理を続行する
         else
+          #warningを出して処理を続行する
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + key.to_s + "]は存在しません"
         end
       end
@@ -448,10 +452,13 @@ class Control #セッター／ゲッター
 
     #オプション全探査
     argument.each do |property|
+      #データストアが設定されている場合
       if options[:datastore]
-          result[property] = @root_control.send(options[:datastore])[property]
+        #データストアから値を取得する
+        result[property] = @root_control.send(options[:datastore])[property]
       else
         if respond_to?(property.to_s)
+          #コントロールプロパティから値を取得する
           result[property] = send(property)
         else
           pp "クラス[" + self.class.to_s + "]：変数[" + "@" + property.to_s + "]は存在しません"

@@ -65,8 +65,6 @@ class Tsukasa < ClickableLayoutControl
   #一時的に管理するデータ群。保存対象ではない。
   attr_reader  :_TEMP_
 
-  attr_reader  :_DEFAULT_CONTROL_
-
   attr_reader  :function_list
 
   attr_reader  :script_compiler
@@ -104,8 +102,6 @@ class Tsukasa < ClickableLayoutControl
       #_INCLUDE_したファイルパスをスタックする
       :_LOADED_FEATURES_ => [],
     }
-    #コマンドに設定されているデフォルトの送信先クラスのIDディスパッチテーブル
-    @_DEFAULT_CONTROL_ = {}
 
     options[:id] = :default_rendertarget_container
 

@@ -104,9 +104,6 @@ end
 #画面サイズの変更
 _DEFINE_ :_RESIZE_ do |argumnet, options|
   Window.resize(options[:width], options[:height])
-  _SEND_ROOT_ do
-    _SET_ width: options[:width], height: options[:height]
-  end
 end
 
 _DEFINE_ :_WINDOW_STATUS_ do |argumnet, options|

@@ -36,7 +36,6 @@ require_relative './control.rb'
 require_relative './layoutable_control.rb'
 require_relative './drawable_control.rb'
 require_relative './layout_control.rb'
-require_relative './scene_control.rb'
 
 require_relative './image_control.rb'
 
@@ -56,7 +55,7 @@ require_relative './text_page_control.rb'
 
 require_relative './script_compiler.rb'
 
-class Tsukasa < ClickableLayoutControl
+class Tsukasa < LayoutControl
   #システム全体で共有されるデータ群。保存対象。
   attr_reader  :_SYSTEM_
   #個別のセーブデータを表すデータ群。保存対象。
@@ -84,7 +83,7 @@ class Tsukasa < ClickableLayoutControl
   end
 end
 
-class Tsukasa < ClickableLayoutControl
+class Tsukasa < LayoutControl
 
   def initialize(options)
     #アプリ終了フラグ
@@ -131,7 +130,7 @@ class Tsukasa < ClickableLayoutControl
   end
 end
 
-class Tsukasa < ClickableLayoutControl
+class Tsukasa < LayoutControl
   def _SCRIPT_PARSER_(argument, options, yield_block_stack)
     require_relative options[:file_path]
     @script_parser[options[:ext_name]] = [

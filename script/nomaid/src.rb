@@ -176,7 +176,7 @@ _DEFINE_ :lesson_menu do
     end
     _SEND_ROOT_ do
       nomaid_comment_area{_SET_ charactor: "習い事によってメイドは少し成長した。"}
-      _WAIT_ mouse: :key_down
+      _WAIT_ system: :key_down
       nomaid_comment_area{_SET_ charactor: " "}
     end
     _SET_ :_TEMP_, end_day: true
@@ -279,7 +279,7 @@ _DEFINE_ :work_menu do
       _GET_ :reward, datastore: :_TEMP_ do |arg, options|
         nomaid_comment_area{_SET_ charactor: "労働の対価として$#{options[:reward]}を得た。"}
       end
-      _WAIT_ mouse: :key_down
+      _WAIT_ system: :key_down
       nomaid_comment_area{_SET_ charactor: " "}
     end
     _SET_ :_TEMP_, end_day: true
@@ -297,7 +297,7 @@ _DEFINE_ :rest do
   end
   _SEND_ROOT_ do
     nomaid_comment_area{_SET_ charactor: "メイドはゆっくりと身体を休めた……。"}
-    _WAIT_ mouse: :key_down
+    _WAIT_ system: :key_down
     nomaid_comment_area{_SET_ charactor: " "}
   end
   _SET_ :_TEMP_, end_day: true
@@ -437,7 +437,7 @@ end
       _LINE_FEED_
       _TEXT_ "はいない……。"
     }
-    _WAIT_ mouse: :key_down
+    _WAIT_ system: :key_down
     _EXIT_
   end
 
@@ -455,7 +455,7 @@ end
       _LINE_FEED_
       _TEXT_ "Thank you for playing."
     }
-    _WAIT_ mouse: :key_down
+    _WAIT_ system: :key_down
     _EXIT_
   end
 

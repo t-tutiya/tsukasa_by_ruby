@@ -36,11 +36,14 @@ class Control #公開インターフェイス
   @@system_path = File.expand_path('../../', __FILE__)
 
   attr_reader :id
+  attr_accessor  :update_sleep  #更新スリープフラグ
 end
 
 class Control #内部メソッド
 
   def initialize(options, yield_block_stack, root_control, &block)
+    @update_sleep = false
+
     #rootコントロールの保存
     @root_control = root_control
     # ユーザ定義関数
@@ -88,6 +91,11 @@ class Control #内部メソッド
         #ユーザー定義コマンドとみなして実行する
         call_user_command(command_name, argument, options, yield_block_stack,&block)
       end
+    end
+
+    #更新スリープフラグが立っていないなら通常通りの処理を進める
+    if @update_sleep
+      return 0, 0
     end
 
     #下位コントロール巡回

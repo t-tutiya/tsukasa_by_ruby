@@ -35,7 +35,7 @@ class Control #公開インターフェイス
   #プロセスのカレントディレクトリを保存する
   @@system_path = File.expand_path('../../', __FILE__)
 
-  attr_accessor :id
+  attr_reader :id
 end
 
 class Control #内部メソッド
@@ -105,7 +105,7 @@ class Control #内部メソッド
     return 0, 0
   end
 
-  #_TO_IMAGE_用
+  #描画
   def render(offset_x, offset_y, target, 
               parent_control_width, parent_control_height)
     #下位コントロール巡回
@@ -371,11 +371,10 @@ class Control #コントロールの生成／破棄
   #コントロールをリストに登録する
   def _CREATE_(argument, options, yield_block_stack, &block)
     #コントロールを生成して子要素として登録する
-    @control_list.push(
-      Module.const_get(argument).new( options, 
-                                      yield_block_stack, 
-                                      @root_control, 
-                                      &block)
+    @control_list.push(Module.const_get(argument).new(options, 
+                                                      yield_block_stack, 
+                                                      @root_control, 
+                                                      &block)
     )
   end
 

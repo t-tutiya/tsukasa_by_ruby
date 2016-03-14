@@ -47,9 +47,9 @@ _LOOP_ do
         _SET_ charactor: y.to_s
       end
     end
-    _GET_ [:cursor_x, :cursor_y] do |arg, options|
+    _GET_ [:mouse_x, :mouse_y] do |arg, options|
       _SEND_ :comment_area6_b do
-          _SET_ charactor: options[:cursor_x].to_s + ":" + options[:cursor_y].to_s
+          _SET_ charactor: options[:mouse_x].to_s + ":" + options[:mouse_y].to_s
       end
     end
   end

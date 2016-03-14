@@ -47,6 +47,9 @@ class ClickableLayoutControl < LayoutControl
   attr_reader :cursor_offset_x
   attr_reader :cursor_offset_y
 
+  #キー入力をスリープさせる
+  attr_accessor  :clickable_sleep
+
   def width=(arg)
     unless @collision_shape
       @collision_sprite.collision = [ 0, 0, arg, @height]
@@ -86,7 +89,7 @@ class ClickableLayoutControl < LayoutControl
 
     @cursor_x = @cursor_y = 0
 
-    @key_blocked = false
+    @clickable_sleep = false
 
     super
   end
@@ -194,6 +197,11 @@ class ClickableLayoutControl < LayoutControl
   end
 
   def check_imple(argument, options, yield_block_stack)
+    #キー入力がスリープしている場合条件判定を飛ばす
+    if @clickable_sleep
+      return super
+    end
+
     if options[:mouse]
       #対象キーが配列で渡されていない場合配列に変換する
       options[:mouse] = [options[:mouse]] unless options[:mouse].instance_of?(Array)

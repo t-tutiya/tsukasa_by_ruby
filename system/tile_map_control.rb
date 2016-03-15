@@ -32,7 +32,7 @@ require 'dxruby'
 
 #※子コントロール群は描画対象にならないので注意
 
-class TileMapControl < LayoutControl
+class TileMapControl < RenderTargetControl
 
   attr_accessor :map_array
   attr_accessor :image_array
@@ -58,14 +58,12 @@ class TileMapControl < LayoutControl
   def render(offset_x, offset_y, target, 
               parent_control_width, 
               parent_control_height)
-    super
-
     #描画オブジェクトを持ち、かつ可視でなければ戻る
-    return 0, 0 unless @image_array
+    return super unless @image_array
 
     dx, dy = check_align(parent_control_width, parent_control_height)
 
-    target.draw_tile( @x + @offset_x + offset_x + dx,
+    @entity.draw_tile(@x + @offset_x + offset_x + dx,
                       @y + @offset_y + offset_y + dy, 
                       @map_array, 
                       @image_array, 
@@ -75,7 +73,7 @@ class TileMapControl < LayoutControl
                       @size_y, 
                       @z)
 
-    return check_float
+    return super
   end
 
   def _ADD_TILE_(argument, options, yield_block_stack)

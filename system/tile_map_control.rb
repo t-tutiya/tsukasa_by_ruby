@@ -56,21 +56,14 @@ class TileMapControl < RenderTargetControl
   end
 
   def render(offset_x, offset_y, target, 
-              parent_control_width, 
-              parent_control_height)
+              parent_control_width, parent_control_height)
     #描画オブジェクトを持ち、かつ可視でなければ戻る
     return super unless @image_array
 
-    dx, dy = check_align(parent_control_width, parent_control_height)
-
-    @entity.draw_tile(@x + @offset_x + offset_x + dx,
-                      @y + @offset_y + offset_y + dy, 
-                      @map_array, 
-                      @image_array, 
-                      @map_x, 
-                      @map_y, 
-                      @size_x, 
-                      @size_y, 
+    @entity.draw_tile(0, 0, 
+                      @map_array, @image_array, 
+                      @map_x, @map_y, 
+                      @size_x, @size_y, 
                       @z)
 
     return super

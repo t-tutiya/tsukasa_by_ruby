@@ -796,7 +796,13 @@ class Control #プロパティのパラメータ遷移
     options[:_OPTION_][:check][:count] -= 1
 
     # Easingパラメータが設定されていなければ線形移動を設定
-    options[:_OPTION_][:easing] = :liner unless options[:_OPTION_][:easing]
+    unless options[:_OPTION_][:easing]
+      options[:_OPTION_][:easing] = :liner 
+    end
+    unless EasingProcHash[options[:_OPTION_][:easing]]
+      pp "easingオプション#{EasingProcHash[options[:_OPTION_][:easing]]}は設定されていません"
+      options[:_OPTION_][:easing] = :liner 
+    end
 
     options.each do |key, index|
       next if key == :_OPTION_

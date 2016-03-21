@@ -174,7 +174,7 @@ _DEFINE_ :lesson_menu do
       _SET_ :_TEMP_, mental_point: options[:mental_point] - mp_cost
     end
     end
-    _SEND_ROOT_ do
+    _SEND_ROOT_ interrupt: true do
       nomaid_comment_area{_SET_ charactor: "習い事によってメイドは少し成長した。"}
       _WAIT_ system: :key_down
       nomaid_comment_area{_SET_ charactor: " "}
@@ -275,7 +275,7 @@ _DEFINE_ :work_menu do
       end
 
     end
-    _SEND_ROOT_ do
+    _SEND_ROOT_ interrupt: true  do
       _GET_ :reward, datastore: :_TEMP_ do |arg, options|
         nomaid_comment_area{_SET_ charactor: "労働の対価として$#{options[:reward]}を得た。"}
       end
@@ -295,7 +295,7 @@ _DEFINE_ :rest do
     _SET_ :_TEMP_,  helth_point: options[:helth_point], 
                     mental_point: options[:mental_point]
   end
-  _SEND_ROOT_ do
+  _SEND_ROOT_ interrupt: true  do
     nomaid_comment_area{_SET_ charactor: "メイドはゆっくりと身体を休めた……。"}
     _WAIT_ system: :key_down
     nomaid_comment_area{_SET_ charactor: " "}

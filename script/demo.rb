@@ -35,10 +35,8 @@ _DEFINE_ :TextSelect do |argument, options|
         _SEND_ :text_area do
           _SET_ bgcolor: [255,0,255]
         end
-        _SEND_ROOT_ do
-          _SEND_ :comment_area do
-            _SET_ charactor: options[:comment]
-          end
+        _SEND_ROOT_ [:comment_area], interrupt: true do
+          _SET_ charactor: options[:comment]
         end
       end
       #マウスが領域外に出たら色を戻す

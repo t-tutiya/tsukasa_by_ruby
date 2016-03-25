@@ -150,7 +150,7 @@ class DrawableControl < LayoutableControl
     @draw_option[:offset_sync]
   end
 
-  def initialize(options, yield_block_stack, root_control, &block)
+  def initialize(options, yield_block_stack, root_control, parent_control, &block)
     #描画オプションの初期化
     @draw_option = options[:draw_option] || {}
 

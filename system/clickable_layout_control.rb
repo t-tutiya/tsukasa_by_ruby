@@ -65,7 +65,7 @@ class ClickableLayoutControl < LayoutControl
 end
 
 class ClickableLayoutControl < LayoutControl
-  def initialize(options, yield_block_stack, root_control, &block)
+  def initialize(options, yield_block_stack, root_control, parent_control, &block)
     @collision_shape = options[:collision_shape]
     
     self.colorkey = options[:colorkey] if options[:colorkey]

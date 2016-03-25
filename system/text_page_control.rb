@@ -174,7 +174,7 @@ class TextPageControl < LayoutControl
     @rubi_option[:charactor_pitch] = arg
   end
 
-  def initialize(options, yield_block_stack, root_control, &block)
+  def initialize(options, yield_block_stack, root_control, parent_control, &block)
     #レンダリング済みフォント使用中かどうか
     @use_image_font = options[:use_image_font] || false
     #レンダリング済みフォントのフォント名

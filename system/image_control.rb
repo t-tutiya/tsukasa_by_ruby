@@ -42,7 +42,7 @@ class ImageControl < DrawableControl
     @height = @entity.height
   end
 
-  def initialize(options, yield_block_stack, root_control, &block)
+  def initialize(options, yield_block_stack, root_control, parent_control, &block)
     if options[:file_path]
       self.file_path = options[:file_path]
     else

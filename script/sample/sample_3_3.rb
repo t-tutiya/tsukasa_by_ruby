@@ -23,7 +23,7 @@ comment_area :comment_area6_a, x:0, y:256,  char: "mouse"
 comment_area :comment_area6_b, x:256, y:256,  char: ""
 
 _LOOP_ do
-  _SEND_ROOT_ do
+  _SEND_ [:_ROOT_], interrupt: true do
     _SEND_ :comment_area1_b do
       _RUNNING_TIME_ do |time|
         _SET_ charactor: time.to_s

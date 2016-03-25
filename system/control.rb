@@ -41,11 +41,13 @@ end
 
 class Control #内部メソッド
 
-  def initialize(options, yield_block_stack, root_control, &block)
+  def initialize(options, yield_block_stack, root_control, parent_control, &block)
     @update_sleep = false
 
     #rootコントロールの保存
     @root_control = root_control
+    #親コントロールの保存
+    @parent_control = parent_control
     # ユーザ定義関数
     @function_list = {} 
     #コントロールのID(省略時は自身のクラス名とする)
@@ -133,6 +135,10 @@ class Control #内部メソッド
   def find_control(id)
     #整数であれば子要素の添え字と見なす
     return @control_list[id] if id.instance_of?(Fixnum)
+    #_ROOT_：ルートコントロール
+    return @root_control if id == :_ROOT_
+    #_PARENT_：親コントロール
+    return @parent_control if id == :_PARENT_
     #子コントロールを探査して返す。存在しなければnil
     return @control_list.find {|control| control.id == id }
   end
@@ -382,6 +388,7 @@ class Control #コントロールの生成／破棄
     @control_list.push(Module.const_get(argument).new(options, 
                                                       yield_block_stack, 
                                                       @root_control, 
+                                                      self, 
                                                       &block)
     )
   end
@@ -609,12 +616,6 @@ class Control #スクリプト制御
     @control_list.each do |control|
       control._SEND_(argument, options, yield_block_stack, &block)
     end
-  end
-
-  #ルートコントロールにコマンドブロックを送信する
-  def _SEND_ROOT_(argument, options, yield_block_stack, &block)
-    #ルートコントロールから_SEND_を再実行する
-    @root_control._SEND_(argument, options, yield_block_stack, &block)
   end
 
   #スクリプトファイルを挿入する

@@ -34,24 +34,23 @@ require 'dxruby'
 #システムサポート
 ###############################################################################
 
-_CREATE_ :LayoutControl, id: :requested_close do
+_CREATE_ :ClickableLayoutControl, id: :requested_close,
+  width: Window.width, height: Window.height do
   _STACK_LOOP_ do
     #ウィンドウの閉じるボタンが押された場合に呼びだされる。
     _CHECK_ system: [:requested_close] do
       _EXIT_ #アプリを終了する
     end
     
-    _SEND_ROOT_ do
-      _GET_ :_CURSOR_VISIBLE_, datastore: :_SYSTEM_ do |arg, options|
-        _CHECK_ mouse: :cursor_out do
-          #カーソルを表示する
-          Input.mouse_enable = true unless options[:_CURSOR_VISIBLE_]
-        end
+    _GET_ :_CURSOR_VISIBLE_, datastore: :_SYSTEM_ do |arg, options|
+      _CHECK_ mouse: [:cursor_off] do
+        #カーソルを表示する
+        Input.mouse_enable = true unless options[:_CURSOR_VISIBLE_]
+      end
 
-        _CHECK_ mouse: :cursor_over do
-          #カーソルを不可視に戻す
-          Input.mouse_enable = false unless options[:_CURSOR_VISIBLE_]
-        end
+      _CHECK_ mouse: [:cursor_on] do
+        #カーソルを不可視に戻す
+        Input.mouse_enable = false unless options[:_CURSOR_VISIBLE_]
       end
     end
     _END_FRAME_
@@ -104,6 +103,9 @@ end
 #画面サイズの変更
 _DEFINE_ :_RESIZE_ do |argumnet, options|
   Window.resize(options[:width], options[:height])
+  _SEND_ROOT_ :requested_close do
+    _SET_ width: options[:width], height: options[:height]
+  end
 end
 
 _DEFINE_ :_WINDOW_STATUS_ do |argumnet, options|

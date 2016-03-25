@@ -107,7 +107,7 @@ class Tsukasa < Control
     options[:command_list] = [[ :_INCLUDE_, 
                                 "./default/bootstrap_script.rb",{}]]
 
-    super(options, nil, self)
+    super(options, nil, self, self)
   end
 
   def update(mouse_pos_x = Input.mouse_x,

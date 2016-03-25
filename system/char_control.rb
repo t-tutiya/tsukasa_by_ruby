@@ -2,8 +2,6 @@
 
 require 'dxruby'
 
-require_relative './Image_font_maker'
-
 ###############################################################################
 #TSUKASA for DXRuby ver1.2(2016/3/1)
 #メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby
@@ -191,7 +189,7 @@ class CharControl < ImageControl
   #公開インターフェイス
   #############################################################################
 
-  def initialize(options, yield_block_stack, root_control, &block)
+  def initialize(options, yield_block_stack, root_control, parent_control, &block)
     @font_draw_option = {}
     @font_obj = {}
 
@@ -200,7 +198,7 @@ class CharControl < ImageControl
 
     self.charactor = options[:charactor] || raise #描画文字
 
-    self.weight = options[:bold] || false #太字
+    self.weight = options[:weight] || false #太字
     self.italic = options[:italic] || false  #イタリック
 
     self.color = options[:color] || [255,255,255] #色

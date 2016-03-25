@@ -13,13 +13,13 @@ _CREATE_ :ClickableLayoutControl,
   _STACK_LOOP_ do
     _END_FRAME_
     _CHECK_ mouse: [:cursor_over] do
-      _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 1}
+      _SEND_(0){ _MAP_STATUS_ 1}
     end
     _CHECK_ mouse: [:cursor_out] do
-      _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 0}
+      _SEND_(0){ _MAP_STATUS_ 0}
     end
     _CHECK_ mouse: [:key_down] do
-      _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 2}
+      _SEND_(0){ _MAP_STATUS_ 2}
       _WAIT_ mouse: [:key_up] do
         _GET_ [:cursor_offset_x, :cursor_offset_y, :x, :y] do 
           |cursor_offset_x:, cursor_offset_y:, x:, y:|
@@ -29,7 +29,7 @@ _CREATE_ :ClickableLayoutControl,
       end
     end
     _CHECK_ mouse: [:key_up] do
-      _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 1}
+      _SEND_(0){ _MAP_STATUS_ 1}
     end
   end
 end

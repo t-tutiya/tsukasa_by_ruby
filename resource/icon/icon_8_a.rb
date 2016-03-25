@@ -1,20 +1,20 @@
 _DEFINE_ :_ICON_8_ do
   _STACK_LOOP_ do
-    _MAP_STATUS_ x:0, y:0, id:0
+    _MAP_STATUS_ 0, x:0, y:0
     _WAIT_ count: 5
-    _MAP_STATUS_ x:0, y:0, id:1
+    _MAP_STATUS_ 1, x:0, y:0
     _WAIT_ count: 5
-    _MAP_STATUS_ x:0, y:0, id:2
+    _MAP_STATUS_ 2, x:0, y:0
     _WAIT_ count: 5
-    _MAP_STATUS_ x:0, y:0, id:3
+    _MAP_STATUS_ 3, x:0, y:0
     _WAIT_ count: 5
-    _MAP_STATUS_ x:0, y:0, id:4
+    _MAP_STATUS_ 4, x:0, y:0
     _WAIT_ count: 5
-    _MAP_STATUS_ x:0, y:0, id:5
+    _MAP_STATUS_ 5, x:0, y:0
     _WAIT_ count: 5
-    _MAP_STATUS_ x:0, y:0, id:6
+    _MAP_STATUS_ 6, x:0, y:0
     _WAIT_ count: 5
-    _MAP_STATUS_ x:0, y:0, id:7
+    _MAP_STATUS_ 7, x:0, y:0
     _WAIT_ count: 30
   end
 end

@@ -87,11 +87,11 @@ class TileMapControl < RenderTargetControl
   end
 
   def _MAP_STATUS_(argument, options, yield_block_stack, &block)
-    if options[:id]
-      @map_array[options[:x]][options[:y]] = options[:id]
+    if argument
+      @map_array[options[:x] || 0][options[:y] || 0] = argument
     else
       #ブロックが付与されているならそれを実行する
-      parse_block(@map_array[options[:x]][options[:y]], nil,
+      parse_block(@map_array[options[:x] || 0][options[:y] || 0], nil,
                   yield_block_stack, &block)
     end
   end

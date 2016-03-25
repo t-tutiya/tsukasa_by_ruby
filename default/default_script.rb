@@ -228,13 +228,13 @@ _DEFINE_ :end_pause do
             _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
               x_count: 4, y_count: 1
             _STACK_LOOP_ do
-              _MAP_STATUS_ x:0, y:0, id:0
+              _MAP_STATUS_ 0, x:0, y:0
               _WAIT_ count: 5
-              _MAP_STATUS_ x:0, y:0, id:1
+              _MAP_STATUS_ 1, x:0, y:0
               _WAIT_ count: 5
-              _MAP_STATUS_ x:0, y:0, id:2
+              _MAP_STATUS_ 2, x:0, y:0
               _WAIT_ count: 5
-              _MAP_STATUS_ x:0, y:0, id:3
+              _MAP_STATUS_ 3, x:0, y:0
               _WAIT_ count: 5
             end
           end
@@ -432,16 +432,16 @@ _DEFINE_ :button do |argument, options|
     _STACK_LOOP_ do
       _END_FRAME_
       _CHECK_ mouse: [:cursor_over] do
-        _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 1}
+        _SEND_(0){ _MAP_STATUS_ 1, x:0, y:0}
       end
       _CHECK_ mouse: [:cursor_out] do
-        _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 0}
+        _SEND_(0){ _MAP_STATUS_ 0, x:0, y:0}
       end
       _CHECK_ mouse: [:key_down] do
-        _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 2}
+        _SEND_(0){ _MAP_STATUS_ 2, x:0, y:0}
       end
       _CHECK_ mouse: [:key_up] do
-        _SEND_(0){ _MAP_STATUS_ x:0, y:0, id: 1}
+        _SEND_(0){ _MAP_STATUS_ 1, x:0, y:0}
       end
       _CHECK_ system: [:block_given] do
         _YIELD_

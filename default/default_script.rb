@@ -134,7 +134,7 @@ _DEFINE_ :_WINDOW_STATUS_ do |argumnet, options|
 end
 
 #マウスカーソルの可視設定
-_DEFINE_ :_CURSOR_VISIBLE_ do |argumnet|
+_DEFINE_ :_MOUSE_ENABLE_ do |argumnet|
   _SET_ :_SYSTEM_, _CURSOR_VISIBLE_: argumnet
   Input.mouse_enable = argumnet
 end

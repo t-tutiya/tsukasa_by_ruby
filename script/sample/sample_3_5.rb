@@ -36,7 +36,7 @@ _CREATE_ :LayoutControl , id: :cursor do
   end
 end
 
-_CURSOR_VISIBLE_ false
+_MOUSE_ENABLE_ false
 
 _LOOP_ do
   _GET_ [:mouse_x, :mouse_y] do |arg, options|
@@ -66,5 +66,5 @@ end
 
 end_pause
 #カーソル可視設定
-_CURSOR_VISIBLE_ true
+_MOUSE_ENABLE_ true
 

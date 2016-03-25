@@ -36,13 +36,13 @@ class Control #公開インターフェイス
   @@system_path = File.expand_path('../../', __FILE__)
 
   attr_reader :id
-  attr_accessor  :update_sleep  #更新スリープフラグ
+  attr_accessor :child_update  #子コントロールの更新可否
 end
 
 class Control #内部メソッド
 
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
-    @update_sleep = false
+    @child_update = true
 
     #rootコントロールの保存
     @root_control = root_control
@@ -95,10 +95,8 @@ class Control #内部メソッド
       end
     end
 
-    #更新スリープフラグが立っていないなら通常通りの処理を進める
-    if @update_sleep
-      return 0, 0
-    end
+    #子コントロールを更新しない場合は処理を終了
+    return 0, 0 unless @child_update
 
     #下位コントロール巡回
     @control_list.delete_if do |child_control|

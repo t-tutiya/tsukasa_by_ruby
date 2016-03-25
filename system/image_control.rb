@@ -106,7 +106,13 @@ class ImageControl < DrawableControl
     @entity.draw_font_ex(
       options[:x], options[:y],
       options[:text],
-      options[:font] || Font.default,
+      Font.new( options[:size] || 24,
+                options[:font_name] || "",  
+                {
+                  weight: options[:weight] || false,
+                  italic: options[:italic] || false
+                }
+              ),
       options[:option] || {})
   end
 

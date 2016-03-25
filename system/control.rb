@@ -238,13 +238,14 @@ class Control #内部メソッド
           return true if count <= 0
         end
 
-      #指定ＩＤの子要素が存在する
-      when :child
+      #指定ＩＤの子コントロールが存在する
+      when :child_exist
         value.each do |id|
           return true if find_control(id)
         end
 
-      when :not_child
+      #指定ＩＤの子コントロールが存在しない
+      when :child_not_exist
         value.each do |id|
           return true unless find_control(id)
         end

@@ -246,6 +246,11 @@ class Control #内部メソッド
           return true if find_control(id)
         end
 
+      when :not_child
+        value.each do |id|
+          return true unless find_control(id)
+        end
+
       #キーが押下されている
       when :key_push
         value.each do |key_code|

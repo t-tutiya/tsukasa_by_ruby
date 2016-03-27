@@ -106,6 +106,8 @@ _DEFINE_ :system_menu do
                  comment: "ボタンサンプル３：抜き色"
       TextSelect text: "sample_2_2",   path: path + "sample_2_2.rb", 
                  comment: "アニメーションサンプル"
+      TextSelect text: "sample_2_3",   path: path + "sample_2_3.rb", 
+                 comment: "コマンドメニューサンプル"
     end
     _CREATE_ :LayoutControl, id: 3, x:0, y:0, width: 256, float_x: :left    do
       TextSelect text: "sample_3_1", path: path + "sample_3_1.tks", 

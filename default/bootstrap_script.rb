@@ -28,18 +28,49 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-#コンフィグファイル
+#コンフィグファイルの読み込み
 _INCLUDE_ "./default/config.rb"
 
+#デフォルトのユーザー定義コマンド群の読み込み
+_INCLUDE_ "./default/default_script.rb"
+
+#標準ユーティリティー群の読み込み
+_INCLUDE_ "./default/utility_script.rb"
+
+#プラグインスクリプトファイルの読み込み
 _GET_ :_PLUGIN_PATH_, datastore: :_SYSTEM_ do |_PLUGIN_PATH_:|
   Dir.glob(_PLUGIN_PATH_).each do |file_path|
     _INCLUDE_ file_path
   end
 end
 
-#デフォルトのユーザー定義関数群
-_INCLUDE_ "./default/default_script.rb"
+#初期レイヤ０
+_CREATE_ :ImageControl,
+  z: 1000, #描画順序
+  id: :img0
 
+#初期レイヤ１
+_CREATE_ :ImageControl,
+  z: 2000, #描画順序
+  id: :img1
+
+#初期レイヤ２
+_CREATE_ :ImageControl,
+  z: 3000, #描画順序
+  id: :img2
+
+#初期テキストウィンドウ
+TextWindow :text0, 
+  x: 96,
+  y: 256 + 164,
+  width: 1024,
+  height: 192,
+  z: 1000000 #描画順序
+
+#初期テキストウィンドウのidを格納
+_SET_ :_TEMP_, _DEFAULT_TEXT_PAGE_: :text0
+
+#タイトルバーの文字列を設定
 _WINDOW_STATUS_ caption: "Tsukasa Engine powered by DXRuby", #文字列
                   cursor_type: IDC_ARROW
 

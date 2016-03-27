@@ -296,6 +296,60 @@ _DEFINE_ :button do |argument, options|
   end
 end
 
+###############################################################################
+#汎用テキストボタン
+###############################################################################
+
+#テキストボタン定義
+_DEFINE_ :TextButton do |argument, 
+  id: :test, 
+  x: 0, #Ｘ座標
+  y: 0, #Ｙ座標
+  width: 128, #ボタンＸ幅
+  height: 32, #ボタンＹ幅
+  text: "", #表示文字列
+  size: 32, #文字サイズ
+  font_name: "ＭＳ ゴシック", #フォント名
+  char_color: [255,255,255], #文字色
+  out_color: [0,0,0], #カーソルがボタン外にある時の背景色
+  in_color: [255,255,0], #カーソルがボタン上にある時の背景色
+  float_y: nil,
+  **options|
+  _CREATE_ :ClickableLayoutControl, id: id,
+    x: x , y: y, width: width , height: height,
+    float_y: float_y do
+    #テキストを描画するRenderTarget
+    _CREATE_ :RenderTargetControl, id: :text_area, 
+      width: width, height: height, bgcolor: out_color do
+      _CREATE_ :CharControl, 
+        size: size, 
+        color: char_color, 
+        font_name: font_name, 
+        charactor: text
+    end
+    _STACK_LOOP_ do
+      #マウスが領域内に入ったら色を変える
+      _WAIT_ mouse: [:cursor_over]
+      text_area{_SET_ bgcolor: in_color}
+
+      _WAIT_ mouse: [:cursor_out, :key_down]
+      #マウスが領域外に出たら色を戻す
+      _CHECK_ mouse: [:cursor_out] do
+        text_area{_SET_ bgcolor: out_color}
+      end
+      #マウスがクリックされたら付与ブロックを実行する
+      _CHECK_ mouse: [:key_down] do
+        #_EVAL_ "pp '[" + text.to_s + "]が押されました'"
+        _YIELD_ id
+      end
+    end
+  end
+end
+
+###############################################################################
+#ラベル
+###############################################################################
+
 #既読管理ラベル
 _DEFINE_ :_LABEL_ do |arugment, options|
 
@@ -437,53 +491,5 @@ _DEFINE_ :_LABEL_ do |arugment, options|
   #テキスト評価
   ###################################################################
   _YIELD_ 
-end
-
-###############################################################################
-#汎用テキストボタン
-###############################################################################
-
-#テキストボタン定義
-_DEFINE_ :TextButton do |argument, 
-  id: :test, 
-  x: 0, #Ｘ座標
-  y: 0, #Ｙ座標
-  width: 128, #ボタンＸ幅
-  height: 32, #ボタンＹ幅
-  text: "", #表示文字列
-  size: 32, #文字サイズ
-  font_name: "ＭＳ ゴシック", #フォント名
-  char_color: [255,255,255], #文字色
-  out_color: [0,0,0], #カーソルがボタン外にある時の背景色
-  in_color: [255,255,0], #カーソルがボタン上にある時の背景色
-  **options|
-  _CREATE_ :ClickableLayoutControl, id: id,
-    x: x , y: y, width: width , height: height do
-    #テキストを描画するRenderTarget
-    _CREATE_ :RenderTargetControl, id: :text_area, 
-      width: width, height: height do
-      _CREATE_ :CharControl, 
-        size: size, 
-        color: char_color, 
-        font_name: font_name, 
-        charactor: text
-    end
-    _STACK_LOOP_ do
-      #マウスが領域内に入ったら色を変える
-      _WAIT_ mouse: [:cursor_over]
-      text_area{_SET_ bgcolor: in_color}
-
-      _WAIT_ mouse: [:cursor_out, :key_down]
-      #マウスが領域外に出たら色を戻す
-      _CHECK_ mouse: [:cursor_out] do
-        text_area{_SET_ bgcolor: out_color}
-      end
-      #マウスがクリックされたら付与ブロックを実行する
-      _CHECK_ mouse: [:key_down] do
-        #_EVAL_ "pp '[" + text.to_s + "]が押されました'"
-        _YIELD_ id
-      end
-    end
-  end
 end
 

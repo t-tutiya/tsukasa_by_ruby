@@ -16,49 +16,15 @@ _SET_ :_TEMP_,
   day: 0,
   week: 0
 
-#テキストボタン定義
-_DEFINE_ :TextSelect do |argument, options|
-  _CREATE_ :ClickableLayoutControl,
-    float_y: :bottom,
-    x: options[:x] || 0, 
-    y: options[:y] || 0, 
+_DEFINE_ :menu_button do |id:, text: |
+  TextButton text: text, 
+    id: id,
     width: 228, 
-    height: 32, 
-    id: :Anonymous_CharControl do
-    #テキストを描画するRenderTarget
-    _CREATE_ :RenderTargetControl,
-      float_x: :left,
-      width: 228, 
-      height: 32, 
-      id: :text_area, 
-      bgcolor: [255,255,0] do
-      _CREATE_ :CharControl, 
-        size: 32, 
-        color:[255,255,0], 
-        font_name: "ＭＳ ゴシック", 
-        charactor: options[:text]
-    end
-    _STACK_LOOP_ do
-      _CHECK_ mouse: [:cursor_over] do
-      #マウスが領域内に入ったら色を変え、
-        _SEND_(:text_area){
-          _SET_ bgcolor: [255,0,255]
-        }
-      end
-      #マウスが領域外に出たら色を戻す
-      _CHECK_ mouse: [:cursor_out] do
-        _SEND_(:text_area){
-          _SET_ bgcolor: [0,255,255]
-        }
-      end
-      #マウスがクリックされたらフラグを立てる
-      _CHECK_ mouse: [:key_down] do
-        _SET_ :_TEMP_, flag: options[:id]
-        #_EVAL_ "pp '[" + options[:text].to_s + "]が押されました'"
-        _RETURN_
-      end
-      _END_FRAME_
-    end
+    height:32,
+    char_color: [255,255,0], #文字色
+    out_color: [0,255,255],
+    float_y: :bottom do |id|
+    _SET_ :_TEMP_, flag: id
   end
 end
 
@@ -68,9 +34,9 @@ _RESIZE_ width: 800, height: 600
 #トップメニュー
 _DEFINE_ :top_menu do
   _CREATE_ :LayoutControl, id: :top_menu, x:100, y:100 do
-    TextSelect text: "習い事をさせる", id: :lesson
-    TextSelect text: "働かせる", id: :work
-    TextSelect text: "休ませる", id: :rest
+    menu_button text: "習い事をさせる", id: :lesson
+    menu_button text: "働かせる", id: :work
+    menu_button text: "休ませる", id: :rest
   end
 
   _WAIT_ :_TEMP_,  not_equal: {flag: nil}
@@ -96,11 +62,11 @@ end
 #「習い事をさせる」メニュー
 _DEFINE_ :lesson_menu do
   _CREATE_ :LayoutControl, id: :lesson_menu, x:100, y:100 do
-    TextSelect text: "礼拝", id: :pray
-    TextSelect text: "学問", id: :academy
-    TextSelect text: "舞踏", id: :dance
-    TextSelect text: "礼儀作法", id: :courtesy
-    TextSelect text: "戻る", id: :cancel
+    menu_button text: "礼拝", id: :pray
+    menu_button text: "学問", id: :academy
+    menu_button text: "舞踏", id: :dance
+    menu_button text: "礼儀作法", id: :courtesy
+    menu_button text: "戻る", id: :cancel
   end
 
   _SET_ :_TEMP_, flag: nil
@@ -186,11 +152,11 @@ end
 #「働かせる」メニュー
 _DEFINE_ :work_menu do
   _CREATE_ :LayoutControl, id: :work_menu, x:100, y:100 do
-    TextSelect text: "清掃", id: :cleaning
-    TextSelect text: "給仕", id: :waitress
-    TextSelect text: "家庭教師", id: :tutor
-    TextSelect text: "接待", id: :party
-    TextSelect text: "戻る", id: :cancel
+    menu_button text: "清掃", id: :cleaning
+    menu_button text: "給仕", id: :waitress
+    menu_button text: "家庭教師", id: :tutor
+    menu_button text: "接待", id: :party
+    menu_button text: "戻る", id: :cancel
   end
   _SET_ :_TEMP_, flag: nil
   _WAIT_ :_TEMP_,  not_equal: {flag: nil}

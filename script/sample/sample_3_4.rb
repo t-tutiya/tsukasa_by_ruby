@@ -1,14 +1,26 @@
+_DEFINE_ :menu_button do |id:, text: |
+  TextButton text: text, 
+    id: id,
+    width: 228, 
+    height:32,
+    char_color: [255,255,0], #文字色
+    out_color: [0,255,255],
+    float_y: :bottom do |id|
+    _SET_ :_TEMP_, file_path: id
+  end
+end
+
 _CREATE_ :LayoutControl, id: :top_menu, x:0, y:0 do
   _SCREEN_MODES_ do |screen_modes|
     screen_modes.each do |screen_mode|
       if screen_mode == [640,480,60]
-        TextSelect text: "640×480", path: 0
+        menu_button text: "640×480", id: 0
       elsif screen_mode == [800,600,60]
-        TextSelect text: "800×600", path: 1
+        menu_button text: "800×600", id: 1
       elsif screen_mode == [1024,768,60]
-        TextSelect text: "1024×768", path: 2
+        menu_button text: "1024×768", id: 2
       elsif screen_mode == [1280,720,60]
-        TextSelect text: "1280×720", path: 3
+        menu_button text: "1280×720", id: 3
       end
     end
   end

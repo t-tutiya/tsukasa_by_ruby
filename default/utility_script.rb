@@ -340,7 +340,7 @@ _DEFINE_ :TextButton do |argument,
       #マウスがクリックされたら付与ブロックを実行する
       _CHECK_ mouse: [:key_down] do
         #_EVAL_ "pp '[" + text.to_s + "]が押されました'"
-        _YIELD_ id
+        _YIELD_ id, options
       end
     end
   end

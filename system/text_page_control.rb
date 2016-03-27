@@ -221,9 +221,6 @@ class TextPageControl < LayoutControl
     #次に描画する文字のＸ座標とインデントＸ座標オフセットをリセット
     @indent = options[:indent] || 0 
 
-    #文字ＩＤ
-    @charactor_id = 0
-
     super
 
     @function_list[:_CHAR_RENDERER_] =options[:_CHAR_RENDERER_] || Proc.new(){}
@@ -262,15 +259,11 @@ class TextPageControl < LayoutControl
                                       :align_y => :bottom,
                                       :charactor => argument,
                                       :command_list=> options[:command_list],
-                                      :float_x => :left,
-                                      :id => @charactor_id
+                                      :float_x => :left
                                     }.merge(@char_option), 
                                     nil,
                                     @function_list[:_CHAR_RENDERER_]
                                    )
-
-    #文字のＩＤを更新
-    @charactor_id += 1
 
     #文字幅スペーサーを生成する
     @control_list.last.push_command(:_CREATE_, 
@@ -407,9 +400,6 @@ class TextPageControl < LayoutControl
                       yield_block_stack, nil
                     ],
     )
-
-    #文字ＩＤの連番をリセット
-    @charactor_id = 0
   end
 
   #flushコマンド
@@ -430,9 +420,6 @@ class TextPageControl < LayoutControl
                         :float_y => :bottom
                       }, 
                       yield_block_stack])
-    
-    #文字ＩＤの連番をリセット
-    @charactor_id = 0
   end
 
   #############################################################################

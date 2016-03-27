@@ -36,6 +36,7 @@ class Control #公開インターフェイス
   @@system_path = File.expand_path('../../', __FILE__)
 
   attr_reader :id
+  attr_reader :child_index
   attr_accessor :child_update  #子コントロールの更新可否
 end
 
@@ -76,7 +77,9 @@ class Control #内部メソッド
     @command_list.push([command, argument, options, yield_block_stack, block])
   end
 
-  def update(mouse_pos_x, mouse_pos_y)
+  def update(mouse_pos_x, mouse_pos_y, index)
+    @child_index = index
+
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
@@ -98,13 +101,17 @@ class Control #内部メソッド
     #子コントロールを更新しない場合は処理を終了
     return 0, 0 unless @child_update
 
+    child_index = 0
+
     #下位コントロール巡回
     @control_list.delete_if do |child_control|
       #下位コントロールを自ターゲットに直接描画
-      child_dx, child_dy = child_control.update(mouse_pos_x, mouse_pos_y)
+      child_dx, child_dy = child_control.update(
+                            mouse_pos_x, mouse_pos_y, child_index)
       #マウス座標のオフセットを更新する
       mouse_pos_x -= child_dx
       mouse_pos_y -= child_dy
+      child_index += 1
 
       #コントロールの削除チェック
       child_control.delete?

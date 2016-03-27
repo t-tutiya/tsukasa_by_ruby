@@ -112,7 +112,7 @@ class Tsukasa < Control
 
   def update(mouse_pos_x = Input.mouse_x,
              mouse_pos_y = Input.mouse_y)
-    super
+    super(mouse_pos_x, mouse_pos_y, 0)
   end
 
   def render(offset_x, offset_y, target, 

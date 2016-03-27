@@ -71,9 +71,10 @@ class LayoutableControl < Control
     super
   end
 
-  def update(mouse_pos_x, mouse_pos_y)
+  def update(mouse_pos_x, mouse_pos_y, index)
     super(mouse_pos_x - @x -  @offset_x, 
-          mouse_pos_y - @y -  @offset_y)
+          mouse_pos_y - @y -  @offset_y,
+          index)
     return check_float
   end
 

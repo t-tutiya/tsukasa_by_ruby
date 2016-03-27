@@ -256,6 +256,7 @@ class TextPageControl < LayoutControl
     @control_list.last.push_command(:_CREATE_, 
                                     :CharControl, 
                                     {
+                                      :offset_x => @charactor_pitch,
                                       :align_y => :bottom,
                                       :charactor => argument,
                                       :command_list=> options[:command_list],
@@ -264,17 +265,6 @@ class TextPageControl < LayoutControl
                                     nil,
                                     @function_list[:_CHAR_RENDERER_]
                                    )
-
-    #文字幅スペーサーを生成する
-    @control_list.last.push_command(:_CREATE_, 
-                                    :LayoutControl, 
-                                    {
-                                      :width => @charactor_pitch,
-                                      :height => @line_height,
-                                      :align_y => :bottom,
-                                      :float_x => :left}, 
-                                    nil, 
-                                    nil)
   end
 
   #textコマンド
@@ -371,10 +361,11 @@ class TextPageControl < LayoutControl
     end
 
     @command_list.unshift(
-                    #行間ピッチ分の無形コントロールを追加
+                    #次のアクティブ行コントロールを追加  
                     [ :_CREATE_, 
                       :LayoutControl, 
                       {
+                        :offset_y => @line_spacing,
                         :width => @width,
                         :height => @line_height,
                         #インデント用無形コントロール
@@ -388,17 +379,6 @@ class TextPageControl < LayoutControl
     @command_list.unshift(
                     #行間待機処理を設定する
                     [:_LINE_WAIT_, nil, {}, yield_block_stack, nil],
-                    #次のアクティブ行コントロールを追加  
-                    [ :_CREATE_, 
-                      :LayoutControl, 
-                      {
-                        :width => @width,
-                        :height => @line_spacing,
-                        :float_x => :bottom, 
-                        :float_y => :bottom
-                      }, 
-                      yield_block_stack, nil
-                    ],
     )
   end
 

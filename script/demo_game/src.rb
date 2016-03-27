@@ -23,7 +23,7 @@ _SEND_(:text0) do
     _WAIT_ :_TEMP_, not_equal: {flag: nil}
     #文字列をカスケードアウトさせる
     _GET_ :child_index do |arg, options|
-      _MOVE_ 30 + options[:child_index] / 2 * 3, y:[0,600], _OPTION_:{easing: :in_back}
+      _MOVE_ 30 + options[:child_index] * 3, y:[0,600], _OPTION_:{easing: :in_back}
     end
   end
   _DEFINE_ :_CHAR_WAIT_ do

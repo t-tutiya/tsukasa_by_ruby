@@ -95,7 +95,7 @@ class LayoutableControl < Control
       dx = 0
     #右連結
     when :left
-      dx = @width
+      dx = @width + @offset_x
     #下連結
     when :bottom
       dx = @x
@@ -110,7 +110,7 @@ class LayoutableControl < Control
       dy = @y
     #下連結
     when :bottom
-      dy = @height
+      dy = @height + @offset_y
     end
 
     return dx, dy

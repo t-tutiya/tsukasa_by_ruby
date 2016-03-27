@@ -34,7 +34,7 @@ require 'dxruby'
 #汎用テキストマネージャクラス
 ###############################################################################
 
-class CharControl < ImageControl
+class CharControl < RenderTargetControl
   ############################################################################
   #書体情報
   ############################################################################
@@ -191,9 +191,10 @@ class CharControl < ImageControl
 
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
     @font_draw_option = {}
-    @font_obj = {}
 
-    self.size = options[:size] || 24 #フォントサイズ
+    #フォントサイズ
+    self.size = options[:width] = options[:height] = options[:size] || 24 
+
     self.font_name = options[:font_name] || "ＭＳ 明朝" #フォント名
 
     self.charactor = options[:charactor] || raise #描画文字
@@ -224,50 +225,68 @@ class CharControl < ImageControl
       #文字が設定されていなければ戻る
       return super unless @charactor
 
-      #フォントオブジェクトの初期化
-      @font_obj = Font.new( @size, 
-                            @font_name, 
-                            { :weight=>@weight, 
-                              :italic=>@italic})
-
       #現状での縦幅、横幅を取得
-      width = @font_obj.get_width(@charactor)
-      width = 1 if width == 0
-      @real_width = @width  = width
-      @real_height = @height = @font_obj.size
+      width = Font.new( @size, @font_name, 
+                            { :weight=>@weight, 
+                              :italic=>@italic}).get_width(@charactor)
+      if width == 0
+       self.width = 1
+      else
+       self.width = width
+      end
+
+      self.height = @size
 
       #イタリックの場合、文字サイズの半分を横幅に追加する。
       if @italic
-        @real_width = @width + @font_draw_option[:size]/2
+        real_width = @width + @font_draw_option[:size]/2
       end
 
       #影文字の場合、オフセット分を縦幅、横幅に追加する
       if @font_draw_option[:shadow]
-        @real_width   = @width  + @font_draw_option[:shadow_x]
-        @real_height  = @height + @font_draw_option[:shadow_y]
+        real_width   = @width  + @font_draw_option[:shadow_x]
+        real_height  = @height + @font_draw_option[:shadow_y]
       end
 
       #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加し、縁サイズ分をオフセットに加える。
       if @font_draw_option[:edge]
-        @real_width   = @width  + @font_draw_option[:edge_width] * 2
-        @real_height  = @height + @font_draw_option[:edge_width] * 2
-        @offset_x = -1 * @font_draw_option[:edge_width]
-        @offset_y = -1 * @font_draw_option[:edge_width]
+        real_width   = @width  + @font_draw_option[:edge_width] * 2
+        real_height  = @height + @font_draw_option[:edge_width] * 2
+        offset_x = -1 * @font_draw_option[:edge_width]
+        offset_y = -1 * @font_draw_option[:edge_width]
       else
-        @offset_x = 0
-        @offset_y = 0
+        offset_x = 0
+        offset_y = 0
       end
 
+      @control_list.clear
+
       #文字用のimageを作成
-      @entity = Image.new(@real_width, @real_height, [0, 0, 0, 0]) 
-
-      #フォントを描画
-      @entity.draw_font_ex( -1 * @offset_x, 
-                            -1 * @offset_y, 
-                            @charactor, 
-                            @font_obj, 
-                            @font_draw_option)
-
+      _CREATE_( :ImageControl, 
+                {
+                  offset_x: offset_x,
+                  offset_y: offset_y,
+                  width: real_width, 
+                  height: real_height,
+                  size: @size,
+                  font_name: @font_name,
+                  weight: @weight,
+                  italic: @italic,
+                  charactor: @charactor,
+                  draw_option: @font_draw_option,
+                  font_color: @font_draw_option[:color]
+                },
+                {}) do |arg, options|
+        #フォントを描画
+        _TEXT_  x:0, y:0, 
+                text: options[:charactor], 
+                size: options[:size],
+                font_name: options[:font_name],
+                weight: options[:weight],
+                italic: options[:italic],
+                color: options[:font_color],
+                option: options[:draw_option]
+      end
       @option_update = false
     end
 

@@ -595,12 +595,13 @@ class Control #スクリプト制御
       #子コントロールを再帰的に検索
       argument.each do |control_id|
         control = control.find_control(control_id)
+        break unless control
       end
     end
 
     #候補が見つからなかった場合
     unless control
-      pp argument[-1].to_s + "は無効な識別子です"
+      pp argument.to_s + "は存在しません"
       return
     end
 

@@ -626,7 +626,14 @@ class Control #スクリプト制御
   def _SEND_ALL_(argument, options, yield_block_stack, &block)
     #子コントロール全てを探査対象とする
     @control_list.each do |control|
-      control._SEND_(argument, options, yield_block_stack, &block)
+      unless argument
+        control._SEND_(nil, options, yield_block_stack, &block)
+        next
+      end
+      
+      if control.id == argument
+        control._SEND_(nil, options, yield_block_stack, &block)
+      end
     end
   end
 

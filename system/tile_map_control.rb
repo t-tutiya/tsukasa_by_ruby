@@ -57,6 +57,13 @@ class TileMapControl < RenderTargetControl
     super
   end
 
+  def dispose()
+    @image_array.each do |image|
+      image.dispose
+    end
+    super
+  end
+
   def render(offset_x, offset_y, target, 
               parent_control_width, parent_control_height)
     #描画オブジェクトを持ち、かつ可視でなければ戻る
@@ -83,7 +90,7 @@ class TileMapControl < RenderTargetControl
     @image_array += Image.load_tiles(options[:file_path], 
                                     options[:x_count] || 1, 
                                     options[:y_count] || 1, 
-                                    options[:share_switch] || true)
+                                    options[:share_switch] || false)
   end
 
   def _MAP_STATUS_(argument, options, yield_block_stack, &block)

@@ -163,7 +163,7 @@ _DEFINE_ :_PAD_CONFIG_ do |argumnet, options|
 end
 
 #キー入力情報を再取得する
-_DEFINE_ :_RESET_INPUT_ do
+_DEFINE_ :_INPUT_UPDATE_ do
   Input.update
 end
 

@@ -181,7 +181,7 @@ class TextPageControl < LayoutControl
     @image_face = options[:image_face] || nil
 
     @line_spacing = options[:line_spacing] || 12   #行間の幅
-    @charactor_pitch = options[:charactor_pitch ] || 3 #文字間の幅
+    @charactor_pitch = options[:charactor_pitch ] || -2 #文字間の幅
     @line_height = options[:line_height] || 32    #行の高さ
 
     #文字情報

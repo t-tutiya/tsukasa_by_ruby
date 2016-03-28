@@ -308,7 +308,7 @@ _DEFINE_ :TextButton do |argument,
   width: 128, #ボタンＸ幅
   height: 32, #ボタンＹ幅
   text: "", #表示文字列
-  size: 32, #文字サイズ
+  size: 31, #文字サイズ
   font_name: "ＭＳ ゴシック", #フォント名
   char_color: [255,255,255], #文字色
   out_color: [0,0,0], #カーソルがボタン外にある時の背景色

@@ -230,44 +230,38 @@ class CharControl < RenderTargetControl
                             { :weight=>@weight, 
                               :italic=>@italic}).get_width(@charactor)
       if width == 0
-       self.width = 1
-      else
-       self.width = width
+        width = 1
       end
 
-      self.height = @size
+      height = @size
 
       #イタリックの場合、文字サイズの半分を横幅に追加する。
       if @italic
-        real_width = @width + @font_draw_option[:size]/2
+        width += @font_draw_option[:size]/2
       end
 
       #影文字の場合、オフセット分を縦幅、横幅に追加する
       if @font_draw_option[:shadow]
-        real_width   = @width  + @font_draw_option[:shadow_x]
-        real_height  = @height + @font_draw_option[:shadow_y]
+        width += @font_draw_option[:shadow_x]
+        height += @font_draw_option[:shadow_y]
       end
 
-      #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加し、縁サイズ分をオフセットに加える。
+      #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加。
       if @font_draw_option[:edge]
-        real_width   = @width  + @font_draw_option[:edge_width] * 2
-        real_height  = @height + @font_draw_option[:edge_width] * 2
-        offset_x = -1 * @font_draw_option[:edge_width]
-        offset_y = -1 * @font_draw_option[:edge_width]
-      else
-        offset_x = 0
-        offset_y = 0
+        width += @font_draw_option[:edge_width] * 2
+        height += @font_draw_option[:edge_width] * 2
       end
+
+     self.width = width
+     self.height = height
 
       @control_list.clear
 
       #文字用のimageを作成
       _CREATE_( :ImageControl, 
                 {
-                  offset_x: offset_x,
-                  offset_y: offset_y,
-                  width: real_width, 
-                  height: real_height,
+                  width: width, 
+                  height: height,
                   size: @size,
                   font_name: @font_name,
                   weight: @weight,

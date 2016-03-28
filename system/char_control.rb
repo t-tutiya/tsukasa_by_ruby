@@ -34,7 +34,7 @@ require 'dxruby'
 #汎用テキストマネージャクラス
 ###############################################################################
 
-class CharControl < RenderTargetControl
+class CharControl < DrawableControl
   ############################################################################
   #書体情報
   ############################################################################
@@ -193,7 +193,7 @@ class CharControl < RenderTargetControl
     @font_draw_option = {}
 
     #フォントサイズ
-    self.size = options[:width] = options[:height] = options[:size] || 24 
+    self.size = options[:size] || 24 
 
     self.font_name = options[:font_name] || "ＭＳ 明朝" #フォント名
 
@@ -225,62 +225,44 @@ class CharControl < RenderTargetControl
       #文字が設定されていなければ戻る
       return super unless @charactor
 
-      #現状での縦幅、横幅を取得
-      width = Font.new( @size, @font_name, 
+      @font_obj = Font.new( @size, @font_name, 
                             { :weight=>@weight, 
-                              :italic=>@italic}).get_width(@charactor)
-      if width == 0
-        width = 1
-      end
+                              :italic=>@italic})
 
-      height = @size
+      #現状での縦幅、横幅を取得
+      @width = @font_obj.get_width(@charactor)
+      @width = 1 if @width == 0
+      @height = @size
 
       #イタリックの場合、文字サイズの半分を横幅に追加する。
       if @italic
-        width += @font_draw_option[:size]/2
+        @width += @font_draw_option[:size]/2
       end
 
       #影文字の場合、オフセット分を縦幅、横幅に追加する
       if @font_draw_option[:shadow]
-        width += @font_draw_option[:shadow_x]
-        height += @font_draw_option[:shadow_y]
+        @width += @font_draw_option[:shadow_x]
+        @height += @font_draw_option[:shadow_y]
       end
 
       #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加。
       if @font_draw_option[:edge]
-        width += @font_draw_option[:edge_width] * 2
-        height += @font_draw_option[:edge_width] * 2
+        @width += @font_draw_option[:edge_width] * 2
+        @height += @font_draw_option[:edge_width] * 2
       end
 
-     self.width = width
-     self.height = height
-
-      @control_list.clear
+      @entity.dispose if @entity
 
       #文字用のimageを作成
-      _CREATE_( :ImageControl, 
-                {
-                  width: width, 
-                  height: height,
-                  size: @size,
-                  font_name: @font_name,
-                  weight: @weight,
-                  italic: @italic,
-                  charactor: @charactor,
-                  draw_option: @font_draw_option,
-                  font_color: @font_draw_option[:color]
-                },
-                {}) do |arg, options|
-        #フォントを描画
-        _TEXT_  x:0, y:0, 
-                text: options[:charactor], 
-                size: options[:size],
-                font_name: options[:font_name],
-                weight: options[:weight],
-                italic: options[:italic],
-                color: options[:font_color],
-                option: options[:draw_option]
-      end
+      @entity = Image.new(@width, @height, [0, 0, 0, 0]) 
+
+      #フォントを描画
+      @entity.draw_font_ex( 0, 
+                            0, 
+                            @charactor, 
+                            @font_obj, 
+                            @font_draw_option)
+
       @option_update = false
     end
 

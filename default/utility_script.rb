@@ -248,19 +248,12 @@ _DEFINE_ :TextWindow do |argument, options|
   end
 end
 
-#初期テキストウィンドウ
-#初期レイヤ（背景）
-_CREATE_ :ImageControl,
-  z: 0, #描画順序
-  id: :base do
-end
-
 ###############################################################################
 #汎用ボタン
 ###############################################################################
 
 #ボタンコントロール
-_DEFINE_ :button do |argument, options|
+_DEFINE_ :_IMAGE_BUTTON_ do |argument, options|
   _CREATE_ :ClickableLayoutControl, 
     x: options[:x] || 0,
     y: options[:y] || 0,
@@ -301,7 +294,7 @@ end
 ###############################################################################
 
 #テキストボタン定義
-_DEFINE_ :TextButton do |argument, 
+_DEFINE_ :_TEXT_BUTTON_ do |argument, 
   id: :test, 
   x: 0, #Ｘ座標
   y: 0, #Ｙ座標

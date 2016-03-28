@@ -1,7 +1,7 @@
 _CREATE_ :CharControl, y: 500, charactor:"右クリックで戻る"
 
 _DEFINE_ :menu_button do |x:, y:, id:, text: |
-  TextButton text: text, x: x, y: y, id: id,
+  _TEXT_BUTTON_ text: text, x: x, y: y, id: id,
     width: 196-16, height:32 do |id|
     _SEND_ [:_PARENT_, :_PARENT_, :_PARENT_] do 
       _SEND_ :menu do

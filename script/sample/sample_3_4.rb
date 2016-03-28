@@ -1,5 +1,5 @@
 _DEFINE_ :menu_button do |id:, text: |
-  TextButton text: text, 
+  _TEXT_BUTTON_ text: text, 
     id: id,
     width: 228, 
     height:32,

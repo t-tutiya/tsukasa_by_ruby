@@ -44,6 +44,11 @@ _GET_ :_PLUGIN_PATH_, datastore: :_SYSTEM_ do |_PLUGIN_PATH_:|
   end
 end
 
+#初期レイヤ（背景）
+_CREATE_ :ImageControl,
+  z: 0, #描画順序
+  id: :base
+
 #初期レイヤ０
 _CREATE_ :ImageControl,
   z: 1000, #描画順序

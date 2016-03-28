@@ -24,7 +24,7 @@ _DEFINE_ :TextSelect do |argument, options|
       id: :text_area, 
       bgcolor: [0,255,255] do
       _CREATE_ :CharControl, 
-        size: 32, 
+        size: 30, 
         color:[255,255,0], 
         font_name: "ＭＳ ゴシック", 
         charactor: options[:text]

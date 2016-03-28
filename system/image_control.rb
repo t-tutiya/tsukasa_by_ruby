@@ -36,10 +36,14 @@ class ImageControl < DrawableControl
   attr_reader :file_path
   def file_path=(file_path)
     @file_path = file_path
-    #画像ファイルをキャッシュから読み込んで初期化する
-    @entity = @@image_cache[file_path]
+    @entity = Image.load(@file_path)
     @width = @entity.width
     @height = @entity.height
+  end
+
+  def dispose()
+    @entity.dispose
+    super
   end
 
   def initialize(options, yield_block_stack, root_control, parent_control, &block)

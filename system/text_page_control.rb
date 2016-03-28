@@ -389,6 +389,7 @@ class TextPageControl < LayoutControl
     @control_list.each do |control|
       control._DELETE_(argument, options, yield_block_stack)
     end
+    @control_list.clear
 
     #次のアクティブ行コントロールを追加  
     @command_list.unshift([:_CREATE_, 

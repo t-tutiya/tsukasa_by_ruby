@@ -197,7 +197,7 @@ class CharControl < DrawableControl
 
     self.font_name = options[:font_name] || "ＭＳ 明朝" #フォント名
 
-    self.charactor = options[:charactor] || raise #描画文字
+    self.charactor = options[:charactor] || " " #描画文字
 
     self.weight = options[:weight] || false #太字
     self.italic = options[:italic] || false  #イタリック

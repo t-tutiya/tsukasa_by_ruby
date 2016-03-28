@@ -1,3 +1,4 @@
+_CREATE_ :CharControl, y: 500, charactor:"右クリックで戻る"
 
 _DEFINE_ :menu_button do |x:, y:, id:, text: |
   TextButton text: text, x: x, y: y, id: id,

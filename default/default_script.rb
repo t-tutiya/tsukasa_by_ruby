@@ -40,6 +40,7 @@ _CREATE_ :ClickableLayoutControl, id: :requested_close,
     #ウィンドウの閉じるボタンが押された場合に呼びだされる。
     _CHECK_ system: [:requested_close] do
       _EXIT_ #アプリを終了する
+      _DELETE_
     end
     
     _GET_ :_CURSOR_VISIBLE_, datastore: :_SYSTEM_ do |arg, options|

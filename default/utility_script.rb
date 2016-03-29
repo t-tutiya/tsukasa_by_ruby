@@ -36,7 +36,7 @@ require 'dxruby'
 ###############################################################################
 
 #標準ポーズコマンド
-_DEFINE_ :pause do
+_DEFINE_ :_PAUSE_ do
   #スリープフラグを立てる
   _SET_ :_TEMP_, _SLEEP_: true
   #スリープフラグが下りるまで待機
@@ -48,7 +48,7 @@ end
 _INCLUDE_ "./resource/icon/icon_8_a.rb"
 
 #行クリック待ちポーズ
-_DEFINE_ :line_pause do
+_DEFINE_ :_LINE_PAUSE_ do
   #テキストレイヤのクリック待ち
   _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
     _SEND_ _DEFAULT_TEXT_PAGE_ do
@@ -67,7 +67,7 @@ _DEFINE_ :line_pause do
   end
 
   #ルートのクリック待ち
-  pause 
+  _PAUSE_ 
 
   #クリック待ちアイコンを削除
   _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
@@ -83,12 +83,12 @@ _DEFINE_ :line_pause do
   end
 end
 
-#行クリック待ちポーズ(line_pauseの省略板)
+#行クリック待ちポーズ(_LINE_PAUSE_の省略板)
 _DEFINE_ :lp do
-  line_pause
+  _LINE_PAUSE_
 end
 
-_DEFINE_ :end_pause do
+_DEFINE_ :_END_PAUSE_ do
   #テキストレイヤのクリック待ち
   _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
     _SEND_ _DEFAULT_TEXT_PAGE_ do
@@ -115,7 +115,7 @@ _DEFINE_ :end_pause do
     end
   end
   #ルートのクリック待ち
-  pause 
+  _PAUSE_ 
 
   #クリック待ちアイコンを削除
   _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
@@ -131,8 +131,9 @@ _DEFINE_ :end_pause do
   end
 end
 
+#ページクリック待ちポーズ(_END_PAUSE_の省略板)
 _DEFINE_ :ep do
-  end_pause
+  _END_PAUSE_
 end
 
 ###############################################################################
@@ -140,7 +141,7 @@ end
 ###############################################################################
 
 #標準テキストウィンドウ
-_DEFINE_ :TextWindow do |argument, options|
+_DEFINE_ :_TEXT_WINDOW_ do |argument, options|
   #メッセージウィンドウ
   _CREATE_ :TextPageControl, 
     x: options[:x] || 0,

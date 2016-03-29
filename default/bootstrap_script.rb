@@ -65,7 +65,7 @@ _CREATE_ :ImageControl,
   id: :img2
 
 #初期テキストウィンドウ
-TextWindow :text0, 
+_TEXT_WINDOW_ :text0, 
   x: 96,
   y: 256 + 164,
   width: 1024,

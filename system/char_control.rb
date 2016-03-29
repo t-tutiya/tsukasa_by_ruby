@@ -68,9 +68,9 @@ class CharControl < DrawableControl
   end
 
   # 文字
-  attr_reader :charactor    
-  def charactor=(arg)
-    @charactor = arg
+  attr_reader :char    
+  def char=(arg)
+    @char = arg
     @option_update = true
   end
 
@@ -197,7 +197,7 @@ class CharControl < DrawableControl
 
     self.font_name = options[:font_name] || "ＭＳ 明朝" #フォント名
 
-    self.charactor = options[:charactor] || " " #描画文字
+    self.char = options[:char] || " " #描画文字
 
     self.weight = options[:weight] || false #太字
     self.italic = options[:italic] || false  #イタリック
@@ -223,14 +223,14 @@ class CharControl < DrawableControl
   def update(mouse_pos_x, mouse_pos_y, index)
     if @option_update
       #文字が設定されていなければ戻る
-      return super unless @charactor
+      return super unless @char
 
       @font_obj = Font.new( @size, @font_name, 
                             { :weight=>@weight, 
                               :italic=>@italic})
 
       #現状での縦幅、横幅を取得
-      @width = @font_obj.get_width(@charactor)
+      @width = @font_obj.get_width(@char)
       @width = 1 if @width == 0
       @height = @size
 
@@ -259,7 +259,7 @@ class CharControl < DrawableControl
       #フォントを描画
       @entity.draw_font_ex( 0, 
                             0, 
-                            @charactor, 
+                            @char, 
                             @font_obj, 
                             @font_draw_option)
 

@@ -258,7 +258,7 @@ class TextPageControl < LayoutControl
                                     {
                                       :offset_x => @charactor_pitch,
                                       :align_y => :bottom,
-                                      :charactor => argument,
+                                      :char => argument,
                                       :command_list=> options[:command_list],
                                       :float_x => :left
                                     }.merge(@char_option), 

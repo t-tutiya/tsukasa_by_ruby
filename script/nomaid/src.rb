@@ -141,9 +141,9 @@ _DEFINE_ :lesson_menu do
     end
     end
     _SEND_ [:_ROOT_], interrupt: true do
-      nomaid_comment_area{_SET_ charactor: "習い事によってメイドは少し成長した。"}
+      nomaid_comment_area{_SET_ char: "習い事によってメイドは少し成長した。"}
       _WAIT_ system: :key_down
-      nomaid_comment_area{_SET_ charactor: " "}
+      nomaid_comment_area{_SET_ char: " "}
     end
     _SET_ :_TEMP_, end_day: true
   end
@@ -243,10 +243,10 @@ _DEFINE_ :work_menu do
     end
     _SEND_ [:_ROOT_], interrupt: true  do
       _GET_ :reward, datastore: :_TEMP_ do |arg, options|
-        nomaid_comment_area{_SET_ charactor: "労働の対価として$#{options[:reward]}を得た。"}
+        nomaid_comment_area{_SET_ char: "労働の対価として$#{options[:reward]}を得た。"}
       end
       _WAIT_ system: :key_down
-      nomaid_comment_area{_SET_ charactor: " "}
+      nomaid_comment_area{_SET_ char: " "}
     end
     _SET_ :_TEMP_, end_day: true
   end
@@ -262,9 +262,9 @@ _DEFINE_ :rest do
                     mental_point: options[:mental_point]
   end
   _SEND_ [:_ROOT_], interrupt: true  do
-    nomaid_comment_area{_SET_ charactor: "メイドはゆっくりと身体を休めた……。"}
+    nomaid_comment_area{_SET_ char: "メイドはゆっくりと身体を休めた……。"}
     _WAIT_ system: :key_down
-    nomaid_comment_area{_SET_ charactor: " "}
+    nomaid_comment_area{_SET_ char: " "}
   end
   _SET_ :_TEMP_, end_day: true
 end
@@ -289,7 +289,7 @@ _CREATE_ :CharControl,
   y: 128,
   color:[255,255,0], 
   font_name: "ＭＳ ゴシック",
-  charactor: " "
+  char: " "
 
 #■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 #■メイﾝループ

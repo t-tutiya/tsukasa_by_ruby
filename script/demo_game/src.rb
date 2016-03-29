@@ -60,7 +60,7 @@ _DEFINE_ :TextSelect do |argument, options|
         size: 32, 
         color:[255,255,0], 
         font_name: "ＭＳ ゴシック", 
-        charactor: options[:text]
+        char: options[:text]
       _MOVE_ 30, 
         alpha:[0,255],
         _OPTION_: {check:{key_down: K_RCONTROL, 

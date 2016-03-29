@@ -319,7 +319,7 @@ _DEFINE_ :_TEXT_BUTTON_ do |argument,
         size: size, 
         color: char_color, 
         font_name: font_name, 
-        charactor: text
+        char: text
     end
     _STACK_LOOP_ do
       #マウスが領域内に入ったら色を変える

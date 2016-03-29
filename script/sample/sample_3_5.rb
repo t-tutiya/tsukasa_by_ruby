@@ -6,7 +6,7 @@ _CREATE_ :CharControl,
   y: 256+196,
   color:[255,255,0], 
   font_name: "ＭＳ ゴシック",
-  charactor: " "
+  char: " "
 
 _CREATE_ :ClickableLayoutControl, x: 640-256, y: 480-256, width:256, height: 256 do
   _CREATE_ :ImageControl, file_path: "./resource/button_normal.png"
@@ -41,7 +41,7 @@ _MOUSE_ENABLE_ false
 _LOOP_ do
   _GET_ [:mouse_x, :mouse_y] do |arg, options|
     _SEND_ :comment_area do
-      _SET_ charactor: options[:mouse_x].to_s + ":" + options[:mouse_y].to_s
+      _SET_ char: options[:mouse_x].to_s + ":" + options[:mouse_y].to_s
     end
     _SEND_ :cursor do
       _SET_ x: options[:mouse_x], y: options[:mouse_y]
@@ -54,7 +54,7 @@ _LOOP_ do
     _MOVE_ 30, mouse_x:0, mouse_y:0 do
       _GET_ [:mouse_x, :mouse_y] do |arg, options|
         _SEND_ :comment_area do
-          _SET_ charactor: options[:mouse_x].to_s + ":" + options[:mouse_y].to_s
+          _SET_ char: options[:mouse_x].to_s + ":" + options[:mouse_y].to_s
         end
       end
     end

@@ -3,8 +3,8 @@ _CREATE_ :CharControl,
   size: 32, 
   y: 256+196,
   color:[255,255,0], 
-  font_name: "ＭＳ ゴシック",
-  charactor: " "
+  font_name: "Migu 1M",
+  char: " "
 
 
 #テキストボタン定義
@@ -27,7 +27,7 @@ _DEFINE_ :TextSelect do |argument, options|
         size: 30, 
         color:[255,255,0], 
         font_name: "ＭＳ ゴシック", 
-        charactor: options[:text]
+        char: options[:text]
     end
     _STACK_LOOP_ do
       _CHECK_ mouse: [:cursor_over] do
@@ -36,7 +36,7 @@ _DEFINE_ :TextSelect do |argument, options|
           _SET_ bgcolor: [255,0,255]
         end
         _SEND_ [:_ROOT_, :comment_area], interrupt: true do
-          _SET_ charactor: options[:comment]
+          _SET_ char: options[:comment]
         end
       end
       #マウスが領域外に出たら色を戻す
@@ -177,7 +177,7 @@ _STACK_LOOP_ do |a,b,c|
     _DELETE_
   end
   _SEND_ :comment_area do
-    _SET_ charactor: ""
+    _SET_ char: ""
   end
 
   _END_FRAME_

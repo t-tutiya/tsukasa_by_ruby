@@ -77,7 +77,6 @@ v1.2.0(2016/4/1)
 ・クラス構成
 　・Layoutable/DrawableモジュールをControl派生クラスLayoutableControl/DrawableControlに変更
 　・ClickableモジュールをLayoutControl派生クラスClickableLayoutControlに変更
-　・Tsukasaの継承元クラスをControlに変更
 　・TileMapControlの継承元クラスをRenderTargetControlに変更
 　・CharaControlの継承元クラスをDrawableControlに変更
 

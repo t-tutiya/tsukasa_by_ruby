@@ -82,28 +82,28 @@ v1.2.0(2016/4/1)
 
 * Control
     * プロパティ
-　    * child_index追加
-　    * child_update（子コントロール更新フラグ）追加
+    * child_index追加
+    * child_update（子コントロール更新フラグ）追加
     * _SEND_
-　    * 第１引数を設定しない場合、自コントロールを対象とするように変更
-　    * interruptオプションを追加
-　    * 特殊コントロールＩＤ:_ROOT_/:_PARENT_を対応
+    * 第１引数を設定しない場合、自コントロールを対象とするように変更
+    * interruptオプションを追加
+    * 特殊コントロールＩＤ:_ROOT_/:_PARENT_を対応
     * _SEND_ALL_コマンドを追加
     * _SEND_ROOT_コマンド廃止
     * _SET_OFFSET_コマンドを追加
     * _GET_のインターフェイスを刷新
-　    * 指定した値はブロック経由で参照する形式に変更
-　    * _RESULT_を廃止
+    * 指定した値はブロック経由で参照する形式に変更
+    * _RESULT_を廃止
     * _MOVE_/_PATH_の仕様を更新
-　    * 移動が終わるまでウェイトをかけ、実行中はブロックが実行されるように変更
-　    * _MOVE_/_PATH_のoptionを_OPTION_に変更
-　    * 無効のeasingオプションが設定された場合:linerに差し替えるように修正
+    * 移動が終わるまでウェイトをかけ、実行中はブロックが実行されるように変更
+    * _MOVE_/_PATH_のoptionを_OPTION_に変更
+    * 無効のeasingオプションが設定された場合:linerに差し替えるように修正
     * _INCLUDE_で多重読み込みを抑制する処理を追加：forceオプションを追加
     * 条件判定
-　    * 条件判定でコントロールプロパティの比較を可能にした
-　    * パッドボタン判定を追加
-　    * childをchild_existに変更
-　    * child_not_existを追加
+    * 条件判定でコントロールプロパティの比較を可能にした
+    * パッドボタン判定を追加
+    * childをchild_existに変更
+    * child_not_existを追加
     * _DEBUG_変数削除
     * デフォルト設定を廃止
 
@@ -155,20 +155,20 @@ v1.1.0(2016/1/8)
 
 * Controlクラス
     * 追加コマンド
-　    * _LOAD_NATIVE_：ネイティブrubyコードの読み込み。
-　    * _NEXT_LOOP_：_LOOP_の特殊版
-　    * _PARSE_：tks/司スクリプトをパースする
-　    * _QUICK_SAVE_ / _QUICK_LOAD_ ：クイックセーブ／ロードを実現するメカニズム。    * 追加条件判定項目
-　    * command_stack / not_command_stack（旧command）
-　    * システム全体の判定を行うsystemを追加。
-　　    * key_down/key_up/right_key_down/right_key_up
-　　    * block_given/requested_close(mouseから移動)
+    * _LOAD_NATIVE_：ネイティブrubyコードの読み込み。
+    * _NEXT_LOOP_：_LOOP_の特殊版
+    * _PARSE_：tks/司スクリプトをパースする
+    * _QUICK_SAVE_ / _QUICK_LOAD_ ：クイックセーブ／ロードを実現するメカニズム。    * 追加条件判定項目
+    * command_stack / not_command_stack（旧command）
+    * システム全体の判定を行うsystemを追加。
+        * key_down/key_up/right_key_down/right_key_up
+        * block_given/requested_close(mouseから移動)
     * 機能追加／変更
-　    * _TO_IMAGE_コマンド：任意の拡大率でImageControlを作れるようにした
-　    * _YILED_コマンド：付与ブロック無しに呼びだされた場合は例外で落とすようにした
-　    * _INCLUDE_コマンド：任意のparserクラスをオプションで指定できるようにした
-　    * 条件判定で単一要素を渡す際に、[]で囲まなくても良いようにした。
-　    * _PARSER_データストア追加
+    * _TO_IMAGE_コマンド：任意の拡大率でImageControlを作れるようにした
+    * _YILED_コマンド：付与ブロック無しに呼びだされた場合は例外で落とすようにした
+    * _INCLUDE_コマンド：任意のparserクラスをオプションで指定できるようにした
+    * 条件判定で単一要素を渡す際に、[]で囲まなくても良いようにした。
+    * _PARSER_データストア追加
 
 * TextPageControlクラス
     * 文字間待機、行間待機をユーザー定義関数で定義する形式に変更

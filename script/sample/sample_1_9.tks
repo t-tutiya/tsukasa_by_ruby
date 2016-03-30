@@ -11,5 +11,5 @@
 @		_MOVE_ 360, alpha: [255, 0]
 @	}
 
-@ end_pause
+@ _END_PAUSE_
 @ test0{_DELETE_}

@@ -47,7 +47,7 @@ class SoundControl  < Control
     end
   end
 
-  def update(mouse_pos_x,mouse_pos_y )
+  def update(mouse_pos_x, mouse_pos_y, index)
     Ayame.update
     super
   end

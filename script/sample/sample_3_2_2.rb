@@ -1,3 +1,3 @@
 _QUICK_LOAD_ 0
 
-end_pause
+_END_PAUSE_

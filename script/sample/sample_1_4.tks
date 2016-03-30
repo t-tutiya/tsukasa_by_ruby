@@ -3,4 +3,4 @@
 @		_MOVE_ 120, x: 500, y: -100, _OPTION_:{easing: :out_quart}
 @	}
 
-@ end_pause
+@ _END_PAUSE_

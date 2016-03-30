@@ -14,5 +14,5 @@
 
 @	test01{_STOP_ fadetime: 5}
 
-@ end_pause
+@ _END_PAUSE_
 @ test01{_DELETE_}

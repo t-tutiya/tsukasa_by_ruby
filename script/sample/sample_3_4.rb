@@ -51,7 +51,7 @@ img1{_SET_ file_path: "./resource/char/A-1.png"}
 
 _FULL_SCREEN_ true
 
-end_pause
+_END_PAUSE_
 
 _FULL_SCREEN_ false
 

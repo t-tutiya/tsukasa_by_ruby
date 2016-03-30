@@ -172,7 +172,6 @@ class DrawableControl < LayoutableControl
     super
   end
 
-  #_TO_IMAGE_用
   def render(offset_x, offset_y, target, 
               parent_control_width, parent_control_height)
     super(0, 0, @entity, @width, @height)

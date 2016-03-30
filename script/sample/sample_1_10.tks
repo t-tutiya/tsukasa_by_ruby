@@ -17,6 +17,6 @@
 @		}
 @	}
 
-@ end_pause
+@ _END_PAUSE_
 @ test0{_DELETE_}
 @ test1{_DELETE_}

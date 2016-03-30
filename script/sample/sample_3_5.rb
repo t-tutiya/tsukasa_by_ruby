@@ -64,7 +64,7 @@ _LOOP_ do
   _END_FRAME_
 end
 
-end_pause
+_END_PAUSE_
 #カーソル可視設定
 _MOUSE_ENABLE_ true
 

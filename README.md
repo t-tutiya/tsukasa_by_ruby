@@ -54,7 +54,8 @@ http://mirichi.github.io/dxruby-doc/api/constant_keycode.html
 *  default 初期値を設定するconfig.rb／デフォルトのスクリプトを格納するdefault_script.rbなどが格納されています。
 *  script 司/tksスクリプトを配置するフォルダです。このフォルダのfirst.rbが最初に実行されます。
 *  resource サンプルで使うリソースファイルが入っています。
-    *  githubからインストールする場合は、下記ファイルを直接ダウンロードし、展開後に配置してください。
+    * githubからインストールする場合は、下記ファイルを直接ダウンロードし、展開後に配置してください。
+    * https://github.com/t-tutiya/tsukasa/releases/download/v1.2.0/resource.zip
 *  datastore データストアを保存するフォルダです。初期状態では空です。
     *  githubからインストールする場合はこのフォルダが存在しないので、手動で空フォルダを作成してください。
 *  main.rb 実行スクリプト。これ自体は司エンジンには含まれません。

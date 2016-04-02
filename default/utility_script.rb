@@ -53,14 +53,12 @@ _DEFINE_ :_LINE_PAUSE_ do
   _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
     _SEND_ _DEFAULT_TEXT_PAGE_ do
       _PAUSE_ do
-        _CREATE_ :RenderTargetControl, id: :icon, 
+        _CREATE_ :TileMapControl, 
+          map_array: [[0]], size_x: 1, size_y: 1, id: :icon, 
           width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
-          _CREATE_ :TileMapControl, 
-            map_array: [[0]], size_x: 1, size_y: 1 do
-              _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_8_a.png",
-                x_count: 4, y_count: 2
-            _ICON_8_
-          end
+            _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_8_a.png",
+              x_count: 4, y_count: 2
+          _ICON_8_
         end
       end
     end
@@ -74,7 +72,7 @@ _DEFINE_ :_LINE_PAUSE_ do
     _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
       _SEND_ _DEFAULT_TEXT_PAGE_ do
         _SEND_TO_ACTIVE_LINE_ do 
-          _SEND_ :icon do
+          _SEND_ :icon, interrupt: true do
             _DELETE_
           end
         end
@@ -93,22 +91,16 @@ _DEFINE_ :_END_PAUSE_ do
   _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
     _SEND_ _DEFAULT_TEXT_PAGE_ do
       _PAUSE_ do
-        _CREATE_ :RenderTargetControl, id: :icon, 
+        _CREATE_ :TileMapControl, id: :icon, 
+          map_array: [[0]], size_x: 1, size_y: 1, 
           width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
-          _CREATE_ :TileMapControl, 
-            map_array: [[0]], size_x: 1, size_y: 1 do
-            _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
-              x_count: 4, y_count: 1
-            _STACK_LOOP_ do
-              _MAP_STATUS_ 0, x:0, y:0
-              _WAIT_ count: 5
-              _MAP_STATUS_ 1, x:0, y:0
-              _WAIT_ count: 5
-              _MAP_STATUS_ 2, x:0, y:0
-              _WAIT_ count: 5
-              _MAP_STATUS_ 3, x:0, y:0
-              _WAIT_ count: 5
-            end
+          _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
+            x_count: 4, y_count: 1
+          _STACK_LOOP_ do
+            _WAIT_ count: 5
+            _WAIT_ count: 5
+            _WAIT_ count: 5
+            _WAIT_ count: 5
           end
         end
       end
@@ -122,7 +114,7 @@ _DEFINE_ :_END_PAUSE_ do
     _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
       _SEND_ _DEFAULT_TEXT_PAGE_ do
         _SEND_TO_ACTIVE_LINE_ do 
-          _SEND_ :icon do
+          _SEND_ :icon, interrupt: true do
             _DELETE_
           end
         end
@@ -153,44 +145,50 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
     font_name: "ＭＳＰ ゴシック" do
       #文字間ウェイト
       _DEFINE_ :_CHAR_WAIT_ do
-        _WAIT_  :_TEMP_, count: 2,
-                key_down: K_RCONTROL,
-                key_push: K_SPACE,
-                system: [:mouse_push],
-                equal: {_SKIP_: true}
+        _WAIT_  :_TEMP_, 
+          count: 2,
+          key_down: K_RCONTROL,
+          key_push: K_SPACE,
+          system: [:mouse_push],
+          equal: {_SKIP_: true}
       end
+
       #行間ウェイト
       _DEFINE_ :_LINE_WAIT_ do
-        _WAIT_  :_TEMP_, count: 2,
-                key_down: K_RCONTROL,
-                key_push: K_SPACE,
-                system: [:mouse_push],
-                equal: {_SKIP_: true}
+        _WAIT_  :_TEMP_, 
+          count: 2,
+          key_down: K_RCONTROL,
+          key_push: K_SPACE,
+          system: [:mouse_push],
+          equal: {_SKIP_: true}
       end
+
       #文字レンダラ
       _DEFINE_ :_CHAR_RENDERER_ do
         #フェードイン（スペースキーか右CTRLが押されたらスキップ）
-        _MOVE_   30, alpha:[0,255],
-              _OPTION_: {check: { key_down: K_RCONTROL, 
-                                key_push: K_SPACE,
-                                system: [:mouse_push],
-                                equal: {_SKIP_: true}},
-                       datastore: :_TEMP_}
+        _MOVE_  30, 
+          alpha: [0,255],
+          _OPTION_: {check: { key_down: K_RCONTROL, 
+                            key_push: K_SPACE,
+                            system: [:mouse_push],
+                            equal: {_SKIP_: true}},
+                     datastore: :_TEMP_}
+        #α値を初期化
         _SET_ alpha: 255
         #待機フラグが下がるまで待機
         _WAIT_ :_TEMP_, equal: {_SLEEP_: false}
         #キー入力伝搬を防ぐ為に１フレ送る
         _INPUT_UPDATE_
         #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
-        _MOVE_  60,  alpha:128,
-              _OPTION_: {
-              check: {key_down: K_RCONTROL, 
+        _MOVE_ 60, 
+          alpha: 128,
+          _OPTION_: { check: {key_down: K_RCONTROL, 
                       key_push: K_SPACE,
-                      system: [:mouse_push]
-                      }}
+                      system: [:mouse_push]}}
         #スキップされた場合
-        _CHECK_ :_TEMP_, key_down: K_RCONTROL,
-                equal: {_SKIP_: true} do
+        _CHECK_ :_TEMP_, 
+          key_down: K_RCONTROL,
+          equal: {_SKIP_: true} do
           #CTRLスキップ中であれば透明度255
           _SET_ alpha: 255
         end
@@ -220,13 +218,12 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
 
       #キー入力待ち処理
       _DEFINE_ :_PAUSE_ do 
-        _WAIT_  :_TEMP_, count:32,
-                key_down: K_RCONTROL,
-                key_push: K_SPACE,
-                system: [:mouse_push],
-                equal: {_SKIP_: true}
-
-        _END_FRAME_
+        _WAIT_  :_TEMP_, 
+          count:32,
+          key_down: K_RCONTROL,
+          key_push: K_SPACE,
+          system: [:mouse_push],
+          equal: {_SKIP_: true}
 
         #クリック待ちアイコンの表示
         _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
@@ -237,11 +234,14 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
           end
         end
 
+        _END_FRAME_
+
         #スペースキーあるいはCTRLキーの押下待機
-        _WAIT_  :_TEMP_, key_down: K_RCONTROL,
-                          key_push: K_SPACE,
-                          system: [:mouse_push],
-                          equal: {_SKIP_: true}
+        _WAIT_  :_TEMP_, 
+          key_down: K_RCONTROL,
+          key_push: K_SPACE,
+          system: [:mouse_push],
+          equal: {_SKIP_: true}
 
         #ウェイクに移行
         _SET_ :_TEMP_, _SLEEP_: false

@@ -110,6 +110,7 @@ _DEFINE_ :_END_PAUSE_ do
       end
     end
   end
+
   #ルートのクリック待ち
   _PAUSE_ 
 
@@ -173,33 +174,29 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
         _MOVE_  30, 
           alpha: [0,255],
           _OPTION_: {check: { key_down: K_RCONTROL, 
-                            key_push: K_SPACE,
-                            system: [:mouse_push],
-                            equal: {_SKIP_: true}},
+                              key_push: K_SPACE,
+                              system: [:mouse_push],
+                              equal: {_SKIP_: true}},
                      datastore: :_TEMP_}
         #α値を初期化
         _SET_ alpha: 255
         #待機フラグが下がるまで待機
         _WAIT_ :_TEMP_, equal: {_SLEEP_: false}
-        #キー入力伝搬を防ぐ為に１フレ送る
+        #キー入力情報を更新
         _INPUT_UPDATE_
         #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
         _MOVE_ 60, 
           alpha: 128,
-          _OPTION_: { check: {key_down: K_RCONTROL, 
-                      key_push: K_SPACE,
-                      system: [:mouse_push]}}
-        #スキップされた場合
+          _OPTION_: {check: { key_down: K_RCONTROL, 
+                              key_push: K_SPACE,
+                              system: [:mouse_push]}}
+        #CTRLスキップ中でなければ透明度128
+        _SET_ alpha: 128
+        #CTRLスキップ中であれば透明度255
         _CHECK_ :_TEMP_, 
           key_down: K_RCONTROL,
           equal: {_SKIP_: true} do
-          #CTRLスキップ中であれば透明度255
           _SET_ alpha: 255
-        end
-        _CHECK_ key_push: K_SPACE,
-                system: [:mouse_push] do
-          #CTRLスキップ中でなければ透明度128
-          _SET_ alpha: 128
         end
       end
 
@@ -222,8 +219,9 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
 
       #キー入力待ち処理
       _DEFINE_ :_PAUSE_ do 
+        #行末の文字を出力してからアイコンを表示するまでのウェイト
         _WAIT_  :_TEMP_, 
-          count:32,
+          count: 28,
           key_down: K_RCONTROL,
           key_push: K_SPACE,
           system: [:mouse_push],
@@ -238,6 +236,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
           end
         end
 
+        #キー伝搬を防ぐ為のフレーム更新
         _END_FRAME_
 
         #スペースキーあるいはCTRLキーの押下待機

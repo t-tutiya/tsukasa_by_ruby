@@ -257,7 +257,7 @@ class Control #内部メソッド
           return true unless find_control(id)
         end
 
-      #キーが押下されている
+      #キーが押下された
       when :key_push
         value.each do |key_code|
           return true if Input.key_push?(key_code)
@@ -269,13 +269,13 @@ class Control #内部メソッド
           return true unless Input.key_push?(key_code)
         end
 
-      #キーが押下されている（前回との比較付き）
+      #キーが継続押下されている
       when :key_down
         value.each do |key_code|
           return true if Input.key_down?(key_code)
         end
 
-      #キーが押下されていない（前回との比較付き）
+      #キーが継続押下されていない
       when :not_key_down
         value.each do |key_code|
           return true unless Input.key_down?(key_code)
@@ -377,13 +377,13 @@ class Control #内部メソッド
             return true if Input.mouse_push?( M_LBUTTON )
           when :mouse_down
             return true if Input.mouse_down?( M_LBUTTON )
-          when :key_up
+          when :mouse_up
             return true if Input.mouse_release?( M_LBUTTON )
           when :right_mouse_down
             return true if Input.mouse_down?( M_RBUTTON )
           when :right_mouse_push
             return true if Input.mouse_push?( M_RBUTTON )
-          when :right_key_up
+          when :right_mouse_up
             return true if Input.mouse_release?( M_RBUTTON )
           when :block_given
             return true unless yield_block_stack[-1] == nil

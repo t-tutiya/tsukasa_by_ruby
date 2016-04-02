@@ -180,7 +180,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
         #待機フラグが下がるまで待機
         _WAIT_ :_TEMP_, equal: {_SLEEP_: false}
         #キー入力伝搬を防ぐ為に１フレ送る
-        _END_FRAME_
+        _INPUT_UPDATE_
         #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
         _MOVE_  60,  alpha:128,
               _OPTION_: {
@@ -269,22 +269,40 @@ _DEFINE_ :_IMAGE_BUTTON_ do |argument, options|
       _ADD_TILE_ 1, file_path: "./resource/button_over.png"
       _ADD_TILE_ 2, file_path: "./resource/button_key_down.png"
     end
-    _STACK_LOOP_ do
-      _END_FRAME_
-      _CHECK_ mouse: [:cursor_over] do
-        _SEND_(0){ _MAP_STATUS_ 1, x:0, y:0}
+    _LOOP_ do
+      #画像を「NORMAL」に差し替える
+      _SEND_(0){ _MAP_STATUS_ 0}
+
+      #カーソルが画像の上に来るまで待機
+      _WAIT_ mouse: [:cursor_on]
+
+      #画像を「OVER」に差し替える
+      _SEND_(0){ _MAP_STATUS_ 1}
+
+      #キーがクリックされるまで待機し、その間ブロックを実行する
+      _WAIT_ mouse: [:key_down] do
+        #カーソルが画像の外に移動した場合
+        _CHECK_ mouse: [:cursor_out] do
+          #ループの最初に戻る
+          _NEXT_
+        end
       end
-      _CHECK_ mouse: [:cursor_out] do
-        _SEND_(0){ _MAP_STATUS_ 0, x:0, y:0}
-      end
-      _CHECK_ mouse: [:key_down] do
-        _SEND_(0){ _MAP_STATUS_ 2, x:0, y:0}
-      end
-      _CHECK_ mouse: [:key_up] do
-        _SEND_(0){ _MAP_STATUS_ 1, x:0, y:0}
-      end
+
+      #画像を「DOWN」に差し替える
+      _SEND_(0){ _MAP_STATUS_ 2}
+
+      #ブロックが設定されていれば実行する
       _CHECK_ system: [:block_given] do
         _YIELD_
+      end
+
+      #キーが離されるまで待機し、その間ブロックを実行する
+      _WAIT_ mouse: [:key_up] do
+        #カーソルが画像の外に移動した場合
+        _CHECK_ mouse: [:cursor_out] do
+          #ループの最初に戻る
+          _NEXT_
+        end
       end
     end
   end

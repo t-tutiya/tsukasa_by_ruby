@@ -1,8 +1,7 @@
 _CREATE_ :ClickableLayoutControl, 
   width:256, 
-  height:256,
-  id: :drag_unit do
-  _CREATE_ :TileMapControl, 
+  height:256 do
+  _CREATE_ :TileMapControl, id: :icon, 
     width: 256,
     height: 256 do
     _SET_ map_array: [[0]]
@@ -10,26 +9,36 @@ _CREATE_ :ClickableLayoutControl,
     _ADD_TILE_ 1, file_path: "./resource/button_over.png"
     _ADD_TILE_ 2, file_path: "./resource/button_key_down.png"
   end
-  _STACK_LOOP_ do
-    _END_FRAME_
-    _CHECK_ mouse: [:cursor_over] do
-      _SEND_(0){ _MAP_STATUS_ 1}
-    end
-    _CHECK_ mouse: [:cursor_out] do
-      _SEND_(0){ _MAP_STATUS_ 0}
-    end
-    _CHECK_ mouse: [:key_down] do
-      _SEND_(0){ _MAP_STATUS_ 2}
-      _WAIT_ mouse: [:key_up] do
-        _GET_ [:cursor_offset_x, :cursor_offset_y, :x, :y] do 
-          |cursor_offset_x:, cursor_offset_y:, x:, y:|
-          _SET_ x: cursor_offset_x + x, 
-                y: cursor_offset_y + y
-        end
+  #ループ
+  _LOOP_ do
+    #カーソルが画像の上に来るまで待機
+    _WAIT_ mouse: [:cursor_on]
+
+    #画像を「OVER」に差し替える
+    icon{ _MAP_STATUS_ 1}
+
+    #キーがクリックされるまで待機し、その間ブロックを実行する
+    _WAIT_ mouse: [:key_down] do
+      #カーソルが画像の外に移動した場合
+      _CHECK_ mouse: [:cursor_out] do
+        #画像を「NORMAL」に差し替える
+        icon{ _MAP_STATUS_ 0}
+        #ループの最初に戻る
+        _NEXT_
       end
     end
-    _CHECK_ mouse: [:key_up] do
-      _SEND_(0){ _MAP_STATUS_ 1}
+
+    #画像を「DOWN」に差し替える
+    icon{ _MAP_STATUS_ 2}
+
+    #キーが離されるまで待機し、その間ブロックを実行する
+    _WAIT_ mouse: [:key_up] do
+      #コントロールプロパティを取得
+      _GET_ [:cursor_offset_x, :cursor_offset_y] do 
+             |cursor_offset_x:, cursor_offset_y:|
+        #コントロールのＸＹ座標にカーソルの移動オフセット値を加算
+        _SET_OFFSET_ x: cursor_offset_x, y: cursor_offset_y
+      end
     end
   end
 end

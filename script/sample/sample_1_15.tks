@@ -1,14 +1,10 @@
 @	_SET_ :_TEMP_, click: nil
 
 @	_IMAGE_BUTTON_ :button1, x: 50, y: 150 do
-@		_CHECK_ mouse: [:key_up] do
-@			_SET_ :_TEMP_, click: :left
-@		end
+@		_SET_ :_TEMP_, click: :left
 @	end
 @	_IMAGE_BUTTON_ :button2, x: 450, y: 150 do
-@		_CHECK_ mouse: [:key_up] do
-@			_SET_ :_TEMP_, click: :right
-@		end
+@		_SET_ :_TEMP_, click: :right
 @	end
 @
 @	_WAIT_ :_TEMP_, not_null: :click
@@ -21,5 +17,9 @@
 @		_INCLUDE_ "./script/sample/sample_1_15b.tks"
 @	end
 
-@ button1{_DELETE_}
-@ button2{_DELETE_}
+@ _SEND_ :button1, interrupt: true do
+@   _DELETE_
+@ end
+@ _SEND_ :button2, interrupt: true do
+@   _DELETE_
+@ end

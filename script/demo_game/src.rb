@@ -16,7 +16,7 @@ _SEND_(:text0) do
       _OPTION_: { easing: :out_quart, 
                 check: {key_down: K_RCONTROL, 
                         key_push: K_SPACE,
-                        system: :key_down}
+                        system: :mouse_push}
               }
     _SET_ x: 0, y:0
     #待機フラグが下がるまで待機
@@ -30,13 +30,13 @@ _SEND_(:text0) do
     _WAIT_  count: 2,
             key_down: K_RCONTROL,
             key_push: K_SPACE,
-            system: :key_down
+            system: :mouse_push
   end
   _DEFINE_ :_LINE_WAIT_ do
     _WAIT_  count: 2,
             key_down: K_RCONTROL,
             key_push: K_SPACE,
-            system: :key_down
+            system: :mouse_push
   end
 end
 
@@ -65,7 +65,7 @@ _DEFINE_ :TextSelect do |argument, options|
         alpha:[0,255],
         _OPTION_: {check:{key_down: K_RCONTROL, 
                         key_push: K_SPACE,
-                        system: :key_down}}
+                        system: :mouse_push}}
       _SET_ alpha: 255
     end
     _MOVE_ 30, 
@@ -73,7 +73,7 @@ _DEFINE_ :TextSelect do |argument, options|
       _OPTION_: { easing: :out_quart,
                 check:{ key_down: K_RCONTROL, 
                         key_push: K_SPACE,
-                        system: :key_down}}
+                        system: :mouse_push}}
     _SET_ x: 0
     _STACK_LOOP_ do
       #マウスが領域内に入ったら色を変え、文字をスクロールインさせる
@@ -89,7 +89,7 @@ _DEFINE_ :TextSelect do |argument, options|
         }
       end
       #マウスがクリックされたらフラグを立てる
-      _CHECK_ mouse: [:key_down] do
+      _CHECK_ mouse: [:key_push] do
         pp options
         _SET_ :_TEMP_, flag: options[:id]
         _EVAL_ "pp '[" + options[:text].to_s + "]が押されました'"
@@ -112,7 +112,7 @@ _DEFINE_ :func_select do |argument, options, control|
       _WAIT_  count: 3, 
               key_down: K_RCONTROL, 
               key_push: K_SPACE,
-              system: :key_down
+              system: :mouse_push
     end
   end
 end

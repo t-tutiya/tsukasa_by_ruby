@@ -9,7 +9,7 @@
 @		_SET_ shader: :rule0
 @	end
 @
-@	_WAIT_ key_push: K_SPACE, system: [:key_down]
+@	_WAIT_ key_push: K_SPACE, system: [:mouse_push]
 @
 @	test1{
 @		rule0 {

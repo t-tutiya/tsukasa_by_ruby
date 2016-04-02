@@ -373,11 +373,15 @@ class Control #内部メソッド
           #ウィンドウの閉じるボタンが押下された場合
           when :requested_close
             return true if Input.requested_close?
-          when :key_down
+          when :mouse_push
             return true if Input.mouse_push?( M_LBUTTON )
+          when :mouse_down
+            return true if Input.mouse_down?( M_LBUTTON )
           when :key_up
             return true if Input.mouse_release?( M_LBUTTON )
-          when :right_key_down
+          when :right_mouse_down
+            return true if Input.mouse_down?( M_RBUTTON )
+          when :right_mouse_push
             return true if Input.mouse_push?( M_RBUTTON )
           when :right_key_up
             return true if Input.mouse_release?( M_RBUTTON )

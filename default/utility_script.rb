@@ -156,7 +156,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
         _WAIT_  :_TEMP_, count: 2,
                 key_down: K_RCONTROL,
                 key_push: K_SPACE,
-                system: [:key_down],
+                system: [:mouse_push],
                 equal: {_SKIP_: true}
       end
       #行間ウェイト
@@ -164,7 +164,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
         _WAIT_  :_TEMP_, count: 2,
                 key_down: K_RCONTROL,
                 key_push: K_SPACE,
-                system: [:key_down],
+                system: [:mouse_push],
                 equal: {_SKIP_: true}
       end
       #文字レンダラ
@@ -173,7 +173,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
         _MOVE_   30, alpha:[0,255],
               _OPTION_: {check: { key_down: K_RCONTROL, 
                                 key_push: K_SPACE,
-                                system: [:key_down],
+                                system: [:mouse_push],
                                 equal: {_SKIP_: true}},
                        datastore: :_TEMP_}
         _SET_ alpha: 255
@@ -186,7 +186,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
               _OPTION_: {
               check: {key_down: K_RCONTROL, 
                       key_push: K_SPACE,
-                      system: [:key_down]
+                      system: [:mouse_push]
                       }}
         #スキップされた場合
         _CHECK_ :_TEMP_, key_down: K_RCONTROL,
@@ -195,7 +195,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
           _SET_ alpha: 255
         end
         _CHECK_ key_push: K_SPACE,
-                system: [:key_down] do
+                system: [:mouse_push] do
           #CTRLスキップ中でなければ透明度128
           _SET_ alpha: 128
         end
@@ -207,7 +207,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
           _WAIT_  count: argument,
                   key_down: K_RCONTROL,
                   key_push: K_SPACE,
-                  system: [:key_down]
+                  system: [:mouse_push]
         end
       end
       
@@ -223,7 +223,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
         _WAIT_  :_TEMP_, count:32,
                 key_down: K_RCONTROL,
                 key_push: K_SPACE,
-                system: [:key_down],
+                system: [:mouse_push],
                 equal: {_SKIP_: true}
 
         _END_FRAME_
@@ -240,7 +240,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
         #スペースキーあるいはCTRLキーの押下待機
         _WAIT_  :_TEMP_, key_down: K_RCONTROL,
                           key_push: K_SPACE,
-                          system: [:key_down],
+                          system: [:mouse_push],
                           equal: {_SKIP_: true}
 
         #ウェイクに移行
@@ -280,7 +280,7 @@ _DEFINE_ :_IMAGE_BUTTON_ do |argument, options|
       _SEND_(0){ _MAP_STATUS_ 1}
 
       #キーがクリックされるまで待機し、その間ブロックを実行する
-      _WAIT_ mouse: [:key_down] do
+      _WAIT_ mouse: [:key_push] do
         #カーソルが画像の外に移動した場合
         _CHECK_ mouse: [:cursor_out] do
           #ループの最初に戻る
@@ -344,13 +344,13 @@ _DEFINE_ :_TEXT_BUTTON_ do |argument,
       _WAIT_ mouse: [:cursor_over]
       text_area{_SET_ bgcolor: in_color}
 
-      _WAIT_ mouse: [:cursor_out, :key_down]
+      _WAIT_ mouse: [:cursor_out, :key_push]
       #マウスが領域外に出たら色を戻す
       _CHECK_ mouse: [:cursor_out] do
         text_area{_SET_ bgcolor: out_color}
       end
       #マウスがクリックされたら付与ブロックを実行する
-      _CHECK_ mouse: [:key_down] do
+      _CHECK_ mouse: [:key_push] do
         #_EVAL_ "pp '[" + text.to_s + "]が押されました'"
         _YIELD_ id, options
       end

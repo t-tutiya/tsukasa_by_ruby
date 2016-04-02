@@ -95,11 +95,13 @@ class ClickableLayoutControl < LayoutControl
     @on_mouse_over  = false
     @on_mouse_out   = false
 
+    @on_key_push    = false
     @on_key_down    = false
     @on_key_down_out= false
     @on_key_up      = false
     @on_key_up_out  = false
 
+    @on_right_key_push    = false
     @on_right_key_down    = false
     @on_right_key_down_out= false
     @on_right_key_up      = false
@@ -139,9 +141,14 @@ class ClickableLayoutControl < LayoutControl
       @on_mouse_over = true unless @over
       @over = true
 
+      #キー継続押下チェック
+      if Input.mouse_down?( M_LBUTTON )
+        @on_key_down = true
+      end
+
       #キー押下チェック
       if Input.mouse_push?( M_LBUTTON )
-        @on_key_down = true
+        @on_key_push = true
       end
 
       #キー解除チェック
@@ -149,9 +156,14 @@ class ClickableLayoutControl < LayoutControl
         @on_key_up = true
       end
 
+      #キー継続押下チェック
+      if Input.mouse_down?( M_RBUTTON )
+        @on_right_key_down = true
+      end
+
       #右キー押下チェック
       if Input.mouse_push?( M_RBUTTON )
-        @on_right_key_down = true
+        @on_right_key_push = true
       end
 
       #右キー解除チェック
@@ -168,7 +180,7 @@ class ClickableLayoutControl < LayoutControl
       @out = true
 
       #キー押下チェック
-      if Input.mouse_push?( M_LBUTTON )
+      if Input.mouse_down?( M_LBUTTON )
         @on_key_down_out = true
       end
 
@@ -178,7 +190,7 @@ class ClickableLayoutControl < LayoutControl
       end
 
       #右キー押下チェック
-      if Input.mouse_push?( M_RBUTTON )
+      if Input.mouse_down?( M_RBUTTON )
         @on_right_key_down_out = true
       end
 
@@ -217,6 +229,10 @@ class ClickableLayoutControl < LayoutControl
           return true if @on_mouse_out
 
         #マウスボタンが押下された場合
+        when :key_push
+          return true if @on_key_push
+
+        #マウスボタンが継続押下されている合
         when :key_down
           return true if @on_key_down
 
@@ -233,6 +249,10 @@ class ClickableLayoutControl < LayoutControl
           return true if @on_key_up_out
 
         #マウス右ボタンが押下された場合
+        when :right_key_push
+          return true if @on_right_key_push
+
+        #マウス右ボタンが継続押下されている場合
         when :right_key_down
           return true if @on_right_key_down
 

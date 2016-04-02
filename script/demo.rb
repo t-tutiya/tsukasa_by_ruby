@@ -108,6 +108,8 @@ _DEFINE_ :system_menu do
                  comment: "アニメーションサンプル"
       TextSelect text: "sample_2_3",   path: path + "sample_2_3.rb", 
                  comment: "コマンドメニューサンプル"
+      TextSelect text: "sample_2_4",   path: path + "sample_2_4.rb", 
+                 comment: "ドラッグ操作サンプル"
     end
     _CREATE_ :LayoutControl, id: 3, x:0, y:0, width: 256, float_x: :left    do
       TextSelect text: "sample_3_1", path: path + "sample_3_1.tks", 
@@ -124,8 +126,6 @@ _DEFINE_ :system_menu do
                  comment: "マウス画像のカスタマイズ"
       TextSelect text: "sample_3_6", path: path + "sample_3_6.rb", 
                  comment: "疑似if文（コンソールに結果を出力）"
-      TextSelect text: "sample_3_7", path: path + "sample_3_7.rb", 
-                 comment: "ドラッグによるコントロール移動"
     end
   end
 

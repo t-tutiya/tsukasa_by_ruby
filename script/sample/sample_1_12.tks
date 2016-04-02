@@ -3,8 +3,8 @@
 [text0{_TEXT_ _TEMP_: :name_a}]「ネームプレートなど、変更されうる
 テキストをテンポラリに設定し、出力できます」[ep]
 
-@ _GET_ :name_a, datastore: :_TEMP_ do |arg, options|
-@   _SET_ :_TEMP_, name_b: options[:name_a]
+@ _GET_ :name_a, datastore: :_TEMP_ do |name_a:|
+@   _SET_ :_TEMP_, name_b: name_a
 @ end
 @
 [= :name_b]「インラインデータ記法を使うと、

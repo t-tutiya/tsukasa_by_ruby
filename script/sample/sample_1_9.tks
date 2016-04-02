@@ -7,7 +7,7 @@
 @
 @	img0 {_SET_ file_path: "./resource/char/B-2.png"}
 @
-@	_SEND_(-1) {
+@	test0{
 @		_MOVE_ 360, alpha: [255, 0]
 @	}
 

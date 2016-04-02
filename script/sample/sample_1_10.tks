@@ -5,7 +5,7 @@
 @
 @	_CREATE_ :ImageControl, id: :test1, file_path: "./resource/bg_sample.png" do
 @		_CREATE_ :RuleShaderControl, id: :rule0, vague: 40,
-					file_path: "./resource/rule/horizontal_rule.png"
+@					file_path: "./resource/rule/horizontal_rule.png"
 @		_SET_ shader: :rule0
 @	end
 @

@@ -1,14 +1,11 @@
 @	_CREATE_ :SoundControl, 
 @		file_path: "./resource/music/easygoing.ogg",
-@		id: :test01 do
-@	end
+@		id: :test01
 初期化が終了しました。
 キーを押すとフェードイン再生します[ep]
 
-@	test01{
-@		_PLAY_ 0, fadetime: 5
-@	}
-@
+@	test01{_PLAY_ 0, fadetime: 5}
+
 無限ループ中。
 スペースキーを押すとフェードアウト停止します。[ep]
 

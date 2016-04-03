@@ -52,7 +52,8 @@ class Control #内部メソッド
     # ユーザ定義関数
     @function_list = {} 
     #コントロールのID(省略時は自身のクラス名とする)
-    @id = options[:id] || ("Anonymous_" + self.class.name).to_sym
+    @id = options[:id] || self.class.name.to_sym
+
     #コマンドリスト
     @command_list = [] 
 

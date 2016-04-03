@@ -47,8 +47,7 @@ _DEFINE_ :TextSelect do |argument, options|
     x: options[:x] || 0, 
     y: options[:y] || 0, 
     width: 196, 
-    height: 32, 
-    id: :Anonymous_CharControl do
+    height: 32 do
     #テキストを描画するRenderTarget
     _CREATE_ :RenderTargetControl,
       float_x: :left,

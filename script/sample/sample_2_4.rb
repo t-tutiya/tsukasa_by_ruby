@@ -17,15 +17,15 @@ _CREATE_ :ClickableLayoutControl,
     #画像を「OVER」に差し替える
     icon{ _MAP_STATUS_ 1}
 
-    #キーがクリックされるまで待機し、その間ブロックを実行する
-    _WAIT_ mouse: [:key_down] do
-      #カーソルが画像の外に移動した場合
-      _CHECK_ mouse: [:cursor_out] do
-        #画像を「NORMAL」に差し替える
-        icon{ _MAP_STATUS_ 0}
-        #ループの最初に戻る
-        _NEXT_
-      end
+    #キーがクリックされるまで待機
+    _WAIT_ mouse: [:key_down, :cursor_out]
+
+    #カーソルが画像の外に移動した場合
+    _CHECK_ mouse: [:cursor_out] do
+      #画像を「NORMAL」に差し替える
+      icon{ _MAP_STATUS_ 0}
+      #ループの最初に戻る
+      _NEXT_
     end
 
     #画像を「DOWN」に差し替える

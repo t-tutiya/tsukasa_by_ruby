@@ -170,8 +170,9 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
 
       #文字レンダラ
       _DEFINE_ :_CHAR_RENDERER_ do
-        #フェードイン（スペースキーか右CTRLが押されたらスキップ）
+        #フェードイン
         _MOVE_  30, alpha: [0,255] do
+          #キー入力判定
           _CHECK_ :_TEMP_, key_down: K_RCONTROL,
                            key_push: K_SPACE,
                            system: [:mouse_push],
@@ -185,19 +186,21 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
         #待機フラグが下がるまで待機
         _WAIT_ :_TEMP_, equal: {_SLEEP_: false}
 
+        #キー伝搬を防ぐためにフレームを終了する
         _END_FRAME_
 
-        #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
+        #ハーフフェードアウト
         _MOVE_ 60, alpha: 128 do
-          _CHECK_ :_TEMP_,  key_down: K_RCONTROL, 
-                            key_push: K_SPACE,
-                            system: [:mouse_push] do
+          #キー入力判定
+          _CHECK_ key_down: K_RCONTROL, 
+                  key_push: K_SPACE,
+                  system: [:mouse_push] do
             #α値を初期化
             _SET_ alpha: 128
-            #CTRLスキップ中であれば透明度255
-            _CHECK_ :_TEMP_, 
-              key_down: K_RCONTROL,
-              equal: {_SKIP_: true} do
+            #スキップモードの場合
+            _CHECK_ :_TEMP_, key_down: K_RCONTROL,
+                             equal: {_SKIP_: true} do
+              #α値を再度初期化
               _SET_ alpha: 255
             end
             _BREAK_
@@ -208,10 +211,10 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
       #文字間ウェイトの更新
       _DEFINE_ :_WAIT_FRAME_ do |argument|
         _DEFINE_ :_CHAR_WAIT_ do
-          _WAIT_  count: argument,
-                  key_down: K_RCONTROL,
-                  key_push: K_SPACE,
-                  system: [:mouse_push]
+          _WAIT_ count: argument,
+                 key_down: K_RCONTROL,
+                 key_push: K_SPACE,
+                 system: [:mouse_push]
         end
       end
       
@@ -224,32 +227,42 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
 
       #キー入力待ち処理
       _DEFINE_ :_PAUSE_ do 
-        #行末の文字を出力してからアイコンを表示するまでのウェイト
-        _WAIT_  :_TEMP_, 
-          count: 28,
-          key_down: K_RCONTROL,
-          key_push: K_SPACE,
-          system: [:mouse_push],
-          equal: {_SKIP_: true}
+        #スキップ状態の場合
+        _CHECK_ :_TEMP_, equal: {_SKIP_: true} do
+          #ウェイクに移行
+          _SET_ :_TEMP_, _SLEEP_: false
+          _RETURN_
+        end
 
         #クリック待ちアイコンの表示
-        _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
-          _CHECK_ system: [:block_given] do
-            _SEND_TO_ACTIVE_LINE_ do
-              _YIELD_
-            end
+        _CHECK_ system: [:block_given] do
+          _SEND_TO_ACTIVE_LINE_ do
+            _WAIT_ count: 28, 
+                   key_down: K_RCONTROL,
+                   key_push: K_SPACE,
+                   system: [:mouse_push]
+            _YIELD_
           end
         end
 
-        #キー伝搬を防ぐ為のフレーム更新
-        _END_FRAME_
+        #最後の文字のフェードイン待ち
+        _WAIT_ count: 28 do
+          #キーの押下を判定
+          _CHECK_ key_down: K_RCONTROL,
+                  key_push: K_SPACE,
+                  system: [:mouse_push] do
+            #キー押下のクリアを待機
+            _WAIT_ key_down: K_RCONTROL,
+                   key_up: K_SPACE,
+                   system: [:mouse_up]
+            _BREAK_
+          end
+        end 
 
-        #スペースキーあるいはCTRLキーの押下待機
-        _WAIT_  :_TEMP_, 
-          key_down: K_RCONTROL,
-          key_push: K_SPACE,
-          system: [:mouse_push],
-          equal: {_SKIP_: true}
+        #キー押下待機
+        _WAIT_ key_down: K_RCONTROL,
+               key_push: K_SPACE,
+               system: [:mouse_push]
 
         #ウェイクに移行
         _SET_ :_TEMP_, _SLEEP_: false

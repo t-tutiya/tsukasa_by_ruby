@@ -559,24 +559,18 @@ class Control #制御構文
   def _NEXT_(argument, options, yield_block_stack)
     #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_LOOP_タグが見つからない場合は@command_listを空にする
-    argument = 1 unless argument
-    argument.times do
-      until @command_list.empty? do
-        break if @command_list.shift == :_END_LOOP_ 
-      end
+    until @command_list.empty? do
+      break if @command_list.shift == :_END_LOOP_ 
     end
   end
 
   def _BREAK_(argument, options, yield_block_stack)
     #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_LOOP_タグが見つからない場合は@command_listを空にする
-    argument = 1 unless argument
-    argument.times do
-      until @command_list.empty? do
-        if @command_list.shift == :_END_LOOP_ 
-          @command_list.shift #_LOOP_をpopする
-          break 
-        end
+    until @command_list.empty? do
+      if @command_list.shift == :_END_LOOP_ 
+        @command_list.shift #_LOOP_をpopする
+        break 
       end
     end
   end

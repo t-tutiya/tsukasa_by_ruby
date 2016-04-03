@@ -171,32 +171,37 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
       #文字レンダラ
       _DEFINE_ :_CHAR_RENDERER_ do
         #フェードイン（スペースキーか右CTRLが押されたらスキップ）
-        _MOVE_  30, 
-          alpha: [0,255],
-          _OPTION_: {check: { key_down: K_RCONTROL, 
-                              key_push: K_SPACE,
-                              system: [:mouse_push],
-                              equal: {_SKIP_: true}},
-                     datastore: :_TEMP_}
-        #α値を初期化
-        _SET_ alpha: 255
+        _MOVE_  30, alpha: [0,255] do
+          _CHECK_ :_TEMP_, key_down: K_RCONTROL,
+                           key_push: K_SPACE,
+                           system: [:mouse_push],
+                           equal: {_SKIP_: true} do
+            #α値を初期化
+            _SET_ alpha: 255
+            _BREAK_
+          end
+        end
+
         #待機フラグが下がるまで待機
         _WAIT_ :_TEMP_, equal: {_SLEEP_: false}
-        #キー入力情報を更新
-        _INPUT_UPDATE_
+
+        _END_FRAME_
+
         #ハーフフェードアウト（スペースキーか右CTRLが押されたらスキップ）
-        _MOVE_ 60, 
-          alpha: 128,
-          _OPTION_: {check: { key_down: K_RCONTROL, 
-                              key_push: K_SPACE,
-                              system: [:mouse_push]}}
-        #CTRLスキップ中でなければ透明度128
-        _SET_ alpha: 128
-        #CTRLスキップ中であれば透明度255
-        _CHECK_ :_TEMP_, 
-          key_down: K_RCONTROL,
-          equal: {_SKIP_: true} do
-          _SET_ alpha: 255
+        _MOVE_ 60, alpha: 128 do
+          _CHECK_ :_TEMP_,  key_down: K_RCONTROL, 
+                            key_push: K_SPACE,
+                            system: [:mouse_push] do
+            #α値を初期化
+            _SET_ alpha: 128
+            #CTRLスキップ中であれば透明度255
+            _CHECK_ :_TEMP_, 
+              key_down: K_RCONTROL,
+              equal: {_SKIP_: true} do
+              _SET_ alpha: 255
+            end
+            _BREAK_
+           end
         end
       end
 

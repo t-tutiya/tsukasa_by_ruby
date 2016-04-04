@@ -262,9 +262,25 @@ class TextPageControl < LayoutControl
                                       :command_list=> options[:command_list],
                                       :float_x => :left
                                     }.merge(@char_option), 
-                                    nil,
+                                    yield_block_stack,
                                     @function_list[:_CHAR_RENDERER_]
                                    )
+
+    #文字待機処理をスタックする
+    @command_list.unshift([:_CHAR_WAIT_, nil, {}, yield_block_stack, nil])
+  end
+
+  #指定したコマンドブロックを文字列の末端に追加する
+  def _CHAR_COMMAND_(argument, options, yield_block_stack, &block)
+    #文字コントロールを生成する
+    @control_list.last.push_command(:_SCOPE_, 
+                                    argument, 
+                                    options, 
+                                    yield_block_stack, 
+                                    block)
+
+    #文字待機処理をスタックする
+    @command_list.unshift([:_CHAR_WAIT_, nil, {}, yield_block_stack, nil])
   end
 
   #textコマンド
@@ -299,8 +315,6 @@ class TextPageControl < LayoutControl
     argument.to_s.each_char do |ch|
       #１文字分の出力コマンドをスタックする
       command_list.push([char_command, ch, {}, yield_block_stack, nil])
-      #文字待機処理をスタックする
-      command_list.push([:_CHAR_WAIT_, nil, {}, yield_block_stack, nil])
     end
 
     #展開したコマンドをスタックする

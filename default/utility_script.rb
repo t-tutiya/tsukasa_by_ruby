@@ -37,8 +37,54 @@ require 'dxruby'
 
 #標準ポーズコマンド
 _DEFINE_ :_PAUSE_ do
+  #スキップ状態の場合
+  _CHECK_ :_TEMP_, equal: {_SKIP_: true} do
+    #ウェイクに移行
+    _SET_ :_TEMP_, _SLEEP_: false
+    _RETURN_
+  end
+
+  #テキストレイヤのクリック待ち
+  _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
+    _SEND_ _DEFAULT_TEXT_PAGE_ do
+      #クリック待ちアイコンの表示
+      _CHECK_ system: [:block_given] do
+        _CHAR_COMMAND_ do
+          _WAIT_ count: 28, 
+                 key_down: K_RCONTROL,
+                 key_push: K_SPACE,
+                 system: [:mouse_push]
+          _YIELD_
+        end
+      end
+
+      #最後の文字のフェードイン待ち
+      _WAIT_ count: 28 do
+        #キーの押下を判定
+        _CHECK_ key_down: K_RCONTROL,
+                key_push: K_SPACE,
+                system: [:mouse_push] do
+          #キー押下のクリアを待機
+          _WAIT_ key_down: K_RCONTROL,
+                 key_up: K_SPACE,
+                 system: [:mouse_up]
+          _BREAK_
+        end
+      end 
+
+      #キー押下待機
+      _WAIT_ key_down: K_RCONTROL,
+             key_push: K_SPACE,
+             system: [:mouse_push]
+
+      #ウェイクに移行
+      _SET_ :_TEMP_, _SLEEP_: false
+    end
+  end
+
   #スリープフラグを立てる
   _SET_ :_TEMP_, _SLEEP_: true
+
   #スリープフラグが下りるまで待機
   _WAIT_ :_TEMP_, 
           key_down: K_RCONTROL, 
@@ -49,32 +95,22 @@ _INCLUDE_ "./resource/icon/icon_8_a.rb"
 
 #行クリック待ちポーズ
 _DEFINE_ :_LINE_PAUSE_ do
-  #テキストレイヤのクリック待ち
-  _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
-    _SEND_ _DEFAULT_TEXT_PAGE_ do
-      _PAUSE_ do
-        _CREATE_ :TileMapControl, 
-          map_array: [[0]], size_x: 1, size_y: 1, id: :icon, 
-          width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
-          _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_8_a.png",
-            x_count: 4, y_count: 2
-          _ICON_8_
-        end
-      end
-    end
-  end
-
   #ルートのクリック待ち
-  _PAUSE_ 
-
-  #クリック待ちアイコンを削除
-  _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
-    _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
-      _SEND_ _DEFAULT_TEXT_PAGE_ do
-        _SEND_ [-1, :icon], interrupt: true do
-          _DELETE_
-        end
+  _PAUSE_ do
+    _CREATE_ :LayoutControl, width: 24, height: 24,
+      align_y: :bottom, float_x: :left do
+      _CREATE_ :TileMapControl, 
+        map_array: [[0]], size_x: 1, size_y: 1, 
+        width: 24, height: 24, z: 100000 do
+        _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_8_a.png",
+          x_count: 4, y_count: 2
+        _ICON_8_
       end
+
+      #待機フラグが下がるまで待機
+      _WAIT_ :_TEMP_, equal: {_SLEEP_: false}
+
+      _DELETE_
     end
   end
 end
@@ -85,41 +121,31 @@ _DEFINE_ :lp do
 end
 
 _DEFINE_ :_END_PAUSE_ do
-  #テキストレイヤのクリック待ち
-  _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
-    _SEND_ _DEFAULT_TEXT_PAGE_ do
-      _PAUSE_ do
-        _CREATE_ :TileMapControl, id: :icon, 
-          map_array: [[0]], size_x: 1, size_y: 1, 
-          width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
-          _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
-            x_count: 4, y_count: 1
-          _STACK_LOOP_ do
-            _MAP_STATUS_ 0
-            _WAIT_ count: 5
-            _MAP_STATUS_ 1
-            _WAIT_ count: 5
-            _MAP_STATUS_ 2
-            _WAIT_ count: 5
-            _MAP_STATUS_ 3
-            _WAIT_ count: 5
-          end
-        end
-      end
-    end
-  end
-
   #ルートのクリック待ち
-  _PAUSE_ 
-
-  #クリック待ちアイコンを削除
-  _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
-    _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
-      _SEND_ _DEFAULT_TEXT_PAGE_ do
-        _SEND_ [-1, :icon], interrupt: true do
-          _DELETE_
+  _PAUSE_ do
+    _CREATE_ :LayoutControl, width: 24, height: 24,
+      align_y: :bottom, float_x: :left do
+      _CREATE_ :TileMapControl, 
+        map_array: [[0]], size_x: 1, size_y: 1, 
+        width: 24, height: 24, z: 100000 do
+        _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
+          x_count: 4, y_count: 1
+        _STACK_LOOP_ do
+          _MAP_STATUS_ 0
+          _WAIT_ count: 5
+          _MAP_STATUS_ 1
+          _WAIT_ count: 5
+          _MAP_STATUS_ 2
+          _WAIT_ count: 5
+          _MAP_STATUS_ 3
+          _WAIT_ count: 5
         end
       end
+
+      #待機フラグが下がるまで待機
+      _WAIT_ :_TEMP_, equal: {_SLEEP_: false}
+
+      _DELETE_
     end
   end
 end
@@ -144,125 +170,75 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
     size: 32, 
     id: argument,
     font_name: "ＭＳＰ ゴシック" do
-      #文字間ウェイト
-      _DEFINE_ :_CHAR_WAIT_ do
-        _WAIT_  :_TEMP_, 
-          count: 2,
-          key_down: K_RCONTROL,
-          key_push: K_SPACE,
-          system: [:mouse_push],
-          equal: {_SKIP_: true}
+    #文字間ウェイト
+    _DEFINE_ :_CHAR_WAIT_ do
+      _WAIT_  :_TEMP_, 
+        count: 2,
+        key_down: K_RCONTROL,
+        key_push: K_SPACE,
+        system: [:mouse_push],
+        equal: {_SKIP_: true}
+    end
+
+    #行間ウェイト
+    _DEFINE_ :_LINE_WAIT_ do
+      _WAIT_  :_TEMP_, 
+        count: 2,
+        key_down: K_RCONTROL,
+        key_push: K_SPACE,
+        system: [:mouse_push],
+        equal: {_SKIP_: true}
+    end
+
+    #文字レンダラ
+    _DEFINE_ :_CHAR_RENDERER_ do
+      #フェードイン
+      _MOVE_  30, alpha: [0,255] do
+        #キー入力判定
+        _CHECK_ :_TEMP_, key_down: K_RCONTROL,
+                         key_push: K_SPACE,
+                         system: [:mouse_push],
+                         equal: {_SKIP_: true} do
+          #α値を初期化
+          _SET_ alpha: 255
+          _BREAK_
+        end
       end
 
-      #行間ウェイト
-      _DEFINE_ :_LINE_WAIT_ do
-        _WAIT_  :_TEMP_, 
-          count: 2,
-          key_down: K_RCONTROL,
-          key_push: K_SPACE,
-          system: [:mouse_push],
-          equal: {_SKIP_: true}
-      end
+      #待機フラグが下がるまで待機
+      _WAIT_ :_TEMP_, equal: {_SLEEP_: false}
 
-      #文字レンダラ
-      _DEFINE_ :_CHAR_RENDERER_ do
-        #フェードイン
-        _MOVE_  30, alpha: [0,255] do
-          #キー入力判定
+      #キー伝搬を防ぐためにフレームを終了する
+      _END_FRAME_
+
+      #ハーフフェードアウト
+      _MOVE_ 60, alpha: 128 do
+        #キー入力判定
+        _CHECK_ key_down: K_RCONTROL, 
+                key_push: K_SPACE,
+                system: [:mouse_push] do
+          #α値を初期化
+          _SET_ alpha: 128
+          #スキップモードの場合
           _CHECK_ :_TEMP_, key_down: K_RCONTROL,
-                           key_push: K_SPACE,
-                           system: [:mouse_push],
                            equal: {_SKIP_: true} do
-            #α値を初期化
+            #α値を再度初期化
             _SET_ alpha: 255
-            _BREAK_
           end
-        end
-
-        #待機フラグが下がるまで待機
-        _WAIT_ :_TEMP_, equal: {_SLEEP_: false}
-
-        #キー伝搬を防ぐためにフレームを終了する
-        _END_FRAME_
-
-        #ハーフフェードアウト
-        _MOVE_ 60, alpha: 128 do
-          #キー入力判定
-          _CHECK_ key_down: K_RCONTROL, 
-                  key_push: K_SPACE,
-                  system: [:mouse_push] do
-            #α値を初期化
-            _SET_ alpha: 128
-            #スキップモードの場合
-            _CHECK_ :_TEMP_, key_down: K_RCONTROL,
-                             equal: {_SKIP_: true} do
-              #α値を再度初期化
-              _SET_ alpha: 255
-            end
-            _BREAK_
-           end
-        end
+          _BREAK_
+         end
       end
+    end
 
-      #文字間ウェイトの更新
-      _DEFINE_ :_WAIT_FRAME_ do |argument|
-        _DEFINE_ :_CHAR_WAIT_ do
-          _WAIT_ count: argument,
-                 key_down: K_RCONTROL,
-                 key_push: K_SPACE,
-                 system: [:mouse_push]
-        end
-      end
-      
-      #アクティブ行への送信
-      _DEFINE_ :_SEND_TO_ACTIVE_LINE_ do
-        _SEND_ -1 do
-          _YIELD_
-        end
-      end
-
-      #キー入力待ち処理
-      _DEFINE_ :_PAUSE_ do 
-        #スキップ状態の場合
-        _CHECK_ :_TEMP_, equal: {_SKIP_: true} do
-          #ウェイクに移行
-          _SET_ :_TEMP_, _SLEEP_: false
-          _RETURN_
-        end
-
-        #クリック待ちアイコンの表示
-        _CHECK_ system: [:block_given] do
-          _SEND_TO_ACTIVE_LINE_ do
-            _WAIT_ count: 28, 
-                   key_down: K_RCONTROL,
-                   key_push: K_SPACE,
-                   system: [:mouse_push]
-            _YIELD_
-          end
-        end
-
-        #最後の文字のフェードイン待ち
-        _WAIT_ count: 28 do
-          #キーの押下を判定
-          _CHECK_ key_down: K_RCONTROL,
-                  key_push: K_SPACE,
-                  system: [:mouse_push] do
-            #キー押下のクリアを待機
-            _WAIT_ key_down: K_RCONTROL,
-                   key_up: K_SPACE,
-                   system: [:mouse_up]
-            _BREAK_
-          end
-        end 
-
-        #キー押下待機
-        _WAIT_ key_down: K_RCONTROL,
+    #文字間ウェイトの更新
+    _DEFINE_ :_WAIT_FRAME_ do |argument|
+      _DEFINE_ :_CHAR_WAIT_ do
+        _WAIT_ count: argument,
+               key_down: K_RCONTROL,
                key_push: K_SPACE,
                system: [:mouse_push]
-
-        #ウェイクに移行
-        _SET_ :_TEMP_, _SLEEP_: false
       end
+    end
   end
 end
 

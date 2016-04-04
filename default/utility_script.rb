@@ -56,8 +56,8 @@ _DEFINE_ :_LINE_PAUSE_ do
         _CREATE_ :TileMapControl, 
           map_array: [[0]], size_x: 1, size_y: 1, id: :icon, 
           width: 24, height: 24, align_y: :bottom, float_x: :left, z: 100000 do
-            _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_8_a.png",
-              x_count: 4, y_count: 2
+          _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_8_a.png",
+            x_count: 4, y_count: 2
           _ICON_8_
         end
       end
@@ -71,10 +71,8 @@ _DEFINE_ :_LINE_PAUSE_ do
   _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
     _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
       _SEND_ _DEFAULT_TEXT_PAGE_ do
-        _SEND_TO_ACTIVE_LINE_ do 
-          _SEND_ :icon, interrupt: true do
-            _DELETE_
-          end
+        _SEND_ [-1, :icon], interrupt: true do
+          _DELETE_
         end
       end
     end
@@ -118,10 +116,8 @@ _DEFINE_ :_END_PAUSE_ do
   _CHECK_ :_TEMP_, not_equal: {_SKIP_: true} do
     _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
       _SEND_ _DEFAULT_TEXT_PAGE_ do
-        _SEND_TO_ACTIVE_LINE_ do 
-          _SEND_ :icon, interrupt: true do
-            _DELETE_
-          end
+        _SEND_ [-1, :icon], interrupt: true do
+          _DELETE_
         end
       end
     end

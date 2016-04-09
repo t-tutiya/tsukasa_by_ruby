@@ -42,7 +42,6 @@ require_relative './image_control.rb'
 require_relative './clickable_layout_control.rb'
 
 require_relative './rendertarget_control.rb'
-require_relative './colorkey_control.rb'
 
 require_relative './tile_map_control.rb'
 

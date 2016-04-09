@@ -34,12 +34,8 @@ class ClickableLayoutControl < LayoutControl
   #コリジョンのエンティティ
   attr_accessor  :collision_shape
 
-  #カラーキー設定
-  def colorkey=(arg)
-    @colorkey = arg
-    @colorkey_control = find_control(@colorkey)
-  end
-  attr_reader :colorkey
+  attr_accessor  :colorkey_id
+  attr_accessor  :colorkey_border
 
   attr_reader :cursor_x
   attr_reader :cursor_y
@@ -64,8 +60,9 @@ end
 class ClickableLayoutControl < LayoutControl
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
     @collision_shape = options[:collision_shape]
-    
-    self.colorkey = options[:colorkey] if options[:colorkey]
+
+    @colorkey_id = options[:colorkey_id]
+    @colorkey_border = options[:colorkey_border] || 255
 
     @collision_sprite = Sprite.new
 
@@ -121,15 +118,15 @@ class ClickableLayoutControl < LayoutControl
     @collision_sprite.x = @x + @offset_x
     @collision_sprite.y = @y + @offset_y
 
-    #マウスカーソルがコリジョン範囲内に無い
+    #マウスカーソル座標との衝突判定
     if not (@mouse_sprite === @collision_sprite)
+      #マウスカーソルがコリジョン範囲内に無い
       @inner_control = false
-    #マウスカーソルがコリジョン範囲内にあるがカラーキーボーダー内に無い
-    elsif @colorkey and 
-          (@colorkey_control.entity[mouse_pos_x - @x, mouse_pos_y - @y][0] < @colorkey_control.border)
+    elsif @colorkey_id and (find_control(@colorkey_id).entity[mouse_pos_x - @x, mouse_pos_y - @y][0] <= @colorkey_border)
+      #マウスカーソルがコリジョン範囲内にあるがカラーキーボーダー内に無い
       @inner_control = false
-    #マウスカーソルがコリジョン範囲内にある
     else
+      #マウスカーソルがコリジョン範囲内にある
       @inner_control = true
     end
 

@@ -41,6 +41,8 @@ class ImageControl < DrawableControl
     @height = @entity.height
   end
 
+  attr_reader :entity
+
   def dispose()
     @entity.dispose
     super

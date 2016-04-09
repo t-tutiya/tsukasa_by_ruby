@@ -3,7 +3,7 @@ _CREATE_ :CharControl,
   size: 32, 
   y: 256+196,
   color:[255,255,0], 
-  font_name: "Migu 1M",
+  font_name: "ＭＳ　ゴシック",
   char: " "
 
 
@@ -106,9 +106,11 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_2_2",   path: path + "sample_2_2.rb", 
                  comment: "アニメーションサンプル"
       TextSelect text: "sample_2_3",   path: path + "sample_2_3.rb", 
-                 comment: "コマンドメニューサンプル"
+                 comment: "コマンドメニュー/右クリックサンプル"
       TextSelect text: "sample_2_4",   path: path + "sample_2_4.rb", 
                  comment: "ドラッグ操作サンプル"
+      TextSelect text: "sample_2_5",   path: path + "sample_2_5.rb", 
+                 comment: "_TO_IMAGE_とルールトランジションの組み合わせ"
     end
     _CREATE_ :LayoutControl, id: 3, x:0, y:0, width: 256, float_x: :left    do
       TextSelect text: "sample_3_1", path: path + "sample_3_1.tks", 

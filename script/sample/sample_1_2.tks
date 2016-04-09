@@ -8,8 +8,8 @@
 @	text0{_SET_ size:32, line_height: 32}
 
 他にも様々な設定が可能です。[lp]
-@    text0{_WAIT_FRAME_ 10}
+@    _WAIT_FRAME_ 10
 例えば文字の表示速度を変えたり、[lp]
-@    text0{_WAIT_FRAME_ 3}
+@    _WAIT_FRAME_ 3
 [text0{_RUBI_ "エクスカリバ－"}]ルビを振る事もできます。[ep]
 

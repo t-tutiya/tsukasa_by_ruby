@@ -155,6 +155,20 @@ _DEFINE_ :ep do
   _END_PAUSE_
 end
 
+#文字間ウェイトの更新
+_DEFINE_ :_WAIT_FRAME_ do |argument|
+  _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
+    _SEND_ _DEFAULT_TEXT_PAGE_ do
+      _DEFINE_ :_CHAR_WAIT_ do
+        _WAIT_ count: argument,
+               key_down: K_RCONTROL,
+               key_push: K_SPACE,
+               system: [:mouse_push]
+      end
+    end
+  end
+end
+
 ###############################################################################
 #デフォルトのレイヤ群
 ###############################################################################
@@ -227,16 +241,6 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
           end
           _BREAK_
          end
-      end
-    end
-
-    #文字間ウェイトの更新
-    _DEFINE_ :_WAIT_FRAME_ do |argument|
-      _DEFINE_ :_CHAR_WAIT_ do
-        _WAIT_ count: argument,
-               key_down: K_RCONTROL,
-               key_push: K_SPACE,
-               system: [:mouse_push]
       end
     end
   end

@@ -91,6 +91,16 @@ class TileMapControl < RenderTargetControl
                                     options[:x_count] || 1, 
                                     options[:y_count] || 1, 
                                     options[:share_switch] || false)
+    
+    if argument
+      counter = argument
+      image_array.each do |image|
+        @image_array[counter] = image
+        counter += 1
+      end
+    else
+      @image_array += image_array
+    end
   end
 
   def _MAP_STATUS_(argument, options, yield_block_stack, &block)

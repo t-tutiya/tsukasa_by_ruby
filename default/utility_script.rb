@@ -258,28 +258,25 @@ _DEFINE_ :_IMAGE_BUTTON_ do |argument, options|
       width: 256,
       height: 256 do
       _SET_ map_array: [[0]]
-      _SET_TILE_ 0, file_path: "./resource/button_normal.png"
-      _SET_TILE_ 1, file_path: "./resource/button_over.png"
-      _SET_TILE_ 2, file_path: "./resource/button_key_down.png"
+      _SET_TILE_ 0, file_path: options[:normal]||"./resource/button_normal.png"
+      _SET_TILE_ 1, file_path: options[:over]||"./resource/button_over.png"
+      _SET_TILE_ 2, file_path: options[:down]||"./resource/button_key_down.png"
     end
     _LOOP_ do
-      #画像を「NORMAL」に差し替える
       _SEND_(0){ _MAP_STATUS_ 0}
-
-      #カーソルが画像の上に来るまで待機
+      #マウスが領域内に入ったら色を変える
       _WAIT_ mouse: [:cursor_on]
 
       #画像を「OVER」に差し替える
       _SEND_(0){ _MAP_STATUS_ 1}
 
-      #キーがクリックされるまで待機し、その間ブロックを実行する
-      _WAIT_ mouse: [:key_push] do
-        #カーソルが画像の外に移動した場合
-        _CHECK_ mouse: [:cursor_out] do
-          #ループの最初に戻る
-          _NEXT_
-        end
+      _WAIT_ mouse: [:cursor_out, :key_push]
+      #マウスが領域外に出たら色を戻す
+      _CHECK_ mouse: [:cursor_out] do
+        _NEXT_
       end
+
+      #マウスがクリックされたら付与ブロックを実行する
 
       #画像を「DOWN」に差し替える
       _SEND_(0){ _MAP_STATUS_ 2}

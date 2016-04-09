@@ -31,7 +31,6 @@ require 'dxruby'
 ###############################################################################
 
 class LayoutControl < LayoutableControl
-  #_TO_IMAGE_用
   def render(offset_x, offset_y, target, 
               parent_control_width, parent_control_height)
     dx, dy = check_align(parent_control_width, parent_control_height)

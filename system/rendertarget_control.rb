@@ -50,11 +50,6 @@ class RenderTargetControl < DrawableControl
     @update_flag = true
   end
   
-  #枠線の太さ（初期値０）
-  attr_accessor  :border
-  #枠線のRGB配列（初期値[255,255,255]）
-  attr_accessor  :border_color
-
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
     @bgcolor = options[:bgcolor]  || [0,0,0,0]
     #保持オブジェクトの初期化
@@ -62,13 +57,10 @@ class RenderTargetControl < DrawableControl
                                 options[:height] || 1, 
                                 @bgcolor)
 
-    @width = options[:width]
-    @height = options[:height]
+    self.width = options[:width]
+    self.height = options[:height]
 
     @update_flag = false
-
-    self.border = options[:border]  || 0
-    self.border_color = options[:border_color]  || [255,255,255]
 
     return super
   end
@@ -78,24 +70,6 @@ class RenderTargetControl < DrawableControl
     if @update_flag
       @entity = RenderTarget.new(@width, @height, @bgcolor)
       @update_flag = false
-    end
-
-    #枠線を引く
-    if @border > 0
-      width = @width - 1
-      height = @height - 1
-      @entity.draw_box_fill(0              , 0, 
-                            width          , @border, 
-                            @border_color, @z)
-      @entity.draw_box_fill(width - @border, 0, 
-                            width          , height        , 
-                            @border_color, @z)
-      @entity.draw_box_fill(0              , 0, 
-                            @border        , height        , 
-                            @border_color, @z)
-      @entity.draw_box_fill(0              , height - @border, 
-                            width          , height        , 
-                            @border_color, @z)
     end
 
     super

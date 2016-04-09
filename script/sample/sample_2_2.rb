@@ -1,6 +1,6 @@
 _CREATE_ :TileMapControl, 
   map_array: [[0]], size_x: 1, size_y: 1, width:32, height:32 do
-  _ADD_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
+  _SET_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
     x_count: 4, y_count: 1
   _STACK_LOOP_ do
     _MAP_STATUS_ 0

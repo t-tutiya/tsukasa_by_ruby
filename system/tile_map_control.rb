@@ -78,7 +78,7 @@ class TileMapControl < RenderTargetControl
     return super
   end
 
-  def _ADD_TILE_(argument, options, yield_block_stack)
+  def _SET_TILE_(argument, options, yield_block_stack)
     if argument
       @image_array[argument] = Image.load(options[:file_path])
     else
@@ -86,8 +86,8 @@ class TileMapControl < RenderTargetControl
     end
   end
 
-  def _ADD_TILE_GROUP_(argument, options, yield_block_stack)
-    @image_array += Image.load_tiles(options[:file_path], 
+  def _SET_TILE_GROUP_(argument, options, yield_block_stack)
+    image_array = Image.load_tiles( options[:file_path], 
                                     options[:x_count] || 1, 
                                     options[:y_count] || 1, 
                                     options[:share_switch] || false)

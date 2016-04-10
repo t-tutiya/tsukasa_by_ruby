@@ -24,7 +24,10 @@
 @   _SEND_ :test1 do
 @		  _SEND_ options[:rule_id] do
 @			  _MOVE_ options[:time], counter:[0,255]
+@       _DELETE_
 @		  end
+@     _WAIT_ child_not_exist: :rule0
+@     _DELETE_
 @   end
 @	end
 
@@ -32,4 +35,3 @@
 
 @ _END_PAUSE_
 @ test0{_DELETE_}
-@ test1{_DELETE_}

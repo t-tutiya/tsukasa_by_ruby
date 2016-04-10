@@ -14,9 +14,11 @@
 @	test1{
 @		rule0 {
 @			_MOVE_ 240, counter:[0,255]
+@     _DELETE_
 @		}
+@   _WAIT_ child_not_exist: :rule0
+@   _DELETE_
 @	}
 
 @ _END_PAUSE_
 @ test0{_DELETE_}
-@ test1{_DELETE_}

@@ -238,8 +238,8 @@ class ClickableLayoutControl < LayoutControl
           return true if @on_right_key_up
 
         #マウスボタン押下が範囲外で解除された場合
-        when :key_right_up_out
-          return true if @on_key_right_up_out
+        when :right_key_up_out
+          return true if @on_right_key_up_out
 
         end
       end

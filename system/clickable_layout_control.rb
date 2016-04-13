@@ -144,35 +144,17 @@ class ClickableLayoutControl < LayoutControl
       @over = true
 
       #キー継続押下チェック
-      if Input.mouse_down?( M_LBUTTON )
-        @on_key_down = true
-      end
-
+      @on_key_down = Input.mouse_down?( M_LBUTTON )
       #キー押下チェック
-      if Input.mouse_push?( M_LBUTTON )
-        @on_key_push = true
-      end
-
+      @on_key_push = Input.mouse_push?( M_LBUTTON )
       #キー解除チェック
-      if Input.mouse_release?( M_LBUTTON )
-        @on_key_up = true
-      end
-
+      @on_key_up = Input.mouse_release?( M_LBUTTON )
       #キー継続押下チェック
-      if Input.mouse_down?( M_RBUTTON )
-        @on_right_key_down = true
-      end
-
+      @on_right_key_down = Input.mouse_down?( M_RBUTTON )
       #右キー押下チェック
-      if Input.mouse_push?( M_RBUTTON )
-        @on_right_key_push = true
-      end
-
+      @on_right_key_push = Input.mouse_push?( M_RBUTTON )
       #右キー解除チェック
-      if Input.mouse_release?( M_RBUTTON )
-        @on_right_key_up = true
-      end
-
+      @on_right_key_up = Input.mouse_release?( M_RBUTTON )
     else
       #イベント起動済みフラグクリア
       @over = false
@@ -182,24 +164,13 @@ class ClickableLayoutControl < LayoutControl
       @out = true
 
       #キー押下チェック
-      if Input.mouse_down?( M_LBUTTON )
-        @on_key_down_out = true
-      end
-
+      @on_key_down_out = Input.mouse_down?( M_LBUTTON )
       #キー解除チェック
-      if Input.mouse_release?( M_LBUTTON )
-        @on_key_up_out = true
-      end
-
+      @on_key_up_out = Input.mouse_release?( M_LBUTTON )
       #右キー押下チェック
-      if Input.mouse_down?( M_RBUTTON )
-        @on_right_key_down_out = true
-      end
-
+      @on_right_key_down_out = Input.mouse_down?( M_RBUTTON )
       #右キー解除チェック
-      if Input.mouse_release?( M_RBUTTON )
-        @on_right_key_up_out = true
-      end
+      @on_right_key_up_out = Input.mouse_release?( M_RBUTTON )
     end
 
     return super

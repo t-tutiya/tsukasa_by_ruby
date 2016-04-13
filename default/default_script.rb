@@ -114,7 +114,9 @@ _DEFINE_ :_WINDOW_STATUS_ do |argumnet, options|
   Window.caption = options[:caption] if options[:caption]
   #タイトルバーのアイコン画像を設定する
   Window.load_icon(options[:icon_path])if options[:icon_path]
-  
+  #フレーム更新時のリセット背景色を設定する
+  Window.bgcolor = options[:bgcolor] if options[:bgcolor]
+
   #マウスカーソルの形状を設定する。
     #マウスカーソル定数
     #IDC_APPSTARTING 標準の矢印カーソルと小さい砂時計カーソル

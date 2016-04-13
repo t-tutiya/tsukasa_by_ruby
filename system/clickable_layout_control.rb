@@ -103,20 +103,25 @@ class ClickableLayoutControl < LayoutControl
     @on_right_key_down_out= false
     @on_right_key_up      = false
     @on_right_key_up_out  = false
+    
+    #カーソル座標を補正
+    x = mouse_pos_x - @x
+    y = mouse_pos_y - @y
 
     #前フレームとのカーソル座標更新差分を取得
-    @cursor_offset_x = mouse_pos_x - @cursor_x
-    @cursor_offset_y = mouse_pos_y - @cursor_y
+    @cursor_offset_x = x - @cursor_x
+    @cursor_offset_y = y - @cursor_y
 
     #カーソルが移動しているかどうかのフラグを格納
     @on_cursor_move = !((@cursor_offset_x == 0) and (@cursor_offset_y == 0))
 
     #カーソル座標を保存する
-    @cursor_x = @mouse_sprite.x = mouse_pos_x
-    @cursor_y = @mouse_sprite.y = mouse_pos_y
+    @cursor_x = @mouse_sprite.x = x
+    @cursor_y = @mouse_sprite.y = y
 
-    @collision_sprite.x = @x + @offset_x
-    @collision_sprite.y = @y + @offset_y
+    #コリジョン図形の位置を補正
+    @collision_sprite.x = @offset_x
+    @collision_sprite.y = @offset_y
 
     #マウスカーソル座標との衝突判定
     if not (@mouse_sprite === @collision_sprite)

@@ -249,18 +249,20 @@ class CharControl < DrawableControl
 
       #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加。
       if @font_draw_option[:edge]
-        @width += @font_draw_option[:edge_width] * 2
+        @width  += @font_draw_option[:edge_width] * 2
         @height += @font_draw_option[:edge_width] * 2
+        offset_x = offset_y = @font_draw_option[:edge_width]
+      else
+        offset_x = offset_y = 0
       end
 
-      @entity.dispose if @entity
-
       #文字用のimageを作成
+      @entity.dispose if @entity
       @entity = Image.new(@width, @height, [0, 0, 0, 0]) 
 
       #フォントを描画
-      @entity.draw_font_ex( 0, 
-                            0, 
+      @entity.draw_font_ex( offset_x, 
+                            offset_y, 
                             @char, 
                             @font_obj, 
                             @font_draw_option)

@@ -70,7 +70,7 @@ class CharControl < DrawableControl
   # 文字
   attr_reader :char    
   def char=(arg)
-    @char = arg
+    @char = arg.to_s
     @option_update = true
   end
 

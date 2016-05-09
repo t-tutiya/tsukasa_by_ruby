@@ -344,6 +344,34 @@ class Control #内部メソッド
           end
         end
 
+      #指定されたデータと値が未満かどうか
+      when :under
+        value.each do |hash|
+          hash.each do |key, val|
+            if argument
+              #データストアとの比較
+              return true if @root_control.send(argument)[key] < val
+            else
+              #コントロールプロパティとの比較
+              return true if send(key) < val
+            end
+          end
+        end
+
+      #指定されたデータと値がより大きいかどうか
+      when :upper
+        value.each do |hash|
+          hash.each do |key, val|
+            if argument
+              #データストアとの比較
+              return true if @root_control.send(argument)[key] > val
+            else
+              #コントロールプロパティとの比較
+              return true if send(key) > val
+            end
+          end
+        end
+
       #指定されたデータがnilの場合
       when :null
         value.each do |key|

@@ -203,10 +203,10 @@ class CharControl < DrawableControl
     self.italic = options[:italic] || false  #イタリック
 
     self.color = options[:color] || [255,255,255] #色
-    self.aa = options[:aa] || true #アンチエイリアスのオンオフ
+    self.aa = options[:aa] == false ? false : true #アンチエイリアスのオンオフ
 
-    self.edge = options[:edge] || true #縁文字
-    self.shadow = options[:shadow] || true #影
+    self.edge = options[:edge] == false ? false : true #縁文字
+    self.shadow = options[:shadow] == false ? false : true #影
 
     self.edge_color = options[:edge_color] || [0, 0, 0] #縁文字：縁の色
     self.edge_width = options[:edge_width] || 2 #縁文字：縁の幅
@@ -225,9 +225,11 @@ class CharControl < DrawableControl
       #文字が設定されていなければ戻る
       return super unless @char
 
-      @font_obj = Font.new( @size, @font_name, 
+      @font_obj = Font.new( @size, 
+                            @font_name, 
                             { :weight=>@weight, 
-                              :italic=>@italic})
+                              :italic=>@italic,
+                              :auto_fitting=>true })
 
       #現状での縦幅、横幅を取得
       @width = @font_obj.get_width(@char)

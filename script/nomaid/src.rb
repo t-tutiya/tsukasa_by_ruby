@@ -280,8 +280,6 @@ _SEND_(:text0){
   _FLUSH_
 }
 
-
-
 _CREATE_ :CharControl, 
   id: :nomaid_comment_area,
   size: 32, 
@@ -295,6 +293,7 @@ _CREATE_ :CharControl,
 #■メイﾝループ
 #■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
+#ステータスウィンドウ
 _CREATE_ :TextPageControl, 
   x: 32,
   y: 256,
@@ -304,125 +303,224 @@ _CREATE_ :TextPageControl,
   id: :text1,
   font_name: "ＭＳＰ ゴシック"
 
+_DEFINE_ :status_text do |id: nil, char: nil|
+  _CREATE_ :CharControl, 
+    size: 32,
+    id: id,
+    float_x: :left, 
+    color:[255,255,0], 
+    font_name: "ＭＳＰ ゴシック",
+    char: char || " "
+end
+
+_CREATE_ :LayoutControl,
+  id: :status_window, 
+  x: 32,
+  y: 256,
+  width: 1024,
+  height: 192 do
+    _CREATE_ :LayoutControl, id: :line1, height: 42, float_y: :bottom do
+      status_text char: "第"
+      status_text id: :week
+      status_text char: "週　第"
+      status_text id: :day
+      status_text char: "日目　現在の所持金は＄"
+      status_text id: :gold
+      status_text char: "。"
+    end
+    _CREATE_ :LayoutControl, id: :line2, height: 42, float_y: :bottom do
+      status_text char: "借金の返済まであと"
+      status_text id: :last_day
+      status_text char: "日。"
+    end
+    _CREATE_ :LayoutControl, id: :line3, height: 42, float_y: :bottom do
+      status_text char: "今週の返済額は＄"
+      status_text id: :week_debt
+      status_text char: "で、あと＄"
+      status_text id: :week_debt_last_gold
+      status_text char: "必要だ。"
+    end
+    _CREATE_ :LayoutControl, id: :line4, height: 42, float_y: :bottom do
+      status_text char: "＝＝＝＝"
+    end
+    _CREATE_ :LayoutControl, id: :line5, height: 42, float_y: :bottom do
+      status_text char: "所持金："
+      status_text id: :gold
+      status_text char: "　ＨＰ："
+      status_text id: :helth_point
+      status_text char: "/"
+      status_text id: :helth_point_max
+      status_text char: "　ＭＰ："
+      status_text id: :mental_point
+      status_text char: "/"
+      status_text id: :mental_point_max
+    end
+    _CREATE_ :LayoutControl, id: :line6, height: 42, float_y: :bottom do
+      status_text char: "魅力："
+      status_text id: :charm
+      status_text char: "　気品："
+      status_text id: :noble
+      status_text char: "　教養："
+      status_text id: :culture
+    end
+    _CREATE_ :LayoutControl, id: :line7, height: 42, float_y: :bottom do
+      status_text char: "知性："
+      status_text id: :intelligence
+      status_text char: "　恭順："
+      status_text id: :allegiance
+      status_text char: "　礼節："
+      status_text id: :courtesy
+    end
+    _DEFINE_ :update_status do
+      _GET_ [ :week, 
+              :day,
+              :debt,
+              :gold,
+              :helth_point,
+              :helth_point_max,
+              :mental_point,
+              :mental_point_max,
+              :charm,
+              :noble,
+              :culture,
+              :intelligence,
+              :allegiance,
+              :courtesy,
+              ], datastore: :_TEMP_ do |
+              week:, 
+              day:,
+              debt:,
+              gold:,
+              helth_point:,
+              helth_point_max:,
+              mental_point:,
+              mental_point_max:,
+              charm:,
+              noble:,
+              culture:,
+              intelligence:,
+              allegiance:,
+              courtesy:|
+        line1{
+          day{_SET_ char: day + 1}
+          week{_SET_ char: week + 1}
+          gold{_SET_ char: gold}
+        }
+        line2{
+          last_day{_SET_ char: 7-day}
+        }
+        line3{
+          week_debt{_SET_ char: debt[week]}
+          week_debt_last_gold{_SET_ char: [debt[week] - gold, 0].max}
+        }
+        line5{
+          gold{_SET_ char: gold}
+          helth_point{_SET_ char: helth_point}
+          helth_point_max{_SET_ char: helth_point_max}
+          mental_point{_SET_ char: mental_point}
+          mental_point_max{_SET_ char: mental_point_max}
+        }
+        line6{
+          charm{_SET_ char: charm}
+          noble{_SET_ char: noble}
+          culture{_SET_ char: culture}
+        }
+        line7{
+          intelligence{_SET_ char: intelligence}
+          allegiance{_SET_ char: allegiance}
+          courtesy{_SET_ char: courtesy}
+        }
+      end
+    end
+end
+
 #７週間リピート
-_LOOP_ count:7 do |arg, ops, control|
+_LOOP_ count:7 do
   #週開始処理
   _SET_ :_TEMP_, day: 0
 
-  _LOOP_ count:7 do |arg, ops, control|
-    _END_FRAME_
-
-    _GET_ [ :week, 
-            :day,
-            :debt,
-            :gold,
-            :helth_point,
-            :helth_point_max,
-            :mental_point,
-            :mental_point_max,
-            :charm,
-            :noble,
-            :culture,
-            :intelligence,
-            :allegiance,
-            :courtesy,
-            ], datastore: :_TEMP_ do |arg, options|
-
-    text1{
-      _FLUSH_
-      _TEXT_  "第#{options[:week] + 1 }週#{options[:day] + 1}日目。現在の所持金は$#{options[:gold]}。"
-      _LINE_FEED_
-      _TEXT_  "借金の返済まで後#{7 - options[:day]}日。"
-      _LINE_FEED_
-      _TEXT_  "今週の返済額は$#{options[:debt][options[:week]]}で、あと$#{ [options[:debt][options[:week]] - options[:gold],0].max}必要だ。"
-      _LINE_FEED_
-      _TEXT_  "==="
-      _LINE_FEED_
-      _TEXT_  "所持金：#{options[:gold]}  ＨＰ　：#{options[:helth_point]}/#{options[:helth_point_max]}  ＭＰ　：#{options[:mental_point]}/#{options[:mental_point_max]}"
-      _LINE_FEED_
-      _TEXT_ "魅力：#{options[:charm]}  気品　：#{options[:noble]}  教養　：#{options[:culture]}"
-      _LINE_FEED_
-      _TEXT_ "知性：#{options[:intelligence]}  恭順　：#{options[:allegiance]}  礼節　：#{options[:courtesy]}"
+  _LOOP_ count:7 do
+    #画面の更新
+    status_window{
+      update_status
     }
-    end
 
+    #曜日終了フラグリセット
     _SET_ :_TEMP_, end_day: nil
 
     #トップメニューの表示と処理
     _LOOP_ do
+      #メニュー押下フラグリセット
       _SET_ :_TEMP_, flag: nil
-
+      #メニュー表示
       top_menu
-
+      #曜日終了確認
       _CHECK_ :_TEMP_, equal: {end_day: true} do
         _BREAK_
       end
     end
 
-    #曜日開始処理
-    _GET_ :day, datastore: :_TEMP_ do |arg, options|
-      _SET_ :_TEMP_ , day: options[:day] + 1
-    end
+    #曜日更新処理
+    _SET_OFFSET_ :_TEMP_ , day: 1
+    _END_FRAME_
   end
 
-  _SET_ :_TEMP_, gameover: nil
-
-  _GET_ [:gold, :debt, :week, :gameover, :gameclear], datastore: :_TEMP_ do |arg, options|
-    options[:gold] -= options[:debt][options[:week]]
-    options[:week] += 1
-
-    if options[:gold] < 0
-      options[:gameover] = true
-    else
-      options[:gameover] = false
+  #ゲームオーバー判定
+  _GET_ [:debt, :week], datastore: :_TEMP_ do |debt:, week:|
+    _CHECK_ :_TEMP_, under: {gold: debt[week]} do
+      _SET_ :_TEMP_, gameover: true
+      _BREAK_
     end
 
-    if options[:week] == 7
-      options[:gameclear] = true
-    end
-    _SET_ :_TEMP_,  gold: options[:gold], 
-                    week: options[:week], 
-                    gameover: options[:gameover], 
-                    gameclear: options[:gameclear]
+    #借金返済
+    _SET_OFFSET_  :_TEMP_, gold: -debt[week]
   end
+
+  #ゲームクリア判定
+  _CHECK_ :_TEMP_, equal: {week: 6} do
+    _SET_ :_TEMP_, gameclear: true
+    _BREAK_
+  end
+
+  #週更新処理
+  _SET_OFFSET_  :_TEMP_, week: 1
 end
 
+status_window{_DELETE_}
 
-  #gameoverフラグが変化するのを待つ
-  #[解説]※１はコマンドを送信するだけですぐこの処理に移ってしまうので、フラグ経由でタイミングを管理しなければならない
-  _WAIT_ :_TEMP_,  not_equal: {gameover: nil}
+_END_FRAME_
 
-  #ゲームオーバーならテキストを出力して終了
-  _CHECK_ :_TEMP_, equal: {gameover: true} do
-    #_INCLUDE_ "./script/nomaid/bad_end.tks"
-    text1{
-      _FLUSH_
-      _TEXT_ "　あなたはメイドの借金を返すことができなかった。"
-      _LINE_FEED_
-      _TEXT_ "あわれメイドは売られてしまい、その後を知るもの"
-      _LINE_FEED_
-      _TEXT_ "はいない……。"
-    }
-    _WAIT_ system: :mouse_push
-    _EXIT_
-  end
+#ゲームオーバーならテキストを出力して終了
+_CHECK_ :_TEMP_, equal: {gameover: true} do
+  #_INCLUDE_ "./script/nomaid/bad_end.tks"
+  text1{
+    _FLUSH_
+    _TEXT_ "　あなたはメイドの借金を返すことができなかった。"
+    _LINE_FEED_
+    _TEXT_ "あわれメイドは売られてしまい、その後を知るもの"
+    _LINE_FEED_
+    _TEXT_ "はいない……。"
+  }
+  _WAIT_ system: :mouse_push
+  _EXIT_
+end
 
-  #ゲームクリアならテキストを出力して終了
-  _CHECK_ :_TEMP_, equal: {gameclear: true} do
-    #_INCLUDE_ "./script/nomaid/happy_end.tks"
-    text1{
-      _FLUSH_
-      _TEXT_ "　無事にメイドの借金を返済し終えたあなたには、"
-      _LINE_FEED_
-      _TEXT_ "メイドとの楽しい日々の暮らしが待っている。"
-      _LINE_FEED_
-      _TEXT_ "　ゲームクリアおめでとうございます。"
-      _LINE_FEED_
-      _LINE_FEED_
-      _TEXT_ "Thank you for playing."
-    }
-    _WAIT_ system: :mouse_push
-    _EXIT_
-  end
+#ゲームクリアならテキストを出力して終了
+_CHECK_ :_TEMP_, equal: {gameclear: true} do
+  #_INCLUDE_ "./script/nomaid/happy_end.tks"
+  text1{
+    _FLUSH_
+    _TEXT_ "　無事にメイドの借金を返済し終えたあなたには、"
+    _LINE_FEED_
+    _TEXT_ "メイドとの楽しい日々の暮らしが待っている。"
+    _LINE_FEED_
+    _TEXT_ "　ゲームクリアおめでとうございます。"
+    _LINE_FEED_
+    _LINE_FEED_
+    _TEXT_ "Thank you for playing."
+  }
+  _WAIT_ system: :mouse_push
+  _EXIT_
+end
 
 _PUTS_ "eof"

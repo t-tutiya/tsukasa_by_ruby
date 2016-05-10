@@ -9,8 +9,8 @@ _CREATE_ :ClickableLayoutControl,
     _SET_TILE_ 1, file_path: "./resource/button_over.png"
     _SET_TILE_ 2, file_path: "./resource/button_key_down.png"
   end
-  #ループ
-  _LOOP_ do
+
+  _DEFINE_ :drug_control do
     #カーソルが画像の上に来るまで待機
     _WAIT_ mouse: [:cursor_on]
 
@@ -25,7 +25,9 @@ _CREATE_ :ClickableLayoutControl,
       #画像を「NORMAL」に差し替える
       icon{ _MAP_STATUS_ 0}
       #ループの最初に戻る
-      _NEXT_
+      _RETURN_ do
+        drug_control
+      end
     end
 
     #画像を「DOWN」に差し替える
@@ -40,7 +42,12 @@ _CREATE_ :ClickableLayoutControl,
         _SET_OFFSET_ x: cursor_offset_x, y: cursor_offset_y
       end
     end
+    _RETURN_ do
+      drug_control
+    end
   end
+  
+  drug_control
 end
 
 _LOOP_ do

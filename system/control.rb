@@ -584,15 +584,20 @@ class Control #制御構文
     @command_list.push([:_STACK_LOOP_, argument, options, yield_block_stack, block])
   end
 
-  def _NEXT_(argument, options, yield_block_stack)
+  def _NEXT_(argument, options, yield_block_stack, &block)
     #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
       break if @command_list.shift == :_END_LOOP_ 
     end
+
+    if block
+      #ブロックが付与されているならそれを実行する
+      parse_block(argument, options, yield_block_stack, &block)
+    end
   end
 
-  def _BREAK_(argument, options, yield_block_stack)
+  def _BREAK_(argument, options, yield_block_stack, &block)
     #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -601,13 +606,23 @@ class Control #制御構文
         break 
       end
     end
+
+    if block
+      #ブロックが付与されているならそれを実行する
+      parse_block(argument, options, yield_block_stack, &block)
+    end
   end
 
-  def _RETURN_(argument, options, yield_block_stack)
+  def _RETURN_(argument, options, yield_block_stack, &block)
     #_END_FUNCTION_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_FUNCTION_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
       break if @command_list.shift == :_END_FUNCTION_
+    end
+
+    if block
+      #ブロックが付与されているならそれを実行する
+      parse_block(argument, options, yield_block_stack, &block)
     end
   end
 end

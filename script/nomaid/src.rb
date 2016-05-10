@@ -159,11 +159,14 @@ _DEFINE_ :set_status_window do
 end
 
 #■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-#■メニューシステム
+#■メニュー
 #■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
 #トップメニュー
 _DEFINE_ :top_menu do
+  #メニュー押下フラグリセット
+  _SET_ :_TEMP_, flag: nil
+
   _CREATE_ :LayoutControl, id: :top_menu, x:100, y:100 do
     menu_button text: "習い事をさせる", id: :lesson
     menu_button text: "働かせる", id: :work
@@ -188,8 +191,17 @@ _DEFINE_ :top_menu do
   _CHECK_ :_TEMP_, equal: {flag: :rest} do
     rest
   end
-end
 
+  #曜日終了確認
+  _CHECK_ :_TEMP_, equal: {end_day: true} do
+    _RETURN_
+  end
+  
+  #コマンド終了後、自分自身を再帰呼び出しする
+  _RETURN_ do
+    top_menu
+  end
+end
 
 #「習い事をさせる」メニュー
 _DEFINE_ :lesson_menu do
@@ -443,6 +455,10 @@ _SET_ :_TEMP_,
   day: 0,
   week: 0
 
+#■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+#■ＯＰシーン
+#■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
 #ＯＰ用テキストレイアウト指定
 _SEND_(:text0){
   _SET_ x:32, y:32, width: 1024, height: 1024, size:24
@@ -451,6 +467,10 @@ _SEND_(:text0){
 #ＯＰ文字列表示
 _INCLUDE_ "./script/nomaid/op.tks"
 
+#■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+#■メインシーン
+#■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
 #テキストウィンドウクリア
 _SEND_(:text0){
   _FLUSH_
@@ -458,10 +478,6 @@ _SEND_(:text0){
 
 #ステータスウィンドウ表示
 set_status_window
-
-#■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-#■メイﾝループ
-#■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
 #７週間リピート
 _LOOP_ count:7 do
@@ -477,20 +493,11 @@ _LOOP_ count:7 do
     #曜日終了フラグリセット
     _SET_ :_TEMP_, end_day: nil
 
-    #トップメニューの表示と処理
-    _LOOP_ do
-      #メニュー押下フラグリセット
-      _SET_ :_TEMP_, flag: nil
-      #メニュー表示
-      top_menu
-      #曜日終了確認
-      _CHECK_ :_TEMP_, equal: {end_day: true} do
-        _BREAK_
-      end
-    end
+    #メニュー表示
+    top_menu
 
     #曜日更新処理
-    _SET_OFFSET_ :_TEMP_ , day: 1
+    _SET_OFFSET_ :_TEMP_, day: 1
     _END_FRAME_
   end
 
@@ -515,30 +522,30 @@ _LOOP_ count:7 do
   _SET_OFFSET_  :_TEMP_, week: 1
 end
 
+#■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+#■ゲーム終了シーン
+#■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
 status_window{_DELETE_}
 
 _END_FRAME_
 
 #ゲームオーバーならテキストを出力して終了
 _CHECK_ :_TEMP_, equal: {gameover: true} do
-  #_INCLUDE_ "./script/nomaid/bad_end.tks"
-  text1{
-    _FLUSH_
+  text0{
     _TEXT_ "　あなたはメイドの借金を返すことができなかった。"
     _LINE_FEED_
     _TEXT_ "あわれメイドは売られてしまい、その後を知るもの"
     _LINE_FEED_
     _TEXT_ "はいない……。"
   }
-  _WAIT_ system: :mouse_push
+  _END_PAUSE_
   _EXIT_
 end
 
 #ゲームクリアならテキストを出力して終了
 _CHECK_ :_TEMP_, equal: {gameclear: true} do
-  #_INCLUDE_ "./script/nomaid/happy_end.tks"
-  text1{
-    _FLUSH_
+  text0{
     _TEXT_ "　無事にメイドの借金を返済し終えたあなたには、"
     _LINE_FEED_
     _TEXT_ "メイドとの楽しい日々の暮らしが待っている。"
@@ -548,7 +555,7 @@ _CHECK_ :_TEMP_, equal: {gameclear: true} do
     _LINE_FEED_
     _TEXT_ "Thank you for playing."
   }
-  _WAIT_ system: :mouse_push
+  _END_PAUSE_
   _EXIT_
 end
 

@@ -177,13 +177,14 @@ end
 _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
   #メッセージウィンドウ
   _CREATE_ :TextPageControl, 
+    id: argument,
     x: options[:x] || 0,
     y: options[:y] || 0,
     width: options[:width],
     height: options[:height],
-    size: 32, 
-    id: argument,
-    font_name: "ＭＳＰ ゴシック" do
+    size: options[:size] || 32, 
+    z: options[:z] || 1000000,
+    font_name: options[:font_name] || "ＭＳＰ ゴシック" do
     #文字間ウェイト
     _DEFINE_ :_CHAR_WAIT_ do
       _WAIT_  :_TEMP_, 

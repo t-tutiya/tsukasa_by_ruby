@@ -204,6 +204,7 @@ class TextPageControl < LayoutControl
       :shadow_color => options[:shadow_color] || [0, 0, 0],    #影：影の色
       :shadow_x => options[:shadow_x] || 0,              #影:オフセットＸ座標
       :shadow_y => options[:shadow_y] || 0,              #影:オフセットＹ座標
+      :z => options[:z] || 1000000, #描画順
     }
 
     #ルビ文字情報

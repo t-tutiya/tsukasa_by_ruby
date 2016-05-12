@@ -101,7 +101,7 @@ _DEFINE_ :_LINE_PAUSE_ do
       align_y: :bottom, float_x: :left do
       _CREATE_ :TileMapControl, 
         map_array: [[0]], size_x: 1, size_y: 1, 
-        width: 24, height: 24, z: 100000 do
+        width: 24, height: 24, z: 1000000 do
         _SET_TILE_GROUP_ file_path: "./resource/icon/icon_8_a.png",
           x_count: 4, y_count: 2
         _ICON_8_
@@ -127,7 +127,7 @@ _DEFINE_ :_END_PAUSE_ do
       align_y: :bottom, float_x: :left do
       _CREATE_ :TileMapControl, 
         map_array: [[0]], size_x: 1, size_y: 1, 
-        width: 24, height: 24, z: 100000 do
+        width: 24, height: 24, z: 1000000 do
         _SET_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
           x_count: 4, y_count: 1
         _STACK_LOOP_ do

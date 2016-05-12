@@ -40,7 +40,6 @@ class TileMapControl < RenderTargetControl
   attr_accessor :map_y
   attr_accessor :size_x
   attr_accessor :size_y
-  attr_accessor :z
 
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
     options[:width] = options[:width] || 32
@@ -52,7 +51,6 @@ class TileMapControl < RenderTargetControl
     @map_y = options[:map_y] || 0
     @size_x = options[:size_x] || 1
     @size_y = options[:size_y] || 1
-    @z = options[:z] || 0
 
     super
   end

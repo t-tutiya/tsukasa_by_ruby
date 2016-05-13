@@ -82,8 +82,6 @@ class LayoutableControl < Control
   def check_align_x()
     width = @parent_control.width
 
-    offset_x = 0
-
     #右揃えを考慮
     case @align_x
     when :right 
@@ -99,8 +97,6 @@ class LayoutableControl < Control
 
   def check_align_y()
     height = @parent_control.height
-
-    offset_y = 0
 
     #下揃えを考慮
     case @align_y

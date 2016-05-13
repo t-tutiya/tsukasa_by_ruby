@@ -79,33 +79,33 @@ class LayoutableControl < Control
     return check_float
   end
 
+  #Ｘ方向のセンタリング補正
   def check_align_x()
-    width = @parent_control.width
-
-    #右揃えを考慮
     case @align_x
-    when :right 
-      offset_x = width - @width
-    when :center 
-      offset_x = width/2 - @width/2
-    else
+    when nil
       offset_x = 0
+    when :right 
+      offset_x = @parent_control.width - @width
+    when :center 
+      offset_x = @parent_control.width/2 - @width/2
+    else
+      raise
     end
 
     return offset_x
   end
 
+  #Ｙ方向のセンタリング補正
   def check_align_y()
-    height = @parent_control.height
-
-    #下揃えを考慮
     case @align_y
-    when :bottom 
-      offset_y = height - @height
-    when :center 
-      offset_y = height/2 - @height/2
-    else
+    when nil
       offset_y = 0
+    when :bottom 
+      offset_y = @parent_control.height - @height
+    when :center 
+      offset_y = @parent_control.height/2 - @height/2
+    else
+      raise
     end
 
     return offset_y

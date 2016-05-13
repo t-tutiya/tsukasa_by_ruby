@@ -62,8 +62,7 @@ class TileMapControl < RenderTargetControl
     super
   end
 
-  def render(offset_x, offset_y, target, 
-              parent_control_width, parent_control_height)
+  def render(offset_x, offset_y, target)
     #描画オブジェクトを持ち、かつ可視でなければ戻る
     return super unless @image_array
 

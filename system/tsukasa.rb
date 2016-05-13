@@ -114,9 +114,7 @@ class Tsukasa < LayoutControl
     super(mouse_pos_x, mouse_pos_y, 0)
   end
 
-  def render(offset_x, offset_y, target, 
-             parent_control_width = Window.width, 
-             parent_control_height = Window.width)
+  def render(offset_x, offset_y, target)
     super
   end
 

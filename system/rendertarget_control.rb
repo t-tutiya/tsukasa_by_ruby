@@ -65,8 +65,7 @@ class RenderTargetControl < DrawableControl
     return super
   end
   
-  def render(offset_x, offset_y, target, 
-              parent_control_width, parent_control_height)
+  def render(offset_x, offset_y, target)
     if @update_flag
       @entity = RenderTarget.new(@width, @height, @bgcolor)
       @update_flag = false

@@ -45,6 +45,7 @@ class LayoutableControl < Control
   attr_accessor  :float_y
 
   #寄せ指定
+  attr_accessor  :align_x
   attr_accessor  :align_y
 
   #サイズ
@@ -72,22 +73,48 @@ class LayoutableControl < Control
   end
 
   def update(mouse_pos_x, mouse_pos_y, index)
-    super(mouse_pos_x - @x -  @offset_x, 
-          mouse_pos_y - @y -  @offset_y,
+    super(mouse_pos_x - @x - @offset_x, 
+          mouse_pos_y - @y - @offset_y,
           index)
     return check_float
   end
 
-  def check_align(width, height)
-    offest_x = offset_y = 0
+  def check_align_x()
+    width = @parent_control.width
+
+    offset_x = 0
+
+    #右揃えを考慮
+    case @align_x
+    when :right 
+      offset_x = width - @width
+    when :center 
+      offset_x = width/2 - @width/2
+    else
+      offset_x = 0
+    end
+
+    return offset_x
+  end
+
+  def check_align_y()
+    height = @parent_control.height
+
+    offset_y = 0
+
     #下揃えを考慮
     case @align_y
     when :bottom 
       offset_y = height - @height
+    when :center 
+      offset_y = height/2 - @height/2
+    else
+      offset_y = 0
     end
-    return offest_x, offset_y
+
+    return offset_y
   end
-  
+
   def check_float
     #連結指定チェック
     case @float_x

@@ -55,17 +55,26 @@ class TextPageControl < LayoutControl
 
   #文字基礎情報
 
-  attr_reader  :size #文字サイズ
+  #文字サイズ
+  def size()
+    @char_option[:size]
+  end
   def size=(arg)
     @char_option[:size] = arg
   end
   
-  attr_reader  :color #文字色
+  #文字色
+  def color()
+    @char_option[:color]
+  end
   def color=(arg)
     @char_option[:color] = arg
   end
 
-  attr_reader  :font_name
+  #フォント名
+  def font_name()
+    @char_option[:font_name]
+  end
   def font_name=(arg)
     @char_option[:font_name] = arg
   end
@@ -85,68 +94,110 @@ class TextPageControl < LayoutControl
     #        target[:use_image_font] = false
     #      end
 
-  attr_reader :weight # 太字（bool || integer）
+  # 太字（bool || integer）
+  def weight()
+    @char_option[:weight]
+  end
   def weight=(arg)
     @char_option[:weight] = arg
   end
-  attr_reader :italic # イタリック（bool）
+
+  # イタリック（bool）
+  def italic()
+    @char_option[:italic]
+  end
   def italic=(arg)
     @char_option[:italic] = arg
   end
-  attr_reader :z #描画順指定（TODO：反映未確認）
+
+  #描画順指定（TODO：反映未確認）
+  def z()
+    @char_option[:z]
+  end
   def z=(arg)
     @char_option[:z] = arg
   end
-  attr_reader  :aa   #アンチエイリアスのオンオフ
+
+  #アンチエイリアスのオンオフ
+  def aa()
+    @char_option[:aa]
+  end
   def aa=(arg)
     @char_option[:aa] = arg
   end
 
   #袋文字関連
     
-  attr_reader :edge  # 袋文字を描画するかどうかをtrue/falseで指定します。
+  # 袋文字を描画するかどうかをtrue/falseで指定します。
+  def edge()
+    @char_option[:edge]
+  end
   def edge=(arg)
     @char_option[:edge] = arg
   end
 
-  attr_reader :edge_color  # 袋文字の枠色を指定します。配列で[R, G, B]それぞれ0～255
+  # 袋文字の枠色を指定します。配列で[R, G, B]それぞれ0～255
+  def edge_color()
+    @char_option[:edge_color]
+  end
   def edge_color=(arg)
     @char_option[:edge_color] = arg
   end
 
-  attr_reader :edge_width  # 袋文字の枠の幅を0～の数値で指定します。1で1pixcel
+  # 袋文字の枠の幅を0～の数値で指定します。1で1pixcel
+  def edge_width()
+    @char_option[:edge_width]
+  end
   def edge_width=(arg)
     @char_option[:edge_width] = arg
   end
 
-  attr_reader :edge_level  # 袋文字の枠の濃さを0～の数値で指定します。大きいほど濃くなりますが、幅が大きいほど薄くなります。値の制限はありませんが、目安としては一桁ぐらいが実用範囲でしょう。
+  # 袋文字の枠の濃さを0～の数値で指定します。大きいほど濃くなりますが、幅が大きいほど薄くなります。値の制限はありませんが、目安としては一桁ぐらいが実用範囲でしょう。
+  def edge_level()
+    @char_option[:edge_level]
+  end
   def edge_level=(arg)
     @char_option[:edge_level] = arg
   end
 
   #影文字関連
 
-  attr_reader :shadow    # 影を描画するかどうかをtrue/falseで指定します
+  # 影を描画するかどうかをtrue/falseで指定します
+  def shadow()
+    @char_option[:shadow]
+  end
   def shadow=(arg)
     @char_option[:shadow] = arg
   end
 
-  attr_reader :shadow_edge   # edgeがtrueの場合に、枠の部分に対して影を付けるかどうかをtrue/falseで指定します。trueで枠の影が描かれます
+  # edgeがtrueの場合に、枠の部分に対して影を付けるかどうかをtrue/falseで指定します。trueで枠の影が描かれます
+  def shadow_edge()
+    @char_option[:shadow_edge]
+  end
   def shadow_edge=(arg)
     @char_option[:shadow_edge] = arg
   end
 
-  attr_reader :shadow_color    # 影の色を指定します。配列で[R, G, B]、それぞれ0～255
+  # 影の色を指定します。配列で[R, G, B]、それぞれ0～255
+  def shadow_color()
+    @char_option[:shadow_color]
+  end
   def shadow_color=(arg)
     @char_option[:shadow_color] = arg
   end
 
-  attr_reader :shadow_x    # 影の位置を相対座標で指定します。+1は1ピクセル右になります
+  # 影の位置を相対座標で指定します。+1は1ピクセル右になります
+  def shadow_x()
+    @char_option[:shadow_x]
+  end
   def shadow_x=(arg)
     @char_option[:shadow_x] = arg
   end
 
-  attr_reader :shadow_y    # 影の位置を相対座標で指定します。+1は1ピクセル下になります
+  # 影の位置を相対座標で指定します。+1は1ピクセル下になります
+  def shadow_y()
+    @char_option[:shadow_y]
+  end
   def shadow_y=(arg)
     @char_option[:shadow_y] = arg
   end
@@ -154,22 +205,34 @@ class TextPageControl < LayoutControl
 
   #ルビ関連情報
 
-  attr_accessor  :rubi_size #ルビサイズ
+  #ルビサイズ
+  def rubi_size()
+    @rubi_option[:size]
+  end
   def rubi_size=(arg)
     @rubi_option[:size] = arg
   end
 
-  attr_accessor  :rubi_offset_x #ルビ幅
+  #ルビオフセットＸ座標
+  def rubi_offset_x()
+    @rubi_option[:offset_x]
+  end
   def rubi_offset_x=(arg)
     @rubi_option[:offset_x] = arg
   end
 
-  attr_accessor  :rubi_offset_y
+  #ルビオフセットＹ座標
+  def rubi_offset_y()
+    @rubi_option[:offset_y]
+  end
   def rubi_offset_y=(arg)
     @rubi_option[:offset_y] = arg
   end
 
-  attr_accessor  :rubi_pitch
+  #ルビ文字幅
+  def rubi_pitch()
+    @rubi_option[:charactor_pitch]
+  end
   def rubi_pitch=(arg)
     @rubi_option[:charactor_pitch] = arg
   end

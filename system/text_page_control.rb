@@ -244,7 +244,7 @@ class TextPageControl < LayoutControl
     @image_face = options[:image_face] || nil
 
     @line_spacing = options[:line_spacing] || 12   #行間の幅
-    @charactor_pitch = options[:charactor_pitch ] || -2 #文字間の幅
+    @charactor_pitch = options[:charactor_pitch ] || 0 #文字間の幅
     @line_height = options[:line_height] || 32    #行の高さ
 
     #文字情報
@@ -257,8 +257,8 @@ class TextPageControl < LayoutControl
       :color => options[:color] || [255,255,255],     #色
       :aa => options[:aa] || true,                 #アンチエイリアスのオンオフ
 
-      :edge => options[:edge] || true,               #縁文字
-      :shadow => options[:shadow] || true,            #影
+      :edge => options[:edge].nil? ? true : options[:edge], #縁文字
+      :shadow => options[:shadow].nil? ? true : options[:shadow],       #影
 
       :edge_color => options[:edge_color] || [0, 0, 0], #縁文字：縁の色
       :edge_width => options[:edge_width] || 2,            #縁文字：縁の幅

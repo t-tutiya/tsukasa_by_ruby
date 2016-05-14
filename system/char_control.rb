@@ -205,8 +205,8 @@ class CharControl < DrawableControl
     self.color = options[:color] || [255,255,255] #色
     self.aa = options[:aa] == false ? false : true #アンチエイリアスのオンオフ
 
-    self.edge = options[:edge] == false ? false : true #縁文字
-    self.shadow = options[:shadow] == false ? false : true #影
+    self.edge = (options[:edge] != false) #縁文字
+    self.shadow = (options[:shadow] != false) #影
 
     self.edge_color = options[:edge_color] || [0, 0, 0] #縁文字：縁の色
     self.edge_width = options[:edge_width] || 2 #縁文字：縁の幅

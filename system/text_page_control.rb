@@ -255,18 +255,18 @@ class TextPageControl < LayoutControl
       :italic => options[:italic] || false, #イタリック
 
       :color => options[:color] || [255,255,255],     #色
-      :aa => options[:aa] || true,                 #アンチエイリアスのオンオフ
+      :aa => (options[:aa] != false),            #アンチエイリアスのオンオフ
 
-      :edge => options[:edge].nil? ? true : options[:edge], #縁文字
-      :shadow => options[:shadow].nil? ? true : options[:shadow],       #影
+      :edge => (options[:edge] == true), #縁文字
+      :shadow => (options[:shadow] == true),       #影
 
       :edge_color => options[:edge_color] || [0, 0, 0], #縁文字：縁の色
       :edge_width => options[:edge_width] || 2,            #縁文字：縁の幅
       :edge_level => options[:edge_level] || 16,           #縁文字：縁の濃さ
 
-      :shadow_color => options[:shadow_color] || [0, 0, 0],    #影：影の色
-      :shadow_x => options[:shadow_x] || 0,              #影:オフセットＸ座標
-      :shadow_y => options[:shadow_y] || 0,              #影:オフセットＹ座標
+      :shadow_color => options[:shadow_color] || [255, 255, 255],   #影：影の色
+      :shadow_x => options[:shadow_x] || 8,              #影:オフセットＸ座標
+      :shadow_y => options[:shadow_y] || 8,              #影:オフセットＹ座標
       :z => options[:z] || 1000000, #描画順
     }
 

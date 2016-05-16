@@ -182,7 +182,8 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
     y: options[:y] || 0,
     width: options[:width],
     height: options[:height],
-    edge: options[:edge] || false,
+    edge: options[:edge],
+    edge_color: options[:edge_color] || [255,0,0],
     size: options[:size] || 32, 
     z: options[:z] || 1000000,
     font_name: options[:font_name] || "ＭＳＰ ゴシック" do

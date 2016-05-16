@@ -663,10 +663,10 @@ class Control #スクリプト制御
     #インタラプト指定されている
     if options[:interrupt]
       #子コントロールのコマンドリスト先頭に挿入
-      control._SCOPE_(nil, nil, yield_block_stack, &block)
+      control._SCOPE_(nil, options, yield_block_stack, &block)
     else
       #子コントロールのコマンドリスト末端に挿入
-      control.push_command(:_SCOPE_, nil, nil, yield_block_stack, block)
+      control.push_command(:_SCOPE_, nil, options, yield_block_stack, block)
     end
   end
 

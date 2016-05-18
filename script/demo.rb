@@ -111,6 +111,8 @@ _DEFINE_ :system_menu do
                  comment: "ドラッグ操作サンプル"
       TextSelect text: "sample_2_5",   path: path + "sample_2_5.rb", 
                  comment: "_TO_IMAGE_とルールトランジションの組み合わせ"
+      TextSelect text: "sample_2_6",   path: path + "sample_2_6.rb", 
+                 comment: "センタリングとＸ方向連結のサンプル"
     end
     _CREATE_ :LayoutControl, id: 3, x:0, y:0, width: 256, float_x: :left    do
       TextSelect text: "sample_3_1", path: path + "sample_3_1.tks", 

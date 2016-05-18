@@ -118,7 +118,7 @@ class ImageControl < DrawableControl
     end
 
     @entity.draw_font_ex(
-      options[:x], options[:y],
+      options[:x] || 0, options[:y] || 0,
       options[:text],
       Font.new( options[:size] || 24,
                 options[:font_name] || "",  

@@ -297,7 +297,6 @@ class TextPageControl < LayoutControl
                       {
                         :width => @width,
                         :height => @line_height,
-                        :float_x => :bottom, 
                         :float_y => :bottom
                       }, 
                       yield_block_stack, block])
@@ -448,7 +447,6 @@ class TextPageControl < LayoutControl
                         :height => @line_height,
                         #インデント用無形コントロール
                         :command_list => command_list, 
-                        :float_x => :bottom, 
                         :float_y => :bottom
                       }, 
                       yield_block_stack, nil
@@ -475,7 +473,6 @@ class TextPageControl < LayoutControl
                       {
                         :width => @width,
                         :height => @line_height,
-                        :float_x => :bottom, 
                         :float_y => :bottom
                       }, 
                       yield_block_stack])

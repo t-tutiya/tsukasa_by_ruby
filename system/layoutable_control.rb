@@ -114,26 +114,24 @@ class LayoutableControl < Control
   def check_float
     #連結指定チェック
     case @float_x
+    when nil
+      dx = 0
     #右連結
     when :left
       dx = @width + @offset_x
-    #下連結
-    when :bottom
-      dx = @x
     else
-      dx = 0
+      raise
     end
 
     #連結指定チェック
     case @float_y
-    #右連結
-    when :left
-      dy = @y
+    when nil
+      dy = 0
     #下連結
     when :bottom
       dy = @height + @offset_y
     else
-      dy = 0
+      raise
     end
 
     return dx, dy

@@ -132,7 +132,7 @@ class Control #内部メソッド
       offset_y += child_dy
     end
     #オフセット値を返す
-    return offset_x, offset_y
+    return 0, 0
   end
 
   def find_control(id)

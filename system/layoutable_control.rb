@@ -67,6 +67,7 @@ class LayoutableControl < Control
     @float_y = options[:float_y]
 
     #下寄せ指定
+    @align_x = options[:align_x]
     @align_y = options[:align_y]
 
     super

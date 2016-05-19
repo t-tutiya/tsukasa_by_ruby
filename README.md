@@ -62,6 +62,11 @@ http://mirichi.github.io/dxruby-doc/api/constant_keycode.html
 *  readme.md 簡易ドキュメント
 
 ##更新履歴
+
+v1.2.1p9
+
+* 条件項目upperをoverに変更
+
 v1.2.1p8
 
 * float_xの:bottomオプション廃止

@@ -59,9 +59,95 @@ http://mirichi.github.io/dxruby-doc/api/constant_keycode.html
 *  datastore データストアを保存するフォルダです。初期状態では空です。
     *  githubからインストールする場合はこのフォルダが存在しないので、手動で空フォルダを作成してください。
 *  main.rb 実行スクリプト。これ自体は司エンジンには含まれません。
-*  readme.rd 簡易ドキュメント
+*  readme.md 簡易ドキュメント
 
 ##更新履歴
+v1.2.1p8
+
+* float_xの:bottomオプション廃止
+* float_yの:leftオプション廃止
+* float_x/yの初期値をnilに統一
+* ImageControl#_TEXT_の引数x/yに初期値0を設定。
+* サンプルコード更新
+
+v1.2.1p7
+* テキスト関連の初期設定を更新
+    * 袋文字／影文字をデフォルトでオフに変更
+    * 影文字の初期オフセットを[0,0]から[8,8]に。色を[255,255,255]に
+* _TEXT_WINDOW_でedgeの有無指定を可能に
+* _SEND_に設定した引数をハッシュで受け取れるようにした。
+
+v1.2.1p6
+
+* TextPageControl#charctor_pitchプロパティの初期値を０に変更
+* _TEXT_WINDOW_の袋文字オプションをデフォルトでfalseに変更
+
+v1.2.1p5
+
+* bugfix
+
+v1.2.1p4
+
+* _TEXT_WINDOW_コマンドの描画順を1000000に統一
+* コントロールのセンタリングの設計を更新
+　・align_xプロパティを追加
+　・align_x:にright/centerを設定可能に更新
+　・align_y:にbottom/centerを設定可能に更新
+
+v1.2.1p3
+
+* _RETURN_/_NEXT_/_BREAK_に付与ブロックを追加
+
+v1.2.1p2
+
+※今回からDXRuby v1.4.4以降対応になります。
+
+* Fontのauto_fitting(DXRuby1.4.4昨日)に対応
+* 条件項目にunder/upperを追加
+* CharControlのcharに値を代入した場合、無条件でto_sが実行されるようにした。
+* resouseフォルダに仮配置のテキストファイルを配置
+* サンプルコード更新
+
+v1.2.1p1
+
+* サンプルコード更新
+
+v1.2.1
+
+* ファイル構成
+    * colorkey_control.rbを削除
+    * サンプルコードの追加
+
+* Control
+    * 無名コントロールのidに"Anonymous_"を付与するのを廃止
+    * _WAIT_/_MOVE_/_PATH_の付与ブロックを_BREAK_で抜けられるようにした
+    * マウスボタンクリック系の仕様を更新
+        * system: key_down/upをmouse_down/upに改名
+        * system: mouse_pushを追加。mouse_downの仕様を変更
+
+* ImageControl
+    * entityプロパティ追加
+
+* TextPageControl
+    * _CHAR_COMMAND_コマンドを追加
+
+* TileMapControl
+    * _ADD_TILE_GROUP_で開始タイル番号を指定できるようにした
+    * _ADD_TILE_/_ADD_TILE_GROUP_を_SET_TILE_/_SET_TILE_GROUP_に改名
+
+* ClickableLayoutControl
+    * colorkey_id/colorkey_border追加。これに伴いcolorkeyを廃止
+    * cursor_x/cursor_yの値が正しく更新されないバグを修正
+    * mouse: key_down系をkey_pushに変更＆key_down系を追加
+    * key_right_up_outをright_key_up_outに変更（誤字）
+
+* RenderTargetControl
+　・枠線表示機能を削除
+
+* ユーザー定義コマンド
+    * _WINDOW_STATUS_にbgcolorプロパティを追加
+    * _INPUT_UPDATE_を廃止
+    * _WAIT_FRAME_をグローバルユーザー定義コマンドに
 
 v1.2.0(2016/4/1)
 

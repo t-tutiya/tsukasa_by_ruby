@@ -356,7 +356,7 @@ class Control #内部メソッド
         end
 
       #指定されたデータと値がより大きいかどうか
-      when :upper
+      when :over
         value.each do |hash|
           hash.each do |key, val|
             if argument

@@ -66,6 +66,7 @@ http://mirichi.github.io/dxruby-doc/api/constant_keycode.html
 v1.2.1p9
 
 * 条件項目upperをoverに変更
+* ドキュメント更新
 
 v1.2.1p8
 

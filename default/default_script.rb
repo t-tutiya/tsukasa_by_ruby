@@ -164,3 +164,14 @@ _DEFINE_ :_PAD_CONFIG_ do |argumnet, options|
                     options[:pad_number] = 0)
 end
 
+#ImageControlを生成し、指定したコントロール配下を描画する
+_DEFINE_ :_TO_IMAGE_ do 
+  |argument, width:, height:, scale: nil, z: Float::INFINITY, visible: true|
+  _CREATE_ :ImageControl, id: argument, z: z, visible: visible,
+    width: width, height: height do
+    _DRAW_ [:_PARENT_], scale: scale
+    _CHECK_ system: :block_given do
+      _YIELD_
+    end
+  end
+end

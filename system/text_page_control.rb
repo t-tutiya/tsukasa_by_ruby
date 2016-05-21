@@ -48,7 +48,7 @@ class TextPageControl < LayoutControl
   #テキストページ情報
 
   attr_accessor  :line_spacing  #行間
-  attr_accessor  :charactor_pitch #文字間
+  attr_accessor  :character_pitch #文字間
   attr_accessor  :line_height #行の高さ
 
   attr_accessor  :indent
@@ -231,10 +231,10 @@ class TextPageControl < LayoutControl
 
   #ルビ文字幅
   def rubi_pitch()
-    @rubi_option[:charactor_pitch]
+    @rubi_option[:character_pitch]
   end
   def rubi_pitch=(arg)
-    @rubi_option[:charactor_pitch] = arg
+    @rubi_option[:character_pitch] = arg
   end
 
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
@@ -244,7 +244,7 @@ class TextPageControl < LayoutControl
     @image_face = options[:image_face] || nil
 
     @line_spacing = options[:line_spacing] || 12   #行間の幅
-    @charactor_pitch = options[:charactor_pitch ] || 0 #文字間の幅
+    @character_pitch = options[:character_pitch ] || 0 #文字間の幅
     @line_height = options[:line_height] || 32    #行の高さ
 
     #文字情報
@@ -277,7 +277,7 @@ class TextPageControl < LayoutControl
       :offset_x => options[:rubi_offset_x] || 0,
       :offset_y => options[:rubi_offset_y] || -12,
       #ルビ文字のベース文字からのピッチ幅
-      :charactor_pitch => options[:rubi_pitch] || 12,
+      :character_pitch => options[:rubi_pitch] || 12,
       #ルビの待ちフレーム数
       :wait_frame => options[:rubi_wait_frame] || 2 
     }
@@ -319,7 +319,7 @@ class TextPageControl < LayoutControl
     @control_list.last.push_command(:_CREATE_, 
                                     :CharControl, 
                                     {
-                                      :offset_x => @charactor_pitch,
+                                      :offset_x => @character_pitch,
                                       :align_y => :bottom,
                                       :char => argument,
                                       :command_list=> options[:command_list],
@@ -396,7 +396,7 @@ class TextPageControl < LayoutControl
                     :line_height => @rubi_option[:size],
                     :font_name => @char_option[:font_name],
                     :line_spacing => 0,
-                    :charactor_pitch => @rubi_option[:charactor_pitch],
+                    :character_pitch => @rubi_option[:character_pitch],
                     :_LINE_WAIT_ => @function_list[:_LINE_WAIT_],
                     :_CHAR_WAIT_ => @function_list[:_CHAR_WAIT_],
                     :_CHAR_RENDERER_ => @function_list[:_CHAR_RENDERER_]},
@@ -505,7 +505,7 @@ class TextPageControl < LayoutControl
 
     #描画座標を１文字＋文字ピッチ分進める
     @next_char_x += @font.get_width(options[:char].to_s) + 
-                    @charactor_pitch
+                    @character_pitch
 =end
   end
 
@@ -538,7 +538,7 @@ class TextPageControl < LayoutControl
                     image
                   ))
     #描画座標を画像横幅＋文字ピッチ分進める
-    @next_char_x += image.width + @charactor_pitch
+    @next_char_x += image.width + @character_pitch
 
     #:waitコマンドを追加でスタックする（待ち時間は遅延評価とする）
     #TODO:恐らくこのwaitもスクリプトで定義可能でないとマズイ

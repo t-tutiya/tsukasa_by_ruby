@@ -3,9 +3,7 @@
 @
 @ _WAIT_ key_push: K_SPACE
 @
-@ _TO_IMAGE_ :test0, width: 1024, height: 600
-@
-@ _END_FRAME_
+@ _TO_IMAGE_ :test0
 @
 @ img0 {_SET_ file_path: "./resource/char/B-2.png"}
 @

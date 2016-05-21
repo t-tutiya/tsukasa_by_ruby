@@ -102,7 +102,6 @@ class Tsukasa < LayoutControl
     @script_compiler = ScriptCompiler.new
     @script_parser = {}
 
-    options[:id] = :default_rendertarget_container
     options[:command_list] = [[ :_INCLUDE_, 
                                 "./default/bootstrap_script.rb",{}]]
 

@@ -147,6 +147,16 @@ _DEFINE_ :system_menu do
   end
 end
 
+_SEND_ :base do
+  _DELETE_
+end
+_SEND_ :img0 do
+  _DELETE_
+end
+_SEND_ :img1 do
+  _DELETE_
+end
+
 _STACK_LOOP_ do |a,b,c|
 
  _CREATE_ :ImageControl,

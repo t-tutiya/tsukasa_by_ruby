@@ -165,4 +165,50 @@ class ImageControl < DrawableControl
   def _SAVE_IMAGE_(argument, options, yield_block_stack)
     @entity.save(argument,options[:format] || FORMAT_PNG)
   end
+
+  #指定したツリーを描画する
+  def _DRAW_(argument, options, yield_block_stack, &block)
+    #中間バッファのサイズを決める
+    width = options[:width] || @width
+    height = options[:height] || @height
+    #中間バッファを生成
+    rt = RenderTarget.new(width, height)
+
+    #コントロールの初期化
+    control = self
+    argument = [argument] unless argument.instance_of?(Array)
+
+    #子コントロールを再帰的に検索
+    argument.each do |control_id|
+      control = control.find_control(control_id)
+      break unless control
+    end
+
+    #コントロールの探査に失敗
+    unless control
+      pp "コントロールが存在しません"
+      return
+    end
+
+    #中間バッファに描画（指定したコントロール自身は描画されないので注意）
+    control.render(0,0,rt)
+
+    #拡大率が設定されている場合
+    if options[:scale]
+      #第２中間バッファを生成
+      rt2 = RenderTarget.new( options[:scale] * width, 
+                              options[:scale] * height,)
+      #拡大率を反映して第２中間バッファに描画
+      rt2.draw_ex(-1 * options[:scale]**2 * width,
+                  -1 * options[:scale]**2 * height,
+                  rt,
+                  {:scale_x => options[:scale],
+                   :scale_y => options[:scale],})
+      #自身に描画
+      @entity.draw(0,0, rt2.to_image)
+    else
+      #自身に描画
+      @entity.draw(0,0, rt.to_image)
+    end
+  end
 end

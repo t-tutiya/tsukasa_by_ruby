@@ -1127,3 +1127,21 @@ class Control #プロパティのパラメータ遷移
     end
   end
 end
+
+class Control #デバッグ支援機能
+  def put_control_tree(space_count)
+    space = ""
+    space_count.times do
+      space +="  "
+    end
+    puts space + "->" + @id.to_s + " [ " + self.class.to_s + " ]"
+    space_count +=1
+    @control_list.each do |control|
+      control.put_control_tree(space_count)
+    end
+  end
+
+  def _DEBUG_TREE_(argument, options, yield_block_stack)
+    put_control_tree(0)
+  end
+end

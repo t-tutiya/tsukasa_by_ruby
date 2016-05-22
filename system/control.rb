@@ -1141,7 +1141,25 @@ class Control #デバッグ支援機能
     end
   end
 
+  #コントロールツリーを出力する
   def _DEBUG_TREE_(argument, options, yield_block_stack)
     put_control_tree(0)
+  end
+
+  #プロパティの現在値を出力する
+  def _DEBUG_PROP_(argument, options, yield_block_stack)
+    methods.each do |method|
+      method = method.to_s
+      if method[-1] == "=" and not(["===", "==", "!="].index(method))
+        puts method.chop! + " : " + send(method).to_s
+      end
+    end
+  end
+
+  #コマンドリストを出力する
+  def _DEBUG_COMMAND_(argument, options, yield_block_stack)
+    @command_list.each do |command|
+      p command
+    end
   end
 end

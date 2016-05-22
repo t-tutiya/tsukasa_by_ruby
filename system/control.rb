@@ -523,7 +523,7 @@ class Control #制御構文
 
     @command_list.unshift([:_WAIT_, argument, options, yield_block_stack, block])
     #現在のループ終端を挿入
-    @command_list.unshift(:_END_LOOP_)
+    @command_list.unshift([:_END_LOOP_])
 
     #フレーム終了疑似コマンドをスタックする
     @command_list.unshift(:_END_FRAME_)
@@ -557,7 +557,7 @@ class Control #制御構文
     #リストの先端に自分自身を追加する
     @command_list.unshift([:_LOOP_, argument, options, yield_block_stack, block])
     #現在のループ終端を挿入
-    @command_list.unshift(:_END_LOOP_)
+    @command_list.unshift([:_END_LOOP_])
     #ブロックを実行時評価しコマンド列を生成する。
     parse_block(argument, options, yield_block_stack, &block)
   end
@@ -576,7 +576,7 @@ class Control #制御構文
     #ブロックを実行時評価しコマンド列を生成する。
     parse_block(argument, options, yield_block_stack, &block)
 
-    @command_list.push(:_END_LOOP_)
+    @command_list.push([:_END_LOOP_])
     #リストの末端に自分自身を追加する
     @command_list.push([:_STACK_LOOP_, argument, options, yield_block_stack, block])
   end
@@ -878,9 +878,9 @@ class Control #プロパティのパラメータ遷移
     @command_list.unshift([:_MOVE_, argument, options, yield_block_stack, block])
 
     #現在のループ終端を挿入
-    @command_list.unshift(:_END_LOOP_)
+    @command_list.unshift([:_END_LOOP_])
     #フレーム終了疑似コマンドをスタックする
-    @command_list.unshift(:_END_FRAME_)
+    @command_list.unshift([:_END_FRAME_])
 
     if block
       #ブロックが付与されているならそれを実行する
@@ -1088,9 +1088,9 @@ class Control #プロパティのパラメータ遷移
     @command_list.unshift([:_PATH_, argument, options, yield_block_stack, block])
 
     #現在のループ終端を挿入
-    @command_list.unshift(:_END_LOOP_)
+    @command_list.unshift([:_END_LOOP_])
     #フレーム終了疑似コマンドをスタックする
-    @command_list.unshift(:_END_FRAME_)
+    @command_list.unshift([:_END_FRAME_])
 
     if block
       #ブロックが付与されているならそれを実行する

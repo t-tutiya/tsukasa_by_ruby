@@ -254,13 +254,33 @@ class CharControl < DrawableControl
       #文字が設定されていなければ戻る
       return super unless @char
 
+      width = height = offset_x = offset_y = 0
+
+      #イタリックの場合、文字サイズの半分を横幅に追加する。
+      if @italic
+        width += @font_draw_option[:size]/2
+      end
+
+      #影文字の場合、オフセット分を縦幅、横幅に追加する
+      if @font_draw_option[:shadow]
+        width += @font_draw_option[:shadow_x]
+        height += @font_draw_option[:shadow_y]
+      end
+
+      #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加。
+      if @font_draw_option[:edge]
+        width  += @font_draw_option[:edge_width] * 2
+        height += @font_draw_option[:edge_width] * 2
+        offset_x = offset_y = @font_draw_option[:edge_width]
+      end
+
       #プリレンダフォントデータが登録されているか
       if @@fonts_file_cache[@font_name]
         #プリレンダ文字の描画
-        draw_prerender_character()
+        draw_prerender_character(width, height, offset_x, offset_y)
       else
         #通常文字の描画
-        draw_character()
+        draw_character(width, height, offset_x, offset_y)
       end
 
       #更新フラグをリセット
@@ -276,7 +296,8 @@ class CharControl < DrawableControl
 
   private
   
-  def draw_character()
+  #通常文字の描画
+  def draw_character(width, height, offset_x, offset_y)
     #フォントオブジェクトの初期化
     @font_obj = Font.new( @size, 
                           @font_name, 
@@ -285,29 +306,10 @@ class CharControl < DrawableControl
                             :auto_fitting=>true })
 
     #現状での縦幅、横幅を取得
-    @width = @font_obj.get_width(@char)
+    @width = width
+    @width += @font_obj.get_width(@char)
     @width = 1 if @width == 0
-    @height = @size
-
-    #イタリックの場合、文字サイズの半分を横幅に追加する。
-    if @italic
-      @width += @font_draw_option[:size]/2
-    end
-
-    #影文字の場合、オフセット分を縦幅、横幅に追加する
-    if @font_draw_option[:shadow]
-      @width += @font_draw_option[:shadow_x]
-      @height += @font_draw_option[:shadow_y]
-    end
-
-    #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加。
-    if @font_draw_option[:edge]
-      @width  += @font_draw_option[:edge_width] * 2
-      @height += @font_draw_option[:edge_width] * 2
-      offset_x = offset_y = @font_draw_option[:edge_width]
-    else
-      offset_x = offset_y = 0
-    end
+    @height = height + @size
 
     #文字用のimageを作成
     @entity.dispose if @entity
@@ -320,13 +322,14 @@ class CharControl < DrawableControl
                           @font_obj, 
                           @font_draw_option)
   end
-  
-  def draw_prerender_character()
+
+  #プリレンダ文字の描画
+  def draw_prerender_character(width, height, offset_x, offset_y)
     #キャッシュからデータを読み込む
     @font_data = @@fonts_file_cache[@font_name].data_hash
 
     #現状での縦幅、横幅を取得
-    @width = 0
+    @width = width
     @char.each_char do |char|
       #文字のデータ構造体を取得
       font = @font_data[char.encode("windows-31j")]
@@ -334,51 +337,37 @@ class CharControl < DrawableControl
       @width += font.width - font.ox
     end
     @width = 1 if @width == 0
-    @height = @@fonts_file_cache[@font_name].height
-
-    #影文字の場合、オフセット分を縦幅、横幅に追加する
-    if @font_draw_option[:shadow]
-      @width += @font_draw_option[:shadow_x]
-      @height += @font_draw_option[:shadow_y]
-    end
-
-    #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加。
-    if @font_draw_option[:edge]
-      @width  += @font_draw_option[:edge_width] * 2
-      @height += @font_draw_option[:edge_width] * 2
-      offset_x = offset_y = @font_draw_option[:edge_width]
-    else
-      offset_x = offset_y = 0
-    end
+    @height = height + @@fonts_file_cache[@font_name].height
 
     #文字用のimageを作成
     @entity.dispose if @entity
-    @entity = Image.new(@width, @height)
+    @entity = Image.new(@width, @height, [0, 0, 0, 0])
 
     # イメージキャッシュにエントリが無ければ初期化
     unless @@fonts_image_cache.key?(@font_name)
       @@fonts_image_cache[@font_name] = {} 
     end
-    #全ての文字を描画する
+    # イメージキャッシュを取得
     @font_image = @@fonts_image_cache[@font_name]
-    x = 0
+
+    #全ての文字を描画する
     @char.each_char do |char|
       #文字のデータ構造体を取得
       font = @font_data[char.encode("windows-31j")]
 
       #キャッシュにその文字が登録されていない場合
       unless @font_image.has_key?(char)
-        #文字をバイナリからイメージ＆グリフ化して、キャッシュに格納する
+        #文字をバイナリからイメージ化してキャッシュに格納する
         @font_image[char] = Image.load_from_file_in_memory(font.binary)
       end
 
-      #グリフ化済みの文字を自前imageに書き込む
-      @entity.draw( x - font.ox + offset_x, 
+      #文字をグリフ化してImageに書き込む
+      @entity.draw( offset_x + font.ox, 
                     offset_y, 
                     @font_image[char].effect_image_font(@font_draw_option))
 
       #Ｘ座標更新
-      x += font.width - font.ox
+      offset_x += font.width - font.ox
     end
   end
 end

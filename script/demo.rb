@@ -3,7 +3,7 @@ _CREATE_ :CharControl,
   size: 32, 
   y: 256+196,
   color:[255,255,0], 
-  font_name: "ＭＳ　ゴシック",
+  font_name: "ＭＳＰ ゴシック",
   char: " "
 
 
@@ -23,7 +23,7 @@ _DEFINE_ :TextSelect do |argument, options|
       id: :text_area, 
       bgcolor: [0,255,255] do
       _CREATE_ :CharControl, 
-        size: 30, 
+        size: 28, 
         color:[255,255,0], 
         font_name: "ＭＳ ゴシック", 
         char: options[:text]

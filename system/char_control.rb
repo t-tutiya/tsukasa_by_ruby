@@ -42,8 +42,12 @@ class CharControl < DrawableControl
   @@fonts_file_cache = {} #レンダリング済み文字ファイルのキャッシュ
   @@fonts_image_cache = {} #グリフ化済み文字のイメージキャッシュ
 
+  def CharControl.install(file_path)
+    Font.install(file_path)
+  end
+
   #レンダリング済み文字ファイルを、フォント名をキーにハッシュに保存する
-  def CharControl.install(font_name, file_path)
+  def CharControl.install_prerender(font_name, file_path)
     #ファイルキャッシュにデータが格納されていない場合
     unless @@fonts_file_cache.key?(font_name)
       #ファイルをオープン
@@ -55,7 +59,7 @@ class CharControl < DrawableControl
   end
 
   #フォント名が登録されているかどうかを返す
-  def CharControl.regist?(font_name)
+  def CharControl.regist_prerender?(font_name)
     return @@fonts_file_cache.key?(font_name)
   end
 

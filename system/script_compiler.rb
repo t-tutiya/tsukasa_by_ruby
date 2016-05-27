@@ -40,7 +40,18 @@ class ScriptCompiler
     @yield_block_stack = yield_block_stack
     @command_list.clear
 
-    eval(script, nil, fname)
+    begin
+      eval(script, nil, fname)
+    rescue SyntaxError => e
+      puts "[司エンジン：スクリプトパースエラー：文法エラーです]"
+      puts e.message
+      exit
+    rescue Exception => e
+      puts "[司エンジン：スクリプトパースエラー]"
+      puts e.message
+      puts e.backtrace
+      exit
+    end
 
     return @command_list
   end
@@ -51,7 +62,23 @@ class ScriptCompiler
     @yield_block_stack = yield_block_stack
     @command_list.clear
 
-    self.instance_exec(argument, options, &block)
+    begin
+      self.instance_exec(argument, options, &block)
+    rescue RuntimeError => e
+      puts "[司エンジン：実行時エラー：RuntimeError]"
+      raise
+    rescue NoMethodError => e
+      puts "[司エンジン：実行時エラー：指定されたメソッドが存在しません]"
+      puts e.message
+      puts e.backtrace[0]
+      exit
+    rescue Exception => e
+      pp "[司エンジン：実行時エラー：ブロック実行時のエラー]"
+      puts e.inspect 
+      puts e.message
+      puts e.backtrace
+      exit
+    end
 
     return @command_list
   end

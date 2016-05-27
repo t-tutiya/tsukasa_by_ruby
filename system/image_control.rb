@@ -36,7 +36,13 @@ class ImageControl < DrawableControl
   attr_reader :file_path
   def file_path=(file_path)
     @file_path = file_path
-    @entity = Image.load(@file_path)
+    begin
+      @entity = Image.load(@file_path)
+    rescue DXRuby::DXRubyError => e
+      puts "ファイル'#{@file_path}'の読み込みに失敗しました"
+      puts e.backtrace[0]
+      exit
+    end
     @width = @entity.width
     @height = @entity.height
   end

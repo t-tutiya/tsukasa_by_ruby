@@ -249,16 +249,21 @@ class CharControl < DrawableControl
   end
 
   def update(mouse_pos_x, mouse_pos_y, index)
+    #更新フラグが立っている
     if @option_update
       #文字が設定されていなければ戻る
       return super unless @char
 
+      #プリレンダフォントデータが登録されているか
       if @@fonts_file_cache[@font_name]
+        #プリレンダ文字の描画
         draw_prerender_character()
       else
+        #通常文字の描画
         draw_character()
       end
 
+      #更新フラグをリセット
       @option_update = false
     end
 
@@ -272,6 +277,7 @@ class CharControl < DrawableControl
   private
   
   def draw_character()
+    #フォントオブジェクトの初期化
     @font_obj = Font.new( @size, 
                           @font_name, 
                           { :weight=>@weight, 
@@ -318,16 +324,17 @@ class CharControl < DrawableControl
   def draw_prerender_character()
     #キャッシュからデータを読み込む
     @font_data = @@fonts_file_cache[@font_name].data_hash
-    @size = @@fonts_file_cache[@font_name].height
-    
-    # イメージキャッシュにエントリが無ければ初期化
-    @@fonts_image_cache[@font_name] = {} if !@@fonts_image_cache.key?(@font_name)
 
-    
-    @font_image = @@fonts_image_cache[@font_name]
-
-    #必要なサイズのImageを生成する
-    @entity = Image.new(get_width(@char), @size)
+    #現状での縦幅、横幅を取得
+    @width = 0
+    @char.each_char do |char|
+      #文字のデータ構造体を取得
+      font = @font_data[char.encode("windows-31j")]
+      #Ｘ座標更新
+      @width += font.width - font.ox
+    end
+    @width = 1 if @width == 0
+    @height = @@fonts_file_cache[@font_name].height
 
     #影文字の場合、オフセット分を縦幅、横幅に追加する
     if @font_draw_option[:shadow]
@@ -344,37 +351,35 @@ class CharControl < DrawableControl
       offset_x = offset_y = 0
     end
 
-    x = 0
+    #文字用のimageを作成
+    @entity.dispose if @entity
+    @entity = Image.new(@width, @height)
+
+    # イメージキャッシュにエントリが無ければ初期化
+    unless @@fonts_image_cache.key?(@font_name)
+      @@fonts_image_cache[@font_name] = {} 
+    end
     #全ての文字を描画する
+    @font_image = @@fonts_image_cache[@font_name]
+    x = 0
     @char.each_char do |char|
       #文字のデータ構造体を取得
       font = @font_data[char.encode("windows-31j")]
 
       #キャッシュにその文字が登録されていない場合
-      if !@font_image.has_key?(char)
+      unless @font_image.has_key?(char)
         #文字をバイナリからイメージ＆グリフ化して、キャッシュに格納する
-        @font_image[char] = Image.load_from_file_in_memory(font.binary).effect_image_font({})
+        @font_image[char] = Image.load_from_file_in_memory(font.binary)
       end
 
       #グリフ化済みの文字を自前imageに書き込む
-      @entity.draw(x - font.ox, 0, @font_image[char])
+      @entity.draw( x - font.ox + offset_x, 
+                    offset_y, 
+                    @font_image[char].effect_image_font(@font_draw_option))
 
       #Ｘ座標更新
       x += font.width - font.ox
     end
-  end
-
-  #文字幅を返す
-  def get_width(chars)
-    x = 0
-    chars.each_char do |char|
-      #文字のデータ構造体を取得
-      font = @font_data[char.encode("windows-31j")]
-      #Ｘ座標更新
-      x += font.width - font.ox
-    end
-    
-    return x
   end
 end
 

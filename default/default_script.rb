@@ -189,3 +189,13 @@ _DEFINE_ :_TO_IMAGE_ do
   #ImageControlのコマンドリストを評価させるために１フレ送る
   _END_FRAME_
 end
+
+#一時truetypeフォントの登録
+_DEFINE_ :_INSTALL_FONT_ do |file_path|
+  CharControl.install(file_path)
+end
+
+#プリレンダフォントデータの登録
+_DEFINE_ :_INSTALL_PRERENDER_FONT_ do |file_path, font_name:| 
+  CharControl.install_prerender(font_name, file_path)
+end

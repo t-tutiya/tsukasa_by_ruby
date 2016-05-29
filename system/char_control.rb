@@ -36,7 +36,7 @@ require 'dxruby'
 
 #構造体クラスの生成
 ImageFontData = Struct.new(:width, :ox, :binary)
-ImageFontSaveData = Struct.new(:data_hash, :height)
+ImageFontSaveData = Struct.new(:data_hash, :height, :ver)
 
 class CharControl < DrawableControl
   @@fonts_file_cache = {} #レンダリング済み文字ファイルのキャッシュ

@@ -126,6 +126,9 @@ class ClickableLayoutControl < LayoutControl
     @collision_sprite.x = @offset_x
     @collision_sprite.y = @offset_y
 
+    #windowがアクティブで無ければ衝突判定をせずに終了
+    return super unless Window.active?
+
     #マウスカーソル座標との衝突判定
     if not (@mouse_sprite === @collision_sprite)
       #マウスカーソルがコリジョン範囲内に無い

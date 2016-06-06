@@ -1156,6 +1156,18 @@ class Control #デバッグ支援機能
     end
   end
 
+  def _DEBUG_TEMP_(argument, options, yield_block_stack)
+    pp @root_control._TEMP_
+  end
+
+  def _DEBUG_LOCAL_(argument, options, yield_block_stack)
+    pp @root_control._LOCAL_
+  end
+
+  def _DEBUG_SYSTEM_(argument, options, yield_block_stack)
+    pp @root_control._SYSTEM_
+  end
+
   #コマンドリストを出力する
   def _DEBUG_COMMAND_(argument, options, yield_block_stack)
     @command_list.each do |command|

@@ -67,12 +67,11 @@ class TKSParser < Parslet::Parser
 
   rule(:integer) { match('[0-9]').repeat(1).as(:int) }
 
+  #既読ラベル
   rule(:label){
     str("*") >>
     space? >>
-    ( str("S").as(:label_start) | 
-      str("E").as(:label_end) | 
-      label_node) >>
+    label_node >>
     str(" ").repeat(0) >> newline
   }
 
@@ -204,18 +203,8 @@ class TKSParser < Parslet::Parser
   root(:document)
 
   class Replacer < Parslet::Transform
-    rule(
-      :label_start => simple(:target)
-    ) { 
-      "_LABEL_ chapter: :_START_, id: 0 do\n"
-    }
 
-    rule(
-      :label_end => simple(:target)
-    ) { 
-      "end\n"
-    }
-
+    #シナリオラベル
     rule(
       :chapter => simple(:chapter), :id => simple(:id)
     ) { 
@@ -223,6 +212,7 @@ class TKSParser < Parslet::Parser
       "_LABEL_ chapter: :#{chapter}, id: #{id} do\n"
     }
 
+    #シナリオラベル（id無し）
     rule(
       :chapter => simple(:chapter)
     ) { 
@@ -294,7 +284,9 @@ class TKSParser < Parslet::Parser
     rule(
       :output => sequence(:target)
     ) { 
-      target.join
+      "_SCOPE_ do\n" + 
+      target.join + "\n" + 
+      "end\n"
     }
 
     #空行ブロック→キー入力待ちコマンド追加

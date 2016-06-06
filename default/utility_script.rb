@@ -41,7 +41,10 @@ _DEFINE_ :_PAUSE_ do
   _CHECK_ :_TEMP_, equal: {_SKIP_: true} do
     #ウェイクに移行
     _SET_ :_TEMP_, _SLEEP_: false
-    _RETURN_
+    _RETURN_ do
+      #スキップモードの誤伝搬を防ぐ
+      _END_FRAME_
+    end
   end
 
   #テキストレイヤのクリック待ち

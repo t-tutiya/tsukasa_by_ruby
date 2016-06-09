@@ -172,7 +172,7 @@ class DrawableControl < LayoutableControl
     super
   end
 
-  def render(offset_x, offset_y, target)
+  def render(offset_x, offset_y, target, parent_x = 0, parent_y = 0)
     super(0, 0, @entity)
 
     #描画オブジェクトを持ち、かつ可視でなければ戻る
@@ -180,8 +180,8 @@ class DrawableControl < LayoutableControl
     return 0, 0 if @entity.disposed?
 
     #自エンティティを上位ターゲットに描画
-    target.draw_ex( @x + @offset_x + offset_x + check_align_x(),
-                    @y + @offset_y + offset_y + check_align_y(), 
+    target.draw_ex( @x + parent_x + @offset_x + offset_x + check_align_x(),
+                    @y + parent_y + @offset_y + offset_y + check_align_y(), 
                     @entity, 
                     @draw_option)
 

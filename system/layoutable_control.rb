@@ -80,6 +80,14 @@ class LayoutableControl < Control
     return check_float
   end
 
+  def render(offset_x, offset_y, target, parent_x = 0, parent_y = 0)
+    if @entity
+      super
+    else
+      super(offset_x, offset_y, target, @x, @y)
+    end
+  end
+
   #Ｘ方向のセンタリング補正
   def check_align_x()
     case @align_x
@@ -119,7 +127,7 @@ class LayoutableControl < Control
       dx = 0
     #右連結
     when :left
-      dx = @width + @offset_x
+      dx = @width + @offset_x + @x
     else
       raise
     end
@@ -130,7 +138,7 @@ class LayoutableControl < Control
       dy = 0
     #下連結
     when :bottom
-      dy = @height + @offset_y
+      dy = @height + @offset_y + @y
     else
       raise
     end

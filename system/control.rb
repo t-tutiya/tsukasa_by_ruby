@@ -425,6 +425,7 @@ end
 class Control #コントロールの生成／破棄
   #コントロールをリストに登録する
   def _CREATE_(argument, options, yield_block_stack, &block)
+    begin 
     #コントロールを生成して子要素として登録する
     @control_list.push(Module.const_get(argument).new(options, 
                                                       yield_block_stack, 
@@ -432,6 +433,10 @@ class Control #コントロールの生成／破棄
                                                       self, 
                                                       &block)
     )
+    rescue
+      pp "コントロール#{argument}の生成に失敗しました。名称を間違えている可能性があります"
+      raise
+    end
   end
 
   #disposeコマンド

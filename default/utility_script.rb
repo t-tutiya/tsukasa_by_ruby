@@ -250,6 +250,11 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
       end
     end
   end
+  _CHECK_ system: [:block_given] do
+    _SEND_ argument do
+      _YIELD_
+    end
+  end
 end
 
 ###############################################################################

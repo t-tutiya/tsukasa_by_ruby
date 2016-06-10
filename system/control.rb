@@ -122,11 +122,11 @@ class Control #内部メソッド
   end
 
   #描画
-  def render(offset_x, offset_y, target, parent_x = 0, parent_y = 0)
+  def render(offset_x, offset_y, target)
     #下位コントロール巡回
     @control_list.each do |child_control|
       #下位コントロールを自ターゲットに直接描画
-      child_dx, child_dy = child_control.render(offset_x, offset_y, target, parent_x, parent_y)
+      child_dx, child_dy = child_control.render(offset_x, offset_y, target)
       #次のコントロールの描画座標原点を設定する
       offset_x += child_dx
       offset_y += child_dy

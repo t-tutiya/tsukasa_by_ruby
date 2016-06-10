@@ -31,11 +31,11 @@ require 'dxruby'
 ###############################################################################
 
 class LayoutControl < LayoutableControl
-  def render(offset_x, offset_y, target, parent_x = 0, parent_y = 0)
+  def render(offset_x, offset_y, target)
 
     super(offset_x + @x + @offset_x + check_align_x(), 
           offset_y + @y + @offset_y + check_align_y(), 
-          target, parent_x = 0, parent_y = 0)
+          target)
 
     return check_float
   end

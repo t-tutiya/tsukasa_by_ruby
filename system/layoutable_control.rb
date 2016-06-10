@@ -31,7 +31,6 @@ require 'dxruby'
 ###############################################################################
 
 class LayoutableControl < Control
-
   #座標
   attr_accessor  :x
   attr_accessor  :y
@@ -78,14 +77,6 @@ class LayoutableControl < Control
           mouse_pos_y - @y - @offset_y,
           index)
     return check_float
-  end
-
-  def render(offset_x, offset_y, target, parent_x = 0, parent_y = 0)
-    if @entity
-      super
-    else
-      super(offset_x, offset_y, target, @x, @y)
-    end
   end
 
   #Ｘ方向のセンタリング補正

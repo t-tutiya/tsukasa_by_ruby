@@ -30,7 +30,7 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class RenderTargetControl < DrawableControl
+class RenderTargetControl < Drawable
   #Ｘ幅
   def width=(arg)
     super

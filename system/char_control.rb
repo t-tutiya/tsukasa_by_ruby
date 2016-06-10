@@ -38,7 +38,7 @@ require 'dxruby'
 ImageFontData = Struct.new(:width, :ox, :binary)
 ImageFontSaveData = Struct.new(:data_hash, :height, :ver)
 
-class CharControl < DrawableControl
+class CharControl < Drawable
   @@fonts_file_cache = {} #レンダリング済み文字ファイルのキャッシュ
   @@fonts_image_cache = {} #グリフ化済み文字のイメージキャッシュ
 

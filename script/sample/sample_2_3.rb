@@ -2,12 +2,15 @@ _CREATE_ :CharControl, y: 500, char:"右クリックで戻る"
 
 _DEFINE_ :menu_button do |x:, y:, id:, text: |
   _TEXT_BUTTON_ text: text, x: x, y: y, id: id,
-    width: 196-16, height:32 do |id|
-    _SEND_ [:_PARENT_, :_PARENT_, :_PARENT_] do 
-      _SEND_ :menu do
-        _SET_ child_update: false
+    width: 196-16, height:32 do
+    #キーがクリックされた
+    _DEFINE_ :on_key_push do
+      _SEND_ [:_PARENT_, :_PARENT_, :_PARENT_] do 
+        _SEND_ :menu do
+          _SET_ child_update: false
+        end
+        command_window x:32+16, y: 48 + id * 32 + id * 8
       end
-      command_window x:32+16, y: 48 + id * 32 + id * 8
     end
   end
 end
@@ -44,7 +47,7 @@ _DEFINE_ :command_window do |argument, options|
         end
         _SEND_ [:_PARENT_, :menu, :text_box] do
           _SEND_ALL_ interrupt: true do
-            text_area{ _SET_ bgcolor: [0,0,0] }
+            bg{ _SET_ bgcolor: [0,0,0] }
           end
         end
         _DELETE_

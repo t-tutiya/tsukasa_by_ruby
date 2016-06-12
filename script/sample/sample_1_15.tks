@@ -1,10 +1,15 @@
 @	_SET_ :_TEMP_, click: nil
 
 @	_IMAGE_BUTTON_ :button1, x: 50, y: 150 do
-@		_SET_ :_TEMP_, click: :left
+@    _DEFINE_ :on_key_push_user do
+@     _SET_ :_TEMP_, click: :left
+@    end
 @	end
 @	_IMAGE_BUTTON_ :button2, x: 450, y: 150 do
-@		_SET_ :_TEMP_, click: :right
+@    _DEFINE_ :on_key_push_user do
+@     pp "test"
+@ 		_SET_ :_TEMP_, click: :right
+@    end
 @	end
 @
 @	_WAIT_ :_TEMP_, not_null: :click

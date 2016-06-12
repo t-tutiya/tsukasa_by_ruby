@@ -8,8 +8,11 @@ _DEFINE_ :menu_button do |id:, text: |
     height:32,
     char_color: [255,255,0], #文字色
     out_color: [0,255,255],
-    float_y: :bottom do |id|
-    _SET_ :_TEMP_, flag: id
+    float_y: :bottom do 
+    #キーがクリックされた
+    _DEFINE_ :on_key_push do
+      _SET_ :_TEMP_, flag: id
+    end
   end
 end
 

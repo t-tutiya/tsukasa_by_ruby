@@ -5,8 +5,11 @@ _DEFINE_ :menu_button do |id:, text: |
     height:32,
     char_color: [255,255,0], #文字色
     out_color: [0,255,255],
-    float_y: :bottom do |id|
-    _SET_ :_TEMP_, file_path: id
+    float_y: :bottom do
+    #キーがクリックされた
+    _DEFINE_ :on_key_push do
+      _SET_ :_TEMP_, mode: id
+    end
   end
 end
 
@@ -26,19 +29,19 @@ _CREATE_ :LayoutControl, id: :top_menu, x:0, y:0 do
   end
 end
 
-_SET_ :_TEMP_, file_path: nil
-_WAIT_ :_TEMP_,  not_equal: {file_path: nil}
+_SET_ :_TEMP_, mode: nil
+_WAIT_ :_TEMP_,  not_equal: {mode: nil}
 
-_CHECK_ :_TEMP_,  equal: {file_path: 0} do
+_CHECK_ :_TEMP_,  equal: {mode: 0} do
   _RESIZE_ width: 640, height:480
 end
-_CHECK_ :_TEMP_,  equal: {file_path: 1} do
+_CHECK_ :_TEMP_,  equal: {mode: 1} do
   _RESIZE_ width: 800, height:600
 end
-_CHECK_ :_TEMP_,  equal: {file_path: 2} do
+_CHECK_ :_TEMP_,  equal: {mode: 2} do
   _RESIZE_ width: 1024, height:768
 end
-_CHECK_ :_TEMP_,  equal: {file_path: 3} do
+_CHECK_ :_TEMP_,  equal: {mode: 3} do
   _RESIZE_ width: 1280, height:720
 end
 

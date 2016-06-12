@@ -252,14 +252,133 @@ end
 #汎用ボタン
 ###############################################################################
 
+#汎用ボタンロジック
+_DEFINE_ :_BUTTON_BASE_ do |id, width:, height:, **options|
+  _CREATE_ :ClickableLayoutControl, 
+    id: id || nil,
+    width: width, 
+    height: height,
+    **options do
+
+    #カーソルがコントロールから外れた
+    _DEFINE_ :on_mouse_out do
+    end
+
+    #カーソルがコントロールに乗った
+    _DEFINE_ :on_mouse_over do
+    end
+
+    #キーがクリックされた
+    _DEFINE_ :on_key_push do
+    end
+
+    #キーがクリック解除された
+    _DEFINE_ :on_key_up do
+    end
+
+    #カーソルがボタン外にある
+    _DEFINE_ :on_mouse_inner_out do
+      on_mouse_out
+      #マウスが領域内に入ったら色を変える
+      _WAIT_ mouse: [:cursor_over]
+      _RETURN_ do
+        on_mouse_inner_over
+      end
+    end
+
+    #カーソルがボタン上にある
+    _DEFINE_ :on_mouse_inner_over do
+      on_mouse_over
+      _WAIT_ mouse: [:cursor_out, :key_push]
+      _CHECK_ mouse: [:cursor_out] do
+        _RETURN_ do
+          on_mouse_inner_out
+        end
+      end
+
+      #マウスがクリックされたら付与ブロックを実行する
+      _CHECK_ mouse: [:key_push] do
+        _RETURN_ do
+          on_key_inner_push
+        end
+      end
+    end
+
+    #ボタン上でカーソルが押された
+    _DEFINE_ :on_key_inner_push do
+      on_key_push
+      _WAIT_ mouse: [:key_up]
+      _RETURN_ do
+        on_key_inner_up
+      end
+    end
+    
+    #ボタン上でカーソルが押された
+    _DEFINE_ :on_key_inner_up do
+      on_key_up
+      _RETURN_ do
+        on_mouse_inner_over
+      end
+    end
+
+    #ブロック実行
+    _CHECK_ system: :block_given do
+      _YIELD_ id, options
+    end
+
+    _END_FRAME_
+
+    on_mouse_inner_out
+  end
+end
+
+#テキストボタン
+_DEFINE_ :_TEXT_BUTTON_ do 
+ |id, #コントロールID
+  width: 128, #ボタンＸ幅
+  height: 32, #ボタンＹ幅
+  text: "", #表示文字列
+  out_color: [0,0,0], #カーソルがボタン外にある時の背景色
+  in_color: [255,255,0], #カーソルがボタン上にある時の背景色
+  char_options: {},
+  **options|
+  
+  _BUTTON_BASE_ id, width: width, height: height, **options do
+    #背景
+    _CREATE_ :RenderTargetControl, id: :bg, 
+      width: width, height: height, bgcolor: out_color
+    #テキスト
+    _CREATE_ :CharControl, id: :text, char: text, **char_options
+
+    #カーソルがコントロールから外れた
+    _DEFINE_ :on_mouse_out do
+      _SEND_ [:bg] do
+        _SET_ bgcolor: out_color
+      end
+    end
+
+    #カーソルがコントロールに乗った
+    _DEFINE_ :on_mouse_over do
+      _SEND_ [:bg] do
+        _SET_ bgcolor: in_color
+      end
+    end
+
+    #ブロック実行
+    _CHECK_ system: :block_given do
+      _YIELD_ id, options
+    end
+  end
+end
+
 #ボタンコントロール
 _DEFINE_ :_IMAGE_BUTTON_ do |argument, options|
-  _CREATE_ :ClickableLayoutControl, 
-    x: options[:x] || 0,
-    y: options[:y] || 0,
+  _BUTTON_BASE_ argument,
     width:256, 
     height:256,
-    id: argument do
+    id: argument,
+    **options do
+
     _CREATE_ :TileMapControl, 
       width: 256,
       height: 256 do
@@ -268,91 +387,41 @@ _DEFINE_ :_IMAGE_BUTTON_ do |argument, options|
       _SET_TILE_ 1, file_path: options[:over]||"./resource/button_over.png"
       _SET_TILE_ 2, file_path: options[:down]||"./resource/button_key_down.png"
     end
-    _LOOP_ do
+
+    #カーソルがコントロールから外れた
+    _DEFINE_ :on_mouse_out do
       _SEND_(0){ _MAP_STATUS_ 0}
+    end
+
+    #カーソルがコントロールに乗った
+    _DEFINE_ :on_mouse_over do
       #マウスが領域内に入ったら色を変える
-      _WAIT_ mouse: [:cursor_on]
-
-      #画像を「OVER」に差し替える
       _SEND_(0){ _MAP_STATUS_ 1}
+    end
 
-      _WAIT_ mouse: [:cursor_out, :key_push]
-      #マウスが領域外に出たら色を戻す
-      _CHECK_ mouse: [:cursor_out] do
-        _NEXT_
-      end
-
-      #マウスがクリックされたら付与ブロックを実行する
-
+    #キーがクリックされた
+    _DEFINE_ :on_key_push do
       #画像を「DOWN」に差し替える
       _SEND_(0){ _MAP_STATUS_ 2}
-
-      #ブロックが設定されていれば実行する
-      _CHECK_ system: [:block_given] do
-        _YIELD_
-      end
-
-      #キーが離されるまで待機し、その間ブロックを実行する
-      _WAIT_ mouse: [:key_up] do
-        #カーソルが画像の外に移動した場合
-        _CHECK_ mouse: [:cursor_out] do
-          #ループの最初に戻る
-          _NEXT_
-        end
-      end
+      on_key_push_user
     end
+
+    #キーがクリック解除された
+    _DEFINE_ :on_key_up do
+    end
+
+    #ユーザーフック用コマンド
+    _DEFINE_ :on_key_push_user do
+    end
+
+    #ブロック実行
+    _CHECK_ system: :block_given do
+      _YIELD_ 
+    end
+
   end
 end
 
-###############################################################################
-#汎用テキストボタン
-###############################################################################
-
-#テキストボタン定義
-_DEFINE_ :_TEXT_BUTTON_ do |argument, 
-  id: :test, 
-  x: 0, #Ｘ座標
-  y: 0, #Ｙ座標
-  width: 128, #ボタンＸ幅
-  height: 32, #ボタンＹ幅
-  text: "", #表示文字列
-  size: 31, #文字サイズ
-  font_name: "ＭＳ ゴシック", #フォント名
-  char_color: [255,255,255], #文字色
-  out_color: [0,0,0], #カーソルがボタン外にある時の背景色
-  in_color: [255,255,0], #カーソルがボタン上にある時の背景色
-  float_y: nil,
-  **options|
-  _CREATE_ :ClickableLayoutControl, id: id,
-    x: x , y: y, width: width , height: height,
-    float_y: float_y do
-    #テキストを描画するRenderTarget
-    _CREATE_ :RenderTargetControl, id: :text_area, 
-      width: width, height: height, bgcolor: out_color do
-      _CREATE_ :CharControl, 
-        size: size, 
-        color: char_color, 
-        font_name: font_name, 
-        char: text
-    end
-    _STACK_LOOP_ do
-      #マウスが領域内に入ったら色を変える
-      _WAIT_ mouse: [:cursor_over]
-      text_area{_SET_ bgcolor: in_color}
-
-      _WAIT_ mouse: [:cursor_out, :key_push]
-      #マウスが領域外に出たら色を戻す
-      _CHECK_ mouse: [:cursor_out] do
-        text_area{_SET_ bgcolor: out_color}
-      end
-      #マウスがクリックされたら付与ブロックを実行する
-      _CHECK_ mouse: [:key_push] do
-        #_EVAL_ "pp '[" + text.to_s + "]が押されました'"
-        _YIELD_ id, options
-      end
-    end
-  end
-end
 
 ###############################################################################
 #ラベル

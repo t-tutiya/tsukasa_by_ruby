@@ -184,7 +184,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
     #文字間ウェイト
     _DEFINE_ :_CHAR_WAIT_ do
       _WAIT_  :_TEMP_, 
-        count: 2,
+        count: 4,
         key_down: K_RCONTROL,
         key_push: K_SPACE,
         system: [:mouse_push],
@@ -204,7 +204,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
     #文字レンダラ
     _DEFINE_ :_CHAR_RENDERER_ do
       #フェードイン
-      _MOVE_  30, alpha: [0,255] do
+      _MOVE_ 20, alpha: [0,255], _OPTION_:{easing: :in_quint} do
         #キー入力判定
         _CHECK_ :_TEMP_, key_down: K_RCONTROL,
                          key_push: K_SPACE,

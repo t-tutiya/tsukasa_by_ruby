@@ -635,6 +635,11 @@ class Control #ユーザー定義関数操作
     @function_list[argument] = block
   end
 
+  #ユーザー定義コマンドの別名を作る
+  def _ALIAS_(argument, options, yield_block_stack, &block)
+    @function_list[options[:new]] = @function_list[options[:old]]
+  end
+
   #関数ブロックを実行する
   def _YIELD_(argument, options, yield_block_stack)
     new_yield_block_stack = yield_block_stack.dup

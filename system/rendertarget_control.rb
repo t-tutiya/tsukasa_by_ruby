@@ -78,4 +78,59 @@ class RenderTargetControl < Drawable
     @entity.dispose if @entity
     super
   end
+
+  #RenderTarget上に直線を引く
+  def _LINE_(argument, options, yield_block_stack)
+    @entity.draw_line( 
+      options[:x1], options[:y1], options[:x2], options[:y2], options[:color], options[:z])
+  end
+
+  #RenderTarget上に矩形を描く
+  def _BOX_(argument, options, yield_block_stack)
+    if options[:fill]
+      @entity.draw_box_fill( 
+        options[:x1], options[:y1], options[:x2], options[:y2], 
+        options[:color], options[:z])
+    else
+      @entity.draw_box(
+        options[:x1], options[:y1], options[:x2], options[:y2], 
+        options[:color], options[:z])
+    end
+  end
+
+  #RenderTarget上に円を描く
+  def _CIRCLE_(argument, options, yield_block_stack)
+    pp "test"
+    @entity.regenerate_proc = ->{@entity.clear}
+    if options[:fill]
+      @entity.draw_circle_fill(
+        options[:x], options[:y], options[:r], options[:color], options[:z])
+    else
+      @entity.draw_circle( 
+        options[:x], options[:y], options[:r], options[:color], options[:z])
+    end
+  end
+
+  #RenderTarget上に文字を描く
+  def _TEXT_(argument, options, yield_block_stack)
+    options[:weight] = 4 unless options[:weight]
+    options[:option] = {} unless options[:option]
+    if options[:color]
+      options[:option][:color] = options[:color]  
+    else
+      options[:option][:color] = [0, 0, 0, 0]
+    end
+
+    @entity.draw_font_ex(
+      options[:x] || 0, options[:y] || 0,
+      options[:text],
+      Font.new( options[:size] || 24,
+                options[:font_name] || "",  
+                {
+                  weight: options[:weight] * 100,
+                  italic: options[:italic] || false
+                }
+              ),
+      options[:option])
+  end
 end

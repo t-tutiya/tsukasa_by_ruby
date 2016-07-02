@@ -70,6 +70,8 @@ _TEXT_WINDOW_ :text0,
   y: 256 + 164,
   width: 1024,
   height: 192,
+  size: 32, 
+  font_name: "ＭＳＰ ゴシック",
   z: 1000000 #描画順序
 
 #初期テキストウィンドウのidを格納

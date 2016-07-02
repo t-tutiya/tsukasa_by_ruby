@@ -100,8 +100,6 @@ class RenderTargetControl < Drawable
 
   #RenderTarget上に円を描く
   def _CIRCLE_(argument, options, yield_block_stack)
-    pp "test"
-    @entity.regenerate_proc = ->{@entity.clear}
     if options[:fill]
       @entity.draw_circle_fill(
         options[:x], options[:y], options[:r], options[:color], options[:z])

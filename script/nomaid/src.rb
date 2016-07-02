@@ -3,6 +3,7 @@
 #メニューの選択肢ボタン
 _DEFINE_ :menu_button do |id:, text: |
   _TEXT_BUTTON_ text: text, 
+    char_options: {font_name: "ＭＳＰ ゴシック"},
     id: id,
     width: 228, 
     height:32,

@@ -89,14 +89,8 @@ class Control #内部メソッド
       #今フレーム処理終了判定
       break if command_name == :_END_FRAME_
 
-      #コマンドがメソッドとして存在する場合
-      if self.respond_to?(command_name, true)
-        #コマンドを実行する
-        send(command_name, argument, options, yield_block_stack, &block)
-      else
-        #ユーザー定義コマンドとみなして実行する
-        call_user_command(command_name, argument, options, yield_block_stack,&block)
-      end
+      #コマンドを実行する
+      exec_command(command_name, argument, options, yield_block_stack,&block)
     end
 
     #子コントロールを更新しない場合は処理を終了
@@ -205,8 +199,16 @@ class Control #内部メソッド
     @command_list = command_list + @command_list
   end
 
-  #ユーザー定義コマンドの実行
-  def call_user_command(command_name, argument, options, yield_block_stack, &block)
+  #コマンドの実行
+  def exec_command(command_name, argument, options, yield_block_stack, &block)
+
+    #コマンドがメソッドとして存在する場合
+    if self.respond_to?(command_name, true)
+      #コマンドを実行する
+      send(command_name, argument, options, yield_block_stack, &block)
+      return
+    end
+
     #関数名に対応する関数ブロックを取得する
     function_block =  @function_list[command_name] || 
                       @root_control.function_list[command_name]

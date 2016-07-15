@@ -599,6 +599,11 @@ class Control #制御構文
       #ブロックが付与されているならそれを実行する
       parse_block(argument, options, yield_block_stack, &block)
     end
+
+    #第１引数で指定されているコマンドを実行する
+    if argument
+      exec_command(argument, nil, nil, yield_block_stack)
+    end
   end
 
   def _BREAK_(argument, options, yield_block_stack, &block)
@@ -615,6 +620,11 @@ class Control #制御構文
       #ブロックが付与されているならそれを実行する
       parse_block(argument, options, yield_block_stack, &block)
     end
+
+    #第１引数で指定されているコマンドを実行する
+    if argument
+      exec_command(argument, nil, nil, yield_block_stack)
+    end
   end
 
   def _RETURN_(argument, options, yield_block_stack, &block)
@@ -627,6 +637,11 @@ class Control #制御構文
     if block
       #ブロックが付与されているならそれを実行する
       parse_block(argument, options, yield_block_stack, &block)
+    end
+
+    #第１引数で指定されているコマンドを実行する
+    if argument
+      exec_command(argument, nil, nil, yield_block_stack)
     end
   end
 end

@@ -30,19 +30,54 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+module ImageCacheManager
+
+  @@image_cache = Hash.new # {file_path: [Image, counter, parmanent_flag]}
+
+  #Imageの取得
+  def self.load(file_path, parmanent = false)
+    #リソースファイルがキャッシュされている場合
+    if @@image_cache[file_path]
+      #カウンタ加算
+      @@image_cache[file_path][1] += 1
+    #リソースファイルがキャッシュされていない場合
+    else
+      begin
+        #エントリを追加
+        @@image_cache[file_path] = [Image.load(file_path), 1, parmanent]
+      rescue DXRuby::DXRubyError => e
+        puts "ファイル'#{file_path}'の読み込みに失敗しました"
+        puts e.backtrace[0]
+        exit
+      end
+    end
+    #リソースファイルを返す
+    return @@image_cache[file_path][0]
+  end
+
+  #Imageの解放指定／永続化解除
+  def self.dispose(file_path)
+    #永続化設定されている場合は解放しない
+    return if @@image_cache[file_path][2]
+    #カウンタ減算
+    @@image_cache[file_path][1] -= 1
+    #カウンタがゼロになった
+    if @@image_cache[file_path][1] == 0
+      #リソース解放
+      @@image_cache[file_path][0].dispose()
+      #キャッシュからエントリを削除
+      @@image_cache.delete(file_path)
+    end
+  end
+end
+
 #画像コントロール
 class ImageControl < Drawable
   
   attr_reader :file_path
   def file_path=(file_path)
     @file_path = file_path
-    begin
-      @entity = Image.load(@file_path)
-    rescue DXRuby::DXRubyError => e
-      puts "ファイル'#{@file_path}'の読み込みに失敗しました"
-      puts e.backtrace[0]
-      exit
-    end
+    @entity = ImageCacheManager.load(file_path)
     @width = @entity.width
     @height = @entity.height
   end
@@ -50,7 +85,7 @@ class ImageControl < Drawable
   attr_reader :entity
 
   def dispose()
-    @entity.dispose
+    ImageCacheManager.dispose(@file_path)
     super
   end
 

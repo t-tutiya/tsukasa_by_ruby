@@ -130,6 +130,8 @@ class Control #内部メソッド
   end
 
   def find_control(id)
+    #idがnilであれば自身を返す
+    return self unless id
     #整数であれば子要素の添え字と見なす
     return @control_list[id] if id.instance_of?(Fixnum)
     #_ROOT_：ルートコントロール
@@ -444,8 +446,10 @@ class Control #コントロールの生成／破棄
   #disposeコマンド
   #コントロールを削除する
   def _DELETE_(argument, options, yield_block_stack)
+    pp "delete"
+    pp argument
     #削除フラグを立てる
-    dispose()
+    find_control(argument).dispose()
   end
 end
 

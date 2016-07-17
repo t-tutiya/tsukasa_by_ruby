@@ -37,6 +37,8 @@ require_relative './layoutable_control.rb'
 require_relative './drawable_control.rb'
 require_relative './layout_control.rb'
 
+require_relative './cache_manager.rb'
+
 require_relative './image_control.rb'
 
 require_relative './clickable_layout_control.rb'

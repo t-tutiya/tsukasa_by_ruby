@@ -56,7 +56,7 @@ class ImageControl < Drawable
   attr_reader :entity
 
   def dispose()
-    @@ImageCache.dispose(@file_path)
+    @@ImageCache.dispose(@file_path) if @file_path
     super
   end
 

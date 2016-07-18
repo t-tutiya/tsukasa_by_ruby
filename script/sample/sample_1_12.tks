@@ -1,6 +1,8 @@
 @	_SET_ :_TEMP_, name_a: "土屋"
-@
-[text0{_TEXT_ _TEMP_: :name_a}]「ネームプレートなど、変更されうる
+@ _SEND_ :text0 do
+@   _TEXT_ _TEMP_: :name_a
+@ end
+「ネームプレートなど、変更されうる
 テキストをテンポラリに設定し、出力できます」[ep]
 
 @ _GET_ :name_a, datastore: :_TEMP_ do |name_a:|

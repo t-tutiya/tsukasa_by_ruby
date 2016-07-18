@@ -1,5 +1,9 @@
-	img0{_SET_ file_path: "./resource/char/A-1.png", x:256}
-	img1{_SET_ file_path: "./resource/char/A-1.png", x:0}
+_SEND_ :img0 do
+  _SET_ file_path: "./resource/char/A-1.png", x:256
+end
+_SEND_ :img1 do
+  _SET_ file_path: "./resource/char/A-1.png", x:0
+end
 
 _END_FRAME_
 

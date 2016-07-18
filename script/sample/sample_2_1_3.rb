@@ -13,24 +13,24 @@ _CREATE_ :ClickableLayoutControl,
     id: :key_down, visible: false
   _STACK_LOOP_ do
     _CHECK_ mouse: [:cursor_over] do
-      normal  {_SET_ visible: false}
-      over    {_SET_ visible: true}
-      key_down{_SET_ visible: false}
+      _SEND_(:normal)  {_SET_ visible: false}
+      _SEND_(:over)    {_SET_ visible: true}
+      _SEND_(:key_down){_SET_ visible: false}
     end
     _CHECK_ mouse: [:cursor_out] do
-      normal  {_SET_ visible: true}
-      over    {_SET_ visible: false}
-      key_down{_SET_ visible: false}
+      _SEND_(:normal)  {_SET_ visible: true}
+      _SEND_(:over)    {_SET_ visible: false}
+      _SEND_(:key_down){_SET_ visible: false}
     end
     _CHECK_ mouse: [:key_down] do
-      normal  {_SET_ visible: false}
-      over    {_SET_ visible: false}
-      key_down{_SET_ visible: true}
+      _SEND_(:normal)  {_SET_ visible: false}
+      _SEND_(:over)    {_SET_ visible: false}
+      _SEND_(:key_down){_SET_ visible: true}
     end
     _CHECK_ mouse: [:key_up] do
-      normal  {_SET_ visible: false}
-      over    {_SET_ visible: true}
-      key_down{_SET_ visible: false}
+      _SEND_(:normal)  {_SET_ visible: false}
+      _SEND_(:over)    {_SET_ visible: true}
+      _SEND_(:key_down){_SET_ visible: false}
     end
     _END_FRAME_
   end

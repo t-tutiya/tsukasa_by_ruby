@@ -47,7 +47,9 @@ _DEFINE_ :command_window do |argument, options|
         end
         _SEND_ [:_PARENT_, :menu, :text_box] do
           _SEND_ALL_ interrupt: true do
-            bg{ _SET_ bgcolor: [0,0,0] }
+            _SEND_ :bg do
+              _SET_ bgcolor: [0,0,0]
+            end
           end
         end
         _DELETE_

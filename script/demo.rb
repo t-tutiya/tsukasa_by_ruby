@@ -59,75 +59,75 @@ _DEFINE_ :system_menu do
   _CREATE_ :LayoutControl, id: :top_menu1, x:0, y:0 do
     path = "./script/sample/"
     _CREATE_ :LayoutControl, id: 0, x:0, y:0, width: 256, float_x: :left  do
-      TextSelect text: "sample_1_1", path: path + "sample_1_1.tks", 
+      TextSelect text: "sample_1_1.tks", path: path + "sample_1_1.tks", 
                  comment: "文字列の表示"
-      TextSelect text: "sample_1_2", path: path + "sample_1_2.tks", 
+      TextSelect text: "sample_1_2.tks", path: path + "sample_1_2.tks", 
                  comment: "文字列の表示：応用"
-      TextSelect text: "sample_1_3", path: path + "sample_1_3.tks", 
+      TextSelect text: "sample_1_3.rb", path: path + "sample_1_3.rb", 
                  comment: "画像の表示"
-      TextSelect text: "sample_1_4", path: path + "sample_1_4.tks", 
+      TextSelect text: "sample_1_4.rb", path: path + "sample_1_4.rb", 
                  comment: "画像の直線移動"
-      TextSelect text: "sample_1_5", path: path + "sample_1_5.tks", 
+      TextSelect text: "sample_1_5.rb", path: path + "sample_1_5.rb", 
                  comment: "画像のスプライン移動"
-      TextSelect text: "sample_1_6", path: path + "sample_1_6.tks", 
+      TextSelect text: "sample_1_6.rb", path: path + "sample_1_6.rb", 
                  comment: "フェードイン・アウト"
-      TextSelect text: "sample_1_7", path: path + "sample_1_7.tks", 
+      TextSelect text: "sample_1_7.rb", path: path + "sample_1_7.rb", 
                  comment: "より自然なフェードイン・アウト"
-      TextSelect text: "sample_1_8", path: path + "sample_1_8.tks", 
+      TextSelect text: "sample_1_8.rb", path: path + "sample_1_8.rb", 
                  comment: "フェードトランジション"
-      TextSelect text: "sample_1_9", path: path + "sample_1_9.tks", 
+      TextSelect text: "sample_1_9.rb", path: path + "sample_1_9.rb", 
                  comment: "より自然なフェードトランジション"
     end
     _CREATE_ :LayoutControl, id: 1, x:0, y:0, width: 256, float_x: :left   do
-      TextSelect text: "sample_1_10", path: path + "sample_1_10.tks", 
+      TextSelect text: "sample_1_10.rb", path: path + "sample_1_10.rb", 
                  comment: "ルールトランジション"
-      TextSelect text: "sample_1_11", path: path + "sample_1_11.tks", 
+      TextSelect text: "sample_1_11.rb", path: path + "sample_1_11.rb", 
                  comment: "ユーザー定義コマンドを使う"
-      TextSelect text: "sample_1_12", path: path + "sample_1_12.tks", 
+      TextSelect text: "sample_1_12.tks", path: path + "sample_1_12.tks", 
                  comment: "データストアとインラインデータ記法"
-      TextSelect text: "sample_1_13", path: path + "sample_1_13.tks", 
+      TextSelect text: "sample_1_13.tks", path: path + "sample_1_13.tks", 
                  comment: "条件判定"
-      TextSelect text: "sample_1_14", path: path + "sample_1_14.tks", 
+      TextSelect text: "sample_1_14.rb", path: path + "sample_1_14.rb", 
                  comment: "繰り返し構文"
-      TextSelect text: "sample_1_15", path: path + "sample_1_15.tks", 
+      TextSelect text: "sample_1_15.rb", path: path + "sample_1_15.rb", 
                  comment: "ボタンの表示"
-      TextSelect text: "sample_1_16", path: path + "sample_1_16.tks", 
+      TextSelect text: "sample_1_16.tks", path: path + "sample_1_16.tks", 
                  comment: "サウンド"
-      TextSelect text: "sample_1_17", path: path + "sample_1_17.tks", 
+      TextSelect text: "sample_1_17.tks", path: path + "sample_1_17.tks", 
                  comment: "セーブ／ロード"
     end
     _CREATE_ :LayoutControl, id: 2, x:0, y:0, width: 256, float_x: :left    do
-      TextSelect text: "sample_2_1_1", path: path + "sample_2_1_1.rb", 
+      TextSelect text: "sample_2_1_1.rb", path: path + "sample_2_1_1.rb", 
                  comment: "ボタンサンプル１：通常"
-      TextSelect text: "sample_2_1_2", path: path + "sample_2_1_2.rb", 
+      TextSelect text: "sample_2_1_2.rb", path: path + "sample_2_1_2.rb", 
                  comment: "ボタンサンプル２：多角形コリジョン"
-      TextSelect text: "sample_2_1_3", path: path + "sample_2_1_3.rb", 
+      TextSelect text: "sample_2_1_3.rb", path: path + "sample_2_1_3.rb", 
                  comment: "ボタンサンプル３：抜き色"
-      TextSelect text: "sample_2_2",   path: path + "sample_2_2.rb", 
+      TextSelect text: "sample_2_2.rb",   path: path + "sample_2_2.rb", 
                  comment: "アニメーションサンプル"
-      TextSelect text: "sample_2_3",   path: path + "sample_2_3.rb", 
+      TextSelect text: "sample_2_3.rb",   path: path + "sample_2_3.rb", 
                  comment: "コマンドメニュー/右クリックサンプル"
-      TextSelect text: "sample_2_4",   path: path + "sample_2_4.rb", 
+      TextSelect text: "sample_2_4.rb",   path: path + "sample_2_4.rb", 
                  comment: "ドラッグ操作サンプル"
-      TextSelect text: "sample_2_5",   path: path + "sample_2_5.rb", 
+      TextSelect text: "sample_2_5.rb",   path: path + "sample_2_5.rb", 
                  comment: "_TO_IMAGE_とルールトランジションの組み合わせ"
-      TextSelect text: "sample_2_6",   path: path + "sample_2_6.rb", 
+      TextSelect text: "sample_2_6.rb",   path: path + "sample_2_6.rb", 
                  comment: "センタリングとＸ方向連結のサンプル"
     end
     _CREATE_ :LayoutControl, id: 3, x:0, y:0, width: 256, float_x: :left    do
-      TextSelect text: "sample_3_1", path: path + "sample_3_1.tks", 
+      TextSelect text: "sample_3_1.rb", path: path + "sample_3_1.tks", 
                  comment: "既読フラグサンプル"
-      TextSelect text: "sample_3_2_1", path: path + "sample_3_2_1.rb", 
+      TextSelect text: "sample_3_2_1.rb", path: path + "sample_3_2_1.rb", 
                  comment: "シリアライズサンプル：セーブ"
-      TextSelect text: "sample_3_2_2", path: path + "sample_3_2_2.rb", 
+      TextSelect text: "sample_3_2_2.rb", path: path + "sample_3_2_2.rb", 
                  comment: "シリアライズサンプル：ロード"
-      TextSelect text: "sample_3_3", path: path + "sample_3_3.rb", 
+      TextSelect text: "sample_3_3.rb", path: path + "sample_3_3.rb", 
                  comment: "システムステータスの取得"
-      TextSelect text: "sample_3_4", path: path + "sample_3_4.rb", 
+      TextSelect text: "sample_3_4.rb", path: path + "sample_3_4.rb", 
                  comment: "フルスクリーン化"
-      TextSelect text: "sample_3_5", path: path + "sample_3_5.rb", 
+      TextSelect text: "sample_3_5.rb", path: path + "sample_3_5.rb", 
                  comment: "マウス画像のカスタマイズ"
-      TextSelect text: "sample_3_6", path: path + "sample_3_6.rb", 
+      TextSelect text: "sample_3_6.rb", path: path + "sample_3_6.rb", 
                  comment: "疑似if文（コンソールに結果を出力）"
     end
   end

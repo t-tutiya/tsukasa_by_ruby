@@ -128,35 +128,41 @@ _DEFINE_ :set_status_window do
               intelligence:,
               allegiance:,
               courtesy:|
-        line1{
-          day{_SET_ char: day + 1}
-          week{_SET_ char: week + 1}
-          gold{_SET_ char: gold}
-        }
-        line2{
-          last_day{_SET_ char: 7-day}
-        }
-        line3{
-          week_debt{_SET_ char: debt[week]}
-          week_debt_last_gold{_SET_ char: [debt[week] - gold, 0].max}
-        }
-        line5{
-          gold{_SET_ char: gold}
-          helth_point{_SET_ char: helth_point}
-          helth_point_max{_SET_ char: helth_point_max}
-          mental_point{_SET_ char: mental_point}
-          mental_point_max{_SET_ char: mental_point_max}
-        }
-        line6{
-          charm{_SET_ char: charm}
-          noble{_SET_ char: noble}
-          culture{_SET_ char: culture}
-        }
-        line7{
-          intelligence{_SET_ char: intelligence}
-          allegiance{_SET_ char: allegiance}
-          courtesy{_SET_ char: courtesy}
-        }
+
+        _SEND_ :line1 do
+          _SEND_(:day){_SET_ char: day + 1}
+          _SEND_(:week){_SET_ char: week + 1}
+          _SEND_(:gold){_SET_ char: gold}
+        end
+
+        _SEND_ :line2 do
+          _SEND_(:last_day){_SET_ char: 7-day}
+        end
+
+        _SEND_ :line3 do
+          _SEND_(:week_debt){_SET_ char: debt[week]}
+          _SEND_(:week_debt_last_gold){_SET_ char: [debt[week] - gold, 0].max}
+        end
+
+        _SEND_ :line5 do
+          _SEND_(:gold){_SET_ char: gold}
+          _SEND_(:helth_point){_SET_ char: helth_point}
+          _SEND_(:helth_point_max){_SET_ char: helth_point_max}
+          _SEND_(:mental_point){_SET_ char: mental_point}
+          _SEND_(:mental_point_max){_SET_ char: mental_point_max}
+        end
+
+        _SEND_ :line6 do
+          _SEND_(:charm){_SET_ char: charm}
+          _SEND_(:noble){_SET_ char: noble}
+          _SEND_(:culture){_SET_ char: culture}
+        end
+
+        _SEND_ :line7 do
+          _SEND_(:intelligence){_SET_ char: intelligence}
+          _SEND_(:allegiance){_SET_ char: allegiance}
+          _SEND_(:courtesy){_SET_ char: courtesy}
+        end
       end
     end
   end
@@ -297,9 +303,13 @@ _DEFINE_ :lesson_menu do
     end
 
     _SEND_ [:_ROOT_], interrupt: true do
-      nomaid_comment_area{_SET_ char: "習い事によってメイドは少し成長した。"}
+      _SEND_ :nomaid_comment_area do
+        _SET_ char: "習い事によってメイドは少し成長した。"
+      end
       _WAIT_ system: :mouse_push
-      nomaid_comment_area{_SET_ char: " "}
+      _SEND_ :nomaid_comment_area do
+        _SET_ char: " "
+      end
     end
     _SET_ :_TEMP_, end_day: true
   end
@@ -411,10 +421,14 @@ _DEFINE_ :work_menu do
 
     _SEND_ [:_ROOT_], interrupt: true  do
       _GET_ :reward, datastore: :_TEMP_ do |reward:|
-        nomaid_comment_area{_SET_ char: "労働の対価として$#{reward}を得た。"}
+        _SEND_ :nomaid_comment_area do
+          _SET_ char: "労働の対価として$#{reward}を得た。"
+        end
       end
       _WAIT_ system: :mouse_push
-      nomaid_comment_area{_SET_ char: " "}
+      _SEND_ :nomaid_comment_area do
+        _SET_ char: " "
+      end
     end
     _SET_ :_TEMP_, end_day: true
   end
@@ -428,9 +442,13 @@ _DEFINE_ :rest do
                           mental_point: [100 - mental_point, 50].min
   end
   _SEND_ [:_ROOT_], interrupt: true  do
-    nomaid_comment_area{_SET_ char: "メイドはゆっくりと身体を休めた……。"}
+    _SEND_ :nomaid_comment_area do
+      _SET_ char: "メイドはゆっくりと身体を休めた……。"
+    end
     _WAIT_ system: :mouse_push
-    nomaid_comment_area{_SET_ char: " "}
+    _SEND_ :nomaid_comment_area do
+      _SET_ char: " "
+    end
   end
   _SET_ :_TEMP_, end_day: true
 end
@@ -490,9 +508,9 @@ _LOOP_ count:7 do
 
   _LOOP_ count:7 do
     #画面の更新
-    status_window{
+    _SEND_ :status_window do
       update_status
-    }
+    end
 
     #曜日終了フラグリセット
     _SET_ :_TEMP_, end_day: nil
@@ -530,26 +548,26 @@ end
 #■ゲーム終了シーン
 #■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
-status_window{_DELETE_}
+_DELETE_ :status_window
 
 _END_FRAME_
 
 #ゲームオーバーならテキストを出力して終了
 _CHECK_ :_TEMP_, equal: {gameover: true} do
-  text0{
+  _SEND_ :text0 do
     _TEXT_ "　あなたはメイドの借金を返すことができなかった。"
     _LINE_FEED_
     _TEXT_ "あわれメイドは売られてしまい、その後を知るもの"
     _LINE_FEED_
     _TEXT_ "はいない……。"
-  }
+  end
   _END_PAUSE_
   _EXIT_
 end
 
 #ゲームクリアならテキストを出力して終了
 _CHECK_ :_TEMP_, equal: {gameclear: true} do
-  text0{
+  _SEND_ :text0 do
     _TEXT_ "　無事にメイドの借金を返済し終えたあなたには、"
     _LINE_FEED_
     _TEXT_ "メイドとの楽しい日々の暮らしが待っている。"
@@ -558,7 +576,7 @@ _CHECK_ :_TEMP_, equal: {gameclear: true} do
     _LINE_FEED_
     _LINE_FEED_
     _TEXT_ "Thank you for playing."
-  }
+  end
   _END_PAUSE_
   _EXIT_
 end

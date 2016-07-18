@@ -49,8 +49,8 @@ _SEND_ :top_menu do
   _DELETE_
 end
 
-img0{_SET_ file_path: "./resource/button_normal.png"}
-img1{_SET_ file_path: "./resource/char/A-1.png"}
+_SEND_(:img0){_SET_ file_path: "./resource/button_normal.png"}
+_SEND_(:img1){_SET_ file_path: "./resource/char/A-1.png"}
 
 _FULL_SCREEN_ true
 

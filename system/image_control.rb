@@ -44,7 +44,7 @@ class ImageControl < Drawable
   attr_reader :file_path
   def file_path=(file_path)
     #元Imageを解放
-    @@ImageCache.dispose(@file_path) if @entity
+    @@ImageCache.dispose(@file_path) if @file_path
     #新Imageを取得
     @file_path = file_path
     @entity = @@ImageCache.load(@file_path)

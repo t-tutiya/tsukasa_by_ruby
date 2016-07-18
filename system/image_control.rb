@@ -36,6 +36,10 @@ class ImageControl < Drawable
   @@ImageCache = CacheManager.new do |id|
     Image.load(id)
   end
+  
+  def self.cache()
+    return @@ImageCache
+  end
 
   attr_reader :file_path
   def file_path=(file_path)

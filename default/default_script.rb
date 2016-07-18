@@ -199,3 +199,15 @@ end
 _DEFINE_ :_INSTALL_PRERENDER_FONT_ do |file_path, font_name:| 
   CharControl.install_prerender(font_name, file_path)
 end
+
+###############################################################################
+#キャッシュ管理
+###############################################################################
+
+_DEFINE_ :_IMAGE_REGIST_ do |file_path|
+  ImageControl.cache.regist(file_path, true)
+end
+
+_DEFINE_ :_IMAGE_DISPOSE_ do |file_path|
+  ImageControl.cache.force_dispose(file_path)
+end

@@ -158,6 +158,25 @@ _DEFINE_ :ep do
   _END_PAUSE_
 end
 
+#デフォルトテキストウィンドウの_SET_ラッパー
+_DEFINE_ :_CHAR_SET_ do |argument, options|
+  _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
+    _SEND_ _DEFAULT_TEXT_PAGE_ do
+      _SET_ argument, options
+    end
+  end
+end
+
+#デフォルトテキストウィンドウの_RUBI_ラッパー
+_DEFINE_ :_CHAR_RUBI_ do |argument, options|
+  _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
+    _SEND_ _DEFAULT_TEXT_PAGE_ do
+      _RUBI_ argument, options
+    end
+  end
+end
+
+
 #文字間ウェイトの更新
 _DEFINE_ :_WAIT_FRAME_ do |argument|
   _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|

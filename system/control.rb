@@ -217,8 +217,8 @@ class Control #内部メソッド
 
     #ユーザー定義コマンドが存在しない場合、コマンド送信文であるとみなす
     unless function_block
-      _SEND_(command_name, options, yield_block_stack, &block)
-      return
+      pp "コマンド[#{command_name}]はコントロールに登録されていません"
+      raise
     end
 
     #参照渡し汚染が起きないようにディープコピーで取得

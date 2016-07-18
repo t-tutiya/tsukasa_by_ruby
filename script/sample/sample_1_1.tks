@@ -11,11 +11,17 @@
 略称としてlpも[lp]使用できます。[ep]
 
 （※５）４ページ目です。
-@ text0{
+@ _SEND_ :text0 do
 @   _TEXT_ "行頭に@が書かれた行はコマンドブロックになります"
-@ }
+@ end
 @   _LINE_PAUSE_ #コマンドブロック内でのコメントは"#"を使います
-@   text0{_LINE_FEED_}
-	text0{_TEXT_ "インデントされた行もコマンドブロックと見なされます"}
-	_END_PAUSE_
-	text0{_FLUSH_}
+@ _SEND_ :text0 do
+@   _LINE_FEED_
+@ end
+  _SEND_ :text0 do
+    _TEXT_ "インデントされた行もコマンドブロックと見なされます"
+  end
+  _END_PAUSE_
+  _SEND_ :text0 do
+    _FLUSH_
+  end

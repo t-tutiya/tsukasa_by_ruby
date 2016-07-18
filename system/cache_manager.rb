@@ -41,17 +41,16 @@ class CacheManager
   end
 
   #リソースの取得
-  def load(id, parmanent = false)
+  def load(id)
     #リソースファイルがキャッシュされている場合
     if @cache[id]
       #カウンタ加算
       @cache[id][1] += 1
-    #リソースファイルがキャッシュされていない場合
     else
       #リソースの登録
-      regist(id, parmanent)
+      regist(id, false)
     end
-    #リソースファイルを返す
+    #リソースデータを返す
     return @cache[id][0]
   end
 
@@ -59,7 +58,7 @@ class CacheManager
   def regist(id, parmanent)
     begin
       #エントリを追加
-      @cache[id] = [@create.call(id), 1, parmanent]
+      @cache[id] = [@create.call(id), 0, parmanent]
     rescue DXRuby::DXRubyError => e
       puts "'#{id}'の登録に失敗しました"
       puts e.backtrace[0]
@@ -67,18 +66,26 @@ class CacheManager
     end
   end
 
-  #Imageの解放指定／永続化解除
+  #リソースの解放
   def dispose(id)
-    #永続化設定されている場合は解放しない
+    #永続化指定されている場合は解放しない
     return if @cache[id][2]
-    #カウンタ減算
-    @cache[id][1] -= 1
-    #カウンタがゼロになった
-    if @@cache[id][1] == 0
-      #リソース解放
-      @cache[id][0].dispose()
-      #キャッシュからエントリを削除
-      @cache.delete(id)
+
+    #参照カウンタがゼロの場合
+    if @cache[id][1] == 0
+      #キャッシュを解放する
+      force_dispose(id)
+    else
+      #カウンタ減算
+      @cache[id][1] -= 1
     end
+  end
+
+  #リソースの強制的な解放
+  def force_dispose(id)
+    #リソース解放
+    @cache[id][0].dispose()
+    #キャッシュからエントリを削除
+    @cache.delete(id)
   end
 end

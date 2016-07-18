@@ -44,8 +44,8 @@ class CacheManager
   def load(id)
     #リソースファイルがキャッシュされている場合
     if @cache[id]
-      #カウンタ加算
-      @cache[id][1] += 1
+      #永続化指定されていなければカウンタを加算
+      @cache[id][1] += 1 unless @cache[id][2]
     else
       #リソースの登録
       regist(id, false)

@@ -43,7 +43,14 @@ class CharControl < Drawable
   @@fonts_image_cache = {} #グリフ化済み文字のイメージキャッシュ
 
   def CharControl.install(file_path)
-    Font.install(file_path)
+    begin
+      #エントリを追加
+      Font.install(file_path)
+    rescue DXRuby::DXRubyError => e
+      puts "'#{file_path}'の登録に失敗しました"
+      puts e.backtrace[0]
+      exit
+    end
   end
 
   #レンダリング済み文字ファイルを、フォント名をキーにハッシュに保存する

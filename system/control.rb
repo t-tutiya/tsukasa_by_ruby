@@ -670,15 +670,14 @@ end
 class Control #スクリプト制御
   #子コントロールを検索してコマンドブロックを送信する
   def _SEND_(argument, options, yield_block_stack, &block)
+    #配列化
+    argument = [argument] unless argument.instance_of?(Array)
+
+    #子コントロールを再帰的に検索
     control = self
-    
-    if argument
-      argument = [argument] unless argument.instance_of?(Array)
-      #子コントロールを再帰的に検索
-      argument.each do |control_id|
-        control = control.find_control(control_id)
-        break unless control
-      end
+    argument.each do |control_id|
+      control = control.find_control(control_id)
+      break unless control
     end
 
     #候補が見つからなかった場合

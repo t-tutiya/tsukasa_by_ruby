@@ -30,11 +30,7 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-###############################################################################
-#汎用テキストマネージャクラス
-###############################################################################
-
-#構造体クラスの生成
+#構造体クラスの生成（レンダリング済み文字アーカイブの再構築のために必要）
 ImageFontData = Struct.new(:width, :ox, :binary)
 ImageFontSaveData = Struct.new(:data_hash, :height, :ver)
 
@@ -230,7 +226,7 @@ class CharControl < Drawable
 
     self.font_name = options[:font_name] || "ＭＳ 明朝" #フォント名
 
-    self.char = options[:char] || " " #描画文字
+    self.char = options[:char] || nil #描画文字
 
     self.weight = options[:weight] || false #太字
     self.italic = options[:italic] || false  #イタリック
@@ -254,42 +250,45 @@ class CharControl < Drawable
   end
 
   def update(mouse_pos_x, mouse_pos_y, index)
-    #更新フラグが立っている
-    if @option_update
-      #文字が設定されていなければ戻る
-      return super unless @char
+    #更新フラグが立っていないなら終了
+    return super unless @option_update
 
-      width = height = offset_x = offset_y = 0
+    #更新フラグをリセット
+    @option_update = false
 
-      #イタリックの場合、文字サイズの半分を横幅に追加する。
-      if @italic
-        width += @font_draw_option[:size]/2
-      end
+    #文字が設定されていない場合
+    unless @char
+      @entity.dispose if @entity and !(@entity.disposed?)
+      return super 
+    end
 
-      #影文字の場合、オフセット分を縦幅、横幅に追加する
-      if @font_draw_option[:shadow]
-        width += @font_draw_option[:shadow_x]
-        height += @font_draw_option[:shadow_y]
-      end
+    width = height = offset_x = offset_y = 0
 
-      #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加。
-      if @font_draw_option[:edge]
-        width  += @font_draw_option[:edge_width] * 2
-        height += @font_draw_option[:edge_width] * 2
-        offset_x = offset_y = @font_draw_option[:edge_width]
-      end
+    #イタリックの場合、文字サイズの半分を横幅に追加する。
+    if @italic
+      width += @font_draw_option[:size]/2
+    end
 
-      #プリレンダフォントデータが登録されているか
-      if @@fonts_file_cache[@font_name]
-        #プリレンダ文字の描画
-        draw_prerender_character(width, height, offset_x, offset_y)
-      else
-        #通常文字の描画
-        draw_character(width, height, offset_x, offset_y)
-      end
+    #影文字の場合、オフセット分を縦幅、横幅に追加する
+    if @font_draw_option[:shadow]
+      width += @font_draw_option[:shadow_x]
+      height += @font_draw_option[:shadow_y]
+    end
 
-      #更新フラグをリセット
-      @option_update = false
+    #袋文字の場合、縁サイズの２倍を縦幅、横幅に追加。
+    if @font_draw_option[:edge]
+      width  += @font_draw_option[:edge_width] * 2
+      height += @font_draw_option[:edge_width] * 2
+      offset_x = offset_y = @font_draw_option[:edge_width]
+    end
+
+    #プリレンダフォントデータが登録されているか
+    if @@fonts_file_cache[@font_name]
+      #プリレンダ文字の描画
+      draw_prerender_character(width, height, offset_x, offset_y)
+    else
+      #通常文字の描画
+      draw_character(width, height, offset_x, offset_y)
     end
 
     return super
@@ -317,7 +316,7 @@ class CharControl < Drawable
     @height = height + @size
 
     #文字用のimageを作成
-    @entity.dispose if @entity
+    @entity.dispose if @entity and !(@entity.disposed?)
     @entity = Image.new(@width, @height, [0, 0, 0, 0]) 
 
     #フォントを描画
@@ -345,7 +344,7 @@ class CharControl < Drawable
     @height = height + @@fonts_file_cache[@font_name].height
 
     #文字用のimageを作成
-    @entity.dispose if @entity
+    @entity.dispose if @entity and !(@entity.disposed?)
     @entity = Image.new(@width, @height, [0, 0, 0, 0])
 
     # イメージキャッシュにエントリが無ければ初期化
@@ -374,6 +373,11 @@ class CharControl < Drawable
       #Ｘ座標更新
       offset_x += font.width - font.ox
     end
+  end
+  
+  def _CLEAR_(argument, options, yield_block_stack)
+    @char = nil
+    @option_update = true
   end
 end
 

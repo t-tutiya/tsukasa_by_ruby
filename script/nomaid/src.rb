@@ -25,7 +25,7 @@ _CREATE_ :CharControl,
   y: 128,
   color:[255,255,0], 
   font_name: "ＭＳＰ ゴシック",
-  char: " "
+  char: nil
 
 #ステータスウィンドウ作成用のヘルパーコマンド
 _DEFINE_ :status_text do |id: nil, char: nil|
@@ -35,7 +35,7 @@ _DEFINE_ :status_text do |id: nil, char: nil|
     float_x: :left, 
     color:[255,255,0], 
     font_name: "ＭＳＰ ゴシック",
-    char: char || " "
+    char: char || nil
 end
 
 _DEFINE_ :set_status_window do
@@ -308,7 +308,7 @@ _DEFINE_ :lesson_menu do
       end
       _WAIT_ system: :mouse_push
       _SEND_ :nomaid_comment_area do
-        _SET_ char: " "
+        _CLEAR_
       end
     end
     _SET_ :_TEMP_, end_day: true
@@ -427,7 +427,7 @@ _DEFINE_ :work_menu do
       end
       _WAIT_ system: :mouse_push
       _SEND_ :nomaid_comment_area do
-        _SET_ char: " "
+        _CLEAR_
       end
     end
     _SET_ :_TEMP_, end_day: true
@@ -447,7 +447,7 @@ _DEFINE_ :rest do
     end
     _WAIT_ system: :mouse_push
     _SEND_ :nomaid_comment_area do
-      _SET_ char: " "
+      _CLEAR_
     end
   end
   _SET_ :_TEMP_, end_day: true

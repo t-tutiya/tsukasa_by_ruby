@@ -59,7 +59,7 @@ class CacheManager
     begin
       #エントリを追加
       @cache[id] = [@create.call(id), 0, parmanent]
-    rescue DXRuby::DXRubyError => e
+    rescue DXRuby::DXRubyError
       raise(TsukasaLoadError.new(id))
     end
   end

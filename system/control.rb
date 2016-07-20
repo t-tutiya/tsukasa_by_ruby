@@ -232,13 +232,13 @@ class Control #内部メソッド
   end
 
   def check_imple(argument, options, yield_block_stack)
-    options.each do |key, value|
+    options.each do |condition, value|
       return unless value
 
       #対象キーが配列で渡されていない場合配列に変換する
       value = [value] unless value.instance_of?(Array)
 
-      case key
+      case condition
 
       #count数が０以下の場合
       when :count
@@ -814,8 +814,6 @@ class Control #セーブデータ制御
                     argument.to_s +
                     @root_control._SYSTEM_[:_QUICK_DATA_FILENAME_])
 
-    code = ""
-
     db.transaction do
       command_list = Marshal.load(db["key"])
       @command_list = command_list + @command_list
@@ -1135,7 +1133,7 @@ class Control #プロパティのパラメータ遷移
 
     # -1.0 < t < 1.0
     if t < 1.0 
-      return (3.0 * t ** 3 -6.0 * t ** 2 + 4.0) / 6.0
+      return (3.0 * t ** 3 - 6.0 * t ** 2 + 4.0) / 6.0
 
     # -2.0 < t <= -1.0 or 1.0 <= t < 2.0
     elsif t < 2.0 

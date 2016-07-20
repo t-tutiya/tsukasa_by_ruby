@@ -42,7 +42,7 @@ class CharControl < Drawable
     begin
       #エントリを追加
       Font.install(file_path)
-    rescue DXRuby::DXRubyError => e
+    rescue DXRuby::DXRubyError
       raise(TsukasaLoadError.new(file_path))
     end
   end
@@ -247,6 +247,8 @@ class CharControl < Drawable
     self.shadow_edge = options[:shadow_edge] || false #影：影の縁文字
 
     super
+
+    @entity = nil
   end
 
   def update(mouse_pos_x, mouse_pos_y, index)

@@ -61,6 +61,7 @@ class ImageControl < Drawable
   end
 
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
+    @file_path = nil
     if options[:file_path]
       self.file_path = options[:file_path]
     else

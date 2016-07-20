@@ -158,8 +158,7 @@ class Tsukasa < LayoutControl
       end
     else
       #セーブファイル指定エラー
-      pp "対象セーブファイルが指定されていません"
-      raise 
+      raise(TsukasaError, "対象セーブファイルが指定されていません")
     end
   end
 
@@ -182,8 +181,7 @@ class Tsukasa < LayoutControl
       end
     else
       #セーブファイル指定エラー
-      pp "対象セーブファイルが指定されていません"
-      raise 
+      raise(TsukasaError, "対象セーブファイルが指定されていません")
     end
   end
 end

@@ -217,8 +217,7 @@ class Control #内部メソッド
 
     #ユーザー定義コマンドが存在しない場合、コマンド送信文であるとみなす
     unless function_block
-      pp "コマンド[#{command_name}]はコントロールに登録されていません"
-      raise
+      raise(TsukasaError, "コマンド[#{command_name}]はコントロールに登録されていません")
     end
 
     #参照渡し汚染が起きないようにディープコピーで取得
@@ -437,9 +436,8 @@ class Control #コントロールの生成／破棄
                                                       self, 
                                                       &block)
     )
-    rescue
-      pp "コントロール#{argument}の生成に失敗しました。名称を間違えている可能性があります"
-      raise
+    rescue NameError
+      raise(TsukasaError, "コントロール[#{argument}]の生成に失敗しました。")
     end
   end
 
@@ -742,10 +740,14 @@ class Control #スクリプト制御
       options[:parser] = ext_name.to_sym
     end
 
-    #スクリプトをパースする
-    _PARSE_(File.read(options[:file_path], encoding: "UTF-8"),
-                    options, 
-                    yield_block_stack)
+    begin
+      #スクリプトをパースする
+      _PARSE_(File.read(options[:file_path], encoding: "UTF-8"),
+                      options, 
+                      yield_block_stack)
+    rescue Errno::ENOENT
+      raise(TsukasaLoadError.new(options[:file_path]))
+    end
   end
 
   #スクリプトをパースする

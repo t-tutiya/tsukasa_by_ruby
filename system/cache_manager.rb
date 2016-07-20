@@ -60,9 +60,7 @@ class CacheManager
       #エントリを追加
       @cache[id] = [@create.call(id), 0, parmanent]
     rescue DXRuby::DXRubyError => e
-      puts "'#{id}'の登録に失敗しました"
-      puts e.backtrace[0]
-      exit
+      raise(TsukasaLoadError.new(id))
     end
   end
 

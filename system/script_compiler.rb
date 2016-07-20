@@ -72,12 +72,6 @@ class ScriptCompiler
       puts e.message
       puts e.backtrace[0]
       exit
-    rescue Exception => e
-      pp "[司エンジン：実行時エラー：ブロック実行時のエラー]"
-      puts e.inspect 
-      puts e.message
-      puts e.backtrace
-      exit
     end
 
     return @command_list

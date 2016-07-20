@@ -47,9 +47,7 @@ class CharControl < Drawable
       #エントリを追加
       Font.install(file_path)
     rescue DXRuby::DXRubyError => e
-      puts "'#{file_path}'の登録に失敗しました"
-      puts e.backtrace[0]
-      exit
+      raise(TsukasaLoadError.new(file_path))
     end
   end
 

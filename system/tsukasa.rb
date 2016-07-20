@@ -33,29 +33,24 @@ require 'dxruby'
 require 'pp'
 
 require_relative './exception.rb'
+require_relative './cache_manager.rb'
+require_relative './script_compiler.rb'
+
 require_relative './control.rb'
 require_relative './layoutable.rb'
 require_relative './drawable.rb'
+
 require_relative './layout_control.rb'
-
-require_relative './cache_manager.rb'
-
-require_relative './image_control.rb'
-
 require_relative './clickable_layout_control.rb'
-
+require_relative './image_control.rb'
 require_relative './rendertarget_control.rb'
+require_relative './sound_control.rb'
+require_relative './char_control.rb'
 
 require_relative './tile_map_control.rb'
-
 require_relative './rule_shader_control.rb'
 
-require_relative './sound_control.rb'
-
-require_relative './char_control.rb'
 require_relative './text_page_control.rb'
-
-require_relative './script_compiler.rb'
 
 class Tsukasa < LayoutControl
   #システム全体で共有されるデータ群。保存対象。

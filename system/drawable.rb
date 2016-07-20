@@ -31,15 +31,6 @@ require 'dxruby'
 ###############################################################################
 
 class Drawable < Layoutable
-=begin
-  #Imageのキャッシュ機構の簡易実装
-  #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
-  @@image_cache = Hash.new
-  #キャッシュされていない画像パスが指定されたら読み込む
-  @@image_cache.default_proc = ->(hsh, key) {
-    hsh[key] = Image.load(key)
-  }
-=end
   attr_reader  :entity
 
   #可視フラグ

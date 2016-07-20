@@ -34,8 +34,8 @@ require 'pp'
 
 require_relative './exception.rb'
 require_relative './control.rb'
-require_relative './layoutable_control.rb'
-require_relative './drawable_control.rb'
+require_relative './layoutable.rb'
+require_relative './drawable.rb'
 require_relative './layout_control.rb'
 
 require_relative './cache_manager.rb'

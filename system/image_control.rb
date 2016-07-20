@@ -198,7 +198,7 @@ class ImageControl < Drawable
 
     #コントロールの探査に失敗
     unless control
-      pp "コントロールが存在しません"
+      warn "コントロール\"#{argument}\"が存在しません"
       return
     end
 

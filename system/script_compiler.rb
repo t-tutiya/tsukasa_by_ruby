@@ -79,8 +79,8 @@ class ScriptCompiler
 
   def method_missing(command_name, argument = nil, **options, &block)
     if [:_END_FUNCTION_].index(command_name)
-      pp "#{command_name}コマンドは使用できません"
-      raise
+      warn "\"#{command_name}\"コマンドは使用できません"
+      return
     end
 
     #コマンドを登録する

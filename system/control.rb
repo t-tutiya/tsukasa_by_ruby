@@ -465,7 +465,7 @@ class Control #セッター／ゲッター
           send(key.to_s + "=", val)
         else
           #warningを出して処理を続行する
-          pp "クラス[" + self.class.to_s + "]：変数[" + "@" + key.to_s + "]は存在しません"
+          warn  "クラス[#{self.class}]：変数[" + "@#{key}]は存在しません"
         end
       end
     end
@@ -486,7 +486,7 @@ class Control #セッター／ゲッター
           send(key.to_s + "=", send(key.to_s) + val)
         else
           #warningを出して処理を続行する
-          pp "クラス[" + self.class.to_s + "]：変数[" + "@" + key.to_s + "]は存在しません"
+          warn  "クラス[#{self.class}]：変数[" + "@#{key}]は存在しません"
         end
       end
     end
@@ -508,7 +508,7 @@ class Control #セッター／ゲッター
           #コントロールプロパティから値を取得する
           result[property] = send(property)
         else
-          pp "クラス[" + self.class.to_s + "]：変数[" + "@" + property.to_s + "]は存在しません"
+          warn  "クラス[#{self.class}]：変数[" + "@#{property}]は存在しません"
         end
       end
     end
@@ -683,7 +683,7 @@ class Control #スクリプト制御
 
     #候補が見つからなかった場合
     unless control
-      pp argument.to_s + "は存在しません"
+      warn "コントロール\"#{argument}\"は存在しません"
       return
     end
 

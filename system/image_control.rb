@@ -53,8 +53,6 @@ class ImageControl < Drawable
     @height = @entity.height
   end
 
-  attr_reader :entity
-
   def dispose()
     @@ImageCache.dispose(@file_path) if @file_path
     super
@@ -62,6 +60,8 @@ class ImageControl < Drawable
 
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
     @file_path = nil
+    super
+
     if options[:file_path]
       self.file_path = options[:file_path]
     else
@@ -71,7 +71,6 @@ class ImageControl < Drawable
       #XY幅を取得
       @width = @height = 1
     end
-    super
   end
 
   #ImageControl上に直線を引く

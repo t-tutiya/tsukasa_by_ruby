@@ -247,8 +247,6 @@ class CharControl < Drawable
     self.shadow_edge = options[:shadow_edge] || false #影：影の縁文字
 
     super
-
-    @entity = nil
   end
 
   def update(mouse_pos_x, mouse_pos_y, index)

@@ -68,10 +68,9 @@ class ImageControl < Drawable
       @entity = Image.new(options[:width]  || 1,
                           options[:height] || 1,
                           options[:color]  || [0,0,0,0])
+      #XY幅を取得
+      @width = @height = 1
     end
-    @entity = options[:entity] if options[:entity]
-    options[:width] = @entity.width
-    options[:height] = @entity.height
     super
   end
 

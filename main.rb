@@ -10,6 +10,8 @@ height = 600
 Window.bgcolor=[0,0,0]
 #初期化
 Window.resize(width, height)
+Window.x = 0
+Window.y = 0
 
 tsukasa = Tsukasa.new({ :width => width,
                         :height => height,

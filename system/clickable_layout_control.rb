@@ -184,10 +184,7 @@ class ClickableLayoutControl < LayoutControl
 
   def check_imple(argument, options, yield_block_stack)
     if options[:mouse]
-      #対象キーが配列で渡されていない場合配列に変換する
-      options[:mouse] = [options[:mouse]] unless options[:mouse].instance_of?(Array)
-
-      options[:mouse].each do |key|
+      Array(options[:mouse]).each do |key|
         case key
         when :cursor_on
           return true if @inner_control

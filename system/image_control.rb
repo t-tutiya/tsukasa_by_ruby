@@ -188,10 +188,9 @@ class ImageControl < Drawable
 
     #コントロールの初期化
     control = self
-    argument = [argument] unless argument.instance_of?(Array)
 
     #子コントロールを再帰的に検索
-    argument.each do |control_id|
+    Array(argument).each do |control_id|
       control = control.find_control(control_id)
       break unless control
     end

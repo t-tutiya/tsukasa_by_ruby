@@ -494,11 +494,10 @@ class Control #セッター／ゲッター
 
   #指定したコントロール(orデータストア)のプロパティを取得する
   def _GET_(argument, options, yield_block_stack, &block)
-    argument = [argument] unless argument.instance_of?(Array)
     result = {}
 
     #オプション全探査
-    argument.each do |property|
+    Array(argument).each do |property|
       #データストアが設定されている場合
       if options[:datastore]
         #データストアから値を取得する
@@ -670,12 +669,9 @@ end
 class Control #スクリプト制御
   #子コントロールを検索してコマンドブロックを送信する
   def _SEND_(argument, options, yield_block_stack, &block)
-    #配列化
-    argument = [argument] unless argument.instance_of?(Array)
-
     #子コントロールを再帰的に検索
     control = self
-    argument.each do |control_id|
+    Array(argument).each do |control_id|
       control = control.find_control(control_id)
       break unless control
     end

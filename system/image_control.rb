@@ -69,7 +69,8 @@ class ImageControl < Drawable
                           options[:height] || 1,
                           options[:color]  || [0,0,0,0])
       #XY幅を取得
-      @width = @height = 1
+      @width = @entity.width
+      @height = @entity.height
     end
   end
 

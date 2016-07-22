@@ -39,29 +39,29 @@ class ImageControl < Drawable
     return @@ImageCache
   end
 
-  attr_reader :file_path
-  def file_path=(file_path)
+  attr_reader :path
+  def path=(path)
     #元Imageを解放
-    @@ImageCache.dispose(@file_path) if @file_path
+    @@ImageCache.dispose(@path) if @path
     #新Imageを取得
-    @file_path = file_path
-    @entity = @@ImageCache.load(@file_path)
+    @path = path
+    @entity = @@ImageCache.load(@path)
     #XY幅を取得
     @width = @entity.width
     @height = @entity.height
   end
 
   def dispose()
-    @@ImageCache.dispose(@file_path) if @file_path
+    @@ImageCache.dispose(@path) if @path
     super
   end
 
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
-    @file_path = nil
+    @path = nil
     super
 
-    if options[:file_path]
-      self.file_path = options[:file_path]
+    if options[:path]
+      self.path = options[:path]
     else
       @entity = Image.new(options[:width]  || 1,
                           options[:height] || 1,

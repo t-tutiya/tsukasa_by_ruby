@@ -9,7 +9,7 @@ _CREATE_ :CharControl,
   char: " "
 
 _CREATE_ :ClickableLayoutControl, x: 640-256, y: 480-256, width:256, height: 256 do
-  _CREATE_ :ImageControl, file_path: "./resource/button_normal.png"
+  _CREATE_ :ImageControl, path: "./resource/button_normal.png"
   _STACK_LOOP_ do |a,b,c|
     _CHECK_ mouse: [:cursor_over] do 
       _SET_ :_SYSTEM_ , data0: true
@@ -21,7 +21,7 @@ end
 _CREATE_ :LayoutControl , id: :cursor do
   _CREATE_ :TileMapControl, 
     map_array: [[0]], size_x: 1, size_y: 1, width:32, height:32 do
-    _SET_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
+    _SET_TILE_GROUP_ path: "./resource/icon/icon_4_a.png",
       x_count: 4, y_count: 1
     _STACK_LOOP_ do
       _MAP_STATUS_ 0

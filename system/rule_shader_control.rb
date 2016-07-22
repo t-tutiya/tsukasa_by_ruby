@@ -40,11 +40,11 @@ class RuleShaderControl < Control
   attr_reader :entity
 
   #ルールトラジンション：ルール画像設定
-  attr_reader :file_path
-  def file_path=(file_path)
-    @file_path = file_path
+  attr_reader :path
+  def path=(path)
+    @path = path
     #画像ファイルをキャッシュから読み込んで初期化する
-    @entity = TransitionShader.new(@@image_cache[file_path])
+    @entity = TransitionShader.new(@@image_cache[path])
   end
 
   #ルールトランジション：カウンター
@@ -68,7 +68,7 @@ class RuleShaderControl < Control
 
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
     @vague = options[:vague] || 40
-    self.file_path = options[:file_path] if options[:file_path]
+    self.path = options[:path] if options[:path]
     self.counter = options[:counter] || 0
     super
   end

@@ -105,7 +105,7 @@ _DEFINE_ :_LINE_PAUSE_ do
       _CREATE_ :TileMapControl, 
         map_array: [[0]], size_x: 1, size_y: 1, 
         width: 24, height: 24, z: 1000000 do
-        _SET_TILE_GROUP_ file_path: "./resource/icon/icon_8_a.png",
+        _SET_TILE_GROUP_ path: "./resource/icon/icon_8_a.png",
           x_count: 4, y_count: 2
         _ICON_8_
       end
@@ -131,7 +131,7 @@ _DEFINE_ :_END_PAUSE_ do
       _CREATE_ :TileMapControl, 
         map_array: [[0]], size_x: 1, size_y: 1, 
         width: 24, height: 24, z: 1000000 do
-        _SET_TILE_GROUP_ file_path: "./resource/icon/icon_4_a.png",
+        _SET_TILE_GROUP_ path: "./resource/icon/icon_4_a.png",
           x_count: 4, y_count: 1
         _STACK_LOOP_ do
           _MAP_STATUS_ 0
@@ -402,9 +402,9 @@ _DEFINE_ :_IMAGE_BUTTON_ do |argument, options|
       width: 256,
       height: 256 do
       _SET_ map_array: [[0]]
-      _SET_TILE_ 0, file_path: options[:normal]||"./resource/button_normal.png"
-      _SET_TILE_ 1, file_path: options[:over]||"./resource/button_over.png"
-      _SET_TILE_ 2, file_path: options[:down]||"./resource/button_key_down.png"
+      _SET_TILE_ 0, path: options[:normal]||"./resource/button_normal.png"
+      _SET_TILE_ 1, path: options[:over]||"./resource/button_over.png"
+      _SET_TILE_ 2, path: options[:down]||"./resource/button_key_down.png"
     end
 
     #カーソルがコントロールから外れた

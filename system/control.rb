@@ -716,19 +716,19 @@ class Control #スクリプト制御
     #TODO：Window.open_filenameが使用された場合の対策だが、他に方法はないか？
     FileUtils.chdir(@@system_path)
     #ファイルのフルパスを取得
-    options[:file_path] = File.expand_path(argument)
+    options[:path] = File.expand_path(argument)
 
     #強制フラグが無く、一度_INCLUDE_しているファイルなら終了
     if !(options[:force]) and 
-        @root_control._TEMP_[:_LOADED_FEATURES_].index(options[:file_path])
+        @root_control._TEMP_[:_LOADED_FEATURES_].index(options[:path])
       return
     end
 
     #ファイルパスをリストに追加する。
-    @root_control._TEMP_[:_LOADED_FEATURES_].push(options[:file_path])
+    @root_control._TEMP_[:_LOADED_FEATURES_].push(options[:path])
 
     #拡張子取得
-    ext_name = File.extname(options[:file_path])
+    ext_name = File.extname(options[:path])
     #rbファイルでなければparserのクラス名を初期化する。
     unless ext_name == ".rb"
       ext_name.slice!(0)
@@ -737,17 +737,17 @@ class Control #スクリプト制御
 
     begin
       #スクリプトをパースする
-      _PARSE_(File.read(options[:file_path], encoding: "UTF-8"),
+      _PARSE_(File.read(options[:path], encoding: "UTF-8"),
                       options, 
                       yield_block_stack)
     rescue Errno::ENOENT
-      raise(TsukasaLoadError.new(options[:file_path]))
+      raise(TsukasaLoadError.new(options[:path]))
     end
   end
 
   #スクリプトをパースする
   def _PARSE_(argument, options, yield_block_stack)
-    options[:file_path] = "(parse)" unless options[:file_path]
+    options[:path] = "(parse)" unless options[:path]
 
     #パーサーが指定されている場合
     if options[:parser]
@@ -760,7 +760,7 @@ class Control #スクリプト制御
     #司スクリプトを評価してコマンド配列を取得し、コマンドリストの先頭に追加する
     command_list = @root_control.script_compiler.eval_commands(
                       argument,
-                      options[:file_path],
+                      options[:path],
                       yield_block_stack, 
                     )
     @command_list = command_list + @command_list

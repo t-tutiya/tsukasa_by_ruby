@@ -41,8 +41,8 @@ _INCLUDE_ "./default/utility_script.rb"
 
 #プラグインスクリプトファイルの読み込み
 _GET_ :_PLUGIN_PATH_, datastore: :_SYSTEM_ do |_PLUGIN_PATH_:|
-  Dir.glob(_PLUGIN_PATH_).each do |file_path|
-    _INCLUDE_ file_path
+  Dir.glob(_PLUGIN_PATH_).each do |path|
+    _INCLUDE_ path
   end
 end
 

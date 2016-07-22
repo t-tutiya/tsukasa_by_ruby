@@ -1,19 +1,19 @@
 #ルール画像を設定するユーザー定義コマンド
 _DEFINE_ :set_rule do |argument, options|
   _CREATE_ :RuleShaderControl, id: options[:id], vague: options[:vague] || 40,
-            file_path: options[:file_path]
+            path: options[:path]
   _SET_ shader: options[:id]
 end
 
 #前回と同じ
 _CREATE_ :RenderTargetControl, id: :test0, width: 800, height: 600 do
-  _CREATE_ :ImageControl, file_path: "./resource/bg_test.jpg"
-  _CREATE_ :ImageControl, file_path: "./resource/char/B-1.png", x: 250
+  _CREATE_ :ImageControl, path: "./resource/bg_test.jpg"
+  _CREATE_ :ImageControl, path: "./resource/char/B-1.png", x: 250
 end
 
-_CREATE_ :ImageControl, id: :test1, file_path: "./resource/bg_sample.png" do
+_CREATE_ :ImageControl, id: :test1, path: "./resource/bg_sample.png" do
   set_rule id: :rule0, vague: 40,
-           file_path: "./resource/rule/horizontal_rule.png"
+           path: "./resource/rule/horizontal_rule.png"
 end
 
 #前回と同じ

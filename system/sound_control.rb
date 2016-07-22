@@ -33,16 +33,16 @@ require 'ayame'
 
 #Soundコントロール
 class SoundControl  < Control
-  attr_reader :file_path
-  def file_path=(args)
+  attr_reader :path
+  def path=(args)
     #音源ファイルを読み込んで初期化する
     @entity = Ayame.new(args)
   end
 
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
     super
-    if options[:file_path]
-      self.file_path = options[:file_path]
+    if options[:path]
+      self.path = options[:path]
     end
   end
 

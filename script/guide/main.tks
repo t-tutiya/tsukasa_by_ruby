@@ -4,7 +4,7 @@
     }
     _END_FRAME_
     _SEND_ [:img_base, cha] do
-      _SET_ file_path: "./resource/char/" + img + ".png"
+      _SET_ path: "./resource/char/" + img + ".png"
     end
     _SEND_ [:img_base, :fade] do
       _MOVE_ 30, alpha: 0
@@ -24,7 +24,7 @@
     id: :img_base,
     #↓これ忘れるなー。どうしようもねーのかな
     width:1024, height: 600 do
-    _CREATE_ :ImageControl, id: :base, file_path: "./resource/bg_sample.png"
+    _CREATE_ :ImageControl, id: :base, path: "./resource/bg_sample.png"
     _CREATE_ :ImageControl, x: 128,id: :img1
     _CREATE_ :ImageControl, x: 512+128, id: :img0
     _CREATE_ :ImageControl, x: 800, id: :img2
@@ -34,7 +34,7 @@
     x: 0,
     y: 256 + 164-32,
     id: :text_ex do
-    _CREATE_ :ImageControl, file_path: "./resource/window_tra2.png",
+    _CREATE_ :ImageControl, path: "./resource/window_tra2.png",
       z: 1000000-2 #描画順序
     #初期テキストウィンドウ
     _TEXT_WINDOW_ :text0_ex, 

@@ -1,5 +1,5 @@
 _SEND_ :img0 do
-  _SET_ file_path: "./resource/char/A-1.png"
+  _SET_ path: "./resource/char/A-1.png"
   _MOVE_ 120, x: [0, 500], y: [0, -100], _OPTION_:{easing: :out_quart}
 end
 

@@ -59,8 +59,8 @@ _CREATE_ :ClickableLayoutControl, id: :requested_close,
 end
 
 #スクリーンショットキャプチャ
-_DEFINE_ :_CAPTURE_SS_ do |file_path, options|
-  Window.get_screen_shot(file_path, options[:format] || FORMAT_PNG)
+_DEFINE_ :_CAPTURE_SS_ do |path, options|
+  Window.get_screen_shot(path, options[:format] || FORMAT_PNG)
 end
 
 #ファイルオープンダイアログ
@@ -191,23 +191,23 @@ _DEFINE_ :_TO_IMAGE_ do
 end
 
 #一時truetypeフォントの登録
-_DEFINE_ :_INSTALL_FONT_ do |file_path|
-  CharControl.install(file_path)
+_DEFINE_ :_INSTALL_FONT_ do |path|
+  CharControl.install(path)
 end
 
 #プリレンダフォントデータの登録
-_DEFINE_ :_INSTALL_PRERENDER_FONT_ do |file_path, font_name:| 
-  CharControl.install_prerender(font_name, file_path)
+_DEFINE_ :_INSTALL_PRERENDER_FONT_ do |path, font_name:| 
+  CharControl.install_prerender(font_name, path)
 end
 
 ###############################################################################
 #キャッシュ管理
 ###############################################################################
 
-_DEFINE_ :_IMAGE_REGIST_ do |file_path|
-  ImageControl.cache.regist(file_path, true)
+_DEFINE_ :_IMAGE_REGIST_ do |path|
+  ImageControl.cache.regist(path, true)
 end
 
-_DEFINE_ :_IMAGE_DISPOSE_ do |file_path|
-  ImageControl.cache.force_dispose(file_path)
+_DEFINE_ :_IMAGE_DISPOSE_ do |path|
+  ImageControl.cache.force_dispose(path)
 end

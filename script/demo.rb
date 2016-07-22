@@ -46,7 +46,7 @@ _DEFINE_ :TextSelect do |argument, options|
       end
       #マウスがクリックされたらフラグを立てる
       _CHECK_ mouse: [:key_push] do
-        _SET_ :_TEMP_, file_path: options[:path]
+        _SET_ :_TEMP_, path: options[:path]
         _EVAL_ "pp '[" + options[:text].to_s + "]が押されました'"
         _RETURN_
       end
@@ -172,13 +172,13 @@ _STACK_LOOP_ do |a,b,c|
    id: :img1 do
  end
 
-  _SET_ :_TEMP_, file_path: nil
+  _SET_ :_TEMP_, path: nil
 
   system_menu
 
-  _WAIT_ :_TEMP_,  not_equal: {file_path: nil}
-  _GET_ :file_path, datastore: :_TEMP_ do |arg, options|
-    _PUTS_ options[:file_path]
+  _WAIT_ :_TEMP_,  not_equal: {path: nil}
+  _GET_ :path, datastore: :_TEMP_ do |arg, options|
+    _PUTS_ options[:path]
   end
   _SEND_ :top_menu1 do
     _DELETE_
@@ -195,7 +195,7 @@ _STACK_LOOP_ do |a,b,c|
 
   _END_FRAME_
 
-  _INCLUDE_ :file_path, force: true
+  _INCLUDE_ :path, force: true
 
 	_SEND_ :base do
 	  _DELETE_

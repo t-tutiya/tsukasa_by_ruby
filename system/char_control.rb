@@ -36,21 +36,21 @@ class CharControl < Drawable
   @@fonts_file_cache = {} #レンダリング済み文字ファイルのキャッシュ
   @@fonts_image_cache = {} #グリフ化済み文字のイメージキャッシュ
 
-  def CharControl.install(file_path)
+  def CharControl.install(path)
     begin
       #エントリを追加
-      Font.install(file_path)
+      Font.install(path)
     rescue DXRuby::DXRubyError
-      raise(TsukasaLoadError.new(file_path))
+      raise(TsukasaLoadError.new(path))
     end
   end
 
   #レンダリング済み文字ファイルを、フォント名をキーにハッシュに保存する
-  def CharControl.install_prerender(font_name, file_path)
+  def CharControl.install_prerender(font_name, path)
     #ファイルキャッシュにデータが格納されていない場合
     unless @@fonts_file_cache.key?(font_name)
       #ファイルをオープン
-      open(file_path, "rb") do |fh|
+      open(path, "rb") do |fh|
         #マーシャルで展開しキャッシュに格納する
         @@fonts_file_cache[font_name] = Marshal.load(fh.read)
       end

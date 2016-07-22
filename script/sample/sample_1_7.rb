@@ -1,11 +1,11 @@
 _SEND_ :base do
-  _SET_ file_path: "./resource/bg_sample.png"
+  _SET_ path: "./resource/bg_sample.png"
 end
 
 _CREATE_ :RenderTargetControl, id: :test0,
   x: 100, y: 100, width: 512, height: 512, z: 4000 do
-  _CREATE_ :ImageControl, file_path: "./resource/button_over.png", x: 100
-  _CREATE_ :ImageControl, file_path: "./resource/button_normal.png", y: 100
+  _CREATE_ :ImageControl, path: "./resource/button_over.png", x: 100
+  _CREATE_ :ImageControl, path: "./resource/button_normal.png", y: 100
 end
 
 _SEND_ :test0 do

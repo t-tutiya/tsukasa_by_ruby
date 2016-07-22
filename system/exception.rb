@@ -31,10 +31,10 @@
 class TsukasaError < StandardError; end
 
 class TsukasaLoadError < TsukasaError
-  attr_reader :file_path
+  attr_reader :path
   
-  def initialize(file_path)
-    @file_path = file_path
-    super("\"#@file_path\"の読み込みに失敗しました。")
+  def initialize(path)
+    @path = path
+    super("\"#@path\"の読み込みに失敗しました。")
   end
 end

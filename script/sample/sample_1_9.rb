@@ -1,9 +1,9 @@
 _SEND_ :base do
-  _SET_ file_path: "./resource/bg_sample.png"
+  _SET_ path: "./resource/bg_sample.png"
 end
 
 _SEND_ :img0 do
-  _SET_ file_path: "./resource/char/B-1.png", x: 250
+  _SET_ path: "./resource/char/B-1.png", x: 250
 end
 
 _WAIT_ key_push: K_SPACE
@@ -11,7 +11,7 @@ _WAIT_ key_push: K_SPACE
 _TO_IMAGE_ :test0
 
 _SEND_ :img0 do
-  _SET_ file_path: "./resource/char/B-2.png"
+  _SET_ path: "./resource/char/B-2.png"
 end
 
 

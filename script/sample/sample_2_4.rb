@@ -5,9 +5,9 @@ _CREATE_ :ClickableLayoutControl,
     width: 256,
     height: 256 do
     _SET_ map_array: [[0]]
-    _SET_TILE_ 0, file_path: "./resource/button_normal.png"
-    _SET_TILE_ 1, file_path: "./resource/button_over.png"
-    _SET_TILE_ 2, file_path: "./resource/button_key_down.png"
+    _SET_TILE_ 0, path: "./resource/button_normal.png"
+    _SET_TILE_ 1, path: "./resource/button_over.png"
+    _SET_TILE_ 2, path: "./resource/button_key_down.png"
   end
 
   _DEFINE_ :drug_control do

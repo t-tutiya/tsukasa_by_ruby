@@ -1,5 +1,5 @@
 @	_CREATE_ :SoundControl, 
-@		file_path: "./resource/music/easygoing.ogg",
+@		path: "./resource/music/easygoing.ogg",
 @		id: :test0
 初期化が終了しました。
 キーを押すとフェードイン再生します[ep]

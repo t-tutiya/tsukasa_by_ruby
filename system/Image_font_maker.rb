@@ -153,11 +153,11 @@ class Image_font
   @@fonts_image_cache = {} #グリフ化済み文字のイメージキャッシュ
 
   #レンダリング済み文字ファイルを、フォント名をキーにハッシュに保存する
-  def Image_font.regist(font_name, file_path)
+  def Image_font.regist(font_name, path)
     #ファイルキャッシュにデータが格納されていない場合
     if !@@fonts_file_cache.key?(font_name)
       #ファイルをオープン
-      open(file_path, "rb") do |fh|
+      open(path, "rb") do |fh|
         #マーシャルで展開しキャッシュに格納する
         @@fonts_file_cache[font_name] = Marshal.load(fh.read)
       end
@@ -170,10 +170,10 @@ class Image_font
   end
 
   #フォント名は識別用なので任意
-  def initialize(font_name, file_path = nil)
+  def initialize(font_name, path = nil)
     #ファイルキャッシュにデータが格納されていない場合登録する。
     if !@@fonts_file_cache.key?(font_name)
-      Image_font.regist(font_name, file_path)
+      Image_font.regist(font_name, path)
     end
 
     # イメージキャッシュにエントリが無ければ初期化

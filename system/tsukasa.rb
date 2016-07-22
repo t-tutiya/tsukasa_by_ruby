@@ -128,7 +128,7 @@ end
 
 class Tsukasa < LayoutControl
   def _SCRIPT_PARSER_(argument, options, yield_block_stack)
-    require_relative options[:file_path]
+    require_relative options[:path]
     @script_parser[options[:ext_name]] = [
       Module.const_get(options[:parser]).new,
       Module.const_get(options[:parser])::Replacer.new]

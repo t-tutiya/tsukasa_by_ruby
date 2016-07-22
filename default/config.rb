@@ -31,7 +31,7 @@ require 'dxruby'
 ###############################################################################
 
 #tksスクリプト用のパーサーを登録
-_SCRIPT_PARSER_ ext_name: :tks, file_path: "./tks_parser.rb",parser: :TKSParser
+_SCRIPT_PARSER_ ext_name: :tks, path: "./tks_parser.rb",parser: :TKSParser
 
 #セーブデータの保存フォルダ
 _SET_ :_SYSTEM_, _SAVE_DATA_PATH_: "./datastore/"

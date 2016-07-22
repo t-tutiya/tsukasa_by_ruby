@@ -137,4 +137,3 @@ class Layoutable < Control
     return dx, dy
   end
 end
-

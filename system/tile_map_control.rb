@@ -30,8 +30,6 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-#※子コントロール群は描画対象にならないので注意
-
 class TileMapControl < RenderTargetControl
 
   attr_accessor :map_array

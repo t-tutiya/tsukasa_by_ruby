@@ -380,4 +380,3 @@ class CharControl < Drawable
     @option_update = true
   end
 end
-

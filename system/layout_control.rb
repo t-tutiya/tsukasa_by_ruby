@@ -1,7 +1,5 @@
 #! ruby -E utf-8
 
-require 'dxruby'
-
 ###############################################################################
 #TSUKASA for DXRuby ver1.2.1(2016/5/2)
 #メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby

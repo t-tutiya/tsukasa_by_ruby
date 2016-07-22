@@ -1,7 +1,7 @@
 #! ruby -E utf-8
 
-require 'dxruby'
 require 'pstore'
+require "tmpdir"
 
 ###############################################################################
 #TSUKASA for DXRuby ver1.2.1(2016/5/2)

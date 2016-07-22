@@ -1,6 +1,5 @@
 #! ruby -E utf-8
 
-require 'dxruby'
 require './system/tsukasa.rb'
 
 width = 1024

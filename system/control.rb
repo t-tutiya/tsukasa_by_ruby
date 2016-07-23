@@ -31,6 +31,8 @@ require "tmpdir"
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+module Tsukasa
+
 class Control #公開インターフェイス
   #プロセスのカレントディレクトリを保存する
   @@system_path = File.expand_path('../../', __FILE__)
@@ -38,9 +40,6 @@ class Control #公開インターフェイス
   attr_reader :id
   attr_reader :child_index
   attr_accessor :child_update  #子コントロールの更新可否
-end
-
-class Control #内部メソッド
 
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
     @child_update = true
@@ -1195,4 +1194,6 @@ class Control #デバッグ支援機能
       p command
     end
   end
+end
+
 end

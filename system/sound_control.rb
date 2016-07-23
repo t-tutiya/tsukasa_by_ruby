@@ -34,16 +34,20 @@ require 'ayame'
 #Soundコントロール
 class SoundControl  < Control
   attr_reader :path
-  def path=(args)
+  def path=(arg)
+    unless arg
+      raise(TsukasaError.new("SoundControlのpathが設定されていません")) 
+    end
+    @path = arg
     #音源ファイルを読み込んで初期化する
-    @entity = Ayame.new(args)
+    @entity = Ayame.new(arg)
   end
 
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
     super
-    if options[:path]
-      self.path = options[:path]
-    end
+    
+    #音声ファイルを読み込む
+    self.path = options[:path]
   end
 
   def update(mouse_pos_x, mouse_pos_y, index)
@@ -62,39 +66,33 @@ class SoundControl  < Control
   
   #再生
   def _PLAY_(argument, options, yield_block_stack, &block)
-    raise unless @entity
     @entity.play( argument || 1, #ループ回数（０なら無限）
                   options[:fadetime].to_f || 0)
   end
 
   #停止
   def _STOP_(argument, options, yield_block_stack, &block)
-    raise unless @entity
     @entity.stop(options[:fadetime].to_f || 0)
   end
 
   #一時停止
   def _PAUSE_(argument, options, yield_block_stack, &block)
-    raise unless @entity
     @entity.pause(options[:fadetime].to_f || 0)
   end
 
   #再開
   def _RESUME_(argument, options, yield_block_stack, &block)
-    raise unless @entity
     @entity.resume(options[:fadetime].to_f || 0)
   end
 
   #音量
   def _VOLUME_(argument, options, yield_block_stack, &block)
-    raise unless @entity
     @entity.set_volume( argument || 90,
                         options[:fadetime].to_f || 0)
   end
 
   #パン
   def _PAN_(argument, options, yield_block_stack, &block)
-    raise unless @entity
     @entity.set_pan( argument || 0, #-100～100
                      options[:fadetime].to_f || 0)
   end

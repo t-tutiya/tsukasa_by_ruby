@@ -446,8 +446,11 @@ class Control #コントロールの生成／破棄
   #disposeコマンド
   #コントロールを削除する
   def _DELETE_(argument, options, yield_block_stack)
+    #コントロールを検索する
+    control = find_control_path(argument)
+
     #削除フラグを立てる
-    find_control(argument).dispose()
+    control.dispose() if control
   end
 end
 

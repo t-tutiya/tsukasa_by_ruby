@@ -47,22 +47,22 @@ _GET_ :_PLUGIN_PATH_, datastore: :_SYSTEM_ do |_PLUGIN_PATH_:|
 end
 
 #初期レイヤ（背景）
-_CREATE_ :ImageControl,
+_CREATE_ :Image,
   z: 0, #描画順序
   id: :base
 
 #初期レイヤ０
-_CREATE_ :ImageControl,
+_CREATE_ :Image,
   z: 1000, #描画順序
   id: :img0
 
 #初期レイヤ１
-_CREATE_ :ImageControl,
+_CREATE_ :Image,
   z: 2000, #描画順序
   id: :img1
 
 #初期レイヤ２
-_CREATE_ :ImageControl,
+_CREATE_ :Image,
   z: 3000, #描画順序
   id: :img2
 
@@ -81,7 +81,7 @@ _SET_ :_TEMP_, _DEFAULT_TEXT_PAGE_: :text0
 
 #タイトルバーの文字列を設定
 _WINDOW_STATUS_ caption: "Tsukasa Engine powered by DXRuby", #文字列
-                cursor_type: IDC_ARROW,
+                cursor_type: DXRuby::IDC_ARROW,
                 x: 0,
                 y: 0
 

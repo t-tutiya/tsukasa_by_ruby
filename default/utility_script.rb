@@ -100,9 +100,9 @@ _INCLUDE_ "./resource/icon/icon_8_a.rb"
 _DEFINE_ :_LINE_PAUSE_ do
   #ルートのクリック待ち
   _PAUSE_ do
-    _CREATE_ :LayoutControl, width: 24, height: 24,
+    _CREATE_ :Layout, width: 24, height: 24,
       align_y: :bottom, float_x: :left do
-      _CREATE_ :TileMapControl, 
+      _CREATE_ :TileMap, 
         map_array: [[0]], size_x: 1, size_y: 1, 
         width: 24, height: 24, z: 1000000 do
         _SET_TILE_GROUP_ path: "./resource/icon/icon_8_a.png",
@@ -126,9 +126,9 @@ end
 _DEFINE_ :_END_PAUSE_ do
   #ルートのクリック待ち
   _PAUSE_ do
-    _CREATE_ :LayoutControl, width: 24, height: 24,
+    _CREATE_ :Layout, width: 24, height: 24,
       align_y: :bottom, float_x: :left do
-      _CREATE_ :TileMapControl, 
+      _CREATE_ :TileMap, 
         map_array: [[0]], size_x: 1, size_y: 1, 
         width: 24, height: 24, z: 1000000 do
         _SET_TILE_GROUP_ path: "./resource/icon/icon_4_a.png",
@@ -198,7 +198,7 @@ end
 #標準テキストウィンドウ
 _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
   #メッセージウィンドウ
-  _CREATE_ :TextPageControl, 
+  _CREATE_ :TextPage, 
     id: argument, **options do
     #文字間ウェイト
     _DEFINE_ :_CHAR_WAIT_ do
@@ -273,7 +273,7 @@ end
 
 #汎用ボタンロジック
 _DEFINE_ :_BUTTON_BASE_ do |id, width:, height:, **options|
-  _CREATE_ :ClickableLayoutControl, 
+  _CREATE_ :ClickableLayout, 
     id: id || nil,
     width: width, 
     height: height,
@@ -364,10 +364,10 @@ _DEFINE_ :_TEXT_BUTTON_ do
   
   _BUTTON_BASE_ id, width: width, height: height, **options do
     #背景
-    _CREATE_ :RenderTargetControl, id: :bg, 
+    _CREATE_ :RenderTarget, id: :bg, 
       width: width, height: height, bgcolor: out_color
     #テキスト
-    _CREATE_ :CharControl, id: :text, char: text, **char_options
+    _CREATE_ :Char, id: :text, char: text, **char_options
 
     #カーソルがコントロールから外れた
     _DEFINE_ :on_mouse_out do
@@ -398,7 +398,7 @@ _DEFINE_ :_IMAGE_BUTTON_ do |argument, options|
     id: argument,
     **options do
 
-    _CREATE_ :TileMapControl, 
+    _CREATE_ :TileMap, 
       width: 256,
       height: 256 do
       _SET_ map_array: [[0]]

@@ -32,11 +32,11 @@ require 'ayame'
 
 
 #Soundコントロール
-class SoundControl  < Control
+class Sound  < Control
   attr_reader :path
   def path=(arg)
     unless arg
-      raise(TsukasaError.new("SoundControlのpathが設定されていません")) 
+      raise(TsukasaError.new("Soundのpathが設定されていません")) 
     end
     @path = arg
     #音源ファイルを読み込んで初期化する

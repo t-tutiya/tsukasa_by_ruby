@@ -32,21 +32,21 @@
 ImageFontData = Struct.new(:width, :ox, :binary)
 ImageFontSaveData = Struct.new(:data_hash, :height, :ver)
 
-class CharControl < Drawable
+class Char < Drawable
   @@fonts_file_cache = {} #レンダリング済み文字ファイルのキャッシュ
   @@fonts_image_cache = {} #グリフ化済み文字のイメージキャッシュ
 
-  def CharControl.install(path)
+  def Char.install(path)
     begin
       #エントリを追加
-      Font.install(path)
+      DXRuby::Font.install(path)
     rescue DXRuby::DXRubyError
       raise(TsukasaLoadError.new(path))
     end
   end
 
   #レンダリング済み文字ファイルを、フォント名をキーにハッシュに保存する
-  def CharControl.install_prerender(font_name, path)
+  def Char.install_prerender(font_name, path)
     #ファイルキャッシュにデータが格納されていない場合
     unless @@fonts_file_cache.key?(font_name)
       #ファイルをオープン
@@ -58,7 +58,7 @@ class CharControl < Drawable
   end
 
   #フォント名が登録されているかどうかを返す
-  def CharControl.regist_prerender?(font_name)
+  def Char.regist_prerender?(font_name)
     return @@fonts_file_cache.key?(font_name)
   end
 
@@ -301,7 +301,7 @@ class CharControl < Drawable
   #通常文字の描画
   def draw_character(width, height, offset_x, offset_y)
     #フォントオブジェクトの初期化
-    @font_obj = Font.new( @size, 
+    @font_obj = DXRuby::Font.new( @size, 
                           @font_name, 
                           { :weight=>@weight, 
                             :italic=>@italic,
@@ -315,7 +315,7 @@ class CharControl < Drawable
 
     #文字用のimageを作成
     @entity.dispose if @entity and !(@entity.disposed?)
-    @entity = Image.new(@width, @height, [0, 0, 0, 0]) 
+    @entity = DXRuby::Image.new(@width, @height, [0, 0, 0, 0]) 
 
     #フォントを描画
     @entity.draw_font_ex( offset_x, 
@@ -343,7 +343,7 @@ class CharControl < Drawable
 
     #文字用のimageを作成
     @entity.dispose if @entity and !(@entity.disposed?)
-    @entity = Image.new(@width, @height, [0, 0, 0, 0])
+    @entity = DXRuby::Image.new(@width, @height, [0, 0, 0, 0])
 
     # イメージキャッシュにエントリが無ければ初期化
     unless @@fonts_image_cache.key?(@font_name)
@@ -360,7 +360,7 @@ class CharControl < Drawable
       #キャッシュにその文字が登録されていない場合
       unless @font_image.has_key?(char)
         #文字をバイナリからイメージ化してキャッシュに格納する
-        @font_image[char] = Image.load_from_file_in_memory(font.binary)
+        @font_image[char] = DXRuby::Image.load_from_file_in_memory(font.binary)
       end
 
       #文字をグリフ化してImageに書き込む

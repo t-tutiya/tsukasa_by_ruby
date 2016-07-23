@@ -32,7 +32,7 @@
 #汎用テキストマネージャクラス
 ###############################################################################
 
-class TextPageControl < LayoutControl
+class TextPage < Layout
 
   #############################################################################
   #公開インターフェイス
@@ -289,7 +289,7 @@ class TextPageControl < LayoutControl
 
     #次のアクティブ行コントロールを追加  
     @command_list.unshift([:_CREATE_, 
-                      :LayoutControl,
+                      :Layout,
                       {
                         :width => @width,
                         :height => @line_height,
@@ -313,7 +313,7 @@ class TextPageControl < LayoutControl
   def _CHAR_(argument, options, yield_block_stack)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
-                                    :CharControl, 
+                                    :Char, 
                                     {
                                       :offset_x => @character_pitch,
                                       :align_y => :bottom,
@@ -381,9 +381,9 @@ class TextPageControl < LayoutControl
   end
 
   def _RUBI_(argument, options, yield_block_stack)
-    #ルビを出力するTextPageControlを生成する
+    #ルビを出力するTextPageを生成する
     rubi_layout =[:_CREATE_, 
-                  :TextPageControl, 
+                  :TextPage, 
                   { :command_list => [[:_TEXT_, argument, {}, yield_block_stack, nil]],
                     :x => @rubi_option[:offset_x],
                     :y => @rubi_option[:offset_y],
@@ -399,9 +399,9 @@ class TextPageControl < LayoutControl
                     nil, 
                     nil]
 
-    #TextPageControlをベース文字に登録する。
+    #TextPageをベース文字に登録する。
     @control_list.last.push_command(:_CREATE_, 
-                                    :LayoutControl, 
+                                    :Layout, 
                                     {
                                       :width => 0,
                                       :height => @size,
@@ -420,7 +420,7 @@ class TextPageControl < LayoutControl
     if @indent > 0
       command_list =[
                       [ :_CREATE_, 
-                        :LayoutControl, 
+                        :Layout, 
                         {
                           :width => @indent,
                           :height => @line_height,
@@ -436,7 +436,7 @@ class TextPageControl < LayoutControl
     @command_list.unshift(
                     #次のアクティブ行コントロールを追加  
                     [ :_CREATE_, 
-                      :LayoutControl, 
+                      :Layout, 
                       {
                         :offset_y => @line_spacing,
                         :width => @width,
@@ -465,7 +465,7 @@ class TextPageControl < LayoutControl
 
     #次のアクティブ行コントロールを追加  
     @command_list.unshift([:_CREATE_, 
-                      :LayoutControl, 
+                      :Layout, 
                       {
                         :width => @width,
                         :height => @line_height,

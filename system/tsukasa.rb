@@ -31,8 +31,11 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+$dxruby_no_include = true
 require 'dxruby'
 require 'pp'
+
+module Tsukasa
 
 require_relative './exception.rb'
 require_relative './cache_manager.rb'
@@ -54,7 +57,7 @@ require_relative './rule_shader_control.rb'
 
 require_relative './text_page_control.rb'
 
-class Tsukasa < LayoutControl
+class Window < Layout
   #システム全体で共有されるデータ群。保存対象。
   attr_reader  :_SYSTEM_
   #個別のセーブデータを表すデータ群。保存対象。
@@ -68,21 +71,18 @@ class Tsukasa < LayoutControl
   attr_reader  :script_parser
 
   def mouse_x
-    Input.mouse_x
+    DXRuby::Input.mouse_x
   end
   def mouse_x=(arg)
-    Input.set_mouse_pos(arg, Input.mouse_y)
+    DXRuby::Input.set_mouse_pos(arg, DXRuby::Input.mouse_y)
   end
 
   def mouse_y
-    Input.mouse_y
+    DXRuby::Input.mouse_y
   end
   def mouse_y=(arg)
-    Input.set_mouse_pos(Input.mouse_x, arg)
+    DXRuby::Input.set_mouse_pos(DXRuby::Input.mouse_x, arg)
   end
-end
-
-class Tsukasa < LayoutControl
 
   def initialize(options)
     #アプリ終了フラグ
@@ -108,8 +108,8 @@ class Tsukasa < LayoutControl
     super(options, nil, self, self)
   end
 
-  def update(mouse_pos_x = Input.mouse_x,
-             mouse_pos_y = Input.mouse_y)
+  def update(mouse_pos_x = DXRuby::Input.mouse_x,
+             mouse_pos_y = DXRuby::Input.mouse_y)
     super(mouse_pos_x, mouse_pos_y, 0)
   end
 
@@ -124,9 +124,7 @@ class Tsukasa < LayoutControl
   def close?
     @close
   end
-end
 
-class Tsukasa < LayoutControl
   def _SCRIPT_PARSER_(argument, options, yield_block_stack)
     require_relative options[:path]
     @script_parser[options[:ext_name]] = [
@@ -186,4 +184,6 @@ class Tsukasa < LayoutControl
       raise(TsukasaError, "対象セーブファイルが指定されていません")
     end
   end
+end
+
 end

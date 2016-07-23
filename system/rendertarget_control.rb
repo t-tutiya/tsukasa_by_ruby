@@ -28,7 +28,7 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class RenderTargetControl < Drawable
+class RenderTarget < Drawable
   #Ｘ幅
   def width=(arg)
     super
@@ -53,7 +53,7 @@ class RenderTargetControl < Drawable
 
     @bgcolor = options[:bgcolor]  || [0,0,0,0]
     #保持オブジェクトの初期化
-    @entity = RenderTarget.new( options[:width]  || 1, 
+    @entity = DXRuby::RenderTarget.new( options[:width]  || 1, 
                                 options[:height] || 1, 
                                 @bgcolor)
 
@@ -65,7 +65,7 @@ class RenderTargetControl < Drawable
   
   def render(offset_x, offset_y, target)
     if @update_flag
-      @entity = RenderTarget.new(@width, @height, @bgcolor)
+      @entity = DXRuby::RenderTarget.new(@width, @height, @bgcolor)
       @update_flag = false
     end
 
@@ -120,7 +120,7 @@ class RenderTargetControl < Drawable
     @entity.draw_font_ex(
       options[:x] || 0, options[:y] || 0,
       options[:text],
-      Font.new( options[:size] || 24,
+      DXRuby::Font.new( options[:size] || 24,
                 options[:font_name] || "",  
                 {
                   weight: options[:weight] * 100,

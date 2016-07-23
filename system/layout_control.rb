@@ -28,7 +28,7 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class LayoutControl < Layoutable
+class Layout < Layoutable
   def render(offset_x, offset_y, target)
 
     super(offset_x + @x + @offset_x + check_align_x(), 

@@ -44,7 +44,7 @@ class ImageFontMaker
   def initialize(size, font_name, mode = nil)
 
     #初期化
-    @font = Font.new(size, font_name)
+    @font = DXRuby::Font.new(size, font_name)
     @char_info = {}
 
     #全文字取得モードでなければ戻る
@@ -100,7 +100,7 @@ class ImageFontMaker
         #文字画像の高さを決定
         height = v.tm_ascent + v.tm_descent
         #サイズが確定した時点で、そのサイズのImageを生成
-        image = Image.new(cx, height, C_BLACK)
+        image = DXRuby::Image.new(cx, height, C_BLACK)
         #文字を書き込む
         image.draw_font(ox, 0, k, @font)
         #ファイル名のフルパスを作成
@@ -206,7 +206,7 @@ class Image_font
   #chars:描画する文字列（１文字以上）
   def glyph(chars)
     #必要なサイズのImageを生成する
-    target = Image.new(get_width(chars), @size)
+    target = DXRuby::Image.new(get_width(chars), @size)
 
     x = 0
     
@@ -218,7 +218,7 @@ class Image_font
       #キャッシュにその文字が登録されていない場合
       if !@font_image.has_key?(char)
         #文字をバイナリからイメージ＆グリフ化して、キャッシュに格納する
-        @font_image[char] = Image.load_from_file_in_memory(font.binary).effect_image_font({})
+        @font_image[char] = DXRuby::Image.load_from_file_in_memory(font.binary).effect_image_font({})
       end
 
       #グリフ化済みの文字を自前imageに書き込む

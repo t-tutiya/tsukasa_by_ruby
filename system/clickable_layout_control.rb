@@ -28,7 +28,7 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class ClickableLayoutControl < LayoutControl
+class ClickableLayout < Layout
   #コリジョンのエンティティ
   attr_accessor  :collision_shape
 
@@ -53,16 +53,14 @@ class ClickableLayoutControl < LayoutControl
     end
     super
   end
-end
 
-class ClickableLayoutControl < LayoutControl
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
     @collision_shape = options[:collision_shape]
 
     @colorkey_id = options[:colorkey_id]
     @colorkey_border = options[:colorkey_border] || 255
 
-    @collision_sprite = Sprite.new
+    @collision_sprite = DXRuby::Sprite.new
 
     if @collision_shape
       @collision_sprite.collision = @collision_shape
@@ -73,7 +71,7 @@ class ClickableLayoutControl < LayoutControl
                                       options[:height] || 0]
     end
 
-    @mouse_sprite = Sprite.new
+    @mouse_sprite = DXRuby::Sprite.new
     @mouse_sprite.collision = [0, 0]
 
     @over = false
@@ -125,7 +123,7 @@ class ClickableLayoutControl < LayoutControl
     @collision_sprite.y = @offset_y
 
     #windowがアクティブで無ければ衝突判定をせずに終了
-    return super unless Window.active?
+    return super unless DXRuby::Window.active?
 
     #マウスカーソル座標との衝突判定
     if not (@mouse_sprite === @collision_sprite)
@@ -148,17 +146,17 @@ class ClickableLayoutControl < LayoutControl
       @over = true
 
       #キー継続押下チェック
-      @on_key_down = Input.mouse_down?( M_LBUTTON )
+      @on_key_down = DXRuby::Input.mouse_down?( DXRuby::M_LBUTTON )
       #キー押下チェック
-      @on_key_push = Input.mouse_push?( M_LBUTTON )
+      @on_key_push = DXRuby::Input.mouse_push?( DXRuby::M_LBUTTON )
       #キー解除チェック
-      @on_key_up = Input.mouse_release?( M_LBUTTON )
+      @on_key_up = DXRuby::Input.mouse_release?( DXRuby::M_LBUTTON )
       #キー継続押下チェック
-      @on_right_key_down = Input.mouse_down?( M_RBUTTON )
+      @on_right_key_down = DXRuby::Input.mouse_down?( DXRuby::M_RBUTTON )
       #右キー押下チェック
-      @on_right_key_push = Input.mouse_push?( M_RBUTTON )
+      @on_right_key_push = DXRuby::Input.mouse_push?( DXRuby::M_RBUTTON )
       #右キー解除チェック
-      @on_right_key_up = Input.mouse_release?( M_RBUTTON )
+      @on_right_key_up = DXRuby::Input.mouse_release?( DXRuby::M_RBUTTON )
     else
       #イベント起動済みフラグクリア
       @over = false
@@ -168,13 +166,13 @@ class ClickableLayoutControl < LayoutControl
       @out = true
 
       #キー押下チェック
-      @on_key_down_out = Input.mouse_down?( M_LBUTTON )
+      @on_key_down_out = DXRuby::Input.mouse_down?( DXRuby::M_LBUTTON )
       #キー解除チェック
-      @on_key_up_out = Input.mouse_release?( M_LBUTTON )
+      @on_key_up_out = DXRuby::Input.mouse_release?( DXRuby::M_LBUTTON )
       #右キー押下チェック
-      @on_right_key_down_out = Input.mouse_down?( M_RBUTTON )
+      @on_right_key_down_out = DXRuby::Input.mouse_down?( DXRuby::M_RBUTTON )
       #右キー解除チェック
-      @on_right_key_up_out = Input.mouse_release?( M_RBUTTON )
+      @on_right_key_up_out = DXRuby::Input.mouse_release?( DXRuby::M_RBUTTON )
     end
 
     return super

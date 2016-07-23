@@ -271,56 +271,56 @@ class Control #内部メソッド
       #キーが押下された
       when :key_push
         Array(value).each do |key_code|
-          return true if Input.key_push?(key_code)
+          return true if DXRuby::Input.key_push?(key_code)
         end
 
       #キーが押下されていない
       when :not_key_push
         Array(value).each do |key_code|
-          return true unless Input.key_push?(key_code)
+          return true unless DXRuby::Input.key_push?(key_code)
         end
 
       #キーが継続押下されている
       when :key_down
         Array(value).each do |key_code|
-          return true if Input.key_down?(key_code)
+          return true if DXRuby::Input.key_down?(key_code)
         end
 
       #キーが継続押下されていない
       when :not_key_down
         Array(value).each do |key_code|
-          return true unless Input.key_down?(key_code)
+          return true unless DXRuby::Input.key_down?(key_code)
         end
 
       #キーが解除された
       when :key_up
         Array(value).each do |key_code|
-          return true if Input.key_release?(key_code)
+          return true if DXRuby::Input.key_release?(key_code)
         end
 
       #キーが解除されていない
       when :not_key_up
         Array(value).each do |key_code|
-          return true unless Input.key_release?(key_code)
+          return true unless DXRuby::Input.key_release?(key_code)
         end
 
       #パッドボタン処理系
 
       when :pad_down
         Array(value).each do |pad_code|
-          return true if Input.pad_down?(pad_code,
+          return true if DXRuby::Input.pad_down?(pad_code,
                                         @root_control._SYSTEM_[:_PAD_NUMBER_])
         end
 
       when :pad_push
         Array(value).each do |pad_code|
-          return true if Input.pad_push?(pad_code,
+          return true if DXRuby::Input.pad_push?(pad_code,
                                         @root_control._SYSTEM_[:_PAD_NUMBER_])
         end
 
       when :pad_release
         Array(value).each do |pad_code|
-          return true if Input.pad_release?(pad_code,
+          return true if DXRuby::Input.pad_release?(pad_code,
                                         @root_control._SYSTEM_[:_PAD_NUMBER_])
         end
 
@@ -403,19 +403,19 @@ class Control #内部メソッド
           case key
           #ウィンドウの閉じるボタンが押下された場合
           when :requested_close
-            return true if Input.requested_close?
+            return true if DXRuby::Input.requested_close?
           when :mouse_push
-            return true if Input.mouse_push?( M_LBUTTON )
+            return true if DXRuby::Input.mouse_push?( DXRuby::M_LBUTTON )
           when :mouse_down
-            return true if Input.mouse_down?( M_LBUTTON )
+            return true if DXRuby::Input.mouse_down?( DXRuby::M_LBUTTON )
           when :mouse_up
-            return true if Input.mouse_release?( M_LBUTTON )
+            return true if DXRuby::Input.mouse_release?( DXRuby::M_LBUTTON )
           when :right_mouse_down
-            return true if Input.mouse_down?( M_RBUTTON )
+            return true if DXRuby::Input.mouse_down?( DXRuby::M_RBUTTON )
           when :right_mouse_push
-            return true if Input.mouse_push?( M_RBUTTON )
+            return true if DXRuby::Input.mouse_push?( DXRuby::M_RBUTTON )
           when :right_mouse_up
-            return true if Input.mouse_release?( M_RBUTTON )
+            return true if DXRuby::Input.mouse_release?( DXRuby::M_RBUTTON )
           when :block_given
             return true unless yield_block_stack[-1] == nil
           end
@@ -432,7 +432,7 @@ class Control #コントロールの生成／破棄
   def _CREATE_(argument, options, yield_block_stack, &block)
     begin 
     #コントロールを生成して子要素として登録する
-    @control_list.push(Module.const_get(argument).new(options, 
+    @control_list.push(Tsukasa.const_get(argument).new(options, 
                                                       yield_block_stack, 
                                                       @root_control, 
                                                       self, 

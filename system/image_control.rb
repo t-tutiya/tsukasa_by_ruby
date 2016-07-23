@@ -29,10 +29,10 @@
 ###############################################################################
 
 #画像コントロール
-class ImageControl < Drawable
+class Image < Drawable
   #DXRuby::Imageのキャッシュマネージャー
   @@ImageCache = CacheManager.new do |id|
-    Image.load(id)
+    DXRuby::Image.load(id)
   end
   
   def self.cache()
@@ -63,7 +63,7 @@ class ImageControl < Drawable
     if options[:path]
       self.path = options[:path]
     else
-      @entity = Image.new(options[:width]  || 1,
+      @entity = DXRuby::Image.new(options[:width]  || 1,
                           options[:height] || 1,
                           options[:color]  || [0,0,0,0])
       #XY幅を取得
@@ -72,13 +72,13 @@ class ImageControl < Drawable
     end
   end
 
-  #ImageControl上に直線を引く
+  #Image上に直線を引く
   def _LINE_(argument, options, yield_block_stack)
     @entity.line( 
       options[:x1], options[:y1], options[:x2], options[:y2], options[:color])
   end
 
-  #ImageControl上に矩形を描く
+  #Image上に矩形を描く
   def _BOX_(argument, options, yield_block_stack)
     if options[:fill]
       @entity.box_fill( 
@@ -91,7 +91,7 @@ class ImageControl < Drawable
     end
   end
 
-  #ImageControl上に円を描く
+  #Image上に円を描く
   def _CIRCLE_(argument, options, yield_block_stack)
     if options[:fill]
       @entity.circle_fill(
@@ -102,7 +102,7 @@ class ImageControl < Drawable
     end
   end
 
-  #ImageControl上に三角形を描く
+  #Image上に三角形を描く
   def _TRIANGLE_(argument, options, yield_block_stack)
     if options[:fill]
       @entity.triangle_fill(
@@ -117,7 +117,7 @@ class ImageControl < Drawable
     end
   end
 
-  #ImageControl上に文字を描く
+  #Image上に文字を描く
   def _TEXT_(argument, options, yield_block_stack)
     options[:weight] = 4 unless options[:weight]
     options[:option] = {} unless options[:option]
@@ -130,7 +130,7 @@ class ImageControl < Drawable
     @entity.draw_font_ex(
       options[:x] || 0, options[:y] || 0,
       options[:text],
-      Font.new( options[:size] || 24,
+      DXRuby::Font.new( options[:size] || 24,
                 options[:font_name] || "",  
                 {
                   weight: options[:weight] * 100,
@@ -140,17 +140,17 @@ class ImageControl < Drawable
       options[:option])
   end
 
-  #ImageControlを指定色で塗りつぶす
+  #Imageを指定色で塗りつぶす
   def _FILL_(argument, options, yield_block_stack)
     @entity.fill(argument)
   end
 
-  #ImageControlを[0,0,0,0]で塗りつぶす
+  #Imageを[0,0,0,0]で塗りつぶす
   def _CLEAR_(argument, options, yield_block_stack)
     @entity.clear
   end
 
-  #ImageControlの指定座標への色の取得／設定
+  #Imageの指定座標への色の取得／設定
   def _PIXEL_(argument, options, yield_block_stack, &block)
     if options[:color]
       @entity[options[:x], options[:y]] = options[:color]
@@ -162,7 +162,7 @@ class ImageControl < Drawable
     end
   end
 
-  #ImageControlを指定座標の色を比較し、同値ならブロックを実行する
+  #Imageを指定座標の色を比較し、同値ならブロックを実行する
   def _COMPARE_(argument, options, yield_block_stack, &block)
     if @entity.compare(options[:x], options[:y], options[:color])
       #ブロックが付与されているならそれを実行する
@@ -182,7 +182,7 @@ class ImageControl < Drawable
     width = options[:width] || @width
     height = options[:height] || @height
     #中間バッファを生成
-    rt = RenderTarget.new(width, height)
+    rt = DXRuby::RenderTarget.new(width, height)
 
     #コントロールの初期化
     control = self
@@ -205,7 +205,7 @@ class ImageControl < Drawable
     #拡大率が設定されている場合
     if options[:scale]
       #第２中間バッファを生成
-      rt2 = RenderTarget.new( options[:scale] * width, 
+      rt2 = DXRuby::RenderTarget.new( options[:scale] * width, 
                               options[:scale] * height,)
       #拡大率を反映して第２中間バッファに描画
       rt2.draw_ex(-1 * options[:scale]**2 * width,

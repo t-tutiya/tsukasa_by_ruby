@@ -28,7 +28,7 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class TileMapControl < RenderTargetControl
+class TileMap < RenderTarget
 
   attr_accessor :map_array
   attr_accessor :image_array
@@ -73,14 +73,14 @@ class TileMapControl < RenderTargetControl
 
   def _SET_TILE_(argument, options, yield_block_stack)
     if argument
-      @image_array[argument] = Image.load(options[:path])
+      @image_array[argument] = DXRuby::Image.load(options[:path])
     else
-      @image_array.push(Image.load(options[:path]))
+      @image_array.push(DXRuby::Image.load(options[:path]))
     end
   end
 
   def _SET_TILE_GROUP_(argument, options, yield_block_stack)
-    image_array = Image.load_tiles( options[:path], 
+    image_array = DXRuby::Image.load_tiles( options[:path], 
                                     options[:x_count] || 1, 
                                     options[:y_count] || 1, 
                                     options[:share_switch] || false)

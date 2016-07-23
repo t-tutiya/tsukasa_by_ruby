@@ -18,7 +18,7 @@ _DEFINE_ :menu_button do |id:, text: |
 end
 
 #アウトプットウィンドウ
-_CREATE_ :CharControl, 
+_CREATE_ :Char, 
   id: :nomaid_comment_area,
   size: 32, 
   x: 64,
@@ -29,7 +29,7 @@ _CREATE_ :CharControl,
 
 #ステータスウィンドウ作成用のヘルパーコマンド
 _DEFINE_ :status_text do |id: nil, char: nil|
-  _CREATE_ :CharControl, 
+  _CREATE_ :Char, 
     size: 32,
     id: id,
     float_x: :left, 
@@ -40,13 +40,13 @@ end
 
 _DEFINE_ :set_status_window do
   #ステータスウィンドウ
-  _CREATE_ :LayoutControl,
+  _CREATE_ :Layout,
     id: :status_window, 
     x: 32,
     y: 256,
     width: 1024,
     height: 192 do
-    _CREATE_ :LayoutControl, id: :line1, height: 42, float_y: :bottom do
+    _CREATE_ :Layout, id: :line1, height: 42, float_y: :bottom do
       status_text char: "第"
       status_text id: :week
       status_text char: "週　第"
@@ -55,22 +55,22 @@ _DEFINE_ :set_status_window do
       status_text id: :gold
       status_text char: "。"
     end
-    _CREATE_ :LayoutControl, id: :line2, height: 42, float_y: :bottom do
+    _CREATE_ :Layout, id: :line2, height: 42, float_y: :bottom do
       status_text char: "借金の返済まであと"
       status_text id: :last_day
       status_text char: "日。"
     end
-    _CREATE_ :LayoutControl, id: :line3, height: 42, float_y: :bottom do
+    _CREATE_ :Layout, id: :line3, height: 42, float_y: :bottom do
       status_text char: "今週の返済額は＄"
       status_text id: :week_debt
       status_text char: "で、あと＄"
       status_text id: :week_debt_last_gold
       status_text char: "必要だ。"
     end
-    _CREATE_ :LayoutControl, id: :line4, height: 42, float_y: :bottom do
+    _CREATE_ :Layout, id: :line4, height: 42, float_y: :bottom do
       status_text char: "＝＝＝＝"
     end
-    _CREATE_ :LayoutControl, id: :line5, height: 42, float_y: :bottom do
+    _CREATE_ :Layout, id: :line5, height: 42, float_y: :bottom do
       status_text char: "所持金："
       status_text id: :gold
       status_text char: "　ＨＰ："
@@ -82,7 +82,7 @@ _DEFINE_ :set_status_window do
       status_text char: "/"
       status_text id: :mental_point_max
     end
-    _CREATE_ :LayoutControl, id: :line6, height: 42, float_y: :bottom do
+    _CREATE_ :Layout, id: :line6, height: 42, float_y: :bottom do
       status_text char: "魅力："
       status_text id: :charm
       status_text char: "　気品："
@@ -90,7 +90,7 @@ _DEFINE_ :set_status_window do
       status_text char: "　教養："
       status_text id: :culture
     end
-    _CREATE_ :LayoutControl, id: :line7, height: 42, float_y: :bottom do
+    _CREATE_ :Layout, id: :line7, height: 42, float_y: :bottom do
       status_text char: "知性："
       status_text id: :intelligence
       status_text char: "　恭順："
@@ -177,7 +177,7 @@ _DEFINE_ :top_menu do
   #メニュー押下フラグリセット
   _SET_ :_TEMP_, flag: nil
 
-  _CREATE_ :LayoutControl, id: :top_menu, x:100, y:100 do
+  _CREATE_ :Layout, id: :top_menu, x:100, y:100 do
     menu_button text: "習い事をさせる", id: :lesson
     menu_button text: "働かせる", id: :work
     menu_button text: "休ませる", id: :rest
@@ -215,7 +215,7 @@ end
 
 #「習い事をさせる」メニュー
 _DEFINE_ :lesson_menu do
-  _CREATE_ :LayoutControl, id: :lesson_menu, x:100, y:100 do
+  _CREATE_ :Layout, id: :lesson_menu, x:100, y:100 do
     menu_button text: "礼拝", id: :pray
     menu_button text: "学問", id: :academy
     menu_button text: "舞踏", id: :dance
@@ -317,7 +317,7 @@ end
 
 #「働かせる」メニュー
 _DEFINE_ :work_menu do
-  _CREATE_ :LayoutControl, id: :work_menu, x:100, y:100 do
+  _CREATE_ :Layout, id: :work_menu, x:100, y:100 do
     menu_button text: "清掃", id: :cleaning
     menu_button text: "給仕", id: :waitress
     menu_button text: "家庭教師", id: :tutor

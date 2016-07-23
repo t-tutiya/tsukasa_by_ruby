@@ -1,4 +1,4 @@
-@	_CREATE_ :SoundControl, 
+@	_CREATE_ :Sound, 
 @		path: "./resource/music/easygoing.ogg",
 @		id: :test0
 初期化が終了しました。

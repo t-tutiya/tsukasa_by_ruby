@@ -20,21 +20,21 @@
     char_fade cha: :img1, img: arg
   end
 
-  _CREATE_ :LayoutControl,
+  _CREATE_ :Layout,
     id: :img_base,
     #↓これ忘れるなー。どうしようもねーのかな
     width:1024, height: 600 do
-    _CREATE_ :ImageControl, id: :base, path: "./resource/bg_sample.png"
-    _CREATE_ :ImageControl, x: 128,id: :img1
-    _CREATE_ :ImageControl, x: 512+128, id: :img0
-    _CREATE_ :ImageControl, x: 800, id: :img2
+    _CREATE_ :Image, id: :base, path: "./resource/bg_sample.png"
+    _CREATE_ :Image, x: 128,id: :img1
+    _CREATE_ :Image, x: 512+128, id: :img0
+    _CREATE_ :Image, x: 800, id: :img2
   end
 
-  _CREATE_ :LayoutControl,
+  _CREATE_ :Layout,
     x: 0,
     y: 256 + 164-32,
     id: :text_ex do
-    _CREATE_ :ImageControl, path: "./resource/window_tra2.png",
+    _CREATE_ :Image, path: "./resource/window_tra2.png",
       z: 1000000-2 #描画順序
     #初期テキストウィンドウ
     _TEXT_WINDOW_ :text0_ex, 

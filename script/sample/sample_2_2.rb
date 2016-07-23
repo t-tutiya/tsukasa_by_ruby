@@ -1,4 +1,4 @@
-_CREATE_ :TileMapControl, 
+_CREATE_ :TileMap, 
   map_array: [[0]], size_x: 1, size_y: 1, width:32, height:32 do
   _SET_TILE_GROUP_ path: "./resource/icon/icon_4_a.png",
     x_count: 4, y_count: 1

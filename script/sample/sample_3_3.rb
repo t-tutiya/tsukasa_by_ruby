@@ -1,5 +1,5 @@
 _DEFINE_ :comment_area do |arg, x:, y:, char:|
-  _CREATE_ :CharControl, 
+  _CREATE_ :Char, 
     id: arg,
     size: 32, 
     x: x,

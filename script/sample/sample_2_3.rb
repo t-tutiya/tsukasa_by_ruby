@@ -1,4 +1,4 @@
-_CREATE_ :CharControl, y: 500, char:"右クリックで戻る"
+_CREATE_ :Char, y: 500, char:"右クリックで戻る"
 
 _DEFINE_ :menu_button do |x:, y:, id:, text: |
   _TEXT_BUTTON_ text: text, x: x, y: y, id: id,
@@ -16,21 +16,21 @@ _DEFINE_ :menu_button do |x:, y:, id:, text: |
 end
 
 _DEFINE_ :command_window do |argument, options|
-  _CREATE_ :LayoutControl,
+  _CREATE_ :Layout,
     x: options[:x],
     y: options[:y], 
     id: :command  do
-    _CREATE_ :RenderTargetControl, id: :menu,
+    _CREATE_ :RenderTarget, id: :menu,
       width: 196,
       height: 32 * 4 + 8 * 6 do
-      _CREATE_ :ImageControl, 
+      _CREATE_ :Image, 
               width: 196, height: 32 * 4 + 8 * 6 , color: [255, 0,0,0] do
         _BOX_ x1: 0,      y1: 0,
               x2: 196,    y2: 32 * 4 + 8 * 6, color: [255,255,255]
         _BOX_ x1: 1,      y1: 1, 
               x2: 196 -2, y2: 32 * 4 + 8 * 6 - 2, color: [255,255,255]
       end
-      _CREATE_ :LayoutControl, id: :text_box do
+      _CREATE_ :Layout, id: :text_box do
         menu_button text: "たたかう", x:8, y:         8     , id:0
         menu_button text: "まほう　", x:8, y:32 +     8 * 2 , id:1
         menu_button text: "ぼうぎょ", x:8, y:32 * 2 + 8 * 3 , id:2

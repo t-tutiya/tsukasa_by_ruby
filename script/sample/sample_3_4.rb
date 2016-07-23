@@ -13,7 +13,7 @@ _DEFINE_ :menu_button do |id:, text: |
   end
 end
 
-_CREATE_ :LayoutControl, id: :top_menu, x:0, y:0 do
+_CREATE_ :Layout, id: :top_menu, x:0, y:0 do
   _SCREEN_MODES_ do |screen_modes|
     screen_modes.each do |screen_mode|
       if screen_mode == [640,480,60]

@@ -4,7 +4,7 @@ _SEND_(:img0) {_SET_ path: "./resource/char/B-1.png", x: 250}
 _WAIT_ key_push: K_SPACE
 
 _TO_IMAGE_ :test0 do 
-  _CREATE_ :RuleShaderControl, id: :rule0, vague: 40,
+  _CREATE_ :RuleShader, id: :rule0, vague: 40,
             path: "./resource/rule/horizontal_rule.png"
   _SET_ shader: :rule0
 end

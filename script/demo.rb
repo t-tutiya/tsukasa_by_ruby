@@ -1,4 +1,4 @@
-_CREATE_ :CharControl, 
+_CREATE_ :Char, 
   id: :comment_area,
   size: 32, 
   y: 256+196,
@@ -9,20 +9,20 @@ _CREATE_ :CharControl,
 
 #テキストボタン定義
 _DEFINE_ :TextSelect do |argument, options|
-  _CREATE_ :ClickableLayoutControl,
+  _CREATE_ :ClickableLayout,
     float_y: :bottom,
     x: options[:x] || 0, 
     y: options[:y] || 0, 
     width: options[:width] || 228, 
     height: 32 do
     #テキストを描画するRenderTarget
-    _CREATE_ :RenderTargetControl,
+    _CREATE_ :RenderTarget,
       float_x: :left,
       width: options[:width] || 228, 
       height: 32, 
       id: :text_area, 
       bgcolor: [0,255,255] do
-      _CREATE_ :CharControl, 
+      _CREATE_ :Char, 
         size: 28, 
         color:[255,255,0], 
         font_name: "ＭＳ ゴシック", 
@@ -56,9 +56,9 @@ _DEFINE_ :TextSelect do |argument, options|
 end
 
 _DEFINE_ :system_menu do
-  _CREATE_ :LayoutControl, id: :top_menu1, x:0, y:0 do
+  _CREATE_ :Layout, id: :top_menu1, x:0, y:0 do
     path = "./script/sample/"
-    _CREATE_ :LayoutControl, id: 0, x:0, y:0, width: 256, float_x: :left  do
+    _CREATE_ :Layout, id: 0, x:0, y:0, width: 256, float_x: :left  do
       TextSelect text: "sample_1_1.tks", path: path + "sample_1_1.tks", 
                  comment: "文字列の表示"
       TextSelect text: "sample_1_2.tks", path: path + "sample_1_2.tks", 
@@ -78,7 +78,7 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_1_9.rb", path: path + "sample_1_9.rb", 
                  comment: "より自然なフェードトランジション"
     end
-    _CREATE_ :LayoutControl, id: 1, x:0, y:0, width: 256, float_x: :left   do
+    _CREATE_ :Layout, id: 1, x:0, y:0, width: 256, float_x: :left   do
       TextSelect text: "sample_1_10.rb", path: path + "sample_1_10.rb", 
                  comment: "ルールトランジション"
       TextSelect text: "sample_1_11.rb", path: path + "sample_1_11.rb", 
@@ -96,7 +96,7 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_1_17.tks", path: path + "sample_1_17.tks", 
                  comment: "セーブ／ロード"
     end
-    _CREATE_ :LayoutControl, id: 2, x:0, y:0, width: 256, float_x: :left    do
+    _CREATE_ :Layout, id: 2, x:0, y:0, width: 256, float_x: :left    do
       TextSelect text: "sample_2_1_1.rb", path: path + "sample_2_1_1.rb", 
                  comment: "ボタンサンプル１：通常"
       TextSelect text: "sample_2_1_2.rb", path: path + "sample_2_1_2.rb", 
@@ -114,7 +114,7 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_2_6.rb",   path: path + "sample_2_6.rb", 
                  comment: "センタリングとＸ方向連結のサンプル"
     end
-    _CREATE_ :LayoutControl, id: 3, x:0, y:0, width: 256, float_x: :left    do
+    _CREATE_ :Layout, id: 3, x:0, y:0, width: 256, float_x: :left    do
       TextSelect text: "sample_3_1.rb", path: path + "sample_3_1.tks", 
                  comment: "既読フラグサンプル"
       TextSelect text: "sample_3_2_1.rb", path: path + "sample_3_2_1.rb", 
@@ -132,14 +132,14 @@ _DEFINE_ :system_menu do
     end
   end
 
-  _CREATE_ :LayoutControl, id: :top_menu2, x:0, y:256 + 64 do
+  _CREATE_ :Layout, id: :top_menu2, x:0, y:256 + 64 do
     TextSelect  text: "デモゲーム：ノベル脱出ゲーム", 
                 path: "./script/demo_game/1_0.tks", 
                 width: 512, 
                 comment: "ノベルゲーム形式のサンプルデモです。"
   end
 
-  _CREATE_ :LayoutControl, id: :top_menu3, x:0, y:256 + 128  do
+  _CREATE_ :Layout, id: :top_menu3, x:0, y:256 + 128  do
     TextSelect  text: "デモゲーム：野メイド", 
                 path: "./script/nomaid/src.rb", 
                 width: 512, 
@@ -159,15 +159,15 @@ end
 
 _STACK_LOOP_ do |a,b,c|
 
- _CREATE_ :ImageControl,
+ _CREATE_ :Image,
    z: 0,
    id: :base do
  end
- _CREATE_ :ImageControl,
+ _CREATE_ :Image,
    z: 1000,
    id: :img0 do
  end
- _CREATE_ :ImageControl,
+ _CREATE_ :Image,
    z: 2000,
    id: :img1 do
  end

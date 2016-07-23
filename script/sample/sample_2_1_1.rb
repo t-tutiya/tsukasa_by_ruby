@@ -1,13 +1,13 @@
 #ボタンコントロール
 _DEFINE_ :button3 do |argument, options|
-  _CREATE_ :ClickableLayoutControl, 
+  _CREATE_ :ClickableLayout, 
     x: options[:x] || 0,
     y: options[:y] || 0,
     width: 256,
     height: 256,
     id: options[:id] do
 
-    _CREATE_ :TileMapControl, 
+    _CREATE_ :TileMap, 
       width: 256, height: 256 do
       _SET_ map_array: [[0]]
       _SET_TILE_ 0, path: options[:normal]||"./resource/button_normal.png"

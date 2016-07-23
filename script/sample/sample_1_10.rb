@@ -1,10 +1,10 @@
-_CREATE_ :RenderTargetControl, id: :test0, width: 800, height: 600 do
-  _CREATE_ :ImageControl, path: "./resource/bg_test.jpg"
-  _CREATE_ :ImageControl, path: "./resource/char/B-1.png", x: 250
+_CREATE_ :RenderTarget, id: :test0, width: 800, height: 600 do
+  _CREATE_ :Image, path: "./resource/bg_test.jpg"
+  _CREATE_ :Image, path: "./resource/char/B-1.png", x: 250
 end
 
-_CREATE_ :ImageControl, id: :test1, path: "./resource/bg_sample.png" do
-  _CREATE_ :RuleShaderControl, id: :rule0, vague: 40,
+_CREATE_ :Image, id: :test1, path: "./resource/bg_sample.png" do
+  _CREATE_ :RuleShader, id: :rule0, vague: 40,
             path: "./resource/rule/horizontal_rule.png"
   _SET_ shader: :rule0
 end

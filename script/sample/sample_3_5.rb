@@ -1,6 +1,6 @@
 _RESIZE_ width:640, height:480
 
-_CREATE_ :CharControl, 
+_CREATE_ :Char, 
   id: :comment_area,
   size: 32, 
   y: 256+196,
@@ -8,8 +8,8 @@ _CREATE_ :CharControl,
   font_name: "ＭＳ ゴシック",
   char: " "
 
-_CREATE_ :ClickableLayoutControl, x: 640-256, y: 480-256, width:256, height: 256 do
-  _CREATE_ :ImageControl, path: "./resource/button_normal.png"
+_CREATE_ :ClickableLayout, x: 640-256, y: 480-256, width:256, height: 256 do
+  _CREATE_ :Image, path: "./resource/button_normal.png"
   _STACK_LOOP_ do |a,b,c|
     _CHECK_ mouse: [:cursor_over] do 
       _SET_ :_SYSTEM_ , data0: true
@@ -18,8 +18,8 @@ _CREATE_ :ClickableLayoutControl, x: 640-256, y: 480-256, width:256, height: 256
   end
 end
 
-_CREATE_ :LayoutControl , id: :cursor do
-  _CREATE_ :TileMapControl, 
+_CREATE_ :Layout , id: :cursor do
+  _CREATE_ :TileMap, 
     map_array: [[0]], size_x: 1, size_y: 1, width:32, height:32 do
     _SET_TILE_GROUP_ path: "./resource/icon/icon_4_a.png",
       x_count: 4, y_count: 1

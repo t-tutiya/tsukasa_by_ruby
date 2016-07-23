@@ -42,20 +42,20 @@ end
 
 #テキストボタン定義
 _DEFINE_ :TextSelect do |argument, options|
-  _CREATE_ :ClickableLayoutControl,
+  _CREATE_ :ClickableLayout,
     float_x: :left,
     x: options[:x] || 0, 
     y: options[:y] || 0, 
     width: 196, 
     height: 32 do
     #テキストを描画するRenderTarget
-    _CREATE_ :RenderTargetControl,
+    _CREATE_ :RenderTarget,
       float_x: :left,
       width: 196, 
       height: 32, 
       id: :text_area, 
       bgcolor: [255,255,0] do
-      _CREATE_ :CharControl, 
+      _CREATE_ :Char, 
         size: 32, 
         color:[255,255,0], 
         font_name: "ＭＳ ゴシック", 

@@ -1,7 +1,7 @@
 
-_CREATE_ :RenderTargetControl, id: :RenderTarget0, 
+_CREATE_ :RenderTarget, id: :RenderTarget0, 
   width: 512, height: 128, bgcolor: [128,0,0] do
-  _CREATE_ :ImageControl, id: :Image0,
+  _CREATE_ :Image, id: :Image0,
     width: 128, height: 128,
     align_x: :right do
     _FILL_ [255,0,0]
@@ -9,10 +9,10 @@ _CREATE_ :RenderTargetControl, id: :RenderTarget0,
   end
 end
 
-_CREATE_ :RenderTargetControl, id: :RenderTarget0, 
+_CREATE_ :RenderTarget, id: :RenderTarget0, 
   y: 128+64,
   width: 512, height: 128, bgcolor: [0,128,0] do
-  _CREATE_ :ImageControl, id: :Image0,
+  _CREATE_ :Image, id: :Image0,
     width: 128, height: 128,
     align_x: :center do
     _FILL_ [0,255,0]
@@ -20,28 +20,28 @@ _CREATE_ :RenderTargetControl, id: :RenderTarget0,
   end
 end
 
-_CREATE_ :ImageControl, id: :Image0,
+_CREATE_ :Image, id: :Image0,
   y: 256 + 128,
   width: 128, height: 128,
   float_x: :left do
   _FILL_ [0,0,128]
   _TEXT_ text: "Ｘ方向連結1", color: [255,255,255]
 end
-_CREATE_ :ImageControl, id: :Image0,
+_CREATE_ :Image, id: :Image0,
   y: 256 + 128,
   width: 128, height: 128,
   float_x: :left do
   _FILL_ [0,0,128+32]
   _TEXT_ text: "Ｘ方向連結2", color: [255,255,255]
 end
-_CREATE_ :ImageControl, id: :Image0,
+_CREATE_ :Image, id: :Image0,
   y: 256 + 128,
   width: 128, height: 128,
   float_x: :left do
   _FILL_ [0,0,128+64]
   _TEXT_ text: "Ｘ方向連結3", color: [255,255,255]
 end
-_CREATE_ :ImageControl, id: :Image0,
+_CREATE_ :Image, id: :Image0,
   y: 256 + 128,
   width: 128, height: 128 do
   _FILL_ [0,0,128+96]

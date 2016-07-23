@@ -1,15 +1,15 @@
 #ボタンコントロール
-_CREATE_ :ClickableLayoutControl, 
+_CREATE_ :ClickableLayout, 
         width: 256,
         height: 256,
         id: :button1,
         colorkey_id: :normal,
         colorkey_border:200 do
-  _CREATE_ :ImageControl, path: "./resource/star_button.png", 
+  _CREATE_ :Image, path: "./resource/star_button.png", 
     id: :normal
-  _CREATE_ :ImageControl, path: "./resource/button_over.png", 
+  _CREATE_ :Image, path: "./resource/button_over.png", 
     id: :over, visible: false
-  _CREATE_ :ImageControl, path: "./resource/button_key_down.png", 
+  _CREATE_ :Image, path: "./resource/button_key_down.png", 
     id: :key_down, visible: false
   _STACK_LOOP_ do
     _CHECK_ mouse: [:cursor_over] do

@@ -1,7 +1,7 @@
-_CREATE_ :ClickableLayoutControl, 
+_CREATE_ :ClickableLayout, 
   width:256, 
   height:256 do
-  _CREATE_ :TileMapControl, id: :icon, 
+  _CREATE_ :TileMap, id: :icon, 
     width: 256,
     height: 256 do
     _SET_ map_array: [[0]]

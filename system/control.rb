@@ -138,8 +138,23 @@ class Control #内部メソッド
     return @root_control if id == :_ROOT_
     #_PARENT_：親コントロール
     return @parent_control if id == :_PARENT_
-    #子コントロールを探査して返す。存在しなければnil
+    #直下の子コントロールを探査して返す。存在しなければnil
     return @control_list.find {|control| control.id == id }
+  end
+
+  def find_control_path(control_path)
+    control = self
+    Array(control_path).each do |control_id|
+      control = control.find_control(control_id)
+      break unless control
+    end
+
+    #候補が見つからなかった場合
+    unless control
+      warn "コントロール\"#{control_path}\"は存在しません"
+    end
+    
+    return control
   end
 
   #コントロールを削除して良いかどうか
@@ -656,18 +671,9 @@ end
 class Control #スクリプト制御
   #子コントロールを検索してコマンドブロックを送信する
   def _SEND_(argument, options, yield_block_stack, &block)
-    #子コントロールを再帰的に検索
-    control = self
-    Array(argument).each do |control_id|
-      control = control.find_control(control_id)
-      break unless control
-    end
-
-    #候補が見つからなかった場合
-    unless control
-      warn "コントロール\"#{argument}\"は存在しません"
-      return
-    end
+    #コントロールを検索する
+    control = find_control_path(argument)
+    return unless control
 
     #インタラプト指定されている
     if options[:interrupt]

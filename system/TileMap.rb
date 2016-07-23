@@ -28,7 +28,9 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class TileMap < RenderTarget
+module Tsukasa
+
+class TileMap < DrawableLayout
 
   attr_accessor :map_array
   attr_accessor :image_array
@@ -105,5 +107,7 @@ class TileMap < RenderTarget
                   yield_block_stack, &block)
     end
   end
+
+end
 
 end

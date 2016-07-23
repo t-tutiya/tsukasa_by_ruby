@@ -28,7 +28,9 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class RenderTarget < Drawable
+module Tsukasa
+
+class DrawableLayout < Helper::Drawable
   #Ｘ幅
   def width=(arg)
     super
@@ -49,6 +51,7 @@ class RenderTarget < Drawable
   end
   
   def initialize(options, yield_block_stack, root_control, parent_control, &block)
+  
     super
 
     @bgcolor = options[:bgcolor]  || [0,0,0,0]
@@ -77,13 +80,13 @@ class RenderTarget < Drawable
     super
   end
 
-  #RenderTarget上に直線を引く
+  #DrawableLayout上に直線を引く
   def _LINE_(argument, options, yield_block_stack)
     @entity.draw_line( 
       options[:x1], options[:y1], options[:x2], options[:y2], options[:color], options[:z])
   end
 
-  #RenderTarget上に矩形を描く
+  #DrawableLayout上に矩形を描く
   def _BOX_(argument, options, yield_block_stack)
     if options[:fill]
       @entity.draw_box_fill( 
@@ -96,7 +99,7 @@ class RenderTarget < Drawable
     end
   end
 
-  #RenderTarget上に円を描く
+  #DrawableLayout上に円を描く
   def _CIRCLE_(argument, options, yield_block_stack)
     if options[:fill]
       @entity.draw_circle_fill(
@@ -107,7 +110,7 @@ class RenderTarget < Drawable
     end
   end
 
-  #RenderTarget上に文字を描く
+  #DrawableLayout上に文字を描く
   def _TEXT_(argument, options, yield_block_stack)
     options[:weight] = 4 unless options[:weight]
     options[:option] = {} unless options[:option]
@@ -129,4 +132,6 @@ class RenderTarget < Drawable
               ),
       options[:option])
   end
+end
+
 end

@@ -28,6 +28,8 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+module Tsukasa
+
 class ScriptCompiler
 
   def initialize()
@@ -86,4 +88,6 @@ class ScriptCompiler
       command_name, argument, options, @yield_block_stack, block || nil,
     ])
   end
+end
+
 end

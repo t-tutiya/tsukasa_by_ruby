@@ -364,7 +364,7 @@ _DEFINE_ :_TEXT_BUTTON_ do
   
   _BUTTON_BASE_ id, width: width, height: height, **options do
     #背景
-    _CREATE_ :RenderTarget, id: :bg, 
+    _CREATE_ :DrawableLayout, id: :bg, 
       width: width, height: height, bgcolor: out_color
     #テキスト
     _CREATE_ :Char, id: :text, char: text, **char_options

@@ -37,27 +37,27 @@ require 'pp'
 
 require_relative './config.rb'
 
+require_relative './Control.rb'
+
+require_relative './Exception.rb'
+require_relative './CacheManager.rb'
+require_relative './ScriptCompiler.rb'
+
+require_relative './Layoutable.rb'
+require_relative './Drawable.rb'
+
+require_relative './Image.rb'
+require_relative './Layout.rb'
+require_relative './DrawableLayout.rb'
+require_relative './ClickableLayout.rb'
+require_relative './Sound.rb'
+require_relative './Char.rb'
+
+require_relative './TextPage.rb'
+require_relative './TileMap.rb'
+require_relative './RuleShader.rb'
+
 module Tsukasa
-
-require_relative './exception.rb'
-require_relative './cache_manager.rb'
-require_relative './script_compiler.rb'
-
-require_relative './control.rb'
-require_relative './layoutable.rb'
-require_relative './drawable.rb'
-
-require_relative './layout_control.rb'
-require_relative './clickable_layout_control.rb'
-require_relative './image_control.rb'
-require_relative './rendertarget_control.rb'
-require_relative './sound_control.rb'
-require_relative './char_control.rb'
-
-require_relative './tile_map_control.rb'
-require_relative './rule_shader_control.rb'
-
-require_relative './text_page_control.rb'
 
 class Window < Layout
   #システム全体で共有されるデータ群。保存対象。
@@ -160,7 +160,7 @@ class Window < Layout
       end
     else
       #セーブファイル指定エラー
-      raise(TsukasaError, "対象セーブファイルが指定されていません")
+      raise(Tsukasa::TsukasaError, "対象セーブファイルが指定されていません")
     end
   end
 
@@ -183,7 +183,7 @@ class Window < Layout
       end
     else
       #セーブファイル指定エラー
-      raise(TsukasaError, "対象セーブファイルが指定されていません")
+      raise(Tsukasa::TsukasaError, "対象セーブファイルが指定されていません")
     end
   end
 end

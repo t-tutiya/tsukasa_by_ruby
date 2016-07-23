@@ -28,6 +28,10 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+module Tsukasa
+
+module Helper
+
 class Layoutable < Control
   #座標
   attr_accessor  :x
@@ -134,4 +138,8 @@ class Layoutable < Control
 
     return dx, dy
   end
+end
+
+end
+
 end

@@ -28,6 +28,8 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+module Tsukasa
+
 class ClickableLayout < Layout
   #コリジョンのエンティティ
   attr_accessor  :collision_shape
@@ -245,4 +247,6 @@ class ClickableLayout < Layout
     end 
     return super
   end
+end
+
 end

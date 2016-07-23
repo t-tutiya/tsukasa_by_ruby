@@ -28,7 +28,9 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class Layout < Layoutable
+module Tsukasa
+
+class Layout < Helper::Layoutable
   def render(offset_x, offset_y, target)
 
     super(offset_x + @x + @offset_x + check_align_x(), 
@@ -37,4 +39,6 @@ class Layout < Layoutable
 
     return check_float
   end
+end
+
 end

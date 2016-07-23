@@ -1,5 +1,5 @@
 
-_CREATE_ :RenderTarget, id: :RenderTarget0, 
+_CREATE_ :DrawableLayout, id: :DrawableLayout0, 
   width: 512, height: 128, bgcolor: [128,0,0] do
   _CREATE_ :Image, id: :Image0,
     width: 128, height: 128,
@@ -9,7 +9,7 @@ _CREATE_ :RenderTarget, id: :RenderTarget0,
   end
 end
 
-_CREATE_ :RenderTarget, id: :RenderTarget0, 
+_CREATE_ :DrawableLayout, id: :DrawableLayout0, 
   y: 128+64,
   width: 512, height: 128, bgcolor: [0,128,0] do
   _CREATE_ :Image, id: :Image0,

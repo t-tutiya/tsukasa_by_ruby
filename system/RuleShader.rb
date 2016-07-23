@@ -28,6 +28,8 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+module Tsukasa
+
 class RuleShader < Control
   #Imageのキャッシュ機構の簡易実装
   #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
@@ -148,4 +150,6 @@ EOS
     end
 
   end
+end
+
 end

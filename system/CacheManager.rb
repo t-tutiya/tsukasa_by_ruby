@@ -28,6 +28,8 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+module Tsukasa
+
 #キャッシュ機構のベースクラス
 class CacheManager
 
@@ -58,7 +60,7 @@ class CacheManager
       #エントリを追加
       @cache[id] = [@create.call(id), 0, parmanent]
     rescue DXRuby::DXRubyError
-      raise(TsukasaLoadError.new(id))
+      raise(Tsukasa::TsukasaLoadError.new(id))
     end
   end
 
@@ -84,4 +86,6 @@ class CacheManager
     #キャッシュからエントリを削除
     @cache.delete(id)
   end
+end
+
 end

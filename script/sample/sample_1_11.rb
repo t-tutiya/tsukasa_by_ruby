@@ -6,7 +6,7 @@ _DEFINE_ :set_rule do |argument, options|
 end
 
 #前回と同じ
-_CREATE_ :RenderTarget, id: :test0, width: 800, height: 600 do
+_CREATE_ :DrawableLayout, id: :test0, width: 800, height: 600 do
   _CREATE_ :Image, path: "./resource/bg_test.jpg"
   _CREATE_ :Image, path: "./resource/char/B-1.png", x: 250
 end

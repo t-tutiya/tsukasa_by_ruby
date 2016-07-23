@@ -2,7 +2,7 @@ _SEND_ :base do
   _SET_ path: "./resource/bg_sample.png"
 end
 
-_CREATE_ :RenderTarget, id: :test0,
+_CREATE_ :DrawableLayout, id: :test0,
   x: 100, y: 100, width: 512, height: 512, z: 4000 do
   _CREATE_ :Image, path: "./resource/button_over.png", x: 100
   _CREATE_ :Image, path: "./resource/button_normal.png", y: 100

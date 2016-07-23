@@ -28,6 +28,8 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+module Tsukasa
+
 class TsukasaError < StandardError; end
 
 class TsukasaLoadError < TsukasaError
@@ -37,4 +39,6 @@ class TsukasaLoadError < TsukasaError
     @path = path
     super("\"#@path\"の読み込みに失敗しました。")
   end
+end
+
 end

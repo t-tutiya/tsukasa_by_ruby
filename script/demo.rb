@@ -15,8 +15,8 @@ _DEFINE_ :TextSelect do |argument, options|
     y: options[:y] || 0, 
     width: options[:width] || 228, 
     height: 32 do
-    #テキストを描画するRenderTarget
-    _CREATE_ :RenderTarget,
+    #テキストを描画するDrawableLayout
+    _CREATE_ :DrawableLayout,
       float_x: :left,
       width: options[:width] || 228, 
       height: 32, 

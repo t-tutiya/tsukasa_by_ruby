@@ -31,12 +31,14 @@ require 'ayame'
 ###############################################################################
 
 
+module Tsukasa
+
 #Soundコントロール
 class Sound  < Control
   attr_reader :path
   def path=(arg)
     unless arg
-      raise(TsukasaError.new("Soundのpathが設定されていません")) 
+      raise(Tsukasa::TsukasaError.new("Soundのpathが設定されていません")) 
     end
     @path = arg
     #音源ファイルを読み込んで初期化する
@@ -96,4 +98,6 @@ class Sound  < Control
     @entity.set_pan( argument || 0, #-100～100
                      options[:fadetime].to_f || 0)
   end
+end
+
 end

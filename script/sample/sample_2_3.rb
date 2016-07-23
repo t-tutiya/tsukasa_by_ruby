@@ -20,7 +20,7 @@ _DEFINE_ :command_window do |argument, options|
     x: options[:x],
     y: options[:y], 
     id: :command  do
-    _CREATE_ :RenderTarget, id: :menu,
+    _CREATE_ :DrawableLayout, id: :menu,
       width: 196,
       height: 32 * 4 + 8 * 6 do
       _CREATE_ :Image, 

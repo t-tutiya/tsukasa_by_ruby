@@ -28,8 +28,10 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+module Tsukasa
+
 #画像コントロール
-class Image < Drawable
+class Image < Helper::Drawable
   #DXRuby::Imageのキャッシュマネージャー
   @@ImageCache = CacheManager.new do |id|
     DXRuby::Image.load(id)
@@ -220,4 +222,6 @@ class Image < Drawable
       @entity.draw(0,0, rt.to_image)
     end
   end
+end
+
 end

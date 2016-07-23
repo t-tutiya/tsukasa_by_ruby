@@ -28,11 +28,13 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+module Tsukasa
+
 #構造体クラスの生成（レンダリング済み文字アーカイブの再構築のために必要）
 ImageFontData = Struct.new(:width, :ox, :binary)
 ImageFontSaveData = Struct.new(:data_hash, :height, :ver)
 
-class Char < Drawable
+class Char < Helper::Drawable
   @@fonts_file_cache = {} #レンダリング済み文字ファイルのキャッシュ
   @@fonts_image_cache = {} #グリフ化済み文字のイメージキャッシュ
 
@@ -41,7 +43,7 @@ class Char < Drawable
       #エントリを追加
       DXRuby::Font.install(path)
     rescue DXRuby::DXRubyError
-      raise(TsukasaLoadError.new(path))
+      raise(Tsukasa::TsukasaLoadError.new(path))
     end
   end
 
@@ -377,4 +379,6 @@ class Char < Drawable
     @char = nil
     @option_update = true
   end
+end
+
 end

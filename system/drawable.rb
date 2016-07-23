@@ -28,6 +28,10 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+module Tsukasa
+
+module Helper
+
 class Drawable < Layoutable
   attr_reader  :entity
 
@@ -177,4 +181,8 @@ class Drawable < Layoutable
 
     return check_float
   end
+end
+
+end
+
 end

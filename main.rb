@@ -1,6 +1,6 @@
 #! ruby -E utf-8
 
-require './system/tsukasa.rb'
+require './system/Tsukasa.rb'
 
 width = 1024
 height = 600

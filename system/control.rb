@@ -235,81 +235,76 @@ class Control #内部メソッド
     options.each do |condition, value|
       return unless value
 
-      #対象キーが配列で渡されていない場合配列に変換する
-      value = [value] unless value.instance_of?(Array)
-
       case condition
 
       #count数が０以下の場合
       when :count
-        value.each do |count|
-          return true if count <= 0
-        end
+        return true if value <= 0
 
       #指定ＩＤの子コントロールが存在する
       when :child_exist
-        value.each do |id|
+        Array(value).each do |id|
           return true if find_control(id)
         end
 
       #指定ＩＤの子コントロールが存在しない
       when :child_not_exist
-        value.each do |id|
+        Array(value).each do |id|
           return true unless find_control(id)
         end
 
       #キーが押下された
       when :key_push
-        value.each do |key_code|
+        Array(value).each do |key_code|
           return true if Input.key_push?(key_code)
         end
 
       #キーが押下されていない
       when :not_key_push
-        value.each do |key_code|
+        Array(value).each do |key_code|
           return true unless Input.key_push?(key_code)
         end
 
       #キーが継続押下されている
       when :key_down
-        value.each do |key_code|
+        Array(value).each do |key_code|
           return true if Input.key_down?(key_code)
         end
 
       #キーが継続押下されていない
       when :not_key_down
-        value.each do |key_code|
+        Array(value).each do |key_code|
           return true unless Input.key_down?(key_code)
         end
 
       #キーが解除された
       when :key_up
-        value.each do |key_code|
+        Array(value).each do |key_code|
           return true if Input.key_release?(key_code)
         end
 
       #キーが解除されていない
       when :not_key_up
-        value.each do |key_code|
+        Array(value).each do |key_code|
           return true unless Input.key_release?(key_code)
         end
 
       #パッドボタン処理系
 
       when :pad_down
-        value.each do |pad_code|
+        Array(value).each do |pad_code|
           return true if Input.pad_down?(pad_code,
                                         @root_control._SYSTEM_[:_PAD_NUMBER_])
         end
 
       when :pad_push
-        value.each do |pad_code|
+        Array(value).each do |pad_code|
           return true if Input.pad_push?(pad_code,
                                         @root_control._SYSTEM_[:_PAD_NUMBER_])
         end
 
       when :pad_release
-        value.each do |pad_code|
+        Array(value).each do |pad_code|
           return true if Input.pad_release?(pad_code,
                                         @root_control._SYSTEM_[:_PAD_NUMBER_])
         end
@@ -318,57 +313,49 @@ class Control #内部メソッド
 
       #指定されたデータと値がイコールかどうか
       when :equal
-        value.each do |hash|
-          hash.each do |key, val|
-            if argument
-              #データストアとの比較
-              return true if @root_control.send(argument)[key] == val
-            else
-              #コントロールプロパティとの比較
-              return true if send(key) == val
-            end
+        value.each do |key, val|
+          if argument
+            #データストアとの比較
+            return true if @root_control.send(argument)[key] == val
+          else
+            #コントロールプロパティとの比較
+            return true if send(key) == val
           end
         end
 
       #指定されたデータと値がイコールでない場合
       when :not_equal
-        value.each do |hash|
-          hash.each do |key, val|
-            if argument
-              #データストアとの比較
-              return true if @root_control.send(argument)[key] != val
-            else
-              #コントロールプロパティとの比較
-              return true if send(key) != val
-            end
+        value.each do |key, val|
+          if argument
+            #データストアとの比較
+            return true if @root_control.send(argument)[key] != val
+          else
+            #コントロールプロパティとの比較
+            return true if send(key) != val
           end
         end
 
       #指定されたデータと値が未満かどうか
       when :under
-        value.each do |hash|
-          hash.each do |key, val|
-            if argument
-              #データストアとの比較
-              return true if @root_control.send(argument)[key] < val
-            else
-              #コントロールプロパティとの比較
-              return true if send(key) < val
-            end
+        value.each do |key, val|
+          if argument
+            #データストアとの比較
+            return true if @root_control.send(argument)[key] < val
+          else
+            #コントロールプロパティとの比較
+            return true if send(key) < val
           end
         end
 
       #指定されたデータと値がより大きいかどうか
       when :over
-        value.each do |hash|
-          hash.each do |key, val|
-            if argument
-              #データストアとの比較
-              return true if @root_control.send(argument)[key] > val
-            else
-              #コントロールプロパティとの比較
-              return true if send(key) > val
-            end
+        value.each do |key, val|
+          if argument
+            #データストアとの比較
+            return true if @root_control.send(argument)[key] > val
+          else
+            #コントロールプロパティとの比較
+            return true if send(key) > val
           end
         end
 
@@ -397,7 +384,7 @@ class Control #内部メソッド
         end
 
       when :system
-        value.each do |key|
+        Array(value).each do |key|
           case key
           #ウィンドウの閉じるボタンが押下された場合
           when :requested_close

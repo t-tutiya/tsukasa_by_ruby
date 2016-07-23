@@ -60,7 +60,7 @@ end
 
 #スクリーンショットキャプチャ
 _DEFINE_ :_CAPTURE_SS_ do |path, options|
-  DXRuby::Window.get_screen_shot(path, options[:format] || FORMAT_PNG)
+  DXRuby::Window.get_screen_shot(path, options[:format] || DXRuby::FORMAT_PNG)
 end
 
 #ファイルオープンダイアログ

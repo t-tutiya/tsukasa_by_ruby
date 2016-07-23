@@ -2,9 +2,6 @@
 
 require './system/tsukasa.rb'
 
-K_RCONTROL = DXRuby::K_RCONTROL
-K_SPACE = DXRuby::K_SPACE
-
 width = 1024
 height = 600
 

@@ -146,17 +146,17 @@ class ClickableLayout < Layout
       @over = true
 
       #キー継続押下チェック
-      @on_key_down = DXRuby::Input.mouse_down?( DXRuby::M_LBUTTON )
+      @on_key_down = DXRuby::Input.mouse_down?( M_LBUTTON )
       #キー押下チェック
-      @on_key_push = DXRuby::Input.mouse_push?( DXRuby::M_LBUTTON )
+      @on_key_push = DXRuby::Input.mouse_push?( M_LBUTTON )
       #キー解除チェック
-      @on_key_up = DXRuby::Input.mouse_release?( DXRuby::M_LBUTTON )
+      @on_key_up = DXRuby::Input.mouse_release?( M_LBUTTON )
       #キー継続押下チェック
-      @on_right_key_down = DXRuby::Input.mouse_down?( DXRuby::M_RBUTTON )
+      @on_right_key_down = DXRuby::Input.mouse_down?( M_RBUTTON )
       #右キー押下チェック
-      @on_right_key_push = DXRuby::Input.mouse_push?( DXRuby::M_RBUTTON )
+      @on_right_key_push = DXRuby::Input.mouse_push?( M_RBUTTON )
       #右キー解除チェック
-      @on_right_key_up = DXRuby::Input.mouse_release?( DXRuby::M_RBUTTON )
+      @on_right_key_up = DXRuby::Input.mouse_release?( M_RBUTTON )
     else
       #イベント起動済みフラグクリア
       @over = false
@@ -166,13 +166,13 @@ class ClickableLayout < Layout
       @out = true
 
       #キー押下チェック
-      @on_key_down_out = DXRuby::Input.mouse_down?( DXRuby::M_LBUTTON )
+      @on_key_down_out = DXRuby::Input.mouse_down?( M_LBUTTON )
       #キー解除チェック
-      @on_key_up_out = DXRuby::Input.mouse_release?( DXRuby::M_LBUTTON )
+      @on_key_up_out = DXRuby::Input.mouse_release?( M_LBUTTON )
       #右キー押下チェック
-      @on_right_key_down_out = DXRuby::Input.mouse_down?( DXRuby::M_RBUTTON )
+      @on_right_key_down_out = DXRuby::Input.mouse_down?( M_RBUTTON )
       #右キー解除チェック
-      @on_right_key_up_out = DXRuby::Input.mouse_release?( DXRuby::M_RBUTTON )
+      @on_right_key_up_out = DXRuby::Input.mouse_release?( M_RBUTTON )
     end
 
     return super

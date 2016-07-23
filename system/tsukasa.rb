@@ -35,6 +35,8 @@ $dxruby_no_include = true
 require 'dxruby'
 require 'pp'
 
+require_relative './config.rb'
+
 module Tsukasa
 
 require_relative './exception.rb'

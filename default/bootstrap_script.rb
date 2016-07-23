@@ -81,7 +81,7 @@ _SET_ :_TEMP_, _DEFAULT_TEXT_PAGE_: :text0
 
 #タイトルバーの文字列を設定
 _WINDOW_STATUS_ caption: "Tsukasa Engine powered by DXRuby", #文字列
-                cursor_type: DXRuby::IDC_ARROW,
+                cursor_type: IDC_ARROW,
                 x: 0,
                 y: 0
 

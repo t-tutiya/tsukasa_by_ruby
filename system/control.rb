@@ -405,17 +405,17 @@ class Control #内部メソッド
           when :requested_close
             return true if DXRuby::Input.requested_close?
           when :mouse_push
-            return true if DXRuby::Input.mouse_push?( DXRuby::M_LBUTTON )
+            return true if DXRuby::Input.mouse_push?( M_LBUTTON )
           when :mouse_down
-            return true if DXRuby::Input.mouse_down?( DXRuby::M_LBUTTON )
+            return true if DXRuby::Input.mouse_down?( M_LBUTTON )
           when :mouse_up
-            return true if DXRuby::Input.mouse_release?( DXRuby::M_LBUTTON )
+            return true if DXRuby::Input.mouse_release?( M_LBUTTON )
           when :right_mouse_down
-            return true if DXRuby::Input.mouse_down?( DXRuby::M_RBUTTON )
+            return true if DXRuby::Input.mouse_down?( M_RBUTTON )
           when :right_mouse_push
-            return true if DXRuby::Input.mouse_push?( DXRuby::M_RBUTTON )
+            return true if DXRuby::Input.mouse_push?( M_RBUTTON )
           when :right_mouse_up
-            return true if DXRuby::Input.mouse_release?( DXRuby::M_RBUTTON )
+            return true if DXRuby::Input.mouse_release?( M_RBUTTON )
           when :block_given
             return true unless yield_block_stack[-1] == nil
           end

@@ -40,9 +40,6 @@ class TextPage < Layout
   #公開インターフェイス
   #############################################################################
 
-#  attr_accessor  :use_image_font
-#  attr_accessor  :image_face
-
   #テキストページ情報
 
   attr_accessor  :line_spacing  #行間
@@ -76,21 +73,6 @@ class TextPage < Layout
   def font_name=(arg)
     @char_option[:font_name] = arg
   end
-
-    #TODO：以下はdxrubyのFont情報と無関係なので管理を分離する
-    # :fontname
-    #      #指定されたフォント名がレンダリング済みフォントとして登録されている場合
-    #      if Image_font.regist?(value.to_s)
-    #        #フォント名をイメージフォント名として設定
-    #        target[:image_face] = value.to_s
-    #        #イメージフォント使用中フラグを立てる
-    #        target[:use_image_font] = true
-    #      else
-    #        #フォント名を設定
-    #        target[:fontname] = value.to_s
-    #        #イメージフォント使用中フラグをクリア
-    #        target[:use_image_font] = false
-    #      end
 
   # 太字（bool || integer）
   def weight()

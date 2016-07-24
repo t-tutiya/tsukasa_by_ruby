@@ -47,10 +47,14 @@ class Char < Helper::Drawable
   def Char.install_prerender(font_name, path)
     #ファイルキャッシュにデータが格納されていない場合
     unless @@fonts_file_cache.key?(font_name)
-      #ファイルをオープン
-      open(path, "rb") do |fh|
-        #マーシャルで展開しキャッシュに格納する
-        @@fonts_file_cache[font_name] = Marshal.load(fh.read)
+      begin
+        #ファイルをオープン
+        open(path, "rb") do |fh|
+          #マーシャルで展開しキャッシュに格納する
+          @@fonts_file_cache[font_name] = Marshal.load(fh.read)
+        end
+      rescue Errno::ENOENT
+        raise(Tsukasa::TsukasaLoadError.new(path))
       end
     end
   end

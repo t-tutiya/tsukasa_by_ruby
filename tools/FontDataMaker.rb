@@ -117,6 +117,10 @@ class ImageFont
   end
 end
 
+###############################################################################
+# バッチスクリプト
+###############################################################################
+
 Window.bgcolor = [100,100,100]
 
 size = ARGV[0] || 32
@@ -132,7 +136,7 @@ puts "出力ファイルパス：#{file_path}"
 puts "コンバートを開始します。コンバート後のデータの再配布については、コンバート元のフォントのライセンスに従ってください"
 
 # レンダリング済みフォント作成
-imagefontmaker = PreRenderFontMaker.new(size,font_name,:all).output(file_path)
+imagefontmaker = ConvertFont.new(size,font_name,:all).output(file_path)
 
 #初期化時にフォント名とファイルパスを渡すパターン
 imagefont1 = ImageFont.new("test", file_path)

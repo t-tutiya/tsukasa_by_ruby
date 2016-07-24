@@ -35,7 +35,7 @@ require 'pp'
 # レンダリング済みフォントを作るクラス
 ###############################################################################
 
-class PreRenderFontMaker
+class ConvertFont
 
   #コンストラクタ
   def initialize(size, font_name, mode = nil)

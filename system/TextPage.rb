@@ -475,13 +475,6 @@ class TextPage < Layout
                       }, 
                       yield_block_stack])
   end
-
-  #レンダリング済みフォントデータファイルを登録する
-  def map_image_font(argument, options, yield_block_stack)#改修前
-    raise
-    #レンダリング済みフォントデータファイルを任意フォント名で登録
-    Image_font.regist(options[:font_name].to_s, options[:path].to_s)
-  end
 end
 
 end

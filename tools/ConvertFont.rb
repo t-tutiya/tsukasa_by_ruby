@@ -32,13 +32,6 @@ require 'pp'
 ###############################################################################
 
 ###############################################################################
-# 保存されるデータ構造
-###############################################################################
-
-ImageFontData = Struct.new(:width, :ox, :binary)
-ImageFontSaveData = Struct.new(:data_hash, :height, :ver)
-
-###############################################################################
 # レンダリング済みフォントを作るクラス
 ###############################################################################
 
@@ -114,12 +107,12 @@ class PreRenderFontMaker
           binary = fh.read
         end
         #その文字をキーに、ハッシュに各種座標を格納する
-        data_hash[char] = ImageFontData.new(cx, ox, binary)
+        data_hash[char] = [cx, ox, binary]
       end
     end
 
     #セーブ用データの生成
-    imagefont = ImageFontSaveData.new(data_hash, @font.size, "v1.0")
+    imagefont = [data_hash, @font.size, "v1.0"]
 
     #ハッシュをマーシャルダンプして保存
     open(file_name, "wb") do |fh|

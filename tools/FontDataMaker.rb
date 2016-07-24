@@ -36,14 +36,14 @@ require_relative './ConvertFont.rb'
 ###############################################################################
 # レンダリング済みフォントを使うクラス
 ###############################################################################
-class Image_font
+class ImageFont
   attr_reader :size
 
   @@fonts_file_cache = {} #レンダリング済み文字ファイルのキャッシュ
   @@fonts_image_cache = {} #グリフ化済み文字のイメージキャッシュ
 
   #レンダリング済み文字ファイルを、フォント名をキーにハッシュに保存する
-  def Image_font.regist(font_name, file_path)
+  def ImageFont.regist(font_name, file_path)
     #ファイルキャッシュにデータが格納されていない場合
     if !@@fonts_file_cache.key?(font_name)
       #ファイルをオープン
@@ -55,7 +55,7 @@ class Image_font
   end
 
   #フォント名が登録されているかどうかを返す
-  def Image.regist?(font_name)
+  def ImageFont.regist?(font_name)
     return @@fonts_file_cache.key?(font_name)
   end
 
@@ -70,8 +70,8 @@ class Image_font
     @@fonts_image_cache[font_name] = {} if !@@fonts_image_cache.key?(font_name)
 
     #キャッシュからデータを読み込む
-    @font_data = @@fonts_file_cache[font_name].data_hash
-    @size = @@fonts_file_cache[font_name].height
+    @font_data = @@fonts_file_cache[font_name][0]
+    @size = @@fonts_file_cache[font_name][1]
     @font_image = @@fonts_image_cache[font_name]
   end
 
@@ -82,7 +82,7 @@ class Image_font
       #文字のデータ構造体を取得
       font = @font_data[char.encode("windows-31j")]
       #Ｘ座標更新
-      x += font.width - font.ox
+      x += font[0] - font[1]
     end
     
     return x
@@ -103,14 +103,14 @@ class Image_font
       #キャッシュにその文字が登録されていない場合
       if !@font_image.has_key?(char)
         #文字をバイナリからイメージ＆グリフ化して、キャッシュに格納する
-        @font_image[char] = Image.load_from_file_in_memory(font.binary).effect_image_font({})
+        @font_image[char] = Image.load_from_file_in_memory(font[2]).effect_image_font({})
       end
 
       #グリフ化済みの文字を自前imageに書き込む
-      target.draw(x - font.ox, 0, @font_image[char])
+      target.draw(x - font[1], 0, @font_image[char])
 
       #Ｘ座標更新
-      x += font.width - font.ox
+      x += font[0] - font[1]
     end
     #描画を終えたimageを返す
     return target
@@ -127,7 +127,7 @@ size = size.to_i
 
 puts "FontDataMaker fo Tsukasa Engine v1.0"
 puts "サイズ：#{size.to_s}"
-puts "フォント：#{font_name}"
+puts "フォント：#{font_name.encode("utf-8")}"
 puts "出力ファイルパス：#{file_path}"
 puts "コンバートを開始します。コンバート後のデータの再配布については、コンバート元のフォントのライセンスに従ってください"
 
@@ -135,7 +135,7 @@ puts "コンバートを開始します。コンバート後のデータの再�
 imagefontmaker = PreRenderFontMaker.new(size, font_name, :all).output(file_path)
 
 #初期化時にフォント名とファイルパスを渡すパターン
-imagefont1 = Image_font.new("test", file_path)
+imagefont1 = ImageFont.new("test", file_path)
 
 image0 = imagefont1.glyph("コンバートが完了しました").effect_image_font({:shadow=>false, :edge=>false, :edge_color=>C_CYAN, :edge_width =>2})
 

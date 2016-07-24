@@ -30,10 +30,6 @@
 
 module Tsukasa
 
-#構造体クラスの生成（レンダリング済み文字アーカイブの再構築のために必要）
-ImageFontData = Struct.new(:width, :ox, :binary)
-ImageFontSaveData = Struct.new(:data_hash, :height, :ver)
-
 class Char < Helper::Drawable
   @@fonts_file_cache = {} #レンダリング済み文字ファイルのキャッシュ
   @@fonts_image_cache = {} #グリフ化済み文字のイメージキャッシュ
@@ -330,7 +326,7 @@ class Char < Helper::Drawable
   #プリレンダ文字の描画
   def draw_prerender_character(width, height, offset_x, offset_y)
     #キャッシュからデータを読み込む
-    @font_data = @@fonts_file_cache[@font_name].data_hash
+    @font_data = @@fonts_file_cache[@font_name][0]
 
     #現状での縦幅、横幅を取得
     @width = width
@@ -338,10 +334,10 @@ class Char < Helper::Drawable
       #文字のデータ構造体を取得
       font = @font_data[char.encode("windows-31j")]
       #Ｘ座標更新
-      @width += font.width - font.ox
+      @width += font[0] - font[1]
     end
     @width = 1 if @width == 0
-    @height = height + @@fonts_file_cache[@font_name].height
+    @height = height + @@fonts_file_cache[@font_name][1]
 
     #文字用のimageを作成
     @entity.dispose if @entity and !(@entity.disposed?)
@@ -362,16 +358,16 @@ class Char < Helper::Drawable
       #キャッシュにその文字が登録されていない場合
       unless @font_image.has_key?(char)
         #文字をバイナリからイメージ化してキャッシュに格納する
-        @font_image[char] = DXRuby::Image.load_from_file_in_memory(font.binary)
+        @font_image[char] = DXRuby::Image.load_from_file_in_memory(font[2])
       end
 
       #文字をグリフ化してImageに書き込む
-      @entity.draw( offset_x + font.ox, 
+      @entity.draw( offset_x + font[1], 
                     offset_y, 
                     @font_image[char].effect_image_font(@font_draw_option))
 
       #Ｘ座標更新
-      offset_x += font.width - font.ox
+      offset_x += font[0] - font[1]
     end
   end
   

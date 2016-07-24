@@ -2,21 +2,45 @@
 
 require './system/Tsukasa.rb'
 
+##############################################################################
+#設定
+##############################################################################
+
+#ウィンドウのサイズ
 width = 1024
 height = 600
 
+#ウィンドウの表示位置
+x = 0
+y = 0
+
+#画面中央へ自動配置する（true=する/false=しない初期状態）
+center = false
+
+##############################################################################
+#内部実装（弄らないでください）
+##############################################################################
+
 #ベース背景色
 DXRuby::Window.bgcolor=[0,0,0]
-#初期化
+#サイズ設定
 DXRuby::Window.resize(width, height)
-DXRuby::Window.x = 0
-DXRuby::Window.y = 0
+
+if center
+  x, y = DXRuby::Window.get_current_mode
+  x = x / 2 - width / 2
+  y = y / 2 - height / 2
+end
+
+DXRuby::Window.x = x
+DXRuby::Window.y = y
 
 tsukasa = Tsukasa::Window.new({ :width => width,
                                 :height => height,
                                 })
 #ゲームループ
 DXRuby::Window.loop(true) do
+
   #司エンジン処理
   tsukasa.update()
   tsukasa.render(0, 0, DXRuby::Window)

@@ -86,4 +86,4 @@ _WINDOW_STATUS_ caption: "Tsukasa Engine powered by DXRuby", #文字列
                 y: 0
 
 #最初に実行するスクリプトファイルを呼びだす
-_INCLUDE_ "./script/first.rb"
+_INCLUDE_ "./first.rb"

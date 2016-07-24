@@ -63,7 +63,7 @@ class ImageFont
   def initialize(font_name, file_path = nil)
     #ファイルキャッシュにデータが格納されていない場合登録する。
     if !@@fonts_file_cache.key?(font_name)
-      Image_font.regist(font_name, file_path)
+      ImageFont.regist(font_name, file_path)
     end
 
     # イメージキャッシュにエントリが無ければ初期化
@@ -132,7 +132,7 @@ puts "出力ファイルパス：#{file_path}"
 puts "コンバートを開始します。コンバート後のデータの再配布については、コンバート元のフォントのライセンスに従ってください"
 
 # レンダリング済みフォント作成
-imagefontmaker = PreRenderFontMaker.new(size, font_name, :all).output(file_path)
+imagefontmaker = PreRenderFontMaker.new(size,font_name,:all).output(file_path)
 
 #初期化時にフォント名とファイルパスを渡すパターン
 imagefont1 = ImageFont.new("test", file_path)

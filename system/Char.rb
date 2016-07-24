@@ -32,7 +32,6 @@ module Tsukasa
 
 class Char < Helper::Drawable
   @@fonts_file_cache = {} #レンダリング済み文字ファイルのキャッシュ
-  @@fonts_image_cache = {} #グリフ化済み文字のイメージキャッシュ
 
   def Char.install(path)
     begin
@@ -346,13 +345,6 @@ class Char < Helper::Drawable
     #文字用のimageを作成
     @entity.dispose if @entity and !(@entity.disposed?)
     @entity = DXRuby::Image.new(@width, @height, [0, 0, 0, 0])
-
-    # イメージキャッシュにエントリが無ければ初期化
-    unless @@fonts_image_cache.key?(@font_name)
-      @@fonts_image_cache[@font_name] = {} 
-    end
-    # イメージキャッシュを取得
-    @font_image = @@fonts_image_cache[@font_name]
 
     #全ての文字を描画する
     @char.each_char do |char|

@@ -190,7 +190,7 @@ class Control #公開インターフェイス
     options[:command_list] = command_list unless command_list.empty?
 
     #オプションを生成
-    options[:_ARGUMENT_] = self.class.name.to_sym
+    options[:_ARGUMENT_] = self.class.name
     command = [:_CREATE_, options, {}]
 
     return command

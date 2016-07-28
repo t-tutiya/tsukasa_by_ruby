@@ -272,7 +272,7 @@ end
 ###############################################################################
 
 #汎用ボタンロジック
-_DEFINE_ :_BUTTON_BASE_ do |id, width:, height:, **options|
+_DEFINE_ :_BUTTON_BASE_ do |id:, width:, height:, **options|
   _CREATE_ :ClickableLayout, 
     id: id || nil,
     width: width, 
@@ -353,7 +353,7 @@ end
 
 #テキストボタン
 _DEFINE_ :_TEXT_BUTTON_ do 
- |id, #コントロールID
+ |id: nil, #コントロールID
   width: 128, #ボタンＸ幅
   height: 32, #ボタンＹ幅
   text: "", #表示文字列
@@ -362,7 +362,7 @@ _DEFINE_ :_TEXT_BUTTON_ do
   char_options: {},
   **options|
   
-  _BUTTON_BASE_ id, width: width, height: height, **options do
+  _BUTTON_BASE_ id: id, width: width, height: height, **options do
     #背景
     _CREATE_ :DrawableLayout, id: :bg, 
       width: width, height: height, bgcolor: out_color

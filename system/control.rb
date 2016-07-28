@@ -478,6 +478,7 @@ class Control #セッター／ゲッター
   def _SET_OFFSET_(yield_stack, options)
     #オプション全探査
     options.each do |key, val|
+      next if key == :_ARGUMENT_
       #データストアが設定されている場合
       if options[:_ARGUMENT_]
         #指定データストアのキーに値をオフセット値を加算して代入

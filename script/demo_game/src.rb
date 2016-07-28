@@ -22,7 +22,7 @@ _SEND_(:text0) do
     #待機フラグが下がるまで待機
     _WAIT_ :_TEMP_, not_equal: {flag: nil}
     #文字列をカスケードアウトさせる
-    _GET_ :child_index do |arg, options|
+    _GET_ :child_index do |options|
       _MOVE_ 30 + options[:child_index] * 3, y:[0,600], _OPTION_:{easing: :in_back}
     end
   end
@@ -41,7 +41,7 @@ _SEND_(:text0) do
 end
 
 #テキストボタン定義
-_DEFINE_ :TextSelect do |argument, options|
+_DEFINE_ :TextSelect do |options|
   _CREATE_ :ClickableLayout,
     float_x: :left,
     x: options[:x] || 0, 
@@ -104,10 +104,10 @@ _DEFINE_ :TextSelect do |argument, options|
 end
 
 #文字列中にボタンを埋め込む
-_DEFINE_ :func_select do |argument, options, control|
+_DEFINE_ :func_select do |options|
   _SEND_ :text0 do
     _CHAR_COMMAND_ do
-      TextSelect id: options[:id], text: argument
+      TextSelect id: options[:id], text: options[:_ARGUMENT_]
       _WAIT_  count: 3, 
               key_down: K_RCONTROL, 
               key_push: K_SPACE,

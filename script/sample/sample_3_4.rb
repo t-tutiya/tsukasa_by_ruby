@@ -14,7 +14,7 @@ _DEFINE_ :menu_button do |id:, text: |
 end
 
 _CREATE_ :Layout, id: :top_menu, x:0, y:0 do
-  _SCREEN_MODES_ do |screen_modes|
+  _SCREEN_MODES_ do |screen_modes:|
     screen_modes.each do |screen_mode|
       if screen_mode == [640,480,60]
         menu_button text: "640×480", id: 0

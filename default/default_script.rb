@@ -90,7 +90,7 @@ end
 
 #フルスクリーン化可能な解像度のリストを取得する
 _DEFINE_ :_SCREEN_MODES_ do 
-  _YIELD_ DXRuby::Window.get_screen_modes
+  _YIELD_ screen_modes: DXRuby::Window.get_screen_modes
 end
 
 #FPSカウンタ

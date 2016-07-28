@@ -83,9 +83,13 @@ class ScriptCompiler
       return
     end
 
+    if argument
+      options[:_ARGUMENT_] = argument
+    end
+
     #コマンドを登録する
     @command_list.push([
-      command_name, argument, options, @yield_block_stack, block || nil,
+      command_name, nil, options, @yield_block_stack, block
     ])
   end
 end

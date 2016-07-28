@@ -199,7 +199,7 @@ end
 _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
   #メッセージウィンドウ
   _CREATE_ :TextPage, 
-    id: argument, **options do
+    id: options[:_ARGUMENT_], **options do
     #文字間ウェイト
     _DEFINE_ :_CHAR_WAIT_ do
       _WAIT_  :_TEMP_, 

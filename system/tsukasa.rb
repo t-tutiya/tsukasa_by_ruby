@@ -111,8 +111,8 @@ class Window < Layout
     @script_compiler = ScriptCompiler.new
     @script_parser = {}
 
-    options[:command_list] = [[ :_INCLUDE_, 
-                                "./default/bootstrap_script.rb",{}]]
+    options[:command_list] = [[ :_INCLUDE_, nil, 
+                                {_ARGUMENT_: "./default/bootstrap_script.rb"},nil]]
 
     super(options, nil, self, self)
   end
@@ -143,15 +143,15 @@ class Window < Layout
 
   #ネイティブコードを読み込む
   def _LOAD_NATIVE_(argument, options, yield_block_stack)
-    raise unless argument
-    require argument
+    raise unless options[:_ARGUMENT_]
+    require options[:_ARGUMENT_]
   end
 
   #データセーブ
   def _SAVE_(argument, options, yield_block_stack)
-    raise unless argument.kind_of?(Numeric)
+    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
     #グローバルデータ
-    if argument == 0
+    if options[:_ARGUMENT_] == 0
       db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
                       @_SYSTEM_[:_SYSTEM_FILENAME_])
       db.transaction do
@@ -159,8 +159,8 @@ class Window < Layout
       end
     #ユーザーデータ
     #任意の接尾字を指定する
-    elsif argument
-      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + argument.to_s +
+    elsif options[:_ARGUMENT_]
+      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + options[:_ARGUMENT_].to_s +
                       @_SYSTEM_[:_LOCAL_FILENAME_])
       db.transaction do
         db["key"] = @_LOCAL_
@@ -172,9 +172,9 @@ class Window < Layout
   end
 
   def _LOAD_(argument, options, yield_block_stack)
-    raise unless argument.kind_of?(Numeric)
+    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
     #グローバルデータ
-    if argument == 0
+    if options[:_ARGUMENT_] == 0
       db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
                       @_SYSTEM_[:_SYSTEM_FILENAME_])
       db.transaction do
@@ -182,8 +182,8 @@ class Window < Layout
       end
     #ユーザーデータ
     #任意の接尾字を指定する
-    elsif argument
-      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + argument.to_s +
+    elsif options[:_ARGUMENT_]
+      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + options[:_ARGUMENT_].to_s +
                       @_SYSTEM_[:_LOCAL_FILENAME_])
       db.transaction do
         @_LOCAL_ = db["key"]

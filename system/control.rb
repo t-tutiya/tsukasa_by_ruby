@@ -190,6 +190,7 @@ class Control #公開インターフェイス
     options[:command_list] = command_list unless command_list.empty?
 
     #オプションを生成
+    #TODO
     command = [:_CREATE_, self.class.name.to_sym, options, {}]
 
     return command
@@ -328,9 +329,9 @@ class Control #内部メソッド
       #指定されたデータと値がイコールかどうか
       when :equal
         value.each do |key, val|
-          if argument
+          if options[:_ARGUMENT_]
             #データストアとの比較
-            return true if @root_control.send(argument)[key] == val
+            return true if @root_control.send(options[:_ARGUMENT_])[key] == val
           else
             #コントロールプロパティとの比較
             return true if send(key) == val
@@ -340,9 +341,9 @@ class Control #内部メソッド
       #指定されたデータと値がイコールでない場合
       when :not_equal
         value.each do |key, val|
-          if argument
+          if options[:_ARGUMENT_]
             #データストアとの比較
-            return true if @root_control.send(argument)[key] != val
+            return true if @root_control.send(options[:_ARGUMENT_])[key] != val
           else
             #コントロールプロパティとの比較
             return true if send(key) != val
@@ -352,9 +353,9 @@ class Control #内部メソッド
       #指定されたデータと値が未満かどうか
       when :under
         value.each do |key, val|
-          if argument
+          if options[:_ARGUMENT_]
             #データストアとの比較
-            return true if @root_control.send(argument)[key] < val
+            return true if @root_control.send(options[:_ARGUMENT_])[key] < val
           else
             #コントロールプロパティとの比較
             return true if send(key) < val
@@ -364,9 +365,9 @@ class Control #内部メソッド
       #指定されたデータと値がより大きいかどうか
       when :over
         value.each do |key, val|
-          if argument
+          if options[:_ARGUMENT_]
             #データストアとの比較
-            return true if @root_control.send(argument)[key] > val
+            return true if @root_control.send(options[:_ARGUMENT_])[key] > val
           else
             #コントロールプロパティとの比較
             return true if send(key) > val
@@ -376,9 +377,9 @@ class Control #内部メソッド
       #指定されたデータがnilの場合
       when :null
         value.each do |key|
-          if argument
+          if options[:_ARGUMENT_]
             #データストアとの比較
-            return true if @root_control.send(argument)[key] == nil
+            return true if @root_control.send(options[:_ARGUMENT_])[key] == nil
           else
             #コントロールプロパティとの比較
             return true if send(key) == nil
@@ -388,9 +389,9 @@ class Control #内部メソッド
       #指定されたデータがnilで無い場合
       when :not_null
         value.each do |key|
-          if argument
+          if options[:_ARGUMENT_]
             #データストアとの比較
-            return true if @root_control.send(argument)[key] != nil
+            return true if @root_control.send(options[:_ARGUMENT_])[key] != nil
           else
             #コントロールプロパティとの比較
             return true if send(key) != nil
@@ -431,7 +432,7 @@ class Control #コントロールの生成／破棄
   def _CREATE_(argument, options, yield_block_stack, &block)
     begin 
     #コントロールを生成して子要素として登録する
-    @control_list.push(Tsukasa.const_get(argument).new(options, 
+    @control_list.push(Tsukasa.const_get(options[:_ARGUMENT_]).new(options, 
                                                       yield_block_stack, 
                                                       @root_control, 
                                                       self, 
@@ -446,7 +447,7 @@ class Control #コントロールの生成／破棄
   #コントロールを削除する
   def _DELETE_(argument, options, yield_block_stack)
     #コントロールを検索する
-    control = find_control_path(argument)
+    control = find_control_path(options[:_ARGUMENT_])
 
     #削除フラグを立てる
     control.dispose() if control
@@ -459,9 +460,9 @@ class Control #セッター／ゲッター
     #オプション全探査
     options.each do |key, val|
       #データストアが設定されている場合
-      if argument
+      if options[:_ARGUMENT_]
         #指定データストアのキーに値を代入する
-        @root_control.send(argument.to_s)[key] = val
+        @root_control.send(options[:_ARGUMENT_].to_s)[key] = val
       else
         #セッターが存在する場合
         if  respond_to?(key.to_s + "=")
@@ -480,9 +481,9 @@ class Control #セッター／ゲッター
     #オプション全探査
     options.each do |key, val|
       #データストアが設定されている場合
-      if argument
+      if options[:_ARGUMENT_]
         #指定データストアのキーに値をオフセット値を加算して代入
-        @root_control.send(argument.to_s)[key] += val
+        @root_control.send(options[:_ARGUMENT_].to_s)[key] += val
       else
         #セッターが存在する場合
         if  respond_to?(key.to_s + "=")
@@ -501,7 +502,7 @@ class Control #セッター／ゲッター
     result = {}
 
     #オプション全探査
-    Array(argument).each do |property|
+    Array(options[:_ARGUMENT_]).each do |property|
       #データストアが設定されている場合
       if options[:datastore]
         #データストアから値を取得する
@@ -525,7 +526,7 @@ class Control #制御構文
   def _WAIT_(argument, options, yield_block_stack, &block)
 
     #チェック条件を満たしたら終了する
-    return if check_imple(argument, options, yield_block_stack)
+    return if check_imple(options[:_ARGUMENT_], options, yield_block_stack)
 
     if options[:count]
       options[:count] = options[:count] - 1
@@ -604,8 +605,8 @@ class Control #制御構文
     end
 
     #第１引数で指定されているコマンドを実行する
-    if argument
-      exec_command(argument, nil, nil, yield_block_stack)
+    if options[:_ARGUMENT_]
+      exec_command(options[:_ARGUMENT_], nil, nil, yield_block_stack)
     end
   end
 
@@ -625,8 +626,8 @@ class Control #制御構文
     end
 
     #第１引数で指定されているコマンドを実行する
-    if argument
-      exec_command(argument, nil, nil, yield_block_stack)
+    if options[:_ARGUMENT_]
+      exec_command(options[:_ARGUMENT_], nil, nil, yield_block_stack)
     end
   end
 
@@ -643,8 +644,8 @@ class Control #制御構文
     end
 
     #第１引数で指定されているコマンドを実行する
-    if argument
-      exec_command(argument, nil, nil, yield_block_stack)
+    if options[:_ARGUMENT_]
+      exec_command(options[:_ARGUMENT_], nil, nil, yield_block_stack)
     end
   end
 end
@@ -652,7 +653,7 @@ end
 class Control #ユーザー定義関数操作
   #ユーザー定義コマンドを定義する
   def _DEFINE_(argument, options, yield_block_stack, &block)
-    @function_list[argument] = block
+    @function_list[options[:_ARGUMENT_]] = block
   end
 
   #ユーザー定義コマンドの別名を作る
@@ -674,7 +675,7 @@ class Control #スクリプト制御
   #子コントロールを検索してコマンドブロックを送信する
   def _SEND_(argument, options, yield_block_stack, &block)
     #コントロールを検索する
-    control = find_control_path(argument)
+    control = find_control_path(options[:_ARGUMENT_])
     return unless control
 
     #インタラプト指定されている
@@ -691,7 +692,7 @@ class Control #スクリプト制御
   def _SEND_ALL_(argument, options, yield_block_stack, &block)
     #子コントロール全てを探査対象とする
     @control_list.each do |control|
-      next if argument and (control.id != argument)
+      next if options[:_ARGUMENT_] and (control.id != options[:_ARGUMENT_])
       control._SEND_(nil, options, yield_block_stack, &block)
     end
   end
@@ -699,19 +700,19 @@ class Control #スクリプト制御
   #スクリプトファイルを挿入する
   def _INCLUDE_(argument, options, yield_block_stack)
     #オプションが設定していなければ例外送出
-    raise unless argument
+    raise unless options[:_ARGUMENT_]
 
     #第１引数がシンボルの場合
-    if argument.instance_of?(Symbol)
+    if options[:_ARGUMENT_].instance_of?(Symbol)
       #データストアの値を対象のファイルパスとする
-      argument = @root_control._TEMP_[argument]
+      options[:_ARGUMENT_] = @root_control._TEMP_[options[:_ARGUMENT_]]
     end
 
     #プロセスのカレントディレクトリを強制的に更新する
     #TODO：Window.open_filenameが使用された場合の対策だが、他に方法はないか？
     FileUtils.chdir(@@system_path)
     #ファイルのフルパスを取得
-    options[:path] = File.expand_path(argument)
+    options[:path] = File.expand_path(options[:_ARGUMENT_])
 
     #強制フラグが無く、一度_INCLUDE_しているファイルなら終了
     if !(options[:force]) and 
@@ -731,8 +732,9 @@ class Control #スクリプト制御
     end
 
     begin
+      options[:_ARGUMENT_] = File.read(options[:path], encoding: "UTF-8")
       #スクリプトをパースする
-      _PARSE_(File.read(options[:path], encoding: "UTF-8"),
+      _PARSE_(nil,
                       options, 
                       yield_block_stack)
     rescue Errno::ENOENT
@@ -747,14 +749,14 @@ class Control #スクリプト制御
     #パーサーが指定されている場合
     if options[:parser]
       #文字列を取得して変換をかける
-      argument = @root_control.script_parser[options[:parser]][1].apply(
-                   @root_control.script_parser[options[:parser]][0].parse(argument)
+      options[:_ARGUMENT_] = @root_control.script_parser[options[:parser]][1].apply(
+                   @root_control.script_parser[options[:parser]][0].parse(options[:_ARGUMENT_])
                  )
     end
 
     #司スクリプトを評価してコマンド配列を取得し、コマンドリストの先頭に追加する
     command_list = @root_control.script_compiler.eval_commands(
-                      argument,
+                      options[:_ARGUMENT_],
                       options[:path],
                       yield_block_stack, 
                     )
@@ -768,13 +770,13 @@ class Control #スクリプト制御
 
   #文字列を評価する（デバッグ用）
   def _EVAL_(argument, options, yield_block_stack)
-    eval(argument)
+    eval(options[:_ARGUMENT_])
   end
 
   #文字列をコマンドラインに出力する（デバッグ用）
   def _PUTS_(argument, options, yield_block_stack)
     #第１引数を出力する
-    pp argument if argument 
+    pp options[:_ARGUMENT_] if options[:_ARGUMENT_] 
     #ハッシュを出力する
     pp options unless options.empty?
   end
@@ -782,7 +784,7 @@ end
 
 class Control #セーブデータ制御
   def _QUICK_SAVE_(argument, options, yield_block_stack)
-    raise unless argument.kind_of?(Numeric)
+    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
 
     command_list = []
 
@@ -791,7 +793,7 @@ class Control #セーブデータ制御
     end
 
     db = PStore.new(@root_control._SYSTEM_[:_SAVE_DATA_PATH_] + 
-                    argument.to_s +
+                    options[:_ARGUMENT_].to_s +
                     @root_control._SYSTEM_[:_QUICK_DATA_FILENAME_])
 
     db.transaction do
@@ -800,9 +802,9 @@ class Control #セーブデータ制御
   end
 
   def _QUICK_LOAD_(argument, options, yield_block_stack)
-    raise unless argument.kind_of?(Numeric)
+    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
     db = PStore.new(@root_control._SYSTEM_[:_SAVE_DATA_PATH_] + 
-                    argument.to_s +
+                    options[:_ARGUMENT_].to_s +
                     @root_control._SYSTEM_[:_QUICK_DATA_FILENAME_])
 
     db.transaction do
@@ -843,7 +845,7 @@ end
 
 class Control #プロパティのパラメータ遷移
   def _MOVE_(argument, options, yield_block_stack, &block)
-    raise unless argument #必須要素
+    #raise unless argument #必須要素
     
     #オプションハッシュの初期化
     options[:_OPTION_] =  {} unless options[:_OPTION_]
@@ -851,7 +853,7 @@ class Control #プロパティのパラメータ遷移
     
     #現在の経過カウントを初期化
     unless options[:_OPTION_][:check][:count]
-      options[:_OPTION_][:check][:count] = argument 
+      options[:_OPTION_][:check][:count] = options[:_ARGUMENT_]
     end
 
     #条件が成立した場合
@@ -871,6 +873,7 @@ class Control #プロパティのパラメータ遷移
     end
 
     options.each do |key, index|
+      next if key == :_ARGUMENT_
       next if key == :_OPTION_
 
       #開始値が設定されていなければ現在の値で初期化
@@ -890,12 +893,12 @@ class Control #プロパティのパラメータ遷移
             (options[key][0] + 
               (options[key][1] - options[key][0]).to_f * 
                 EasingProcHash[options[:_OPTION_][:easing]].call(
-                  (argument - options[:_OPTION_][:check][:count]).fdiv(argument)
+                  (options[:_ARGUMENT_] - options[:_OPTION_][:check][:count]).fdiv(options[:_ARGUMENT_])
               )
             ).to_i)
     end
 
-    @command_list.unshift([:_MOVE_, argument, options, yield_block_stack, block])
+    @command_list.unshift([:_MOVE_, nil, options, yield_block_stack, block])
 
     #現在のループ終端を挿入
     @command_list.unshift([:_END_LOOP_])
@@ -1061,7 +1064,7 @@ class Control #プロパティのパラメータ遷移
   #これらの実装については以下のサイトを参考にさせて頂きました。感謝します。
   # http://www1.u-netsurf.ne.jp/~future/HTML/bspline.html
   def _PATH_(argument, options, yield_block_stack, &block)
-    raise unless argument #必須要素
+    raise unless options[:_ARGUMENT_] #必須要素
 
     #オプションハッシュの初期化
     options[:_OPTION_] =  {} unless options[:_OPTION_]
@@ -1069,7 +1072,7 @@ class Control #プロパティのパラメータ遷移
 
     #現在の経過カウントを初期化
     unless options[:_OPTION_][:check][:count]
-      options[:_OPTION_][:check][:count] = argument 
+      options[:_OPTION_][:check][:count] = options[:_ARGUMENT_] 
     end
 
     #条件判定が存在し、かつその条件が成立した場合
@@ -1083,7 +1086,7 @@ class Control #プロパティのパラメータ遷移
       next if key == :_OPTION_
 
       #Ｂスプライン補間時に始点終点を通らない
-      step =(values.size - 1).fdiv(argument) * (argument - options[:_OPTION_][:check][:count])
+      step =(values.size - 1).fdiv(options[:_ARGUMENT_]) * (options[:_ARGUMENT_] - options[:_OPTION_][:check][:count])
 
       result = 0.0
 

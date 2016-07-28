@@ -191,23 +191,23 @@ _DEFINE_ :_TO_IMAGE_ do
 end
 
 #一時truetypeフォントの登録
-_DEFINE_ :_INSTALL_FONT_ do |path|
-  Char.install(path)
+_DEFINE_ :_INSTALL_FONT_ do |_ARGUMENT_:|
+  Char.install(_ARGUMENT_)
 end
 
 #プリレンダフォントデータの登録
-_DEFINE_ :_INSTALL_PRERENDER_FONT_ do |path, font_name:| 
-  Char.install_prerender(font_name, path)
+_DEFINE_ :_INSTALL_PRERENDER_FONT_ do |_ARGUMENT_:, font_name:| 
+  Char.install_prerender(font_name, _ARGUMENT_)
 end
 
 ###############################################################################
 #キャッシュ管理
 ###############################################################################
 
-_DEFINE_ :_IMAGE_REGIST_ do |path|
-  Image.cache.regist(path, true)
+_DEFINE_ :_IMAGE_REGIST_ do |_ARGUMENT_:|
+  Image.cache.regist(_ARGUMENT_, true)
 end
 
-_DEFINE_ :_IMAGE_DISPOSE_ do |path|
-  Image.cache.force_dispose(path)
+_DEFINE_ :_IMAGE_DISPOSE_ do |_ARGUMENT_:|
+  Image.cache.force_dispose(_ARGUMENT_)
 end

@@ -275,6 +275,7 @@ class TextPage < Layout
     @command_list.unshift([:_CREATE_, 
                       :Layout,
                       {
+                        :_ARGUMENT_ => :Layout, 
                         :width => @width,
                         :height => @line_height,
                         :float_y => :bottom
@@ -299,9 +300,10 @@ class TextPage < Layout
     @control_list.last.push_command(:_CREATE_, 
                                     :Char, 
                                     {
+                                      :_ARGUMENT_ => :Char, 
                                       :offset_x => @character_pitch,
                                       :align_y => :bottom,
-                                      :char => argument,
+                                      :char => options[:_ARGUMENT_],
                                       :command_list=> options[:command_list],
                                       :float_x => :left
                                     }.merge(@char_option), 
@@ -329,22 +331,23 @@ class TextPage < Layout
   #textコマンド
   #指定文字列を描画チェインに連結する
   def _TEXT_(argument, options, yield_block_stack)
+    pp options
     command_list = Array.new
 
     #第１引数が設定されていない場合
-    unless argument
+    unless options[:_ARGUMENT_]
       result = ""
       #キーで指定されたデータストアのデータを文字列とする
       options.each do |key, value|
         result = @root_control.send(key)[value]
       end
-      argument = result.to_s
+      options[:_ARGUMENT_] = result.to_s
     end
 
     #第１引数がシンボルの場合
-    if argument.instance_of?(Symbol)
+    if options[:_ARGUMENT_].instance_of?(Symbol)
       #キーで指定された一時データストアのデータを文字列とする
-      argument = @root_control.send(:_TEMP_)[argument]
+      options[:_ARGUMENT_] = @root_control.send(:_TEMP_)[options[:_ARGUMENT_]]
     end
 
     #イメージフォントを使うかどうか
@@ -355,9 +358,9 @@ class TextPage < Layout
     end
 
     #文字列を分解してcharコマンドに変換する
-    argument.to_s.each_char do |ch|
+    options[:_ARGUMENT_].to_s.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      command_list.push([char_command, ch, {}, yield_block_stack, nil])
+      command_list.push([char_command, ch, {_ARGUMENT_: ch}, yield_block_stack, nil])
     end
 
     #展開したコマンドをスタックする
@@ -368,7 +371,9 @@ class TextPage < Layout
     #ルビを出力するTextPageを生成する
     rubi_layout =[:_CREATE_, 
                   :TextPage, 
-                  { :command_list => [[:_TEXT_, argument, {}, yield_block_stack, nil]],
+                  {
+                    :_ARGUMENT_ => :TextPage, 
+                    :command_list => [[:_TEXT_, argument, options, yield_block_stack, nil]],
                     :x => @rubi_option[:offset_x],
                     :y => @rubi_option[:offset_y],
                     :height=> @rubi_option[:size],
@@ -387,6 +392,7 @@ class TextPage < Layout
     @control_list.last.push_command(:_CREATE_, 
                                     :Layout, 
                                     {
+                                      :_ARGUMENT_ => :Layout, 
                                       :width => 0,
                                       :height => @size,
                                       :command_list => [rubi_layout],
@@ -406,6 +412,7 @@ class TextPage < Layout
                       [ :_CREATE_, 
                         :Layout, 
                         {
+                          :_ARGUMENT_ => :Layout, 
                           :width => @indent,
                           :height => @line_height,
                           :float_x => :left
@@ -422,6 +429,7 @@ class TextPage < Layout
                     [ :_CREATE_, 
                       :Layout, 
                       {
+                        :_ARGUMENT_ => :Layout, 
                         :offset_y => @line_spacing,
                         :width => @width,
                         :height => @line_height,
@@ -451,6 +459,7 @@ class TextPage < Layout
     @command_list.unshift([:_CREATE_, 
                       :Layout, 
                       {
+                        :_ARGUMENT_ => :Layout, 
                         :width => @width,
                         :height => @line_height,
                         :float_y => :bottom

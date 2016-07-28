@@ -295,7 +295,7 @@ class TextPage < Layout
 
   #charコマンド
   #指定文字（群）を描画チェインに連結する
-  def _CHAR_(argument, options, yield_block_stack)
+  def _CHAR_(options, yield_block_stack)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
                                     :Char, 
@@ -316,10 +316,10 @@ class TextPage < Layout
   end
 
   #指定したコマンドブロックを文字列の末端に追加する
-  def _CHAR_COMMAND_(argument, options, yield_block_stack, &block)
+  def _CHAR_COMMAND_(options, yield_block_stack, &block)
     #文字コントロールを生成する
     @control_list.last.push_command(:_SCOPE_, 
-                                    argument, 
+                                    nil, 
                                     options, 
                                     yield_block_stack, 
                                     block)
@@ -330,8 +330,7 @@ class TextPage < Layout
 
   #textコマンド
   #指定文字列を描画チェインに連結する
-  def _TEXT_(argument, options, yield_block_stack)
-    pp options
+  def _TEXT_(options, yield_block_stack)
     command_list = Array.new
 
     #第１引数が設定されていない場合
@@ -367,13 +366,13 @@ class TextPage < Layout
     @command_list = command_list + @command_list
   end
 
-  def _RUBI_(argument, options, yield_block_stack)
+  def _RUBI_(options, yield_block_stack)
     #ルビを出力するTextPageを生成する
     rubi_layout =[:_CREATE_, 
                   :TextPage, 
                   {
                     :_ARGUMENT_ => :TextPage, 
-                    :command_list => [[:_TEXT_, argument, options, yield_block_stack, nil]],
+                    :command_list => [[:_TEXT_, nil, options, yield_block_stack, nil]],
                     :x => @rubi_option[:offset_x],
                     :y => @rubi_option[:offset_y],
                     :height=> @rubi_option[:size],
@@ -404,7 +403,7 @@ class TextPage < Layout
 
   #line_feedコマンド
   #改行処理（CR＋LF）
-  def _LINE_FEED_(argument, options, yield_block_stack)
+  def _LINE_FEED_(options, yield_block_stack)
 
     #インデントスペーサーの作成
     if @indent > 0
@@ -448,10 +447,10 @@ class TextPage < Layout
 
   #flushコマンド
   #メッセージレイヤの消去
-  def _FLUSH_(argument, options, yield_block_stack)
+  def _FLUSH_(options, yield_block_stack)
     #子コントロールをクリアする
     @control_list.each do |control|
-      control._DELETE_(argument, options, yield_block_stack)
+      control._DELETE_(options, yield_block_stack)
     end
     @control_list.clear
 

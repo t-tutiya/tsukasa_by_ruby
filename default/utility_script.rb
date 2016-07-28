@@ -159,30 +159,30 @@ _DEFINE_ :ep do
 end
 
 #デフォルトテキストウィンドウの_SET_ラッパー
-_DEFINE_ :_CHAR_SET_ do |argument, options|
+_DEFINE_ :_CHAR_SET_ do |options|
   _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
     _SEND_ _DEFAULT_TEXT_PAGE_ do
-      _SET_ argument, options
+      _SET_ options
     end
   end
 end
 
 #デフォルトテキストウィンドウの_RUBI_ラッパー
-_DEFINE_ :_CHAR_RUBI_ do |argument, options|
+_DEFINE_ :_CHAR_RUBI_ do |options|
   _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
     _SEND_ _DEFAULT_TEXT_PAGE_ do
-      _RUBI_ argument, options
+      _RUBI_ options
     end
   end
 end
 
 
 #文字間ウェイトの更新
-_DEFINE_ :_WAIT_FRAME_ do |argument|
+_DEFINE_ :_WAIT_FRAME_ do |_ARGUMENT_:|
   _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
     _SEND_ _DEFAULT_TEXT_PAGE_ do
       _DEFINE_ :_CHAR_WAIT_ do
-        _WAIT_ count: argument,
+        _WAIT_ count: _ARGUMENT_,
                key_down: K_RCONTROL,
                key_push: K_SPACE,
                system: [:mouse_push]
@@ -196,7 +196,7 @@ end
 ###############################################################################
 
 #標準テキストウィンドウ
-_DEFINE_ :_TEXT_WINDOW_ do |argument, options|
+_DEFINE_ :_TEXT_WINDOW_ do |options|
   #メッセージウィンドウ
   _CREATE_ :TextPage, 
     id: options[:_ARGUMENT_], **options do
@@ -261,7 +261,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |argument, options|
     end
   end
   _CHECK_ system: [:block_given] do
-    _SEND_ argument do
+    _SEND_ options[:_ARGUMENT_] do
       _YIELD_
     end
   end
@@ -391,11 +391,11 @@ _DEFINE_ :_TEXT_BUTTON_ do
 end
 
 #ボタンコントロール
-_DEFINE_ :_IMAGE_BUTTON_ do |argument, options|
-  _BUTTON_BASE_ argument,
+_DEFINE_ :_IMAGE_BUTTON_ do |options|
+  _BUTTON_BASE_ options[:_ARGUMENT_],
     width:256, 
     height:256,
-    id: argument,
+    id:  options[:_ARGUMENT_],
     **options do
 
     _CREATE_ :TileMap, 

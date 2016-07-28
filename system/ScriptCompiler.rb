@@ -42,10 +42,10 @@ class ScriptCompiler
 
     begin
       eval(script, nil, fname)
-    rescue SyntaxError => e
-      puts "[司エンジン：スクリプトパースエラー：文法エラーです]"
-      puts e.message
-      exit
+#    rescue SyntaxError => e
+#      puts "[司エンジン：スクリプトパースエラー：文法エラーです]"
+#      puts e.message
+#      exit
     rescue Exception => e
       puts "[司エンジン：スクリプトパースエラー]"
       puts e.message
@@ -56,22 +56,17 @@ class ScriptCompiler
     return @command_list
   end
 
-  def eval_block( argument, options, yield_block_stack, &block)
+  def eval_block(options, yield_block_stack, &block)
     raise unless block
 
     @yield_block_stack = yield_block_stack
     @command_list.clear
 
     begin
-      self.instance_exec(argument, options, &block)
-    rescue RuntimeError => e
-      puts "[司エンジン：実行時エラー：RuntimeError]"
-      raise
-    rescue NoMethodError => e
-      puts "[司エンジン：実行時エラー：指定されたメソッドが存在しません]"
-      puts e.message
-      puts e.backtrace[0]
-      exit
+      self.instance_exec(options, options, &block)
+#    rescue RuntimeError => e
+#      puts "[司エンジン：実行時エラー：RuntimeError]"
+#      raise
     end
 
     return @command_list

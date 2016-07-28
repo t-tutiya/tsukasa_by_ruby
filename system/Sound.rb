@@ -67,35 +67,35 @@ class Sound  < Control
   end
   
   #再生
-  def _PLAY_(argument, options, yield_block_stack, &block)
-    @entity.play( argument || 1, #ループ回数（０なら無限）
+  def _PLAY_(options, yield_block_stack, &block)
+    @entity.play( options[:_ARGUMENT_] || 1, #ループ回数（０なら無限）
                   options[:fadetime].to_f || 0)
   end
 
   #停止
-  def _STOP_(argument, options, yield_block_stack, &block)
+  def _STOP_(options, yield_block_stack, &block)
     @entity.stop(options[:fadetime].to_f || 0)
   end
 
   #一時停止
-  def _PAUSE_(argument, options, yield_block_stack, &block)
+  def _PAUSE_(options, yield_block_stack, &block)
     @entity.pause(options[:fadetime].to_f || 0)
   end
 
   #再開
-  def _RESUME_(argument, options, yield_block_stack, &block)
+  def _RESUME_(options, yield_block_stack, &block)
     @entity.resume(options[:fadetime].to_f || 0)
   end
 
   #音量
-  def _VOLUME_(argument, options, yield_block_stack, &block)
-    @entity.set_volume( argument || 90,
+  def _VOLUME_(options, yield_block_stack, &block)
+    @entity.set_volume( options[:_ARGUMENT_] || 90,
                         options[:fadetime].to_f || 0)
   end
 
   #パン
-  def _PAN_(argument, options, yield_block_stack, &block)
-    @entity.set_pan( argument || 0, #-100～100
+  def _PAN_(options, yield_block_stack, &block)
+    @entity.set_pan( options[:_ARGUMENT_] || 0, #-100～100
                      options[:fadetime].to_f || 0)
   end
 end

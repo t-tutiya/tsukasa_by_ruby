@@ -75,13 +75,13 @@ class Image < Helper::Drawable
   end
 
   #Image上に直線を引く
-  def _LINE_(argument, options, yield_block_stack)
+  def _LINE_(options, yield_block_stack)
     @entity.line( 
       options[:x1], options[:y1], options[:x2], options[:y2], options[:color])
   end
 
   #Image上に矩形を描く
-  def _BOX_(argument, options, yield_block_stack)
+  def _BOX_(options, yield_block_stack)
     if options[:fill]
       @entity.box_fill( 
         options[:x1], options[:y1], options[:x2], options[:y2], 
@@ -94,7 +94,7 @@ class Image < Helper::Drawable
   end
 
   #Image上に円を描く
-  def _CIRCLE_(argument, options, yield_block_stack)
+  def _CIRCLE_(options, yield_block_stack)
     if options[:fill]
       @entity.circle_fill(
         options[:x], options[:y], options[:r], options[:color])
@@ -105,7 +105,7 @@ class Image < Helper::Drawable
   end
 
   #Image上に三角形を描く
-  def _TRIANGLE_(argument, options, yield_block_stack)
+  def _TRIANGLE_(options, yield_block_stack)
     if options[:fill]
       @entity.triangle_fill(
         options[:x1], options[:y1], options[:x2], options[:y2], 
@@ -120,7 +120,7 @@ class Image < Helper::Drawable
   end
 
   #Image上に文字を描く
-  def _TEXT_(argument, options, yield_block_stack)
+  def _TEXT_(options, yield_block_stack)
     options[:weight] = 4 unless options[:weight]
     options[:option] = {} unless options[:option]
     if options[:color]
@@ -143,17 +143,17 @@ class Image < Helper::Drawable
   end
 
   #Imageを指定色で塗りつぶす
-  def _FILL_(argument, options, yield_block_stack)
-    @entity.fill(argument)
+  def _FILL_(options, yield_block_stack)
+    @entity.fill(options[:_ARGUMENT_])
   end
 
   #Imageを[0,0,0,0]で塗りつぶす
-  def _CLEAR_(argument, options, yield_block_stack)
+  def _CLEAR_(options, yield_block_stack)
     @entity.clear
   end
 
   #Imageの指定座標への色の取得／設定
-  def _PIXEL_(argument, options, yield_block_stack, &block)
+  def _PIXEL_(options, yield_block_stack, &block)
     if options[:color]
       @entity[options[:x], options[:y]] = options[:color]
     end
@@ -165,7 +165,7 @@ class Image < Helper::Drawable
   end
 
   #Imageを指定座標の色を比較し、同値ならブロックを実行する
-  def _COMPARE_(argument, options, yield_block_stack, &block)
+  def _COMPARE_(options, yield_block_stack, &block)
     if @entity.compare(options[:x], options[:y], options[:color])
       #ブロックが付与されているならそれを実行する
       parse_block(@entity[options[:x], options[:y]], nil, 
@@ -174,12 +174,12 @@ class Image < Helper::Drawable
   end
 
   #画像を保存する
-  def _SAVE_IMAGE_(argument, options, yield_block_stack)
-    @entity.save(argument,options[:format] || FORMAT_PNG)
+  def _SAVE_IMAGE_(options, yield_block_stack)
+    @entity.save(options[:_ARGUMENT_], options[:format] || FORMAT_PNG)
   end
 
   #指定したツリーを描画する
-  def _DRAW_(argument, options, yield_block_stack, &block)
+  def _DRAW_(options, yield_block_stack, &block)
     #中間バッファのサイズを決める
     width = options[:width] || @width
     height = options[:height] || @height
@@ -190,14 +190,14 @@ class Image < Helper::Drawable
     control = self
 
     #子コントロールを再帰的に検索
-    Array(argument).each do |control_id|
+    Array(options[:_ARGUMENT_]).each do |control_id|
       control = control.find_control(control_id)
       break unless control
     end
 
     #コントロールの探査に失敗
     unless control
-      warn "コントロール\"#{argument}\"が存在しません"
+      warn "コントロール\"#{options[:_ARGUMENT_]}\"が存在しません"
       return
     end
 

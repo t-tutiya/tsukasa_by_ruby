@@ -180,7 +180,7 @@ class ClickableLayout < Layout
     return super
   end
 
-  def check_imple(argument, options, yield_block_stack)
+  def check_imple(datastore, options, yield_block_stack)
     if options[:mouse]
       Array(options[:mouse]).each do |key|
         case key

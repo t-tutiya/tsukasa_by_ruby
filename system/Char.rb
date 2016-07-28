@@ -367,7 +367,7 @@ class Char < Helper::Drawable
     end
   end
   
-  def _CLEAR_(argument, options, yield_block_stack)
+  def _CLEAR_(options, yield_block_stack)
     @char = nil
     @option_update = true
   end

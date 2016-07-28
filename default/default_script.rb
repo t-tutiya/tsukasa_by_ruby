@@ -43,7 +43,7 @@ _CREATE_ :ClickableLayout, id: :requested_close,
       _DELETE_
     end
     
-    _GET_ :_CURSOR_VISIBLE_, datastore: :_SYSTEM_ do |arg, options|
+    _GET_ :_CURSOR_VISIBLE_, datastore: :_SYSTEM_ do |options|
       _CHECK_ mouse: [:cursor_off] do
         #カーソルを表示する
         DXRuby::Input.mouse_enable = true unless options[:_CURSOR_VISIBLE_]
@@ -84,8 +84,8 @@ _DEFINE_ :_RUNNING_TIME_ do
 end
 
 #フルスクリーンのオンオフ
-_DEFINE_ :_FULL_SCREEN_ do |argument|
-      DXRuby::Window.full_screen = argument #bool
+_DEFINE_ :_FULL_SCREEN_ do |_ARGUMENT_:|
+      DXRuby::Window.full_screen = _ARGUMENT_ #bool
 end
 
 #フルスクリーン化可能な解像度のリストを取得する
@@ -102,14 +102,14 @@ _DEFINE_ :_FPS_ do |fps|
 end
 
 #画面サイズの変更
-_DEFINE_ :_RESIZE_ do |argumnet, options|
+_DEFINE_ :_RESIZE_ do |options|
   DXRuby::Window.resize(options[:width], options[:height])
   _SEND_ [:_ROOT_, :requested_close] do
     _SET_ width: options[:width], height: options[:height]
   end
 end
 
-_DEFINE_ :_WINDOW_STATUS_ do |argumnet, options|
+_DEFINE_ :_WINDOW_STATUS_ do |options|
   #タイトルバーの文字列を設定する
   DXRuby::Window.caption = options[:caption] if options[:caption]
   #タイトルバーのアイコン画像を設定する
@@ -137,28 +137,28 @@ _DEFINE_ :_WINDOW_STATUS_ do |argumnet, options|
 end
 
 #マウスカーソルの可視設定
-_DEFINE_ :_MOUSE_ENABLE_ do |argumnet|
-  _SET_ :_SYSTEM_, _CURSOR_VISIBLE_: argumnet
-  DXRuby::Input.mouse_enable = argumnet
+_DEFINE_ :_MOUSE_ENABLE_ do |_ARGUMENT_:|
+  _SET_ :_SYSTEM_, _CURSOR_VISIBLE_: _ARGUMENT_
+  DXRuby::Input.mouse_enable = _ARGUMENT_
 end
 
 #マウスホイールの値を設定／取得する
-_DEFINE_ :_MOUSE_WHEEL_POS_ do |argumnet|
-  DXRuby::Input.mouse_wheel_pos = argumnet if argumnet
+_DEFINE_ :_MOUSE_WHEEL_POS_ do |_ARGUMENT_:|
+  DXRuby::Input.mouse_wheel_pos = _ARGUMENT_ if _ARGUMENT_
   _CHECK_ system: :block_given do
     _YIELD_ DXRuby::Input.mouse_wheel_pos
   end
 end
 
 #パッドの方向キーを-1,0,1で取得する
-_DEFINE_ :_PAD_ARROW_ do |argumnet|
+_DEFINE_ :_PAD_ARROW_ do |_ARGUMENT_:|
   _CHECK_ system: :block_given do
-    _YIELD_ x: DXRuby::Input.x(argumnet || 0), y: DXRuby::Input.y(argumnet || 0)
+    _YIELD_ x: DXRuby::Input.x(_ARGUMENT_ || 0), y: DXRuby::Input.y(_ARGUMENT_ || 0)
   end
 end
 
 #パッドのキーコンフィグを設定する
-_DEFINE_ :_PAD_CONFIG_ do |argumnet, options|
+_DEFINE_ :_PAD_CONFIG_ do |options|
   DXRuby::Input.set_config( options[:pad_code], 
                     options[:key_code], 
                     options[:pad_number] = 0)
@@ -166,7 +166,7 @@ end
 
 #Imageを生成し、指定したコントロール配下を描画する
 _DEFINE_ :_TO_IMAGE_ do 
-  |argument, width: nil, height: nil, scale: nil, z: Float::INFINITY, visible: true|
+  |width: nil, height: nil, scale: nil, z: Float::INFINITY, visible: true|
   _GET_ [:width, :height] do |arg, options|
     #width/heightのどちらかが設定されていない場合、現在の幅を使用する
     unless width and height
@@ -174,7 +174,7 @@ _DEFINE_ :_TO_IMAGE_ do
       height= options[:height]
     end
     #新規Imageの生成（初期設定では不可視）
-    _CREATE_ :Image, id: argument, z: z, visible: false,
+    _CREATE_ :Image, id: options[:_ARGUMENT_], z: z, visible: false,
       width: width, height: height do
       #自身と並列の子コントロールを描画する（自身は除く）
       _DRAW_ [:_PARENT_], scale: scale

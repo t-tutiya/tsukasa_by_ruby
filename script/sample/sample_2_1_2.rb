@@ -16,7 +16,7 @@ _CREATE_ :ClickableLayout,
     _CIRCLE_ x: 128,  y: 128, r: 128, color: C_GREEN, fill: true
     _TEXT_ x:80, y:120, text: "DOWN", option: {color: [0,0,0]}
   end
-  _STACK_LOOP_ do
+  _DEFINE_ :inner_loop do
     _CHECK_ mouse: [:cursor_over] do
       _SEND_(:normal)  {_SET_ visible: false}
       _SEND_(:over)    {_SET_ visible: true}
@@ -38,7 +38,9 @@ _CREATE_ :ClickableLayout,
       _SEND_(:key_down){_SET_ visible: false}
     end
     _END_FRAME_
+    _RETURN_ :inner_loop
   end
+  inner_loop
 end
 
 _LOOP_ do

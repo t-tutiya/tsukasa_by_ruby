@@ -571,24 +571,6 @@ class Control #制御構文
     parse_block(options, yield_stack, &block)
   end
 
-  def _STACK_LOOP_(yield_stack, options, &block) 
-    if options
-      #チェック条件を満たしたら終了する
-      return if check_imple(options[:_ARGUMENT_], options, yield_stack)
-      #カウンタを減算
-      if options[:count]
-        options[:count] = options[:count] - 1
-      end
-    end
-
-    #ブロックを実行時評価しコマンド列を生成する。
-    parse_block(options, yield_stack, &block)
-
-    @command_list.push([:_END_LOOP_])
-    #リストの末端に自分自身を追加する
-    @command_list.push([:_STACK_LOOP_, options, yield_stack, block])
-  end
-
   def _NEXT_(yield_stack, options, &block)
     #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_LOOP_タグが見つからない場合は@command_listを空にする

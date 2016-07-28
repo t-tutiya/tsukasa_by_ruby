@@ -5,7 +5,7 @@ _DEFINE_ :menu_button do |x:, y:, id:, text: |
     width: 196-16, height:32 do
     #キーがクリックされた
     _DEFINE_ :on_key_push do
-      _SEND_ [:_PARENT_, :_PARENT_, :_PARENT_] do 
+      _SEND_ [:_PARENT_, :_PARENT_, :_PARENT_], interrupt: true do 
         _SEND_ :menu do
           _SET_ child_update: false
         end
@@ -15,7 +15,7 @@ _DEFINE_ :menu_button do |x:, y:, id:, text: |
   end
 end
 
-_DEFINE_ :command_window do |argument, options|
+_DEFINE_ :command_window do |options|
   _CREATE_ :Layout,
     x: options[:x],
     y: options[:y], 
@@ -37,7 +37,7 @@ _DEFINE_ :command_window do |argument, options|
         menu_button text: "にげる",   x:8, y:32 * 3 + 8 * 4 , id:3
       end
     end
-    _STACK_LOOP_ do
+    _DEFINE_ :inner_loop do
       #子コントロールがあるなら削除されるまで待機
       _WAIT_ child_not_exist: [:command]
       #システムで右クリックされたら自身を削除
@@ -55,7 +55,9 @@ _DEFINE_ :command_window do |argument, options|
         _DELETE_
       end
       _END_FRAME_
+      _RETURN_ :inner_loop
     end
+    inner_loop
   end
 end
 

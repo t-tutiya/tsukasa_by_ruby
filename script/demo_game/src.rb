@@ -74,7 +74,7 @@ _DEFINE_ :TextSelect do |options|
                         key_push: K_SPACE,
                         system: :mouse_push}}
     _SET_ x: 0
-    _STACK_LOOP_ do
+    _DEFINE_ :inner_loop do
       #マウスが領域内に入ったら色を変え、文字をスクロールインさせる
       _CHECK_ mouse: [:cursor_over] do
         _SEND_(:text_area){
@@ -99,7 +99,9 @@ _DEFINE_ :TextSelect do |options|
         _RETURN_
       end
       _END_FRAME_
+      _RETURN_ :inner_loop
     end
+    inner_loop
   end
 end
 

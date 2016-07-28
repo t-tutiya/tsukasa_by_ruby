@@ -10,12 +10,14 @@ _CREATE_ :Char,
 
 _CREATE_ :ClickableLayout, x: 640-256, y: 480-256, width:256, height: 256 do
   _CREATE_ :Image, path: "./resource/button_normal.png"
-  _STACK_LOOP_ do |a,b,c|
+  _DEFINE_ :inner_loop do
     _CHECK_ mouse: [:cursor_over] do 
       _SET_ :_SYSTEM_ , data0: true
     end
     _END_FRAME_
+    _RETURN_ :inner_loop
   end
+  inner_loop
 end
 
 _CREATE_ :Layout , id: :cursor do
@@ -23,7 +25,7 @@ _CREATE_ :Layout , id: :cursor do
     map_array: [[0]], size_x: 1, size_y: 1, width:32, height:32 do
     _SET_TILE_GROUP_ path: "./resource/icon/icon_4_a.png",
       x_count: 4, y_count: 1
-    _STACK_LOOP_ do
+    _DEFINE_ :inner_loop do
       _MAP_STATUS_ 0
       _WAIT_ count: 5
       _MAP_STATUS_ 1
@@ -32,7 +34,9 @@ _CREATE_ :Layout , id: :cursor do
       _WAIT_ count: 5
       _MAP_STATUS_ 3
       _WAIT_ count: 5
+      _RETURN_ :inner_loop
     end
+    inner_loop
   end
 end
 

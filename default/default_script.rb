@@ -36,7 +36,7 @@ require 'dxruby'
 
 _CREATE_ :ClickableLayout, id: :requested_close,
   width: DXRuby::Window.width, height: DXRuby::Window.height do
-  _STACK_LOOP_ do
+  _DEFINE_ :inner_loop do
     #ウィンドウの閉じるボタンが押された場合に呼びだされる。
     _CHECK_ system: [:requested_close] do
       _EXIT_ #アプリを終了する
@@ -55,7 +55,9 @@ _CREATE_ :ClickableLayout, id: :requested_close,
       end
     end
     _END_FRAME_
+    _RETURN_ :inner_loop
   end
+  inner_loop
 end
 
 #スクリーンショットキャプチャ

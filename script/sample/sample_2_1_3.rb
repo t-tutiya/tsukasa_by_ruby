@@ -11,7 +11,8 @@ _CREATE_ :ClickableLayout,
     id: :over, visible: false
   _CREATE_ :Image, path: "./resource/button_key_down.png", 
     id: :key_down, visible: false
-  _STACK_LOOP_ do
+
+  _DEFINE_ :inner_loop do
     _CHECK_ mouse: [:cursor_over] do
       _SEND_(:normal)  {_SET_ visible: false}
       _SEND_(:over)    {_SET_ visible: true}
@@ -33,7 +34,9 @@ _CREATE_ :ClickableLayout,
       _SEND_(:key_down){_SET_ visible: false}
     end
     _END_FRAME_
+    _RETURN_ :inner_loop
   end
+  inner_loop
 end
 
 _LOOP_ do

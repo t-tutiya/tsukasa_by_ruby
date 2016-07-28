@@ -133,7 +133,7 @@ _DEFINE_ :_END_PAUSE_ do
         width: 24, height: 24, z: 1000000 do
         _SET_TILE_GROUP_ path: "./resource/icon/icon_4_a.png",
           x_count: 4, y_count: 1
-        _STACK_LOOP_ do
+        _DEFINE_ :inner_loop do
           _MAP_STATUS_ 0
           _WAIT_ count: 5
           _MAP_STATUS_ 1
@@ -142,7 +142,9 @@ _DEFINE_ :_END_PAUSE_ do
           _WAIT_ count: 5
           _MAP_STATUS_ 3
           _WAIT_ count: 5
+          _RETURN_ :inner_loop
         end
+        inner_loop
       end
 
       #待機フラグが下がるまで待機

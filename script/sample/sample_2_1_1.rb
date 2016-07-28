@@ -1,5 +1,5 @@
 #ボタンコントロール
-_DEFINE_ :button3 do |argument, options|
+_DEFINE_ :button3 do |options|
   _CREATE_ :ClickableLayout, 
     x: options[:x] || 0,
     y: options[:y] || 0,
@@ -15,7 +15,7 @@ _DEFINE_ :button3 do |argument, options|
       _SET_TILE_ 2, path: options[:down]||"./resource/button_key_down.png"
     end
 
-    _STACK_LOOP_ do
+    _DEFINE_ :inner_loop do
       _CHECK_ mouse: [:cursor_over] do
         _SEND_(0){ _MAP_STATUS_ 1}
       end
@@ -29,7 +29,9 @@ _DEFINE_ :button3 do |argument, options|
         _SEND_(0){ _MAP_STATUS_ 1}
       end
       _END_FRAME_
+      _RETURN_ :inner_loop
     end
+    inner_loop
   end
 end
 button3 id: :test01, x: 100, y: 100

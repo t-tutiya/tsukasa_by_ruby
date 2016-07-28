@@ -28,7 +28,7 @@ _DEFINE_ :TextSelect do |options|
         font_name: "ＭＳ ゴシック", 
         char: options[:text]
     end
-    _STACK_LOOP_ do
+    _DEFINE_ :inner_loop do
       _CHECK_ mouse: [:cursor_over] do
       #マウスが領域内に入ったら色を変え、
         _SEND_ :text_area do
@@ -51,7 +51,9 @@ _DEFINE_ :TextSelect do |options|
         _RETURN_
       end
       _END_FRAME_
+      _RETURN_ :inner_loop
     end
+    inner_loop
   end
 end
 
@@ -157,7 +159,7 @@ _SEND_ :img1 do
   _DELETE_
 end
 
-_STACK_LOOP_ do |a,b,c|
+_DEFINE_ :inner_loop do
 
  _CREATE_ :Image,
    z: 0,
@@ -207,4 +209,7 @@ _STACK_LOOP_ do |a,b,c|
 	  _DELETE_
 	end
 
+  _RETURN_ :inner_loop
 end
+
+inner_loop

@@ -190,8 +190,8 @@ class Control #公開インターフェイス
     options[:command_list] = command_list unless command_list.empty?
 
     #オプションを生成
-    #TODO
-    command = [:_CREATE_, self.class.name.to_sym, options, {}]
+    options[:_ARGUMENT_] = self.class.name.to_sym
+    command = [:_CREATE_, options, {}]
 
     return command
   end
@@ -386,7 +386,7 @@ class Control #内部メソッド
 
       #指定されたデータがnilで無い場合
       when :not_null
-        value.each do |key|
+        Array(value).each do |key|
           if datastore
             #データストアとの比較
             return true if @root_control.send(datastore)[key] != nil
@@ -554,7 +554,7 @@ class Control #制御構文
   def _LOOP_(yield_stack, options, &block) 
     unless options.empty?
       #チェック条件を満たしたら終了する
-      return if check_imple(options, yield_stack)
+      return if check_imple(options[:datastore], options, yield_stack)
     end
 
     #カウンタを減算
@@ -677,7 +677,7 @@ class Control #スクリプト制御
     #インタラプト指定されている
     if options[:interrupt]
       #子コントロールのコマンドリスト先頭に挿入
-      control._SCOPE_(nil, options, yield_stack, &block)
+      control._SCOPE_(yield_stack, options, &block)
     else
       #子コントロールのコマンドリスト末端に挿入
       control.push_command(:_SCOPE_, options, yield_stack, block)
@@ -689,7 +689,7 @@ class Control #スクリプト制御
     #子コントロール全てを探査対象とする
     @control_list.each do |control|
       next if options[:_ARGUMENT_] and (control.id != options[:_ARGUMENT_])
-      control._SEND_(nil, options, yield_stack, &block)
+      control._SEND_(yield_stack, options, &block)
     end
   end
 
@@ -1074,6 +1074,7 @@ class Control #プロパティのパラメータ遷移
 
     options.each do |key, values|
       next if key == :_OPTION_
+      next if key == :_ARGUMENT_
 
       #Ｂスプライン補間時に始点終点を通らない
       step =(values.size - 1).fdiv(options[:_ARGUMENT_]) * (options[:_ARGUMENT_] - options[:_OPTION_][:check][:count])

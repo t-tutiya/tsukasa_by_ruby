@@ -8,7 +8,7 @@ _CREATE_ :Char,
 
 
 #テキストボタン定義
-_DEFINE_ :TextSelect do |argument, options|
+_DEFINE_ :TextSelect do |options|
   _CREATE_ :ClickableLayout,
     float_y: :bottom,
     x: options[:x] || 0, 
@@ -177,7 +177,7 @@ _STACK_LOOP_ do |a,b,c|
   system_menu
 
   _WAIT_ :_TEMP_,  not_equal: {path: nil}
-  _GET_ :path, datastore: :_TEMP_ do |arg, options|
+  _GET_ :path, datastore: :_TEMP_ do |options|
     _PUTS_ options[:path]
   end
   _SEND_ :top_menu1 do

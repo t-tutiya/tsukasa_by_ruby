@@ -39,7 +39,7 @@ end
 _MOUSE_ENABLE_ false
 
 _LOOP_ do
-  _GET_ [:mouse_x, :mouse_y] do |arg, options|
+  _GET_ [:mouse_x, :mouse_y] do |options|
     _SEND_ :comment_area do
       _SET_ char: options[:mouse_x].to_s + ":" + options[:mouse_y].to_s
     end
@@ -52,7 +52,7 @@ _LOOP_ do
       _MOVE_ 30, x:0, y:0, _OPTION_:{easing: :out_quart}
     end
     _MOVE_ 30, mouse_x:0, mouse_y:0 do
-      _GET_ [:mouse_x, :mouse_y] do |arg, options|
+      _GET_ [:mouse_x, :mouse_y] do |options|
         _SEND_ :comment_area do
           _SET_ char: options[:mouse_x].to_s + ":" + options[:mouse_y].to_s
         end

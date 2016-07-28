@@ -80,7 +80,7 @@ end
 
 #アプリを起動してからのミリ秒を取得する
 _DEFINE_ :_RUNNING_TIME_ do 
-  _YIELD_ DXRuby::Window.running_time
+  _YIELD_ time: DXRuby::Window.running_time
 end
 
 #フルスクリーンのオンオフ
@@ -94,10 +94,10 @@ _DEFINE_ :_SCREEN_MODES_ do
 end
 
 #FPSカウンタ
-_DEFINE_ :_FPS_ do |fps|
-  DXRuby::Window.fps = fps if fps
+_DEFINE_ :_FPS_ do |_ARGUMENT_: false|
+  DXRuby::Window.fps = _ARGUMENT_ if _ARGUMENT_
   _CHECK_ system: :block_given do
-    _YIELD_ DXRuby::Window.real_fps
+    _YIELD_ fps: DXRuby::Window.real_fps
   end
 end
 
@@ -143,10 +143,10 @@ _DEFINE_ :_MOUSE_ENABLE_ do |_ARGUMENT_:|
 end
 
 #マウスホイールの値を設定／取得する
-_DEFINE_ :_MOUSE_WHEEL_POS_ do |_ARGUMENT_:|
+_DEFINE_ :_MOUSE_WHEEL_POS_ do |_ARGUMENT_: false|
   DXRuby::Input.mouse_wheel_pos = _ARGUMENT_ if _ARGUMENT_
   _CHECK_ system: :block_given do
-    _YIELD_ DXRuby::Input.mouse_wheel_pos
+    _YIELD_ pos: DXRuby::Input.mouse_wheel_pos
   end
 end
 
@@ -166,15 +166,15 @@ end
 
 #Imageを生成し、指定したコントロール配下を描画する
 _DEFINE_ :_TO_IMAGE_ do 
-  |width: nil, height: nil, scale: nil, z: Float::INFINITY, visible: true|
-  _GET_ [:width, :height] do |arg, options|
+  |_ARGUMENT_:, width: nil, height: nil, scale: nil, z: Float::INFINITY, visible: true|
+  _GET_ [:width, :height] do |options|
     #width/heightのどちらかが設定されていない場合、現在の幅を使用する
     unless width and height
       width = options[:width]
       height= options[:height]
     end
     #新規Imageの生成（初期設定では不可視）
-    _CREATE_ :Image, id: options[:_ARGUMENT_], z: z, visible: false,
+    _CREATE_ :Image, id: _ARGUMENT_, z: z, visible: false,
       width: width, height: height do
       #自身と並列の子コントロールを描画する（自身は除く）
       _DRAW_ [:_PARENT_], scale: scale

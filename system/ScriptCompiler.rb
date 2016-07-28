@@ -63,7 +63,7 @@ class ScriptCompiler
     @command_list.clear
 
     begin
-      self.instance_exec(options, options, &block)
+      self.instance_exec(options, &block)
 #    rescue RuntimeError => e
 #      puts "[司エンジン：実行時エラー：RuntimeError]"
 #      raise
@@ -78,7 +78,7 @@ class ScriptCompiler
       return
     end
 
-    if argument
+    unless nil == argument
       options[:_ARGUMENT_] = argument
     end
 

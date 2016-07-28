@@ -1,6 +1,6 @@
-_DEFINE_ :comment_area do |arg, x:, y:, char:|
+_DEFINE_ :comment_area do |_ARGUMENT_:, x:, y:, char:|
   _CREATE_ :Char, 
-    id: arg,
+    id: _ARGUMENT_,
     size: 32, 
     x: x,
     y: y,
@@ -25,17 +25,17 @@ comment_area :comment_area6_b, x:256, y:256,  char: ""
 _LOOP_ do
   _SEND_ [:_ROOT_], interrupt: true do
     _SEND_ :comment_area1_b do
-      _RUNNING_TIME_ do |time|
+      _RUNNING_TIME_ do |time:|
         _SET_ char: time.to_s
       end
     end
     _SEND_ :comment_area2_b do
-      _FPS_ do |fps|
+      _FPS_ do |fps:|
         _SET_ char: fps.to_s
       end
     end
     _SEND_ :comment_area3_b do
-      _MOUSE_WHEEL_POS_ do |pos|
+      _MOUSE_WHEEL_POS_ do |pos:|
         _SET_ char: pos.to_s
       end
     end
@@ -47,9 +47,9 @@ _LOOP_ do
         _SET_ char: y.to_s
       end
     end
-    _GET_ [:mouse_x, :mouse_y] do |arg, options|
+    _GET_ [:mouse_x, :mouse_y] do |mouse_x:, mouse_y:|
       _SEND_ :comment_area6_b do
-          _SET_ char: options[:mouse_x].to_s + ":" + options[:mouse_y].to_s
+          _SET_ char: mouse_x.to_s + ":" + mouse_y.to_s
       end
     end
   end

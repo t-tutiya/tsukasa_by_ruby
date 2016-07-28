@@ -273,7 +273,6 @@ class TextPage < Layout
 
     #次のアクティブ行コントロールを追加  
     @command_list.unshift([:_CREATE_, 
-                      :Layout,
                       {
                         :_ARGUMENT_ => :Layout, 
                         :width => @width,
@@ -298,7 +297,6 @@ class TextPage < Layout
   def _CHAR_(options, yield_block_stack)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
-                                    :Char, 
                                     {
                                       :_ARGUMENT_ => :Char, 
                                       :offset_x => @character_pitch,
@@ -312,20 +310,19 @@ class TextPage < Layout
                                    )
 
     #文字待機処理をスタックする
-    @command_list.unshift([:_CHAR_WAIT_, nil, {}, yield_block_stack, nil])
+    @command_list.unshift([:_CHAR_WAIT_, {}, yield_block_stack, nil])
   end
 
   #指定したコマンドブロックを文字列の末端に追加する
   def _CHAR_COMMAND_(options, yield_block_stack, &block)
     #文字コントロールを生成する
     @control_list.last.push_command(:_SCOPE_, 
-                                    nil, 
                                     options, 
                                     yield_block_stack, 
                                     block)
 
     #文字待機処理をスタックする
-    @command_list.unshift([:_CHAR_WAIT_, nil, {}, yield_block_stack, nil])
+    @command_list.unshift([:_CHAR_WAIT_, {}, yield_block_stack, nil])
   end
 
   #textコマンド
@@ -359,7 +356,7 @@ class TextPage < Layout
     #文字列を分解してcharコマンドに変換する
     options[:_ARGUMENT_].to_s.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      command_list.push([char_command, ch, {_ARGUMENT_: ch}, yield_block_stack, nil])
+      command_list.push([char_command, {_ARGUMENT_: ch}, yield_block_stack, nil])
     end
 
     #展開したコマンドをスタックする
@@ -369,7 +366,6 @@ class TextPage < Layout
   def _RUBI_(options, yield_block_stack)
     #ルビを出力するTextPageを生成する
     rubi_layout =[:_CREATE_, 
-                  :TextPage, 
                   {
                     :_ARGUMENT_ => :TextPage, 
                     :command_list => [[:_TEXT_, nil, options, yield_block_stack, nil]],
@@ -389,7 +385,6 @@ class TextPage < Layout
 
     #TextPageをベース文字に登録する。
     @control_list.last.push_command(:_CREATE_, 
-                                    :Layout, 
                                     {
                                       :_ARGUMENT_ => :Layout, 
                                       :width => 0,
@@ -409,7 +404,6 @@ class TextPage < Layout
     if @indent > 0
       command_list =[
                       [ :_CREATE_, 
-                        :Layout, 
                         {
                           :_ARGUMENT_ => :Layout, 
                           :width => @indent,
@@ -426,7 +420,6 @@ class TextPage < Layout
     @command_list.unshift(
                     #次のアクティブ行コントロールを追加  
                     [ :_CREATE_, 
-                      :Layout, 
                       {
                         :_ARGUMENT_ => :Layout, 
                         :offset_y => @line_spacing,
@@ -441,7 +434,7 @@ class TextPage < Layout
 
     @command_list.unshift(
                     #行間待機処理を設定する
-                    [:_LINE_WAIT_, nil, {}, yield_block_stack, nil],
+                    [:_LINE_WAIT_, {}, yield_block_stack, nil],
     )
   end
 
@@ -456,7 +449,6 @@ class TextPage < Layout
 
     #次のアクティブ行コントロールを追加  
     @command_list.unshift([:_CREATE_, 
-                      :Layout, 
                       {
                         :_ARGUMENT_ => :Layout, 
                         :width => @width,

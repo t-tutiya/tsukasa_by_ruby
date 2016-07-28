@@ -99,8 +99,8 @@ class TileMap < DrawableLayout
   end
 
   def _MAP_STATUS_(options, yield_block_stack, &block)
-    if argument
-      @map_array[options[:x] || 0][options[:y] || 0] = argument
+    if options[:_ARGUMENT_]
+      @map_array[options[:x] || 0][options[:y] || 0] = options[:_ARGUMENT_]
     else
       #ブロックが付与されているならそれを実行する
       parse_block(@map_array[options[:x] || 0][options[:y] || 0], nil,

@@ -72,9 +72,9 @@ class Control #公開インターフェイス
   end
 
   #コマンドをスタックに格納する
-  def push_command(command, argument, options, yield_block_stack, block)
+  def push_command(command, options, yield_block_stack, block)
     #コマンドをスタックの末端に挿入する
-    @command_list.push([command, argument, options, yield_block_stack, block])
+    @command_list.push([command, options, yield_block_stack, block])
   end
 
   def update(mouse_pos_x, mouse_pos_y, index)
@@ -83,13 +83,13 @@ class Control #公開インターフェイス
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
-      command_name, argument, options, yield_block_stack, block = @command_list.shift
+      command_name, options, yield_block_stack, block = @command_list.shift
 
       #今フレーム処理終了判定
       break if command_name == :_END_FRAME_
 
       #コマンドを実行する
-      exec_command(command_name, options, yield_block_stack,&block)
+      exec_command(command_name, options, yield_block_stack, &block)
     end
 
     #子コントロールを更新しない場合は処理を終了
@@ -529,7 +529,7 @@ class Control #制御構文
       options[:count] = options[:count] - 1
     end
 
-    @command_list.unshift([:_WAIT_, nil, options, yield_block_stack, block])
+    @command_list.unshift([:_WAIT_, options, yield_block_stack, block])
     #現在のループ終端を挿入
     @command_list.unshift([:_END_LOOP_])
 
@@ -585,7 +585,7 @@ class Control #制御構文
 
     @command_list.push([:_END_LOOP_])
     #リストの末端に自分自身を追加する
-    @command_list.push([:_STACK_LOOP_, nil, options, yield_block_stack, block])
+    @command_list.push([:_STACK_LOOP_, options, yield_block_stack, block])
   end
 
   def _NEXT_(options, yield_block_stack, &block)
@@ -680,7 +680,7 @@ class Control #スクリプト制御
       control._SCOPE_(nil, options, yield_block_stack, &block)
     else
       #子コントロールのコマンドリスト末端に挿入
-      control.push_command(:_SCOPE_, nil, options, yield_block_stack, block)
+      control.push_command(:_SCOPE_, options, yield_block_stack, block)
     end
   end
 
@@ -837,8 +837,6 @@ end
 
 class Control #プロパティのパラメータ遷移
   def _MOVE_(options, yield_block_stack, &block)
-    #raise unless argument #必須要素
-    
     #オプションハッシュの初期化
     options[:_OPTION_] =  {} unless options[:_OPTION_]
     options[:_OPTION_][:check] =  {} unless options[:_OPTION_][:check]
@@ -890,7 +888,7 @@ class Control #プロパティのパラメータ遷移
             ).to_i)
     end
 
-    @command_list.unshift([:_MOVE_, nil, options, yield_block_stack, block])
+    @command_list.unshift([:_MOVE_, options, yield_block_stack, block])
 
     #現在のループ終端を挿入
     @command_list.unshift([:_END_LOOP_])
@@ -1100,7 +1098,7 @@ class Control #プロパティのパラメータ遷移
       send(key.to_s + "=", result.round)
     end
 
-    @command_list.unshift([:_PATH_, argument, options, yield_block_stack, block])
+    @command_list.unshift([:_PATH_, options, yield_block_stack, block])
 
     #現在のループ終端を挿入
     @command_list.unshift([:_END_LOOP_])

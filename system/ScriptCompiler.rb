@@ -40,18 +40,7 @@ class ScriptCompiler
     @yield_stack = yield_stack
     @command_list.clear
 
-    begin
-      eval(script, nil, fname)
-#    rescue SyntaxError => e
-#      puts "[司エンジン：スクリプトパースエラー：文法エラーです]"
-#      puts e.message
-#      exit
-    rescue Exception => e
-      puts "[司エンジン：スクリプトパースエラー]"
-      puts e.message
-      puts e.backtrace
-      exit
-    end
+    eval(script, nil, fname)
 
     return @command_list
   end
@@ -62,12 +51,7 @@ class ScriptCompiler
     @yield_stack = yield_stack
     @command_list.clear
 
-    begin
-      self.instance_exec(options, &block)
-#    rescue RuntimeError => e
-#      puts "[司エンジン：実行時エラー：RuntimeError]"
-#      raise
-    end
+    self.instance_exec(options, &block)
 
     return @command_list
   end

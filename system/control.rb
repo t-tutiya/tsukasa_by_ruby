@@ -771,8 +771,6 @@ class Control #スクリプト制御
   def _PUTS_(options, yield_block_stack)
     #第１引数を出力する
     pp options[:_ARGUMENT_] if options[:_ARGUMENT_] 
-    #ハッシュを出力する
-    pp options unless options.empty?
   end
 end
 

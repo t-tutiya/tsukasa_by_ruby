@@ -217,7 +217,7 @@ class Char < Helper::Drawable
   #公開インターフェイス
   #############################################################################
 
-  def initialize(options, yield_block_stack, root_control, parent_control, &block)
+  def initialize(options, yield_stack, root_control, parent_control, &block)
     @font_draw_option = {}
 
     #フォントサイズ
@@ -367,7 +367,7 @@ class Char < Helper::Drawable
     end
   end
   
-  def _CLEAR_(options, yield_block_stack)
+  def _CLEAR_(yield_stack, options)
     @char = nil
     @option_update = true
   end

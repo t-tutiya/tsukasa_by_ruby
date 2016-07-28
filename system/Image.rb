@@ -58,7 +58,7 @@ class Image < Helper::Drawable
     super
   end
 
-  def initialize(options, yield_block_stack, root_control, parent_control, &block)
+  def initialize(yield_stack, options, root_control, parent_control, &block)
     @path = nil
     super
 
@@ -75,13 +75,13 @@ class Image < Helper::Drawable
   end
 
   #Image上に直線を引く
-  def _LINE_(options, yield_block_stack)
+  def _LINE_(yield_stack, options)
     @entity.line( 
       options[:x1], options[:y1], options[:x2], options[:y2], options[:color])
   end
 
   #Image上に矩形を描く
-  def _BOX_(options, yield_block_stack)
+  def _BOX_(yield_stack, options)
     if options[:fill]
       @entity.box_fill( 
         options[:x1], options[:y1], options[:x2], options[:y2], 
@@ -94,7 +94,7 @@ class Image < Helper::Drawable
   end
 
   #Image上に円を描く
-  def _CIRCLE_(options, yield_block_stack)
+  def _CIRCLE_(yield_stack, options)
     if options[:fill]
       @entity.circle_fill(
         options[:x], options[:y], options[:r], options[:color])
@@ -105,7 +105,7 @@ class Image < Helper::Drawable
   end
 
   #Image上に三角形を描く
-  def _TRIANGLE_(options, yield_block_stack)
+  def _TRIANGLE_(yield_stack, options)
     if options[:fill]
       @entity.triangle_fill(
         options[:x1], options[:y1], options[:x2], options[:y2], 
@@ -120,7 +120,7 @@ class Image < Helper::Drawable
   end
 
   #Image上に文字を描く
-  def _TEXT_(options, yield_block_stack)
+  def _TEXT_(yield_stack, options)
     options[:weight] = 4 unless options[:weight]
     options[:option] = {} unless options[:option]
     if options[:color]
@@ -143,43 +143,43 @@ class Image < Helper::Drawable
   end
 
   #Imageを指定色で塗りつぶす
-  def _FILL_(options, yield_block_stack)
+  def _FILL_(yield_stack, options)
     @entity.fill(options[:_ARGUMENT_])
   end
 
   #Imageを[0,0,0,0]で塗りつぶす
-  def _CLEAR_(options, yield_block_stack)
+  def _CLEAR_(yield_stack, options)
     @entity.clear
   end
 
   #Imageの指定座標への色の取得／設定
-  def _PIXEL_(options, yield_block_stack, &block)
+  def _PIXEL_(yield_stack, options, &block)
     if options[:color]
       @entity[options[:x], options[:y]] = options[:color]
     end
     if block
       #ブロックが付与されているならそれを実行する
       parse_block(@entity[options[:x], options[:y]], nil, 
-                  yield_block_stack, &block)
+                  yield_stack, &block)
     end
   end
 
   #Imageを指定座標の色を比較し、同値ならブロックを実行する
-  def _COMPARE_(options, yield_block_stack, &block)
+  def _COMPARE_(yield_stack, options, &block)
     if @entity.compare(options[:x], options[:y], options[:color])
       #ブロックが付与されているならそれを実行する
       parse_block(@entity[options[:x], options[:y]], nil, 
-                  yield_block_stack, &block)
+                  yield_stack, &block)
     end
   end
 
   #画像を保存する
-  def _SAVE_IMAGE_(options, yield_block_stack)
+  def _SAVE_IMAGE_(yield_stack, options)
     @entity.save(options[:_ARGUMENT_], options[:format] || FORMAT_PNG)
   end
 
   #指定したツリーを描画する
-  def _DRAW_(options, yield_block_stack, &block)
+  def _DRAW_(yield_stack, options, &block)
     #中間バッファのサイズを決める
     width = options[:width] || @width
     height = options[:height] || @height

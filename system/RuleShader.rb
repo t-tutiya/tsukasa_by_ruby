@@ -68,7 +68,7 @@ class RuleShader < Control
   #ルールトランジション：曖昧さ
   attr_accessor :vague
 
-  def initialize(options, yield_block_stack, root_control, parent_control, &block)
+  def initialize(options, yield_stack, root_control, parent_control, &block)
     @vague = options[:vague] || 40
     self.path = options[:path] if options[:path]
     self.counter = options[:counter] || 0

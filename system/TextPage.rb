@@ -217,7 +217,7 @@ class TextPage < Layout
     @rubi_option[:character_pitch] = arg
   end
 
-  def initialize(options, yield_block_stack, root_control, parent_control, &block)
+  def initialize(options, yield_stack, root_control, parent_control, &block)
     #レンダリング済みフォント使用中かどうか
     @use_image_font = options[:use_image_font] || false
     #レンダリング済みフォントのフォント名
@@ -279,7 +279,7 @@ class TextPage < Layout
                         :height => @line_height,
                         :float_y => :bottom
                       }, 
-                      yield_block_stack, block])
+                      yield_stack, block])
   end
 
   #############################################################################
@@ -294,7 +294,7 @@ class TextPage < Layout
 
   #charコマンド
   #指定文字（群）を描画チェインに連結する
-  def _CHAR_(options, yield_block_stack)
+  def _CHAR_(yield_stack, options)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
                                     {
@@ -305,29 +305,29 @@ class TextPage < Layout
                                       :command_list=> options[:command_list],
                                       :float_x => :left
                                     }.merge(@char_option), 
-                                    yield_block_stack,
+                                    yield_stack,
                                     @function_list[:_CHAR_RENDERER_]
                                    )
 
     #文字待機処理をスタックする
-    @command_list.unshift([:_CHAR_WAIT_, {}, yield_block_stack, nil])
+    @command_list.unshift([:_CHAR_WAIT_, {}, yield_stack, nil])
   end
 
   #指定したコマンドブロックを文字列の末端に追加する
-  def _CHAR_COMMAND_(options, yield_block_stack, &block)
+  def _CHAR_COMMAND_(yield_stack, options, &block)
     #文字コントロールを生成する
     @control_list.last.push_command(:_SCOPE_, 
                                     options, 
-                                    yield_block_stack, 
+                                    yield_stack, 
                                     block)
 
     #文字待機処理をスタックする
-    @command_list.unshift([:_CHAR_WAIT_, {}, yield_block_stack, nil])
+    @command_list.unshift([:_CHAR_WAIT_, {}, yield_stack, nil])
   end
 
   #textコマンド
   #指定文字列を描画チェインに連結する
-  def _TEXT_(options, yield_block_stack)
+  def _TEXT_(yield_stack, options)
     command_list = Array.new
 
     #第１引数が設定されていない場合
@@ -356,19 +356,19 @@ class TextPage < Layout
     #文字列を分解してcharコマンドに変換する
     options[:_ARGUMENT_].to_s.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      command_list.push([char_command, {_ARGUMENT_: ch}, yield_block_stack, nil])
+      command_list.push([char_command, {_ARGUMENT_: ch}, yield_stack, nil])
     end
 
     #展開したコマンドをスタックする
     @command_list = command_list + @command_list
   end
 
-  def _RUBI_(options, yield_block_stack)
+  def _RUBI_(yield_stack, options)
     #ルビを出力するTextPageを生成する
     rubi_layout =[:_CREATE_, 
                   {
                     :_ARGUMENT_ => :TextPage, 
-                    :command_list => [[:_TEXT_, nil, options, yield_block_stack, nil]],
+                    :command_list => [[:_TEXT_, options, yield_stack, nil]],
                     :x => @rubi_option[:offset_x],
                     :y => @rubi_option[:offset_y],
                     :height=> @rubi_option[:size],
@@ -398,7 +398,7 @@ class TextPage < Layout
 
   #line_feedコマンド
   #改行処理（CR＋LF）
-  def _LINE_FEED_(options, yield_block_stack)
+  def _LINE_FEED_(yield_stack, options)
 
     #インデントスペーサーの作成
     if @indent > 0
@@ -410,7 +410,7 @@ class TextPage < Layout
                           :height => @line_height,
                           :float_x => :left
                         }, 
-                        yield_block_stack, nil
+                        yield_stack, nil
                       ]
                     ]
     else
@@ -429,21 +429,21 @@ class TextPage < Layout
                         :command_list => command_list, 
                         :float_y => :bottom
                       }, 
-                      yield_block_stack, nil
+                      yield_stack, nil
                     ])
 
     @command_list.unshift(
                     #行間待機処理を設定する
-                    [:_LINE_WAIT_, {}, yield_block_stack, nil],
+                    [:_LINE_WAIT_, {}, yield_stack, nil],
     )
   end
 
   #flushコマンド
   #メッセージレイヤの消去
-  def _FLUSH_(options, yield_block_stack)
+  def _FLUSH_(yield_stack, options)
     #子コントロールをクリアする
     @control_list.each do |control|
-      control._DELETE_(options, yield_block_stack)
+      control._DELETE_(yield_stack, options)
     end
     @control_list.clear
 
@@ -455,7 +455,7 @@ class TextPage < Layout
                         :height => @line_height,
                         :float_y => :bottom
                       }, 
-                      yield_block_stack])
+                      yield_stack])
   end
 end
 

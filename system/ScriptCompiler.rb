@@ -36,8 +36,8 @@ class ScriptCompiler
     @command_list = []
   end
 
-  def eval_commands(script, fname = "(eval)", yield_block_stack)
-    @yield_block_stack = yield_block_stack
+  def eval_commands(script, fname = "(eval)", yield_stack)
+    @yield_stack = yield_stack
     @command_list.clear
 
     begin
@@ -56,10 +56,10 @@ class ScriptCompiler
     return @command_list
   end
 
-  def eval_block(options, yield_block_stack, &block)
+  def eval_block(options, yield_stack, &block)
     raise unless block
 
-    @yield_block_stack = yield_block_stack
+    @yield_stack = yield_stack
     @command_list.clear
 
     begin
@@ -84,7 +84,7 @@ class ScriptCompiler
 
     #コマンドを登録する
     @command_list.push([
-      command_name, options, @yield_block_stack, block
+      command_name, options, @yield_stack, block
     ])
   end
 end

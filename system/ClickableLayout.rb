@@ -56,7 +56,7 @@ class ClickableLayout < Layout
     super
   end
 
-  def initialize(options, yield_block_stack, root_control, parent_control, &block)
+  def initialize(options, yield_stack, root_control, parent_control, &block)
     @collision_shape = options[:collision_shape]
 
     @colorkey_id = options[:colorkey_id]
@@ -180,7 +180,7 @@ class ClickableLayout < Layout
     return super
   end
 
-  def check_imple(datastore, options, yield_block_stack)
+  def check_imple(datastore, options, yield_stack)
     if options[:mouse]
       Array(options[:mouse]).each do |key|
         case key

@@ -39,7 +39,7 @@ class TileMap < DrawableLayout
   attr_accessor :size_x
   attr_accessor :size_y
 
-  def initialize(options, yield_block_stack, root_control, parent_control, &block)
+  def initialize(options, yield_stack, root_control, parent_control, &block)
     options[:width] = options[:width] || 32
     options[:height] = options[:height] || 32
 
@@ -73,7 +73,7 @@ class TileMap < DrawableLayout
     return super
   end
 
-  def _SET_TILE_(options, yield_block_stack)
+  def _SET_TILE_(yield_stack, options)
     if options[:_ARGUMENT_]
       @image_array[options[:_ARGUMENT_]] = DXRuby::Image.load(options[:path])
     else
@@ -81,7 +81,7 @@ class TileMap < DrawableLayout
     end
   end
 
-  def _SET_TILE_GROUP_(options, yield_block_stack)
+  def _SET_TILE_GROUP_(yield_stack, options)
     image_array = DXRuby::Image.load_tiles( options[:path], 
                                     options[:x_count] || 1, 
                                     options[:y_count] || 1, 
@@ -98,13 +98,13 @@ class TileMap < DrawableLayout
     end
   end
 
-  def _MAP_STATUS_(options, yield_block_stack, &block)
+  def _MAP_STATUS_(yield_stack, options, &block)
     if options[:_ARGUMENT_]
       @map_array[options[:x] || 0][options[:y] || 0] = options[:_ARGUMENT_]
     else
       #ブロックが付与されているならそれを実行する
       parse_block(@map_array[options[:x] || 0][options[:y] || 0], nil,
-                  yield_block_stack, &block)
+                  yield_stack, &block)
     end
   end
 

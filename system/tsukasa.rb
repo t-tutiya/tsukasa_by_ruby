@@ -134,7 +134,7 @@ class Window < Layout
     @close
   end
 
-  def _SCRIPT_PARSER_(options, yield_block_stack)
+  def _SCRIPT_PARSER_(yield_stack, options)
     require_relative options[:path]
     @script_parser[options[:ext_name]] = [
       Module.const_get(options[:parser]).new,
@@ -142,13 +142,13 @@ class Window < Layout
   end
 
   #ネイティブコードを読み込む
-  def _LOAD_NATIVE_(options, yield_block_stack)
+  def _LOAD_NATIVE_(yield_stack, options)
     raise unless options[:_ARGUMENT_]
     require options[:_ARGUMENT_]
   end
 
   #データセーブ
-  def _SAVE_(options, yield_block_stack)
+  def _SAVE_(yield_stack, options)
     raise unless options[:_ARGUMENT_].kind_of?(Numeric)
     #グローバルデータ
     if options[:_ARGUMENT_] == 0
@@ -171,7 +171,7 @@ class Window < Layout
     end
   end
 
-  def _LOAD_(options, yield_block_stack)
+  def _LOAD_(yield_stack, options)
     raise unless options[:_ARGUMENT_].kind_of?(Numeric)
     #グローバルデータ
     if options[:_ARGUMENT_] == 0

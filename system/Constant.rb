@@ -266,4 +266,17 @@ module Tsukasa
   IDC_UPARROW	= DXRuby::IDC_UPARROW #上を指す垂直の矢印カーソル
   IDC_WAIT	= DXRuby::IDC_WAIT #砂時計カーソル
 
+  #
+  #色定数
+  #
+
+  C_BLACK = DXRuby::C_BLACK
+  C_RED = DXRuby::C_RED
+  C_GREEN = DXRuby::C_GREEN
+  C_BLUE = DXRuby::C_BLUE
+  C_YELLOW = DXRuby::C_YELLOW
+  C_CYAN = DXRuby::C_CYAN
+  C_MAGENTA = DXRuby::C_MAGENTA
+  C_WHITE = DXRuby::C_WHITE
+  C_DEFAULT = DXRuby::C_DEFAULT #[0, 0, 0, 0]
 end

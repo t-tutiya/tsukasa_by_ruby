@@ -677,7 +677,7 @@ class Control #スクリプト制御
   end
 
   #スクリプトファイルを挿入する
-  def _INCLUDE_(yield_stack, _ARGUMENT_:, **options)
+  def _INCLUDE_(yield_stack, _ARGUMENT_:, path: nil, parser: nil, force: false, **)
     #第１引数がシンボルの場合
     if _ARGUMENT_.instance_of?(Symbol)
       #データストアの値を対象のファイルパスとする
@@ -688,50 +688,51 @@ class Control #スクリプト制御
     #TODO：Window.open_filenameが使用された場合の対策だが、他に方法はないか？
     FileUtils.chdir(@@system_path)
     #ファイルのフルパスを取得
-    options[:path] = File.expand_path(_ARGUMENT_)
+    path = File.expand_path(_ARGUMENT_)
 
     #強制フラグが無く、一度_INCLUDE_しているファイルなら終了
-    if !(options[:force]) and 
-        @root_control._TEMP_[:_LOADED_FEATURES_].index(options[:path])
+    if !force and @root_control._TEMP_[:_LOADED_FEATURES_].index(path)
       return
     end
 
     #ファイルパスをリストに追加する。
-    @root_control._TEMP_[:_LOADED_FEATURES_].push(options[:path])
+    @root_control._TEMP_[:_LOADED_FEATURES_].push(path)
 
     #拡張子取得
-    ext_name = File.extname(options[:path])
+    ext_name = File.extname(path)
     #rbファイルでなければparserのクラス名を初期化する。
     unless ext_name == ".rb"
       ext_name.slice!(0)
-      options[:parser] = ext_name.to_sym
+      parser = ext_name.to_sym
     end
 
     begin
-      options[:_ARGUMENT_] = File.read(options[:path], encoding: "UTF-8")
       #スクリプトをパースする
-      _PARSE_(yield_stack, options)
+      _PARSE_(yield_stack, 
+        _ARGUMENT_: File.read(path, encoding: "UTF-8"),
+        parser: parser
+      )
     rescue Errno::ENOENT
-      raise(Tsukasa::TsukasaLoadError.new(options[:path]))
+      raise(Tsukasa::TsukasaLoadError.new(path))
     end
   end
 
   #スクリプトをパースする
-  def _PARSE_(yield_stack, _ARGUMENT_:, **options)
-    options[:path] = "(parse)" unless options[:path]
+  def _PARSE_(yield_stack, _ARGUMENT_:, path: nil, parser: nil, **)
+    path = "(parse)" unless path
 
     #パーサーが指定されている場合
-    if options[:parser]
+    if parser
       #文字列を取得して変換をかける
-      _ARGUMENT_ = @root_control.script_parser[options[:parser]][1].apply(
-                   @root_control.script_parser[options[:parser]][0].parse(_ARGUMENT_)
-                 )
+      _ARGUMENT_ =  @root_control.script_parser[parser][1].apply(
+                      @root_control.script_parser[parser][0].parse(_ARGUMENT_)
+                    )
     end
 
     #司スクリプトを評価してコマンド配列を取得し、コマンドリストの先頭に追加する
     command_list = @root_control.script_compiler.eval_commands(
                       _ARGUMENT_,
-                      options[:path],
+                      path,
                       yield_stack, 
                     )
     @command_list = command_list + @command_list

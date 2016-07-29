@@ -427,25 +427,26 @@ end
 
 class Control #コントロールの生成／破棄
   #コントロールをリストに登録する
-  def _CREATE_(yield_stack, options, &block)
+  def _CREATE_(yield_stack, _ARGUMENT_:, **options, &block)
     begin 
     #コントロールを生成して子要素として登録する
-    @control_list.push(Tsukasa.const_get(options[:_ARGUMENT_]).new(options, 
-                                                      yield_stack, 
-                                                      @root_control, 
-                                                      self, 
-                                                      &block)
+    @control_list.push(
+      Tsukasa.const_get(_ARGUMENT_).new(options, 
+                                        yield_stack, 
+                                        @root_control, 
+                                        self, 
+                                        &block)
     )
-    #rescue NameError
-    #  raise(Tsukasa::TsukasaError, "コントロール[#{options[:_ARGUMENT_]}]の生成に失敗しました。")
+    rescue NameError
+      raise(Tsukasa::TsukasaError, "コントロール[#{_ARGUMENT_}]の生成に失敗しました。")
     end
   end
 
   #disposeコマンド
   #コントロールを削除する
-  def _DELETE_(yield_stack, options)
+  def _DELETE_(yield_stack, _ARGUMENT_: nil)
     #コントロールを検索する
-    control = find_control_path(options[:_ARGUMENT_])
+    control = find_control_path(_ARGUMENT_)
 
     #削除フラグを立てる
     control.dispose() if control
@@ -454,13 +455,13 @@ end
 
 class Control #セッター／ゲッター
   #コントロールのプロパティを更新する
-  def _SET_(yield_stack, options)
+  def _SET_(yield_stack, _ARGUMENT_: nil, **options)
     #オプション全探査
     options.each do |key, val|
       #データストアが設定されている場合
-      if options[:_ARGUMENT_]
+      if _ARGUMENT_
         #指定データストアのキーに値を代入する
-        @root_control.send(options[:_ARGUMENT_].to_s)[key] = val
+        @root_control.send(_ARGUMENT_.to_s)[key] = val
       else
         #セッターが存在する場合
         if  respond_to?(key.to_s + "=")
@@ -475,14 +476,13 @@ class Control #セッター／ゲッター
   end
 
   #コントロールのプロパティを更新する
-  def _SET_OFFSET_(yield_stack, options)
+  def _SET_OFFSET_(yield_stack, _ARGUMENT_: nil, **options)
     #オプション全探査
     options.each do |key, val|
-      next if key == :_ARGUMENT_
       #データストアが設定されている場合
-      if options[:_ARGUMENT_]
+      if _ARGUMENT_
         #指定データストアのキーに値をオフセット値を加算して代入
-        @root_control.send(options[:_ARGUMENT_].to_s)[key] += val
+        @root_control.send(_ARGUMENT_.to_s)[key] += val
       else
         #セッターが存在する場合
         if  respond_to?(key.to_s + "=")
@@ -497,15 +497,15 @@ class Control #セッター／ゲッター
   end
 
   #指定したコントロール(orデータストア)のプロパティを取得する
-  def _GET_(yield_stack, options, &block)
+  def _GET_(yield_stack, _ARGUMENT_:, datastore: nil, **, &block)
     result = {}
 
     #オプション全探査
-    Array(options[:_ARGUMENT_]).each do |property|
+    Array(_ARGUMENT_).each do |property|
       #データストアが設定されている場合
-      if options[:datastore]
+      if datastore
         #データストアから値を取得する
-        result[property] = @root_control.send(options[:datastore])[property]
+        result[property] = @root_control.send(datastore)[property]
       else
         if respond_to?(property.to_s)
           #コントロールプロパティから値を取得する
@@ -571,7 +571,7 @@ class Control #制御構文
     parse_block(options, yield_stack, &block)
   end
 
-  def _NEXT_(yield_stack, options, &block)
+  def _NEXT_(yield_stack, _ARGUMENT_: nil, &block)
     #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -580,16 +580,16 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      parse_block(options, yield_stack, &block)
+      parse_block(nil, yield_stack, &block)
     end
 
     #第１引数で指定されているコマンドを実行する
-    if options[:_ARGUMENT_]
-      exec_command(options[:_ARGUMENT_], nil, nil, yield_stack)
+    if _ARGUMENT_
+      exec_command(_ARGUMENT_, nil, nil, yield_stack)
     end
   end
 
-  def _BREAK_(yield_stack, options, &block)
+  def _BREAK_(yield_stack, _ARGUMENT_: nil, &block)
     #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -601,16 +601,16 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      parse_block(options, yield_stack, &block)
+      parse_block(nil, yield_stack, &block)
     end
 
     #第１引数で指定されているコマンドを実行する
-    if options[:_ARGUMENT_]
-      exec_command(options[:_ARGUMENT_], nil, nil, yield_stack)
+    if _ARGUMENT_
+      exec_command(_ARGUMENT_, nil, nil, yield_stack)
     end
   end
 
-  def _RETURN_(yield_stack, options, &block)
+  def _RETURN_(yield_stack, _ARGUMENT_: nil, &block)
     #_END_FUNCTION_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_FUNCTION_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -619,25 +619,25 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      parse_block(options, yield_stack, &block)
+      parse_block(nil, yield_stack, &block)
     end
 
     #第１引数で指定されているコマンドを実行する
-    if options[:_ARGUMENT_]
-      exec_command(options[:_ARGUMENT_], nil, yield_stack)
+    if _ARGUMENT_
+      exec_command(_ARGUMENT_, nil, yield_stack)
     end
   end
 end
 
 class Control #ユーザー定義関数操作
   #ユーザー定義コマンドを定義する
-  def _DEFINE_(yield_stack, options, &block)
-    @function_list[options[:_ARGUMENT_]] = block
+  def _DEFINE_(yield_stack, _ARGUMENT_:, &block)
+    @function_list[_ARGUMENT_] = block
   end
 
   #ユーザー定義コマンドの別名を作る
-  def _ALIAS_(yield_stack, options, &block)
-    @function_list[options[:new]] = @function_list[options[:old]]
+  def _ALIAS_(yield_stack, new:, old:, &block)
+    @function_list[new] = @function_list[old]
   end
 
   #関数ブロックを実行する
@@ -652,13 +652,13 @@ end
 
 class Control #スクリプト制御
   #子コントロールを検索してコマンドブロックを送信する
-  def _SEND_(yield_stack, options, &block)
+  def _SEND_(yield_stack, _ARGUMENT_: nil, interrupt: nil, **options, &block)
     #コントロールを検索する
-    control = find_control_path(options[:_ARGUMENT_])
+    control = find_control_path(_ARGUMENT_)
     return unless control
 
     #インタラプト指定されている
-    if options[:interrupt]
+    if interrupt
       #子コントロールのコマンドリスト先頭に挿入
       control._SCOPE_(yield_stack, options, &block)
     else
@@ -668,30 +668,27 @@ class Control #スクリプト制御
   end
 
   #直下の子コントロール全てにコマンドを送信する
-  def _SEND_ALL_(yield_stack, options, &block)
+  def _SEND_ALL_(yield_stack, _ARGUMENT_: nil, **options, &block)
     #子コントロール全てを探査対象とする
     @control_list.each do |control|
-      next if options[:_ARGUMENT_] and (control.id != options[:_ARGUMENT_])
+      next if _ARGUMENT_ and (control.id != _ARGUMENT_)
       control._SEND_(yield_stack, options, &block)
     end
   end
 
   #スクリプトファイルを挿入する
-  def _INCLUDE_(yield_stack, options)
-    #オプションが設定していなければ例外送出
-    raise unless options[:_ARGUMENT_]
-
+  def _INCLUDE_(yield_stack, _ARGUMENT_:, **options)
     #第１引数がシンボルの場合
-    if options[:_ARGUMENT_].instance_of?(Symbol)
+    if _ARGUMENT_.instance_of?(Symbol)
       #データストアの値を対象のファイルパスとする
-      options[:_ARGUMENT_] = @root_control._TEMP_[options[:_ARGUMENT_]]
+      _ARGUMENT_ = @root_control._TEMP_[_ARGUMENT_]
     end
 
     #プロセスのカレントディレクトリを強制的に更新する
     #TODO：Window.open_filenameが使用された場合の対策だが、他に方法はないか？
     FileUtils.chdir(@@system_path)
     #ファイルのフルパスを取得
-    options[:path] = File.expand_path(options[:_ARGUMENT_])
+    options[:path] = File.expand_path(_ARGUMENT_)
 
     #強制フラグが無く、一度_INCLUDE_しているファイルなら終了
     if !(options[:force]) and 
@@ -720,20 +717,20 @@ class Control #スクリプト制御
   end
 
   #スクリプトをパースする
-  def _PARSE_(yield_stack, options)
+  def _PARSE_(yield_stack, _ARGUMENT_:, **options)
     options[:path] = "(parse)" unless options[:path]
 
     #パーサーが指定されている場合
     if options[:parser]
       #文字列を取得して変換をかける
-      options[:_ARGUMENT_] = @root_control.script_parser[options[:parser]][1].apply(
-                   @root_control.script_parser[options[:parser]][0].parse(options[:_ARGUMENT_])
+      _ARGUMENT_ = @root_control.script_parser[options[:parser]][1].apply(
+                   @root_control.script_parser[options[:parser]][0].parse(_ARGUMENT_)
                  )
     end
 
     #司スクリプトを評価してコマンド配列を取得し、コマンドリストの先頭に追加する
     command_list = @root_control.script_compiler.eval_commands(
-                      options[:_ARGUMENT_],
+                      _ARGUMENT_,
                       options[:path],
                       yield_stack, 
                     )
@@ -746,8 +743,8 @@ class Control #スクリプト制御
   end
 
   #文字列を評価する（デバッグ用）
-  def _EVAL_(yield_stack, options)
-    eval(options[:_ARGUMENT_])
+  def _EVAL_(yield_stack, _ARGUMENT_:)
+    eval(_ARGUMENT_)
   end
 
   #文字列をコマンドラインに出力する（デバッグ用）
@@ -758,8 +755,8 @@ class Control #スクリプト制御
 end
 
 class Control #セーブデータ制御
-  def _QUICK_SAVE_(yield_stack, options)
-    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
+  def _QUICK_SAVE_(yield_stack, _ARGUMENT_:)
+    raise unless _ARGUMENT_.kind_of?(Numeric)
 
     command_list = []
 
@@ -768,7 +765,7 @@ class Control #セーブデータ制御
     end
 
     db = PStore.new(@root_control._SYSTEM_[:_SAVE_DATA_PATH_] + 
-                    options[:_ARGUMENT_].to_s +
+                    _ARGUMENT_.to_s +
                     @root_control._SYSTEM_[:_QUICK_DATA_FILENAME_])
 
     db.transaction do
@@ -776,10 +773,10 @@ class Control #セーブデータ制御
     end
   end
 
-  def _QUICK_LOAD_(yield_stack, options)
-    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
+  def _QUICK_LOAD_(yield_stack, _ARGUMENT_:)
+    raise unless _ARGUMENT_.kind_of?(Numeric)
     db = PStore.new(@root_control._SYSTEM_[:_SAVE_DATA_PATH_] + 
-                    options[:_ARGUMENT_].to_s +
+                    _ARGUMENT_.to_s +
                     @root_control._SYSTEM_[:_QUICK_DATA_FILENAME_])
 
     db.transaction do

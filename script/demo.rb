@@ -131,6 +131,8 @@ _DEFINE_ :system_menu do
                  comment: "マウス画像のカスタマイズ"
       TextSelect text: "sample_3_6.rb", path: path + "sample_3_6.rb", 
                  comment: "疑似if文（コンソールに結果を出力）"
+      TextSelect text: "sample_3_7.tks", path: path + "sample_3_7.tks", 
+                 comment: "シーン管理サンプル"
     end
   end
 

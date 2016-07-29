@@ -1,0 +1,46 @@
+  #シーン１
+  _DEFINE_ :scene_1 do
+
+シーン１です
+マウスの左ボタンをクリックするとシーン２へ移動します
+    _WAIT_ system: [:mouse_push] #マウスの左ボタンが押されるまで待機
+    _END_FRAME_ #キー入力の伝搬を抑制するために１フレ送る
+
+    _RETURN_ :scene_2 #シーン２へ遷移
+  end
+
+  #シーン２
+  _DEFINE_ :scene_2 do
+
+シーン２です
+マウスの左ボタンをクリックするとシーン３へ移動します
+    _WAIT_ system: [:mouse_push] #マウスの左ボタンが押されるまで待機
+    _END_FRAME_ #キー入力の伝搬を抑制するために１フレ送る
+
+    _RETURN_ :scene_3 #シーン２へ遷移
+
+  end
+
+  #シーン３
+  _DEFINE_ :scene_3 do
+
+シーン３です
+マウスの左ボタンをクリックするともう一度シーン３を実行します
+マウスの右ボタンをクリックするとシーン１へ移動します
+    _WAIT_ system: [:mouse_push, :right_mouse_push]
+
+    #マウスのボタンが押されたかどうかを判定
+    _CHECK_ system: [:mouse_push] do
+      _END_FRAME_ #キー入力の伝搬を抑制するために１フレ送る
+      _RETURN_ :scene_3 #シーン３へ遷移
+    end
+
+    _CHECK_ system: [:right_mouse_push] do
+      _END_FRAME_ #キー入力の伝搬を抑制するために１フレ送る
+      _RETURN_ :scene_1 #シーン１へ遷移
+    end
+
+  end
+
+  #シーン１を実行
+  scene_1

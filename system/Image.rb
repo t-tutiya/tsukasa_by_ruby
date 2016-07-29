@@ -179,25 +179,22 @@ class Image < Helper::Drawable
   end
 
   #指定したツリーを描画する
-  def _DRAW_(yield_stack, options, &block)
-    #中間バッファのサイズを決める
-    width = options[:width] || @width
-    height = options[:height] || @height
+  def _DRAW_(yield_stack, _ARGUMENT_: , x: 0, y: 0, scale: nil, **, &block)
     #中間バッファを生成
-    rt = DXRuby::RenderTarget.new(width, height)
+    rt = DXRuby::RenderTarget.new(@width, @height)
 
     #コントロールの初期化
     control = self
 
     #子コントロールを再帰的に検索
-    Array(options[:_ARGUMENT_]).each do |control_id|
+    Array(_ARGUMENT_).each do |control_id|
       control = control.find_control(control_id)
       break unless control
     end
 
     #コントロールの探査に失敗
     unless control
-      warn "コントロール\"#{options[:_ARGUMENT_]}\"が存在しません"
+      warn "コントロール\"#{_ARGUMENT_}\"が存在しません"
       return
     end
 
@@ -205,21 +202,20 @@ class Image < Helper::Drawable
     control.render(0,0,rt)
 
     #拡大率が設定されている場合
-    if options[:scale]
+    if scale
       #第２中間バッファを生成
-      rt2 = DXRuby::RenderTarget.new( options[:scale] * width, 
-                              options[:scale] * height,)
+      rt2 = DXRuby::RenderTarget.new( scale * @width, scale * @height)
       #拡大率を反映して第２中間バッファに描画
-      rt2.draw_ex(-1 * options[:scale]**2 * width,
-                  -1 * options[:scale]**2 * height,
+      rt2.draw_ex(-1 * scale**2 * @width,
+                  -1 * scale**2 * @height,
                   rt,
-                  {:scale_x => options[:scale],
-                   :scale_y => options[:scale],})
+                  {:scale_x => scale,
+                   :scale_y => scale,})
       #自身に描画
-      @entity.draw(0,0, rt2.to_image)
+      @entity.draw(x, y, rt2.to_image)
     else
       #自身に描画
-      @entity.draw(0,0, rt.to_image)
+      @entity.draw(x, y, rt.to_image)
     end
   end
 end

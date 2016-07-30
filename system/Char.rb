@@ -31,6 +31,11 @@
 module Tsukasa
 
 class Char < Helper::Drawable
+  #DXRuby::Imageのキャッシュマネージャー
+  @@ImageCache = CacheManager.new do |id|
+    DXRuby::Image.load(id)
+  end
+
   @@fonts_file_cache = {} #レンダリング済み文字ファイルのキャッシュ
 
   def Char.install(path)
@@ -99,6 +104,13 @@ class Char < Helper::Drawable
   attr_reader :char    
   def char=(arg)
     @char = arg.to_s
+    @option_update = true
+  end
+
+  # 描画画像パス
+  attr_reader :image_path    
+  def image_path=(arg)
+    @image_path = arg
     @option_update = true
   end
 
@@ -226,6 +238,7 @@ class Char < Helper::Drawable
     self.font_name = options[:font_name] || "ＭＳ 明朝" #フォント名
 
     self.char = options[:char] || nil #描画文字
+    self.image_path = options[:image_path] || nil #描画画像パス
 
     self.weight = options[:weight] || false #太字
     self.italic = options[:italic] || false  #イタリック
@@ -281,8 +294,12 @@ class Char < Helper::Drawable
       offset_x = offset_y = @font_draw_option[:edge_width]
     end
 
+    #描画画像パスが設定されているか
+    if @image_path
+      #画像に文字装飾をかけて描画
+      draw_image(width, height, offset_x, offset_y)
     #プリレンダフォントデータが登録されているか
-    if @@fonts_file_cache[@font_name]
+    elsif @@fonts_file_cache[@font_name]
       #プリレンダ文字の描画
       draw_prerender_character(width, height, offset_x, offset_y)
     else
@@ -366,7 +383,26 @@ class Char < Helper::Drawable
       offset_x += font[0] - font[1]
     end
   end
-  
+
+  #画像を文字として描画
+  def draw_image(width, height, offset_x, offset_y)
+    #画像をキャッシュから取得
+    entity = @@ImageCache.load(@image_path)
+
+    #現状での縦幅、横幅を取得
+    @width = width + entity.width
+    @height = height + entity.height
+
+    #imageを作成
+    @entity.dispose if @entity and !(@entity.disposed?)
+    @entity = DXRuby::Image.new(@width, @height, [0, 0, 0, 0]) 
+
+    #画像をグリフ化してImageに書き込む
+    @entity.draw( offset_x/2, 
+                  offset_y/2, 
+                  entity.effect_image_font(@font_draw_option))
+  end
+
   def _CLEAR_(yield_stack, options)
     @char = nil
     @option_update = true

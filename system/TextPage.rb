@@ -303,7 +303,8 @@ class TextPage < Layout
                                       :align_y => :bottom,
                                       :char => options[:_ARGUMENT_],
                                       :command_list=> options[:command_list],
-                                      :float_x => :left
+                                      :float_x => :left,
+                                      :image_path => options[:image_path]
                                     }.merge(@char_option), 
                                     yield_stack,
                                     @function_list[:_CHAR_RENDERER_]

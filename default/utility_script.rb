@@ -178,6 +178,14 @@ _DEFINE_ :_CHAR_RUBI_ do |options|
   end
 end
 
+#デフォルトテキストウィンドウの_SET_ラッパー
+_DEFINE_ :_CHAR_IMAGE_ do |path:|
+  _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
+    _SEND_ _DEFAULT_TEXT_PAGE_ do
+      _CHAR_ image_path: path
+    end
+  end
+end
 
 #文字間ウェイトの更新
 _DEFINE_ :_WAIT_FRAME_ do |_ARGUMENT_:|

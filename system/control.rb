@@ -399,9 +399,6 @@ class Control #内部メソッド
       when :system
         Array(value).each do |key|
           case key
-          #ウィンドウの閉じるボタンが押下された場合
-          when :requested_close
-            return true if DXRuby::Input.requested_close?
           when :mouse_push
             return true if DXRuby::Input.mouse_push?( M_LBUTTON )
           when :mouse_down

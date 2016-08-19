@@ -34,13 +34,19 @@ require 'dxruby'
 #システムサポート
 ###############################################################################
 
+_DEFINE_ :_CHECK_REQUESTED_CLOSE_ do
+  if DXRuby::Input.requested_close?
+    _YIELD_
+  end
+end
+
 _CREATE_ :ClickableLayout, id: :requested_close,
   width: DXRuby::Window.width, height: DXRuby::Window.height do
   _DEFINE_ :inner_loop do
     #ウィンドウの閉じるボタンが押された場合に呼びだされる。
-    _CHECK_ system: [:requested_close] do
+    _CHECK_REQUESTED_CLOSE_ do
       _EXIT_ #アプリを終了する
-      _DELETE_
+      _RETURN_
     end
     
     _GET_ :_CURSOR_VISIBLE_, datastore: :_SYSTEM_ do |options|

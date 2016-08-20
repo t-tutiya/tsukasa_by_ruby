@@ -550,7 +550,7 @@ class Control #制御構文
   def _LOOP_(yield_stack, options, &block) 
     unless options.empty?
       #チェック条件を満たしたら終了する
-      return if check_imple(options[:datastore], options, yield_stack)
+      return if check_imple(options[:_ARGUMENT_], options, yield_stack)
     end
 
     #カウンタによる終了判定

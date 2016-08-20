@@ -250,10 +250,6 @@ class Control #内部メソッド
 
       case condition
 
-      #count数が０以下の場合
-      when :count
-        return true if value <= 0
-
       #指定ＩＤの子コントロールが存在する
       when :child_exist
         Array(value).each do |id|
@@ -523,7 +519,9 @@ class Control #制御構文
     #チェック条件を満たしたら終了する
     return if check_imple(options[:_ARGUMENT_], options, yield_stack)
 
+    #カウンタによる終了判定
     if options[:count]
+      return if options[:count] <= 0
       options[:count] = options[:count] - 1
     end
 
@@ -555,8 +553,9 @@ class Control #制御構文
       return if check_imple(options[:datastore], options, yield_stack)
     end
 
-    #カウンタを減算
+    #カウンタによる終了判定
     if options[:count]
+      return if options[:count] <= 0
       options[:count] = options[:count] - 1
     end
 

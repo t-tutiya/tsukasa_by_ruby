@@ -14,11 +14,14 @@ _SEND_(:text0) do
       x:[800,0], 
       y:[-600,0],
       _OPTION_: { easing: :out_quart, 
-                check: {key_down: K_RCONTROL, 
+              } do
+        _CHECK_ key_down: K_RCONTROL, 
                         key_push: K_SPACE,
-                        system: :mouse_push}
-              }
-    _SET_ x: 0, y:0
+                        system: :mouse_push do
+        _SET_ x: 0, y:0
+        _BREAK_
+      end
+    end
     #待機フラグが下がるまで待機
     _WAIT_ :_TEMP_, not_equal: {flag: nil}
     #文字列をカスケードアウトさせる
@@ -60,20 +63,17 @@ _DEFINE_ :TextSelect do |options|
         color:[255,255,0], 
         font_name: "ＭＳ ゴシック", 
         char: options[:text]
-      _MOVE_ 30, 
-        alpha:[0,255],
-        _OPTION_: {check:{key_down: K_RCONTROL, 
-                        key_push: K_SPACE,
-                        system: :mouse_push}}
-      _SET_ alpha: 255
     end
     _MOVE_ 30, 
       x:[800,0],
-      _OPTION_: { easing: :out_quart,
-                check:{ key_down: K_RCONTROL, 
-                        key_push: K_SPACE,
-                        system: :mouse_push}}
-    _SET_ x: 0
+      _OPTION_: { easing: :out_quart} do
+      _CHECK_ key_down: K_RCONTROL, 
+                      key_push: K_SPACE,
+                      system: :mouse_push do
+        _SET_ x: 0
+       _BREAK_
+      end
+    end
     _DEFINE_ :inner_loop do
       #マウスが領域内に入ったら色を変え、文字をスクロールインさせる
       _CHECK_ mouse: [:cursor_over] do

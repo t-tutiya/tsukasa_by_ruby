@@ -817,18 +817,17 @@ class Control #プロパティのパラメータ遷移
   def _MOVE_(yield_stack, options, &block)
     #オプションハッシュの初期化
     options[:_OPTION_] =  {} unless options[:_OPTION_]
-    options[:_OPTION_][:check] =  {} unless options[:_OPTION_][:check]
     
     #現在の経過カウントを初期化
-    unless options[:_OPTION_][:check][:count]
-      options[:_OPTION_][:check][:count] = options[:_ARGUMENT_]
+    unless options[:_OPTION_][:count]
+      options[:_OPTION_][:count] = options[:_ARGUMENT_]
     end
 
-    #条件が成立した場合
-    return if check_imple(options[:_OPTION_][:datastore], options[:_OPTION_][:check], yield_stack)
+    #カウントが終了しているならループを終了する
+    return if options[:_OPTION_][:count] <= 0
 
     #カウントダウン
-    options[:_OPTION_][:check][:count] -= 1
+    options[:_OPTION_][:count] -= 1
 
     # Easingパラメータが設定されていない場合は線形移動を設定
     unless options[:_OPTION_][:easing]
@@ -861,7 +860,7 @@ class Control #プロパティのパラメータ遷移
             (options[key][0] + 
               (options[key][1] - options[key][0]).to_f * 
                 EasingProcHash[options[:_OPTION_][:easing]].call(
-                  (options[:_ARGUMENT_] - options[:_OPTION_][:check][:count]).fdiv(options[:_ARGUMENT_])
+                  (options[:_ARGUMENT_] - options[:_OPTION_][:count]).fdiv(options[:_ARGUMENT_])
               )
             ).to_i)
     end

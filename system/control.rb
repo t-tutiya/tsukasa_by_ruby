@@ -1034,18 +1034,19 @@ class Control #プロパティのパラメータ遷移
 
     #オプションハッシュの初期化
     options[:_OPTION_] =  {} unless options[:_OPTION_]
-    options[:_OPTION_][:check] =  {} unless options[:_OPTION_][:check]
 
     #現在の経過カウントを初期化
-    unless options[:_OPTION_][:check][:count]
-      options[:_OPTION_][:check][:count] = options[:_ARGUMENT_] 
+    unless options[:_OPTION_][:count]
+      options[:_OPTION_][:count] = options[:_ARGUMENT_] 
     end
 
-    #条件判定が存在し、かつその条件が成立した場合
-    return if check_imple(nil, options[:_OPTION_][:check], yield_stack)
+    #カウントが終了しているならループを終了する
+    return if options[:_OPTION_][:count] <= 0
 
-    options[:_OPTION_][:check][:count] -= 1
+    #カウントダウン
+    options[:_OPTION_][:count] -= 1
 
+    #移動アルゴリズムの指定（初期値Ｂスプライン）
     options[:_OPTION_][:type] = :spline unless options[:_OPTION_][:type]
 
     options.each do |key, values|
@@ -1053,7 +1054,7 @@ class Control #プロパティのパラメータ遷移
       next if key == :_ARGUMENT_
 
       #Ｂスプライン補間時に始点終点を通らない
-      step =(values.size - 1).fdiv(options[:_ARGUMENT_]) * (options[:_ARGUMENT_] - options[:_OPTION_][:check][:count])
+      step =(values.size - 1).fdiv(options[:_ARGUMENT_]) * (options[:_ARGUMENT_] - options[:_OPTION_][:count])
 
       result = 0.0
 

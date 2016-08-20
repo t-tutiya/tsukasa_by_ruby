@@ -34,12 +34,6 @@ require 'dxruby'
 #システムサポート
 ###############################################################################
 
-_DEFINE_ :_CHECK_REQUESTED_CLOSE_ do
-  if DXRuby::Input.requested_close?
-    _YIELD_
-  end
-end
-
 _CREATE_ :ClickableLayout, id: :requested_close,
   width: DXRuby::Window.width, height: DXRuby::Window.height do
   _DEFINE_ :inner_loop do
@@ -206,6 +200,23 @@ end
 #プリレンダフォントデータの登録
 _DEFINE_ :_INSTALL_PRERENDER_FONT_ do |_ARGUMENT_:, font_name:| 
   Char.install_prerender(font_name, _ARGUMENT_)
+end
+
+#ウィンドウの閉じるボタンが押されたかどうかの判定
+_DEFINE_ :_CHECK_REQUESTED_CLOSE_ do
+  if DXRuby::Input.requested_close?
+    _YIELD_
+  end
+end
+
+#１フレーム待機するLOOP
+_DEFINE_ :_WAIT_ do | options |
+  _LOOP_ options do
+    _CHECK_ system: :block_given do
+      _YIELD_
+    end
+    _END_FRAME_
+  end
 end
 
 ###############################################################################

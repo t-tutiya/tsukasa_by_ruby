@@ -515,29 +515,6 @@ class Control #セッター／ゲッター
 end
 
 class Control #制御構文
-  def _WAIT_(yield_stack, options, &block)
-    #チェック条件を満たしたら終了する
-    return if check_imple(options[:_ARGUMENT_], options, yield_stack)
-
-    #カウンタによる終了判定
-    if options[:count]
-      return if options[:count] <= 0
-      options[:count] = options[:count] - 1
-    end
-
-    @command_list.unshift([:_WAIT_, options, yield_stack, block])
-    #現在のループ終端を挿入
-    @command_list.unshift([:_END_LOOP_])
-
-    #フレーム終了疑似コマンドをスタックする
-    @command_list.unshift(:_END_FRAME_)
-
-    if block
-      #ブロックが付与されているならそれを実行する
-      parse_block(options, yield_stack, &block)
-    end
-  end
-
   def _CHECK_(yield_stack, options, &block)
     #チェック条件を満たす場合
     if check_imple(options[:_ARGUMENT_], options, yield_stack)

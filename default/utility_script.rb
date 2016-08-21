@@ -340,7 +340,7 @@ _DEFINE_ :_BUTTON_BASE_ do |id:, width:, height:, **options|
       on_mouse_out
       #マウスが領域内に入ったら色を変える
       _WAIT_ do
-        _CHECK_INPUT_ mouse: :cursor_over do
+        _CHECK_MOUSE_ :cursor_over do
           _BREAK_
         end
       end
@@ -353,7 +353,7 @@ _DEFINE_ :_BUTTON_BASE_ do |id:, width:, height:, **options|
     _DEFINE_ :on_mouse_inner_over do
       on_mouse_over
       _WAIT_ do
-        _CHECK_INPUT_ mouse: [:cursor_out, :key_push] do
+        _CHECK_MOUSE_ [:cursor_out, :key_push] do
           _BREAK_
         end
       end
@@ -375,7 +375,7 @@ _DEFINE_ :_BUTTON_BASE_ do |id:, width:, height:, **options|
     _DEFINE_ :on_key_inner_push do
       on_key_push
       _WAIT_ do
-        _CHECK_INPUT_ mouse: :key_up do
+        _CHECK_MOUSE_ :key_up do
           _BREAK_
         end
       end

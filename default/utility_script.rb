@@ -499,7 +499,7 @@ end
 ###############################################################################
 
 #既読管理ラベル
-_DEFINE_ :_LABEL_ do |arugment, options|
+_DEFINE_ :_LABEL_ do |options|
 
   #既読フラグハッシュが無ければ新設
   _CHECK_ :_SYSTEM_, equal: {_READ_CHAPTER_: nil} do
@@ -543,7 +543,7 @@ _DEFINE_ :_LABEL_ do |arugment, options|
     #ラベルにＩＤが記述されている場合
     if options[:id]
       #アクティブチャプター名が設定されていない場合
-      _CHECK_ :_TEMP_, null: :_ACTIVE_CHAPTER_NAME_ do
+      _CHECK_ :_TEMP_, equal: {_ACTIVE_CHAPTER_NAME_: nil} do
         raise
       end
       #idを設定
@@ -551,12 +551,12 @@ _DEFINE_ :_LABEL_ do |arugment, options|
     #ラベルにＩＤが記述されていない場合
     else
       #アクティブチャプター名が設定されていない場合
-      _CHECK_ :_TEMP_, null: :_ACTIVE_CHAPTER_NAME_ do
+      _CHECK_ :_TEMP_, equal: {_ACTIVE_CHAPTER_NAME_: nil} do
         #例外発生
         raise
       end
       #アクティブIDが既に設定されている場合
-      _CHECK_ :_TEMP_, not_null: :_ACTIVE_CHAPTER_ID_ do
+      _CHECK_ :_TEMP_, not_equal: {_ACTIVE_CHAPTER_ID_: nil} do
         #アクティブIDをインクリメント
         _GET_ :_ACTIVE_CHAPTER_ID_, 
               datastore: :_TEMP_ do |_ACTIVE_CHAPTER_ID_:|
@@ -564,7 +564,7 @@ _DEFINE_ :_LABEL_ do |arugment, options|
         end
       end
       #アクティブIDが既に設定されていない場合
-      _CHECK_ :_TEMP_, null: :_ACTIVE_CHAPTER_ID_ do
+      _CHECK_ :_TEMP_, equal: {_ACTIVE_CHAPTER_ID_: nil} do
         #アクティブIDをゼロで初期化
         _SET_ :_TEMP_, _ACTIVE_CHAPTER_ID_: 0
       end

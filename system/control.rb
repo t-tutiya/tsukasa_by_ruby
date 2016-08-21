@@ -246,8 +246,6 @@ class Control #内部メソッド
 
   def check_imple(datastore, options, yield_stack)
     options.each do |condition, value|
-      return unless value
-
       case condition
 
       #指定ＩＤの子コントロールが存在する
@@ -311,30 +309,6 @@ class Control #内部メソッド
             return true if send(key) > val
           end
         end
-
-      #指定されたデータがnilの場合
-      when :null
-        value.each do |key|
-          if datastore
-            #データストアとの比較
-            return true if @root_control.send(datastore)[key] == nil
-          else
-            #コントロールプロパティとの比較
-            return true if send(key) == nil
-          end
-        end
-
-      #指定されたデータがnilで無い場合
-      when :not_null
-        Array(value).each do |key|
-          if datastore
-            #データストアとの比較
-            return true if @root_control.send(datastore)[key] != nil
-          else
-            #コントロールプロパティとの比較
-            return true if send(key) != nil
-          end
-        end
       end
     end
     
@@ -343,8 +317,6 @@ class Control #内部メソッド
 
   def check_click_imple(datastore, options, yield_stack)
     options.each do |condition, value|
-      return unless value
-
       case condition
       #キーが押下された
       when :key_push

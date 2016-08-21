@@ -11,7 +11,7 @@ _IMAGE_BUTTON_ :button2, x: 450, y: 150 do
    end
 end
 
-_WAIT_ :_TEMP_, not_null: :click
+_WAIT_ :_TEMP_, not_equal: {click: nil}
 
 _CHECK_ :_TEMP_, equal:{click: :left} do
 	_INCLUDE_ "./script/sample/sample_1_15a.tks"

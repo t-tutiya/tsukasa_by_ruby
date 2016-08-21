@@ -16,16 +16,16 @@ _DEFINE_ :button3 do |options|
     end
 
     _DEFINE_ :inner_loop do
-      _CHECK_ mouse: [:cursor_over] do
+      _CHECK_MOUSE_ :cursor_over do
         _SEND_(0){ _MAP_STATUS_ 1}
       end
-      _CHECK_ mouse: [:cursor_out] do
+      _CHECK_MOUSE_:cursor_out do
         _SEND_(0){ _MAP_STATUS_ 0}
       end
-      _CHECK_ mouse: [:key_down] do
+      _CHECK_MOUSE_:key_down do
         _SEND_(0){ _MAP_STATUS_ 2}
       end
-      _CHECK_ mouse: [:key_up] do
+      _CHECK_MOUSE_:key_up do
         _SEND_(0){ _MAP_STATUS_ 1}
       end
       _END_FRAME_

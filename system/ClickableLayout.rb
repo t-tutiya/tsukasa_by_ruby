@@ -180,72 +180,78 @@ class ClickableLayout < Layout
     return super
   end
 
-  def check_imple(datastore, options, yield_stack)
-    if options[:mouse]
-      Array(options[:mouse]).each do |key|
-        case key
-        when :cursor_on
-          return true if @inner_control
+  def check_mouse_imple(datastore, options, yield_stack)
+    Array(options[:_ARGUMENT_]).each do |key|
+      case key
+      when :cursor_on
+        return true if @inner_control
 
-        when :cursor_off
-          return true unless @inner_control
+      when :cursor_off
+        return true unless @inner_control
 
-        #前フレと比較してカーソルが移動した場合
-        when :cursor_move
-          return true if @on_cursor_move
+      #前フレと比較してカーソルが移動した場合
+      when :cursor_move
+        return true if @on_cursor_move
 
-        #カーソルが指定範囲に侵入した場合
-        when :cursor_over
-          return true if @on_mouse_over
+      #カーソルが指定範囲に侵入した場合
+      when :cursor_over
+        return true if @on_mouse_over
 
-        #カーソルが指定範囲の外に移動した場合
-        when :cursor_out
-          return true if @on_mouse_out
+      #カーソルが指定範囲の外に移動した場合
+      when :cursor_out
+        return true if @on_mouse_out
 
-        #マウスボタンが押下された場合
-        when :key_push
-          return true if @on_key_push
+      #マウスボタンが押下された場合
+      when :key_push
+        return true if @on_key_push
 
-        #マウスボタンが継続押下されている合
-        when :key_down
-          return true if @on_key_down
+      #マウスボタンが継続押下されている合
+      when :key_down
+        return true if @on_key_down
 
-        #マウスボタンが範囲外で押下された場合
-        when :key_down_out
-          return true if @on_key_down_out
+      #マウスボタンが範囲外で押下された場合
+      when :key_down_out
+        return true if @on_key_down_out
 
-        #マウスボタン押下が解除された場合
-        when :key_up
-          return true if @on_key_up
+      #マウスボタン押下が解除された場合
+      when :key_up
+        return true if @on_key_up
 
-        #マウスボタン押下が範囲外で解除された場合
-        when :key_up_out
-          return true if @on_key_up_out
+      #マウスボタン押下が範囲外で解除された場合
+      when :key_up_out
+        return true if @on_key_up_out
 
-        #マウス右ボタンが押下された場合
-        when :right_key_push
-          return true if @on_right_key_push
+      #マウス右ボタンが押下された場合
+      when :right_key_push
+        return true if @on_right_key_push
 
-        #マウス右ボタンが継続押下されている場合
-        when :right_key_down
-          return true if @on_right_key_down
+      #マウス右ボタンが継続押下されている場合
+      when :right_key_down
+        return true if @on_right_key_down
 
-        #マウスボタンが範囲外で押下された場合
-        when :right_key_down_out
-          return true if @on_right_key_down_out
+      #マウスボタンが範囲外で押下された場合
+      when :right_key_down_out
+        return true if @on_right_key_down_out
 
-        #マウスボタン押下が解除された場合
-        when :right_key_up
-          return true if @on_right_key_up
+      #マウスボタン押下が解除された場合
+      when :right_key_up
+        return true if @on_right_key_up
 
-        #マウスボタン押下が範囲外で解除された場合
-        when :right_key_up_out
-          return true if @on_right_key_up_out
+      #マウスボタン押下が範囲外で解除された場合
+      when :right_key_up_out
+        return true if @on_right_key_up_out
 
-        end
       end
     end 
-    return super
+    return false
+  end
+
+  def _CHECK_MOUSE_(yield_stack, options, &block)
+    #チェック条件を満たす場合
+    if check_mouse_imple(options[:_ARGUMENT_], options, yield_stack)
+      #checkにブロックが付与されているならそれを実行する
+      parse_block(options, yield_stack, &block)
+    end
   end
 end
 

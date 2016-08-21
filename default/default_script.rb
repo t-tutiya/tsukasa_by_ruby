@@ -44,12 +44,12 @@ _CREATE_ :ClickableLayout, id: :requested_close,
     end
     
     _GET_ :_CURSOR_VISIBLE_, datastore: :_SYSTEM_ do |options|
-      _CHECK_ mouse: [:cursor_off] do
+      _CHECK_MOUSE_ :cursor_off do
         #カーソルを表示する
         DXRuby::Input.mouse_enable = true unless options[:_CURSOR_VISIBLE_]
       end
 
-      _CHECK_ mouse: [:cursor_on] do
+      _CHECK_MOUSE_ :cursor_on do
         #カーソルを不可視に戻す
         DXRuby::Input.mouse_enable = false unless options[:_CURSOR_VISIBLE_]
       end

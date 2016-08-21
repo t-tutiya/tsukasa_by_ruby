@@ -76,19 +76,19 @@ _DEFINE_ :TextSelect do |options|
     end
     _DEFINE_ :inner_loop do
       #マウスが領域内に入ったら色を変え、文字をスクロールインさせる
-      _CHECK_ mouse: [:cursor_over] do
+      _CHECK_MOUSE_:cursor_over do
         _SEND_(:text_area){
           _SET_ bgcolor: [255,0,255]
         }
       end
       #マウスが領域外に出たら色を戻し、文字をスクロールインさせる
-      _CHECK_ mouse: [:cursor_out] do
+      _CHECK_MOUSE_:cursor_out do
         _SEND_(:text_area){
           _SET_ bgcolor: [0,255,255]
         }
       end
       #マウスがクリックされたらフラグを立てる
-      _CHECK_ mouse: [:key_push] do
+      _CHECK_MOUSE_:key_push do
         pp options
         _SET_ :_TEMP_, flag: options[:id]
         _EVAL_ "pp '[" + options[:text].to_s + "]が押されました'"

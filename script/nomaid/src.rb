@@ -306,7 +306,11 @@ _DEFINE_ :lesson_menu do
       _SEND_ :nomaid_comment_area do
         _SET_ char: "習い事によってメイドは少し成長した。"
       end
-      _WAIT_ system: :mouse_push
+      _WAIT_ do
+        _CHECK_INPUT_ mouse: :push do
+          _BREAK_
+        end
+      end
       _SEND_ :nomaid_comment_area do
         _CLEAR_
       end
@@ -425,7 +429,11 @@ _DEFINE_ :work_menu do
           _SET_ char: "労働の対価として$#{reward}を得た。"
         end
       end
-      _WAIT_ system: :mouse_push
+      _WAIT_ do
+        _CHECK_INPUT_ mouse: :push do
+          _BREAK_
+        end
+      end
       _SEND_ :nomaid_comment_area do
         _CLEAR_
       end
@@ -445,7 +453,11 @@ _DEFINE_ :rest do
     _SEND_ :nomaid_comment_area do
       _SET_ char: "メイドはゆっくりと身体を休めた……。"
     end
-    _WAIT_ system: :mouse_push
+      _WAIT_ do
+        _CHECK_INPUT_ mouse: :push do
+          _BREAK_
+        end
+      end
     _SEND_ :nomaid_comment_area do
       _CLEAR_
     end

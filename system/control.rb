@@ -405,17 +405,17 @@ class Control #内部メソッド
       when :mouse
         Array(value).each do |key|
           case key
-          when :mouse_push
+          when :push
             return true if DXRuby::Input.mouse_push?( M_LBUTTON )
-          when :mouse_down
+          when :down
             return true if DXRuby::Input.mouse_down?( M_LBUTTON )
-          when :mouse_up
+          when :up
             return true if DXRuby::Input.mouse_release?( M_LBUTTON )
-          when :right_mouse_down
+          when :right_down
             return true if DXRuby::Input.mouse_down?( M_RBUTTON )
-          when :right_mouse_push
+          when :right_push
             return true if DXRuby::Input.mouse_push?( M_RBUTTON )
-          when :right_mouse_up
+          when :right_up
             return true if DXRuby::Input.mouse_release?( M_RBUTTON )
           end
         end

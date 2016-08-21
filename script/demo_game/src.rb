@@ -15,9 +15,9 @@ _SEND_(:text0) do
       y:[-600,0],
       _OPTION_: { easing: :out_quart, 
               } do
-        _CHECK_ key_down: K_RCONTROL, 
-                        key_push: K_SPACE,
-                        system: :mouse_push do
+        _CHECK_INPUT_ key_down: K_RCONTROL, 
+                      key_push: K_SPACE,
+                      mouse: :push do
         _SET_ x: 0, y:0
         _BREAK_
       end
@@ -30,16 +30,22 @@ _SEND_(:text0) do
     end
   end
   _DEFINE_ :_CHAR_WAIT_ do
-    _WAIT_  count: 2,
-            key_down: K_RCONTROL,
-            key_push: K_SPACE,
-            system: :mouse_push
+    _WAIT_  count: 2 do
+      _CHECK_INPUT_ key_down: K_RCONTROL, 
+                    key_push: K_SPACE,
+                    mouse: :push do
+        _BREAK_
+      end
+    end
   end
   _DEFINE_ :_LINE_WAIT_ do
-    _WAIT_  count: 2,
-            key_down: K_RCONTROL,
-            key_push: K_SPACE,
-            system: :mouse_push
+    _WAIT_  count: 2 do
+      _CHECK_INPUT_ key_down: K_RCONTROL, 
+                    key_push: K_SPACE,
+                    mouse: :push do
+        _BREAK_
+      end
+    end
   end
 end
 
@@ -67,9 +73,9 @@ _DEFINE_ :TextSelect do |options|
     _MOVE_ 30, 
       x:[800,0],
       _OPTION_: { easing: :out_quart} do
-      _CHECK_ key_down: K_RCONTROL, 
-                      key_push: K_SPACE,
-                      system: :mouse_push do
+      _CHECK_INPUT_ key_down: K_RCONTROL, 
+                    key_push: K_SPACE,
+                    mouse: :push do
         _SET_ x: 0
        _BREAK_
       end
@@ -110,10 +116,13 @@ _DEFINE_ :func_select do |options|
   _SEND_ :text0 do
     _CHAR_COMMAND_ do
       TextSelect id: options[:id], text: options[:_ARGUMENT_]
-      _WAIT_  count: 3, 
-              key_down: K_RCONTROL, 
-              key_push: K_SPACE,
-              system: :mouse_push
+      _WAIT_  count: 3 do
+        _CHECK_INPUT_ key_down: K_RCONTROL, 
+                      key_push: K_SPACE,
+                      mouse: :push do
+          _BREAK_
+        end
+      end
     end
   end
 end

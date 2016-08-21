@@ -9,7 +9,11 @@ _CREATE_ :Image, id: :test1, path: "./resource/bg_sample.png" do
   _SET_ shader: :rule0
 end
 
-_WAIT_ key_push: K_SPACE, system: [:mouse_push]
+_WAIT_ do
+  _CHECK_INPUT_ key_push: K_SPACE, mouse: :push do
+    _BREAK_
+  end
+end
 
 _SEND_ :test1 do
   _SEND_ :rule0 do

@@ -41,7 +41,7 @@ _DEFINE_ :command_window do |options|
       #子コントロールがあるなら削除されるまで待機
       _WAIT_ child_not_exist: [:command]
       #システムで右クリックされたら自身を削除
-      _CHECK_ system: [:right_mouse_push] do
+      _CHECK_INPUT_ mouse: :right_push do
         _SEND_ [:_PARENT_, :menu] do
           _SET_ child_update: true
         end

@@ -56,7 +56,7 @@ _DEFINE_ :_PAUSE_ do
           _WAIT_ count: 28 do
             _CHECK_INPUT_ key_down: K_RCONTROL,
                  key_push: K_SPACE,
-                 mouse: :mouse_push do
+                 mouse: :push do
               _BREAK_
             end
           end
@@ -70,12 +70,12 @@ _DEFINE_ :_PAUSE_ do
         #キーの押下を判定
         _CHECK_INPUT_ key_down: K_RCONTROL,
                       key_push: K_SPACE,
-                      mouse: :mouse_push do
+                      mouse: :push do
           #キー押下のクリアを待機
           _WAIT_  do
             _CHECK_INPUT_ key_down: K_RCONTROL,
                            key_up: K_SPACE,
-                           mouse: :mouse_up do
+                           mouse: :up do
               _BREAK_
             end
           end
@@ -87,7 +87,7 @@ _DEFINE_ :_PAUSE_ do
       _WAIT_ do 
         _CHECK_INPUT_ key_down: K_RCONTROL,
                        key_push: K_SPACE,
-                       mouse: :mouse_push do
+                       mouse: :push do
           _BREAK_
         end
       end
@@ -209,7 +209,7 @@ _DEFINE_ :_WAIT_FRAME_ do |_ARGUMENT_:|
         _WAIT_ count: _ARGUMENT_ do
           _CHECK_INPUT_ key_down: K_RCONTROL,
                          key_push: K_SPACE,
-                         mouse: :mouse_push do
+                         mouse: :push do
             _BREAK_
           end
         end
@@ -234,7 +234,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
         equal: {_SKIP_: true} do
         _CHECK_INPUT_ key_down: K_RCONTROL,
                       key_push: K_SPACE,
-                      mouse: :mouse_push do
+                      mouse: :push do
           _BREAK_
         end
       end
@@ -247,7 +247,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
         equal: {_SKIP_: true} do
         _CHECK_INPUT_ key_down: K_RCONTROL,
                       key_push: K_SPACE,
-                      mouse: :mouse_push do
+                      mouse: :push do
           _BREAK_
         end
       end
@@ -260,7 +260,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
         #キー入力判定
         _CHECK_INPUT_  key_down: K_RCONTROL,
                        key_push: K_SPACE,
-                       mouse: :mouse_push do
+                       mouse: :push do
           #α値を初期化
           _SET_ alpha: 255
           _BREAK_
@@ -283,7 +283,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
         #キー入力判定
         _CHECK_INPUT_ key_down: K_RCONTROL, 
                       key_push: K_SPACE,
-                      mouse: :mouse_push do
+                      mouse: :push do
           #α値を初期化
           _SET_ alpha: 128
           #スキップモードの場合

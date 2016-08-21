@@ -98,7 +98,7 @@ end
 #FPSカウンタ
 _DEFINE_ :_FPS_ do |_ARGUMENT_: false|
   DXRuby::Window.fps = _ARGUMENT_ if _ARGUMENT_
-  _CHECK_ system: :block_given do
+  _CHECK_BLOCK_ do
     _YIELD_ fps: DXRuby::Window.real_fps
   end
 end
@@ -147,14 +147,14 @@ end
 #マウスホイールの値を設定／取得する
 _DEFINE_ :_MOUSE_WHEEL_POS_ do |_ARGUMENT_: false|
   DXRuby::Input.mouse_wheel_pos = _ARGUMENT_ if _ARGUMENT_
-  _CHECK_ system: :block_given do
+  _CHECK_BLOCK_ do
     _YIELD_ pos: DXRuby::Input.mouse_wheel_pos
   end
 end
 
 #パッドの方向キーを-1,0,1で取得する
 _DEFINE_ :_PAD_ARROW_ do |_ARGUMENT_:|
-  _CHECK_ system: :block_given do
+  _CHECK_BLOCK_ do
     _YIELD_ x: DXRuby::Input.x(_ARGUMENT_ || 0), y: DXRuby::Input.y(_ARGUMENT_ || 0)
   end
 end
@@ -183,7 +183,7 @@ _DEFINE_ :_TO_IMAGE_ do
       #可視設定を更新する
       _SET_ visible: visible
       #ブロックコマンド実行
-      _CHECK_ system: :block_given do
+      _CHECK_BLOCK_ do
         _YIELD_
       end
     end
@@ -215,7 +215,7 @@ _DEFINE_ :_WAIT_ do |options|
     _CHECK_ options do
       _RETURN_
     end
-    _CHECK_ system: :block_given do
+    _CHECK_BLOCK_ do
       _YIELD_
     end
     _END_FRAME_

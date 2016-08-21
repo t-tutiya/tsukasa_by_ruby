@@ -51,12 +51,16 @@ _DEFINE_ :_PAUSE_ do
   _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
     _SEND_ _DEFAULT_TEXT_PAGE_ do
       #クリック待ちアイコンの表示
-      _CHECK_ system: [:block_given] do
+      _CHECK_BLOCK_ do
         _CHAR_COMMAND_ do
-          _WAIT_ count: 28, 
-                 key_down: K_RCONTROL,
+          _WAIT_ count: 28 do
+            _CHECK_INPUT_ key_down: K_RCONTROL,
                  key_push: K_SPACE,
-                 system: [:mouse_push]
+                 mouse: :mouse_push do
+              _BREAK_
+            end
+          end
+                 
           _YIELD_
         end
       end
@@ -64,21 +68,29 @@ _DEFINE_ :_PAUSE_ do
       #最後の文字のフェードイン待ち
       _WAIT_ count: 28 do
         #キーの押下を判定
-        _CHECK_ key_down: K_RCONTROL,
-                key_push: K_SPACE,
-                system: [:mouse_push] do
+        _CHECK_INPUT_ key_down: K_RCONTROL,
+                      key_push: K_SPACE,
+                      mouse: :mouse_push do
           #キー押下のクリアを待機
-          _WAIT_ key_down: K_RCONTROL,
-                 key_up: K_SPACE,
-                 system: [:mouse_up]
+          _WAIT_  do
+            _CHECK_INPUT_ key_down: K_RCONTROL,
+                           key_up: K_SPACE,
+                           mouse: :mouse_up do
+              _BREAK_
+            end
+          end
           _BREAK_
         end
       end 
 
       #キー押下待機
-      _WAIT_ key_down: K_RCONTROL,
-             key_push: K_SPACE,
-             system: [:mouse_push]
+      _WAIT_ do 
+        _CHECK_INPUT_ key_down: K_RCONTROL,
+                       key_push: K_SPACE,
+                       mouse: :mouse_push do
+          _BREAK_
+        end
+      end
 
       #ウェイクに移行
       _SET_ :_TEMP_, _SLEEP_: false
@@ -89,9 +101,11 @@ _DEFINE_ :_PAUSE_ do
   _SET_ :_TEMP_, _SLEEP_: true
 
   #スリープフラグが下りるまで待機
-  _WAIT_ :_TEMP_, 
-          key_down: K_RCONTROL, 
-          equal: {_SLEEP_: false}
+  _WAIT_ :_TEMP_, equal: {_SLEEP_: false} do
+    _CHECK_INPUT_ key_down: K_RCONTROL do
+      _BREAK_
+    end
+  end
 end
 
 _INCLUDE_ "./resource/icon/icon_8_a.rb"
@@ -192,10 +206,13 @@ _DEFINE_ :_WAIT_FRAME_ do |_ARGUMENT_:|
   _GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|
     _SEND_ _DEFAULT_TEXT_PAGE_ do
       _DEFINE_ :_CHAR_WAIT_ do
-        _WAIT_ count: _ARGUMENT_,
-               key_down: K_RCONTROL,
-               key_push: K_SPACE,
-               system: [:mouse_push]
+        _WAIT_ count: _ARGUMENT_ do
+          _CHECK_INPUT_ key_down: K_RCONTROL,
+                         key_push: K_SPACE,
+                         mouse: :mouse_push do
+            _BREAK_
+          end
+        end
       end
     end
   end
@@ -214,20 +231,26 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
     _DEFINE_ :_CHAR_WAIT_ do
       _WAIT_  :_TEMP_, 
         count: 4,
-        key_down: K_RCONTROL,
-        key_push: K_SPACE,
-        system: [:mouse_push],
-        equal: {_SKIP_: true}
+        equal: {_SKIP_: true} do
+        _CHECK_INPUT_ key_down: K_RCONTROL,
+                      key_push: K_SPACE,
+                      mouse: :mouse_push do
+          _BREAK_
+        end
+      end
     end
 
     #行間ウェイト
     _DEFINE_ :_LINE_WAIT_ do
       _WAIT_  :_TEMP_, 
         count: 2,
-        key_down: K_RCONTROL,
-        key_push: K_SPACE,
-        system: [:mouse_push],
-        equal: {_SKIP_: true}
+        equal: {_SKIP_: true} do
+        _CHECK_INPUT_ key_down: K_RCONTROL,
+                      key_push: K_SPACE,
+                      mouse: :mouse_push do
+          _BREAK_
+        end
+      end
     end
 
     #文字レンダラ
@@ -235,10 +258,14 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
       #フェードイン
       _MOVE_ 20, alpha: [0,255], _OPTION_:{easing: :in_quint} do
         #キー入力判定
-        _CHECK_ :_TEMP_, key_down: K_RCONTROL,
-                         key_push: K_SPACE,
-                         system: [:mouse_push],
-                         equal: {_SKIP_: true} do
+        _CHECK_INPUT_  key_down: K_RCONTROL,
+                       key_push: K_SPACE,
+                       mouse: :mouse_push do
+          #α値を初期化
+          _SET_ alpha: 255
+          _BREAK_
+        end
+        _CHECK_ :_TEMP_, equal: {_SKIP_: true} do
           #α値を初期化
           _SET_ alpha: 255
           _BREAK_
@@ -254,14 +281,17 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
       #ハーフフェードアウト
       _MOVE_ 60, alpha: 128 do
         #キー入力判定
-        _CHECK_ key_down: K_RCONTROL, 
-                key_push: K_SPACE,
-                system: [:mouse_push] do
+        _CHECK_INPUT_ key_down: K_RCONTROL, 
+                      key_push: K_SPACE,
+                      mouse: :mouse_push do
           #α値を初期化
           _SET_ alpha: 128
           #スキップモードの場合
-          _CHECK_ :_TEMP_, key_down: K_RCONTROL,
-                           equal: {_SKIP_: true} do
+          _CHECK_ :_TEMP_, equal: {_SKIP_: true} do
+            #α値を再度初期化
+            _SET_ alpha: 255
+          end
+          _CHECK_INPUT_ key_down: K_RCONTROL  do
             #α値を再度初期化
             _SET_ alpha: 255
           end
@@ -270,7 +300,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
       end
     end
   end
-  _CHECK_ system: [:block_given] do
+  _CHECK_BLOCK_ do
     _SEND_ options[:_ARGUMENT_] do
       _YIELD_
     end
@@ -309,7 +339,11 @@ _DEFINE_ :_BUTTON_BASE_ do |id:, width:, height:, **options|
     _DEFINE_ :on_mouse_inner_out do
       on_mouse_out
       #マウスが領域内に入ったら色を変える
-      _WAIT_ mouse: [:cursor_over]
+      _WAIT_ do
+        _CHECK_INPUT_ mouse: :cursor_over do
+          _BREAK_
+        end
+      end
       _RETURN_ do
         on_mouse_inner_over
       end
@@ -318,15 +352,19 @@ _DEFINE_ :_BUTTON_BASE_ do |id:, width:, height:, **options|
     #カーソルがボタン上にある
     _DEFINE_ :on_mouse_inner_over do
       on_mouse_over
-      _WAIT_ mouse: [:cursor_out, :key_push]
-      _CHECK_ mouse: [:cursor_out] do
+      _WAIT_ do
+        _CHECK_INPUT_ mouse: [:cursor_out, :key_push] do
+          _BREAK_
+        end
+      end
+      _CHECK_MOUSE_ :cursor_out do
         _RETURN_ do
           on_mouse_inner_out
         end
       end
 
       #マウスがクリックされたら付与ブロックを実行する
-      _CHECK_ mouse: [:key_push] do
+      _CHECK_MOUSE_ :key_push do
         _RETURN_ do
           on_key_inner_push
         end
@@ -336,7 +374,11 @@ _DEFINE_ :_BUTTON_BASE_ do |id:, width:, height:, **options|
     #ボタン上でカーソルが押された
     _DEFINE_ :on_key_inner_push do
       on_key_push
-      _WAIT_ mouse: [:key_up]
+      _WAIT_ do
+        _CHECK_INPUT_ mouse: :key_up do
+          _BREAK_
+        end
+      end
       _RETURN_ do
         on_key_inner_up
       end
@@ -351,7 +393,7 @@ _DEFINE_ :_BUTTON_BASE_ do |id:, width:, height:, **options|
     end
 
     #ブロック実行
-    _CHECK_ system: :block_given do
+    _CHECK_BLOCK_ do
       _YIELD_ id, options
     end
 
@@ -394,7 +436,7 @@ _DEFINE_ :_TEXT_BUTTON_ do
     end
 
     #ブロック実行
-    _CHECK_ system: :block_given do
+    _CHECK_BLOCK_ do
       _YIELD_ id, options
     end
   end
@@ -444,7 +486,7 @@ _DEFINE_ :_IMAGE_BUTTON_ do |options|
     end
 
     #ブロック実行
-    _CHECK_ system: :block_given do
+    _CHECK_BLOCK_ do
       _YIELD_ 
     end
 

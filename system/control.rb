@@ -262,62 +262,6 @@ class Control #内部メソッド
           return true unless find_control(id)
         end
 
-      #キーが押下された
-      when :key_push
-        Array(value).each do |key_code|
-          return true if DXRuby::Input.key_push?(key_code)
-        end
-
-      #キーが押下されていない
-      when :not_key_push
-        Array(value).each do |key_code|
-          return true unless DXRuby::Input.key_push?(key_code)
-        end
-
-      #キーが継続押下されている
-      when :key_down
-        Array(value).each do |key_code|
-          return true if DXRuby::Input.key_down?(key_code)
-        end
-
-      #キーが継続押下されていない
-      when :not_key_down
-        Array(value).each do |key_code|
-          return true unless DXRuby::Input.key_down?(key_code)
-        end
-
-      #キーが解除された
-      when :key_up
-        Array(value).each do |key_code|
-          return true if DXRuby::Input.key_release?(key_code)
-        end
-
-      #キーが解除されていない
-      when :not_key_up
-        Array(value).each do |key_code|
-          return true unless DXRuby::Input.key_release?(key_code)
-        end
-
-      #パッドボタン処理系
-
-      when :pad_down
-        Array(value).each do |pad_code|
-          return true if DXRuby::Input.pad_down?(pad_code,
-                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
-        end
-
-      when :pad_push
-        Array(value).each do |pad_code|
-          return true if DXRuby::Input.pad_push?(pad_code,
-                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
-        end
-
-      when :pad_release
-        Array(value).each do |pad_code|
-          return true if DXRuby::Input.pad_release?(pad_code,
-                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
-        end
-
       #ユーザデータ確認系
 
       #指定されたデータと値がイコールかどうか
@@ -391,8 +335,74 @@ class Control #内部メソッド
             return true if send(key) != nil
           end
         end
+      end
+    end
+    
+    return false
+  end
 
-      when :system
+  def check_click_imple(datastore, options, yield_stack)
+    options.each do |condition, value|
+      return unless value
+
+      case condition
+      #キーが押下された
+      when :key_push
+        Array(value).each do |key_code|
+          return true if DXRuby::Input.key_push?(key_code)
+        end
+
+      #キーが押下されていない
+      when :not_key_push
+        Array(value).each do |key_code|
+          return true unless DXRuby::Input.key_push?(key_code)
+        end
+
+      #キーが継続押下されている
+      when :key_down
+        Array(value).each do |key_code|
+          return true if DXRuby::Input.key_down?(key_code)
+        end
+
+      #キーが継続押下されていない
+      when :not_key_down
+        Array(value).each do |key_code|
+          return true unless DXRuby::Input.key_down?(key_code)
+        end
+
+      #キーが解除された
+      when :key_up
+        Array(value).each do |key_code|
+          return true if DXRuby::Input.key_release?(key_code)
+        end
+
+      #キーが解除されていない
+      when :not_key_up
+        Array(value).each do |key_code|
+          return true unless DXRuby::Input.key_release?(key_code)
+        end
+
+      #パッドボタン処理系
+
+      when :pad_down
+        Array(value).each do |pad_code|
+          return true if DXRuby::Input.pad_down?(pad_code,
+                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
+        end
+
+      when :pad_push
+        Array(value).each do |pad_code|
+          return true if DXRuby::Input.pad_push?(pad_code,
+                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
+        end
+
+      when :pad_release
+        Array(value).each do |pad_code|
+          return true if DXRuby::Input.pad_release?(pad_code,
+                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
+        end
+
+      when :mouse
         Array(value).each do |key|
           case key
           when :mouse_push
@@ -407,15 +417,13 @@ class Control #内部メソッド
             return true if DXRuby::Input.mouse_push?( M_RBUTTON )
           when :right_mouse_up
             return true if DXRuby::Input.mouse_release?( M_RBUTTON )
-          when :block_given
-            return true unless yield_stack[-1] == nil
           end
         end
       end
     end
-    
     return false
   end
+
 end
 
 class Control #コントロールの生成／破棄
@@ -518,7 +526,22 @@ class Control #制御構文
   def _CHECK_(yield_stack, options, &block)
     #チェック条件を満たす場合
     if check_imple(options[:_ARGUMENT_], options, yield_stack)
-      #checkにブロックが付与されているならそれを実行する
+      #ブロックを実行する
+      parse_block(options, yield_stack, &block)
+    end
+  end
+
+  def _CHECK_INPUT_(yield_stack, options, &block)
+    #チェック条件を満たす場合
+    if check_click_imple(options[:_ARGUMENT_], options, yield_stack)
+      #ブロックを実行する
+      parse_block(options, yield_stack, &block)
+    end
+  end
+
+  def _CHECK_BLOCK_(yield_stack, options, &block)
+    unless yield_stack[-1] == nil
+      #条件が成立したらブロックを実行する
       parse_block(options, yield_stack, &block)
     end
   end

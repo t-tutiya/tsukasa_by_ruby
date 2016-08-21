@@ -210,8 +210,11 @@ _DEFINE_ :_CHECK_REQUESTED_CLOSE_ do
 end
 
 #１フレーム待機するLOOP
-_DEFINE_ :_WAIT_ do | options |
+_DEFINE_ :_WAIT_ do |options|
   _LOOP_ options do
+    _CHECK_ options do
+      _RETURN_
+    end
     _CHECK_ system: :block_given do
       _YIELD_
     end

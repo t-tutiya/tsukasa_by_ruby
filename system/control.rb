@@ -244,63 +244,6 @@ class Control #内部メソッド
     parse_block(options, yield_stack, &function_block)
   end
 
-  def check_imple(datastore, options, yield_stack)
-    options.each do |condition, value|
-      case condition
-
-      #指定されたデータと値がイコールかどうか
-      when :equal
-        value.each do |key, val|
-          if datastore
-            #データストアとの比較
-            return true if @root_control.send(datastore)[key] == val
-          else
-            #コントロールプロパティとの比較
-            return true if send(key) == val
-          end
-        end
-
-      #指定されたデータと値がイコールでない場合
-      when :not_equal
-        value.each do |key, val|
-          if datastore
-            #データストアとの比較
-            return true if @root_control.send(datastore)[key] != val
-          else
-            #コントロールプロパティとの比較
-            return true if send(key) != val
-          end
-        end
-
-      #指定されたデータと値が未満かどうか
-      when :under
-        value.each do |key, val|
-          if datastore
-            #データストアとの比較
-            return true if @root_control.send(datastore)[key] < val
-          else
-            #コントロールプロパティとの比較
-            return true if send(key) < val
-          end
-        end
-
-      #指定されたデータと値がより大きいかどうか
-      when :over
-        value.each do |key, val|
-          if datastore
-            #データストアとの比較
-            return true if @root_control.send(datastore)[key] > val
-          else
-            #コントロールプロパティとの比較
-            return true if send(key) > val
-          end
-        end
-      end
-    end
-    
-    return false
-  end
-
   def check_click_imple(datastore, options, yield_stack)
     options.each do |condition, value|
       case condition
@@ -504,8 +447,87 @@ end
 
 class Control #制御構文
   def _CHECK_(yield_stack, options, &block)
+    result = false
+
+    options.each do |condition, value|
+      case condition
+
+      #指定されたデータと値がイコールかどうか
+      when :equal
+        value.each do |key, val|
+          if options[:_ARGUMENT_]
+            #データストアとの比較
+            if @root_control.send(options[:_ARGUMENT_])[key] == val
+              result = true
+              break
+            end
+          else
+            #コントロールプロパティとの比較
+            if send(key) == val
+              result = true
+              break
+            end
+          end
+        end
+
+      #指定されたデータと値がイコールでない場合
+      when :not_equal
+        value.each do |key, val|
+          if options[:_ARGUMENT_]
+            #データストアとの比較
+            if @root_control.send(options[:_ARGUMENT_])[key] != val
+              result = true
+              break
+            end
+          else
+            #コントロールプロパティとの比較
+            if send(key) != val
+              result = true
+              break
+            end
+          end
+        end
+
+      #指定されたデータと値が未満かどうか
+      when :under
+        value.each do |key, val|
+          if options[:_ARGUMENT_]
+            #データストアとの比較
+            if @root_control.send(options[:_ARGUMENT_])[key] < val
+              result = true
+              break
+            end
+          else
+            #コントロールプロパティとの比較
+            if send(key) < val
+              result = true
+              break
+            end
+          end
+        end
+
+      #指定されたデータと値がより大きいかどうか
+      when :over
+        value.each do |key, val|
+          if options[:_ARGUMENT_]
+            #データストアとの比較
+            if @root_control.send(options[:_ARGUMENT_])[key] > val
+              result = true
+              break
+            end
+          else
+            #コントロールプロパティとの比較
+            if send(key) > val
+              result = true
+              break
+            end
+          end
+        end
+      end
+    end
+    
     #チェック条件を満たす場合
-    if check_imple(options[:_ARGUMENT_], options, yield_stack)
+    if result
       #ブロックを実行する
       parse_block(options, yield_stack, &block)
     end

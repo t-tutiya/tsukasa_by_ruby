@@ -6,6 +6,7 @@ _DEFINE_ :menu_button do |x:, y:, id:, text: |
     #キーがクリックされた
     _DEFINE_ :on_key_push do
       _SEND_ [:_PARENT_, :_PARENT_, :_PARENT_], interrupt: true do 
+        _SET_ sleep: true
         _SEND_ :menu do
           _SET_ child_update: false
         end
@@ -20,6 +21,7 @@ _DEFINE_ :command_window do |options|
     x: options[:x],
     y: options[:y], 
     id: :command  do
+    _DEFINE_PROPERTY_ sleep: false
     _CREATE_ :DrawableLayout, id: :menu,
       width: 196,
       height: 32 * 4 + 8 * 6 do
@@ -38,10 +40,13 @@ _DEFINE_ :command_window do |options|
       end
     end
     _DEFINE_ :inner_loop do
-      #子コントロールがあるなら削除されるまで待機
-      _WAIT_ child_not_exist: [:command]
+      _WAIT_ equal: {sleep: false}
       #システムで右クリックされたら自身を削除
       _CHECK_INPUT_ mouse: :right_push do
+        
+        _SEND_ [:_PARENT_], interrupt: true do
+          _SET_ sleep: false
+        end
         _SEND_ [:_PARENT_, :menu] do
           _SET_ child_update: true
         end

@@ -21,7 +21,7 @@ _SEND_ :test1 do
     _DELETE_
   end
 
-  _WAIT_ child_not_exist: :rule0
+  _WAIT_ count: 240
   _DELETE_
 end
 

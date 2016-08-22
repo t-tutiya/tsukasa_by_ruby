@@ -248,20 +248,6 @@ class Control #内部メソッド
     options.each do |condition, value|
       case condition
 
-      #指定ＩＤの子コントロールが存在する
-      when :child_exist
-        Array(value).each do |id|
-          return true if find_control(id)
-        end
-
-      #指定ＩＤの子コントロールが存在しない
-      when :child_not_exist
-        Array(value).each do |id|
-          return true unless find_control(id)
-        end
-
-      #ユーザデータ確認系
-
       #指定されたデータと値がイコールかどうか
       when :equal
         value.each do |key, val|

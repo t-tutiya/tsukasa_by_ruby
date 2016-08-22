@@ -415,7 +415,6 @@ class Control #コントロールの生成／破棄
     end
   end
 
-  #disposeコマンド
   #コントロールを削除する
   def _DELETE_(yield_stack, _ARGUMENT_: nil)
     #コントロールを検索する
@@ -423,6 +422,29 @@ class Control #コントロールの生成／破棄
 
     #削除フラグを立てる
     control.dispose() if control
+  end
+
+  #プロパティを動的に追加する
+  def _DEFINE_PROPERTY_(yield_stack, options)
+    #ハッシュを巡回
+    options.each do |key, value|
+      #インスタンス変数を動的に生成し、値を設定する
+      instance_variable_set('@' + key.to_s, value)
+      
+      #ゲッターメソッドを動的に生成する
+      singleton_class.send( :define_method, 
+                            key,
+                            lambda{ 
+                              instance_variable_get('@' + key.to_s) 
+                            })
+      
+      #セッターメソッドを動的に生成する
+      singleton_class.send( :define_method, 
+                            key.to_s + '=', 
+                            lambda{ |set_value| 
+                              instance_variable_set('@' + key.to_s, set_value) 
+                            })
+    end
   end
 end
 

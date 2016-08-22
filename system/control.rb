@@ -450,87 +450,38 @@ class Control #制御構文
     result = false
 
     if options[:_ARGUMENT_]
+      datastore = @root_control.send(options[:_ARGUMENT_])
       options.each do |condition, value|
         case condition
-
         #指定されたデータと値がイコールかどうか
         when :equal
-          value.each do |key, val|
-            #データストアとの比較
-            if @root_control.send(options[:_ARGUMENT_])[key] == val
-              result = true
-              break
-            end
-          end
+          result = true if value.any?{|key, val| datastore[key] == val}
         #指定されたデータと値がイコールでない場合
         when :not_equal
-          value.each do |key, val|
-            #データストアとの比較
-            if @root_control.send(options[:_ARGUMENT_])[key] != val
-              result = true
-              break
-            end
-          end
+          result = true if value.any?{|key, val| datastore[key] != val}
         #指定されたデータと値が未満かどうか
         when :under
-          value.each do |key, val|
-            #データストアとの比較
-            if @root_control.send(options[:_ARGUMENT_])[key] < val
-              result = true
-              break
-            end
-          end
+          result = true if value.any?{|key, val| datastore[key] < val}
         #指定されたデータと値がより大きいかどうか
         when :over
-          value.each do |key, val|
-            #データストアとの比較
-            if @root_control.send(options[:_ARGUMENT_])[key] > val
-              result = true
-              break
-            end
-          end
+          result = true if value.any?{|key, val| datastore[key] > val}
         end
       end
     else
       options.each do |condition, value|
         case condition
-
         #指定されたデータと値がイコールかどうか
         when :equal
-          value.each do |key, val|
-            #コントロールプロパティとの比較
-            if send(key) == val
-              result = true
-              break
-            end
-          end
+          result = true if value.any?{|key, val| send(key) == val}
         #指定されたデータと値がイコールでない場合
         when :not_equal
-          value.each do |key, val|
-            #コントロールプロパティとの比較
-            if send(key) != val
-              result = true
-              break
-            end
-          end
+          result = true if value.any?{|key, val| send(key) != val}
         #指定されたデータと値が未満かどうか
         when :under
-          value.each do |key, val|
-            #コントロールプロパティとの比較
-            if send(key) < val
-              result = true
-              break
-            end
-          end
+          result = true if value.any?{|key, val| send(key) < val}
         #指定されたデータと値がより大きいかどうか
         when :over
-          value.each do |key, val|
-            #コントロールプロパティとの比較
-            if send(key) > val
-              result = true
-              break
-            end
-          end
+          result = true if value.any?{|key, val| send(key) > val}
         end
       end
     end

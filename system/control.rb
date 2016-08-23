@@ -413,86 +413,63 @@ class Control #制御構文
 
   def _CHECK_INPUT_(yield_stack, options, &block)
     result = false
+
     options.each do |condition, value|
+      value = Array(value)
       case condition
       #キーが押下された
       when :key_push
-        Array(value).each do |key_code|
-          result ||= true if DXRuby::Input.key_push?(key_code)
-        end
-
+        result ||= value.any?{|key_code| DXRuby::Input.key_push?(key_code)}
       #キーが押下されていない
       when :not_key_push
-        Array(value).each do |key_code|
-          result ||= true unless DXRuby::Input.key_push?(key_code)
-        end
-
+        result ||= !(value.any?{|key_code| DXRuby::Input.key_push?(key_code)})
       #キーが継続押下されている
       when :key_down
-        Array(value).each do |key_code|
-          result ||= true if DXRuby::Input.key_down?(key_code)
-        end
-
+        result ||= value.any?{|key_code| DXRuby::Input.key_down?(key_code)}
       #キーが継続押下されていない
       when :not_key_down
-        Array(value).each do |key_code|
-          result ||= true unless DXRuby::Input.key_down?(key_code)
-        end
-
+        result ||= !(value.any?{|key_code| DXRuby::Input.key_down?(key_code)})
       #キーが解除された
       when :key_up
-        Array(value).each do |key_code|
-          result ||= true if DXRuby::Input.key_release?(key_code)
-        end
-
+        result ||= value.any?{|key_code| DXRuby::Input.key_release?(key_code)}
       #キーが解除されていない
       when :not_key_up
-        Array(value).each do |key_code|
-          result ||= true unless DXRuby::Input.key_release?(key_code)
-        end
-
-      #パッドボタン処理系
-
+        result||= !(value.any?{|key_code|DXRuby::Input.key_release?(key_code)})
+      #パッドボタンが押された
       when :pad_down
-        Array(value).each do |pad_code|
-          result ||= true if DXRuby::Input.pad_down?(pad_code,
-                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
-        end
-
+        result ||= value.any?{|pad_code| DXRuby::Input.pad_down?(pad_code,
+                                        @root_control._SYSTEM_[:_PAD_NUMBER_])}
+      #パッドボタンが継続押下されている
       when :pad_push
-        Array(value).each do |pad_code|
-          result ||= true if DXRuby::Input.pad_push?(pad_code,
-                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
-        end
-
+        result ||= value.any?{|pad_code| DXRuby::Input.pad_push?(pad_code,
+                                        @root_control._SYSTEM_[:_PAD_NUMBER_])}
+      #パッドボタンが解除された
       when :pad_release
-        Array(value).each do |pad_code|
-          result ||= true if DXRuby::Input.pad_release?(pad_code,
-                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
-        end
-
+        result ||= value.any?{|pad_code| DXRuby::Input.pad_release?(pad_code,
+                                        @root_control._SYSTEM_[:_PAD_NUMBER_])}
+      #マウス処理系
       when :mouse
-        Array(value).each do |key|
+        value.each do |key|
           case key
           when :push
-            result ||= true if DXRuby::Input.mouse_push?( M_LBUTTON )
+            result ||= DXRuby::Input.mouse_push?( M_LBUTTON )
           when :down
-            result ||= true if DXRuby::Input.mouse_down?( M_LBUTTON )
+            result ||= DXRuby::Input.mouse_down?( M_LBUTTON )
           when :up
-            result ||= true if DXRuby::Input.mouse_release?( M_LBUTTON )
+            result ||= DXRuby::Input.mouse_release?( M_LBUTTON )
           when :right_down
-            result ||= true if DXRuby::Input.mouse_down?( M_RBUTTON )
+            result ||= DXRuby::Input.mouse_down?( M_RBUTTON )
           when :right_push
-            result ||= true if DXRuby::Input.mouse_push?( M_RBUTTON )
+            result ||= DXRuby::Input.mouse_push?( M_RBUTTON )
           when :right_up
-            result ||= true if DXRuby::Input.mouse_release?( M_RBUTTON )
+            result ||= DXRuby::Input.mouse_release?( M_RBUTTON )
           end
         end
       end
     end
 
     #チェック条件を満たす場合
-    if check_click_imple(options[:_ARGUMENT_], options, yield_stack)
+    if result
       #ブロックを実行する
       parse_block(options, yield_stack, &block)
     end

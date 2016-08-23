@@ -185,62 +185,48 @@ class ClickableLayout < Layout
     Array(options[:_ARGUMENT_]).each do |key|
       case key
       when :cursor_on
-        result ||= true if @inner_control
-
+        result ||= @inner_control
       when :cursor_off
-        result ||= true unless @inner_control
-
+        result ||= !(@inner_control)
       #前フレと比較してカーソルが移動した場合
       when :cursor_move
-        result ||= true if @on_cursor_move
-
+        result ||= @on_cursor_move
       #カーソルが指定範囲に侵入した場合
       when :cursor_over
-        result ||= true if @on_mouse_over
-
+        result ||= @on_mouse_over
       #カーソルが指定範囲の外に移動した場合
       when :cursor_out
-        result ||= true if @on_mouse_out
-
+        result ||= @on_mouse_out
       #マウスボタンが押下された場合
       when :key_push
-        result ||= true if @on_key_push
-
+        result ||= @on_key_push
       #マウスボタンが継続押下されている合
       when :key_down
-        result ||= true if @on_key_down
-
+        result ||= @on_key_down
       #マウスボタンが範囲外で押下された場合
       when :key_down_out
-        result ||= true if @on_key_down_out
-
+        result ||= @on_key_down_out
       #マウスボタン押下が解除された場合
       when :key_up
-        result ||= true if @on_key_up
-
+        result ||= @on_key_up
       #マウスボタン押下が範囲外で解除された場合
       when :key_up_out
-        result ||= true if @on_key_up_out
-
+        result ||= @on_key_up_out
       #マウス右ボタンが押下された場合
       when :right_key_push
-        result ||= true if @on_right_key_push
-
+        result ||= @on_right_key_push
       #マウス右ボタンが継続押下されている場合
       when :right_key_down
-        result ||= true if @on_right_key_down
-
+        result ||= @on_right_key_down
       #マウスボタンが範囲外で押下された場合
       when :right_key_down_out
-        result ||= true if @on_right_key_down_out
-
+        result ||= @on_right_key_down_out
       #マウスボタン押下が解除された場合
       when :right_key_up
-        result ||= true if @on_right_key_up
-
+        result ||= @on_right_key_up
       #マウスボタン押下が範囲外で解除された場合
       when :right_key_up_out
-        result ||= true if @on_right_key_up_out
+        result ||= @on_right_key_up_out
       end
     end 
 

@@ -243,88 +243,6 @@ class Control #内部メソッド
     #functionを実行時評価しコマンド列を生成する。
     parse_block(options, yield_stack, &function_block)
   end
-
-  def check_click_imple(datastore, options, yield_stack)
-    options.each do |condition, value|
-      case condition
-      #キーが押下された
-      when :key_push
-        Array(value).each do |key_code|
-          return true if DXRuby::Input.key_push?(key_code)
-        end
-
-      #キーが押下されていない
-      when :not_key_push
-        Array(value).each do |key_code|
-          return true unless DXRuby::Input.key_push?(key_code)
-        end
-
-      #キーが継続押下されている
-      when :key_down
-        Array(value).each do |key_code|
-          return true if DXRuby::Input.key_down?(key_code)
-        end
-
-      #キーが継続押下されていない
-      when :not_key_down
-        Array(value).each do |key_code|
-          return true unless DXRuby::Input.key_down?(key_code)
-        end
-
-      #キーが解除された
-      when :key_up
-        Array(value).each do |key_code|
-          return true if DXRuby::Input.key_release?(key_code)
-        end
-
-      #キーが解除されていない
-      when :not_key_up
-        Array(value).each do |key_code|
-          return true unless DXRuby::Input.key_release?(key_code)
-        end
-
-      #パッドボタン処理系
-
-      when :pad_down
-        Array(value).each do |pad_code|
-          return true if DXRuby::Input.pad_down?(pad_code,
-                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
-        end
-
-      when :pad_push
-        Array(value).each do |pad_code|
-          return true if DXRuby::Input.pad_push?(pad_code,
-                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
-        end
-
-      when :pad_release
-        Array(value).each do |pad_code|
-          return true if DXRuby::Input.pad_release?(pad_code,
-                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
-        end
-
-      when :mouse
-        Array(value).each do |key|
-          case key
-          when :push
-            return true if DXRuby::Input.mouse_push?( M_LBUTTON )
-          when :down
-            return true if DXRuby::Input.mouse_down?( M_LBUTTON )
-          when :up
-            return true if DXRuby::Input.mouse_release?( M_LBUTTON )
-          when :right_down
-            return true if DXRuby::Input.mouse_down?( M_RBUTTON )
-          when :right_push
-            return true if DXRuby::Input.mouse_push?( M_RBUTTON )
-          when :right_up
-            return true if DXRuby::Input.mouse_release?( M_RBUTTON )
-          end
-        end
-      end
-    end
-    return false
-  end
-
 end
 
 class Control #コントロールの生成／破棄
@@ -455,16 +373,16 @@ class Control #制御構文
         case condition
         #指定されたデータと値がイコールかどうか
         when :equal
-          result = true if value.any?{|key, val| datastore[key] == val}
+          result ||= value.any?{|key, val| datastore[key] == val}
         #指定されたデータと値がイコールでない場合
         when :not_equal
-          result = true if value.any?{|key, val| datastore[key] != val}
+          result ||= value.any?{|key, val| datastore[key] != val}
         #指定されたデータと値が未満かどうか
         when :under
-          result = true if value.any?{|key, val| datastore[key] < val}
+          result ||= value.any?{|key, val| datastore[key] < val}
         #指定されたデータと値がより大きいかどうか
         when :over
-          result = true if value.any?{|key, val| datastore[key] > val}
+          result ||= value.any?{|key, val| datastore[key] > val}
         end
       end
     else
@@ -472,16 +390,16 @@ class Control #制御構文
         case condition
         #指定されたデータと値がイコールかどうか
         when :equal
-          result = true if value.any?{|key, val| send(key) == val}
+          result ||= value.any?{|key, val| send(key) == val}
         #指定されたデータと値がイコールでない場合
         when :not_equal
-          result = true if value.any?{|key, val| send(key) != val}
+          result ||= value.any?{|key, val| send(key) != val}
         #指定されたデータと値が未満かどうか
         when :under
-          result = true if value.any?{|key, val| send(key) < val}
+          result ||= value.any?{|key, val| send(key) < val}
         #指定されたデータと値がより大きいかどうか
         when :over
-          result = true if value.any?{|key, val| send(key) > val}
+          result ||= value.any?{|key, val| send(key) > val}
         end
       end
     end
@@ -494,6 +412,85 @@ class Control #制御構文
   end
 
   def _CHECK_INPUT_(yield_stack, options, &block)
+    result = false
+    options.each do |condition, value|
+      case condition
+      #キーが押下された
+      when :key_push
+        Array(value).each do |key_code|
+          result ||= true if DXRuby::Input.key_push?(key_code)
+        end
+
+      #キーが押下されていない
+      when :not_key_push
+        Array(value).each do |key_code|
+          result ||= true unless DXRuby::Input.key_push?(key_code)
+        end
+
+      #キーが継続押下されている
+      when :key_down
+        Array(value).each do |key_code|
+          result ||= true if DXRuby::Input.key_down?(key_code)
+        end
+
+      #キーが継続押下されていない
+      when :not_key_down
+        Array(value).each do |key_code|
+          result ||= true unless DXRuby::Input.key_down?(key_code)
+        end
+
+      #キーが解除された
+      when :key_up
+        Array(value).each do |key_code|
+          result ||= true if DXRuby::Input.key_release?(key_code)
+        end
+
+      #キーが解除されていない
+      when :not_key_up
+        Array(value).each do |key_code|
+          result ||= true unless DXRuby::Input.key_release?(key_code)
+        end
+
+      #パッドボタン処理系
+
+      when :pad_down
+        Array(value).each do |pad_code|
+          result ||= true if DXRuby::Input.pad_down?(pad_code,
+                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
+        end
+
+      when :pad_push
+        Array(value).each do |pad_code|
+          result ||= true if DXRuby::Input.pad_push?(pad_code,
+                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
+        end
+
+      when :pad_release
+        Array(value).each do |pad_code|
+          result ||= true if DXRuby::Input.pad_release?(pad_code,
+                                        @root_control._SYSTEM_[:_PAD_NUMBER_])
+        end
+
+      when :mouse
+        Array(value).each do |key|
+          case key
+          when :push
+            result ||= true if DXRuby::Input.mouse_push?( M_LBUTTON )
+          when :down
+            result ||= true if DXRuby::Input.mouse_down?( M_LBUTTON )
+          when :up
+            result ||= true if DXRuby::Input.mouse_release?( M_LBUTTON )
+          when :right_down
+            result ||= true if DXRuby::Input.mouse_down?( M_RBUTTON )
+          when :right_push
+            result ||= true if DXRuby::Input.mouse_push?( M_RBUTTON )
+          when :right_up
+            result ||= true if DXRuby::Input.mouse_release?( M_RBUTTON )
+          end
+        end
+      end
+    end
+
     #チェック条件を満たす場合
     if check_click_imple(options[:_ARGUMENT_], options, yield_stack)
       #ブロックを実行する

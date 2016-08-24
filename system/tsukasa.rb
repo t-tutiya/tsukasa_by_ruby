@@ -79,16 +79,10 @@ class Window < Layout
   attr_reader  :script_compiler
   attr_reader  :script_parser
 
-  def mouse_x
-    DXRuby::Input.mouse_x
-  end
   def mouse_x=(arg)
     DXRuby::Input.set_mouse_pos(arg, DXRuby::Input.mouse_y)
   end
 
-  def mouse_y
-    DXRuby::Input.mouse_y
-  end
   def mouse_y=(arg)
     DXRuby::Input.set_mouse_pos(DXRuby::Input.mouse_x, arg)
   end
@@ -104,7 +98,11 @@ class Window < Layout
     #一時データストア
     @_TEMP_ = {
       #_INCLUDE_したファイルパスをスタックする
-      :_LOADED_FEATURES_ => [],
+      _LOADED_FEATURES_: [],
+      _MOUSE_POS_X_: 0,
+      _MOUSE_POS_Y_: 0,
+      _MOUSE_OFFSET_X_: 0,
+      _MOUSE_OFFSET_Y_: 0,
     }
 
     #パーサー
@@ -112,13 +110,17 @@ class Window < Layout
     @script_parser = {}
 
     options[:command_list] = [[ :_INCLUDE_, 
-                                {_ARGUMENT_: "./default/bootstrap_script.rb"},nil]]
+                            {_ARGUMENT_: "./default/bootstrap_script.rb"},nil]]
 
     super(options, nil, self, self)
   end
 
   def update(mouse_pos_x = DXRuby::Input.mouse_x,
              mouse_pos_y = DXRuby::Input.mouse_y)
+    @_TEMP_[:_MOUSE_OFFSET_X_] = mouse_pos_x - @_TEMP_[:_MOUSE_POS_X_]
+    @_TEMP_[:_MOUSE_OFFSET_Y_] = mouse_pos_y - @_TEMP_[:_MOUSE_POS_Y_]
+    @_TEMP_[:_MOUSE_POS_X_] = mouse_pos_x
+    @_TEMP_[:_MOUSE_POS_Y_] = mouse_pos_y
     super(mouse_pos_x, mouse_pos_y, 0)
   end
 

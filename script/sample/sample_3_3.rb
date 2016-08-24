@@ -21,6 +21,8 @@ comment_area :comment_area5_a, x:0, y:256+96,  char: "y_pad"
 comment_area :comment_area5_b, x:256, y:256+96,  char: ""
 comment_area :comment_area6_a, x:0, y:256,  char: "mouse"
 comment_area :comment_area6_b, x:256, y:256,  char: ""
+comment_area :comment_area6_b2, x:256, y:256-32,  char: ""
+comment_area :comment_area6_a, x:0, y:256-32,  char: "mouse offset"
 
 _LOOP_ do
   _SEND_ [:_ROOT_], interrupt: true do
@@ -47,9 +49,14 @@ _LOOP_ do
         _SET_ char: y.to_s
       end
     end
-    _GET_ [:mouse_x, :mouse_y] do |mouse_x:, mouse_y:|
+    _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
       _SEND_ :comment_area6_b do
-          _SET_ char: mouse_x.to_s + ":" + mouse_y.to_s
+          _SET_ char: _MOUSE_POS_X_.to_s + ":" + _MOUSE_POS_Y_.to_s
+      end
+    end
+    _GET_ [:_MOUSE_OFFSET_X_, :_MOUSE_OFFSET_Y_], datastore: :_TEMP_ do |_MOUSE_OFFSET_X_:, _MOUSE_OFFSET_Y_:|
+      _SEND_ :comment_area6_b2 do
+          _SET_ char: _MOUSE_OFFSET_X_.to_s + ":" + _MOUSE_OFFSET_Y_.to_s
       end
     end
   end

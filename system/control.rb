@@ -407,7 +407,7 @@ class Control #制御構文
     #チェック条件を満たす場合
     if result
       #ブロックを実行する
-      parse_block(options, yield_stack, &block)
+      parse_block(nil, yield_stack, &block)
     end
   end
 
@@ -471,14 +471,14 @@ class Control #制御構文
     #チェック条件を満たす場合
     if result
       #ブロックを実行する
-      parse_block(options, yield_stack, &block)
+      parse_block(nil, yield_stack, &block)
     end
   end
 
   def _CHECK_BLOCK_(yield_stack, options, &block)
     unless yield_stack[-1] == nil
       #条件が成立したらブロックを実行する
-      parse_block(options, yield_stack, &block)
+      parse_block(nil, yield_stack, &block)
     end
   end
 

@@ -180,9 +180,9 @@ class ClickableLayout < Layout
     return super
   end
 
-  def _CHECK_MOUSE_(yield_stack, options, &block)
+  def _CHECK_MOUSE_(yield_stack, _ARGUMENT_:, &block)
     result = false
-    Array(options[:_ARGUMENT_]).each do |key|
+    Array(_ARGUMENT_).each do |key|
       case key
       when :cursor_on
         result ||= @inner_control
@@ -233,7 +233,7 @@ class ClickableLayout < Layout
     #チェック条件を満たす場合
     if result
       #checkにブロックが付与されているならそれを実行する
-      parse_block(options, yield_stack, &block)
+      parse_block(nil, yield_stack, &block)
     end
   end
 end

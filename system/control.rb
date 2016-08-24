@@ -486,8 +486,11 @@ class Control #制御構文
   def _LOOP_(yield_stack, options, &block) 
     #カウンタによる終了判定
     if options[:count]
-      return if options[:count] <= 0
-      options[:count] = options[:count] - 1
+      unless options[:_COUNT_]
+        options[:_COUNT_] = 0
+      end
+      return if options[:count] == options[:_COUNT_]
+      options[:_COUNT_] += 1
     end
 
     #リストの先端に自分自身を追加する

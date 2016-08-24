@@ -211,7 +211,7 @@ end
 
 #１フレーム待機するLOOP
 _DEFINE_ :_WAIT_ do |options|
-  _LOOP_ options do
+  _LOOP_ count: options[:count] do
     _CHECK_ options do
       _RETURN_
     end

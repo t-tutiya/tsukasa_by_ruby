@@ -37,12 +37,6 @@ class ClickableLayout < Layout
   attr_accessor  :colorkey_id
   attr_accessor  :colorkey_border
 
-  attr_reader :cursor_x
-  attr_reader :cursor_y
-
-  attr_reader :cursor_offset_x
-  attr_reader :cursor_offset_y
-
   def width=(arg)
     unless @collision_shape
       @collision_sprite.collision = [ 0, 0, arg, @height]

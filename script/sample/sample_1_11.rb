@@ -30,7 +30,7 @@ _DEFINE_ :go_rule do |options|
       _MOVE_ options[:time], counter:[0,255]
       _DELETE_
     end
-    _WAIT_ options[:time]
+    _WAIT_ count: options[:time]
     _DELETE_
   end
 end

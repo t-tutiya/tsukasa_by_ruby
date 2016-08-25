@@ -43,22 +43,28 @@ end
 _MOUSE_ENABLE_ false
 
 _LOOP_ do
-  _GET_ [:mouse_x, :mouse_y] do |options|
+  _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do 
+        |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
     _SEND_ :comment_area do
-      _SET_ char: options[:mouse_x].to_s + ":" + options[:mouse_y].to_s
+      _SET_ char: _MOUSE_POS_X_.to_s + ":" + _MOUSE_POS_Y_.to_s
     end
     _SEND_ :cursor do
-      _SET_ x: options[:mouse_x], y: options[:mouse_y]
+      _SET_ x: _MOUSE_POS_X_, y: _MOUSE_POS_Y_
     end
   end
   _CHECK_ :_SYSTEM_, equal: {data0: true},key_down: [K_Z] do
     _SEND_ :cursor do 
       _MOVE_ 30, x:0, y:0, _OPTION_:{easing: :out_quart}
     end
-    _MOVE_ 30, mouse_x:0, mouse_y:0 do
-      _GET_ [:mouse_x, :mouse_y] do |options|
-        _SEND_ :comment_area do
-          _SET_ char: options[:mouse_x].to_s + ":" + options[:mouse_y].to_s
+    _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do 
+          |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
+      _MOVE_ 30,  mouse_x: [_MOUSE_POS_X_, 0], 
+                  mouse_y: [_MOUSE_POS_Y_, 0] do
+        _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do 
+                |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
+          _SEND_ :comment_area do
+            _SET_ char: _MOUSE_POS_X_.to_s + ":" + _MOUSE_POS_Y_.to_s
+          end
         end
       end
     end

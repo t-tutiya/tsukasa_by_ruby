@@ -941,38 +941,26 @@ class Control #プロパティのパラメータ遷移
   #スプライン補間
   #これらの実装については以下のサイトを参考にさせて頂きました。感謝します。
   # http://www1.u-netsurf.ne.jp/~future/HTML/bspline.html
-  def _PATH_(yield_stack, options, &block)
-    raise unless options[:_ARGUMENT_] #必須要素
-
-    #オプションハッシュの初期化
-    options[:_OPTION_] =  {} unless options[:_OPTION_]
-
-    #現在の経過カウントを初期化
-    unless options[:_OPTION_][:count]
-      options[:_OPTION_][:count] = options[:_ARGUMENT_] 
-    end
-
-    #カウントが終了しているならループを終了する
-    return if options[:_OPTION_][:count] <= 0
-
-    #カウントダウン
-    options[:_OPTION_][:count] -= 1
-
+  def _PATH_(yield_stack, _ARGUMENT_:, **options, &block)
+    _ARGUMENT_ = Array(_ARGUMENT_)
     #移動アルゴリズムの指定（初期値Ｂスプライン）
-    options[:_OPTION_][:type] = :spline unless options[:_OPTION_][:type]
+    _ARGUMENT_[1] ||= :spline
+    #現在の経過カウントを初期化
+    _ARGUMENT_[2] ||= 0
+    #カウントが終了しているならループを終了する
+    return if _ARGUMENT_[0] == _ARGUMENT_[2]
+    #カウントアップ
+    _ARGUMENT_[2] += 1
 
-    options.each do |key, values|
-      next if key == :_OPTION_
-      next if key == :_ARGUMENT_
-
+    options.each do |key, value|
       #Ｂスプライン補間時に始点終点を通らない
-      step =(values.size - 1).fdiv(options[:_ARGUMENT_]) * (options[:_ARGUMENT_] - options[:_OPTION_][:count])
+      step =(value.size - 1).fdiv(_ARGUMENT_[0]) * (_ARGUMENT_[2])
 
       result = 0.0
 
       #全ての座標を巡回し、それぞれの座標についてstep量に応じた重み付けを行い、その総和を現countでの座標とする
-      values.size.times do |index|
-        case options[:_OPTION_][:type]
+      value.size.times do |index|
+        case _ARGUMENT_[1]
         when :spline
           coefficent = b_spline_coefficent(step - index)
         when :line
@@ -981,13 +969,14 @@ class Control #プロパティのパラメータ遷移
           raise
         end
 
-        result += values[index] * coefficent
+        result += value[index] * coefficent
       end
 
       #移動先座標の決定
       send(key.to_s + "=", result.round)
     end
 
+    options[:_ARGUMENT_] = _ARGUMENT_
     @command_list.unshift([:_PATH_, options, yield_stack, block])
 
     #現在のループ終端を挿入
@@ -997,7 +986,8 @@ class Control #プロパティのパラメータ遷移
 
     if block
       #ブロックが付与されているならそれを実行する
-      parse_block(options, yield_stack, &block)
+      parse_block({end: _ARGUMENT_[0], now: _ARGUMENT_[2]}, 
+                  yield_stack, &block)
     end
   end
 

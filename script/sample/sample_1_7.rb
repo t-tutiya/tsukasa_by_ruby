@@ -9,8 +9,8 @@ _CREATE_ :DrawableLayout, id: :test0,
 end
 
 _SEND_ :test0 do
-  _MOVE_ 180, alpha: 0
-  _MOVE_ 360, alpha: 255
+  _MOVE_ 180, alpha: [255,   0]
+  _MOVE_ 360, alpha: [  0, 255]
 end
 
 _END_PAUSE_

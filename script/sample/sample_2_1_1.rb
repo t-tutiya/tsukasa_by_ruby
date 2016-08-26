@@ -29,7 +29,9 @@ _DEFINE_ :button3 do |options|
         _SEND_(0){ _MAP_STATUS_ 1}
       end
       _END_FRAME_
-      _RETURN_ :inner_loop
+      _RETURN_ do
+        inner_loop
+      end
     end
     inner_loop
   end

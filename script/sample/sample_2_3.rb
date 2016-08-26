@@ -60,7 +60,9 @@ _DEFINE_ :command_window do |options|
         _DELETE_
       end
       _END_FRAME_
-      _RETURN_ :inner_loop
+      _RETURN_ do
+        inner_loop
+      end
     end
     inner_loop
   end

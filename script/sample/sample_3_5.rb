@@ -15,7 +15,9 @@ _CREATE_ :ClickableLayout, x: 640-256, y: 480-256, width:256, height: 256 do
       _SET_ :_SYSTEM_ , data0: true
     end
     _END_FRAME_
-    _RETURN_ :inner_loop
+    _RETURN_ do
+      inner_loop
+    end
   end
   inner_loop
 end
@@ -34,7 +36,9 @@ _CREATE_ :Layout , id: :cursor do
       _WAIT_ count: 5
       _MAP_STATUS_ 3
       _WAIT_ count: 5
-      _RETURN_ :inner_loop
+      _RETURN_ do
+        inner_loop
+      end
     end
     inner_loop
   end

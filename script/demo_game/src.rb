@@ -102,7 +102,9 @@ _DEFINE_ :TextSelect do |options|
         _RETURN_
       end
       _END_FRAME_
-      _RETURN_ :inner_loop
+      _RETURN_ do
+        inner_loop
+      end
     end
     inner_loop
   end

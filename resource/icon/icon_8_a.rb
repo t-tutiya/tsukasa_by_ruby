@@ -16,7 +16,9 @@ _DEFINE_ :_ICON_8_ do
     _WAIT_ count: 5
     _MAP_STATUS_ 7, x:0, y:0
     _WAIT_ count: 30
-    _RETURN_ :inner_loop
+    _RETURN_ do
+      inner_loop
+    end
   end
   inner_loop
 end

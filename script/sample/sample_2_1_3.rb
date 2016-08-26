@@ -34,7 +34,9 @@ _CREATE_ :ClickableLayout,
       _SEND_(:key_down){_SET_ visible: false}
     end
     _END_FRAME_
-    _RETURN_ :inner_loop
+    _RETURN_ do
+      inner_loop
+    end
   end
   inner_loop
 end

@@ -11,7 +11,9 @@
     end
     _END_FRAME_ #キー入力の伝搬を抑制するために１フレ送る
 
-    _RETURN_ :scene_2 #シーン２へ遷移
+    _RETURN_ do
+      scene_2 #シーン２へ遷移
+    end
   end
 
   #シーン２
@@ -27,8 +29,9 @@
     end
     _END_FRAME_ #キー入力の伝搬を抑制するために１フレ送る
 
-    _RETURN_ :scene_3 #シーン２へ遷移
-
+    _RETURN_ do
+      scene_3 #シーン２へ遷移
+    end
   end
 
   #シーン３
@@ -46,14 +49,17 @@
     #マウスのボタンが押されたかどうかを判定
     _CHECK_INPUT_ mouse: :push do
       _END_FRAME_ #キー入力の伝搬を抑制するために１フレ送る
-      _RETURN_ :scene_3 #シーン３へ遷移
+      _RETURN_ do
+        scene_3 #シーン３へ遷移
+      end
     end
 
     _CHECK_INPUT_ mouse: :right_push do
       _END_FRAME_ #キー入力の伝搬を抑制するために１フレ送る
-      _RETURN_ :scene_1 #シーン１へ遷移
+      _RETURN_ do
+        scene_1 #シーン１へ遷移
+      end
     end
-
   end
 
   #シーン１を実行

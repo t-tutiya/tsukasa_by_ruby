@@ -53,11 +53,13 @@ _LOOP_ do
     end
   end
   _CHECK_ :_SYSTEM_, equal: {data0: true},key_down: [K_Z] do
-    _SEND_ :cursor do 
-      _MOVE_ 30, x:0, y:0, _OPTION_:{easing: :out_quart}
-    end
     _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do 
           |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
+      _SEND_ :cursor do 
+        _MOVE_ [30, :out_quart], 
+          x: [_MOUSE_POS_X_, 0], 
+          y: [_MOUSE_POS_Y_, 0]
+      end
       _MOVE_ 30,  mouse_x: [_MOUSE_POS_X_, 0], 
                   mouse_y: [_MOUSE_POS_Y_, 0] do
         _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do 

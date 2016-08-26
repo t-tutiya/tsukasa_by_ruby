@@ -1,5 +1,5 @@
-_LOOP_ count: 3 do
-  _LOOP_ count: 3 do
+_LOOP_ 3 do
+  _LOOP_ 3 do
     _SEND_ :text0 do
       _TEXT_ "＊"
     end

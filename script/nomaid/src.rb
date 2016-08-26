@@ -514,11 +514,11 @@ _SEND_(:text0){
 set_status_window
 
 #７週間リピート
-_LOOP_ count:7 do
+_LOOP_ 7 do
   #週開始処理
   _SET_ :_TEMP_, day: 0
 
-  _LOOP_ count:7 do
+  _LOOP_ 7 do
     #画面の更新
     _SEND_ :status_window do
       update_status

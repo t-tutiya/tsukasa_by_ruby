@@ -10,11 +10,9 @@ _SEND_(:text0) do
   _SET_  font_name: "ＭＳ ゴシック"
   _DEFINE_ :_CHAR_RENDERER_ do |argument, options,control|
     #フェードイン（スペースキーか右CTRLが押されたらスキップ）
-    _MOVE_   30, 
-      x:[800,0], 
-      y:[-600,0],
-      _OPTION_: { easing: :out_quart, 
-              } do
+    _MOVE_ [30, :out_quart], 
+      x:[ 800,0], 
+      y:[-600,0] do
         _CHECK_INPUT_ key_down: K_RCONTROL, 
                       key_push: K_SPACE,
                       mouse: :push do
@@ -26,7 +24,7 @@ _SEND_(:text0) do
     _WAIT_ :_TEMP_, not_equal: {flag: nil}
     #文字列をカスケードアウトさせる
     _GET_ :child_index do |options|
-      _MOVE_ 30 + options[:child_index] * 3, y:[0,600], _OPTION_:{easing: :in_back}
+      _MOVE_ [30 + options[:child_index] * 3, :in_back], y:[0,600]
     end
   end
   _DEFINE_ :_CHAR_WAIT_ do
@@ -70,9 +68,8 @@ _DEFINE_ :TextSelect do |options|
         font_name: "ＭＳ ゴシック", 
         char: options[:text]
     end
-    _MOVE_ 30, 
-      x:[800,0],
-      _OPTION_: { easing: :out_quart} do
+    _MOVE_ [30, :out_quart], 
+      x:[800,0] do
       _CHECK_INPUT_ key_down: K_RCONTROL, 
                     key_push: K_SPACE,
                     mouse: :push do
@@ -101,7 +98,7 @@ _DEFINE_ :TextSelect do |options|
       end
       #フラグが立っていればボタンをアウトさせてループを終了する
       _CHECK_ :_TEMP_,  not_equal: {flag: nil} do
-        _MOVE_ 60, y:[0,600], _OPTION_:{easing: :in_back}
+        _MOVE_ [60, :in_back], y:[0,600]
         _RETURN_
       end
       _END_FRAME_

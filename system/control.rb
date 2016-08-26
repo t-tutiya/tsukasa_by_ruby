@@ -483,22 +483,28 @@ class Control #制御構文
   end
 
   #繰り返し
-  def _LOOP_(yield_stack, options, &block) 
-    #カウンタによる終了判定
-    if options[:count]
-      unless options[:_COUNT_]
-        options[:_COUNT_] = 0
-      end
-      return if options[:count] == options[:_COUNT_]
-      options[:_COUNT_] += 1
+  def _LOOP_(yield_stack, _ARGUMENT_: nil, &block) 
+    if _ARGUMENT_
+      _ARGUMENT_ = Array(_ARGUMENT_)
+      
+      #現在の経過カウントを初期化
+      _ARGUMENT_[1] ||= 0
+      #カウントが終了しているならループを終了する
+      return if _ARGUMENT_[0] == _ARGUMENT_[1]
+      #カウントアップ
+      _ARGUMENT_[1] += 1
+
+      args = {end: _ARGUMENT_[0], now: _ARGUMENT_[1]}
+    else
+      args = nil
     end
 
     #リストの先端に自分自身を追加する
-    @command_list.unshift([:_LOOP_, options, yield_stack, block])
+    @command_list.unshift([:_LOOP_, {_ARGUMENT_: _ARGUMENT_}, yield_stack, block])
     #現在のループ終端を挿入
     @command_list.unshift([:_END_LOOP_])
     #ブロックを実行時評価しコマンド列を生成する。
-    parse_block(options, yield_stack, &block)
+    parse_block(args, yield_stack,&block)
   end
 
   def _NEXT_(yield_stack, _ARGUMENT_: nil, &block)

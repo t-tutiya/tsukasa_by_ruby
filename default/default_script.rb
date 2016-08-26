@@ -209,19 +209,6 @@ _DEFINE_ :_CHECK_REQUESTED_CLOSE_ do
   end
 end
 
-#１フレーム待機するLOOP
-_DEFINE_ :_WAIT_ do |options|
-  _LOOP_ count: options[:count] do
-    _CHECK_ options do
-      _RETURN_
-    end
-    _CHECK_BLOCK_ do
-      _YIELD_
-    end
-    _END_FRAME_
-  end
-end
-
 ###############################################################################
 #キャッシュ管理
 ###############################################################################

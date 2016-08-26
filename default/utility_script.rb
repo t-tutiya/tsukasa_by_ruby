@@ -651,3 +651,16 @@ _DEFINE_ :_CHECK_ARRAY_INCLUDE_ do |array:, value:|
     _YIELD_
   end
 end
+
+#１フレーム待機するLOOP
+_DEFINE_ :_WAIT_ do |options|
+  _LOOP_ options[:count] do
+    _CHECK_ options do
+      _RETURN_
+    end
+    _CHECK_BLOCK_ do
+      _YIELD_
+    end
+    _END_FRAME_
+  end
+end

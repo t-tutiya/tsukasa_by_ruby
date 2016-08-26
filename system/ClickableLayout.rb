@@ -175,52 +175,53 @@ class ClickableLayout < Layout
   end
 
   def _CHECK_MOUSE_(yield_stack, _ARGUMENT_:, &block)
-    result = false
-    Array(_ARGUMENT_).each do |key|
+    result = Array(_ARGUMENT_).any? do |key|
       case key
       when :cursor_on
-        result ||= @inner_control
+        @inner_control
       when :cursor_off
-        result ||= !(@inner_control)
+        !(@inner_control)
       #前フレと比較してカーソルが移動した場合
       when :cursor_move
-        result ||= @on_cursor_move
+        @on_cursor_move
       #カーソルが指定範囲に侵入した場合
       when :cursor_over
-        result ||= @on_mouse_over
+        @on_mouse_over
       #カーソルが指定範囲の外に移動した場合
       when :cursor_out
-        result ||= @on_mouse_out
+        @on_mouse_out
       #マウスボタンが押下された場合
       when :key_push
-        result ||= @on_key_push
+        @on_key_push
       #マウスボタンが継続押下されている合
       when :key_down
-        result ||= @on_key_down
+        @on_key_down
       #マウスボタンが範囲外で押下された場合
       when :key_down_out
-        result ||= @on_key_down_out
+        @on_key_down_out
       #マウスボタン押下が解除された場合
       when :key_up
-        result ||= @on_key_up
+        @on_key_up
       #マウスボタン押下が範囲外で解除された場合
       when :key_up_out
-        result ||= @on_key_up_out
+        @on_key_up_out
       #マウス右ボタンが押下された場合
       when :right_key_push
-        result ||= @on_right_key_push
+        @on_right_key_push
       #マウス右ボタンが継続押下されている場合
       when :right_key_down
-        result ||= @on_right_key_down
+        @on_right_key_down
       #マウスボタンが範囲外で押下された場合
       when :right_key_down_out
-        result ||= @on_right_key_down_out
+        @on_right_key_down_out
       #マウスボタン押下が解除された場合
       when :right_key_up
-        result ||= @on_right_key_up
+        @on_right_key_up
       #マウスボタン押下が範囲外で解除された場合
       when :right_key_up_out
-        result ||= @on_right_key_up_out
+        @on_right_key_up_out
+      else
+        false
       end
     end 
 

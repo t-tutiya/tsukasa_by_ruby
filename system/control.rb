@@ -364,46 +364,32 @@ class Control #セッター／ゲッター
 end
 
 class Control #制御構文
+  #条件判定
   def _CHECK_(yield_stack, options, &block)
-    result = false
+    #第１引数が設定されている場合はデータストアを、設定されていなければコントロール自身を走査対象とする。
+    # 注意：Proc#[] は Proc#call の別名
+    datastore = options[:_ARGUMENT_] ? @root_control.send(options[:_ARGUMENT_]) : proc {|key| send(key) }
 
-    if options[:_ARGUMENT_]
-      datastore = @root_control.send(options[:_ARGUMENT_])
-      options.each do |condition, value|
-        case condition
-        #指定されたデータと値がイコールかどうか
-        when :equal
-          result ||= value.any?{|key, val| datastore[key] == val}
-        #指定されたデータと値がイコールでない場合
-        when :not_equal
-          result ||= value.any?{|key, val| datastore[key] != val}
-        #指定されたデータと値が未満かどうか
-        when :under
-          result ||= value.any?{|key, val| datastore[key] < val}
-        #指定されたデータと値がより大きいかどうか
-        when :over
-          result ||= value.any?{|key, val| datastore[key] > val}
-        end
-      end
-    else
-      options.each do |condition, value|
-        case condition
-        #指定されたデータと値がイコールかどうか
-        when :equal
-          result ||= value.any?{|key, val| send(key) == val}
-        #指定されたデータと値がイコールでない場合
-        when :not_equal
-          result ||= value.any?{|key, val| send(key) != val}
-        #指定されたデータと値が未満かどうか
-        when :under
-          result ||= value.any?{|key, val| send(key) < val}
-        #指定されたデータと値がより大きいかどうか
-        when :over
-          result ||= value.any?{|key, val| send(key) > val}
-        end
+    # 全ての条件を判定する
+    result = options.any? do |condition, value|
+      case condition
+      #指定されたデータと値がイコールの場合
+      when :equal
+        value.any?{|key, val| datastore[key] == val}
+      #指定されたデータと値がイコールでない場合
+      when :not_equal
+        value.any?{|key, val| datastore[key] != val}
+      #指定されたデータと値が未満の場合
+      when :under
+        value.any?{|key, val| datastore[key] < val}
+      #指定されたデータと値がより大きい場合
+      when :over
+        value.any?{|key, val| datastore[key] > val}
+      else
+        false
       end
     end
-    
+
     #チェック条件を満たす場合
     if result
       #ブロックを実行する
@@ -412,59 +398,60 @@ class Control #制御構文
   end
 
   def _CHECK_INPUT_(yield_stack, options, &block)
-    result = false
-
-    options.each do |condition, value|
+    # 全ての条件を判定する
+    result = options.any? do |condition, value|
       value = Array(value)
       case condition
       #キーが押下された
       when :key_push
-        result ||= value.any?{|key_code| DXRuby::Input.key_push?(key_code)}
+        value.any?{|key_code| DXRuby::Input.key_push?(key_code)}
       #キーが押下されていない
       when :not_key_push
-        result ||= !(value.any?{|key_code| DXRuby::Input.key_push?(key_code)})
+        !(value.any?{|key_code| DXRuby::Input.key_push?(key_code)})
       #キーが継続押下されている
       when :key_down
-        result ||= value.any?{|key_code| DXRuby::Input.key_down?(key_code)}
+        value.any?{|key_code| DXRuby::Input.key_down?(key_code)}
       #キーが継続押下されていない
       when :not_key_down
-        result ||= !(value.any?{|key_code| DXRuby::Input.key_down?(key_code)})
+        !(value.any?{|key_code| DXRuby::Input.key_down?(key_code)})
       #キーが解除された
       when :key_up
-        result ||= value.any?{|key_code| DXRuby::Input.key_release?(key_code)}
+        value.any?{|key_code| DXRuby::Input.key_release?(key_code)}
       #キーが解除されていない
       when :not_key_up
-        result||= !(value.any?{|key_code|DXRuby::Input.key_release?(key_code)})
+        !(value.any?{|key_code|DXRuby::Input.key_release?(key_code)})
       #パッドボタンが押された
       when :pad_down
-        result ||= value.any?{|pad_code| DXRuby::Input.pad_down?(pad_code,
+        value.any?{|pad_code| DXRuby::Input.pad_down?(pad_code,
                                         @root_control._SYSTEM_[:_PAD_NUMBER_])}
       #パッドボタンが継続押下されている
       when :pad_push
-        result ||= value.any?{|pad_code| DXRuby::Input.pad_push?(pad_code,
+        value.any?{|pad_code| DXRuby::Input.pad_push?(pad_code,
                                         @root_control._SYSTEM_[:_PAD_NUMBER_])}
       #パッドボタンが解除された
       when :pad_release
-        result ||= value.any?{|pad_code| DXRuby::Input.pad_release?(pad_code,
+        value.any?{|pad_code| DXRuby::Input.pad_release?(pad_code,
                                         @root_control._SYSTEM_[:_PAD_NUMBER_])}
       #マウス処理系
       when :mouse
-        value.each do |key|
+        value.any? do |key|
           case key
           when :push
-            result ||= DXRuby::Input.mouse_push?( M_LBUTTON )
+            DXRuby::Input.mouse_push?( M_LBUTTON )
           when :down
-            result ||= DXRuby::Input.mouse_down?( M_LBUTTON )
+            DXRuby::Input.mouse_down?( M_LBUTTON )
           when :up
-            result ||= DXRuby::Input.mouse_release?( M_LBUTTON )
+            DXRuby::Input.mouse_release?( M_LBUTTON )
           when :right_down
-            result ||= DXRuby::Input.mouse_down?( M_RBUTTON )
+            DXRuby::Input.mouse_down?( M_RBUTTON )
           when :right_push
-            result ||= DXRuby::Input.mouse_push?( M_RBUTTON )
+            DXRuby::Input.mouse_push?( M_RBUTTON )
           when :right_up
-            result ||= DXRuby::Input.mouse_release?( M_RBUTTON )
+            DXRuby::Input.mouse_release?( M_RBUTTON )
           end
         end
+      else
+        false
       end
     end
 

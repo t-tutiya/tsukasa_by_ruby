@@ -753,57 +753,28 @@ class Control #内部コマンド
 end
 
 class Control #プロパティのパラメータ遷移
-  def _MOVE_(yield_stack, options, &block)
-    #オプションハッシュの初期化
-    options[:_OPTION_] =  {} unless options[:_OPTION_]
-    
-    #現在の経過カウントを初期化
-    unless options[:_OPTION_][:count]
-      options[:_OPTION_][:count] = options[:_ARGUMENT_]
-    end
 
-    #カウントが終了しているならループを終了する
-    return if options[:_OPTION_][:count] <= 0
-
-    #カウントダウン
-    options[:_OPTION_][:count] -= 1
-
+  def _MOVE_(yield_stack, _ARGUMENT_:, **options, &block)
+    _ARGUMENT_ = Array(_ARGUMENT_)
     # Easingパラメータが設定されていない場合は線形移動を設定
-    unless options[:_OPTION_][:easing]
-      options[:_OPTION_][:easing] = :liner 
-    end
-    #指定されたeasingオプションが存在しない場合は線形移動を設定
-    unless EasingProcHash[options[:_OPTION_][:easing]]
-      warn "easingオプション#{EasingProcHash[options[:_OPTION_][:easing]]}は設定されていません"
-      options[:_OPTION_][:easing] = :liner 
-    end
+    _ARGUMENT_[1] ||= :liner
+    #現在の経過カウントを初期化
+    _ARGUMENT_[2] ||= 0
+    #カウントが終了しているならループを終了する
+    return if _ARGUMENT_[0] == _ARGUMENT_[2]
+    #カウントアップ
+    _ARGUMENT_[2] += 1
 
-    options.each do |key, index|
-      next if key == :_ARGUMENT_
-      next if key == :_OPTION_
-
-      #開始値が設定されていなければ現在の値で初期化
-      unless options[key].instance_of?(Array)
-        #オフセットオプションが設定されている場合
-        if options[:_OPTION_][:offset]
-          #相対座標移動
-          options[key] = [send(key), send(key) + options[key]]
-        else
-          #絶対座標移動
-          options[key] = [send(key), options[key]]
-        end
-      end
-
+    options.each do |key, value|
       #値を更新する
       send(key.to_s + "=", 
-            (options[key][0] + 
-              (options[key][1] - options[key][0]).to_f * 
-                EasingProcHash[options[:_OPTION_][:easing]].call(
-                  (options[:_ARGUMENT_] - options[:_OPTION_][:count]).fdiv(options[:_ARGUMENT_])
-              )
-            ).to_i)
+        (value[0] + (value[1] - value[0]).to_f * 
+          EasingProcHash[_ARGUMENT_[1]].call(_ARGUMENT_[2].fdiv(_ARGUMENT_[0]))
+        ).to_i
+      )
     end
 
+    options[:_ARGUMENT_] = _ARGUMENT_
     @command_list.unshift([:_MOVE_, options, yield_stack, block])
 
     #現在のループ終端を挿入
@@ -813,7 +784,8 @@ class Control #プロパティのパラメータ遷移
 
     if block
       #ブロックが付与されているならそれを実行する
-      parse_block(options, yield_stack, &block)
+      parse_block({end: _ARGUMENT_[0], now: _ARGUMENT_[2]}, 
+                  yield_stack,&block)
     end
   end
 

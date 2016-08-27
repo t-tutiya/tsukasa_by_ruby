@@ -664,3 +664,15 @@ _DEFINE_ :_WAIT_ do |options|
     _END_FRAME_
   end
 end
+
+_DEFINE_ :_WAIT_INPUT_ do |options|
+  _LOOP_ options[:count] do
+    _CHECK_INPUT_ options do
+      _RETURN_
+    end
+    _CHECK_BLOCK_ do
+      _YIELD_
+    end
+    _END_FRAME_
+  end
+end

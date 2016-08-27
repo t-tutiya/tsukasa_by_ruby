@@ -53,22 +53,20 @@ class ClickableLayout < Layout
   end
 
   def initialize(options, yield_stack, root_control, parent_control, &block)
-    @collision_shape = options[:collision_shape]
-
+    #カラーキー
     @colorkey_id = options[:colorkey_id]
+    #カラーキーボーダー
     @colorkey_border = options[:colorkey_border] || 255
 
+    #コリジョン形状の指定
+    @collision_shape = options[:collision_shape] || 
+                      [0, 0, options[:width] || 0, options[:height] || 0]
+
+    #コントロールSprite初期化
     @collision_sprite = DXRuby::Sprite.new
+    @collision_sprite.collision = @collision_shape
 
-    if @collision_shape
-      @collision_sprite.collision = @collision_shape
-    else
-      @collision_sprite.collision = [ 0, 
-                                      0, 
-                                      options[:width]  || 0, 
-                                      options[:height] || 0]
-    end
-
+    #カーソルSprite初期化
     @mouse_sprite = DXRuby::Sprite.new
     @mouse_sprite.collision = [0, 0]
 

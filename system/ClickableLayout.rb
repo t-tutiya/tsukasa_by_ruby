@@ -34,6 +34,8 @@ class ClickableLayout < Layout
   #コリジョンのエンティティ
   attr_accessor  :collision_shape
 
+  attr_reader  :cursor_x
+  attr_reader  :cursor_y
   attr_accessor  :colorkey_id
   attr_accessor  :colorkey_border
 

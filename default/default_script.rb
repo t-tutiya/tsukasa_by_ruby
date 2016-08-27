@@ -31,73 +31,15 @@ require 'dxruby'
 ###############################################################################
 
 ###############################################################################
-#システムサポート
+#計測関連
 ###############################################################################
-
-_CREATE_ :ClickableLayout, id: :requested_close,
-  width: DXRuby::Window.width, height: DXRuby::Window.height do
-  _DEFINE_ :inner_loop do
-    #ウィンドウの閉じるボタンが押された場合に呼びだされる。
-    _CHECK_REQUESTED_CLOSE_ do
-      _EXIT_ #アプリを終了する
-      _RETURN_
-    end
-    
-    _GET_ :_CURSOR_VISIBLE_, datastore: :_SYSTEM_ do |options|
-      _CHECK_MOUSE_ :cursor_off do
-        #カーソルを表示する
-        DXRuby::Input.mouse_enable = true unless options[:_CURSOR_VISIBLE_]
-      end
-
-      _CHECK_MOUSE_ :cursor_on do
-        #カーソルを不可視に戻す
-        DXRuby::Input.mouse_enable = false unless options[:_CURSOR_VISIBLE_]
-      end
-    end
-    _END_FRAME_
-    _RETURN_ do
-      inner_loop
-    end
-  end
-  inner_loop
-end
-
-#スクリーンショットキャプチャ
-_DEFINE_ :_CAPTURE_SS_ do |path, options|
-  DXRuby::Window.get_screen_shot(path, options[:format] || DXRuby::FORMAT_PNG)
-end
-
-#ファイルオープンダイアログ
-_DEFINE_ :_OPEN_FILENAME_ do |title , options|
-  _YIELD_ DXRuby::Window.open_filename(options[:filter ] || [], title || "")
-end
-
-#ファイルセーブダイアログ
-_DEFINE_ :_SAVE_FILENAME_ do |title , options|
-  _YIELD_ DXRuby::Window.save_filename(options[:filter ] || [], title || "")
-end
-
-#フォルダダイアログ
-_DEFINE_ :_FOLDER_DIALOG_ do |title , options|
-  _YIELD_ DXRuby::Window.folder_dialog(title || "", options[:default_dir ] || "", )
-end
 
 #アプリを起動してからのミリ秒を取得する
 _DEFINE_ :_RUNNING_TIME_ do 
   _YIELD_ time: DXRuby::Window.running_time
 end
 
-#フルスクリーンのオンオフ
-_DEFINE_ :_FULL_SCREEN_ do |_ARGUMENT_:|
-      DXRuby::Window.full_screen = _ARGUMENT_ #bool
-end
-
-#フルスクリーン化可能な解像度のリストを取得する
-_DEFINE_ :_SCREEN_MODES_ do 
-  _YIELD_ screen_modes: DXRuby::Window.get_screen_modes
-end
-
-#FPSカウンタ
+#FPSカウンタ（取得／設定）
 _DEFINE_ :_FPS_ do |_ARGUMENT_: false|
   DXRuby::Window.fps = _ARGUMENT_ if _ARGUMENT_
   _CHECK_BLOCK_ do
@@ -105,14 +47,11 @@ _DEFINE_ :_FPS_ do |_ARGUMENT_: false|
   end
 end
 
-#画面サイズの変更
-_DEFINE_ :_RESIZE_ do |options|
-  DXRuby::Window.resize(options[:width], options[:height])
-  _SEND_ [:_ROOT_, :requested_close] do
-    _SET_ width: options[:width], height: options[:height]
-  end
-end
+###############################################################################
+#ウィンドウ管理
+###############################################################################
 
+#ウィンドウ関連情報の設定
 _DEFINE_ :_WINDOW_STATUS_ do |options|
   #タイトルバーの文字列を設定する
   DXRuby::Window.caption = options[:caption] if options[:caption]
@@ -139,6 +78,59 @@ _DEFINE_ :_WINDOW_STATUS_ do |options|
     #IDC_WAIT 砂時計カーソル
   DXRuby::Input.set_cursor(options[:cursor_type]) if options[:cursor_type]
 end
+
+#フルスクリーン化可能な解像度のリストを取得する
+_DEFINE_ :_SCREEN_MODES_ do 
+  _YIELD_ screen_modes: DXRuby::Window.get_screen_modes
+end
+
+#画面サイズの変更
+_DEFINE_ :_RESIZE_ do |options|
+  DXRuby::Window.resize(options[:width], options[:height])
+  _SEND_ [:_ROOT_, :requested_close] do
+    _SET_ width: options[:width], height: options[:height]
+  end
+end
+
+#フルスクリーンのオンオフ
+_DEFINE_ :_FULL_SCREEN_ do |_ARGUMENT_:|
+  DXRuby::Window.full_screen = _ARGUMENT_ #bool
+end
+
+#ウィンドウの閉じるボタンが押されたかどうかの判定
+_DEFINE_ :_CHECK_REQUESTED_CLOSE_ do
+  if DXRuby::Input.requested_close?
+    _YIELD_
+  end
+end
+
+#スクリーンショットキャプチャ
+_DEFINE_ :_CAPTURE_SS_ do |path, options|
+  DXRuby::Window.get_screen_shot(path, options[:format] || DXRuby::FORMAT_PNG)
+end
+
+###############################################################################
+#ファイルダイアログ管理
+###############################################################################
+
+#ファイルオープンダイアログ
+_DEFINE_ :_OPEN_FILENAME_ do |title , options|
+  _YIELD_ DXRuby::Window.open_filename(options[:filter ] || [], title || "")
+end
+
+#ファイルセーブダイアログ
+_DEFINE_ :_SAVE_FILENAME_ do |title , options|
+  _YIELD_ DXRuby::Window.save_filename(options[:filter ] || [], title || "")
+end
+
+#フォルダダイアログ
+_DEFINE_ :_FOLDER_DIALOG_ do |title , options|
+  _YIELD_ DXRuby::Window.folder_dialog(title || "", options[:default_dir ] || "", )
+end
+
+###############################################################################
+#マウス／ゲームパッド管理
+###############################################################################
 
 #マウスカーソルの可視設定
 _DEFINE_ :_MOUSE_ENABLE_ do |_ARGUMENT_:|
@@ -168,31 +160,9 @@ _DEFINE_ :_PAD_CONFIG_ do |options|
                     options[:pad_number] = 0)
 end
 
-#Imageを生成し、指定したコントロール配下を描画する
-_DEFINE_ :_TO_IMAGE_ do 
-  |_ARGUMENT_:, width: nil, height: nil, scale: nil, z: Float::INFINITY, visible: true|
-  _GET_ [:width, :height] do |options|
-    #width/heightのどちらかが設定されていない場合、現在の幅を使用する
-    unless width and height
-      width = options[:width]
-      height= options[:height]
-    end
-    #新規Imageの生成（初期設定では不可視）
-    _CREATE_ :Image, id: _ARGUMENT_, z: z, visible: false,
-      width: width, height: height do
-      #自身と並列の子コントロールを描画する（自身は除く）
-      _DRAW_ [:_PARENT_], scale: scale
-      #可視設定を更新する
-      _SET_ visible: visible
-      #ブロックコマンド実行
-      _CHECK_BLOCK_ do
-        _YIELD_
-      end
-    end
-  end
-  #Imageのコマンドリストを評価させるために１フレ送る
-  _END_FRAME_
-end
+###############################################################################
+#フォント管理
+###############################################################################
 
 #一時truetypeフォントの登録
 _DEFINE_ :_INSTALL_FONT_ do |_ARGUMENT_:|
@@ -202,13 +172,6 @@ end
 #プリレンダフォントデータの登録
 _DEFINE_ :_INSTALL_PRERENDER_FONT_ do |_ARGUMENT_:, font_name:| 
   Char.install_prerender(font_name, _ARGUMENT_)
-end
-
-#ウィンドウの閉じるボタンが押されたかどうかの判定
-_DEFINE_ :_CHECK_REQUESTED_CLOSE_ do
-  if DXRuby::Input.requested_close?
-    _YIELD_
-  end
 end
 
 ###############################################################################

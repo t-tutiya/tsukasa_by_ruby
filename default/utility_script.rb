@@ -30,6 +30,61 @@ require 'dxruby'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+###############################################################################
+#ヘルパーコマンド関連
+###############################################################################
+
+#配列の中に指定した値が含まれていればブロックを実行する
+_DEFINE_ :_CHECK_ARRAY_INCLUDE_ do |array:, value:|
+  if array.include?(value)
+    _YIELD_
+  end
+end
+
+#１フレーム待機する
+#オプション：_CHECK_条件
+# count:_LOOP_に渡されるカウント（整数）
+# input:_CHECK_INPUT_に渡される条件（ハッシュ）
+_DEFINE_ :_WAIT_ do |options|
+  _LOOP_ options[:count] do
+    _CHECK_ options do
+      _RETURN_
+    end
+    _CHECK_INPUT_ options[:input] do
+      _RETURN_
+    end
+    _CHECK_BLOCK_ do
+      _YIELD_
+    end
+    _END_FRAME_
+  end
+end
+
+#Imageを生成し、指定したコントロール配下を描画する
+_DEFINE_ :_TO_IMAGE_ do 
+  |_ARGUMENT_:, width: nil, height: nil, scale: nil, z: Float::INFINITY, visible: true|
+  _GET_ [:width, :height] do |options|
+    #width/heightのどちらかが設定されていない場合、現在の幅を使用する
+    unless width and height
+      width = options[:width]
+      height= options[:height]
+    end
+    #新規Imageの生成（初期設定では不可視）
+    _CREATE_ :Image, id: _ARGUMENT_, z: z, visible: false,
+      width: width, height: height do
+      #自身と並列の子コントロールを描画する（自身は除く）
+      _DRAW_ [:_PARENT_], scale: scale
+      #可視設定を更新する
+      _SET_ visible: visible
+      #ブロックコマンド実行
+      _CHECK_BLOCK_ do
+        _YIELD_
+      end
+    end
+  end
+  #Imageのコマンドリストを評価させるために１フレ送る
+  _END_FRAME_
+end
 
 ###############################################################################
 #テキストレイヤ関連
@@ -641,32 +696,3 @@ _DEFINE_ :_LABEL_ do |options|
   _YIELD_ 
 end
 
-###############################################################################
-#ヘルパーコマンド関連
-###############################################################################
-
-#配列の中に指定した値が含まれていればブロックを実行する
-_DEFINE_ :_CHECK_ARRAY_INCLUDE_ do |array:, value:|
-  if array.include?(value)
-    _YIELD_
-  end
-end
-
-#１フレーム待機する
-#オプション：_CHECK_条件
-# count:_LOOP_に渡されるカウント（整数）
-# input:_CHECK_INPUT_に渡される条件（ハッシュ）
-_DEFINE_ :_WAIT_ do |options|
-  _LOOP_ options[:count] do
-    _CHECK_ options do
-      _RETURN_
-    end
-    _CHECK_INPUT_ options[:input] do
-      _RETURN_
-    end
-    _CHECK_BLOCK_ do
-      _YIELD_
-    end
-    _END_FRAME_
-  end
-end

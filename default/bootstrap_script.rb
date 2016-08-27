@@ -39,6 +39,36 @@ _INCLUDE_ "./default/default_script.rb"
 #標準ユーティリティー群の読み込み
 _INCLUDE_ "./default/utility_script.rb"
 
+#ウィンドウの閉じるボタンの押下チェック
+#ウィンドウ枠外にマウスカーソルが出た場合のアイコン表示管理
+_CREATE_ :ClickableLayout, id: :requested_close,
+  width: DXRuby::Window.width, height: DXRuby::Window.height do
+  _DEFINE_ :inner_loop do
+    #ウィンドウの閉じるボタンが押された場合に呼びだされる。
+    _CHECK_REQUESTED_CLOSE_ do
+      _EXIT_ #アプリを終了する
+      _RETURN_
+    end
+    
+    _GET_ :_CURSOR_VISIBLE_, datastore: :_SYSTEM_ do |options|
+      _CHECK_MOUSE_ :cursor_off do
+        #カーソルを表示する
+        DXRuby::Input.mouse_enable = true unless options[:_CURSOR_VISIBLE_]
+      end
+
+      _CHECK_MOUSE_ :cursor_on do
+        #カーソルを不可視に戻す
+        DXRuby::Input.mouse_enable = false unless options[:_CURSOR_VISIBLE_]
+      end
+    end
+    _END_FRAME_
+    _RETURN_ do
+      inner_loop
+    end
+  end
+  inner_loop
+end
+
 #プラグインスクリプトファイルの読み込み
 _GET_ :_PLUGIN_PATH_, datastore: :_SYSTEM_ do |_PLUGIN_PATH_:|
   Dir.glob(_PLUGIN_PATH_).each do |path:|

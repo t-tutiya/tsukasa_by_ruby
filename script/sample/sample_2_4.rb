@@ -26,7 +26,7 @@ _CREATE_ :ClickableLayout,
 
     #キーがクリックされるまで待機
     _WAIT_ do
-      _CHECK_MOUSE_ [:key_down, :cursor_out] do
+      _CHECK_MOUSE_ [:key_push, :cursor_out] do
         _BREAK_
       end
     end

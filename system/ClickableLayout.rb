@@ -70,13 +70,11 @@ class ClickableLayout < Layout
     @mouse_sprite = DXRuby::Sprite.new
     @mouse_sprite.collision = [0, 0]
 
-    @over = false
-    @out  = true
+    #カーソル座標がコントロール内にある
+    @cursor_in  = false
 
+    #コントロールに対するカーソルの相対座標
     @cursor_x = @cursor_y = 0
-
-    @mouse_x = @mouse_y = 0
-
     super
   end
 
@@ -85,7 +83,7 @@ class ClickableLayout < Layout
     mouse_pos_x -= check_align_x()
     mouse_pos_y -= check_align_y()
 
-    @inner_control = false
+    @on_inner_control = false
     @on_mouse_over  = false
     @on_mouse_out   = false
 
@@ -101,15 +99,6 @@ class ClickableLayout < Layout
     @on_right_key_up      = false
     @on_right_key_up_out  = false
 
-    #前フレームとのカーソル座標更新差分を取得
-    @cursor_offset_x = mouse_pos_x - @mouse_x
-    @cursor_offset_y = mouse_pos_y - @mouse_y
-    @mouse_x = mouse_pos_x
-    @mouse_y = mouse_pos_y
-
-    #カーソルが移動しているかどうかのフラグを格納
-    @on_cursor_move = !((@cursor_offset_x == 0) and (@cursor_offset_y == 0))
-
     #カーソル座標を保存する
     @cursor_x = @mouse_sprite.x = mouse_pos_x - @x
     @cursor_y = @mouse_sprite.y = mouse_pos_y - @y
@@ -124,22 +113,20 @@ class ClickableLayout < Layout
     #マウスカーソル座標との衝突判定
     if not (@mouse_sprite === @collision_sprite)
       #マウスカーソルがコリジョン範囲内に無い
-      @inner_control = false
+      @on_inner_control = false
     elsif @colorkey_id and (find_control(@colorkey_id).entity[mouse_pos_x - @x, mouse_pos_y - @y][0] <= @colorkey_border)
       #マウスカーソルがコリジョン範囲内にあるがカラーキーボーダー内に無い
-      @inner_control = false
+      @on_inner_control = false
     else
       #マウスカーソルがコリジョン範囲内にある
-      @inner_control = true
+      @on_inner_control = true
     end
 
-    if @inner_control
-      #イベント起動済みフラグクリア
-      @out = false
-
+    if @on_inner_control
       #イベント起動前であれば起動し、クリアフラグを立てる
-      @on_mouse_over = true unless @over
-      @over = true
+      @on_mouse_over = true unless @cursor_in
+      #カーソル座標がコントロール内に入った。
+      @cursor_in = true
 
       #キー継続押下チェック
       @on_key_down = DXRuby::Input.mouse_down?( M_LBUTTON )
@@ -154,12 +141,10 @@ class ClickableLayout < Layout
       #右キー解除チェック
       @on_right_key_up = DXRuby::Input.mouse_release?( M_RBUTTON )
     else
-      #イベント起動済みフラグクリア
-      @over = false
-
-      #イベント起動前であれば起動し、クリアフラグを立てる
-      @on_mouse_out = true unless @out
-      @out = true
+      #前フレームでカーソルがコントロール内に入っていたのであれば、脱出フラグを立てる。
+      @on_mouse_out = true if @cursor_in
+      #カーソル座標がコントロールの外に出た
+      @cursor_in = false
 
       #キー押下チェック
       @on_key_down_out = DXRuby::Input.mouse_down?( M_LBUTTON )
@@ -178,12 +163,9 @@ class ClickableLayout < Layout
     result = Array(_ARGUMENT_).any? do |key|
       case key
       when :cursor_on
-        @inner_control
+        @on_inner_control
       when :cursor_off
-        !(@inner_control)
-      #前フレと比較してカーソルが移動した場合
-      when :cursor_move
-        @on_cursor_move
+        !(@on_inner_control)
       #カーソルが指定範囲に侵入した場合
       when :cursor_over
         @on_mouse_over

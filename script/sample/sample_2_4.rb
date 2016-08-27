@@ -56,8 +56,10 @@ _CREATE_ :ClickableLayout,
       #コントロールプロパティを取得
       _GET_ [:_MOUSE_OFFSET_X_, :_MOUSE_OFFSET_Y_], datastore: :_TEMP_ do 
             | _MOUSE_OFFSET_X_:, _MOUSE_OFFSET_Y_:|
-        #コントロールのＸＹ座標にカーソルの移動オフセット値を加算
-        _SET_OFFSET_ x: _MOUSE_OFFSET_X_, y: _MOUSE_OFFSET_Y_
+        _GET_ [:x, :y] do |x:, y:|
+          #コントロールのＸＹ座標にカーソルの移動オフセット値を加算
+          _SET_ x: x + _MOUSE_OFFSET_X_, y: y + _MOUSE_OFFSET_Y_
+        end
       end
     end
     _RETURN_ do

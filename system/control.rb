@@ -317,27 +317,6 @@ class Control #セッター／ゲッター
     end
   end
 
-  #コントロールのプロパティを更新する
-  def _SET_OFFSET_(yield_stack, _ARGUMENT_: nil, **options)
-    #オプション全探査
-    options.each do |key, val|
-      #データストアが設定されている場合
-      if _ARGUMENT_
-        #指定データストアのキーに値をオフセット値を加算して代入
-        @root_control.send(_ARGUMENT_.to_s)[key] += val
-      else
-        #セッターが存在する場合
-        if  respond_to?(key.to_s + "=")
-          #コントロールプロパティに値をオフセット加算して代入
-          send(key.to_s + "=", send(key.to_s) + val)
-        else
-          #warningを出して処理を続行する
-          warn  "クラス[#{self.class}]：変数[" + "@#{key}]は存在しません"
-        end
-      end
-    end
-  end
-
   #指定したコントロール(orデータストア)のプロパティを取得する
   def _GET_(yield_stack, _ARGUMENT_:, datastore: nil, **, &block)
     result = {}

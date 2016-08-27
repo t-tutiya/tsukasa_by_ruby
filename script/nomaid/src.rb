@@ -258,11 +258,11 @@ _DEFINE_ :lesson_menu do
                  [helth_point - (mental_point_max - mental_point + 15),
                     helth_point].max].min
       mp_cost = [10, [mental_point - 10, mental_point].max].min
-      _SET_OFFSET_ :_TEMP_, 
-                    allegiance: hp_cost / 2 + (mp_cost + courtesy) / 3,
-                    noble: hp_cost / 2 + (mp_cost + intelligence) / 3,
-                    helth_point: - hp_cost,
-                    mental_point: - mp_cost
+      _SET_ :_TEMP_, 
+        allegiance: allegiance + hp_cost / 2 + (mp_cost + courtesy) / 3,
+        noble: noble + hp_cost / 2 + (mp_cost + intelligence) / 3,
+        helth_point: helth_point - hp_cost,
+        mental_point: mental_point - mp_cost
     end
     #勉学
     _CHECK_ :_TEMP_, equal: {flag: :academy} do
@@ -270,11 +270,11 @@ _DEFINE_ :lesson_menu do
                  [helth_point - (mental_point_max - mental_point + 5),
                     helth_point].max].min
       mp_cost = [20, [mental_point - 20, mental_point].max].min
-      _SET_OFFSET_ :_TEMP_, 
-                    culture: hp_cost / 2 + (mp_cost + courtesy) / 2,
-                    intelligence: hp_cost / 2 + (mp_cost + intelligence) / 3,
-                    helth_point: - hp_cost,
-                    mental_point: - mp_cost
+      _SET_ :_TEMP_, 
+        culture: culture + hp_cost / 2 + (mp_cost + courtesy) / 2,
+        intelligence: intelligence + hp_cost / 2 + (mp_cost + intelligence) / 3,
+        helth_point: helth_point - hp_cost,
+        mental_point: mental_point - mp_cost
     end
     #舞踏
     _CHECK_ :_TEMP_, equal: {flag: :dance} do
@@ -282,11 +282,11 @@ _DEFINE_ :lesson_menu do
                  [helth_point - (mental_point_max - mental_point + 20),
                     helth_point].max].min
       mp_cost = [15, [mental_point - 15, mental_point].max].min
-      _SET_OFFSET_ :_TEMP_, 
-                    charm: hp_cost / 2 + (mp_cost + courtesy) / 2,
-                    noble: hp_cost / 2 + (mp_cost + intelligence) / 2,
-                    helth_point: - hp_cost,
-                    mental_point: - mp_cost
+      _SET_ :_TEMP_, 
+        charm: charm + hp_cost / 2 + (mp_cost + courtesy) / 2,
+        noble: noble + hp_cost / 2 + (mp_cost + intelligence) / 2,
+        helth_point: helth_point - hp_cost,
+        mental_point: mental_point - mp_cost
     end
     #礼儀作法
     _CHECK_ :_TEMP_, equal: {flag: :courtesy} do
@@ -294,11 +294,11 @@ _DEFINE_ :lesson_menu do
                  [helth_point - (mental_point_max - mental_point + 5),
                     helth_point].max].min
       mp_cost = [20, [mental_point - 20, mental_point].max].min
-      _SET_OFFSET_ :_TEMP_, 
-                    courtesy: hp_cost / 2 + (mp_cost + courtesy) / 2,
-                    culture: hp_cost / 2 + (mp_cost + intelligence) / 3,
-                    helth_point: - hp_cost,
-                    mental_point: - mp_cost
+      _SET_ :_TEMP_, 
+        courtesy: courtesy + hp_cost / 2 + (mp_cost + courtesy) / 2,
+        culture: culture + hp_cost / 2 + (mp_cost + intelligence) / 3,
+        helth_point: helth_point - hp_cost,
+        mental_point: mental_point - mp_cost
       end
     end
 
@@ -446,8 +446,9 @@ end
 _DEFINE_ :rest do
   _GET_ [ :helth_point, :mental_point], datastore: :_TEMP_ do 
           |helth_point:, mental_point:|
-    _SET_OFFSET_ :_TEMP_, helth_point: [100 - helth_point, mental_point].min, 
-                          mental_point: [100 - mental_point, 50].min
+    _SET_ :_TEMP_, 
+      helth_point: helth_point + [100 - helth_point, mental_point].min, 
+      mental_point: mental_point + [100 - mental_point, 50].min
   end
   _SEND_ [:_ROOT_], interrupt: true  do
     _SEND_ :nomaid_comment_area do
@@ -531,7 +532,9 @@ _LOOP_ 7 do
     top_menu
 
     #曜日更新処理
-    _SET_OFFSET_ :_TEMP_, day: 1
+    _GET_ [:day], datastore: :_TEMP_ do |day:|
+      _SET_ :_TEMP_, day: day + 1
+    end
     _END_FRAME_
   end
 
@@ -543,7 +546,9 @@ _LOOP_ 7 do
     end
 
     #借金返済
-    _SET_OFFSET_  :_TEMP_, gold: -debt[week]
+    _GET_ [:gold], datastore: :_TEMP_ do |gold:|
+      _SET_ :_TEMP_, gold: gold - debt[week]
+    end
   end
 
   #ゲームクリア判定
@@ -553,7 +558,9 @@ _LOOP_ 7 do
   end
 
   #週更新処理
-  _SET_OFFSET_  :_TEMP_, week: 1
+  _GET_ [:week], datastore: :_TEMP_ do |week:|
+    _SET_ :_TEMP_, week: week + 1
+  end
 end
 
 #■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■

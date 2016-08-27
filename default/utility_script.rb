@@ -652,22 +652,16 @@ _DEFINE_ :_CHECK_ARRAY_INCLUDE_ do |array:, value:|
   end
 end
 
-#１フレーム待機するLOOP
+#１フレーム待機する
+#オプション：_CHECK_条件
+# count:_LOOP_に渡されるカウント（整数）
+# input:_CHECK_INPUT_に渡される条件（ハッシュ）
 _DEFINE_ :_WAIT_ do |options|
   _LOOP_ options[:count] do
     _CHECK_ options do
       _RETURN_
     end
-    _CHECK_BLOCK_ do
-      _YIELD_
-    end
-    _END_FRAME_
-  end
-end
-
-_DEFINE_ :_WAIT_INPUT_ do |options|
-  _LOOP_ options[:count] do
-    _CHECK_INPUT_ options do
+    _CHECK_INPUT_ options[:input] do
       _RETURN_
     end
     _CHECK_BLOCK_ do

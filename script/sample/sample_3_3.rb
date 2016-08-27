@@ -9,6 +9,7 @@ _DEFINE_ :comment_area do |_ARGUMENT_:, x:, y:, char:|
     char: char || ""
 end
 
+_CREATE_ :Layout, id: :layout01 do
 comment_area :comment_area1_a, x:0, y:256+192, char: "running_time"
 comment_area :comment_area1_b, x:256, y:256+192,  char: ""
 comment_area :comment_area2_a, x:0, y:256+160,  char: "fps"
@@ -23,9 +24,11 @@ comment_area :comment_area6_a, x:0, y:256,  char: "mouse"
 comment_area :comment_area6_b, x:256, y:256,  char: ""
 comment_area :comment_area6_b2, x:256, y:256-32,  char: ""
 comment_area :comment_area6_a, x:0, y:256-32,  char: "mouse offset"
+end
 
 _LOOP_ do
   _SEND_ [:_ROOT_], interrupt: true do
+    _SEND_ :layout01 do
     _SEND_ :comment_area1_b do
       _RUNNING_TIME_ do |time:|
         _SET_ char: time.to_s
@@ -60,5 +63,13 @@ _LOOP_ do
       end
     end
   end
+  end
+  _CHECK_INPUT_ mouse: :right_push do
+    _SEND_ :layout01, interrupt: true do
+      _DELETE_
+    end
+    _BREAK_
+  end
   _END_FRAME_
 end
+

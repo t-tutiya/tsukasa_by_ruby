@@ -9,4 +9,7 @@ _LOOP_ 3 do
   end
 end
 _END_PAUSE_
+_SEND_ :text0 do
+  _FLUSH_
+end
 

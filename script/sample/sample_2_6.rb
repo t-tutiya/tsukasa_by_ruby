@@ -1,4 +1,5 @@
 
+_CREATE_ :Layout, id: :layout01 do
 _CREATE_ :DrawableLayout, id: :DrawableLayout0, 
   width: 512, height: 128, bgcolor: [128,0,0] do
   _CREATE_ :Image, id: :Image0,
@@ -47,7 +48,13 @@ _CREATE_ :Image, id: :Image0,
   _FILL_ [0,0,128+96]
   _TEXT_ text: "Ｘ方向連結4", color: [255,255,255]
 end
-
+end
 _LOOP_ do
+  _CHECK_INPUT_ mouse: :right_push do
+    _SEND_ :layout01, interrupt: true do
+      _DELETE_
+    end
+    _BREAK_
+  end
   _END_FRAME_
 end

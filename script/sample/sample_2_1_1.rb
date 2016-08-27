@@ -39,5 +39,11 @@ end
 button3 id: :test01, x: 100, y: 100
 
 _LOOP_ do
+  _CHECK_INPUT_ mouse: :right_push do
+    _SEND_ :test01, interrupt: true do
+      _DELETE_
+    end
+    _BREAK_
+  end
   _END_FRAME_
 end

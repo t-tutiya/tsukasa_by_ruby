@@ -1,5 +1,7 @@
 _RESIZE_ width:640, height:480
 
+_CREATE_ :Layout , id: :layout01 do
+
 _CREATE_ :Char, 
   id: :comment_area,
   size: 32, 
@@ -44,22 +46,25 @@ _CREATE_ :Layout , id: :cursor do
   end
 end
 
+end
 _MOUSE_ENABLE_ false
+
+_END_FRAME_
 
 _LOOP_ do
   _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do 
         |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
-    _SEND_ :comment_area do
+    _SEND_ [:layout01, :comment_area] do
       _SET_ char: _MOUSE_POS_X_.to_s + ":" + _MOUSE_POS_Y_.to_s
     end
-    _SEND_ :cursor do
+    _SEND_ [:layout01, :cursor] do
       _SET_ x: _MOUSE_POS_X_, y: _MOUSE_POS_Y_
     end
   end
   _CHECK_ :_SYSTEM_, equal: {data0: true},key_down: [K_Z] do
     _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do 
           |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
-      _SEND_ :cursor do 
+      _SEND_ [:layout01, :cursor] do 
         _MOVE_ [30, :out_quart], 
           x: [_MOUSE_POS_X_, 0], 
           y: [_MOUSE_POS_Y_, 0]
@@ -68,7 +73,7 @@ _LOOP_ do
                   mouse_y: [_MOUSE_POS_Y_, 0] do
         _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do 
                 |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
-          _SEND_ :comment_area do
+          _SEND_ [:layout01, :comment_area] do
             _SET_ char: _MOUSE_POS_X_.to_s + ":" + _MOUSE_POS_Y_.to_s
           end
         end
@@ -77,10 +82,16 @@ _LOOP_ do
     _SET_ mouse_x:0, mouse_y:0
     _SET_ :_SYSTEM_ , data0: false
   end
+  _CHECK_INPUT_ mouse: :right_push do
+    _SEND_ :layout01, interrupt: true do
+      _DELETE_
+    end
+    _RESIZE_ width:1024, height:600
+    _BREAK_
+  end
   _END_FRAME_
 end
 
-_END_PAUSE_
 #カーソル可視設定
 _MOUSE_ENABLE_ true
 

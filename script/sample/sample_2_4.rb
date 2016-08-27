@@ -1,6 +1,7 @@
 _CREATE_ :ClickableLayout, 
   width:256, 
-  height:256 do
+  height:256,
+  id: :button1 do
   _CREATE_ :TileMap, id: :icon, 
     width: 256,
     height: 256 do
@@ -68,5 +69,11 @@ _CREATE_ :ClickableLayout,
 end
 
 _LOOP_ do
+  _CHECK_INPUT_ mouse: :right_push do
+    _SEND_ :button1, interrupt: true do
+      _DELETE_
+    end
+    _BREAK_
+  end
   _END_FRAME_
 end

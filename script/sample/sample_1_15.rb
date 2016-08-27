@@ -27,3 +27,6 @@ end
 _SEND_ :button2, interrupt: true do
   _DELETE_
 end
+_SEND_ :text0 do
+  _FLUSH_
+end

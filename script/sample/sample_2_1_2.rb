@@ -46,5 +46,11 @@ _CREATE_ :ClickableLayout,
 end
 
 _LOOP_ do
+  _CHECK_INPUT_ mouse: :right_push do
+    _SEND_ :button1, interrupt: true do
+      _DELETE_
+    end
+    _BREAK_
+  end
   _END_FRAME_
 end

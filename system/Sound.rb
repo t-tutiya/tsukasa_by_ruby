@@ -3,7 +3,7 @@
 require 'ayame'
 
 ###############################################################################
-#TSUKASA for DXRuby ver1.2.1(2016/5/2)
+#TSUKASA for DXRuby ver2.0(2016/8/28)
 #メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby
 #
 #Copyright (c) <2013-2016> <tsukasa TSUCHIYA>

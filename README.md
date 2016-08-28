@@ -25,7 +25,7 @@
 　司エンジンに関するドキュメントについては、下記の各サイトを参照してください。
 
 *  リファレンスマニュアル
-    *  https://github.com/t-tutiya/tsukasa/wiki
+    *  同梱のリファレンスマニュアルを参照してください。
 *  サンプルコード
     *  [準備中。script/sampleフォルダに入っているサンプルコードを参照してください]
 
@@ -62,6 +62,138 @@ http://mirichi.github.io/dxruby-doc/api/constant_keycode.html
 *  readme.md 簡易ドキュメント
 
 ##更新履歴
+
+v2.0
+
+■司スクリプト記法の変更
+　・コントロール送信文を廃止
+　・付与ブロックの引数をキーワード引数のみに限定し、第１引数を廃止
+
+■Window（旧：Tsukasa）
+・コントロール名／ファイル名を変更
+・デフォルトid廃止
+・mouse_x/yプロパティを書き込み専用に変更
+・_SCRIPT_PARSER_　file_pathオプションをpathに改名
+
+■Control
+・_ALIAS_　追加
+・_CHECK_INPUT_　追加
+・_CHECK_BLOCK_　追加
+・_DEFINE_PROPERTY_　追加
+・_DEBUG_TREE_　追加
+・_DEBUG_PROP_　追加
+・_DEBUG_COMMAND_　追加
+・_DEBUG_TEMP_　追加
+・_DEBUG_LOCAL_　追加
+・_DEBUG_SYSTEM_　追加
+
+・_YIELD_　引数が設定できるようにした。
+・_DELETE_　第一引数で削除するコントロールをパス指定出来るようにした
+・_INCLUDE_/_PARSE_　file_pathオプションをpathに改名
+・_CHECK_
+　・upperをoverに改名
+　・ブロックが引数を受け取らないように変更
+　・count/child_exist/child_not_exist/null/not_null条件項目を廃止
+　・キー入力関連の条件項目を廃止し、_CHECK_INPUT_に移動
+　・requested_close条件項目を廃止し、_CHECK_BLOCK_に移動（その際systemオプションの名称をmouseに変更し、内部のキーもmouse_push/mouse_down/mouse_up/right_mouse_down/right_mouse_push/right_mouse_upをそれぞれpush/down/up/right_down/right_push/right_upに変更
+・_MOVE_/_PATH_
+　・第１引数の仕様を変更
+　・_OPTIONS_オプションを廃止。
+・_LOOP_
+　・条件判定を受け付ける仕様廃止
+　・第一引数でカウンタを指定するように変更
+　・現在のカウント値をブロック引数で取れるようにした
+
+・_STACK_LOOP_　廃止
+・_WAIT_　廃止（仕様を更新し、ユーザー定義コマンドに変更）
+
+■Char（旧：CharControl）
+・コントロール名／ファイル名を変更
+・image_pathプロパティを追加
+
+・_CLEAR_　追加
+
+■Image（旧：ImageControl）
+・コントロール名／ファイル名を変更
+・file_pathプロパティをpathに改名
+・初期化時のみentityを設定出来ていた仕様を廃止
+
+・_DRAW_　追加
+
+■DrawableLayout（旧：RenderTargetControl）
+・コントロール名／ファイル名を変更
+
+・_LINE_　追加
+・_BOX_　追加
+・_CIRCLE_　追加
+・_TEXT_　追加
+
+■TextPage（旧：TextPageControl）
+・コントロール名／ファイル名を変更
+・character_pitchの誤字を修正
+
+■TileMap（旧：TileMapControl）
+・コントロール名／ファイル名を変更
+・_SET_TILE_　file_pathオプションをpathに改名
+・_SET_TILE_GROUP_　file_pathオプションをpathに改名
+
+■Layoutable(旧：LayoutableControl）
+・コントロール名／ファイル名を変更
+・ユーザーが直接生成できないように変更
+
+・_TO_IMAGE_　廃止
+
+■Drawable(旧：DrawableControl）
+・コントロール名／ファイル名を変更
+・ユーザーが直接生成できないように変更
+
+■RuleShader（旧：RuleShaderControl）
+・コントロール名／ファイル名を変更
+
+■Sound（旧：SoundControl）
+・コントロール名／ファイル名を変更
+・file_pathプロパティをpathに改名
+
+■Layout（旧：LayoutControl）
+・コントロール名／ファイル名を変更
+
+■ClickableLayout（旧：ClickableLayoutControl）
+・コントロール名／ファイル名を変更
+・_CHECK_MOUSE_　追加し、衝突判定を_CHECK_から分離（その際、cursor_move条件項目を廃止）
+・cursor_offset_x/yプロパティ廃止
+
+■標準ユーザー定義コマンド（default_script.rb）
+・_INSTALL_PRERENDER_FONT_　追加
+・_INSTALL_FONT_　追加
+・_IMAGE_REGIST_　追加
+・_IMAGE_DISPOSE_　追加
+・_CHECK_REQUESTED_CLOSE_　追加
+・ラベルのヘッダーフッターを廃止
+
+■ユーティリティーユーザー定義コマンド（utility_script.rb）
+・_WAIT_　追加
+・_TO_IMAGE_　追加
+・_BUTTON_BASE_　追加
+・_TEXT_BUTTON_　_BUTTON_BASE_ベースで実装し直しインターフェイスを刷新
+・_IMAGE_BUTTON_　_BUTTON_BASE_ベースで実装し直しインターフェイスを刷新
+・_TEXT_WINDOW_修正
+　・実行時に付与ブロックがある場合に実行するようにした
+　・初期化パラメーターを全てTextPageに委譲するようにした
+・_CHAR_SET_追加
+・_CHAR_RUBI_追加
+・_CHAR_IMAGE_追加
+・_CHECK_ARRAY_INCLUDE_　追加
+
+■データストア
+　・_TEMP_でカーソルの絶対座標と前フレームからの相対座標を取得できるようにした
+
+■定数定義
+　・ファイルConstant.rbを導入し、以下のDXRuby定数を司エンジン上で再定義した。
+　　・キーコード定数
+　　・マウスボタン定数
+　　・パッド定数
+　　・マウスカーソル定数
+　　・色定数
 
 v1.2.1p9
 

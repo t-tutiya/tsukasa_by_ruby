@@ -490,7 +490,7 @@ _DEFINE_ :_TEXT_BUTTON_ do
 
     #ブロック実行
     _CHECK_BLOCK_ do
-      _YIELD_ id, options
+      _YIELD_
     end
   end
 end

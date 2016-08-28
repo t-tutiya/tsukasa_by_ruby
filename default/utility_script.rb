@@ -367,11 +367,9 @@ end
 ###############################################################################
 
 #汎用ボタンロジック
-_DEFINE_ :_BUTTON_BASE_ do |id:, width:, height:, **options|
+_DEFINE_ :_BUTTON_BASE_ do |id:, **options|
   _CREATE_ :ClickableLayout, 
     id: id || nil,
-    width: width, 
-    height: height,
     **options do
 
     #カーソルがコントロールから外れた

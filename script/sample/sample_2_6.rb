@@ -49,12 +49,10 @@ _CREATE_ :Image, id: :Image0,
   _TEXT_ text: "Ｘ方向連結4", color: [255,255,255]
 end
 end
-_LOOP_ do
-  _CHECK_INPUT_ mouse: :right_push do
-    _SEND_ :layout01, interrupt: true do
-      _DELETE_
-    end
-    _BREAK_
-  end
-  _END_FRAME_
+
+_WAIT_ input:{mouse: :right_push}
+
+_SEND_ :layout01, interrupt: true do
+  _DELETE_
 end
+

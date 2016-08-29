@@ -6,12 +6,7 @@ _SEND_ :img0 do
   _SET_ path: "./resource/char/B-1.png", x: 250
 end
 
-_LOOP_ do
-  _CHECK_INPUT_ key_push: K_SPACE do
-    _BREAK_
-  end
-  _END_FRAME_
-end
+_WAIT_ input: {key_push: K_SPACE}
 
 _TO_IMAGE_ :test0
 

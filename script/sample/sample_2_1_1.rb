@@ -38,12 +38,8 @@ _DEFINE_ :button3 do |options|
 end
 button3 id: :test01, x: 100, y: 100
 
-_LOOP_ do
-  _CHECK_INPUT_ mouse: :right_push do
-    _SEND_ :test01, interrupt: true do
-      _DELETE_
-    end
-    _BREAK_
-  end
-  _END_FRAME_
+_WAIT_ input:{mouse: :right_push}
+
+_SEND_ :test01, interrupt: true do
+  _DELETE_
 end

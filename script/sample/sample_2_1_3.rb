@@ -2,7 +2,7 @@
 _CREATE_ :ClickableLayout, 
         width: 256,
         height: 256,
-        id: :button1,
+        id: :test01,
         colorkey_id: :normal,
         colorkey_border:200 do
   _CREATE_ :Image, path: "./resource/star_button.png", 
@@ -41,12 +41,8 @@ _CREATE_ :ClickableLayout,
   inner_loop
 end
 
-_LOOP_ do
-  _CHECK_INPUT_ mouse: :right_push do
-    _SEND_ :button1, interrupt: true do
-      _DELETE_
-    end
-    _BREAK_
-  end
-  _END_FRAME_
+_WAIT_ input:{mouse: :right_push}
+
+_SEND_ :test01, interrupt: true do
+  _DELETE_
 end

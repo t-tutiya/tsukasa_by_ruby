@@ -17,11 +17,7 @@ _CREATE_ :Image, id: :test1, path: "./resource/bg_sample.png" do
 end
 
 #前回と同じ
-_WAIT_ do
-  _CHECK_INPUT_ key_push: K_SPACE, mouse: :push do
-    _BREAK_
-  end
-end
+_WAIT_ input:{key_push: K_SPACE, mouse: :push}
 
 #ルールトランジションを実行するユーザー定義コマンド
 _DEFINE_ :go_rule do |options|

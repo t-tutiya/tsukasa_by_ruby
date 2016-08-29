@@ -4,11 +4,7 @@
 シーン１です
 マウスの左ボタンをクリックするとシーン２へ移動します
     #マウスの左ボタンが押されるまで待機
-    _WAIT_ do
-      _CHECK_INPUT_ mouse: :push do
-        _BREAK_
-      end
-    end
+    _WAIT_ input:{mouse: :push}
     _END_FRAME_ #キー入力の伝搬を抑制するために１フレ送る
 
     _RETURN_ do
@@ -22,11 +18,7 @@
 シーン２です
 マウスの左ボタンをクリックするとシーン３へ移動します
     #マウスの左ボタンが押されるまで待機
-    _WAIT_ do
-      _CHECK_INPUT_ mouse: :push do
-        _BREAK_
-      end
-    end
+    _WAIT_ input:{mouse: :push}
     _END_FRAME_ #キー入力の伝搬を抑制するために１フレ送る
 
     _RETURN_ do
@@ -40,11 +32,7 @@
 シーン３です
 マウスの左ボタンをクリックするともう一度シーン３を実行します
 マウスの右ボタンをクリックするとシーン１へ移動します
-    _WAIT_ do
-      _CHECK_INPUT_ mouse: [:push, :right_push] do
-        _BREAK_
-      end
-    end
+    _WAIT_ input:{mouse: [:push, :right_push]}
 
     #マウスのボタンが押されたかどうかを判定
     _CHECK_INPUT_ mouse: :push do

@@ -2,7 +2,7 @@
 _CREATE_ :ClickableLayout, 
   width: 256,
   height: 256,
-  id: :button1,
+  id: :test01,
   collision_shape: [128,128,128] do
   _CREATE_ :Image, id: :normal, width:256, height:256 do
     _CIRCLE_ x: 128,  y: 128, r: 128, color: C_BLUE, fill: true
@@ -45,12 +45,8 @@ _CREATE_ :ClickableLayout,
   inner_loop
 end
 
-_LOOP_ do
-  _CHECK_INPUT_ mouse: :right_push do
-    _SEND_ :button1, interrupt: true do
-      _DELETE_
-    end
-    _BREAK_
-  end
-  _END_FRAME_
+_WAIT_ input:{mouse: :right_push}
+
+_SEND_ :test01, interrupt: true do
+  _DELETE_
 end

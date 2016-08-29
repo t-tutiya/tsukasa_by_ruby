@@ -1,5 +1,5 @@
 _CREATE_ :TileMap, 
-  map_array: [[0]], size_x: 1, size_y: 1, width:32, height:32 do
+  map_array: [[0]], size_x: 1, size_y: 1, width:32, height:32, id: :test01 do
   _SET_TILE_GROUP_ path: "./resource/icon/icon_4_a.png",
     x_count: 4, y_count: 1
 
@@ -19,12 +19,8 @@ _CREATE_ :TileMap,
   inner_loop
 end
 
-_LOOP_ do
-  _CHECK_INPUT_ mouse: :right_push do
-    _SEND_ :button1, interrupt: true do
-      _DELETE_
-    end
-    _BREAK_
-  end
-  _END_FRAME_
+_WAIT_ input:{mouse: :right_push}
+
+_SEND_ :test01, interrupt: true do
+  _DELETE_
 end

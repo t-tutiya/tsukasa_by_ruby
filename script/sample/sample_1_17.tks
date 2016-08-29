@@ -1,10 +1,5 @@
 ＸかＺのキーを押してください
-  _LOOP_ do
-    _CHECK_INPUT_ key_down: [K_X,K_Z] do
-      _BREAK_
-    end
-    _END_FRAME_
-  end
+  _WAIT_ input:{key_down: [K_X,K_Z]}
   _CHECK_INPUT_ key_down: [K_X] do
   	_SET_ :_SYSTEM_ , data0: K_X
   end

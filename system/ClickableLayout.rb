@@ -123,10 +123,13 @@ class ClickableLayout < Layout
     end
 
     if @on_inner_control
-      #イベント起動前であれば起動し、クリアフラグを立てる
-      @on_mouse_over = true unless @cursor_in
-      #カーソル座標がコントロール内に入った。
-      @cursor_in = true
+      #前フレームでカーソル座標がコントロール外だった場合
+      unless @cursor_in
+        #イベント発生
+        @on_mouse_over = true 
+        #フラグを立てる
+        @cursor_in = true
+      end
 
       #キー継続押下チェック
       @on_key_down = DXRuby::Input.mouse_down?( M_LBUTTON )
@@ -141,10 +144,13 @@ class ClickableLayout < Layout
       #右キー解除チェック
       @on_right_key_up = DXRuby::Input.mouse_release?( M_RBUTTON )
     else
-      #前フレームでカーソルがコントロール内に入っていたのであれば、脱出フラグを立てる。
-      @on_mouse_out = true if @cursor_in
-      #カーソル座標がコントロールの外に出た
-      @cursor_in = false
+      #前フレームでカーソル座標がコントロール内だった場合
+      if @cursor_in
+        #イベント発生
+        @on_mouse_out = true 
+        #フラグを下ろす
+        @cursor_in = false
+      end
 
       #キー押下チェック
       @on_key_down_out = DXRuby::Input.mouse_down?( M_LBUTTON )

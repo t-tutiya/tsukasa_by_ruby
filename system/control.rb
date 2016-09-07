@@ -318,7 +318,7 @@ class Control #セッター／ゲッター
   end
 
   #指定したコントロール(orデータストア)のプロパティを取得する
-  def _GET_(yield_stack, _ARGUMENT_:, datastore: nil, **, &block)
+  def _GET_(yield_stack, _ARGUMENT_:, datastore: nil, control: nil, &block)
     result = {}
 
     #オプション全探査
@@ -328,10 +328,10 @@ class Control #セッター／ゲッター
         #データストアから値を取得する
         result[property] = @root_control.send(datastore)[property]
       else
-        if respond_to?(property.to_s)
+        begin
           #コントロールプロパティから値を取得する
-          result[property] = send(property)
-        else
+          result[property] = find_control(control).send(property)
+        rescue
           warn  "クラス[#{self.class}]：変数[" + "@#{property}]は存在しません"
         end
       end

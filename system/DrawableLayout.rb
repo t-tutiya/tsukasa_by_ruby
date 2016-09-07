@@ -43,6 +43,19 @@ class DrawableLayout < Helper::Drawable
     @update_flag = true
   end
 
+  def relative_x
+    @entity.ox
+  end
+  def relative_x=(arg)
+    @entity.ox = arg
+  end
+  def relative_y
+    @entity.oy
+  end
+  def relative_y=(arg)
+    @entity.oy = arg
+  end
+
   #アップデート時の背景色
   attr_reader  :bgcolor 
   def bgcolor=(arg)

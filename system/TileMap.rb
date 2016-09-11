@@ -74,18 +74,26 @@ class TileMap < DrawableLayout
   end
 
   def _SET_TILE_(yield_stack, options)
-    if options[:_ARGUMENT_]
-      @image_array[options[:_ARGUMENT_]] = DXRuby::Image.load(options[:path])
-    else
-      @image_array.push(DXRuby::Image.load(options[:path]))
+    begin
+      if options[:_ARGUMENT_]
+        @image_array[options[:_ARGUMENT_]] = DXRuby::Image.load(options[:path])
+      else
+        @image_array.push(DXRuby::Image.load(options[:path]))
+      end
+    rescue DXRuby::DXRubyError
+      warn "#{options[:path]}の読みこみに失敗しました"
     end
   end
 
   def _SET_TILE_GROUP_(yield_stack, options)
-    image_array = DXRuby::Image.load_tiles( options[:path], 
-                                    options[:x_count] || 1, 
-                                    options[:y_count] || 1, 
-                                    options[:share_switch] || false)
+    begin
+      image_array = DXRuby::Image.load_tiles( options[:path], 
+                                      options[:x_count] || 1, 
+                                      options[:y_count] || 1, 
+                                      options[:share_switch] || false)
+    rescue DXRuby::DXRubyError
+      warn "#{options[:path]}の読みこみに失敗しました"
+    end
     
     if options[:_ARGUMENT_]
       counter = options[:_ARGUMENT_]

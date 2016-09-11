@@ -1,7 +1,7 @@
 _CREATE_ :Char, 
   id: :comment_area,
   size: 32, 
-  y: 256+196,
+  y: 256+196 + 64,
   color:[255,255,0], 
   font_name: "ＭＳＰ ゴシック",
   char: " "
@@ -60,7 +60,7 @@ _DEFINE_ :TextSelect do |options|
 end
 
 _DEFINE_ :system_menu do
-  _CREATE_ :Layout, id: :top_menu1, x:0, y:0 do
+  _CREATE_ :Layout, id: :top_menu1, x:0, y:0, height: 256 + 64, float_y: :bottom do
     path = "./script/sample/"
     _CREATE_ :Layout, id: 0, x:0, y:0, width: 256, float_x: :left  do
       TextSelect text: "sample_1_1.tks", path: path + "sample_1_1.tks", 
@@ -138,18 +138,25 @@ _DEFINE_ :system_menu do
     end
   end
 
-  _CREATE_ :Layout, id: :top_menu2, x:0, y:256 + 64 do
+  _CREATE_ :Layout, id: :top_menu2, x:0, height: 64, float_y: :bottom do
     TextSelect  text: "デモゲーム：ノベル脱出ゲーム", 
                 path: "./script/demo_game/1_0.tks", 
                 width: 512, 
                 comment: "ノベルゲーム形式のサンプルデモです。"
   end
 
-  _CREATE_ :Layout, id: :top_menu3, x:0, y:256 + 128  do
+  _CREATE_ :Layout, id: :top_menu3, x:0, height: 64, float_y: :bottom do
     TextSelect  text: "デモゲーム：野メイド", 
                 path: "./script/nomaid/src.rb", 
                 width: 512, 
                 comment: "育成ＳＬＧ形式のサンプルデモです。"
+  end
+
+  _CREATE_ :Layout, id: :top_menu4, x:0, height: 64, float_y: :bottom do
+    TextSelect  text: "デモゲーム：ジャンプアクションデモ", 
+                path: "./script/jump_action/game.rb", 
+                width: 512, 
+                comment: "２Ｄのスクロール式ジャンプアクションゲームのデモです。"
   end
 end
 
@@ -193,6 +200,9 @@ _DEFINE_ :inner_loop do
     _DELETE_
   end
   _SEND_ :top_menu3 do
+    _DELETE_
+  end
+  _SEND_ :top_menu4 do
     _DELETE_
   end
   _SEND_ :comment_area do

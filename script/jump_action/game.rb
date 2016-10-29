@@ -1,6 +1,11 @@
 #操作キャラコントロールの読み込みと生成
 _LOAD_NATIVE_ "./script/jump_action/imple.rb"
 
+_SEND_ :base do
+  _SET_ path: "./resource/bg_sample.png"
+end
+
+
 _CREATE_ :DrawableLayout, x: 160, y: 120, width: 320, height: 256 do
   _CREATE_ :TileMap,
     width: 1024, height: 1024,

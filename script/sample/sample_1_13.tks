@@ -1,9 +1,0 @@
-ＸかＺのキーを押してください
-  _WAIT_ input:{key_down: [K_X,K_Z]}
-  _CHECK_INPUT_ key_down: [K_X] do
-Ｘキーが押されました[ep]
-  end
-  _CHECK_INPUT_ key_down: [K_Z] do
-Ｚキーが押されました[ep]
-  end
-

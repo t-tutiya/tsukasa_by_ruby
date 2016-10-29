@@ -87,17 +87,17 @@ _DEFINE_ :system_menu do
                  comment: "ルールトランジション"
       TextSelect text: "sample_1_11.rb", path: path + "sample_1_11.rb", 
                  comment: "ユーザー定義コマンドを使う"
-      TextSelect text: "sample_1_12.tks", path: path + "sample_1_12.tks", 
+      TextSelect text: "sample_1_12.rb", path: path + "sample_1_12.rb", 
                  comment: "データストアとインラインデータ記法"
-      TextSelect text: "sample_1_13.tks", path: path + "sample_1_13.tks", 
+      TextSelect text: "sample_1_13.rb", path: path + "sample_1_13.rb", 
                  comment: "条件判定"
       TextSelect text: "sample_1_14.rb", path: path + "sample_1_14.rb", 
                  comment: "繰り返し構文"
       TextSelect text: "sample_1_15.rb", path: path + "sample_1_15.rb", 
                  comment: "ボタンの表示"
-      TextSelect text: "sample_1_16.tks", path: path + "sample_1_16.tks", 
+      TextSelect text: "sample_1_16.rb", path: path + "sample_1_16.rb", 
                  comment: "サウンド"
-      TextSelect text: "sample_1_17.tks", path: path + "sample_1_17.tks", 
+      TextSelect text: "sample_1_17.rb", path: path + "sample_1_17.rb", 
                  comment: "セーブ／ロード"
     end
     _CREATE_ :Layout, id: 2, x:0, y:0, width: 256, float_x: :left    do

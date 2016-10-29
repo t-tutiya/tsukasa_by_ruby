@@ -211,7 +211,9 @@ _DEFINE_ :_END_PAUSE_ do
           _WAIT_ count: 5
           _MAP_STATUS_ 3
           _WAIT_ count: 5
-          _RETURN_ :inner_loop
+          _RETURN_ do 
+            inner_loop
+          end
         end
         inner_loop
       end

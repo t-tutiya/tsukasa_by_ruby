@@ -1,25 +1,19 @@
-_CREATE_ :DrawableLayout, id: :test0, width: 800, height: 600 do
-  _CREATE_ :Image, path: "./resource/bg_test.jpg"
-  _CREATE_ :Image, path: "./resource/char/B-1.png", x: 250
+_SET_ :_TEMP_, name_a: "土屋"
+_SEND_ :text0 do
+  _TEXT_ _TEMP_: :name_a
+  _TEXT_ "「_SET_コマンドはデータストアに値を格納します」"
 end
-
-_CREATE_ :Image, id: :test1, path: "./resource/bg_sample.png" do
-  _CREATE_ :RuleShader, id: :rule0, vague: 40,
-            path: "./resource/rule/horizontal_rule.png"
-  _SET_ shader: :rule0
-end
-
-_WAIT_ input: {key_push: K_SPACE, mouse: :push}
-
-_SEND_ :test1 do
-  _SEND_ :rule0 do
-    _MOVE_ 240, counter:[0,255]
-    _DELETE_
-  end
-
-  _WAIT_ count: 240
-  _DELETE_
-end
-
 _END_PAUSE_
-_DELETE_ :test0
+
+_GET_ :name_a, datastore: :_TEMP_ do |name_a:|
+  _SET_ :_TEMP_, name_b: name_a
+end
+_SEND_ :text0 do
+  _FLUSH_
+  _TEXT_ _TEMP_: :name_b
+  _TEXT_ "「_GET_コマンドはデータストアから値を取得します」"
+end
+_END_PAUSE_
+_SEND_ :text0 do
+  _FLUSH_
+end

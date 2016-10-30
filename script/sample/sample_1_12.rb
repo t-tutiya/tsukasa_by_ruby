@@ -1,19 +1,15 @@
-_SET_ :_TEMP_, name_a: "土屋"
-_SEND_ :text0 do
-  _TEXT_ _TEMP_: :name_a
-  _TEXT_ "「_SET_コマンドはデータストアに値を格納します」"
+_LOOP_ 3 do
+  _LOOP_ 3 do
+    _SEND_ :text0 do
+      _TEXT_ "＊"
+    end
+  end
+  _SEND_ :text0 do
+    _LINE_FEED_
+  end
 end
 _END_PAUSE_
+_SEND_ :text0 do
+  _FLUSH_
+end
 
-_GET_ :name_a, datastore: :_TEMP_ do |name_a:|
-  _SET_ :_TEMP_, name_b: name_a
-end
-_SEND_ :text0 do
-  _FLUSH_
-  _TEXT_ _TEMP_: :name_b
-  _TEXT_ "「_GET_コマンドはデータストアから値を取得します」"
-end
-_END_PAUSE_
-_SEND_ :text0 do
-  _FLUSH_
-end

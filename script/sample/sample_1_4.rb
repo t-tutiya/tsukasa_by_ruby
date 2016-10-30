@@ -1,6 +1,17 @@
+_SEND_ :base do
+  _SET_ path: "./resource/bg_sample.png"
+end
+
 _SEND_ :img0 do
-  _SET_ path: "./resource/char/A-1.png"
-  _MOVE_ [120, :out_quart], x: [0, 500], y: [0, -100]
+  _SET_ path: "./resource/button_over.png", x: 200, y: 100
+  _MOVE_ 180, alpha: [255,   0]
+  _MOVE_ 360, alpha: [  0, 255]
+end
+
+_SEND_ :img1 do
+  _SET_ path: "./resource/button_normal.png", x: 100, y: 200
+  _MOVE_ 180, alpha: [255,   0]
+  _MOVE_ 360, alpha: [  0, 255]
 end
 
 _END_PAUSE_

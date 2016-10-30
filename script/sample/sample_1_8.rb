@@ -1,24 +1,25 @@
-_SEND_ :base do
-  _SET_ path: "./resource/bg_sample.png"
+_CREATE_ :DrawableLayout, id: :test0, width: 800, height: 600 do
+  _CREATE_ :Image, path: "./resource/bg_test.jpg"
+  _CREATE_ :Image, path: "./resource/char/B-1.png", x: 250
 end
 
-_SEND_ :img0 do
-  _SET_ path: "./resource/char/B-1.png", x: 250
+_CREATE_ :Image, id: :test1, path: "./resource/bg_sample.png" do
+  _CREATE_ :RuleShader, id: :rule0, vague: 40,
+            path: "./resource/rule/horizontal_rule.png"
+  _SET_ shader: :rule0
 end
 
-_SEND_ :img1 do
-  _SET_ path: "./resource/char/B-2.png", x: 250, visible: false
-end
+_WAIT_ input: {key_push: K_SPACE, mouse: :push}
 
-_WAIT_ input: {key_push: K_SPACE}
+_SEND_ :test1 do
+  _SEND_ :rule0 do
+    _MOVE_ 240, counter:[0,255]
+    _DELETE_
+  end
 
-_SEND_ :img0 do
-  _MOVE_ 360, alpha: [255, 0]
-end
-
-_SEND_ :img1 do
-  _SET_ visible: true
-  _MOVE_ 360, alpha: [0,255]
+  _WAIT_ count: 240
+  _DELETE_
 end
 
 _END_PAUSE_
+_DELETE_ :test0

@@ -63,42 +63,42 @@ _DEFINE_ :system_menu do
   _CREATE_ :Layout, id: :top_menu1, x:0, y:0, height: 256 + 64, float_y: :bottom do
     path = "./script/sample/"
     _CREATE_ :Layout, id: 0, x:0, y:0, width: 256, float_x: :left  do
-      TextSelect text: "sample_1_1.tks", path: path + "sample_1_1.tks", 
-                 comment: "文字列の表示"
-      TextSelect text: "sample_1_2.tks", path: path + "sample_1_2.tks", 
-                 comment: "文字列の表示：応用"
-      TextSelect text: "sample_1_3.rb", path: path + "sample_1_3.rb", 
+      TextSelect text: "sample_1_1.rb", path: path + "sample_1_1.rb", 
                  comment: "画像の表示"
-      TextSelect text: "sample_1_4.rb", path: path + "sample_1_4.rb", 
+      TextSelect text: "sample_1_2.rb", path: path + "sample_1_2.rb", 
                  comment: "画像の直線移動"
-      TextSelect text: "sample_1_5.rb", path: path + "sample_1_5.rb", 
+      TextSelect text: "sample_1_3.rb", path: path + "sample_1_3.rb", 
                  comment: "画像のスプライン移動"
-      TextSelect text: "sample_1_6.rb", path: path + "sample_1_6.rb", 
+      TextSelect text: "sample_1_4.rb", path: path + "sample_1_4.rb", 
                  comment: "フェードイン・アウト"
-      TextSelect text: "sample_1_7.rb", path: path + "sample_1_7.rb", 
+      TextSelect text: "sample_1_5.rb", path: path + "sample_1_5.rb", 
                  comment: "より自然なフェードイン・アウト"
-      TextSelect text: "sample_1_8.rb", path: path + "sample_1_8.rb", 
+      TextSelect text: "sample_1_6.rb", path: path + "sample_1_6.rb", 
                  comment: "フェードトランジション"
-      TextSelect text: "sample_1_9.rb", path: path + "sample_1_9.rb", 
+      TextSelect text: "sample_1_7.rb", path: path + "sample_1_7.rb", 
                  comment: "より自然なフェードトランジション"
+      TextSelect text: "sample_1_8.rb", path: path + "sample_1_8.rb", 
+                 comment: "ルールトランジション"
+      TextSelect text: "sample_1_9.rb", path: path + "sample_1_9.rb", 
+                 comment: "ユーザー定義コマンドを使う"
     end
     _CREATE_ :Layout, id: 1, x:0, y:0, width: 256, float_x: :left   do
       TextSelect text: "sample_1_10.rb", path: path + "sample_1_10.rb", 
-                 comment: "ルールトランジション"
-      TextSelect text: "sample_1_11.rb", path: path + "sample_1_11.rb", 
-                 comment: "ユーザー定義コマンドを使う"
-      TextSelect text: "sample_1_12.rb", path: path + "sample_1_12.rb", 
                  comment: "データストアとインラインデータ記法"
-      TextSelect text: "sample_1_13.rb", path: path + "sample_1_13.rb", 
+      TextSelect text: "sample_1_11.rb", path: path + "sample_1_11.rb", 
                  comment: "条件判定"
-      TextSelect text: "sample_1_14.rb", path: path + "sample_1_14.rb", 
+      TextSelect text: "sample_1_12.rb", path: path + "sample_1_12.rb", 
                  comment: "繰り返し構文"
-      TextSelect text: "sample_1_15.rb", path: path + "sample_1_15.rb", 
+      TextSelect text: "sample_1_13.rb", path: path + "sample_1_13.rb", 
                  comment: "ボタンの表示"
-      TextSelect text: "sample_1_16.rb", path: path + "sample_1_16.rb", 
+      TextSelect text: "sample_1_14.rb", path: path + "sample_1_14.rb", 
                  comment: "サウンド"
-      TextSelect text: "sample_1_17.rb", path: path + "sample_1_17.rb", 
+      TextSelect text: "sample_1_15.rb", path: path + "sample_1_15.rb", 
                  comment: "セーブ／ロード"
+      TextSelect text: "sample_1_16.tks", path: path + "sample_1_16.tks", 
+                 comment: "【tks】文字列の表示"
+      TextSelect text: "sample_1_17.tks", path: path + "sample_1_17.tks", 
+                 comment: "【tks】文字列の表示：応用"
     end
     _CREATE_ :Layout, id: 2, x:0, y:0, width: 256, float_x: :left    do
       TextSelect text: "sample_2_1_1.rb", path: path + "sample_2_1_1.rb", 

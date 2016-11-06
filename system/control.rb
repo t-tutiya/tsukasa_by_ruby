@@ -305,12 +305,10 @@ class Control #セッター／ゲッター
         #指定データストアのキーに値を代入する
         @root_control.send(_ARGUMENT_.to_s)[key] = val
       else
-        #セッターが存在する場合
-        if  respond_to?(key.to_s + "=")
+        begin
           #コントロールプロパティに値を代入
           send(key.to_s + "=", val)
-        else
-          #warningを出して処理を続行する
+        rescue
           warn  "クラス[#{self.class}]：変数[" + "@#{key}]は存在しません"
         end
       end

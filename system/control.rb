@@ -556,12 +556,6 @@ class Control #スクリプト制御
 
   #スクリプトファイルを挿入する
   def _INCLUDE_(yield_stack, _ARGUMENT_:, path: nil, parser: nil, force: false, **)
-    #第１引数がシンボルの場合
-    if _ARGUMENT_.instance_of?(Symbol)
-      #データストアの値を対象のファイルパスとする
-      _ARGUMENT_ = find_control_path([:_ROOT_, :_TEMP_]).send(_ARGUMENT_)
-    end
-
     #プロセスのカレントディレクトリを強制的に更新する
     #TODO：Window.open_filenameが使用された場合の対策だが、他に方法はないか？
     FileUtils.chdir(@@system_path)

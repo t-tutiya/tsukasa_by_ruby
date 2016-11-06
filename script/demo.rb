@@ -211,7 +211,9 @@ _DEFINE_ :inner_loop do
 
   _END_FRAME_
 
-  _INCLUDE_ :path, force: true
+  _GET_ :path, control: [:_ROOT_, :_TEMP_] do |path:|
+    _INCLUDE_ path, force: true
+  end
 
 	_SEND_ :base do
 	  _DELETE_

@@ -21,7 +21,7 @@ _SEND_(:text0) do
       end
     end
     #待機フラグが下がるまで待機
-    _WAIT_ :_TEMP_, not_equal: {flag: nil}
+    _WAIT_ [:_ROOT_, :_TEMP_], not_equal: {flag: nil}
     #文字列をカスケードアウトさせる
     _GET_ :child_index do |options|
       _MOVE_ [30 + options[:child_index] * 3, :in_back], y:[0,600]
@@ -93,11 +93,11 @@ _DEFINE_ :TextSelect do |options|
       #マウスがクリックされたらフラグを立てる
       _CHECK_MOUSE_:key_push do
         pp options
-        _SET_ :_TEMP_, flag: options[:id]
+        _SET_ [:_ROOT_, :_TEMP_], flag: options[:id]
         _EVAL_ "pp '[" + options[:text].to_s + "]が押されました'"
       end
       #フラグが立っていればボタンをアウトさせてループを終了する
-      _CHECK_ :_TEMP_,  not_equal: {flag: nil} do
+      _CHECK_ [:_ROOT_, :_TEMP_],  not_equal: {flag: nil} do
         _MOVE_ [60, :in_back], y:[0,600]
         _RETURN_
       end

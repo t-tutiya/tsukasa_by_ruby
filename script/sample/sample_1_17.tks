@@ -12,6 +12,6 @@
 例えば文字の表示速度を変えたり、[lp]
 @    _WAIT_FRAME_ 3
 [_CHAR_RUBI_ "エクスカリバ－"]ルビを振る事もできます。[lp]
-@ _SET_ :_TEMP_, test_data: "インラインデータ記法"
+@ _SET_ [:_ROOT_, :_TEMP_], test_data: "インラインデータ記法"
 [= :test_data]を使うと動的に文字列を表示できます。[ep]
 

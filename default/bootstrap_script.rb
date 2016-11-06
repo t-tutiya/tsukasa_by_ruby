@@ -30,6 +30,10 @@
 
 #puts DXRuby::VERSION
 
+_CREATE_ :Data, id: :_TEMP_
+_CREATE_ :Data, id: :_LOCAL_
+_CREATE_ :Data, id: :_SYSTEM_
+
 #コンフィグファイルの読み込み
 _INCLUDE_ "./default/config.rb"
 
@@ -38,6 +42,7 @@ _INCLUDE_ "./default/default_script.rb"
 
 #標準ユーティリティー群の読み込み
 _INCLUDE_ "./default/utility_script.rb"
+
 
 #ウィンドウの閉じるボタンの押下チェック
 #ウィンドウ枠外にマウスカーソルが出た場合のアイコン表示管理
@@ -50,7 +55,7 @@ _CREATE_ :ClickableLayout, id: :requested_close,
       _RETURN_
     end
     
-    _GET_ :_CURSOR_VISIBLE_, datastore: :_SYSTEM_ do |options|
+    _GET_ :_CURSOR_VISIBLE_, control: [:_ROOT_, :_SYSTEM_] do |options|
       _CHECK_MOUSE_ :cursor_off do
         #カーソルを表示する
         DXRuby::Input.mouse_enable = true unless options[:_CURSOR_VISIBLE_]
@@ -70,7 +75,7 @@ _CREATE_ :ClickableLayout, id: :requested_close,
 end
 
 #プラグインスクリプトファイルの読み込み
-_GET_ :_PLUGIN_PATH_, datastore: :_SYSTEM_ do |_PLUGIN_PATH_:|
+_GET_ :_PLUGIN_PATH_, control: :_SYSTEM_ do |_PLUGIN_PATH_:|
   Dir.glob(_PLUGIN_PATH_).each do |path:|
     _INCLUDE_ path
   end
@@ -107,7 +112,7 @@ _TEXT_WINDOW_ :text0,
   z: 1000000 #描画順序
 
 #初期テキストウィンドウのidを格納
-_SET_ :_TEMP_, _DEFAULT_TEXT_PAGE_: :text0
+_SET_ [:_ROOT_, :_TEMP_], _DEFAULT_TEXT_PAGE_: :text0
 
 #タイトルバーの文字列を設定
 _WINDOW_STATUS_ caption: "Tsukasa Engine powered by DXRuby", #文字列

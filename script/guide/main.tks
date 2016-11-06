@@ -48,7 +48,7 @@
   _END_FRAME_
 
   #初期テキストウィンドウのidを格納
-  _SET_ :_TEMP_, _DEFAULT_TEXT_PAGE_: [:text_ex, :text0_ex]
+  _SET_ [:_ROOT_, :_TEMP_], _DEFAULT_TEXT_PAGE_: [:text_ex, :text0_ex]
 
   char0 "B-1"
 

@@ -12,7 +12,7 @@ _DEFINE_ :menu_button do |id:, text: |
     float_y: :bottom do 
     #キーがクリックされた
     _DEFINE_ :on_key_push do
-      _SET_ :_TEMP_, flag: id
+      _SET_ [:_ROOT_, :_TEMP_], flag: id
     end
   end
 end
@@ -113,7 +113,7 @@ _DEFINE_ :set_status_window do
               :intelligence,
               :allegiance,
               :courtesy,
-              ], datastore: :_TEMP_ do |
+              ], control: [:_ROOT_, :_TEMP_] do |
               week:, 
               day:,
               debt:,
@@ -175,7 +175,7 @@ end
 #トップメニュー
 _DEFINE_ :top_menu do
   #メニュー押下フラグリセット
-  _SET_ :_TEMP_, flag: nil
+  _SET_ [:_ROOT_, :_TEMP_], flag: nil
 
   _CREATE_ :Layout, id: :top_menu, x:100, y:100 do
     menu_button text: "習い事をさせる", id: :lesson
@@ -183,27 +183,27 @@ _DEFINE_ :top_menu do
     menu_button text: "休ませる", id: :rest
   end
 
-  _WAIT_ :_TEMP_,  not_equal: {flag: nil}
+  _WAIT_ [:_ROOT_, :_TEMP_],  not_equal: {flag: nil}
 
   #メニューを削除する
   _SEND_ :top_menu  do
     _DELETE_
   end
 
-  _CHECK_ :_TEMP_, equal: {flag: :lesson} do
+  _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag: :lesson} do
     lesson_menu
   end
 
-  _CHECK_ :_TEMP_, equal: {flag: :work} do
+  _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag: :work} do
     work_menu
   end
 
-  _CHECK_ :_TEMP_, equal: {flag: :rest} do
+  _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag: :rest} do
     rest
   end
 
   #曜日終了確認
-  _CHECK_ :_TEMP_, equal: {end_day: true} do
+  _CHECK_ [:_ROOT_, :_TEMP_], equal: {end_day: true} do
     _RETURN_
   end
   
@@ -223,8 +223,8 @@ _DEFINE_ :lesson_menu do
     menu_button text: "戻る", id: :cancel
   end
 
-  _SET_ :_TEMP_, flag: nil
-  _WAIT_ :_TEMP_,  not_equal: {flag: nil}
+  _SET_ [:_ROOT_, :_TEMP_], flag: nil
+  _WAIT_ [:_ROOT_, :_TEMP_],  not_equal: {flag: nil}
 
   #メニューを削除する
   _SEND_ :lesson_menu  do
@@ -232,7 +232,7 @@ _DEFINE_ :lesson_menu do
   end
 
   #押されたのが「戻る」以外であれば、処理を実行して曜日終了フラグを立てる
-  _CHECK_ :_TEMP_, not_equal: {flag: :cancel} do
+  _CHECK_ [:_ROOT_, :_TEMP_], not_equal: {flag: :cancel} do
     _GET_ [ :mental_point_max, 
             :mental_point,
             :helth_point,
@@ -242,7 +242,7 @@ _DEFINE_ :lesson_menu do
             :intelligence,
             :culture,
             :charm,
-            ], datastore: :_TEMP_ do 
+            ], control: [:_ROOT_, :_TEMP_] do 
           | mental_point_max:, 
             mental_point:,
             helth_point:,
@@ -253,48 +253,48 @@ _DEFINE_ :lesson_menu do
             culture:,
             charm:|
     #礼拝
-    _CHECK_ :_TEMP_, equal: {flag: :pray} do 
+    _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag: :pray} do 
       hp_cost = [(mental_point_max - mental_point) + 15, 
                  [helth_point - (mental_point_max - mental_point + 15),
                     helth_point].max].min
       mp_cost = [10, [mental_point - 10, mental_point].max].min
-      _SET_ :_TEMP_, 
+      _SET_ [:_ROOT_, :_TEMP_], 
         allegiance: allegiance + hp_cost / 2 + (mp_cost + courtesy) / 3,
         noble: noble + hp_cost / 2 + (mp_cost + intelligence) / 3,
         helth_point: helth_point - hp_cost,
         mental_point: mental_point - mp_cost
     end
     #勉学
-    _CHECK_ :_TEMP_, equal: {flag: :academy} do
+    _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag: :academy} do
       hp_cost = [(mental_point_max - mental_point) + 5, 
                  [helth_point - (mental_point_max - mental_point + 5),
                     helth_point].max].min
       mp_cost = [20, [mental_point - 20, mental_point].max].min
-      _SET_ :_TEMP_, 
+      _SET_ [:_ROOT_, :_TEMP_], 
         culture: culture + hp_cost / 2 + (mp_cost + courtesy) / 2,
         intelligence: intelligence + hp_cost / 2 + (mp_cost + intelligence) / 3,
         helth_point: helth_point - hp_cost,
         mental_point: mental_point - mp_cost
     end
     #舞踏
-    _CHECK_ :_TEMP_, equal: {flag: :dance} do
+    _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag: :dance} do
       hp_cost = [(mental_point_max - mental_point) + 20, 
                  [helth_point - (mental_point_max - mental_point + 20),
                     helth_point].max].min
       mp_cost = [15, [mental_point - 15, mental_point].max].min
-      _SET_ :_TEMP_, 
+      _SET_ [:_ROOT_, :_TEMP_], 
         charm: charm + hp_cost / 2 + (mp_cost + courtesy) / 2,
         noble: noble + hp_cost / 2 + (mp_cost + intelligence) / 2,
         helth_point: helth_point - hp_cost,
         mental_point: mental_point - mp_cost
     end
     #礼儀作法
-    _CHECK_ :_TEMP_, equal: {flag: :courtesy} do
+    _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag: :courtesy} do
       hp_cost = [(mental_point_max - mental_point) + 5, 
                  [helth_point - (mental_point_max - mental_point + 5),
                     helth_point].max].min
       mp_cost = [20, [mental_point - 20, mental_point].max].min
-      _SET_ :_TEMP_, 
+      _SET_ [:_ROOT_, :_TEMP_], 
         courtesy: courtesy + hp_cost / 2 + (mp_cost + courtesy) / 2,
         culture: culture + hp_cost / 2 + (mp_cost + intelligence) / 3,
         helth_point: helth_point - hp_cost,
@@ -315,7 +315,7 @@ _DEFINE_ :lesson_menu do
         _CLEAR_
       end
     end
-    _SET_ :_TEMP_, end_day: true
+    _SET_ [:_ROOT_, :_TEMP_], end_day: true
   end
 end
 
@@ -328,8 +328,8 @@ _DEFINE_ :work_menu do
     menu_button text: "接待", id: :party
     menu_button text: "戻る", id: :cancel
   end
-  _SET_ :_TEMP_, flag: nil
-  _WAIT_ :_TEMP_,  not_equal: {flag: nil}
+  _SET_ [:_ROOT_, :_TEMP_], flag: nil
+  _WAIT_ [:_ROOT_, :_TEMP_],  not_equal: {flag: nil}
 
   #メニューを削除する
   _SEND_ :work_menu  do
@@ -337,7 +337,7 @@ _DEFINE_ :work_menu do
   end
 
   #押されたのが「戻る」以外であれば、処理を実行して曜日終了フラグを立てる
-  _CHECK_ :_TEMP_, not_equal: {flag: :cancel} do
+  _CHECK_ [:_ROOT_, :_TEMP_], not_equal: {flag: :cancel} do
     _GET_ [ :mental_point_max, 
             :mental_point,
             :helth_point,
@@ -349,7 +349,7 @@ _DEFINE_ :work_menu do
             :intelligence,
             :culture,
             :charm,
-            ], datastore: :_TEMP_ do 
+            ], control: [:_ROOT_, :_TEMP_] do 
           | mental_point_max:, 
             mental_point:,
             helth_point:,
@@ -362,14 +362,14 @@ _DEFINE_ :work_menu do
             culture:,
             charm:|
       #清掃
-      _CHECK_ :_TEMP_, equal: {flag: :cleaning} do 
+      _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag: :cleaning} do 
         hp_cost = [ mental_point_max - mental_point + 10, 
                     [ helth_point - mental_point_max - mental_point + 10,
                       helth_point].max].min
         mp_cost = [ 10, [ mental_point - 10, mental_point].max].min
         reward = 200 + (hp_cost * allegiance)/2 + (mp_cost * allegiance)/2
 
-        _SET_ :_TEMP_, allegiance: allegiance + hp_cost / 3 + mp_cost / 3,
+        _SET_ [:_ROOT_, :_TEMP_], allegiance: allegiance + hp_cost / 3 + mp_cost / 3,
                        helth_point: helth_point - hp_cost,
                        mental_point: mental_point - mp_cost,
                        gold: gold + reward,
@@ -377,7 +377,7 @@ _DEFINE_ :work_menu do
       end
 
       #給仕
-      _CHECK_ :_TEMP_, equal: {flag: :waitress} do 
+      _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag: :waitress} do 
         hp_cost = [ mental_point_max - mental_point + 15, 
                     [ helth_point - mental_point_max - mental_point + 15,
                       helth_point].max].min
@@ -385,7 +385,7 @@ _DEFINE_ :work_menu do
         reward = hp_cost *((allegiance + courtesy + intelligence / 2) / 3)+
                  mp_cost * ((charm * 2 + intelligence) / 3)
 
-        _SET_ :_TEMP_, allegiance: allegiance += hp_cost / 3 + mp_cost / 3,
+        _SET_ [:_ROOT_, :_TEMP_], allegiance: allegiance += hp_cost / 3 + mp_cost / 3,
                         helth_point: helth_point - hp_cost,
                         mental_point: mental_point - mp_cost,
                         gold: gold + reward,
@@ -393,7 +393,7 @@ _DEFINE_ :work_menu do
       end
 
       #家庭教師
-      _CHECK_ :_TEMP_, equal: {flag: :tutor} do 
+      _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag: :tutor} do 
         hp_cost = [ mental_point_max - mental_point + 25, 
                     [ helth_point - mental_point_max - mental_point + 25,
                       helth_point].max].min
@@ -401,14 +401,14 @@ _DEFINE_ :work_menu do
         reward = hp_cost * ((noble + courtesy + intelligence / 2) / 3) +
                  mp_cost * ((culture * 2 + intelligence * 2) / 3)
 
-        _SET_ :_TEMP_, helth_point: helth_point - hp_cost,
+        _SET_ [:_ROOT_, :_TEMP_], helth_point: helth_point - hp_cost,
                         mental_point: mental_point - mp_cost,
                         gold: gold + reward,
                         reward: reward
       end
 
       #接待
-      _CHECK_ :_TEMP_, equal: {flag: :party} do 
+      _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag: :party} do 
         hp_cost = [ mental_point_max - mental_point + 30, 
                     [ helth_point - mental_point_max - mental_point + 30,
                       helth_point].max].min
@@ -416,7 +416,7 @@ _DEFINE_ :work_menu do
         reward =  hp_cost * ((allegiance * 2 + courtesy + intelligence/2)/2)+ 
                   mp_cost * ((culture / 2 + charm * 2 + noble * 2) / 3)
 
-        _SET_ :_TEMP_, helth_point: helth_point - hp_cost,
+        _SET_ [:_ROOT_, :_TEMP_], helth_point: helth_point - hp_cost,
                         mental_point: mental_point - mp_cost,
                         gold: gold + reward,
                         reward: reward
@@ -424,7 +424,7 @@ _DEFINE_ :work_menu do
     end
 
     _SEND_ [:_ROOT_], interrupt: true  do
-      _GET_ :reward, datastore: :_TEMP_ do |reward:|
+      _GET_ :reward, control: [:_ROOT_, :_TEMP_] do |reward:|
         _SEND_ :nomaid_comment_area do
           _SET_ char: "労働の対価として$#{reward}を得た。"
         end
@@ -438,15 +438,15 @@ _DEFINE_ :work_menu do
         _CLEAR_
       end
     end
-    _SET_ :_TEMP_, end_day: true
+    _SET_ [:_ROOT_, :_TEMP_], end_day: true
   end
 end
 
 #「休ませる」処理
 _DEFINE_ :rest do
-  _GET_ [ :helth_point, :mental_point], datastore: :_TEMP_ do 
+  _GET_ [ :helth_point, :mental_point], control: [:_ROOT_, :_TEMP_] do 
           |helth_point:, mental_point:|
-    _SET_ :_TEMP_, 
+    _SET_ [:_ROOT_, :_TEMP_], 
       helth_point: helth_point + [100 - helth_point, mental_point].min, 
       mental_point: mental_point + [100 - mental_point, 50].min
   end
@@ -463,7 +463,7 @@ _DEFINE_ :rest do
       _CLEAR_
     end
   end
-  _SET_ :_TEMP_, end_day: true
+  _SET_ [:_ROOT_, :_TEMP_], end_day: true
 end
 
 #■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -474,7 +474,7 @@ end
 _RESIZE_ width: 800, height: 600
 
 #パラメータ初期値を設定
-_SET_ :_TEMP_,
+_SET_ [:_ROOT_, :_TEMP_],
   debt: [1000, 2500, 5000, 10000, 25000, 50000, 100000],
   gold: 0,#所持金
   helth_point: 100, #生命力現在値
@@ -517,7 +517,7 @@ set_status_window
 #７週間リピート
 _LOOP_ 7 do
   #週開始処理
-  _SET_ :_TEMP_, day: 0
+  _SET_ [:_ROOT_, :_TEMP_], day: 0
 
   _LOOP_ 7 do
     #画面の更新
@@ -526,40 +526,40 @@ _LOOP_ 7 do
     end
 
     #曜日終了フラグリセット
-    _SET_ :_TEMP_, end_day: nil
+    _SET_ [:_ROOT_, :_TEMP_], end_day: nil
 
     #メニュー表示
     top_menu
 
     #曜日更新処理
-    _GET_ [:day], datastore: :_TEMP_ do |day:|
-      _SET_ :_TEMP_, day: day + 1
+    _GET_ [:day], control: [:_ROOT_, :_TEMP_] do |day:|
+      _SET_ [:_ROOT_, :_TEMP_], day: day + 1
     end
     _END_FRAME_
   end
 
   #ゲームオーバー判定
-  _GET_ [:debt, :week], datastore: :_TEMP_ do |debt:, week:|
-    _CHECK_ :_TEMP_, under: {gold: debt[week]} do
-      _SET_ :_TEMP_, gameover: true
+  _GET_ [:debt, :week], control: [:_ROOT_, :_TEMP_] do |debt:, week:|
+    _CHECK_ [:_ROOT_, :_TEMP_], under: {gold: debt[week]} do
+      _SET_ [:_ROOT_, :_TEMP_], gameover: true
       _BREAK_
     end
 
     #借金返済
-    _GET_ [:gold], datastore: :_TEMP_ do |gold:|
-      _SET_ :_TEMP_, gold: gold - debt[week]
+    _GET_ [:gold], control: [:_ROOT_, :_TEMP_] do |gold:|
+      _SET_ [:_ROOT_, :_TEMP_], gold: gold - debt[week]
     end
   end
 
   #ゲームクリア判定
-  _CHECK_ :_TEMP_, equal: {week: 6} do
-    _SET_ :_TEMP_, gameclear: true
+  _CHECK_ [:_ROOT_, :_TEMP_], equal: {week: 6} do
+    _SET_ [:_ROOT_, :_TEMP_], gameclear: true
     _BREAK_
   end
 
   #週更新処理
-  _GET_ [:week], datastore: :_TEMP_ do |week:|
-    _SET_ :_TEMP_, week: week + 1
+  _GET_ [:week], control: [:_ROOT_, :_TEMP_] do |week:|
+    _SET_ [:_ROOT_, :_TEMP_], week: week + 1
   end
 end
 
@@ -572,7 +572,7 @@ _DELETE_ :status_window
 _END_FRAME_
 
 #ゲームオーバーならテキストを出力して終了
-_CHECK_ :_TEMP_, equal: {gameover: true} do
+_CHECK_ [:_ROOT_, :_TEMP_], equal: {gameover: true} do
   _SEND_ :text0 do
     _TEXT_ "　あなたはメイドの借金を返すことができなかった。"
     _LINE_FEED_
@@ -585,7 +585,7 @@ _CHECK_ :_TEMP_, equal: {gameover: true} do
 end
 
 #ゲームクリアならテキストを出力して終了
-_CHECK_ :_TEMP_, equal: {gameclear: true} do
+_CHECK_ [:_ROOT_, :_TEMP_], equal: {gameclear: true} do
   _SEND_ :text0 do
     _TEXT_ "　無事にメイドの借金を返済し終えたあなたには、"
     _LINE_FEED_

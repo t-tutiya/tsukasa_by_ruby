@@ -300,38 +300,26 @@ class Control #セッター／ゲッター
   def _SET_(yield_stack, _ARGUMENT_: nil, **options)
     #オプション全探査
     options.each do |key, val|
-      #データストアが設定されている場合
-      if _ARGUMENT_
-        #指定データストアのキーに値を代入する
-        @root_control.send(_ARGUMENT_.to_s)[key] = val
-      else
-        begin
-          #コントロールプロパティに値を代入
-          send(key.to_s + "=", val)
-        rescue
-          warn  "クラス[#{self.class}]：変数[" + "@#{key}]は存在しません"
-        end
+      begin
+        #コントロールプロパティに値を代入
+        find_control_path(_ARGUMENT_).send(key.to_s + "=", val)
+      rescue
+        warn  "クラス[#{self.class}]：変数[" + "@#{key}]は存在しません"
       end
     end
   end
 
   #指定したコントロール(orデータストア)のプロパティを取得する
-  def _GET_(yield_stack, _ARGUMENT_:, datastore: nil, control: nil, &block)
+  def _GET_(yield_stack, _ARGUMENT_:, control: nil, &block)
     result = {}
 
     #オプション全探査
     Array(_ARGUMENT_).each do |property|
-      #データストアが設定されている場合
-      if datastore
-        #データストアから値を取得する
-        result[property] = @root_control.send(datastore)[property]
-      else
-        begin
-          #コントロールプロパティから値を取得する
-          result[property] = find_control(control).send(property)
-        rescue
-          warn  "クラス[#{self.class}]：変数[" + "@#{property}]は存在しません"
-        end
+      begin
+        #コントロールプロパティから値を取得する
+        result[property] = find_control_path(control).send(property)
+      rescue
+        warn  "クラス[#{self.class}]：変数[" + "@#{property}]は存在しません"
       end
     end
 
@@ -342,26 +330,25 @@ end
 
 class Control #制御構文
   #条件判定
-  def _CHECK_(yield_stack, options, &block)
-    #第１引数が設定されている場合はデータストアを、設定されていなければコントロール自身を走査対象とする。
-    # 注意：Proc#[] は Proc#call の別名
-    datastore = options[:_ARGUMENT_] ? @root_control.send(options[:_ARGUMENT_]) : proc {|key| send(key) }
+  def _CHECK_(yield_stack, _ARGUMENT_: nil, **options, &block)
+    #比較対象とするコントロールを取得する
+    control = find_control_path(_ARGUMENT_)
 
     # 全ての条件を判定する
     result = options.any? do |condition, value|
       case condition
       #指定されたデータと値がイコールの場合
       when :equal
-        value.any?{|key, val| datastore[key] == val}
+        value.any?{|key, val| control.send(key) == val}
       #指定されたデータと値がイコールでない場合
       when :not_equal
-        value.any?{|key, val| datastore[key] != val}
+        value.any?{|key, val| control.send(key) != val}
       #指定されたデータと値が未満の場合
       when :under
-        value.any?{|key, val| datastore[key] < val}
+        value.any?{|key, val| control.send(key) < val}
       #指定されたデータと値がより大きい場合
       when :over
-        value.any?{|key, val| datastore[key] > val}
+        value.any?{|key, val| control.send(key) > val}
       else
         false
       end
@@ -572,7 +559,7 @@ class Control #スクリプト制御
     #第１引数がシンボルの場合
     if _ARGUMENT_.instance_of?(Symbol)
       #データストアの値を対象のファイルパスとする
-      _ARGUMENT_ = @root_control._TEMP_[_ARGUMENT_]
+      _ARGUMENT_ = find_control_path([:_ROOT_, :_TEMP_]).send(_ARGUMENT_)
     end
 
     #プロセスのカレントディレクトリを強制的に更新する
@@ -1002,18 +989,6 @@ class Control #デバッグ支援機能
         puts method.chop! + " : " + send(method).to_s
       end
     end
-  end
-
-  def _DEBUG_TEMP_(yield_stack, options)
-    pp @root_control._TEMP_
-  end
-
-  def _DEBUG_LOCAL_(yield_stack, options)
-    pp @root_control._LOCAL_
-  end
-
-  def _DEBUG_SYSTEM_(yield_stack, options)
-    pp @root_control._SYSTEM_
   end
 
   #コマンドリストを出力する

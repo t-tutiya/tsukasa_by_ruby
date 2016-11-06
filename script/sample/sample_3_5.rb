@@ -14,7 +14,7 @@ _CREATE_ :ClickableLayout, x: 640-256, y: 480-256, width:256, height: 256 do
   _CREATE_ :Image, path: "./resource/button_normal.png"
   _DEFINE_ :inner_loop do
     _CHECK_MOUSE_:cursor_over do 
-      _SET_ :_SYSTEM_ , data0: true
+      _SET_ [:_ROOT_ ,:_SYSTEM_] , data0: true
     end
     _END_FRAME_
     _RETURN_ do
@@ -52,7 +52,7 @@ _MOUSE_ENABLE_ false
 _END_FRAME_
 
 _LOOP_ do
-  _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do 
+  _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_],  control: [:_ROOT_, :_TEMP_] do 
         |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
     _SEND_ [:layout01, :comment_area] do
       _SET_ char: _MOUSE_POS_X_.to_s + ":" + _MOUSE_POS_Y_.to_s
@@ -61,8 +61,8 @@ _LOOP_ do
       _SET_ x: _MOUSE_POS_X_, y: _MOUSE_POS_Y_
     end
   end
-  _CHECK_ :_SYSTEM_, equal: {data0: true},key_down: [K_Z] do
-    _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do 
+  _CHECK_ [:_ROOT_, :_SYSTEM_], equal: {data0: true},key_down: [K_Z] do
+    _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_],  control: [:_ROOT_, :_TEMP_] do 
           |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
       _SEND_ [:layout01, :cursor] do 
         _MOVE_ [30, :out_quart], 
@@ -71,7 +71,7 @@ _LOOP_ do
       end
       _MOVE_ 30,  mouse_x: [_MOUSE_POS_X_, 0], 
                   mouse_y: [_MOUSE_POS_Y_, 0] do
-        _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do 
+        _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_],  control: [:_ROOT_, :_TEMP_] do 
                 |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
           _SEND_ [:layout01, :comment_area] do
             _SET_ char: _MOUSE_POS_X_.to_s + ":" + _MOUSE_POS_Y_.to_s
@@ -80,7 +80,7 @@ _LOOP_ do
       end
     end
     _SET_ mouse_x:0, mouse_y:0
-    _SET_ :_SYSTEM_ , data0: false
+    _SET_ [:_ROOT_ , :_SYSTEM_] , data0: false
   end
   _CHECK_INPUT_ mouse: :right_push do
     _SEND_ :layout01, interrupt: true do

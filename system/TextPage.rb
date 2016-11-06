@@ -336,7 +336,7 @@ class TextPage < Layout
       result = ""
       #キーで指定されたデータストアのデータを文字列とする
       options.each do |key, value|
-        result = @root_control.send(key)[value]
+        result = find_control_path([:_ROOT_, key]).send(value)
       end
       options[:_ARGUMENT_] = result.to_s
     end
@@ -344,7 +344,7 @@ class TextPage < Layout
     #第１引数がシンボルの場合
     if options[:_ARGUMENT_].instance_of?(Symbol)
       #キーで指定された一時データストアのデータを文字列とする
-      options[:_ARGUMENT_] = @root_control.send(:_TEMP_)[options[:_ARGUMENT_]]
+      options[:_ARGUMENT_] = find_control_path([:_ROOT_, :_TEMP_]).send(options[:_ARGUMENT_])
     end
 
     #イメージフォントを使うかどうか

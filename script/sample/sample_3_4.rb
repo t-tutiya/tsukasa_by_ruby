@@ -8,7 +8,7 @@ _DEFINE_ :menu_button do |id:, text: |
     float_y: :bottom do
     #キーがクリックされた
     _DEFINE_ :on_key_push do
-      _SET_ :_TEMP_, mode: id
+      _SET_ [:_ROOT_, :_TEMP_], mode: id
     end
   end
 end
@@ -29,19 +29,19 @@ _CREATE_ :Layout, id: :top_menu, x:0, y:0 do
   end
 end
 
-_SET_ :_TEMP_, mode: nil
-_WAIT_ :_TEMP_,  not_equal: {mode: nil}
+_SET_ [:_ROOT_, :_TEMP_], mode: nil
+_WAIT_ [:_ROOT_, :_TEMP_],  not_equal: {mode: nil}
 
-_CHECK_ :_TEMP_,  equal: {mode: 0} do
+_CHECK_ [:_ROOT_, :_TEMP_],  equal: {mode: 0} do
   _RESIZE_ width: 640, height:480
 end
-_CHECK_ :_TEMP_,  equal: {mode: 1} do
+_CHECK_ [:_ROOT_, :_TEMP_],  equal: {mode: 1} do
   _RESIZE_ width: 800, height:600
 end
-_CHECK_ :_TEMP_,  equal: {mode: 2} do
+_CHECK_ [:_ROOT_, :_TEMP_],  equal: {mode: 2} do
   _RESIZE_ width: 1024, height:768
 end
-_CHECK_ :_TEMP_,  equal: {mode: 3} do
+_CHECK_ [:_ROOT_, :_TEMP_],  equal: {mode: 3} do
   _RESIZE_ width: 1280, height:720
 end
 

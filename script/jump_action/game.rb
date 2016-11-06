@@ -51,7 +51,7 @@ _CREATE_ :DrawableLayout, x: 160, y: 120, width: 320, height: 256 do
 
     _GET_ :y do |y:|
       #前フレームのY座標を保存
-      _SET_ :_TEMP_, y_prev: y, f: 1
+      _SET_ [:_ROOT_, :_TEMP_], y_prev: y, f: 1
     end
     #通常ステート開始
     state_fall
@@ -122,11 +122,11 @@ end
 #ジャンプステート
 _DEFINE_ :init_jump do
   #ジャンプ係数を初期化
-  _SET_ :_TEMP_, f: -15
+  _SET_ [:_ROOT_, :_TEMP_], f: -15
 
   _GET_ :y do |y:|
     #前フレームのY座標を保存
-    _SET_ :_TEMP_, y_prev: y
+    _SET_ [:_ROOT_, :_TEMP_], y_prev: y
   end
 end
 
@@ -134,12 +134,12 @@ _DEFINE_ :state_fall do
 
   state_x_move
 
-  _GET_ [:f, :y_prev], datastore: :_TEMP_ do |f:, y_prev:|
+  _GET_ [:f, :y_prev], control: [:_ROOT_, :_TEMP_] do |f:, y_prev:|
     _GET_ :y do |y:|
       #Ｙ軸移動増分の設定
       y_move = (y - y_prev) + f
       #前フレームのＹ座標を保存＆ジャンプ係数の初期化
-      _SET_ :_TEMP_, f: 1, y_prev: y
+      _SET_ [:_ROOT_, :_TEMP_], f: 1, y_prev: y
       #座標増分を加算。増分が31を越えていれば強制的に31とする
       y += y_move <= 31 ? y_move : 31
       #Ｙ座標の更新
@@ -150,7 +150,7 @@ _DEFINE_ :state_fall do
   #マップ外判定
   _CHECK_ over: {y:480} do
     _SET_ x: 32, y: 0
-    _SET_ :_TEMP_, y_prev: 0
+    _SET_ [:_ROOT_, :_TEMP_], y_prev: 0
   end
 
   #着地補正

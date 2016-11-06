@@ -52,12 +52,12 @@ _LOOP_ do
         _SET_ char: y.to_s
       end
     end
-    _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_], datastore: :_TEMP_ do |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
+    _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_],  control: [:_ROOT_, :_TEMP_] do |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
       _SEND_ :comment_area6_b do
           _SET_ char: _MOUSE_POS_X_.to_s + ":" + _MOUSE_POS_Y_.to_s
       end
     end
-    _GET_ [:_MOUSE_OFFSET_X_, :_MOUSE_OFFSET_Y_], datastore: :_TEMP_ do |_MOUSE_OFFSET_X_:, _MOUSE_OFFSET_Y_:|
+    _GET_ [:_MOUSE_OFFSET_X_, :_MOUSE_OFFSET_Y_],  control: [:_ROOT_, :_TEMP_] do |_MOUSE_OFFSET_X_:, _MOUSE_OFFSET_Y_:|
       _SEND_ :comment_area6_b2 do
           _SET_ char: _MOUSE_OFFSET_X_.to_s + ":" + _MOUSE_OFFSET_Y_.to_s
       end

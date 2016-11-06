@@ -5,22 +5,22 @@ end
 
 _WAIT_ input:{key_down: [K_X,K_Z]}
 _CHECK_INPUT_ key_down: [K_X] do
-	_SET_ :_SYSTEM_ , data0: K_X
+	_SET_ [:_ROOT_, :_SYSTEM_], data0: K_X
 end
 _CHECK_INPUT_ key_down: [K_Z] do
-	_SET_ :_SYSTEM_, data0: K_Z
+	_SET_ [:_ROOT_, :_SYSTEM_], data0: K_Z
 end
 
 _SAVE_  0
-_SET_ :_SYSTEM_, data0: "dummy"
+_SET_ [:_ROOT_, :_SYSTEM_], data0: "dummy"
 _LOAD_  0
 
-_CHECK_ :_SYSTEM_, equal: {data0: K_X} do
+_CHECK_ [:_ROOT_, :_SYSTEM_], equal: {data0: K_X} do
   _SEND_ :text0 do
     _TEXT_ "Ｘキーが押されました"
   end
 end
-_CHECK_ :_SYSTEM_, equal: {data0: K_Z} do
+_CHECK_ [:_ROOT_, :_SYSTEM_], equal: {data0: K_Z} do
   _SEND_ :text0 do
     _TEXT_ "Ｚキーが押されました"
   end

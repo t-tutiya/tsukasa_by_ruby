@@ -58,6 +58,7 @@ require_relative './DrawableLayout.rb'
 require_relative './ClickableLayout.rb'
 require_relative './Sound.rb'
 require_relative './Char.rb'
+require_relative './Data.rb'
 
 #複合コントロール群
 require_relative './TextPage.rb'
@@ -117,10 +118,17 @@ class Window < Layout
 
   def update(mouse_pos_x = DXRuby::Input.mouse_x,
              mouse_pos_y = DXRuby::Input.mouse_y)
-    @_TEMP_[:_MOUSE_OFFSET_X_] = mouse_pos_x - @_TEMP_[:_MOUSE_POS_X_]
-    @_TEMP_[:_MOUSE_OFFSET_Y_] = mouse_pos_y - @_TEMP_[:_MOUSE_POS_Y_]
-    @_TEMP_[:_MOUSE_POS_X_] = mouse_pos_x
-    @_TEMP_[:_MOUSE_POS_Y_] = mouse_pos_y
+    control = find_control(:_TEMP_)
+    if control
+      control._MOUSE_OFFSET_X_ = mouse_pos_x - (control._MOUSE_POS_X_ || 0)
+      control._MOUSE_OFFSET_Y_ = mouse_pos_y - (control._MOUSE_POS_Y_ || 0)
+      control._MOUSE_POS_X_ = mouse_pos_x
+      control._MOUSE_POS_Y_ = mouse_pos_y
+    end
+#    @_TEMP_[:_MOUSE_OFFSET_X_] = mouse_pos_x - @_TEMP_[:_MOUSE_POS_X_]
+#    @_TEMP_[:_MOUSE_OFFSET_Y_] = mouse_pos_y - @_TEMP_[:_MOUSE_POS_Y_]
+#    @_TEMP_[:_MOUSE_POS_X_] = mouse_pos_x
+#    @_TEMP_[:_MOUSE_POS_Y_] = mouse_pos_y
     super(mouse_pos_x, mouse_pos_y, 0)
   end
 

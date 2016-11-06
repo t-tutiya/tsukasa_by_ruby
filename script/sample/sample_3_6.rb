@@ -8,10 +8,10 @@
   end
 =end
 
-_SET_ :_TEMP_, flag0: false
+_SET_ [:_ROOT_, :_TEMP_], flag0: false
 
 _SCOPE_ do
-  _CHECK_ :_TEMP_, equal: {flag0: true} do |a,b,c|
+  _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag0: true} do |a,b,c|
     _PUTS_ "A true"
     _RETURN_  
   end
@@ -32,14 +32,14 @@ end
 =end
 
 
-_SET_ :_TEMP_, flag1: 1
+_SET_ [:_ROOT_, :_TEMP_], flag1: 1
 
 _SCOPE_ do
-  _CHECK_ :_TEMP_, equal: {flag1: 0} do
+  _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag1: 0} do
     _PUTS_ "A 0"
     _RETURN_  
   end
-  _CHECK_ :_TEMP_, equal: {flag1: 1} do
+  _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag1: 1} do
     _PUTS_ "A 1"
     _RETURN_  
   end

@@ -242,7 +242,7 @@ class TKSParser < Parslet::Parser
       :text_node => simple(:target)
     ) {
       text = "#{target}".gsub(/"/, '\"')
-  "_GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|\n"+
+  "_GET_ :_DEFAULT_TEXT_PAGE_,  control: [:_ROOT_, :_TEMP_] do |_DEFAULT_TEXT_PAGE_:|\n"+
   "  _SEND_ _DEFAULT_TEXT_PAGE_ do\n" + 
       %Q'_TEXT_ "#{text}"' +
   "  end\n" + 
@@ -260,7 +260,7 @@ class TKSParser < Parslet::Parser
     rule(
       :inline_data_node => simple(:target)
     ) {
-  "_GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|\n"+
+  "_GET_ :_DEFAULT_TEXT_PAGE_,  control: [:_ROOT_, :_TEMP_] do |_DEFAULT_TEXT_PAGE_:|\n"+
   "  _SEND_ _DEFAULT_TEXT_PAGE_ do\n" + 
        "_TEXT_ " + target.to_s +
   "  end\n" + 
@@ -272,7 +272,7 @@ class TKSParser < Parslet::Parser
       :text_line => sequence(:target)
     ) { 
       target.join + 
-  "_GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|\n"+
+  "_GET_ :_DEFAULT_TEXT_PAGE_,  control: [:_ROOT_, :_TEMP_] do |_DEFAULT_TEXT_PAGE_:|\n"+
   "  _SEND_ _DEFAULT_TEXT_PAGE_ do\n" + 
   "    _LINE_FEED_\n" + 
   "  end\n" + 
@@ -291,7 +291,7 @@ class TKSParser < Parslet::Parser
     rule(
       :flush => simple(:target)
     ) { 
-  "_GET_ :_DEFAULT_TEXT_PAGE_, datastore: :_TEMP_ do |_DEFAULT_TEXT_PAGE_:|\n"+
+  "_GET_ :_DEFAULT_TEXT_PAGE_, control: [:_ROOT_, :_TEMP_] do |_DEFAULT_TEXT_PAGE_:|\n"+
   "  _SEND_ _DEFAULT_TEXT_PAGE_ do\n" + 
   "    _FLUSH_\n" + 
   "  end\n" + 

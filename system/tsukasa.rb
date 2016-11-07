@@ -68,13 +68,6 @@ require_relative './RuleShader.rb'
 module Tsukasa
 
 class Window < Layout
-  #システム全体で共有されるデータ群。保存対象。
-  attr_reader  :_SYSTEM_
-  #個別のセーブデータを表すデータ群。保存対象。
-  attr_reader  :_LOCAL_
-  #一時的に管理するデータ群。保存対象ではない。
-  attr_reader  :_TEMP_
-
   attr_reader  :function_list
 
   attr_reader  :script_compiler
@@ -91,20 +84,6 @@ class Window < Layout
   def initialize(options)
     #アプリ終了フラグ
     @close = false
-
-    #システムデータストア
-    @_SYSTEM_ = {}
-    #ローカルデータストア
-    @_LOCAL_ = {}
-    #一時データストア
-    @_TEMP_ = {
-      #_INCLUDE_したファイルパスをスタックする
-      _LOADED_FEATURES_: [],
-      _MOUSE_POS_X_: 0,
-      _MOUSE_POS_Y_: 0,
-      _MOUSE_OFFSET_X_: 0,
-      _MOUSE_OFFSET_Y_: 0,
-    }
 
     #パーサー
     @script_compiler = ScriptCompiler.new
@@ -125,10 +104,7 @@ class Window < Layout
       control._MOUSE_POS_X_ = mouse_pos_x
       control._MOUSE_POS_Y_ = mouse_pos_y
     end
-#    @_TEMP_[:_MOUSE_OFFSET_X_] = mouse_pos_x - @_TEMP_[:_MOUSE_POS_X_]
-#    @_TEMP_[:_MOUSE_OFFSET_Y_] = mouse_pos_y - @_TEMP_[:_MOUSE_POS_Y_]
-#    @_TEMP_[:_MOUSE_POS_X_] = mouse_pos_x
-#    @_TEMP_[:_MOUSE_POS_Y_] = mouse_pos_y
+
     super(mouse_pos_x, mouse_pos_y, 0)
   end
 

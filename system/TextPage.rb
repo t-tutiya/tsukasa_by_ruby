@@ -331,22 +331,6 @@ class TextPage < Layout
   def _TEXT_(yield_stack, options)
     command_list = Array.new
 
-    #第１引数が設定されていない場合
-    unless options[:_ARGUMENT_]
-      result = ""
-      #キーで指定されたデータストアのデータを文字列とする
-      options.each do |key, value|
-        result = find_control_path([:_ROOT_, key]).send(value)
-      end
-      options[:_ARGUMENT_] = result.to_s
-    end
-
-    #第１引数がシンボルの場合
-    if options[:_ARGUMENT_].instance_of?(Symbol)
-      #キーで指定された一時データストアのデータを文字列とする
-      options[:_ARGUMENT_] = find_control_path([:_ROOT_, :_TEMP_]).send(options[:_ARGUMENT_])
-    end
-
     #イメージフォントを使うかどうか
     if @use_image_font
       char_command = :image_char

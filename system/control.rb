@@ -561,15 +561,6 @@ class Control #スクリプト制御
     FileUtils.chdir(@@system_path)
     #ファイルのフルパスを取得
     path = File.expand_path(_ARGUMENT_)
-
-    #強制フラグが無く、一度_INCLUDE_しているファイルなら終了
-    if !force and @root_control._TEMP_[:_LOADED_FEATURES_].index(path)
-      return
-    end
-
-    #ファイルパスをリストに追加する。
-    @root_control._TEMP_[:_LOADED_FEATURES_].push(path)
-
     #拡張子取得
     ext_name = File.extname(path)
     #rbファイルでなければparserのクラス名を初期化する。

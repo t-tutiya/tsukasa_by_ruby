@@ -361,7 +361,6 @@ class Control #制御構文
     end
   end
 
-=begin
 
   #_CHECK_INPUT_は現在default_script.rbで定義されるユーザー定義コマンドになっているが、動作速度上のボトルネックになる可能性がある。
   #検証が済むまでこちらのコードも残しておく（2016/11/6）
@@ -430,7 +429,6 @@ class Control #制御構文
       parse_block(nil, yield_stack, &block)
     end
   end
-=end
 
   def _CHECK_BLOCK_(yield_stack, options, &block)
     unless yield_stack[-1] == nil

@@ -186,8 +186,10 @@ _DEFINE_ :_IMAGE_DISPOSE_ do |_ARGUMENT_:|
   Image.cache.force_dispose(_ARGUMENT_)
 end
 
+=begin
 
 _DEFINE_ :_CHECK_INPUT_ do |options|
+  pp options
   # 全ての条件を判定する
   result = options.any? do |condition, value|
     value = Array(value)
@@ -253,3 +255,5 @@ _DEFINE_ :_CHECK_INPUT_ do |options|
     end
   end
 end
+
+=end

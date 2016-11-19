@@ -364,38 +364,37 @@ class Control #制御構文
   def _CHECK_INPUT_(yield_stack, _ARGUMENT_: nil, **options, &block)
     # 全ての条件を判定する
     result = options.any? do |condition, value|
-      value = Array(value)
       case condition
       #キーが押下された
       when :key_push
-        value.any?{|key_code| DXRuby::Input.key_push?(key_code)}
+        Array(value).any?{|key_code| DXRuby::Input.key_push?(key_code)}
       #キーが押下されていない
       when :not_key_push
-        !(value.any?{|key_code| DXRuby::Input.key_push?(key_code)})
+        !(Array(value).any?{|key_code| DXRuby::Input.key_push?(key_code)})
       #キーが継続押下されている
       when :key_down
-        value.any?{|key_code| DXRuby::Input.key_down?(key_code)}
+        Array(value).any?{|key_code| DXRuby::Input.key_down?(key_code)}
       #キーが継続押下されていない
       when :not_key_down
-        !(value.any?{|key_code| DXRuby::Input.key_down?(key_code)})
+        !(Array(value).any?{|key_code| DXRuby::Input.key_down?(key_code)})
       #キーが解除された
       when :key_up
-        value.any?{|key_code| DXRuby::Input.key_release?(key_code)}
+        Array(value).any?{|key_code| DXRuby::Input.key_release?(key_code)}
       #キーが解除されていない
       when :not_key_up
-        !(value.any?{|key_code|DXRuby::Input.key_release?(key_code)})
+        !(Array(value).any?{|key_code|DXRuby::Input.key_release?(key_code)})
       #パッドボタンが押された
       when :pad_down
-        value.any?{|pad_code| DXRuby::Input.pad_down?(pad_code, _ARGUMENT_)}
+        Array(value).any?{|pad_code| DXRuby::Input.pad_down?(pad_code, _ARGUMENT_)}
       #パッドボタンが継続押下されている
       when :pad_push
-        value.any?{|pad_code| DXRuby::Input.pad_push?(pad_code, _ARGUMENT_)}
+        Array(value).any?{|pad_code| DXRuby::Input.pad_push?(pad_code, _ARGUMENT_)}
       #パッドボタンが解除された
       when :pad_release
-        value.any?{|pad_code| DXRuby::Input.pad_release?(pad_code, _ARGUMENT_)}
+        Array(value).any?{|pad_code| DXRuby::Input.pad_release?(pad_code, _ARGUMENT_)}
       #マウス処理系
       when :mouse
-        value.any? do |key|
+        Array(value).any? do |key|
           case key
           when :push
             DXRuby::Input.mouse_push?( M_LBUTTON )

@@ -48,9 +48,6 @@ _SET_ [:_ROOT_, :_SYSTEM_], _QUICK_DATA_FILENAME_: "_quick_data.bin"
 #プラグインファイルの配置フォルダと検索対象
 _SET_ [:_ROOT_, :_SYSTEM_], _PLUGIN_PATH_: "./plugin/*.rb"
 
-#パッド番号
-_SET_ [:_ROOT_, :_SYSTEM_], _PAD_NUMBER_: 0
-
 #カーソル可視設定
 _SET_ [:_ROOT_, :_SYSTEM_], _CURSOR_VISIBLE_: true
 

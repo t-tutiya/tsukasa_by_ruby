@@ -361,11 +361,7 @@ class Control #制御構文
     end
   end
 
-
-  #_CHECK_INPUT_は現在default_script.rbで定義されるユーザー定義コマンドになっているが、動作速度上のボトルネックになる可能性がある。
-  #検証が済むまでこちらのコードも残しておく（2016/11/6）
-  
-  def _CHECK_INPUT_(yield_stack, options, &block)
+  def _CHECK_INPUT_(yield_stack, _ARGUMENT_: nil, **options, &block)
     # 全ての条件を判定する
     result = options.any? do |condition, value|
       value = Array(value)
@@ -390,16 +386,13 @@ class Control #制御構文
         !(value.any?{|key_code|DXRuby::Input.key_release?(key_code)})
       #パッドボタンが押された
       when :pad_down
-        value.any?{|pad_code| DXRuby::Input.pad_down?(pad_code,
-                                        @root_control._SYSTEM_[:_PAD_NUMBER_])}
+        value.any?{|pad_code| DXRuby::Input.pad_down?(pad_code, _ARGUMENT_)}
       #パッドボタンが継続押下されている
       when :pad_push
-        value.any?{|pad_code| DXRuby::Input.pad_push?(pad_code,
-                                        @root_control._SYSTEM_[:_PAD_NUMBER_])}
+        value.any?{|pad_code| DXRuby::Input.pad_push?(pad_code, _ARGUMENT_)}
       #パッドボタンが解除された
       when :pad_release
-        value.any?{|pad_code| DXRuby::Input.pad_release?(pad_code,
-                                        @root_control._SYSTEM_[:_PAD_NUMBER_])}
+        value.any?{|pad_code| DXRuby::Input.pad_release?(pad_code, _ARGUMENT_)}
       #マウス処理系
       when :mouse
         value.any? do |key|

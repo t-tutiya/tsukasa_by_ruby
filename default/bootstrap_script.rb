@@ -30,6 +30,7 @@
 
 #puts DXRuby::VERSION
 
+#一時データストア
 _CREATE_ :Data, id: :_TEMP_ do
   #値の初期化
   _SET_ _MOUSE_POS_X_: 0, _MOUSE_POS_Y_: 0
@@ -49,7 +50,11 @@ _CREATE_ :Data, id: :_TEMP_ do
   end
   func
 end
+
+#ローカルデータストア
 _CREATE_ :Data, id: :_LOCAL_
+
+#システムデータストア
 _CREATE_ :Data, id: :_SYSTEM_
 
 #コンフィグファイルの読み込み

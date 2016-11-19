@@ -43,10 +43,6 @@ class Data < Control
       #セッターの場合
       @datastore[command_name.to_s.chop!.to_sym] = argument
     else
-      #pp "in data"
-      #pp command_name
-      #pp @datastore
-      #pp @datastore[command_name]
       #ゲッターの場合
       return @datastore[command_name]
     end

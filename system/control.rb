@@ -315,9 +315,14 @@ class Control #セッター／ゲッター
 
     #オプション全探査
     Array(_ARGUMENT_).each do |property|
+      property = Array(property)
+      #取得先コントロールパスが指定されていなければcontrolに準じる
+      property[1] = control unless property[1]
+      #格納名が指定されていなければpropetyに準じる
+      property[2] = property[0] unless property[2]
       begin
         #コントロールプロパティから値を取得する
-        result[property] = find_control_path(control).send(property)
+        result[property[2]] = find_control_path(property[1]).send(property[0])
       rescue
         warn  "クラス[#{self.class}]：変数[" + "@#{property}]は存在しません"
       end

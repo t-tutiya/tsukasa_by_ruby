@@ -95,23 +95,6 @@ class Window < Layout
     super(options, nil, self, self)
   end
 
-  def update(mouse_pos_x = DXRuby::Input.mouse_x,
-             mouse_pos_y = DXRuby::Input.mouse_y)
-    control = find_control(:_TEMP_)
-    if control
-      control._MOUSE_OFFSET_X_ = mouse_pos_x - (control._MOUSE_POS_X_ || 0)
-      control._MOUSE_OFFSET_Y_ = mouse_pos_y - (control._MOUSE_POS_Y_ || 0)
-      control._MOUSE_POS_X_ = mouse_pos_x
-      control._MOUSE_POS_Y_ = mouse_pos_y
-    end
-
-    super(mouse_pos_x, mouse_pos_y, 0)
-  end
-
-  def render(offset_x, offset_y, target)
-    super
-  end
-
   def close
     @close = true
   end

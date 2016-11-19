@@ -32,11 +32,37 @@ module Tsukasa
 
 class Data < Control
 
+  #ファイル保存先パス
+  attr_accessor :folder_path
+  #ファイルアクセスの許可設定
+  attr_accessor :file_permission
+
   def initialize(options, yield_stack, root_control, parent_control, &block)
     @datastore = {}
+    @folder_path = options[:folder_path] || "./"
+    @file_permission = options[:file_permission] || true
     super
   end
 
+  #データセーブ
+  def _SAVE_(yield_stack, _ARGUMENT_:)
+    raise unless @file_permission
+    db = PStore.new(@folder_path + _ARGUMENT_)
+    db.transaction do
+      db["key"] = @datastore
+    end
+  end
+
+  #データロード
+  def _LOAD_(yield_stack, _ARGUMENT_:)
+    raise unless @file_permission
+    db = PStore.new(@folder_path + _ARGUMENT_)
+    db.transaction do
+      @datastore = db["key"]
+    end
+  end
+
+  #上記以外の全てのメソッドアクセスをデータストアアクセスとみなす
   def method_missing(command_name, argument = nil)
     #ゲッター／セッター判定
     if command_name.to_s[-1] == '='

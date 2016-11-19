@@ -31,7 +31,7 @@
 #puts DXRuby::VERSION
 
 #一時データストア
-_CREATE_ :Data, id: :_TEMP_ do
+_CREATE_ :Data, id: :_TEMP_, file_permission: false do
   #値の初期化
   _SET_ _MOUSE_POS_X_: 0, _MOUSE_POS_Y_: 0
   #コマンド定義
@@ -52,10 +52,10 @@ _CREATE_ :Data, id: :_TEMP_ do
 end
 
 #ローカルデータストア
-_CREATE_ :Data, id: :_LOCAL_
+_CREATE_ :Data, id: :_LOCAL_, folder_path: "./datastore/"
 
 #システムデータストア
-_CREATE_ :Data, id: :_SYSTEM_
+_CREATE_ :Data, id: :_SYSTEM_, folder_path: "./datastore/"
 
 #コンフィグファイルの読み込み
 _INCLUDE_ "./default/config.rb"

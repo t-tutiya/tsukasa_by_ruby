@@ -11,9 +11,15 @@ _CHECK_INPUT_ key_down: [K_Z] do
 	_SET_ [:_ROOT_, :_SYSTEM_], data0: K_Z
 end
 
-_SAVE_  0
+_SEND_ [:_ROOT_, :_SYSTEM_] do
+  _SAVE_ "savetest.dat"
+end
+_END_FRAME_
 _SET_ [:_ROOT_, :_SYSTEM_], data0: "dummy"
-_LOAD_  0
+_SEND_ [:_ROOT_, :_SYSTEM_] do
+  _LOAD_ "savetest.dat"
+end
+_END_FRAME_
 
 _CHECK_ [:_ROOT_, :_SYSTEM_], equal: {data0: K_X} do
   _SEND_ :text0 do

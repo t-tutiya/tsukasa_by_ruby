@@ -115,53 +115,6 @@ class Window < Layout
     raise unless options[:_ARGUMENT_]
     require options[:_ARGUMENT_]
   end
-
-  #データセーブ
-  def _SAVE_(yield_stack, options)
-    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
-    #グローバルデータ
-    if options[:_ARGUMENT_] == 0
-      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
-                      @_SYSTEM_[:_SYSTEM_FILENAME_])
-      db.transaction do
-        db["key"] = @_SYSTEM_
-      end
-    #ユーザーデータ
-    #任意の接尾字を指定する
-    elsif options[:_ARGUMENT_]
-      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + options[:_ARGUMENT_].to_s +
-                      @_SYSTEM_[:_LOCAL_FILENAME_])
-      db.transaction do
-        db["key"] = @_LOCAL_
-      end
-    else
-      #セーブファイル指定エラー
-      raise(Tsukasa::TsukasaError, "対象セーブファイルが指定されていません")
-    end
-  end
-
-  def _LOAD_(yield_stack, options)
-    raise unless options[:_ARGUMENT_].kind_of?(Numeric)
-    #グローバルデータ
-    if options[:_ARGUMENT_] == 0
-      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + 
-                      @_SYSTEM_[:_SYSTEM_FILENAME_])
-      db.transaction do
-        @_SYSTEM_ = db["key"]
-      end
-    #ユーザーデータ
-    #任意の接尾字を指定する
-    elsif options[:_ARGUMENT_]
-      db = PStore.new(@_SYSTEM_[:_SAVE_DATA_PATH_] + options[:_ARGUMENT_].to_s +
-                      @_SYSTEM_[:_LOCAL_FILENAME_])
-      db.transaction do
-        @_LOCAL_ = db["key"]
-      end
-    else
-      #セーブファイル指定エラー
-      raise(Tsukasa::TsukasaError, "対象セーブファイルが指定されていません")
-    end
-  end
 end
 
 end

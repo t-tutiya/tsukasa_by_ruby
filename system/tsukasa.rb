@@ -109,17 +109,16 @@ class Window < Layout
     @close
   end
 
-  def _SCRIPT_PARSER_(yield_stack, options)
-    require_relative options[:path]
-    @script_parser[options[:ext_name]] = [
-      Module.const_get(options[:parser]).new,
-      Module.const_get(options[:parser])::Replacer.new]
+  def _SCRIPT_PARSER_(yield_stack, path:, ext_name:, parser:)
+    require_relative path
+    @script_parser[ext_name] = [
+      Module.const_get(parser).new,
+      Module.const_get(parser)::Replacer.new]
   end
 
   #ネイティブコードを読み込む
-  def _LOAD_NATIVE_(yield_stack, options)
-    raise unless options[:_ARGUMENT_]
-    require options[:_ARGUMENT_]
+  def _LOAD_NATIVE_(yield_stack, _ARGUMENT_:)
+    require _ARGUMENT_
   end
 end
 

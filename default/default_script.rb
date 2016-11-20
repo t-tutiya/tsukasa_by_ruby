@@ -185,3 +185,78 @@ end
 _DEFINE_ :_IMAGE_DISPOSE_ do |_ARGUMENT_:|
   Image.cache.force_dispose(_ARGUMENT_)
 end
+
+###############################################################################
+#セーブロード管理
+###############################################################################
+
+#データストアを保存する
+#※保存されるのは次フレームなので注意
+_DEFINE_ :_SYSTEM_SAVE_ do |_ARGUMENT_:|
+  _SEND_ [:_ROOT_, :_SYSTEM_] do
+    _SERIALIZE_ do |command_list:|
+      db = PStore.new(_ARGUMENT_)
+      db.transaction do
+        db["key"] = command_list
+      end
+    end
+  end
+end
+
+#データストアに読み込む
+#※保存されるのは次フレームなので注意
+_DEFINE_ :_SYSTEM_LOAD_ do |_ARGUMENT_:|
+  _SEND_ [:_ROOT_, :_SYSTEM_] do
+    db = PStore.new(_ARGUMENT_)
+    command_list = nil
+    db.transaction do
+      command_list = db["key"]
+    end
+    _SERIALIZE_ command_list
+  end
+end
+
+#データストアを保存する
+#※保存されるのは次フレームなので注意
+_DEFINE_ :_LOCAL_SAVE_ do |_ARGUMENT_:|
+  _SEND_ [:_ROOT_, :_LOCAL_] do
+    _SERIALIZE_ do |command_list:|
+      db = PStore.new(_ARGUMENT_)
+      db.transaction do
+        db["key"] = command_list
+      end
+    end
+  end
+end
+
+#データストアに読み込む
+#※保存されるのは次フレームなので注意
+_DEFINE_ :_LOCAL_LOAD_ do |_ARGUMENT_:|
+  _SEND_ [:_ROOT_, :_LOCAL_] do
+    db = PStore.new(_ARGUMENT_)
+    command_list = nil
+    db.transaction do
+      command_list = db["key"]
+    end
+    _SERIALIZE_ command_list
+  end
+end
+
+_DEFINE_ :_QUICK_SAVE_ do |_ARGUMENT_:|
+  _SERIALIZE_ do |command_list:|
+    db = PStore.new(_ARGUMENT_)
+    db.transaction do
+      db["key"] = command_list
+    end
+  end
+end
+
+_DEFINE_ :_QUICK_LOAD_ do |_ARGUMENT_:|
+  db = PStore.new(_ARGUMENT_)
+  command_list = nil
+  db.transaction do
+    command_list = db["key"]
+  end
+  _SERIALIZE_ command_list
+end
+

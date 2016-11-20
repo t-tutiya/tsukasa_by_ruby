@@ -131,7 +131,7 @@ class Drawable < Layoutable
 
   def shader=(arg)
     @shader = arg
-    @draw_option[:shader] = find_control(@shader).entity
+    @draw_option[:shader] = find_control(@shader).entity if @shader
   end
   attr_reader  :shader
 
@@ -159,6 +159,7 @@ class Drawable < Layoutable
     @draw_option[:angle] = options[:angle] || 0
     @draw_option[:z] = options[:z] || 0
     @draw_option[:offset_sync] = options[:offset_sync] || false
+    @draw_option[:shader] = options[:shader] || nil
 
     #可視フラグ（省略時はtrue）
     @visible = (options[:visible] != false)

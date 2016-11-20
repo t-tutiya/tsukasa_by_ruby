@@ -33,18 +33,6 @@ require 'dxruby'
 #tksスクリプト用のパーサーを登録
 _SCRIPT_PARSER_ ext_name: :tks, path: "./TKSParser.rb",parser: :TKSParser
 
-#セーブデータの保存フォルダ
-_SET_ [:_ROOT_, :_SYSTEM_], _SAVE_DATA_PATH_: "./datastore/"
-
-#システムデータのファイル名
-_SET_ [:_ROOT_, :_SYSTEM_], _SYSTEM_FILENAME_: "system_data.bin"
-
-#ローカルデータのファイル名
-_SET_ [:_ROOT_, :_SYSTEM_], _LOCAL_FILENAME_: "_local_data.bin"
-
-#一時データのファイル名
-_SET_ [:_ROOT_, :_SYSTEM_], _QUICK_DATA_FILENAME_: "_quick_data.bin"
-
 #プラグインファイルの配置フォルダと検索対象
 _SET_ [:_ROOT_, :_SYSTEM_], _PLUGIN_PATH_: "./plugin/*.rb"
 

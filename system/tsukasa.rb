@@ -73,10 +73,16 @@ class Window < Layout
   attr_reader  :script_compiler
   attr_reader  :script_parser
 
+  def mouse_x()
+    return DXRuby::Input.mouse_x
+  end
   def mouse_x=(arg)
     DXRuby::Input.set_mouse_pos(arg, DXRuby::Input.mouse_y)
   end
 
+  def mouse_y()
+    return DXRuby::Input.mouse_y
+  end
   def mouse_y=(arg)
     DXRuby::Input.set_mouse_pos(DXRuby::Input.mouse_x, arg)
   end

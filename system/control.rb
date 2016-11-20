@@ -37,7 +37,7 @@ class Control #公開インターフェイス
   #プロセスのカレントディレクトリを保存する
   @@system_path = File.expand_path('../../', __FILE__)
 
-  attr_reader :id
+  attr_accessor :id
   attr_reader :child_index
   attr_accessor :child_update  #子コントロールの更新可否
 
@@ -64,7 +64,7 @@ class Control #公開インターフェイス
       parse_block(options, yield_stack, &block)
     end
 
-    #コマンドセットがあるなら登録する
+    #コマンドセットがあるなら登録する（シリアライズなどで使用）
     if options[:command_list]
       @command_list = options[:command_list] + @command_list
     end
@@ -171,8 +171,10 @@ class Control #公開インターフェイス
     @command_list.clear
   end
 
-  def serialize(control_name = nil, **options)
-  
+  def serialize()
+    options = {}
+
+    #自コントロールのプロパティを取得
     methods.each do |method|
       method = method.to_s
       if method[-1] == "=" and not(["===", "==", "!="].index(method))
@@ -180,20 +182,19 @@ class Control #公開インターフェイス
       end
     end
 
-    command_list = []
+    command_list = [[:_SET_, options, {}]]
 
     #子コントロールのシリアライズコマンドを取得
     @control_list.each do |control|
-      command_list.push(control.serialize())
+      result = [:_CREATE_,
+                {
+                  _ARGUMENT_: control.class.name,
+                  command_list: control.serialize()
+                },{}]
+      command_list.push(result)
     end
 
-    options[:command_list] = command_list unless command_list.empty?
-
-    #オプションを生成
-    options[:_ARGUMENT_] = self.class.name
-    command = [:_CREATE_, options, {}]
-
-    return command
+    return command_list
   end
 end
 
@@ -614,37 +615,16 @@ class Control #スクリプト制御
 end
 
 class Control #セーブデータ制御
-  def _QUICK_SAVE_(yield_stack, _ARGUMENT_:)
-    raise unless _ARGUMENT_.kind_of?(Numeric)
-
-    command_list = []
-
-    @control_list.each do |control|
-      command_list.push(control.serialize())
-    end
-
-    db = PStore.new(@root_control._SYSTEM_[:_SAVE_DATA_PATH_] + 
-                    _ARGUMENT_.to_s +
-                    @root_control._SYSTEM_[:_QUICK_DATA_FILENAME_])
-
-    db.transaction do
-      db["key"] = Marshal.dump(command_list)
+  def _SERIALIZE_(yield_stack, _ARGUMENT_: nil, &block)
+    #第一引数が設定されている
+    if _ARGUMENT_
+      #デシリアライズする（コマンドリストが挿し変わる）
+      @command_list = _ARGUMENT_
+    else
+      #シリアライズし、ブロックに渡す
+      parse_block({command_list: serialize()}, yield_stack, &block)
     end
   end
-
-  def _QUICK_LOAD_(yield_stack, _ARGUMENT_:)
-    raise unless _ARGUMENT_.kind_of?(Numeric)
-    db = PStore.new(@root_control._SYSTEM_[:_SAVE_DATA_PATH_] + 
-                    _ARGUMENT_.to_s +
-                    @root_control._SYSTEM_[:_QUICK_DATA_FILENAME_])
-
-    db.transaction do
-      command_list = Marshal.load(db["key"])
-      @command_list = command_list + @command_list
-    end
-
-  end
-
 end
 
 class Control #内部コマンド

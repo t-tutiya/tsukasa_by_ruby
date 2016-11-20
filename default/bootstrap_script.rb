@@ -38,8 +38,8 @@ _CREATE_ :Data, id: :_TEMP_, file_permission: false do
   _DEFINE_ :func do
     _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_] do |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
       #マウス座標の格納
-      _SET_ _MOUSE_OFFSET_X_: _MOUSE_POS_X_ - DXRuby::Input.mouse_x,
-            _MOUSE_OFFSET_Y_: _MOUSE_POS_Y_ - DXRuby::Input.mouse_y,
+      _SET_ _MOUSE_OFFSET_X_: DXRuby::Input.mouse_x - _MOUSE_POS_X_,
+            _MOUSE_OFFSET_Y_: DXRuby::Input.mouse_y - _MOUSE_POS_Y_,
             _MOUSE_POS_X_: DXRuby::Input.mouse_x,
             _MOUSE_POS_Y_: DXRuby::Input.mouse_y
     end

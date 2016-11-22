@@ -31,31 +31,11 @@
 #puts DXRuby::VERSION
 
 #一時データストア
-_CREATE_ :Data, id: :_TEMP_, file_permission: false do
-  #値の初期化
-  _SET_ _MOUSE_POS_X_: 0, _MOUSE_POS_Y_: 0
-  #コマンド定義
-  _DEFINE_ :func do
-    _GET_ [:_MOUSE_POS_X_, :_MOUSE_POS_Y_] do |_MOUSE_POS_X_:, _MOUSE_POS_Y_:|
-      #マウス座標の格納
-      _SET_ _MOUSE_OFFSET_X_: DXRuby::Input.mouse_x - _MOUSE_POS_X_,
-            _MOUSE_OFFSET_Y_: DXRuby::Input.mouse_y - _MOUSE_POS_Y_,
-            _MOUSE_POS_X_: DXRuby::Input.mouse_x,
-            _MOUSE_POS_Y_: DXRuby::Input.mouse_y
-    end
-    _END_FRAME_
-    _RETURN_ do
-      func
-    end
-  end
-  func
-end
-
+_CREATE_ :Data, id: :_TEMP_
 #ローカルデータストア
-_CREATE_ :Data, id: :_LOCAL_, folder_path: "./datastore/"
-
+_CREATE_ :Data, id: :_LOCAL_
 #システムデータストア
-_CREATE_ :Data, id: :_SYSTEM_, folder_path: "./datastore/"
+_CREATE_ :Data, id: :_SYSTEM_
 
 #コンフィグファイルの読み込み
 _INCLUDE_ "./default/config.rb"

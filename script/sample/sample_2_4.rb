@@ -26,7 +26,13 @@ _CREATE_ :ClickableLayout,
 
     #キーがクリックされるまで待機
     _WAIT_ do
-      _CHECK_MOUSE_ [:key_push, :cursor_out] do
+      _CHECK_MOUSE_ [:key_push] do
+        _GET_ [:cursor_x, :cursor_y] do |cursor_x:, cursor_y:|
+          _SET_ offset_x: - cursor_x, offset_y: - cursor_y
+        end
+        _BREAK_
+      end
+      _CHECK_MOUSE_ [:cursor_out] do
         _BREAK_
       end
     end
@@ -51,15 +57,25 @@ _CREATE_ :ClickableLayout,
     #キーが離されるまで待機し、その間ブロックを実行する
     _WAIT_ do
       _CHECK_MOUSE_ :key_up do
+        _GET_ [[:mouse_x, [:_ROOT_]], 
+               [:mouse_y, [:_ROOT_]], 
+                :offset_x, 
+                :offset_y] do |
+                mouse_x:, 
+                mouse_y:, 
+                offset_x:, 
+                offset_y:|
+          _SET_ x: mouse_x + offset_x, 
+                y: mouse_y + offset_y
+        end
+        _SET_ offset_x: 0, 
+              offset_y: 0
         _BREAK_
       end
-      #コントロールプロパティを取得
-      _GET_ [:_MOUSE_OFFSET_X_, :_MOUSE_OFFSET_Y_],  control: [:_ROOT_, :_TEMP_] do 
-            | _MOUSE_OFFSET_X_:, _MOUSE_OFFSET_Y_:|
-        _GET_ [:x, :y] do |x:, y:|
-          #コントロールのＸＹ座標にカーソルの移動オフセット値を加算
-          _SET_ x: x + _MOUSE_OFFSET_X_, y: y + _MOUSE_OFFSET_Y_
-        end
+
+      _GET_ [:mouse_x, :mouse_y], control: [:_ROOT_] do |mouse_x:, mouse_y:|
+        #コントロールのＸＹ座標にカーソルの移動オフセット値を加算
+        _SET_ x: mouse_x, y: mouse_y
       end
     end
     _RETURN_ do

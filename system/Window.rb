@@ -31,39 +31,6 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-$dxruby_no_include = true #DXRubyがグローバル空間にincludeされるのを抑制する
-require 'dxruby'
-
-#キーコード定数／パッド定数／マウスボタン定数
-require_relative './Constant.rb'
-#例外（TskasaError）
-require_relative './Exception.rb'
-#汎用リソースキャッシュ管理機構
-require_relative './CacheManager.rb'
-#スクリプトコンパイラ
-require_relative './ScriptCompiler.rb'
-
-#ベースコントロール
-require_relative './Control.rb'
-
-#ヘルパーコントロール
-require_relative './Layoutable.rb'
-require_relative './Drawable.rb'
-
-#コントロール群
-require_relative './Image.rb'
-require_relative './Layout.rb'
-require_relative './DrawableLayout.rb'
-require_relative './ClickableLayout.rb'
-require_relative './Sound.rb'
-require_relative './Char.rb'
-require_relative './Data.rb'
-
-#複合コントロール群
-require_relative './TextPage.rb'
-require_relative './TileMap.rb'
-require_relative './RuleShader.rb'
-
 module Tsukasa
 
 class Window < Layout

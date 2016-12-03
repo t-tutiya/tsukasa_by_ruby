@@ -1,6 +1,6 @@
 #! ruby -E utf-8
 
-require './system/Window.rb'
+require './system/Tsukasa.rb'
 require 'pp'
 
 ##############################################################################

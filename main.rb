@@ -96,14 +96,9 @@ tsukasa = Tsukasa::Window.new()do
       #TODO:requested_closeに依存してる
       _RESIZE_ width: 1024, height: 600
 
-      #プラグインファイルの配置フォルダと検索対象
-      _SET_ [:_ROOT_, :_SYSTEM_], _PLUGIN_PATH_: "./plugin/*.rb"
-
       #プラグインスクリプトファイルの読み込み
-      _GET_ :_PLUGIN_PATH_, control: :_SYSTEM_ do |_PLUGIN_PATH_:|
-        Dir.glob(_PLUGIN_PATH_).each do |path:|
-          _INCLUDE_ path
-        end
+      Dir.glob("./plugin/*.rb").each do |path:|
+        _INCLUDE_ path
       end
 
       #初期レイヤ（背景）

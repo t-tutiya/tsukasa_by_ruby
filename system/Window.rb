@@ -68,11 +68,6 @@ require_relative './RuleShader.rb'
 module Tsukasa
 
 class Window < Layout
-  attr_reader  :function_list
-
-  attr_reader  :script_compiler
-  attr_reader  :script_parser
-
   def mouse_x()
     return DXRuby::Input.mouse_x
   end

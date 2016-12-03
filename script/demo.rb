@@ -47,7 +47,7 @@ _DEFINE_ :TextSelect do |options|
       #マウスがクリックされたらフラグを立てる
       _CHECK_MOUSE_ :key_push do
         _SET_ [:_ROOT_, :_TEMP_], path: options[:path]
-        _EVAL_ "pp '[" + options[:text].to_s + "]が押されました'"
+        _EVAL_ "puts '[" + options[:text].to_s + "]が押されました'"
         _RETURN_
       end
       _END_FRAME_

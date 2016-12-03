@@ -33,7 +33,6 @@
 
 $dxruby_no_include = true #DXRubyがグローバル空間にincludeされるのを抑制する
 require 'dxruby'
-require 'pp'
 
 #キーコード定数／パッド定数／マウスボタン定数
 require_relative './Constant.rb'

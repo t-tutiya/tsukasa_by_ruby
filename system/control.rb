@@ -630,7 +630,7 @@ class Control #スクリプト制御
   #文字列をコマンドラインに出力する（デバッグ用）
   def _PUTS_(yield_stack, _ARGUMENT_:)
     #第１引数を出力する
-    pp _ARGUMENT_ if _ARGUMENT_
+    puts _ARGUMENT_ if _ARGUMENT_
   end
 end
 

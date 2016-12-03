@@ -1,6 +1,6 @@
 #! ruby -E utf-8
 
-require './system/Tsukasa.rb'
+require './system/Window.rb'
 
 ##############################################################################
 #設定

@@ -132,12 +132,6 @@ end
 #マウス／ゲームパッド管理
 ###############################################################################
 
-#マウスカーソルの可視設定
-_DEFINE_ :_MOUSE_ENABLE_ do |_ARGUMENT_:|
-  _SET_ [:_ROOT_, :_SYSTEM_], _CURSOR_VISIBLE_: _ARGUMENT_
-  DXRuby::Input.mouse_enable = _ARGUMENT_
-end
-
 #マウスホイールの値を設定／取得する
 _DEFINE_ :_MOUSE_WHEEL_POS_ do |_ARGUMENT_: false|
   DXRuby::Input.mouse_wheel_pos = _ARGUMENT_ if _ARGUMENT_

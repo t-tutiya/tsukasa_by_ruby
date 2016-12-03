@@ -95,10 +95,7 @@ class Window < Layout
     @script_compiler = ScriptCompiler.new
     @script_parser = {}
 
-    options[:command_list] = [[ :_INCLUDE_, 
-                            {_ARGUMENT_: "./default/bootstrap_script.rb"},nil]]
-
-    super(options, nil, self, self)
+    super(option, nil, self, self)
   end
 
   def close

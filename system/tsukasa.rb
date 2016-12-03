@@ -95,7 +95,7 @@ class Window < Layout
     @script_compiler = ScriptCompiler.new
     @script_parser = {}
 
-    super(option, nil, self, self)
+    super(options, nil, self, self)
   end
 
   def close

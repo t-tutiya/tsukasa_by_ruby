@@ -37,7 +37,7 @@ end
 DXRuby::Window.x = x
 DXRuby::Window.y = y
 
-tsukasa = Tsukasa::Window.new({:width => width,:height => height})do
+tsukasa = Tsukasa::Window.new()do
       #tksスクリプト用のパーサーを登録
       _SCRIPT_PARSER_ ext_name: :tks, path: "./TKSParser.rb",parser: :TKSParser
 
@@ -92,6 +92,9 @@ tsukasa = Tsukasa::Window.new({:width => width,:height => height})do
         inner_loop
       end
 
+      #TODO:requested_closeに依存してる
+      _RESIZE_ width: 1024, height: 600
+
       #プラグインファイルの配置フォルダと検索対象
       _SET_ [:_ROOT_, :_SYSTEM_], _PLUGIN_PATH_: "./plugin/*.rb"
 
@@ -139,9 +142,6 @@ tsukasa = Tsukasa::Window.new({:width => width,:height => height})do
       _WINDOW_STATUS_ caption: "Tsukasa Engine powered by DXRuby", #文字列
                       x: 0,
                       y: 0
-
-      #ここで実行されるのは変
-      #_RESIZE_ width: 512, height: 512
 
       #最初に実行するスクリプトファイルを呼びだす
       _INCLUDE_ "./first.rb"

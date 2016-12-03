@@ -40,14 +40,34 @@ class Control #公開インターフェイス
   attr_accessor :id
   attr_reader :child_index
   attr_accessor :child_update  #子コントロールの更新可否
+  attr_reader  :function_list #ユーザー定義関数
 
-  def initialize(options, yield_stack, root_control, parent_control, &block)
+  #rootコントロールになった場合のみ使用
+  attr_reader  :script_compiler #スクリプトコンパイラ
+  attr_reader  :script_parser #スクリプトパーサ
+
+  def initialize( options = {}, 
+                  yield_stack = nil, 
+                  root_control = nil, 
+                  parent_control = nil, 
+                  &block)
     @child_update = true
 
-    #rootコントロールの保存
-    @root_control = root_control
-    #親コントロールの保存
-    @parent_control = parent_control
+    if root_control
+      #rootコントロールの保存
+      @root_control = root_control
+      #親コントロールの保存
+      @parent_control = parent_control
+    else
+      #rootコントロールの保存
+      @root_control = self
+      #親コントロールの保存
+      @parent_control = self
+      #パーサー
+      @script_compiler = ScriptCompiler.new
+      @script_parser = {}
+    end
+
     # ユーザ定義関数
     @function_list = {} 
     #コントロールのID(省略時は自身のクラス名とする)

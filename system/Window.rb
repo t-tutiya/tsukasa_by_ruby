@@ -87,15 +87,14 @@ class Window < Layout
     DXRuby::Input.set_mouse_pos(DXRuby::Input.mouse_x, arg)
   end
 
-  def initialize(options)
+  def initialize( options = {}, 
+                  yield_stack = nil, 
+                  root_control = nil, 
+                  parent_control = nil)
     #アプリ終了フラグ
     @close = false
 
-    #パーサー
-    @script_compiler = ScriptCompiler.new
-    @script_parser = {}
-
-    super(options, nil, self, self)
+    super
   end
 
   def close

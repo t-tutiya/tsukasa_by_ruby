@@ -39,14 +39,14 @@ DXRuby::Window.x = x
 DXRuby::Window.y = y
 
 tsukasa = Tsukasa::Window.new()do
-  #tksスクリプト用のパーサーを登録
-  _SCRIPT_PARSER_ ext_name: :tks, path: "./TKSParser.rb",parser: :TKSParser
-
   #デフォルトのユーザー定義コマンド群の読み込み
   _INCLUDE_ "./default/default_script.rb"
 
   #標準ユーティリティー群の読み込み
   _INCLUDE_ "./default/utility_script.rb"
+
+  #TKSパーサーと関連するテキストレイヤのセットアップ
+  _INCLUDE_ "./default/text_layer_script.rb"
 
   #一時データストア
   _CREATE_ :Data, id: :_TEMP_
@@ -93,7 +93,7 @@ tsukasa = Tsukasa::Window.new()do
     z: 1000000 #描画順序
 
   #初期テキストウィンドウのidを格納
-  _SET_ [:_ROOT_, :_TEMP_], _DEFAULT_TEXT_PAGE_: :text0
+  _DEFINE_PROPERTY_ _DEFAULT_TEXT_PAGE_: [:_ROOT_, :text0]
 
   #タイトルバーの文字列を設定
   _WINDOW_STATUS_ caption: "Tsukasa Engine powered by DXRuby", #文字列

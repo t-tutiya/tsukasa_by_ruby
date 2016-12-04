@@ -84,14 +84,6 @@ _DEFINE_ :_SCREEN_MODES_ do
   _YIELD_ screen_modes: DXRuby::Window.get_screen_modes
 end
 
-#画面サイズの変更
-_DEFINE_ :_RESIZE_ do |options|
-  DXRuby::Window.resize(options[:width], options[:height])
-  _SEND_ [:_ROOT_, :requested_close] do
-    _SET_ width: options[:width], height: options[:height]
-  end
-end
-
 #フルスクリーンのオンオフ
 _DEFINE_ :_FULL_SCREEN_ do |_ARGUMENT_:|
   DXRuby::Window.full_screen = _ARGUMENT_ #bool

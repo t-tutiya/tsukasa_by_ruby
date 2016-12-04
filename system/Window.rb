@@ -102,6 +102,12 @@ class Window < Layout
       parse_block(nil, yield_stack, &block)
     end
   end
+
+  def _RESIZE_(yield_stack, width:, height:)
+    DXRuby::Window.resize(width, height)
+    self.width = width
+    self.height = height
+  end
 end
 
 end

@@ -115,8 +115,7 @@ class Window < ClickableLayout
 
   def _RESIZE_(yield_stack, width:, height:)
     DXRuby::Window.resize(width, height)
-    self.width = width
-    self.height = height
+    super
   end
 end
 

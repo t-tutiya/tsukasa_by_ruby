@@ -48,6 +48,14 @@ class Window < Layout
     DXRuby::Input.set_mouse_pos(DXRuby::Input.mouse_x, arg)
   end
 
+  def mouse_enable()
+    @mouse_enable
+  end
+  def mouse_enable=(arg)
+    @mouse_enable = arg
+    DXRuby::Input.mouse_enable = @mouse_enable
+  end
+
   def close
     @close = true
   end
@@ -62,6 +70,10 @@ class Window < Layout
                   parent_control = nil)
     #アプリ終了フラグ
     @close = false
+    #マウスカーソル可視フラグ
+    @mouse_enable = true
+    super
+  end
 
     super
   end
@@ -80,7 +92,7 @@ class Window < Layout
 
   #マウスカーソルの可視状態を設定する
   def _MOUSE_ENABLE_(yield_stack, _ARGUMENT_:)
-    DXRuby::Input.mouse_enable = _ARGUMENT_
+    self.mouse_enable = _ARGUMENT_
   end
 
   #ウィンドウの閉じるボタンが押されたかどうかの判定

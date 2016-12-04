@@ -28,6 +28,8 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+require_relative './Control.rb'
+
 module Tsukasa
 
 module Helper

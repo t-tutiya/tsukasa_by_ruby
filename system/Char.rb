@@ -28,6 +28,8 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+require_relative './Drawable.rb'
+
 module Tsukasa
 
 class Char < Helper::Drawable

@@ -3,6 +3,13 @@
 require 'pstore'
 require "tmpdir"
 
+#キーコード定数／パッド定数／マウスボタン定数
+require_relative './Constant.rb'
+#例外（TskasaError）
+require_relative './Exception.rb'
+#スクリプトコンパイラ
+require_relative './ScriptCompiler.rb'
+
 ###############################################################################
 #TSUKASA for DXRuby ver2.0(2016/8/28)
 #メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby

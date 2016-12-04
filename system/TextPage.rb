@@ -32,6 +32,8 @@
 #汎用テキストマネージャクラス
 ###############################################################################
 
+require_relative './Layout.rb'
+
 module Tsukasa
 
 class TextPage < Layout

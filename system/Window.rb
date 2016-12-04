@@ -34,6 +34,8 @@
 module Tsukasa
 
 class Window < ClickableLayout
+  attr_accessor :auto_close #「閉じる」ボタンが押下された際に自動的に終了する
+
   def mouse_x()
     return DXRuby::Input.mouse_x
   end
@@ -64,12 +66,14 @@ class Window < ClickableLayout
     @close = false
     #マウスカーソル可視フラグ
     @mouse_enable = true
+    #「閉じる」ボタンが押下された場合自動終了する
+    @auto_close = true
     super
   end
 
   def update(mouse_pos_x, mouse_pos_y, index)
     #「閉じる」ボタンが押下された
-    if DXRuby::Input.requested_close?
+    if DXRuby::Input.requested_close? and @auto_close
       @root_control.exit = true
     end
 

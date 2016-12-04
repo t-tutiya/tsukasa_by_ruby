@@ -652,8 +652,11 @@ class Control #スクリプト制御
 
   #文字列をコマンドラインに出力する（デバッグ用）
   def _PUTS_(yield_stack, _ARGUMENT_: nil, **options)
-    puts "_ARGUMENT_:" + _ARGUMENT_.to_s
-    puts "options:" + options.to_s
+    if _ARGUMENT_
+      puts '"' + _ARGUMENT_.to_s + '"'
+    else
+      puts options.to_s
+    end
   end
 end
 

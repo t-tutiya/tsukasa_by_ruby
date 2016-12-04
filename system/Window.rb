@@ -33,7 +33,7 @@
 
 module Tsukasa
 
-class Window < Layout
+class Window < ClickableLayout
   def mouse_x()
     return DXRuby::Input.mouse_x
   end
@@ -75,7 +75,21 @@ class Window < Layout
     super
   end
 
+  def update(mouse_pos_x, mouse_pos_y, index)
+    #「閉じる」ボタンが押下された
+    if DXRuby::Input.requested_close?
+      self.close()
+    end
+
     super
+
+    #カーソルが画面外に出た時／戻った時にカーソル可視状態を復帰する
+    #※ウィンドウ枠に出た時に標準カーソルを表示させるために必要
+    if @on_inner_control
+      DXRuby::Input.mouse_enable = false unless @mouse_enable
+    else
+      DXRuby::Input.mouse_enable = true unless @mouse_enable
+    end
   end
 
   def _SCRIPT_PARSER_(yield_stack, path:, ext_name:, parser:)

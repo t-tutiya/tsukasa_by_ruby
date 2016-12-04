@@ -55,39 +55,6 @@ tsukasa = Tsukasa::Window.new()do
   #システムデータストア
   _CREATE_ :Data, id: :_SYSTEM_
 
-  #ウィンドウの閉じるボタンの押下チェック
-  #ウィンドウ枠外にマウスカーソルが出た場合のアイコン表示管理
-  _CREATE_ :ClickableLayout, id: :requested_close,
-    width: DXRuby::Window.width, height: DXRuby::Window.height do
-    _DEFINE_ :inner_loop do
-      _SEND_ [:_ROOT_], interrupt: true do
-        #ウィンドウの閉じるボタンが押された場合に呼びだされる。
-        _CHECK_REQUESTED_CLOSE_ do
-          _EXIT_ #アプリを終了する
-          _RETURN_
-        end
-      end
-      
-      _GET_ :_CURSOR_VISIBLE_, control: [:_ROOT_, :_SYSTEM_] do |options|
-        _CHECK_MOUSE_ :cursor_off do
-          #カーソルを表示する
-          DXRuby::Input.mouse_enable = true unless options[:_CURSOR_VISIBLE_]
-        end
-
-        _CHECK_MOUSE_ :cursor_on do
-          #カーソルを不可視に戻す
-          DXRuby::Input.mouse_enable = false unless options[:_CURSOR_VISIBLE_]
-        end
-      end
-      _END_FRAME_
-      _RETURN_ do
-        inner_loop
-      end
-    end
-    inner_loop
-  end
-
-  #TODO:requested_closeに依存してる
   _RESIZE_ width: 1024, height: 600
 
   #プラグインスクリプトファイルの読み込み

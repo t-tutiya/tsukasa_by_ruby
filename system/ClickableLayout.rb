@@ -40,15 +40,11 @@ class ClickableLayout < Layout
   attr_accessor  :colorkey_border
 
   def width=(arg)
-    unless @collision_shape
-      @collision_sprite.collision = [ 0, 0, arg, @height]
-    end
+    @collision_sprite.collision = [ 0, 0, arg, @height]
     super
   end
   def height=(arg)
-    unless @collision_shape
-      @collision_sprite.collision = [ 0, 0, @width, arg]
-    end
+    @collision_sprite.collision = [ 0, 0, @width, arg]
     super
   end
 

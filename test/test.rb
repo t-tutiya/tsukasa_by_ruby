@@ -8,9 +8,10 @@ require '../system/Tsukasa.rb'
 MiniTest.autorun
 
 class TC_Foo < Minitest::Test
+
+  #通常ループ
   def test_foo
     tsukasa = Tsukasa::Control.new() do
-      _PUTS_ "test_foo"
       _EXIT_
     end
 
@@ -19,6 +20,23 @@ class TC_Foo < Minitest::Test
       tsukasa.render(0, 0, DXRuby::Window)
       break if tsukasa.exit
     end
+    
+    reslut = [[:_SET_,
+                {:id=>:"Tsukasa::Control",
+                 :child_update=>true,
+                 :script_parser=>{},
+                 :exit=>true},
+                {}]]
+    assert_equal(tsukasa.serialize(), reslut, "NO")
+  end
+
+  #実行のみ
+  def test_bar
+    tsukasa = Tsukasa::Control.new() do
+      _EXIT_
+    end
+
+    tsukasa.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
     
     reslut = [[:_SET_,
                 {:id=>:"Tsukasa::Control",

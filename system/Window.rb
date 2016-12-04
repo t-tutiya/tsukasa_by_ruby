@@ -77,6 +77,12 @@ class Window < Layout
   def _LOAD_NATIVE_(yield_stack, _ARGUMENT_:)
     require _ARGUMENT_
   end
+
+  #マウスカーソルの可視状態を設定する
+  def _MOUSE_ENABLE_(yield_stack, _ARGUMENT_:)
+    DXRuby::Input.mouse_enable = _ARGUMENT_
+  end
+
 end
 
 end

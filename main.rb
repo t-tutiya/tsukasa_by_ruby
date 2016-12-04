@@ -55,14 +55,6 @@ tsukasa = Tsukasa::Window.new()do
       #システムデータストア
       _CREATE_ :Data, id: :_SYSTEM_
 
-      #カーソル可視設定
-      _SET_ [:_ROOT_, :_SYSTEM_], _CURSOR_VISIBLE_: true
-      #マウスカーソルの可視設定
-      _DEFINE_ :_MOUSE_ENABLE_ do |_ARGUMENT_:|
-        _SET_ [:_ROOT_, :_SYSTEM_], _CURSOR_VISIBLE_: _ARGUMENT_
-        DXRuby::Input.mouse_enable = _ARGUMENT_
-      end
-
       #ウィンドウの閉じるボタンの押下チェック
       #ウィンドウ枠外にマウスカーソルが出た場合のアイコン表示管理
       _CREATE_ :ClickableLayout, id: :requested_close,

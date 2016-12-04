@@ -83,6 +83,13 @@ class Window < Layout
     DXRuby::Input.mouse_enable = _ARGUMENT_
   end
 
+  #ウィンドウの閉じるボタンが押されたかどうかの判定
+  def _CHECK_REQUESTED_CLOSE_(yield_stack, options = nil, &block)
+    #「閉じる」ボタンが押下された
+    if DXRuby::Input.requested_close?
+      parse_block(nil, yield_stack, &block)
+    end
+  end
 end
 
 end

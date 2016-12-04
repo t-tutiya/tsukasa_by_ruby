@@ -97,13 +97,6 @@ _DEFINE_ :_FULL_SCREEN_ do |_ARGUMENT_:|
   DXRuby::Window.full_screen = _ARGUMENT_ #bool
 end
 
-#ウィンドウの閉じるボタンが押されたかどうかの判定
-_DEFINE_ :_CHECK_REQUESTED_CLOSE_ do
-  if DXRuby::Input.requested_close?
-    _YIELD_
-  end
-end
-
 #スクリーンショットキャプチャ
 _DEFINE_ :_CAPTURE_SS_ do |path, options|
   DXRuby::Window.get_screen_shot(path, options[:format] || DXRuby::FORMAT_PNG)

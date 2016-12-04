@@ -60,10 +60,12 @@ tsukasa = Tsukasa::Window.new()do
       _CREATE_ :ClickableLayout, id: :requested_close,
         width: DXRuby::Window.width, height: DXRuby::Window.height do
         _DEFINE_ :inner_loop do
-          #ウィンドウの閉じるボタンが押された場合に呼びだされる。
-          _CHECK_REQUESTED_CLOSE_ do
-            _EXIT_ #アプリを終了する
-            _RETURN_
+          _SEND_ [:_ROOT_], interrupt: true do
+            #ウィンドウの閉じるボタンが押された場合に呼びだされる。
+            _CHECK_REQUESTED_CLOSE_ do
+              _EXIT_ #アプリを終了する
+              _RETURN_
+            end
           end
           
           _GET_ :_CURSOR_VISIBLE_, control: [:_ROOT_, :_SYSTEM_] do |options|

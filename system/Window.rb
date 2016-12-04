@@ -100,11 +100,6 @@ class Window < ClickableLayout
     require _ARGUMENT_
   end
 
-  #マウスカーソルの可視状態を設定する
-  def _MOUSE_ENABLE_(yield_stack, _ARGUMENT_:)
-    self.mouse_enable = _ARGUMENT_
-  end
-
   #ウィンドウの閉じるボタンが押されたかどうかの判定
   def _CHECK_REQUESTED_CLOSE_(yield_stack, options = nil, &block)
     #「閉じる」ボタンが押下された

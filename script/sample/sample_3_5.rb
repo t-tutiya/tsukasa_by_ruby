@@ -47,7 +47,7 @@ _CREATE_ :Layout , id: :cursor do
 end
 
 end
-_MOUSE_ENABLE_ false
+_SET_ mouse_enable: false
 
 _END_FRAME_
 
@@ -90,5 +90,5 @@ _LOOP_ do
 end
 
 #カーソル可視設定
-_MOUSE_ENABLE_ true
+_SET_ mouse_enable: true
 

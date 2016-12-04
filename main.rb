@@ -39,102 +39,102 @@ DXRuby::Window.x = x
 DXRuby::Window.y = y
 
 tsukasa = Tsukasa::Window.new()do
-      #tksスクリプト用のパーサーを登録
-      _SCRIPT_PARSER_ ext_name: :tks, path: "./TKSParser.rb",parser: :TKSParser
+  #tksスクリプト用のパーサーを登録
+  _SCRIPT_PARSER_ ext_name: :tks, path: "./TKSParser.rb",parser: :TKSParser
 
-      #デフォルトのユーザー定義コマンド群の読み込み
-      _INCLUDE_ "./default/default_script.rb"
+  #デフォルトのユーザー定義コマンド群の読み込み
+  _INCLUDE_ "./default/default_script.rb"
 
-      #標準ユーティリティー群の読み込み
-      _INCLUDE_ "./default/utility_script.rb"
+  #標準ユーティリティー群の読み込み
+  _INCLUDE_ "./default/utility_script.rb"
 
-      #一時データストア
-      _CREATE_ :Data, id: :_TEMP_
-      #ローカルデータストア
-      _CREATE_ :Data, id: :_LOCAL_
-      #システムデータストア
-      _CREATE_ :Data, id: :_SYSTEM_
+  #一時データストア
+  _CREATE_ :Data, id: :_TEMP_
+  #ローカルデータストア
+  _CREATE_ :Data, id: :_LOCAL_
+  #システムデータストア
+  _CREATE_ :Data, id: :_SYSTEM_
 
-      #ウィンドウの閉じるボタンの押下チェック
-      #ウィンドウ枠外にマウスカーソルが出た場合のアイコン表示管理
-      _CREATE_ :ClickableLayout, id: :requested_close,
-        width: DXRuby::Window.width, height: DXRuby::Window.height do
-        _DEFINE_ :inner_loop do
-          _SEND_ [:_ROOT_], interrupt: true do
-            #ウィンドウの閉じるボタンが押された場合に呼びだされる。
-            _CHECK_REQUESTED_CLOSE_ do
-              _EXIT_ #アプリを終了する
-              _RETURN_
-            end
-          end
-          
-          _GET_ :_CURSOR_VISIBLE_, control: [:_ROOT_, :_SYSTEM_] do |options|
-            _CHECK_MOUSE_ :cursor_off do
-              #カーソルを表示する
-              DXRuby::Input.mouse_enable = true unless options[:_CURSOR_VISIBLE_]
-            end
-
-            _CHECK_MOUSE_ :cursor_on do
-              #カーソルを不可視に戻す
-              DXRuby::Input.mouse_enable = false unless options[:_CURSOR_VISIBLE_]
-            end
-          end
-          _END_FRAME_
-          _RETURN_ do
-            inner_loop
-          end
+  #ウィンドウの閉じるボタンの押下チェック
+  #ウィンドウ枠外にマウスカーソルが出た場合のアイコン表示管理
+  _CREATE_ :ClickableLayout, id: :requested_close,
+    width: DXRuby::Window.width, height: DXRuby::Window.height do
+    _DEFINE_ :inner_loop do
+      _SEND_ [:_ROOT_], interrupt: true do
+        #ウィンドウの閉じるボタンが押された場合に呼びだされる。
+        _CHECK_REQUESTED_CLOSE_ do
+          _EXIT_ #アプリを終了する
+          _RETURN_
         end
+      end
+      
+      _GET_ :_CURSOR_VISIBLE_, control: [:_ROOT_, :_SYSTEM_] do |options|
+        _CHECK_MOUSE_ :cursor_off do
+          #カーソルを表示する
+          DXRuby::Input.mouse_enable = true unless options[:_CURSOR_VISIBLE_]
+        end
+
+        _CHECK_MOUSE_ :cursor_on do
+          #カーソルを不可視に戻す
+          DXRuby::Input.mouse_enable = false unless options[:_CURSOR_VISIBLE_]
+        end
+      end
+      _END_FRAME_
+      _RETURN_ do
         inner_loop
       end
+    end
+    inner_loop
+  end
 
-      #TODO:requested_closeに依存してる
-      _RESIZE_ width: 1024, height: 600
+  #TODO:requested_closeに依存してる
+  _RESIZE_ width: 1024, height: 600
 
-      #プラグインスクリプトファイルの読み込み
-      Dir.glob("./plugin/*.rb").each do |path:|
-        _INCLUDE_ path
-      end
+  #プラグインスクリプトファイルの読み込み
+  Dir.glob("./plugin/*.rb").each do |path:|
+    _INCLUDE_ path
+  end
 
-      #初期レイヤ（背景）
-      _CREATE_ :Image,
-        z: 0, #描画順序
-        id: :base
+  #初期レイヤ（背景）
+  _CREATE_ :Image,
+    z: 0, #描画順序
+    id: :base
 
-      #初期レイヤ０
-      _CREATE_ :Image,
-        z: 1000, #描画順序
-        id: :img0
+  #初期レイヤ０
+  _CREATE_ :Image,
+    z: 1000, #描画順序
+    id: :img0
 
-      #初期レイヤ１
-      _CREATE_ :Image,
-        z: 2000, #描画順序
-        id: :img1
+  #初期レイヤ１
+  _CREATE_ :Image,
+    z: 2000, #描画順序
+    id: :img1
 
-      #初期レイヤ２
-      _CREATE_ :Image,
-        z: 3000, #描画順序
-        id: :img2
+  #初期レイヤ２
+  _CREATE_ :Image,
+    z: 3000, #描画順序
+    id: :img2
 
-      #初期テキストウィンドウ
-      _TEXT_WINDOW_ :text0, 
-        x: 96,
-        y: 256 + 164,
-        width: 1024,
-        height: 192,
-        size: 32, 
-        font_name: "ＭＳＰ ゴシック",
-        z: 1000000 #描画順序
+  #初期テキストウィンドウ
+  _TEXT_WINDOW_ :text0, 
+    x: 96,
+    y: 256 + 164,
+    width: 1024,
+    height: 192,
+    size: 32, 
+    font_name: "ＭＳＰ ゴシック",
+    z: 1000000 #描画順序
 
-      #初期テキストウィンドウのidを格納
-      _SET_ [:_ROOT_, :_TEMP_], _DEFAULT_TEXT_PAGE_: :text0
+  #初期テキストウィンドウのidを格納
+  _SET_ [:_ROOT_, :_TEMP_], _DEFAULT_TEXT_PAGE_: :text0
 
-      #タイトルバーの文字列を設定
-      _WINDOW_STATUS_ caption: "Tsukasa Engine powered by DXRuby", #文字列
-                      x: 0,
-                      y: 0
+  #タイトルバーの文字列を設定
+  _WINDOW_STATUS_ caption: "Tsukasa Engine powered by DXRuby", #文字列
+                  x: 0,
+                  y: 0
 
-      #最初に実行するスクリプトファイルを呼びだす
-      _INCLUDE_ "./first.rb"
+  #最初に実行するスクリプトファイルを呼びだす
+  _INCLUDE_ "./first.rb"
 end
 
 #ゲームループ

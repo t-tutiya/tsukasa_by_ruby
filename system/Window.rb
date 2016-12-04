@@ -48,6 +48,14 @@ class Window < Layout
     DXRuby::Input.set_mouse_pos(DXRuby::Input.mouse_x, arg)
   end
 
+  def close
+    @close = true
+  end
+
+  def close?
+    @close
+  end
+
   def initialize( options = {}, 
                   yield_stack = nil, 
                   root_control = nil, 
@@ -56,14 +64,6 @@ class Window < Layout
     @close = false
 
     super
-  end
-
-  def close
-    @close = true
-  end
-
-  def close?
-    @close
   end
 
   def _SCRIPT_PARSER_(yield_stack, path:, ext_name:, parser:)

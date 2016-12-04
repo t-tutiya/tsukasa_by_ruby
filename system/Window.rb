@@ -88,18 +88,6 @@ class Window < ClickableLayout
     end
   end
 
-  def _SCRIPT_PARSER_(yield_stack, path:, ext_name:, parser:)
-    require_relative path
-    @script_parser[ext_name] = [
-      Module.const_get(parser).new,
-      Module.const_get(parser)::Replacer.new]
-  end
-
-  #ネイティブコードを読み込む
-  def _LOAD_NATIVE_(yield_stack, _ARGUMENT_:)
-    require _ARGUMENT_
-  end
-
   #ウィンドウの閉じるボタンが押されたかどうかの判定
   def _CHECK_REQUESTED_CLOSE_(yield_stack, options = nil, &block)
     #「閉じる」ボタンが押下された

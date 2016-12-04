@@ -44,7 +44,7 @@ class Control #公開インターフェイス
 
   #rootコントロールになった場合のみ使用
   attr_reader :script_compiler #スクリプトコンパイラ
-  attr_reader :script_parser #スクリプトパーサ
+  attr_accessor :script_parser #スクリプトパーサ
   attr_accessor :exit #終了
 
   def initialize( options = {}, 
@@ -548,6 +548,19 @@ class Control #ユーザー定義関数操作
 end
 
 class Control #スクリプト制御
+  #カスタムパーサーの登録
+  def _SCRIPT_PARSER_(yield_stack, path:, ext_name:, parser:)
+    require_relative path
+    @root_control.script_parser[ext_name] = [
+      Module.const_get(parser).new,
+      Module.const_get(parser)::Replacer.new]
+  end
+
+  #ネイティブコードを読み込む
+  def _LOAD_NATIVE_(yield_stack, _ARGUMENT_:)
+    require _ARGUMENT_
+  end
+
   #子コントロールを検索してコマンドブロックを送信する
   def _SEND_(yield_stack, _ARGUMENT_: nil, interrupt: nil, **options, &block)
     #コントロールを検索する

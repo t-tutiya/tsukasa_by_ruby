@@ -56,14 +56,6 @@ class Window < ClickableLayout
     DXRuby::Input.mouse_enable = @mouse_enable
   end
 
-  def close
-    @close = true
-  end
-
-  def close?
-    @close
-  end
-
   def initialize( options = {}, 
                   yield_stack = nil, 
                   root_control = nil, 
@@ -78,7 +70,7 @@ class Window < ClickableLayout
   def update(mouse_pos_x, mouse_pos_y, index)
     #「閉じる」ボタンが押下された
     if DXRuby::Input.requested_close?
-      self.close()
+      @root_control.exit = true
     end
 
     super

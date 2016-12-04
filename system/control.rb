@@ -43,8 +43,9 @@ class Control #公開インターフェイス
   attr_reader  :function_list #ユーザー定義関数
 
   #rootコントロールになった場合のみ使用
-  attr_reader  :script_compiler #スクリプトコンパイラ
-  attr_reader  :script_parser #スクリプトパーサ
+  attr_reader :script_compiler #スクリプトコンパイラ
+  attr_reader :script_parser #スクリプトパーサ
+  attr_accessor :exit #終了
 
   def initialize( options = {}, 
                   yield_stack = nil, 
@@ -58,6 +59,8 @@ class Control #公開インターフェイス
       @root_control = root_control
       #親コントロールの保存
       @parent_control = parent_control
+      #終了フラグを初期化
+      @exit = false
     else
       #rootコントロールの保存
       @root_control = self
@@ -619,7 +622,7 @@ class Control #スクリプト制御
 
   #アプリを終了する
   def _EXIT_(yield_stack, options)
-    @root_control.close
+    @root_control.exit = true
   end
 
   #文字列を評価する（デバッグ用）

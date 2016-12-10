@@ -45,6 +45,7 @@ require_relative './ClickableLayout.rb'
 require_relative './Sound.rb'
 require_relative './Char.rb'
 require_relative './Data.rb'
+require_relative './Input.rb'
 
 #ウィンドウ
 require_relative './Window.rb'

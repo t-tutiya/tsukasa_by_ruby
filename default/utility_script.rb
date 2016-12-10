@@ -48,10 +48,10 @@ end
 _DEFINE_ :_WAIT_ do |options|
   _LOOP_ options[:count] do
     _CHECK_ options do
-      _RETURN_
+      _BREAK_
     end
     _CHECK_INPUT_ options[:input] do
-      _RETURN_
+      _BREAK_
     end
     _CHECK_BLOCK_ do
       _YIELD_

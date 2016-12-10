@@ -55,6 +55,14 @@ tsukasa = Tsukasa::Window.new()do
   #システムデータストア
   _CREATE_ :Data, id: :_SYSTEM_
 
+  _CREATE_ :Input, id: :_INPUT_
+
+  _DEFINE_ :_CHECK_INPUT_  do |options|
+    _CHECK_ [:_ROOT_, :_INPUT_], equal: options do
+      _YIELD_
+    end
+  end
+
   _RESIZE_ width: 1024, height: 600
 
   #プラグインスクリプトファイルの読み込み

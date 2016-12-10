@@ -228,6 +228,21 @@ class Control #公開インターフェイス
   end
 end
 
+class Control #判定系
+  def check_eaual(property, value)
+    return send(property) == value
+  end
+  def check_not_eaual(property, value)
+    return send(property) != value
+  end
+  def check_under(property, value)
+    return send(property) < value
+  end
+  def check_over(property, value)
+    return send(property) > value
+  end
+end
+
 class Control #内部メソッド
 
   #############################################################################
@@ -375,16 +390,16 @@ class Control #制御構文
       case condition
       #指定されたデータと値がイコールの場合
       when :equal
-        value.any?{|key, val| control.send(key) == val}
+        value.any?{|key, val| control.check_eaual(key, val)}
       #指定されたデータと値がイコールでない場合
       when :not_equal
-        value.any?{|key, val| control.send(key) != val}
+        value.any?{|key, val| control.check_not_eaual(key, val)}
       #指定されたデータと値が未満の場合
       when :under
-        value.any?{|key, val| control.send(key) < val}
+        value.any?{|key, val| control.check_under(key, val)}
       #指定されたデータと値がより大きい場合
       when :over
-        value.any?{|key, val| control.send(key) > val}
+        value.any?{|key, val| control.check_over(key, val)}
       else
         false
       end
@@ -397,66 +412,6 @@ class Control #制御構文
     end
   end
 
-  def _CHECK_INPUT_(yield_stack, _ARGUMENT_: nil, **options, &block)
-    # 全ての条件を判定する
-    result = options.any? do |condition, value|
-      case condition
-      #キーが押下された
-      when :key_push
-        Array(value).any?{|key_code| DXRuby::Input.key_push?(key_code)}
-      #キーが押下されていない
-      when :not_key_push
-        !(Array(value).any?{|key_code| DXRuby::Input.key_push?(key_code)})
-      #キーが継続押下されている
-      when :key_down
-        Array(value).any?{|key_code| DXRuby::Input.key_down?(key_code)}
-      #キーが継続押下されていない
-      when :not_key_down
-        !(Array(value).any?{|key_code| DXRuby::Input.key_down?(key_code)})
-      #キーが解除された
-      when :key_up
-        Array(value).any?{|key_code| DXRuby::Input.key_release?(key_code)}
-      #キーが解除されていない
-      when :not_key_up
-        !(Array(value).any?{|key_code|DXRuby::Input.key_release?(key_code)})
-      #パッドボタンが押された
-      when :pad_down
-        Array(value).any?{|pad_code| DXRuby::Input.pad_down?(pad_code, _ARGUMENT_)}
-      #パッドボタンが継続押下されている
-      when :pad_push
-        Array(value).any?{|pad_code| DXRuby::Input.pad_push?(pad_code, _ARGUMENT_)}
-      #パッドボタンが解除された
-      when :pad_release
-        Array(value).any?{|pad_code| DXRuby::Input.pad_release?(pad_code, _ARGUMENT_)}
-      #マウス処理系
-      when :mouse
-        Array(value).any? do |key|
-          case key
-          when :push
-            DXRuby::Input.mouse_push?( M_LBUTTON )
-          when :down
-            DXRuby::Input.mouse_down?( M_LBUTTON )
-          when :up
-            DXRuby::Input.mouse_release?( M_LBUTTON )
-          when :right_down
-            DXRuby::Input.mouse_down?( M_RBUTTON )
-          when :right_push
-            DXRuby::Input.mouse_push?( M_RBUTTON )
-          when :right_up
-            DXRuby::Input.mouse_release?( M_RBUTTON )
-          end
-        end
-      else
-        false
-      end
-    end
-
-    #チェック条件を満たす場合
-    if result
-      #ブロックを実行する
-      parse_block(nil, yield_stack, &block)
-    end
-  end
 
   def _CHECK_BLOCK_(yield_stack, options, &block)
     unless yield_stack[-1] == nil

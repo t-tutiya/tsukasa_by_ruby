@@ -9,16 +9,19 @@ MiniTest.autorun
 
 class TC_Foo < Minitest::Test
 
-  #通常ループ
+  #コントロールのダンプとの比較によるテスト
   def test_1
-    tsukasa = Tsukasa::Control.new() do
+    #コントロールの生成
+    control = Tsukasa::Control.new() do
+      #メインループを終了する
       _EXIT_
     end
 
+    #メインループ
     DXRuby::Window.loop() do
-      tsukasa.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
-      tsukasa.render(0, 0, DXRuby::Window)
-      break if tsukasa.exit
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0) #処理
+      control.render(0, 0, DXRuby::Window) #描画
+      break if control.exit #メインループ終了判定
     end
     
     reslut = [[:_SET_,
@@ -28,75 +31,119 @@ class TC_Foo < Minitest::Test
                  :exit=>true},
                 {}]]
 
-    assert_equal(tsukasa.serialize(), reslut, "NO")
+    #テスト
+    assert_equal(control.serialize(), reslut)
   end
 
-  #通常ループ
-  def test_1_2
-    tsukasa = Tsukasa::Control.new() do
-      _DEFINE_PROPERTY_ test: 3
-      _MOVE_ 30, test:[40,400]
+  #プロパティとの比較によるテスト
+  def test_2
+    #コントロールの生成
+    control = Tsukasa::Control.new() do
+      #動的プロパティの追加
+      _DEFINE_PROPERTY_ test: 0
+      #５０フレームかけてtestの値を０から１００まで遷移させる
+      _MOVE_ 50, test:[0,100]
+      #メインループを終了する
       _EXIT_
     end
 
+    #メインループ
     DXRuby::Window.loop() do
-      tsukasa.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
-      tsukasa.render(0, 0, DXRuby::Window)
-      break if tsukasa.exit
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0) #処理
+      control.render(0, 0, DXRuby::Window) #描画
+      break if control.exit #メインループ終了判定
     end
-    
-    reslut = [[:_SET_,
-                {:id=>:"Tsukasa::Control",
-                 :test=>400,
-                 :child_update=>true,
-                 :script_parser=>{},
-                 :exit=>true},
-                {}]]
-                 
-    assert_equal(tsukasa.serialize()[0][1][:test], 400, "NO")
+
+    #テスト
+    assert_equal(control.test, 100)
   end
 
-  #通常ループ
-  def test_1_3
-    tsukasa = Tsukasa::Control.new() do
+  #メインループを回さないテスト
+  def test_3
+    #コントロールの生成
+    control = Tsukasa::Control.new() do
+      #動的プロパティの追加
       _DEFINE_PROPERTY_ test: 3
+      #５０フレームかけてtestの値を０から１００まで遷移させる
       _MOVE_ 50, test:[0,100]
-      _EXIT_
-    end
-
-    DXRuby::Window.loop() do
-      tsukasa.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
-      tsukasa.render(0, 0, DXRuby::Window)
-      break if tsukasa.exit
-    end
-    
-    assert_equal(tsukasa.test, 100, "NO")
-  end
-
-  #通常ループ
-  def test_1_4
-    tsukasa = Tsukasa::Control.new() do
-      _DEFINE_PROPERTY_ test: 3
-      _MOVE_ 50, test:[0,100]
+      #メインループを終了する
       _EXIT_
     end
 
     #２５フレーム回したと想定
     25.times do
-      tsukasa.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
     end
 
-    assert_equal(tsukasa.test, 50, "NO")
+    #テスト
+    assert_equal(control.test, 50)
+  end
+
+  #複数フレームにわたる値の変化を比較するテスト
+  def test_4
+    #コントロールの生成
+    control = Tsukasa::Control.new() do
+      #動的プロパティの追加
+      _DEFINE_PROPERTY_ test: 0
+      #１０フレームかけてin_quadイージングでtestの値を０から１００まで遷移させる
+      _MOVE_ [10, :in_quad], test:[0,100]
+      #メインループを終了する
+      _EXIT_
+    end
+
+    result = []
+
+    #１０フレーム回したと想定
+    10.times do
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+      result.push(control.test)
+    end
+
+    #テスト
+    #第１フレが０から始まってないのがあってるのかどうかよくわからぬ。
+    assert_equal(result, [1, 4, 9, 16, 25, 36, 48, 64, 81, 100])
+  end
+
+  #ゲーム側で判定タイミングのトリガーを用意するテスト
+  def test_5
+    puts "zキーを押してください"
+    #コントロールの生成
+    control = Tsukasa::Control.new() do
+      #動的プロパティの追加
+      _DEFINE_PROPERTY_ test: nil
+      #無限ループ
+      _LOOP_ do
+        #zキーが押された場合
+        _CHECK_INPUT_ key_down: Tsukasa::K_Z do
+          #プロパティに値を設定
+          _SET_ test: Tsukasa::K_Z
+          #メインループを終了する
+          _EXIT_
+        end
+        #１フレ送る
+        _END_FRAME_
+      end
+    end
+
+    #メインループ
+    DXRuby::Window.loop() do
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0) #処理
+      control.render(0, 0, DXRuby::Window) #描画
+      break if control.exit #メインループ終了判定
+    end
+
+    #テスト
+    assert_equal(control.test, Tsukasa::K_Z)
   end
 
 
   #実行のみ
-  def test_2
-    tsukasa = Tsukasa::Control.new() do
+  def test_b_2
+    control = Tsukasa::Control.new() do
       _EXIT_
     end
 
-    tsukasa.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+    control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
     
     reslut = [[:_SET_,
                 {:id=>:"Tsukasa::Control",
@@ -104,17 +151,17 @@ class TC_Foo < Minitest::Test
                  :script_parser=>{},
                  :exit=>true},
                 {}]]
-    assert_equal(tsukasa.serialize(), reslut, "NO")
+    assert_equal(control.serialize(), reslut)
   end
 
   #実行のみ
-  def test_3
-    tsukasa = Tsukasa::Control.new() do
+  def test_b_3
+    control = Tsukasa::Control.new() do
       _DEFINE_PROPERTY_ test: 3
       _EXIT_
     end
 
-    tsukasa.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+    control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
     
     reslut = [[:_SET_,
                 {:id=>:"Tsukasa::Control",
@@ -123,17 +170,17 @@ class TC_Foo < Minitest::Test
                  :script_parser=>{},
                  :exit=>true},
                 {}]]
-    assert_equal(tsukasa.serialize(), reslut, "NO")
+    assert_equal(control.serialize(), reslut)
   end
 
   #実行のみ
-  def test_4
-    tsukasa = Tsukasa::Control.new() do
+  def test_b_4
+    control = Tsukasa::Control.new() do
       _CREATE_:Image, id: :test_image
       _EXIT_
     end
 
-    tsukasa.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+    control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
     
     reslut = [[:_SET_, 
               { :path=>nil, 
@@ -164,6 +211,23 @@ class TC_Foo < Minitest::Test
                 :script_parser=>nil, 
                 :exit=>false}, 
               {}]]
-    assert_equal(tsukasa.find_control(:test_image).serialize(), reslut, "NO")
+    assert_equal(control.find_control(:test_image).serialize(), reslut)
+  end
+
+  #通常ループ
+  def test_b_5
+    control = Tsukasa::Control.new() do
+      _DEFINE_PROPERTY_ test: 3
+      _MOVE_ 30, test:[40,400]
+      _EXIT_
+    end
+
+    DXRuby::Window.loop() do
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+      control.render(0, 0, DXRuby::Window)
+      break if control.exit
+    end
+    
+    assert_equal(control.serialize()[0][1][:test], 400, "NO")
   end
 end

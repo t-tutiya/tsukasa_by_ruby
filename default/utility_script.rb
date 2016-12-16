@@ -50,8 +50,10 @@ _DEFINE_ :_WAIT_ do |options|
     _CHECK_ options do
       _BREAK_
     end
-    _CHECK_INPUT_ options[:input] do
-      _BREAK_
+    if options[:input]
+      _CHECK_INPUT_ options[:input] do
+        _BREAK_
+      end
     end
     _CHECK_BLOCK_ do
       _YIELD_

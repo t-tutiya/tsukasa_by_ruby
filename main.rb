@@ -54,7 +54,7 @@ tsukasa = Tsukasa::Window.new()do
   _CREATE_ :Data, id: :_LOCAL_
   #システムデータストア
   _CREATE_ :Data, id: :_SYSTEM_
-
+  #キー入力管理コントロール
   _CREATE_ :Input, id: :_INPUT_
 
   _DEFINE_ :_CHECK_INPUT_  do |options|

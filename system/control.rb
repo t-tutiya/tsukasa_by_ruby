@@ -470,7 +470,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      parse_block(nil, yield_stack, &block)
+      parse_block(nil, yield_stack.pop, &block)
     end
   end
 

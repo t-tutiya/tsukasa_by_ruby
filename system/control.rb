@@ -274,7 +274,7 @@ class Control #内部メソッド
     function_block =  @function_list[command_name] || 
                       @root_control.function_list[command_name]
 
-    #ユーザー定義コマンドが存在しない場合、コマンド送信文であるとみなす
+    #ユーザー定義コマンドが存在しない場合、例外送出する
     unless function_block
       raise(Tsukasa::TsukasaError, "コマンド[#{command_name}]はコントロールに登録されていません")
     end
@@ -470,7 +470,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      parse_block(nil, yield_stack.pop, &block)
+      parse_block(nil, yield_stack, &block)
     end
   end
 
@@ -483,7 +483,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      parse_block(nil, yield_stack, &block)
+      parse_block(nil, yield_stack.pop, &block)
     end
   end
 end

@@ -50,6 +50,57 @@ class ClickableLayout < Layout
     super
   end
 
+  def check_eaual(property, value)
+    return super unless property == :collision
+
+    Array(value).any? do |key|
+      case key
+      when :cursor_on
+        @on_inner_control
+      when :cursor_off
+        !(@on_inner_control)
+      #カーソルが指定範囲に侵入した場合
+      when :cursor_over
+        @on_mouse_over
+      #カーソルが指定範囲の外に移動した場合
+      when :cursor_out
+        @on_mouse_out
+      #マウスボタンが押下された場合
+      when :key_push
+        @on_key_push
+      #マウスボタンが継続押下されている合
+      when :key_down
+        @on_key_down
+      #マウスボタンが範囲外で押下された場合
+      when :key_down_out
+        @on_key_down_out
+      #マウスボタン押下が解除された場合
+      when :key_up
+        @on_key_up
+      #マウスボタン押下が範囲外で解除された場合
+      when :key_up_out
+        @on_key_up_out
+      #マウス右ボタンが押下された場合
+      when :right_key_push
+        @on_right_key_push
+      #マウス右ボタンが継続押下されている場合
+      when :right_key_down
+        @on_right_key_down
+      #マウスボタンが範囲外で押下された場合
+      when :right_key_down_out
+        @on_right_key_down_out
+      #マウスボタン押下が解除された場合
+      when :right_key_up
+        @on_right_key_up
+      #マウスボタン押下が範囲外で解除された場合
+      when :right_key_up_out
+        @on_right_key_up_out
+      else
+        false
+      end
+    end 
+  end
+
   def initialize(options, yield_stack, root_control, parent_control, &block)
     #カラーキー
     @colorkey_id = options[:colorkey_id]
@@ -161,61 +212,6 @@ class ClickableLayout < Layout
     end
 
     return super
-  end
-
-  def _CHECK_MOUSE_(yield_stack, _ARGUMENT_:, &block)
-    result = Array(_ARGUMENT_).any? do |key|
-      case key
-      when :cursor_on
-        @on_inner_control
-      when :cursor_off
-        !(@on_inner_control)
-      #カーソルが指定範囲に侵入した場合
-      when :cursor_over
-        @on_mouse_over
-      #カーソルが指定範囲の外に移動した場合
-      when :cursor_out
-        @on_mouse_out
-      #マウスボタンが押下された場合
-      when :key_push
-        @on_key_push
-      #マウスボタンが継続押下されている合
-      when :key_down
-        @on_key_down
-      #マウスボタンが範囲外で押下された場合
-      when :key_down_out
-        @on_key_down_out
-      #マウスボタン押下が解除された場合
-      when :key_up
-        @on_key_up
-      #マウスボタン押下が範囲外で解除された場合
-      when :key_up_out
-        @on_key_up_out
-      #マウス右ボタンが押下された場合
-      when :right_key_push
-        @on_right_key_push
-      #マウス右ボタンが継続押下されている場合
-      when :right_key_down
-        @on_right_key_down
-      #マウスボタンが範囲外で押下された場合
-      when :right_key_down_out
-        @on_right_key_down_out
-      #マウスボタン押下が解除された場合
-      when :right_key_up
-        @on_right_key_up
-      #マウスボタン押下が範囲外で解除された場合
-      when :right_key_up_out
-        @on_right_key_up_out
-      else
-        false
-      end
-    end 
-
-    #チェック条件を満たす場合
-    if result
-      #checkにブロックが付与されているならそれを実行する
-      parse_block(nil, yield_stack, &block)
-    end
   end
 
   #衝突範囲の変更

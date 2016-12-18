@@ -62,6 +62,14 @@ _DEFINE_ :_WAIT_ do |options|
   end
 end
 
+_DEFINE_ :_CHECK_MOUSE_ do |_ARGUMENT_:|
+  _CHECK_ equal: {collision: _ARGUMENT_} do
+    _CHECK_BLOCK_ do
+      _YIELD_
+    end
+  end
+end
+
 #Imageを生成し、指定したコントロール配下を描画する
 _DEFINE_ :_TO_IMAGE_ do 
   |_ARGUMENT_:, width: nil, height: nil, scale: nil, z: Float::INFINITY, visible: true|

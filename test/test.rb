@@ -113,8 +113,9 @@ class TC_Foo < Minitest::Test
       _DEFINE_PROPERTY_ test: nil
       #無限ループ
       _LOOP_ do
+        _CREATE_ :Input, id: :input
         #zキーが押された場合
-        _CHECK_INPUT_ key_down: Tsukasa::K_Z do
+        _CHECK_ [:_ROOT_, :input], equal:{ key_down: Tsukasa::K_Z} do
           #プロパティに値を設定
           _SET_ test: Tsukasa::K_Z
           #メインループを終了する

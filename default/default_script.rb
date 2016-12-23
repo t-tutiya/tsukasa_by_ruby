@@ -169,7 +169,7 @@ end
 #セーブロード管理
 ###############################################################################
 
-#データストアを保存する
+#_SYSTEM_コントロールを保存する
 #※保存されるのは次フレームなので注意
 _DEFINE_ :_SYSTEM_SAVE_ do |_ARGUMENT_:|
   _SEND_ [:_ROOT_, :_SYSTEM_] do
@@ -182,7 +182,7 @@ _DEFINE_ :_SYSTEM_SAVE_ do |_ARGUMENT_:|
   end
 end
 
-#データストアに読み込む
+#_SYSTEM_コントロールに読み込む
 #※保存されるのは次フレームなので注意
 _DEFINE_ :_SYSTEM_LOAD_ do |_ARGUMENT_:|
   _SEND_ [:_ROOT_, :_SYSTEM_] do
@@ -195,7 +195,7 @@ _DEFINE_ :_SYSTEM_LOAD_ do |_ARGUMENT_:|
   end
 end
 
-#データストアを保存する
+#_LOCAL_コントロールを保存する
 #※保存されるのは次フレームなので注意
 _DEFINE_ :_LOCAL_SAVE_ do |_ARGUMENT_:|
   _SEND_ [:_ROOT_, :_LOCAL_] do
@@ -208,7 +208,7 @@ _DEFINE_ :_LOCAL_SAVE_ do |_ARGUMENT_:|
   end
 end
 
-#データストアに読み込む
+#_LOCAL_コントロールを読み込む
 #※保存されるのは次フレームなので注意
 _DEFINE_ :_LOCAL_LOAD_ do |_ARGUMENT_:|
   _SEND_ [:_ROOT_, :_LOCAL_] do
@@ -221,6 +221,7 @@ _DEFINE_ :_LOCAL_LOAD_ do |_ARGUMENT_:|
   end
 end
 
+#コントロールツリーを保存する
 _DEFINE_ :_QUICK_SAVE_ do |_ARGUMENT_:|
   _SERIALIZE_ do |command_list:|
     db = PStore.new(_ARGUMENT_)
@@ -230,6 +231,7 @@ _DEFINE_ :_QUICK_SAVE_ do |_ARGUMENT_:|
   end
 end
 
+#コントロールツリーを読み込む
 _DEFINE_ :_QUICK_LOAD_ do |_ARGUMENT_:|
   db = PStore.new(_ARGUMENT_)
   command_list = nil

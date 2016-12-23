@@ -6,7 +6,7 @@ require 'pp'
 require_relative './ConvertFont.rb'
 
 ###############################################################################
-#TSUKASA for DXRuby ver2.0(2016/8/28)
+#TSUKASA for DXRuby ver2.1(2016/12/23)
 #メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby
 #
 #Copyright (c) <2013-2016> <tsukasa TSUCHIYA>

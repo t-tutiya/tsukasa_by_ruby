@@ -1,7 +1,7 @@
 #! ruby -E utf-8
 require 'pp'
 require 'minitest/test'
-require '../system/Tsukasa.rb'
+require './system/Tsukasa.rb'
 
 ###############################################################################
 #TSUKASA for DXRuby ver2.1(2016/12/23)
@@ -132,40 +132,6 @@ class TC_Foo < Minitest::Test
     #第１フレが０から始まってないのがあってるのかどうかよくわからぬ。
     assert_equal(result, [1, 4, 9, 16, 25, 36, 48, 64, 81, 100])
   end
-
-  #ゲーム側で判定タイミングのトリガーを用意するテスト
-  def test_5
-    puts "zキーを押してください"
-    #コントロールの生成
-    control = Tsukasa::Control.new() do
-      #動的プロパティの追加
-      _DEFINE_PROPERTY_ test: nil
-      #無限ループ
-      _LOOP_ do
-        _CREATE_ :Input, id: :input
-        #zキーが押された場合
-        _CHECK_ [:_ROOT_, :input], equal:{ key_down: Tsukasa::K_Z} do
-          #プロパティに値を設定
-          _SET_ test: Tsukasa::K_Z
-          #メインループを終了する
-          _EXIT_
-        end
-        #１フレ送る
-        _END_FRAME_
-      end
-    end
-
-    #メインループ
-    DXRuby::Window.loop() do
-      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0) #処理
-      control.render(0, 0, DXRuby::Window) #描画
-      break if control.exit #メインループ終了判定
-    end
-
-    #テスト
-    assert_equal(control.test, Tsukasa::K_Z)
-  end
-
 
   #実行のみ
   def test_b_2

@@ -1,7 +1,7 @@
 #! ruby -E utf-8
 require 'pp'
 require 'minitest/test'
-require '../system/Tsukasa.rb'
+require './system/Tsukasa.rb'
 
 ###############################################################################
 #TSUKASA for DXRuby ver2.1(2016/12/23)
@@ -37,13 +37,27 @@ require '../system/Tsukasa.rb'
 MiniTest.autorun
 
 class TC_Foo < Minitest::Test
-
-  #コントロールのダンプとの比較によるテスト
-  def test_1
+=begin
+  #ゲーム側で判定タイミングのトリガーを用意するテスト
+  def test_5
+    puts "zキーを押してください"
     #コントロールの生成
     control = Tsukasa::Control.new() do
-      #メインループを終了する
-      _EXIT_
+      #動的プロパティの追加
+      _DEFINE_PROPERTY_ test: nil
+      #無限ループ
+      _LOOP_ do
+        _CREATE_ :Input, id: :input
+        #zキーが押された場合
+        _CHECK_ [:_ROOT_, :input], equal:{ key_down: Tsukasa::K_Z} do
+          #プロパティに値を設定
+          _SET_ test: Tsukasa::K_Z
+          #メインループを終了する
+          _EXIT_
+        end
+        #１フレ送る
+        _END_FRAME_
+      end
     end
 
     #メインループ
@@ -52,15 +66,10 @@ class TC_Foo < Minitest::Test
       control.render(0, 0, DXRuby::Window) #描画
       break if control.exit #メインループ終了判定
     end
-    
-    reslut = [[:_SET_,
-                {:id=>:"Tsukasa::Control",
-                 :child_update=>true,
-                 :script_parser=>{},
-                 :exit=>true},
-                {}]]
 
     #テスト
-    assert_equal(control.serialize(), reslut)
+    assert_equal(control.test, Tsukasa::K_Z)
   end
+
+=end
 end

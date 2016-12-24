@@ -77,6 +77,9 @@ tsukasa = Tsukasa::Window.new()do
   #TKSパーサーと関連するテキストレイヤのセットアップ
   _INCLUDE_ "./default/text_layer_script.rb"
 
+  #タイトルバーの文字列を設定
+  _SET_ caption: "Tsukasa Engine powered by DXRuby"
+
   #一時データストア
   _CREATE_ :Data, id: :_TEMP_
   #ローカルデータストア
@@ -131,11 +134,6 @@ tsukasa = Tsukasa::Window.new()do
 
   #初期テキストウィンドウのidを格納
   _DEFINE_PROPERTY_ _DEFAULT_TEXT_PAGE_: [:_ROOT_, :text0]
-
-  #タイトルバーの文字列を設定
-  _WINDOW_STATUS_ caption: "Tsukasa Engine powered by DXRuby", #文字列
-                  x: 0,
-                  y: 0
 
   #最初に実行するスクリプトファイルを呼びだす
   _INCLUDE_ "./first.rb"

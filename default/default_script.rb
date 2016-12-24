@@ -51,34 +51,6 @@ end
 #ウィンドウ管理
 ###############################################################################
 
-#ウィンドウ関連情報の設定
-_DEFINE_ :_WINDOW_STATUS_ do |options|
-  #タイトルバーの文字列を設定する
-  DXRuby::Window.caption = options[:caption] if options[:caption]
-  #タイトルバーのアイコン画像を設定する
-  DXRuby::Window.load_icon(options[:icon_path])if options[:icon_path]
-  #フレーム更新時のリセット背景色を設定する
-  DXRuby::Window.bgcolor = options[:bgcolor] if options[:bgcolor]
-
-  #マウスカーソルの形状を設定する。
-    #マウスカーソル定数
-    #IDC_APPSTARTING 標準の矢印カーソルと小さい砂時計カーソル
-    #IDC_ARROW 標準の矢印カーソル
-    #IDC_CROSS 十字カーソル
-    #IDC_HAND ハンドカーソル
-    #IDC_HELP 矢印と疑問符
-    #IDC_IBEAM アイビーム（ 縦線）カーソル
-    #IDC_NO 禁止カーソル（ 円に左上から右下への斜線）
-    #IDC_SIZEALL 4 方向の矢印カーソル
-    #IDC_SIZENESW 右上と左下を指す両方向矢印カーソル
-    #IDC_SIZENS 上下を指す両方向矢印カーソル
-    #IDC_SIZENWSE 左上と右下を指す両方向矢印カーソル
-    #IDC_SIZEWE 左右を指す両方向矢印カーソル
-    #IDC_UPARROW 上を指す垂直の矢印カーソル
-    #IDC_WAIT 砂時計カーソル
-  DXRuby::Input.set_cursor(options[:cursor_type]) if options[:cursor_type]
-end
-
 #フルスクリーン化可能な解像度のリストを取得する
 _DEFINE_ :_SCREEN_MODES_ do 
   _YIELD_ screen_modes: DXRuby::Window.get_screen_modes

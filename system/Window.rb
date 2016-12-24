@@ -38,6 +38,7 @@ module Tsukasa
 class Window < ClickableLayout
   attr_accessor :auto_close #「閉じる」ボタンが押下された際に自動的に終了する
 
+  #ウィンドウ座標上のマウスＸ座標
   def mouse_x()
     return DXRuby::Input.mouse_x
   end
@@ -45,6 +46,7 @@ class Window < ClickableLayout
     DXRuby::Input.set_mouse_pos(arg, DXRuby::Input.mouse_y)
   end
 
+  #ウィンドウ座標上のマウスＹ座標
   def mouse_y()
     return DXRuby::Input.mouse_y
   end
@@ -52,6 +54,7 @@ class Window < ClickableLayout
     DXRuby::Input.set_mouse_pos(DXRuby::Input.mouse_x, arg)
   end
 
+  #マウスカーソル可視フラグ
   def mouse_enable()
     @mouse_enable
   end
@@ -60,16 +63,61 @@ class Window < ClickableLayout
     DXRuby::Input.mouse_enable = @mouse_enable
   end
 
+  #タイトルバーに表示する文字列
+  def caption()
+    DXRuby::Window.caption
+  end
+  def caption=(arg)
+    DXRuby::Window.caption = arg
+  end
+
+  #フレーム更新時のリセット背景色
+  def bgcolor()
+    DXRuby::Window.bgcolor
+  end
+  def bgcolor=(arg)
+    DXRuby::Window.bgcolor = arg
+  end
+
+  #タイトルバーに表示するアイコン
+  def icon_path=(arg)
+    @icon_path
+  end
+  def icon_path=(arg)
+    @icon_path = arg
+    DXRuby::Window.load_icon(arg)
+  end
+
+  #マウスカーソルの形状
+  def cursor_type()
+    @cursor_type
+  end
+  def cursor_type=(arg)
+    @cursor_type = arg
+    DXRuby::Input.set_cursor(arg) 
+  end
+
   def initialize( options = {}, 
                   yield_stack = nil, 
                   root_control = nil, 
                   parent_control = nil)
     #アプリ終了フラグ
     @close = false
-    #マウスカーソル可視フラグ
-    @mouse_enable = true
     #「閉じる」ボタンが押下された場合自動終了する
-    @auto_close = true
+    @auto_close = options[:auto_close] || true
+
+    #マウスカーソル可視フラグ
+    self.mouse_enable = options[:mouse_enable] || true
+    #タイトルバーに表示するアイコン
+    self.caption = options[:caption] || "Tsukasa Engine powered by DXRuby"
+    #フレーム更新時のリセット背景色
+    self.bgcolor = options[:bgcolor] || [0,0,0]
+    #タイトルバーに表示するアイコン
+    if options[:icon_path]
+      self.icon_path = options[:icon_path]
+    end
+    #マウスカーソルの形状
+    self.cursor_type = options[:cursor_type] || IDC_ARROW
     super
   end
 

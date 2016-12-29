@@ -38,7 +38,7 @@ _CREATE_ :DrawableLayout, x: 160, y: 120, width: 320, height: 256 do
     _DEFINE_ :state_x_move do
 
       #横キー入力判定
-      _PAD_ARROW_ 0 do |x:, y:|
+      _GET_ [:x, :y], control: [:_ROOT_, :_INPUT_] do |x:, y:|
         pad_x = x
         _GET_ :x do |x:|
           #Ｘ方向の増分を加算

@@ -74,8 +74,6 @@ tsukasa = Tsukasa::Window.new()do
   require_relative './system/Data.rb'
   #文字描画
   require_relative './system/Char.rb'
-  #テキストページ管理
-  require_relative './system/TextPage.rb'
   #タイルマップ管理
   require_relative './system/TileMap.rb'
   #シェーダー処理
@@ -86,9 +84,6 @@ tsukasa = Tsukasa::Window.new()do
 
   #標準ユーティリティー群の読み込み
   _INCLUDE_ "./default/utility_script.rb"
-
-  #TKSパーサーと関連するテキストレイヤのセットアップ
-  _INCLUDE_ "./default/text_layer_script.rb"
 
   #タイトルバーの文字列を設定
   _SET_ caption: "Tsukasa Engine powered by DXRuby"
@@ -101,14 +96,6 @@ tsukasa = Tsukasa::Window.new()do
   _CREATE_ :Data, id: :_SYSTEM_
   #キー入力管理コントロール
   _CREATE_ :Input, id: :_INPUT_
-
-  _DEFINE_ :_CHECK_INPUT_  do |options|
-    _CHECK_ [:_ROOT_, :_INPUT_], equal: options do
-      _YIELD_
-    end
-  end
-
-  _RESIZE_ width: 1024, height: 600
 
   #プラグインスクリプトファイルの読み込み
   Dir.glob("./plugin/*.rb").each do |path:|
@@ -135,6 +122,10 @@ tsukasa = Tsukasa::Window.new()do
     z: 3000, #描画順序
     id: :img2
 
+  #テキストページ管理
+  require_relative './system/TextPage.rb'
+  #TKSパーサーと関連するテキストレイヤのセットアップ
+  _INCLUDE_ "./default/text_layer_script.rb"
   #初期テキストウィンドウ
   _TEXT_WINDOW_ :text0, 
     x: 96,
@@ -144,9 +135,11 @@ tsukasa = Tsukasa::Window.new()do
     size: 32, 
     font_name: "ＭＳＰ ゴシック",
     z: 1000000 #描画順序
-
   #初期テキストウィンドウのidを格納
   _DEFINE_PROPERTY_ _DEFAULT_TEXT_PAGE_: [:_ROOT_, :text0]
+
+  #画面サイズ変更
+  _RESIZE_ width: 1024, height: 600
 
   #最初に実行するスクリプトファイルを呼びだす
   _INCLUDE_ "./first.rb"

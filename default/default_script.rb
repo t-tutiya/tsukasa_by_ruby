@@ -87,6 +87,13 @@ _DEFINE_ :_PAD_CONFIG_ do |options|
                     options[:pad_number] = 0)
 end
 
+#キー入力_CHECK_（ラッパー）
+_DEFINE_ :_CHECK_INPUT_  do |options|
+  _CHECK_ [:_ROOT_, :_INPUT_], equal: options do
+    _YIELD_
+  end
+end
+
 ###############################################################################
 #フォント管理
 ###############################################################################

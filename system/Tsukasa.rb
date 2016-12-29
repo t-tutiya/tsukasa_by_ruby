@@ -38,20 +38,19 @@ require 'dxruby'
 require_relative './Control.rb'
 
 #コントロール群
-require_relative './Image.rb'
+
+#レイアウトコントロール
 require_relative './Layout.rb'
+#描画実体を持つレイアウトコントロール
 require_relative './DrawableLayout.rb'
+#衝突判定を持つレイアウトコントロール
 require_relative './ClickableLayout.rb'
+#画像コントロール
+require_relative './Image.rb'
+#SE/BGMコントロール
 require_relative './Sound.rb'
-require_relative './Char.rb'
-require_relative './Data.rb'
+#キー入力コントロール
 require_relative './Input.rb'
-
-#ウィンドウ
+#ウィンドウコントロール
 require_relative './Window.rb'
-
-#複合コントロール群
-require_relative './TextPage.rb'
-require_relative './TileMap.rb'
-require_relative './RuleShader.rb'
 

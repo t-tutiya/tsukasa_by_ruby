@@ -68,6 +68,19 @@ DXRuby::Window.x = x
 DXRuby::Window.y = y
 
 tsukasa = Tsukasa::Window.new()do
+  #ヘルパーコントロール群
+
+  #データストアコントロール
+  require_relative './system/Data.rb'
+  #文字描画
+  require_relative './system/Char.rb'
+  #テキストページ管理
+  require_relative './system/TextPage.rb'
+  #タイルマップ管理
+  require_relative './system/TileMap.rb'
+  #シェーダー処理
+  require_relative './system/RuleShader.rb'
+
   #デフォルトのユーザー定義コマンド群の読み込み
   _INCLUDE_ "./default/default_script.rb"
 

@@ -63,6 +63,20 @@ class Window < ClickableLayout
     DXRuby::Input.mouse_enable = @mouse_enable
   end
 
+  #フルスクリーン状態の取得／設定
+  def full_screen()
+    DXRuby::Window.full_screen
+  end
+  def full_screen=(arg)
+    DXRuby::Window.full_screen = arg
+  end
+
+  #フルスクリーン時に使用可能な解像度
+  #[[width, height, refreshrate], ...]
+  def screen_modes()
+    DXRuby::Window.get_screen_modes
+  end
+
   #タイトルバーに表示する文字列
   def caption()
     DXRuby::Window.caption

@@ -51,16 +51,6 @@ end
 #ウィンドウ管理
 ###############################################################################
 
-#フルスクリーン化可能な解像度のリストを取得する
-_DEFINE_ :_SCREEN_MODES_ do 
-  _YIELD_ screen_modes: DXRuby::Window.get_screen_modes
-end
-
-#フルスクリーンのオンオフ
-_DEFINE_ :_FULL_SCREEN_ do |_ARGUMENT_:|
-  DXRuby::Window.full_screen = _ARGUMENT_ #bool
-end
-
 #スクリーンショットキャプチャ
 _DEFINE_ :_CAPTURE_SS_ do |path, options|
   DXRuby::Window.get_screen_shot(path, options[:format] || DXRuby::FORMAT_PNG)

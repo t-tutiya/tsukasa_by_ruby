@@ -14,7 +14,7 @@ _DEFINE_ :menu_button do |id:, text: |
 end
 
 _CREATE_ :Layout, id: :top_menu, x:0, y:0 do
-  _SCREEN_MODES_ do |screen_modes:|
+  _GET_ :screen_modes, control:[:_ROOT_]  do |screen_modes:|
     screen_modes.each do |screen_mode|
       if screen_mode == [640,480,60]
         menu_button text: "640×480", id: 0
@@ -52,10 +52,10 @@ end
 _SEND_(:img0){_SET_ path: "./resource/button_normal.png"}
 _SEND_(:img1){_SET_ path: "./resource/char/A-1.png"}
 
-_FULL_SCREEN_ true
+_SET_ full_screen: true
 
 _END_PAUSE_
 
-_FULL_SCREEN_ false
+_SET_ full_screen: false
 
 _RESIZE_ width: 1024, height:600

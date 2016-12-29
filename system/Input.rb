@@ -77,13 +77,13 @@ class Input < Control
       !(Array(value).any?{|key_code|DXRuby::Input.key_release?(key_code)})
     #パッドボタンが押された
     when :pad_down
-      Array(value).any?{|pad_code| DXRuby::Input.pad_down?(pad_code, _ARGUMENT_)}
+      Array(value).any?{|pad_code| DXRuby::Input.pad_down?(pad_code, @pad_number)}
     #パッドボタンが継続押下されている
     when :pad_push
-      Array(value).any?{|pad_code| DXRuby::Input.pad_push?(pad_code, _ARGUMENT_)}
+      Array(value).any?{|pad_code| DXRuby::Input.pad_push?(pad_code, @pad_number)}
     #パッドボタンが解除された
     when :pad_release
-      Array(value).any?{|pad_code| DXRuby::Input.pad_release?(pad_code, _ARGUMENT_)}
+      Array(value).any?{|pad_code| DXRuby::Input.pad_release?(pad_code, @pad_number)}
     #マウス処理系
     when :mouse
       Array(value).any? do |key|

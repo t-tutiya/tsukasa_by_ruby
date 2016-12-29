@@ -54,6 +54,13 @@ class Window < ClickableLayout
     DXRuby::Input.set_mouse_pos(DXRuby::Input.mouse_x, arg)
   end
 
+  def mouse_wheel_pos()
+    DXRuby::Input.mouse_wheel_pos
+  end
+  def mouse_wheel_pos=(arg)
+    DXRuby::Input.mouse_wheel_pos = arg
+  end
+
   #マウスカーソル可視フラグ
   def mouse_enable()
     @mouse_enable

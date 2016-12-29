@@ -38,8 +38,8 @@ _LOOP_ do
       end
     end
     _SEND_ :comment_area3_b do
-      _MOUSE_WHEEL_POS_ do |pos:|
-        _SET_ char: pos.to_s
+      _GET_ [[:mouse_wheel_pos, [:_ROOT_]]] do |mouse_wheel_pos:|
+        _SET_ char: mouse_wheel_pos.to_s
       end
     end
     _PAD_ARROW_ 0 do |x:, y:|

@@ -79,14 +79,6 @@ end
 #マウス／ゲームパッド管理
 ###############################################################################
 
-#マウスホイールの値を設定／取得する
-_DEFINE_ :_MOUSE_WHEEL_POS_ do |_ARGUMENT_: false|
-  DXRuby::Input.mouse_wheel_pos = _ARGUMENT_ if _ARGUMENT_
-  _CHECK_BLOCK_ do
-    _YIELD_ pos: DXRuby::Input.mouse_wheel_pos
-  end
-end
-
 #パッドの方向キーを-1,0,1で取得する
 _DEFINE_ :_PAD_ARROW_ do |_ARGUMENT_:|
   _CHECK_BLOCK_ do

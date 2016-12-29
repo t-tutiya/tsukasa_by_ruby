@@ -98,6 +98,7 @@ _DEFINE_ :TextSelect do |options|
       #フラグが立っていればボタンをアウトさせてループを終了する
       _CHECK_ [:_ROOT_, :_TEMP_],  not_equal: {flag: nil} do
         _MOVE_ [60, :in_back], y:[0,600]
+        _DELETE_
         _RETURN_
       end
       _END_FRAME_

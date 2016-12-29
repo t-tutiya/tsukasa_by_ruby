@@ -13,7 +13,7 @@
   _SET_ :_TEMP_, flag: nil
   #ウェイク状態まで待機
   _WAIT_ [:_ROOT_, :_TEMP_],  not_equal: {flag: nil} do
-  	_CHECK_ key_push: [K_A] do
+  	_CHECK_INPUT_ key_push: [K_A] do
 		  _SET_ [:_ROOT_, :_TEMP_], flag: 2
   	end
   end

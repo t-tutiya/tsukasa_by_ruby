@@ -519,11 +519,6 @@ class Control #スクリプト制御
       Module.const_get(parser)::Replacer.new]
   end
 
-  #ネイティブコードを読み込む
-  def _LOAD_NATIVE_(yield_stack, _ARGUMENT_:)
-    require _ARGUMENT_
-  end
-
   #子コントロールを検索してコマンドブロックを送信する
   def _SEND_(yield_stack, _ARGUMENT_: nil, interrupt: nil, **options, &block)
     #コントロールを検索する

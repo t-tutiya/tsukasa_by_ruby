@@ -1,5 +1,5 @@
 #操作キャラコントロールの読み込みと生成
-_LOAD_NATIVE_ "./script/jump_action/imple.rb"
+require "./script/jump_action/imple.rb"
 
 _SEND_ :base do
   _SET_ path: "./resource/bg_sample.png"

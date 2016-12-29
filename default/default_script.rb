@@ -79,14 +79,8 @@ end
 #マウス／ゲームパッド管理
 ###############################################################################
 
-#パッドの方向キーを-1,0,1で取得する
-_DEFINE_ :_PAD_ARROW_ do |_ARGUMENT_:|
-  _CHECK_BLOCK_ do
-    _YIELD_ x: DXRuby::Input.x(_ARGUMENT_ || 0), y: DXRuby::Input.y(_ARGUMENT_ || 0)
-  end
-end
-
 #パッドのキーコンフィグを設定する
+#TODO：パッドごとにInputコントロールを持つ現仕様でどう処理するか検討中
 _DEFINE_ :_PAD_CONFIG_ do |options|
   DXRuby::Input.set_config( options[:pad_code], 
                     options[:key_code], 

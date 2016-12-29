@@ -35,6 +35,26 @@ module Tsukasa
 
 #入力系ラッパーコントロール
 class Input < Control
+
+  #パッドのＸ方向キー増分[-1,0,1]
+  def x()
+    DXRuby::Input.x(@pad_number)
+  end
+
+  #パッドのＹ方向キー増分[-1,0,1]
+  def y()
+    DXRuby::Input.y(@pad_number)
+  end
+
+  def initialize( options = {}, 
+                  yield_stack = nil, 
+                  root_control = nil, 
+                  parent_control = nil, 
+                  &block)
+    @pad_number = options[:pad_number] || 0
+    super
+  end
+
   def check_eaual(property, value)
     case property
     #キーが押下された

@@ -97,8 +97,13 @@ tsukasa = Tsukasa::Window.new()do
   #キー入力管理コントロール
   _CREATE_ :Input, id: :_INPUT_
 
+  #プラグインネイティブファイルの読み込み
+  Dir.glob("./plugin/*.rb").each do |path|
+    require path
+  end
+
   #プラグインスクリプトファイルの読み込み
-  Dir.glob("./plugin/*.rb").each do |path:|
+  Dir.glob("./plugin_script/*.rb").each do |path|
     _INCLUDE_ path
   end
 

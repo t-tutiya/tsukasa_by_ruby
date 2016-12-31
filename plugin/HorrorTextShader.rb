@@ -28,57 +28,16 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-class HorrorShader < Tsukasa::Control
-  #Imageのキャッシュ機構の簡易実装
-  #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
-  @@image_cache = Hash.new
-  #キャッシュされていない画像パスが指定されたら読み込む
-  @@image_cache.default_proc = ->(hsh, key) {
-    hsh[key] = DXRuby::Image.load(key)
-  }
-
-  attr_reader :entity
-=begin
-  #ルールトラジンション：ルール画像設定
-  attr_reader :path
-  def path=(path)
-    @path = path
-    #画像ファイルをキャッシュから読み込んで初期化する
-    @entity = TransitionShader.new(@@image_cache[path])
-  end
-
-  #ルールトランジション：カウンター
-  attr_reader :counter
-  def counter=(arg)
-    @counter = arg
-    @entity.g_min =(( @vague + 255).fdiv(255) *
-                          @counter - 
-                          @vague
-                        ).fdiv(255)
-
-    @entity.g_max =( ( @vague + 
-                            255
-                          ).fdiv(255) *
-                          @counter
-                        ).fdiv(255)
-  end
-=end
-  #ルールトランジション：曖昧さ
-#  attr_accessor :vague
+class HorrorShader < Tsukasa::Shader
 
   def initialize(options, yield_stack, root_control, parent_control, &block)
-#    @vague = options[:vague] || 40
-#    self.path = options[:path] if options[:path]
-#    self.counter = options[:counter] || 0
-
-    #画像ファイルをキャッシュから読み込んで初期化する
-    @entity = HorrorText.new(2.0, 2.0, 16.0, 1.25, 1.0, 640, 200)
-
+    @shader = HorrorText.new(2.0, 2.0, 16.0, 1.25, 1.0, 640, 200)
     super
   end
   
   def update(mouse_pos_x, mouse_pos_y, index)
-    @entity.update
+    @shader.wavePhaseU = (@shader.wavePhaseU + 1.25) % 360
+    @shader.wavePhaseV = (@shader.wavePhaseV + 1.0) % 360
     super
   end
 
@@ -187,12 +146,6 @@ EOS
       self.waveLength    = 4500.0
       self.texelSize = 1.0 / width, 1.0 / height
     end
-      
-    def update
-      self.wavePhaseU = (self.wavePhaseU + 1.25) % 360
-      self.wavePhaseV = (self.wavePhaseV + 1.0) % 360
-    end
-
   end
 
 end

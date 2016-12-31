@@ -4,9 +4,11 @@ _CREATE_ :DrawableLayout, id: :test0, width: 800, height: 600 do
 end
 
 _CREATE_ :Image, id: :test1, path: "./resource/bg_sample.png" do
-  _CREATE_ :RuleShader, id: :rule0, vague: 40,
+  _CREATE_ :RuleTransition, id: :rule0, vague: 40,
             path: "./resource/rule/horizontal_rule.png"
-  _SET_ shader: :rule0
+  _GET_ :shader, control: :rule0 do |shader:|
+    _SET_ shader: shader
+  end
 end
 
 _WAIT_ input: {key_push: K_SPACE, mouse: :push}

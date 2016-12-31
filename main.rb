@@ -77,7 +77,7 @@ tsukasa = Tsukasa::Window.new()do
   #タイルマップ管理
   require_relative './system/TileMap.rb'
   #シェーダー処理
-  require_relative './system/RuleShader.rb'
+  require_relative './system/Shader.rb'
 
   #デフォルトのユーザー定義コマンド群の読み込み
   _INCLUDE_ "./default/default_script.rb"

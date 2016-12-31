@@ -28,11 +28,7 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require_relative './Control.rb'
-
-module Tsukasa
-
-class RuleShader < Control
+class RuleTransition < Tsukasa::Shader
   #Imageのキャッシュ機構の簡易実装
   #TODO:キャッシュ操作：一括クリア、番号を指定してまとめて削除など
   @@image_cache = Hash.new
@@ -41,26 +37,24 @@ class RuleShader < Control
     hsh[key] = DXRuby::Image.load(key)
   }
 
-  attr_reader :entity
-
   #ルールトラジンション：ルール画像設定
   attr_reader :path
   def path=(path)
     @path = path
     #画像ファイルをキャッシュから読み込んで初期化する
-    @entity = TransitionShader.new(@@image_cache[path])
+    @shader = TransitionShader.new(@@image_cache[path])
   end
 
   #ルールトランジション：カウンター
   attr_reader :counter
   def counter=(arg)
     @counter = arg
-    @entity.g_min =(( @vague + 255).fdiv(255) *
+    @shader.g_min =(( @vague + 255).fdiv(255) *
                           @counter - 
                           @vague
                         ).fdiv(255)
 
-    @entity.g_max =( ( @vague + 
+    @shader.g_max =( ( @vague + 
                             255
                           ).fdiv(255) *
                           @counter
@@ -154,4 +148,3 @@ EOS
   end
 end
 
-end

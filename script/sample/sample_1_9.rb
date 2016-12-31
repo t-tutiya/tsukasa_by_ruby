@@ -1,8 +1,10 @@
 #ルール画像を設定するユーザー定義コマンド
 _DEFINE_ :set_rule do |options|
-  _CREATE_ :RuleShader, id: options[:id], vague: options[:vague] || 40,
+  _CREATE_ :RuleTransition, id: options[:id], vague: options[:vague] || 40,
             path: options[:path]
-  _SET_ shader: options[:id]
+  _GET_ :shader, control: options[:id] do |shader:|
+    _SET_ shader: shader
+  end
 end
 
 #前回と同じ

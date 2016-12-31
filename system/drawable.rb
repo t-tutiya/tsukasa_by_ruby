@@ -133,11 +133,13 @@ class Drawable < Layoutable
     @draw_option[:z]
   end
 
+  #シェーダーオブジェクト（DXRuby::Shader）
   def shader=(arg)
-    @shader = arg
-    @draw_option[:shader] = find_control(@shader).entity if @shader
+    @draw_option[:shader] = arg
   end
-  attr_reader  :shader
+  def shader(arg)
+    @draw_option[:shader]
+  end
 
   #描画時の指定座標x/yに、画像のcenter_x/yで指定した位置が来るように補正されます
   #bool (初期値： false)

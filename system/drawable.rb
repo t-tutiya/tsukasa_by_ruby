@@ -137,7 +137,7 @@ class Drawable < Layoutable
   def shader=(arg)
     @draw_option[:shader] = arg
   end
-  def shader(arg)
+  def shader()
     @draw_option[:shader]
   end
 

@@ -294,7 +294,6 @@ end
 class Control #コントロールの生成／破棄
   #コントロールをリストに登録する
   def _CREATE_(yield_stack, _ARGUMENT_:, **options, &block)
-    begin 
     #コントロールを生成して子要素として登録する
     @control_list.push(
       Tsukasa.const_get(_ARGUMENT_).new(options, 
@@ -303,9 +302,12 @@ class Control #コントロールの生成／破棄
                                         self, 
                                         &block)
     )
-    rescue NameError
-      raise(Tsukasa::TsukasaError, "コントロール[#{_ARGUMENT_}]の生成に失敗しました。")
-    end
+  #NoMethodError(NameErrorの派生クラス)をすくい取る
+  rescue NoMethodError => e
+    raise e
+  rescue NameError => e
+    puts "エラー：コントロール[#{_ARGUMENT_}]の生成に失敗しました。コントロールクラスが定義されていないか、生成するクラス名が間違っています"
+    raise e
   end
 
   #コントロールを削除する
@@ -350,7 +352,7 @@ class Control #セッター／ゲッター
         #コントロールプロパティに値を代入
         find_control_path(_ARGUMENT_).send(key.to_s + "=", val)
       rescue
-        warn  "クラス[#{self.class}]：変数[" + "@#{key}]は存在しません"
+        warn  "クラス[#{self.class}]：プロパティ[" + "#{key}]は存在しません"
       end
     end
   end
@@ -370,7 +372,7 @@ class Control #セッター／ゲッター
         #コントロールプロパティから値を取得する
         result[property[2]] = find_control_path(property[1]).send(property[0])
       rescue
-        warn  "クラス[#{self.class}]：変数[" + "@#{property}]は存在しません"
+        warn  "クラス[#{self.class}]：プロパティ[" + "#{property[1]}]は存在しません"
       end
     end
 

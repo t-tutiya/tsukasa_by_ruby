@@ -10,12 +10,13 @@
 
 _SET_ [:_ROOT_, :_TEMP_], flag0: false
 
-_SCOPE_ do
+_LOOP_ do
   _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag0: true} do |a,b,c|
     _PUTS_ "A true"
-    _RETURN_  
+    _BREAK_  
   end
   _PUTS_ "A false"
+  _BREAK_  
 end
 
 =begin
@@ -34,14 +35,15 @@ end
 
 _SET_ [:_ROOT_, :_TEMP_], flag1: 1
 
-_SCOPE_ do
+_LOOP_ do
   _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag1: 0} do
     _PUTS_ "A 0"
-    _RETURN_  
+    _BREAK_  
   end
   _CHECK_ [:_ROOT_, :_TEMP_], equal: {flag1: 1} do
     _PUTS_ "A 1"
-    _RETURN_  
+    _BREAK_  
   end
   _PUTS_ "A else"
+  _BREAK_  
 end

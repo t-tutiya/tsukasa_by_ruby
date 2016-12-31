@@ -72,12 +72,11 @@ tsukasa = Tsukasa::Window.new()do
 
   #データストアコントロール
   require_relative './system/Data.rb'
-  #文字描画
-  require_relative './system/Char.rb'
   #タイルマップ管理
   require_relative './system/TileMap.rb'
   #シェーダー処理
   require_relative './system/Shader.rb'
+  #ルールトランジション
   require_relative './system/RuleTransition.rb'
 
   #デフォルトのユーザー定義コマンド群の読み込み
@@ -95,6 +94,7 @@ tsukasa = Tsukasa::Window.new()do
   _CREATE_ :Data, id: :_LOCAL_
   #システムデータストア
   _CREATE_ :Data, id: :_SYSTEM_
+
   #キー入力管理コントロール
   _CREATE_ :Input, id: :_INPUT_
 
@@ -109,25 +109,16 @@ tsukasa = Tsukasa::Window.new()do
   end
 
   #初期レイヤ（背景）
-  _CREATE_ :Image,
-    z: 0, #描画順序
-    id: :base
-
+  _CREATE_ :Image, z:    0, id: :base
   #初期レイヤ０
-  _CREATE_ :Image,
-    z: 1000, #描画順序
-    id: :img0
-
+  _CREATE_ :Image, z: 1000, id: :img0
   #初期レイヤ１
-  _CREATE_ :Image,
-    z: 2000, #描画順序
-    id: :img1
-
+  _CREATE_ :Image, z: 2000, id: :img1
   #初期レイヤ２
-  _CREATE_ :Image,
-    z: 3000, #描画順序
-    id: :img2
+  _CREATE_ :Image, z: 3000, id: :img2
 
+  #文字描画
+  require_relative './system/Char.rb'
   #テキストページ管理
   require_relative './system/TextPage.rb'
   #TKSパーサーと関連するテキストレイヤのセットアップ

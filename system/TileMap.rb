@@ -113,7 +113,7 @@ class TileMap < DrawableLayout
       @map_array[options[:x] || 0][options[:y] || 0] = options[:_ARGUMENT_]
     else
       #ブロックが付与されているならそれを実行する
-      parse_block(@map_array[options[:x] || 0][options[:y] || 0], nil,
+      shift_commands(@map_array[options[:x] || 0][options[:y] || 0], nil,
                   yield_stack, &block)
     end
   end

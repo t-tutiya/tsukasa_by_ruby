@@ -161,7 +161,7 @@ class Image < Helper::Drawable
     end
     if block
       #ブロックが付与されているならそれを実行する
-      parse_block(@entity[options[:x], options[:y]], nil, 
+      shift_commands(@entity[options[:x], options[:y]], nil, 
                   yield_stack, &block)
     end
   end
@@ -170,7 +170,7 @@ class Image < Helper::Drawable
   def _COMPARE_(yield_stack, options, &block)
     if @entity.compare(options[:x], options[:y], options[:color])
       #ブロックが付与されているならそれを実行する
-      parse_block(@entity[options[:x], options[:y]], nil, 
+      shift_commands(@entity[options[:x], options[:y]], nil, 
                   yield_stack, &block)
     end
   end

@@ -298,19 +298,18 @@ class TextPage < Layout
   #指定文字（群）を描画チェインに連結する
   def _CHAR_(yield_stack, options)
     #文字コントロールを生成する
-    @control_list.last.push_command(:_CREATE_, 
-                                    {
-                                      :_ARGUMENT_ => :Char, 
-                                      :offset_x => @character_pitch,
-                                      :align_y => :bottom,
-                                      :char => options[:_ARGUMENT_],
-                                      :command_list=> options[:command_list],
-                                      :float_x => :left,
-                                      :image_path => options[:image_path]
-                                    }.merge(@char_option), 
-                                    yield_stack,
-                                    @function_list[:_CHAR_RENDERER_]
-                                   )
+    @control_list.last._CREATE_(yield_stack,
+                                {
+                                  :_ARGUMENT_ => :Char, 
+                                  :offset_x => @character_pitch,
+                                  :align_y => :bottom,
+                                  :char => options[:_ARGUMENT_],
+                                  :command_list=> options[:command_list],
+                                  :float_x => :left,
+                                  :image_path => options[:image_path]
+                                }.merge(@char_option), 
+                                &@function_list[:_CHAR_RENDERER_]
+                               )
 
     #文字待機処理をスタックする
     @command_list.unshift([:_CHAR_WAIT_, {}, yield_stack, nil])
@@ -319,13 +318,10 @@ class TextPage < Layout
   #指定したコマンドブロックを文字列の末端に追加する
   def _CHAR_COMMAND_(yield_stack, options, &block)
     #文字コントロールを生成する
-    @control_list.last.push_command(:_SCOPE_, 
-                                    options, 
-                                    yield_stack, 
-                                    block)
+    @control_list.last.push_commands(options, yield_stack, &block)
 
     #文字待機処理をスタックする
-    @command_list.unshift([:_CHAR_WAIT_, {}, yield_stack, nil])
+    @command_list.push([:_CHAR_WAIT_, {}, yield_stack, nil])
   end
 
   #textコマンド
@@ -371,16 +367,14 @@ class TextPage < Layout
                     nil]
 
     #TextPageをベース文字に登録する。
-    @control_list.last.push_command(:_CREATE_, 
-                                    {
-                                      :_ARGUMENT_ => :Layout, 
-                                      :width => 0,
-                                      :height => @size,
-                                      :command_list => [rubi_layout],
-                                      :float_x => :left
-                                    }, 
-                                    nil, 
-                                    nil)
+    @control_list.last._CREATE_(nil, 
+                                {
+                                  :_ARGUMENT_ => :Layout, 
+                                  :width => 0,
+                                  :height => @size,
+                                  :command_list => [rubi_layout],
+                                  :float_x => :left
+                                })
   end
 
   #line_feedコマンド

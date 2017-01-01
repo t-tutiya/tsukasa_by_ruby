@@ -659,7 +659,7 @@ class Control #プロパティのパラメータ遷移
       send(key.to_s + "=", 
         (value[0] + (value[1] - value[0]).to_f * 
           EasingProcHash[_ARGUMENT_[1]].call(_ARGUMENT_[2].fdiv(_ARGUMENT_[0]))
-        ).to_i
+        )
       )
     end
 

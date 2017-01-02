@@ -125,7 +125,7 @@ class TC_Foo < Minitest::Test
     #１０フレーム回したと想定
     10.times do
       control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
-      result.push(control.test)
+      result.push(control.test.to_i)
     end
 
     #テスト

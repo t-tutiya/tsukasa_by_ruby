@@ -77,47 +77,35 @@ class Image < Helper::Drawable
   end
 
   #Image上に直線を引く
-  def _LINE_(yield_stack, options)
+  def _LINE_(yield_stack, x1:, y1:, x2:, y2:, color:)
     @entity.line( 
-      options[:x1], options[:y1], options[:x2], options[:y2], options[:color])
+      x1, y1, x2, y2, color)
   end
 
   #Image上に矩形を描く
-  def _BOX_(yield_stack, options)
-    if options[:fill]
-      @entity.box_fill( 
-        options[:x1], options[:y1], options[:x2], options[:y2], 
-        options[:color])
+  def _BOX_(yield_stack, x1:, y1:, x2:, y2:, color:, fill: false)
+    if fill
+      @entity.box_fill(x1, y1, x2, y2, color)
     else
-      @entity.box(
-        options[:x1], options[:y1], options[:x2], options[:y2], 
-        options[:color])
+      @entity.box(x1, y1, x2, y2, color)
     end
   end
 
   #Image上に円を描く
-  def _CIRCLE_(yield_stack, options)
-    if options[:fill]
-      @entity.circle_fill(
-        options[:x], options[:y], options[:r], options[:color])
+  def _CIRCLE_(yield_stack, x:, y:, r:, color:, fill: false)
+    if fill
+      @entity.circle_fill(x, y, r, color)
     else
-      @entity.circle( 
-        options[:x], options[:y], options[:r], options[:color])
+      @entity.circle(x, y, r, color)
     end
   end
 
   #Image上に三角形を描く
-  def _TRIANGLE_(yield_stack, options)
-    if options[:fill]
-      @entity.triangle_fill(
-        options[:x1], options[:y1], options[:x2], options[:y2], 
-        options[:x3], options[:y3], 
-        options[:color])
+  def _TRIANGLE_(yield_stack, x1:, y1:, x2:, y2:,  x3:, y3:, color:, fill: false)
+    if fill
+      @entity.triangle_fill(x1, y1, x2, y2, x3, y3, color)
     else
-      @entity.triangle( 
-        options[:x1], options[:y1], options[:x2], options[:y2], 
-        options[:x3], options[:y3], 
-        options[:color])
+      @entity.triangle(x1, y1, x2, y2, x3, y3, color)
     end
   end
 
@@ -147,29 +135,27 @@ class Image < Helper::Drawable
   end
 
   #Imageの指定座標への色の取得／設定
-  def _PIXEL_(yield_stack, options, &block)
-    if options[:color]
-      @entity[options[:x], options[:y]] = options[:color]
+  def _PIXEL_(yield_stack, x:, y:, color: , &block)
+    if color
+      @entity[x, y] = color
     end
     if block
       #ブロックが付与されているならそれを実行する
-      shift_command_block(@entity[options[:x], options[:y]], nil, 
-                  yield_stack, &block)
+      shift_command_block(@entity[x, y], nil, yield_stack, &block)
     end
   end
 
   #Imageを指定座標の色を比較し、同値ならブロックを実行する
-  def _COMPARE_(yield_stack, options, &block)
-    if @entity.compare(options[:x], options[:y], options[:color])
+  def _COMPARE_(yield_stack, x:, y:, color: , &block)
+    if @entity.compare(x, y, color)
       #ブロックが付与されているならそれを実行する
-      shift_command_block(@entity[options[:x], options[:y]], nil, 
-                  yield_stack, &block)
+      shift_command_block(@entity[x, y], nil, yield_stack, &block)
     end
   end
 
   #画像を保存する
-  def _SAVE_IMAGE_(yield_stack, options)
-    @entity.save(options[:_ARGUMENT_], options[:format] || FORMAT_PNG)
+  def _SAVE_IMAGE_(yield_stack, _ARGUMENT_:, format: FORMAT_PNG)
+    @entity.save(_ARGUMENT_, format)
   end
 
   #指定したツリーを描画する

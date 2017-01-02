@@ -41,6 +41,10 @@ require_relative './ScriptCompiler.rb'
 module Tsukasa
 
 class Control #公開インターフェイス
+  #スクリプトパーサー
+  @@script_compiler = ScriptCompiler.new
+  @@script_parser = {}
+
   #プロセスのカレントディレクトリを保存する
   @@system_path = File.expand_path('../../', __FILE__)
 
@@ -50,33 +54,21 @@ class Control #公開インターフェイス
   attr_reader  :function_list #ユーザー定義関数
 
   #rootコントロールになった場合のみ使用
-  attr_reader :script_compiler #スクリプトコンパイラ
-  attr_accessor :script_parser #スクリプトパーサ
   attr_accessor :exit #終了
 
   def initialize( options = {}, 
                   yield_stack = nil, 
-                  root_control = nil, 
-                  parent_control = nil, 
+                  root_control = self, 
+                  parent_control = self, 
                   &block)
     @child_update = true
 
-    if root_control
-      #rootコントロールの保存
-      @root_control = root_control
-      #親コントロールの保存
-      @parent_control = parent_control
-      #終了フラグを初期化
-      @exit = false
-    else
-      #rootコントロールの保存
-      @root_control = self
-      #親コントロールの保存
-      @parent_control = self
-      #パーサー
-      @script_compiler = ScriptCompiler.new
-      @script_parser = {}
-    end
+    #rootコントロールの保存
+    @root_control = root_control
+    #親コントロールの保存
+    @parent_control = parent_control
+    #終了フラグを初期化
+    @exit = false
 
     # ユーザ定義関数
     @function_list = {} 
@@ -108,7 +100,7 @@ class Control #公開インターフェイス
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
   def shift_command_block(options, yield_stack, &block)
-    @command_list = @root_control.script_compiler.eval_block(
+    @command_list = @@script_compiler.eval_block(
                                               options, yield_stack, &block) + 
                     @command_list
   end
@@ -116,7 +108,7 @@ class Control #公開インターフェイス
   #ブロックをパースしてコマンド配列化し、コマンドリストの末尾に挿入する
   def push_command_block(options, yield_stack, &block)
     @command_list = @command_list + 
-                    @root_control.script_compiler.eval_block(
+                    @@script_compiler.eval_block(
                                               options, yield_stack, &block)
   end
 
@@ -519,7 +511,7 @@ class Control #スクリプト制御
   #カスタムパーサーの登録
   def _SCRIPT_PARSER_(yield_stack, path:, ext_name:, parser:)
     require_relative path
-    @root_control.script_parser[ext_name] = [
+    @@script_parser[ext_name] = [
       Module.const_get(parser).new,
       Module.const_get(parser)::Replacer.new]
   end
@@ -582,13 +574,13 @@ class Control #スクリプト制御
     #パーサーが指定されている場合
     if parser
       #文字列を取得して変換をかける
-      _ARGUMENT_ =  @root_control.script_parser[parser][1].apply(
-                      @root_control.script_parser[parser][0].parse(_ARGUMENT_)
+      _ARGUMENT_ = @@script_parser[parser][1].apply(
+                      @@script_parser[parser][0].parse(_ARGUMENT_)
                     )
     end
 
     #司スクリプトを評価してコマンド配列を取得し、コマンドリストの先頭に追加する
-    command_list = @root_control.script_compiler.eval_commands(
+    command_list = @@script_compiler.eval_commands(
                       _ARGUMENT_,
                       path,
                       yield_stack, 

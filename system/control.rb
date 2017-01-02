@@ -91,7 +91,7 @@ class Control #公開インターフェイス
 
     #ブロックが付与されているなら読み込んで登録する
     if block
-      shift_commands(options, yield_stack, &block)
+      shift_command_block(options, yield_stack, &block)
     end
 
     #コマンドセットがあるなら登録する（シリアライズなどで使用）
@@ -101,13 +101,18 @@ class Control #公開インターフェイス
 
   end
 
+  def send_command(command, options, yield_stack, &block)
+    #コマンドをスタックの末端に挿入する
+    @command_list.push([command, options, yield_stack, block])
+  end
+
   #ブロックをコマンド配列化して先頭に挿入する
-  def shift_commands(options, yield_stack, &block)
+  def shift_command_block(options, yield_stack, &block)
     @command_list = parse_block(options, yield_stack, &block) + @command_list
   end
 
   #ブロックをコマンド配列化して末尾に追加する
-  def push_commands(options, yield_stack, &block)
+  def push_command_block(options, yield_stack, &block)
     @command_list = @command_list + parse_block(options, yield_stack, &block)
   end
 
@@ -287,7 +292,7 @@ class Control #内部メソッド
     @command_list.unshift(:_END_FUNCTION_)
 
     #functionを実行時評価しコマンド列を生成する。
-    shift_commands(options, yield_stack, &function_block)
+    shift_command_block(options, yield_stack, &function_block)
   end
 end
 
@@ -377,7 +382,7 @@ class Control #セッター／ゲッター
     end
 
     #ブロックを実行する
-    shift_commands(result, yield_stack, &block)
+    shift_command_block(result, yield_stack, &block)
   end
 end
 
@@ -410,7 +415,7 @@ class Control #制御構文
     #チェック条件を満たす場合
     if result
       #ブロックを実行する
-      shift_commands(nil, yield_stack, &block)
+      shift_command_block(nil, yield_stack, &block)
     end
   end
 
@@ -418,7 +423,7 @@ class Control #制御構文
   def _CHECK_BLOCK_(yield_stack, options, &block)
     unless yield_stack[-1] == nil
       #条件が成立したらブロックを実行する
-      shift_commands(nil, yield_stack, &block)
+      shift_command_block(nil, yield_stack, &block)
     end
   end
 
@@ -444,7 +449,7 @@ class Control #制御構文
     #現在のループ終端を挿入
     @command_list.unshift([:_END_LOOP_])
     #ブロックを実行時評価しコマンド列を生成する。
-    shift_commands(args, yield_stack,&block)
+    shift_command_block(args, yield_stack,&block)
   end
 
   def _NEXT_(yield_stack, _ARGUMENT_: nil, &block)
@@ -456,7 +461,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_commands(nil, yield_stack, &block)
+      shift_command_block(nil, yield_stack, &block)
     end
   end
 
@@ -472,7 +477,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_commands(nil, yield_stack, &block)
+      shift_command_block(nil, yield_stack, &block)
     end
   end
 
@@ -486,7 +491,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_commands(nil, yield_stack.pop, &block)
+      shift_command_block(nil, yield_stack.pop, &block)
     end
   end
 end
@@ -508,7 +513,7 @@ class Control #ユーザー定義関数操作
     yield_block = new_yield_stack.pop
     raise unless yield_block
 
-    shift_commands(options, new_yield_stack, &yield_block)
+    shift_command_block(options, new_yield_stack, &yield_block)
   end
 end
 
@@ -530,10 +535,10 @@ class Control #スクリプト制御
     #インタラプト指定されている
     if interrupt
       #子コントロールのコマンドリスト先頭に挿入
-      control.shift_commands(options, yield_stack, &block)
+      control.shift_command_block(options, yield_stack, &block)
     else
       #子コントロールのコマンドリスト末端に挿入
-      control.push_commands(options, yield_stack, &block)
+      control.push_command_block(options, yield_stack, &block)
     end
   end
 
@@ -621,7 +626,7 @@ class Control #セーブデータ制御
       @command_list = _ARGUMENT_
     else
       #シリアライズし、ブロックに渡す
-      shift_commands({command_list: serialize()}, yield_stack, &block)
+      shift_command_block({command_list: serialize()}, yield_stack, &block)
     end
   end
 end
@@ -673,7 +678,7 @@ class Control #プロパティのパラメータ遷移
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_commands({end: _ARGUMENT_[0], now: _ARGUMENT_[2]}, 
+      shift_command_block({end: _ARGUMENT_[0], now: _ARGUMENT_[2]}, 
                   yield_stack,&block)
     end
   end
@@ -875,7 +880,7 @@ class Control #プロパティのパラメータ遷移
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_commands({end: _ARGUMENT_[0], now: _ARGUMENT_[2]}, 
+      shift_command_block({end: _ARGUMENT_[0], now: _ARGUMENT_[2]}, 
                   yield_stack, &block)
     end
   end

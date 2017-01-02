@@ -35,8 +35,8 @@ require 'dxruby'
 ###############################################################################
 
 #ガベージコレクション処理を強制的に実行する
-_DEFINE_ :_GC_GARBAGE_COLLECT_ do
-  GC.start()
+_DEFINE_ :_GC_GARBAGE_COLLECT_ do |full_mark: true, immediate_sweep: true|
+  GC.start(full_mark: full_mark, immediate_sweep: immediate_sweep)
 end
 
 #ガベージコレクションの実行を許可する
@@ -47,6 +47,16 @@ end
 #ガベージコレクションの実行を禁止する
 _DEFINE_ :_GC_DISABLE_ do
   GC.disable()
+end
+
+#ガベージコレクションの最新の情報をハッシュで取得する
+#シンボルを設定した場合はその値のみを取得する
+_DEFINE_ :_GC_LATEST_GC_INFO_ do |_ARGUMENT_: nil|
+  if _ARGUMENT_
+    _YIELD_({_ARGUMENT_ => GC.latest_gc_info(_ARGUMENT_)})
+  else
+    _YIELD_(GC.latest_gc_info())
+  end
 end
 
 #ガベージコレクションの統計情報をハッシュで取得する

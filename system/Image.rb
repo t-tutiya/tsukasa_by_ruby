@@ -122,31 +122,23 @@ class Image < Helper::Drawable
   end
 
   #Image上に文字を描く
-  def _TEXT_(yield_stack, options)
-    options[:weight] = 4 unless options[:weight]
-    options[:option] = {} unless options[:option]
-    if options[:color]
-      options[:option][:color] = options[:color]  
-    else
-      options[:option][:color] = [0, 0, 0, 0]
+  def _TEXT_(yield_stack, 
+              weight: 4, option: {}, color: [0, 0, 0, 0],
+              x: 0, y: 0, text: "", size: 24, font_name: "", italic: false)
+    if color
+      option[:color] = color
     end
 
     @entity.draw_font_ex(
-      options[:x] || 0, options[:y] || 0,
-      options[:text],
-      DXRuby::Font.new( options[:size] || 24,
-                options[:font_name] || "",  
-                {
-                  weight: options[:weight] * 100,
-                  italic: options[:italic] || false
-                }
-              ),
-      options[:option])
+      x, y,
+      text,
+      DXRuby::Font.new(size, font_name,{weight: weight * 100, italic: italic}),
+      option)
   end
 
   #Imageを指定色で塗りつぶす
-  def _FILL_(yield_stack, options)
-    @entity.fill(options[:_ARGUMENT_])
+  def _FILL_(yield_stack, _ARGUMENT_:)
+    @entity.fill(_ARGUMENT_)
   end
 
   #Imageを[0,0,0,0]で塗りつぶす

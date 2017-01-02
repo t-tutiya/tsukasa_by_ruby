@@ -2,7 +2,7 @@
 
 require 'rake/testtask'
 
-task :default => [:test]
+#task :default => [:test]
 
 Rake::TestTask.new do |test|
   # $LOAD_PATH に追加するパス (デフォルトで 'lib' は入っている)

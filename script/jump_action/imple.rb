@@ -38,7 +38,7 @@ class MainChar < Tsukasa::Image
        collision_tile(@x+31, @y+31) == 1
       @y = @y/32*32
       #ブロックを実行する
-      parse_block(options, yield_stack, &block)
+      shift_command_block(options, yield_stack, &block)
     end
   end
 

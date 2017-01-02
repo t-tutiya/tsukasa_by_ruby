@@ -101,19 +101,23 @@ class Control #公開インターフェイス
 
   end
 
+  #コマンドをスタックの末端に挿入する
   def send_command(command, options, yield_stack, &block)
-    #コマンドをスタックの末端に挿入する
     @command_list.push([command, options, yield_stack, block])
   end
 
-  #ブロックをコマンド配列化して先頭に挿入する
+  #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
   def shift_command_block(options, yield_stack, &block)
-    @command_list = parse_block(options, yield_stack, &block) + @command_list
+    @command_list = @root_control.script_compiler.eval_block(
+                                              options, yield_stack, &block) + 
+                    @command_list
   end
 
-  #ブロックをコマンド配列化して末尾に追加する
+  #ブロックをパースしてコマンド配列化し、コマンドリストの末尾に挿入する
   def push_command_block(options, yield_stack, &block)
-    @command_list = @command_list + parse_block(options, yield_stack, &block)
+    @command_list = @command_list + 
+                    @root_control.script_compiler.eval_block(
+                                              options, yield_stack, &block)
   end
 
   def update(mouse_pos_x, mouse_pos_y, index)
@@ -259,12 +263,6 @@ class Control #内部メソッド
   #############################################################################
 
   private
-
-  #rubyブロックをパースしてコマンドの配列に変換する
-  def parse_block(options, yield_stack, &block)
-    return @root_control.script_compiler.eval_block(
-              options, yield_stack, &block)
-  end
 
   #コマンドの実行
   def exec_command(command_name, options, yield_stack, &block)

@@ -77,13 +77,13 @@ class Image < Helper::Drawable
   end
 
   #Image上に直線を引く
-  def _LINE_(yield_stack, x1:, y1:, x2:, y2:, color:)
+  def _LINE_(block, yield_stack, x1:, y1:, x2:, y2:, color:)
     @entity.line( 
       x1, y1, x2, y2, color)
   end
 
   #Image上に矩形を描く
-  def _BOX_(yield_stack, x1:, y1:, x2:, y2:, color:, fill: false)
+  def _BOX_(block, yield_stack, x1:, y1:, x2:, y2:, color:, fill: false)
     if fill
       @entity.box_fill(x1, y1, x2, y2, color)
     else
@@ -92,7 +92,7 @@ class Image < Helper::Drawable
   end
 
   #Image上に円を描く
-  def _CIRCLE_(yield_stack, x:, y:, r:, color:, fill: false)
+  def _CIRCLE_(block, yield_stack, x:, y:, r:, color:, fill: false)
     if fill
       @entity.circle_fill(x, y, r, color)
     else
@@ -101,7 +101,7 @@ class Image < Helper::Drawable
   end
 
   #Image上に三角形を描く
-  def _TRIANGLE_(yield_stack, x1:, y1:, x2:, y2:,  x3:, y3:, color:, fill: false)
+  def _TRIANGLE_(block, yield_stack, x1:, y1:, x2:, y2:,  x3:, y3:, color:, fill: false)
     if fill
       @entity.triangle_fill(x1, y1, x2, y2, x3, y3, color)
     else
@@ -110,7 +110,7 @@ class Image < Helper::Drawable
   end
 
   #Image上に文字を描く
-  def _TEXT_(yield_stack, 
+  def _TEXT_(block, yield_stack, 
               weight: 4, option: {}, color: [0, 0, 0, 0],
               x: 0, y: 0, text: "", size: 24, font_name: "", italic: false)
     if color
@@ -125,7 +125,7 @@ class Image < Helper::Drawable
   end
 
   #Imageを指定色で塗りつぶす
-  def _FILL_(yield_stack, _ARGUMENT_:)
+  def _FILL_(block, yield_stack, _ARGUMENT_:)
     @entity.fill(_ARGUMENT_)
   end
 
@@ -135,7 +135,7 @@ class Image < Helper::Drawable
   end
 
   #Imageの指定座標への色の取得／設定
-  def _PIXEL_(yield_stack, x:, y:, color: , &block)
+  def _PIXEL_(block, yield_stack, x:, y:, color:)
     if color
       @entity[x, y] = color
     end
@@ -146,7 +146,7 @@ class Image < Helper::Drawable
   end
 
   #Imageを指定座標の色を比較し、同値ならブロックを実行する
-  def _COMPARE_(yield_stack, x:, y:, color: , &block)
+  def _COMPARE_(block, yield_stack, x:, y:, color:)
     if @entity.compare(x, y, color)
       #ブロックが付与されているならそれを実行する
       shift_command_block(@entity[x, y], nil, yield_stack, block)
@@ -159,7 +159,7 @@ class Image < Helper::Drawable
   end
 
   #指定したツリーを描画する
-  def _DRAW_(yield_stack, _ARGUMENT_: , x: 0, y: 0, scale: nil, **, &block)
+  def _DRAW_(block, yield_stack, _ARGUMENT_: , x: 0, y: 0, scale: nil, **)
     #中間バッファを生成
     rt = DXRuby::RenderTarget.new(@width, @height)
 

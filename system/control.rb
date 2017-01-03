@@ -261,7 +261,7 @@ class Control #内部メソッド
     #コマンドがメソッドとして存在する場合
     if self.respond_to?(command_name, true)
       #コマンドを実行する
-      send(command_name, yield_stack, options, &block)
+      send(command_name, block, yield_stack, options)
       return
     end
 
@@ -288,7 +288,7 @@ end
 
 class Control #コントロールの生成／破棄
   #コントロールをリストに登録する
-  def _CREATE_(yield_stack, _ARGUMENT_:, **options, &block)
+  def _CREATE_(block, yield_stack, _ARGUMENT_:, **options)
     #コントロールを生成して子要素として登録する
     @control_list.push(
       Tsukasa.const_get(_ARGUMENT_).new(options, 
@@ -306,7 +306,7 @@ class Control #コントロールの生成／破棄
   end
 
   #コントロールを削除する
-  def _DELETE_(yield_stack, _ARGUMENT_: nil)
+  def _DELETE_(block, yield_stack, _ARGUMENT_: nil)
     #コントロールを検索する
     control = find_control_path(_ARGUMENT_)
 
@@ -315,7 +315,7 @@ class Control #コントロールの生成／破棄
   end
 
   #プロパティを動的に追加する
-  def _DEFINE_PROPERTY_(yield_stack, options)
+  def _DEFINE_PROPERTY_(block, yield_stack, options)
     #ハッシュを巡回
     options.each do |key, value|
       #インスタンス変数を動的に生成し、値を設定する
@@ -340,7 +340,7 @@ end
 
 class Control #セッター／ゲッター
   #コントロールのプロパティを更新する
-  def _SET_(yield_stack, _ARGUMENT_: nil, **options)
+  def _SET_(block, yield_stack, _ARGUMENT_: nil, **options)
     #オプション全探査
     options.each do |key, val|
       begin
@@ -353,7 +353,7 @@ class Control #セッター／ゲッター
   end
 
   #指定したコントロール(orデータストア)のプロパティを取得する
-  def _GET_(yield_stack, _ARGUMENT_:, control: nil, &block)
+  def _GET_(block, yield_stack, _ARGUMENT_:, control: nil)
     result = {}
 
     #オプション全探査
@@ -378,7 +378,7 @@ end
 
 class Control #制御構文
   #条件判定
-  def _CHECK_(yield_stack, _ARGUMENT_: nil, **options, &block)
+  def _CHECK_(block, yield_stack, _ARGUMENT_: nil, **options)
     #比較対象とするコントロールを取得する
     control = find_control_path(_ARGUMENT_)
 
@@ -410,7 +410,7 @@ class Control #制御構文
   end
 
 
-  def _CHECK_BLOCK_(yield_stack, options, &block)
+  def _CHECK_BLOCK_(block, yield_stack, options)
     unless yield_stack[-1] == nil
       #条件が成立したらブロックを実行する
       shift_command_block(nil, yield_stack, block)
@@ -418,7 +418,7 @@ class Control #制御構文
   end
 
   #繰り返し
-  def _LOOP_(yield_stack, _ARGUMENT_: nil, &block) 
+  def _LOOP_(block, yield_stack, _ARGUMENT_: nil) 
     if _ARGUMENT_
       _ARGUMENT_ = Array(_ARGUMENT_)
       
@@ -442,7 +442,7 @@ class Control #制御構文
     shift_command_block(args, yield_stack, block)
   end
 
-  def _NEXT_(yield_stack, _ARGUMENT_: nil, &block)
+  def _NEXT_(block, yield_stack, _ARGUMENT_: nil)
     #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -455,7 +455,7 @@ class Control #制御構文
     end
   end
 
-  def _BREAK_(yield_stack, _ARGUMENT_: nil, &block)
+  def _BREAK_(block, yield_stack, _ARGUMENT_: nil)
     #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -471,7 +471,7 @@ class Control #制御構文
     end
   end
 
-  def _RETURN_(yield_stack, _ARGUMENT_: nil, &block)
+  def _RETURN_(block, yield_stack, _ARGUMENT_: nil)
     #_END_FUNCTION_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_FUNCTION_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -488,17 +488,17 @@ end
 
 class Control #ユーザー定義関数操作
   #ユーザー定義コマンドを定義する
-  def _DEFINE_(yield_stack, _ARGUMENT_:, &block)
+  def _DEFINE_(block, yield_stack, _ARGUMENT_:)
     @function_list[_ARGUMENT_] = block
   end
 
   #ユーザー定義コマンドの別名を作る
-  def _ALIAS_(yield_stack, new:, old:, &block)
+  def _ALIAS_(block, yield_stack, new:, old:)
     @function_list[new] = @function_list[old]
   end
 
   #関数ブロックを実行する
-  def _YIELD_(yield_stack, options)
+  def _YIELD_(block, yield_stack, options)
     new_yield_stack = yield_stack.dup
     yield_block = new_yield_stack.pop
     raise unless yield_block
@@ -509,7 +509,7 @@ end
 
 class Control #スクリプト制御
   #カスタムパーサーの登録
-  def _SCRIPT_PARSER_(yield_stack, path:, ext_name:, parser:)
+  def _SCRIPT_PARSER_(block, yield_stack, path:, ext_name:, parser:)
     require_relative path
     @@script_parser[ext_name] = [
       Module.const_get(parser).new,
@@ -517,7 +517,7 @@ class Control #スクリプト制御
   end
 
   #子コントロールを検索してコマンドブロックを送信する
-  def _SEND_(yield_stack, _ARGUMENT_: nil, interrupt: nil, **options, &block)
+  def _SEND_(block, yield_stack, _ARGUMENT_: nil, interrupt: nil, **options)
     #コントロールを検索する
     control = find_control_path(_ARGUMENT_)
     return unless control
@@ -533,16 +533,16 @@ class Control #スクリプト制御
   end
 
   #直下の子コントロール全てにコマンドを送信する
-  def _SEND_ALL_(yield_stack, _ARGUMENT_: nil, **options, &block)
+  def _SEND_ALL_(block, yield_stack, _ARGUMENT_: nil, **options)
     #子コントロール全てを探査対象とする
     @control_list.each do |control|
       next if _ARGUMENT_ and (control.id != _ARGUMENT_)
-      control._SEND_(yield_stack, options, &block)
+      control._SEND_(block, yield_stack, options)
     end
   end
 
   #スクリプトファイルを挿入する
-  def _INCLUDE_(yield_stack, _ARGUMENT_:, path: nil, parser: nil, force: false, **)
+  def _INCLUDE_(block, yield_stack, _ARGUMENT_:, path: nil, parser: nil, force: false, **)
     #プロセスのカレントディレクトリを強制的に更新する
     #TODO：Window.open_filenameが使用された場合の対策だが、他に方法はないか？
     FileUtils.chdir(@@system_path)
@@ -558,7 +558,7 @@ class Control #スクリプト制御
 
     begin
       #スクリプトをパースする
-      _PARSE_(yield_stack, 
+      _PARSE_(block, yield_stack, 
         _ARGUMENT_: File.read(path, encoding: "UTF-8"),
         parser: parser
       )
@@ -568,7 +568,7 @@ class Control #スクリプト制御
   end
 
   #スクリプトをパースする
-  def _PARSE_(yield_stack, _ARGUMENT_:, path: nil, parser: nil, **)
+  def _PARSE_(block, yield_stack, _ARGUMENT_:, path: nil, parser: nil, **)
     path = "(parse)" unless path
 
     #パーサーが指定されている場合
@@ -589,17 +589,17 @@ class Control #スクリプト制御
   end
 
   #アプリを終了する
-  def _EXIT_(yield_stack, options)
+  def _EXIT_(block, yield_stack, options)
     @root_control.exit = true
   end
 
   #文字列を評価する（デバッグ用）
-  def _EVAL_(yield_stack, _ARGUMENT_:)
+  def _EVAL_(block, yield_stack, _ARGUMENT_:)
     eval(_ARGUMENT_)
   end
 
   #文字列をコマンドラインに出力する（デバッグ用）
-  def _PUTS_(yield_stack, _ARGUMENT_: nil, **options)
+  def _PUTS_(block, yield_stack, _ARGUMENT_: nil, **options)
     if _ARGUMENT_
       puts '"' + _ARGUMENT_.to_s + '"'
     else
@@ -609,7 +609,7 @@ class Control #スクリプト制御
 end
 
 class Control #セーブデータ制御
-  def _SERIALIZE_(yield_stack, _ARGUMENT_: nil, &block)
+  def _SERIALIZE_(block, yield_stack, _ARGUMENT_: nil)
     #第一引数が設定されている
     if _ARGUMENT_
       #デシリアライズする（コマンドリストが挿し変わる）
@@ -623,22 +623,22 @@ end
 
 class Control #内部コマンド
   #ファンクションの終点を示す
-  def _END_LOOP_(yield_stack, options)
+  def _END_LOOP_(block, yield_stack, options)
   end
 
   #ファンクションの終点を示す
-  def _END_FUNCTION_(yield_stack, options)
+  def _END_FUNCTION_(block, yield_stack, options)
   end
   
   #フレームの終了を示す（ダミーコマンド。これ自体は実行されない）
-  def _END_FRAME_(yield_stack, options)
+  def _END_FRAME_(block, yield_stack, options)
     raise
   end
 end
 
 class Control #プロパティのパラメータ遷移
 
-  def _MOVE_(yield_stack, _ARGUMENT_:, **options, &block)
+  def _MOVE_(block, yield_stack, _ARGUMENT_:, **options)
     _ARGUMENT_ = Array(_ARGUMENT_)
     # Easingパラメータが設定されていない場合は線形移動を設定
     _ARGUMENT_[1] ||= :liner
@@ -825,7 +825,7 @@ class Control #プロパティのパラメータ遷移
   #スプライン補間
   #これらの実装については以下のサイトを参考にさせて頂きました。感謝します。
   # http://www1.u-netsurf.ne.jp/~future/HTML/bspline.html
-  def _PATH_(yield_stack, _ARGUMENT_:, **options, &block)
+  def _PATH_(block, yield_stack, _ARGUMENT_:, **options)
     _ARGUMENT_ = Array(_ARGUMENT_)
     #移動アルゴリズムの指定（初期値Ｂスプライン）
     _ARGUMENT_[1] ||= :spline
@@ -919,12 +919,12 @@ class Control #デバッグ支援機能
   end
 
   #コントロールツリーを出力する
-  def _DEBUG_TREE_(yield_stack, options)
+  def _DEBUG_TREE_(block, yield_stack, options)
     put_control_tree(0)
   end
 
   #プロパティの現在値を出力する
-  def _DEBUG_PROP_(yield_stack, options)
+  def _DEBUG_PROP_(block, yield_stack, options)
     methods.each do |method|
       method = method.to_s
       if method[-1] == "=" and not(["===", "==", "!="].index(method))
@@ -934,7 +934,7 @@ class Control #デバッグ支援機能
   end
 
   #コマンドリストを出力する
-  def _DEBUG_COMMAND_(yield_stack, options)
+  def _DEBUG_COMMAND_(block, yield_stack, options)
     @command_list.each do |command|
       p command
     end

@@ -45,7 +45,7 @@ class ScriptCompiler
     return @command_list
   end
 
-  def eval_block(options, yield_stack, block)
+  def eval_block(block, yield_stack, options)
     raise unless block
 
     @yield_stack = yield_stack

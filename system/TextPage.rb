@@ -299,6 +299,8 @@ class TextPage < Layout
   def _CHAR_(block, yield_stack, options)
     #文字コントロールを生成する
     @control_list.last.send_command(:_CREATE_, 
+                                @function_list[:_CHAR_RENDERER_],
+                                yield_stack,
                                 {
                                   :_ARGUMENT_ => :Char, 
                                   :offset_x => @character_pitch,
@@ -307,9 +309,7 @@ class TextPage < Layout
                                   :command_list=> options[:command_list],
                                   :float_x => :left,
                                   :image_path => options[:image_path]
-                                }.merge(@char_option), 
-                                yield_stack,
-                                @function_list[:_CHAR_RENDERER_]
+                                }.merge(@char_option)
                                )
 
     #文字待機処理をスタックする
@@ -369,15 +369,15 @@ class TextPage < Layout
 
     #TextPageをベース文字に登録する。
     @control_list.last.send_command(:_CREATE_, 
+                                nil, 
+                                nil,
                                 {
                                   :_ARGUMENT_ => :Layout, 
                                   :width => 0,
                                   :height => @size,
                                   :command_list => [rubi_layout],
                                   :float_x => :left
-                                },
-                                nil, 
-                                nil)
+                                })
   end
 
   #line_feedコマンド

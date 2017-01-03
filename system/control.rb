@@ -94,22 +94,22 @@ class Control #公開インターフェイス
   end
 
   #コマンドをスタックの末端に挿入する
-  def send_command(command, options, yield_stack, block)
+  def send_command(command, block, yield_stack, options)
     @command_list.push([command, options, yield_stack, block])
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
   def shift_command_block(options, yield_stack, block)
-    @command_list = @@script_compiler.eval_block(
-                                              options, yield_stack, block) + 
-                    @command_list
+    @command_list = 
+      @@script_compiler.eval_block(block, yield_stack, options) + 
+      @command_list
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの末尾に挿入する
   def push_command_block(options, yield_stack, block)
-    @command_list = @command_list + 
-                    @@script_compiler.eval_block(
-                                              options, yield_stack, block)
+    @command_list = 
+      @command_list + 
+      @@script_compiler.eval_block(block, yield_stack, options)
   end
 
   def update(mouse_pos_x, mouse_pos_y, index)
@@ -124,7 +124,7 @@ class Control #公開インターフェイス
       break if command_name == :_END_FRAME_
 
       #コマンドを実行する
-      exec_command(command_name, options, yield_stack, block)
+      exec_command(command_name, block, yield_stack, options)
     end
 
     #子コントロールを更新しない場合は処理を終了
@@ -257,7 +257,7 @@ class Control #内部メソッド
   private
 
   #コマンドの実行
-  def exec_command(command_name, options, yield_stack, block)
+  def exec_command(command_name, block, yield_stack, options)
     #コマンドがメソッドとして存在する場合
     if self.respond_to?(command_name, true)
       #コマンドを実行する

@@ -319,7 +319,7 @@ class TextPage < Layout
   #指定したコマンドブロックを文字列の末端に追加する
   def _CHAR_COMMAND_(block, yield_stack, options)
     #文字コントロールを生成する
-    @control_list.last.push_command_block(options, yield_stack, block)
+    @control_list.last.push_command_block(block, yield_stack, options)
 
     #文字待機処理をスタックする
     @command_list.unshift([:_CHAR_WAIT_, {}, yield_stack, nil])

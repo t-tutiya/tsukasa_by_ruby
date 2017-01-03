@@ -83,7 +83,7 @@ class Control #公開インターフェイス
 
     #ブロックが付与されているなら読み込んで登録する
     if block
-      shift_command_block(options, yield_stack, &block)
+      shift_command_block(options, yield_stack, block)
     end
 
     #コマンドセットがあるなら登録する（シリアライズなどで使用）
@@ -94,22 +94,22 @@ class Control #公開インターフェイス
   end
 
   #コマンドをスタックの末端に挿入する
-  def send_command(command, options, yield_stack, &block)
+  def send_command(command, options, yield_stack, block)
     @command_list.push([command, options, yield_stack, block])
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
-  def shift_command_block(options, yield_stack, &block)
+  def shift_command_block(options, yield_stack, block)
     @command_list = @@script_compiler.eval_block(
-                                              options, yield_stack, &block) + 
+                                              options, yield_stack, block) + 
                     @command_list
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの末尾に挿入する
-  def push_command_block(options, yield_stack, &block)
+  def push_command_block(options, yield_stack, block)
     @command_list = @command_list + 
                     @@script_compiler.eval_block(
-                                              options, yield_stack, &block)
+                                              options, yield_stack, block)
   end
 
   def update(mouse_pos_x, mouse_pos_y, index)
@@ -124,7 +124,7 @@ class Control #公開インターフェイス
       break if command_name == :_END_FRAME_
 
       #コマンドを実行する
-      exec_command(command_name, options, yield_stack, &block)
+      exec_command(command_name, options, yield_stack, block)
     end
 
     #子コントロールを更新しない場合は処理を終了
@@ -257,7 +257,7 @@ class Control #内部メソッド
   private
 
   #コマンドの実行
-  def exec_command(command_name, options, yield_stack, &block)
+  def exec_command(command_name, options, yield_stack, block)
     #コマンドがメソッドとして存在する場合
     if self.respond_to?(command_name, true)
       #コマンドを実行する
@@ -282,7 +282,7 @@ class Control #内部メソッド
     @command_list.unshift(:_END_FUNCTION_)
 
     #functionを実行時評価しコマンド列を生成する。
-    shift_command_block(options, yield_stack, &function_block)
+    shift_command_block(options, yield_stack, function_block)
   end
 end
 
@@ -372,7 +372,7 @@ class Control #セッター／ゲッター
     end
 
     #ブロックを実行する
-    shift_command_block(result, yield_stack, &block)
+    shift_command_block(result, yield_stack, block)
   end
 end
 
@@ -405,7 +405,7 @@ class Control #制御構文
     #チェック条件を満たす場合
     if result
       #ブロックを実行する
-      shift_command_block(nil, yield_stack, &block)
+      shift_command_block(nil, yield_stack, block)
     end
   end
 
@@ -413,7 +413,7 @@ class Control #制御構文
   def _CHECK_BLOCK_(yield_stack, options, &block)
     unless yield_stack[-1] == nil
       #条件が成立したらブロックを実行する
-      shift_command_block(nil, yield_stack, &block)
+      shift_command_block(nil, yield_stack, block)
     end
   end
 
@@ -439,7 +439,7 @@ class Control #制御構文
     #現在のループ終端を挿入
     @command_list.unshift([:_END_LOOP_])
     #ブロックを実行時評価しコマンド列を生成する。
-    shift_command_block(args, yield_stack,&block)
+    shift_command_block(args, yield_stack, block)
   end
 
   def _NEXT_(yield_stack, _ARGUMENT_: nil, &block)
@@ -451,7 +451,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_command_block(nil, yield_stack, &block)
+      shift_command_block(nil, yield_stack, block)
     end
   end
 
@@ -467,7 +467,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_command_block(nil, yield_stack, &block)
+      shift_command_block(nil, yield_stack, block)
     end
   end
 
@@ -481,7 +481,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_command_block(nil, yield_stack.pop, &block)
+      shift_command_block(nil, yield_stack.pop, block)
     end
   end
 end
@@ -503,7 +503,7 @@ class Control #ユーザー定義関数操作
     yield_block = new_yield_stack.pop
     raise unless yield_block
 
-    shift_command_block(options, new_yield_stack, &yield_block)
+    shift_command_block(options, new_yield_stack, yield_block)
   end
 end
 
@@ -525,10 +525,10 @@ class Control #スクリプト制御
     #インタラプト指定されている
     if interrupt
       #子コントロールのコマンドリスト先頭に挿入
-      control.shift_command_block(options, yield_stack, &block)
+      control.shift_command_block(options, yield_stack, block)
     else
       #子コントロールのコマンドリスト末端に挿入
-      control.push_command_block(options, yield_stack, &block)
+      control.push_command_block(options, yield_stack, block)
     end
   end
 
@@ -616,7 +616,7 @@ class Control #セーブデータ制御
       @command_list = _ARGUMENT_
     else
       #シリアライズし、ブロックに渡す
-      shift_command_block({command_list: serialize()}, yield_stack, &block)
+      shift_command_block({command_list: serialize()}, yield_stack, block)
     end
   end
 end
@@ -669,7 +669,7 @@ class Control #プロパティのパラメータ遷移
     if block
       #ブロックが付与されているならそれを実行する
       shift_command_block({end: _ARGUMENT_[0], now: _ARGUMENT_[2]}, 
-                  yield_stack,&block)
+                  yield_stack, block)
     end
   end
 
@@ -871,7 +871,7 @@ class Control #プロパティのパラメータ遷移
     if block
       #ブロックが付与されているならそれを実行する
       shift_command_block({end: _ARGUMENT_[0], now: _ARGUMENT_[2]}, 
-                  yield_stack, &block)
+                  yield_stack, block)
     end
   end
 

@@ -309,7 +309,7 @@ class TextPage < Layout
                                   :image_path => options[:image_path]
                                 }.merge(@char_option), 
                                 yield_stack,
-                                &@function_list[:_CHAR_RENDERER_]
+                                @function_list[:_CHAR_RENDERER_]
                                )
 
     #文字待機処理をスタックする
@@ -319,7 +319,7 @@ class TextPage < Layout
   #指定したコマンドブロックを文字列の末端に追加する
   def _CHAR_COMMAND_(yield_stack, options, &block)
     #文字コントロールを生成する
-    @control_list.last.push_command_block(options, yield_stack, &block)
+    @control_list.last.push_command_block(options, yield_stack, block)
 
     #文字待機処理をスタックする
     @command_list.unshift([:_CHAR_WAIT_, {}, yield_stack, nil])
@@ -376,6 +376,7 @@ class TextPage < Layout
                                   :command_list => [rubi_layout],
                                   :float_x => :left
                                 },
+                                nil, 
                                 nil)
   end
 

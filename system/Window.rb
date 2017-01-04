@@ -163,7 +163,7 @@ class Window < ClickableLayout
   def _CHECK_REQUESTED_CLOSE_(block, yield_stack, options = nil)
     #「閉じる」ボタンが押下された
     if DXRuby::Input.requested_close?
-      shift_command_block(block, yield_stack, nil)
+      unshift_command_block(block, yield_stack, nil)
     end
   end
 

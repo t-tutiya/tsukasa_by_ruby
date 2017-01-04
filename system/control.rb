@@ -83,7 +83,7 @@ class Control #公開インターフェイス
 
     #ブロックが付与されているなら読み込んで登録する
     if block
-      shift_command_block(block, yield_stack, options)
+      unshift_command_block(block, yield_stack, options)
     end
 
     #コマンドセットがあるなら登録する（シリアライズなどで使用）
@@ -104,7 +104,7 @@ class Control #公開インターフェイス
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
-  def shift_command_block(block, yield_stack, options)
+  def unshift_command_block(block, yield_stack, options)
     @command_list = 
       @@script_compiler.eval_block(block, yield_stack, options) + 
       @command_list
@@ -287,7 +287,7 @@ class Control #内部メソッド
     @command_list.unshift(:_END_FUNCTION_)
 
     #functionを実行時評価しコマンド列を生成する。
-    shift_command_block(function_block, yield_stack, options)
+    unshift_command_block(function_block, yield_stack, options)
   end
 end
 
@@ -377,7 +377,7 @@ class Control #セッター／ゲッター
     end
 
     #ブロックを実行する
-    shift_command_block(block, yield_stack, result)
+    unshift_command_block(block, yield_stack, result)
   end
 end
 
@@ -410,7 +410,7 @@ class Control #制御構文
     #チェック条件を満たす場合
     if result
       #ブロックを実行する
-      shift_command_block(block, yield_stack, nil)
+      unshift_command_block(block, yield_stack, nil)
     end
   end
 
@@ -418,7 +418,7 @@ class Control #制御構文
   def _CHECK_BLOCK_(block, yield_stack, options)
     unless yield_stack[-1] == nil
       #条件が成立したらブロックを実行する
-      shift_command_block(block, yield_stack, nil)
+      unshift_command_block(block, yield_stack, nil)
     end
   end
 
@@ -444,7 +444,7 @@ class Control #制御構文
     #現在のループ終端を挿入
     unshift_command(:_END_LOOP_, nil, nil, nil)
     #ブロックを実行時評価しコマンド列を生成する。
-    shift_command_block(block, yield_stack, args)
+    unshift_command_block(block, yield_stack, args)
   end
 
   def _NEXT_(block, yield_stack, _ARGUMENT_: nil)
@@ -456,7 +456,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_command_block(block, yield_stack, nil)
+      unshift_command_block(block, yield_stack, nil)
     end
   end
 
@@ -472,7 +472,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_command_block(block, yield_stack, nil)
+      unshift_command_block(block, yield_stack, nil)
     end
   end
 
@@ -486,7 +486,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_command_block(block, yield_stack.pop, nil)
+      unshift_command_block(block, yield_stack.pop, nil)
     end
   end
 end
@@ -508,7 +508,7 @@ class Control #ユーザー定義関数操作
     block = yield_stack.pop
     raise unless block
 
-    shift_command_block(block, yield_stack, options)
+    unshift_command_block(block, yield_stack, options)
   end
 end
 
@@ -530,7 +530,7 @@ class Control #スクリプト制御
     #インタラプト指定されている
     if interrupt
       #子コントロールのコマンドリスト先頭に挿入
-      control.shift_command_block(block, yield_stack, options)
+      control.unshift_command_block(block, yield_stack, options)
     else
       #子コントロールのコマンドリスト末端に挿入
       control.push_command_block(block, yield_stack, options)
@@ -621,7 +621,7 @@ class Control #セーブデータ制御
       @command_list = _ARGUMENT_
     else
       #シリアライズし、ブロックに渡す
-      shift_command_block(block, yield_stack, {command_list: serialize()})
+      unshift_command_block(block, yield_stack, {command_list: serialize()})
     end
   end
 end
@@ -674,7 +674,7 @@ class Control #プロパティのパラメータ遷移
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_command_block(block, yield_stack,
+      unshift_command_block(block, yield_stack,
                           {end: _ARGUMENT_[0], now: _ARGUMENT_[2]})
     end
   end
@@ -877,7 +877,7 @@ class Control #プロパティのパラメータ遷移
 
     if block
       #ブロックが付与されているならそれを実行する
-      shift_command_block(block, yield_stack,
+      unshift_command_block(block, yield_stack,
                           {end: _ARGUMENT_[0], now: _ARGUMENT_[2]})
     end
   end

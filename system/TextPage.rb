@@ -339,7 +339,7 @@ class TextPage < Layout
     #文字列を分解してcharコマンドに変換する
     options[:_ARGUMENT_].to_s.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      command_list.push([char_command, {_ARGUMENT_: ch}, yield_stack, nil])
+      command_list.push([char_command, nil, yield_stack, {_ARGUMENT_: ch}])
     end
 
     #展開したコマンドをスタックする
@@ -348,10 +348,10 @@ class TextPage < Layout
 
   def _RUBI_(block, yield_stack, options)
     #ルビを出力するTextPageを生成する
-    rubi_layout =[:_CREATE_, 
+    rubi_layout =[:_CREATE_, nil, nil,
                   {
                     :_ARGUMENT_ => :TextPage, 
-                    :command_list => [[:_TEXT_, options, yield_stack, nil]],
+                    :command_list => [[:_TEXT_, nil, yield_stack, options]],
                     :x => @rubi_option[:offset_x],
                     :y => @rubi_option[:offset_y],
                     :height=> @rubi_option[:size],
@@ -362,9 +362,7 @@ class TextPage < Layout
                     :character_pitch => @rubi_option[:character_pitch],
                     :_LINE_WAIT_ => @function_list[:_LINE_WAIT_],
                     :_CHAR_WAIT_ => @function_list[:_CHAR_WAIT_],
-                    :_CHAR_RENDERER_ => @function_list[:_CHAR_RENDERER_]},
-                    nil, 
-                    nil]
+                    :_CHAR_RENDERER_ => @function_list[:_CHAR_RENDERER_]}]
 
     #TextPageをベース文字に登録する。
     @control_list.last.push_command(:_CREATE_, nil, nil,
@@ -384,14 +382,13 @@ class TextPage < Layout
     #インデントスペーサーの作成
     if @indent > 0
       command_list =[
-                      [ :_CREATE_, 
+                      [ :_CREATE_, nil, yield_stack,
                         {
                           :_ARGUMENT_ => :Layout, 
                           :width => @indent,
                           :height => @line_height,
                           :float_x => :left
-                        }, 
-                        yield_stack, nil
+                        }
                       ]
                     ]
     else

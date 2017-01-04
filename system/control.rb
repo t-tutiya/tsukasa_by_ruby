@@ -95,12 +95,12 @@ class Control #公開インターフェイス
 
   #コマンドをスタックの先頭に挿入する
   def unshift_command(command, block, yield_stack, options)
-    @command_list.unshift([command, options, yield_stack, block])
+    @command_list.unshift([command, block, yield_stack, options])
   end
 
   #コマンドをスタックの末端に挿入する
   def push_command(command, block, yield_stack, options)
-    @command_list.push([command, options, yield_stack, block])
+    @command_list.push([command, block, yield_stack, options])
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
@@ -123,7 +123,7 @@ class Control #公開インターフェイス
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
-      command_name, options, yield_stack, block = @command_list.shift
+      command_name, block, yield_stack, options = @command_list.shift
 
       #今フレーム処理終了判定
       break if command_name == :_END_FRAME_

@@ -274,14 +274,13 @@ class TextPage < Layout
     @function_list[:_LINE_WAIT_] = options[:_LINE_WAIT_] || Proc.new(){}
 
     #次のアクティブ行コントロールを追加  
-    @command_list.unshift([:_CREATE_, 
-                      {
-                        :_ARGUMENT_ => :Layout, 
-                        :width => @width,
-                        :height => @line_height,
-                        :float_y => :bottom
-                      }, 
-                      yield_stack, block])
+    unshift_command(:_CREATE_, block, yield_stack, 
+                    {
+                      :_ARGUMENT_ => :Layout, 
+                      :width => @width,
+                      :height => @line_height,
+                      :float_y => :bottom
+                    })
   end
 
   #############################################################################
@@ -298,7 +297,7 @@ class TextPage < Layout
   #指定文字（群）を描画チェインに連結する
   def _CHAR_(block, yield_stack, options)
     #文字コントロールを生成する
-    @control_list.last.send_command(:_CREATE_, 
+    @control_list.last.push_command(:_CREATE_, 
                                 @function_list[:_CHAR_RENDERER_],
                                 yield_stack,
                                 {
@@ -313,7 +312,7 @@ class TextPage < Layout
                                )
 
     #文字待機処理をスタックする
-    @command_list.unshift([:_CHAR_WAIT_, {}, yield_stack, nil])
+    unshift_command(:_CHAR_WAIT_, nil, yield_stack, {})
   end
 
   #指定したコマンドブロックを文字列の末端に追加する
@@ -322,7 +321,7 @@ class TextPage < Layout
     @control_list.last.push_command_block(block, yield_stack, options)
 
     #文字待機処理をスタックする
-    @command_list.unshift([:_CHAR_WAIT_, {}, yield_stack, nil])
+    unshift_command(:_CHAR_WAIT_, nil, yield_stack, {})
   end
 
   #textコマンド
@@ -368,16 +367,14 @@ class TextPage < Layout
                     nil]
 
     #TextPageをベース文字に登録する。
-    @control_list.last.send_command(:_CREATE_, 
-                                nil, 
-                                nil,
-                                {
-                                  :_ARGUMENT_ => :Layout, 
-                                  :width => 0,
-                                  :height => @size,
-                                  :command_list => [rubi_layout],
-                                  :float_x => :left
-                                })
+    @control_list.last.push_command(:_CREATE_, nil, nil,
+                                    {
+                                      :_ARGUMENT_ => :Layout, 
+                                      :width => 0,
+                                      :height => @size,
+                                      :command_list => [rubi_layout],
+                                      :float_x => :left
+                                    })
   end
 
   #line_feedコマンド
@@ -401,25 +398,20 @@ class TextPage < Layout
       command_list = nil
     end
 
-    @command_list.unshift(
-                    #次のアクティブ行コントロールを追加  
-                    [ :_CREATE_, 
-                      {
-                        :_ARGUMENT_ => :Layout, 
-                        :offset_y => @line_spacing,
-                        :width => @width,
-                        :height => @line_height,
-                        #インデント用無形コントロール
-                        :command_list => command_list, 
-                        :float_y => :bottom
-                      }, 
-                      yield_stack, nil
-                    ])
+    #次のアクティブ行コントロールを追加  
+    unshift_command(:_CREATE_, nil, yield_stack, 
+                    {
+                      :_ARGUMENT_ => :Layout, 
+                      :offset_y => @line_spacing,
+                      :width => @width,
+                      :height => @line_height,
+                      #インデント用無形コントロール
+                      :command_list => command_list, 
+                      :float_y => :bottom
+                    })
 
-    @command_list.unshift(
-                    #行間待機処理を設定する
-                    [:_LINE_WAIT_, {}, yield_stack, nil],
-    )
+    #行間待機処理を設定する
+    unshift_command(:_LINE_WAIT_, nil, yield_stack, {})
   end
 
   #flushコマンド
@@ -432,14 +424,13 @@ class TextPage < Layout
     @control_list.clear
 
     #次のアクティブ行コントロールを追加  
-    @command_list.unshift([:_CREATE_, 
-                      {
-                        :_ARGUMENT_ => :Layout, 
-                        :width => @width,
-                        :height => @line_height,
-                        :float_y => :bottom
-                      }, 
-                      yield_stack])
+    unshift_command(:_CREATE_, nil, yield_stack,
+                    {
+                      :_ARGUMENT_ => :Layout, 
+                      :width => @width,
+                      :height => @line_height,
+                      :float_y => :bottom
+                    })
   end
 end
 

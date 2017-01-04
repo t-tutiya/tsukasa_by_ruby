@@ -93,8 +93,13 @@ class Control #公開インターフェイス
 
   end
 
+  #コマンドをスタックの先頭に挿入する
+  def unshift_command(command, block, yield_stack, options)
+    @command_list.unshift([command, options, yield_stack, block])
+  end
+
   #コマンドをスタックの末端に挿入する
-  def send_command(command, block, yield_stack, options)
+  def push_command(command, block, yield_stack, options)
     @command_list.push([command, options, yield_stack, block])
   end
 

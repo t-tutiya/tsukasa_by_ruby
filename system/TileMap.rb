@@ -108,12 +108,15 @@ class TileMap < DrawableLayout
     end
   end
 
-  def _MAP_STATUS_(options)
-    if options[:_ARGUMENT_]
-      @map_array[options[:x] || 0][options[:y] || 0] = options[:_ARGUMENT_]
+  def _MAP_STATUS_(_ARGUMENT_: nil, x: 0, y: 0)
+    if _ARGUMENT_
+      @map_array[x][y] = _ARGUMENT_
     else
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(@temp_command_block, @temp_yield_stack, @map_array[options[:x] || 0][options[:y] || 0], nil)
+      unshift_command_block(@temp_command_block, 
+                            @temp_yield_stack, 
+                            @map_array[x][y], 
+                            nil)
     end
   end
 

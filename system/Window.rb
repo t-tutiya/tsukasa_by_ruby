@@ -160,14 +160,14 @@ class Window < ClickableLayout
   end
 
   #ウィンドウの閉じるボタンが押されたかどうかの判定
-  def _CHECK_REQUESTED_CLOSE_(block, yield_stack, options = nil)
+  def _CHECK_REQUESTED_CLOSE_(options = nil)
     #「閉じる」ボタンが押下された
     if DXRuby::Input.requested_close?
-      unshift_command_block(@temp_command_block, yield_stack, nil)
+      unshift_command_block(@temp_command_block, @temp_yield_stack, nil)
     end
   end
 
-  def _RESIZE_(yield_stack, width:, height:)
+  def _RESIZE_(width:, height:)
     DXRuby::Window.resize(width, height)
     super
   end

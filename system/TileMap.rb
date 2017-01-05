@@ -75,7 +75,7 @@ class TileMap < DrawableLayout
     return super
   end
 
-  def _SET_TILE_(yield_stack, options)
+  def _SET_TILE_(options)
     begin
       if options[:_ARGUMENT_]
         @image_array[options[:_ARGUMENT_]] = DXRuby::Image.load(options[:path])
@@ -87,7 +87,7 @@ class TileMap < DrawableLayout
     end
   end
 
-  def _SET_TILE_GROUP_(yield_stack, options)
+  def _SET_TILE_GROUP_(options)
     begin
       image_array = DXRuby::Image.load_tiles( options[:path], 
                                       options[:x_count] || 1, 
@@ -108,12 +108,12 @@ class TileMap < DrawableLayout
     end
   end
 
-  def _MAP_STATUS_(yield_stack, options)
+  def _MAP_STATUS_(options)
     if options[:_ARGUMENT_]
       @map_array[options[:x] || 0][options[:y] || 0] = options[:_ARGUMENT_]
     else
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(@temp_command_block, yield_stack, @map_array[options[:x] || 0][options[:y] || 0], nil)
+      unshift_command_block(@temp_command_block, @temp_yield_stack, @map_array[options[:x] || 0][options[:y] || 0], nil)
     end
   end
 

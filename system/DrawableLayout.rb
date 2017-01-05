@@ -96,13 +96,13 @@ class DrawableLayout < Helper::Drawable
   end
 
   #DrawableLayout上に直線を引く
-  def _LINE_(block, yield_stack, options)
+  def _LINE_(options)
     @entity.draw_line( 
       options[:x1], options[:y1], options[:x2], options[:y2], options[:color], options[:z])
   end
 
   #DrawableLayout上に矩形を描く
-  def _BOX_(block, yield_stack, options)
+  def _BOX_(options)
     if options[:fill]
       @entity.draw_box_fill( 
         options[:x1], options[:y1], options[:x2], options[:y2], 
@@ -115,7 +115,7 @@ class DrawableLayout < Helper::Drawable
   end
 
   #DrawableLayout上に円を描く
-  def _CIRCLE_(block, yield_stack, options)
+  def _CIRCLE_(options)
     if options[:fill]
       @entity.draw_circle_fill(
         options[:x], options[:y], options[:r], options[:color], options[:z])
@@ -126,7 +126,7 @@ class DrawableLayout < Helper::Drawable
   end
 
   #DrawableLayout上に文字を描く
-  def _TEXT_(block, yield_stack, options)
+  def _TEXT_(options)
     options[:weight] = 4 unless options[:weight]
     options[:option] = {} unless options[:option]
     if options[:color]

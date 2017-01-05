@@ -215,7 +215,7 @@ class ClickableLayout < Layout
   end
 
   #衝突範囲の変更
-  def _RESIZE_(yield_stack, width:, height:)
+  def _RESIZE_(width:, height:)
     @collision_sprite.collision = [ 0, 0, width, height]
     @width = width
     @height = height

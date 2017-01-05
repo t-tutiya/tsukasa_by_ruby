@@ -295,11 +295,11 @@ class TextPage < Layout
 
   #charコマンド
   #指定文字（群）を描画チェインに連結する
-  def _CHAR_(yield_stack, options)
+  def _CHAR_(options)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
                                 @function_list[:_CHAR_RENDERER_],
-                                yield_stack,
+                                @temp_yield_stack,
                                 {
                                   :_ARGUMENT_ => :Char, 
                                   :offset_x => @character_pitch,
@@ -312,21 +312,21 @@ class TextPage < Layout
                                )
 
     #文字待機処理をスタックする
-    unshift_command(:_CHAR_WAIT_, nil, yield_stack, {})
+    unshift_command(:_CHAR_WAIT_, nil, @temp_yield_stack, {})
   end
 
   #指定したコマンドブロックを文字列の末端に追加する
-  def _CHAR_COMMAND_(yield_stack, options)
+  def _CHAR_COMMAND_(options)
     #文字コントロールを生成する
-    @control_list.last.push_command_block(@temp_command_block, yield_stack, options)
+    @control_list.last.push_command_block(@temp_command_block, @temp_yield_stack, options)
 
     #文字待機処理をスタックする
-    unshift_command(:_CHAR_WAIT_, nil, yield_stack, {})
+    unshift_command(:_CHAR_WAIT_, nil, @temp_yield_stack, {})
   end
 
   #textコマンド
   #指定文字列を描画チェインに連結する
-  def _TEXT_(yield_stack, options)
+  def _TEXT_(options)
     command_list = Array.new
 
     #イメージフォントを使うかどうか
@@ -339,19 +339,19 @@ class TextPage < Layout
     #文字列を分解してcharコマンドに変換する
     options[:_ARGUMENT_].to_s.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      command_list.push([char_command, nil, yield_stack, {_ARGUMENT_: ch}])
+      command_list.push([char_command, nil, @temp_yield_stack, {_ARGUMENT_: ch}])
     end
 
     #展開したコマンドをスタックする
     @command_list = command_list + @command_list
   end
 
-  def _RUBI_(yield_stack, options)
+  def _RUBI_(options)
     #ルビを出力するTextPageを生成する
     rubi_layout =[:_CREATE_, nil, nil,
                   {
                     :_ARGUMENT_ => :TextPage, 
-                    :command_list => [[:_TEXT_, nil, yield_stack, options]],
+                    :command_list => [[:_TEXT_, nil, @temp_yield_stack, options]],
                     :x => @rubi_option[:offset_x],
                     :y => @rubi_option[:offset_y],
                     :height=> @rubi_option[:size],
@@ -377,12 +377,12 @@ class TextPage < Layout
 
   #line_feedコマンド
   #改行処理（CR＋LF）
-  def _LINE_FEED_(yield_stack, options)
+  def _LINE_FEED_(options)
 
     #インデントスペーサーの作成
     if @indent > 0
       command_list =[
-                      [ :_CREATE_, nil, yield_stack,
+                      [ :_CREATE_, nil, @temp_yield_stack,
                         {
                           :_ARGUMENT_ => :Layout, 
                           :width => @indent,
@@ -396,7 +396,7 @@ class TextPage < Layout
     end
 
     #次のアクティブ行コントロールを追加  
-    unshift_command(:_CREATE_, nil, yield_stack, 
+    unshift_command(:_CREATE_, nil, @temp_yield_stack, 
                     {
                       :_ARGUMENT_ => :Layout, 
                       :offset_y => @line_spacing,
@@ -408,20 +408,20 @@ class TextPage < Layout
                     })
 
     #行間待機処理を設定する
-    unshift_command(:_LINE_WAIT_, nil, yield_stack, {})
+    unshift_command(:_LINE_WAIT_, nil, @temp_yield_stack, {})
   end
 
   #flushコマンド
   #メッセージレイヤの消去
-  def _FLUSH_(yield_stack, options)
+  def _FLUSH_(options)
     #子コントロールをクリアする
     @control_list.each do |control|
-      control._DELETE_(yield_stack, options)
+      control._DELETE_(options)
     end
     @control_list.clear
 
     #次のアクティブ行コントロールを追加  
-    unshift_command(:_CREATE_, nil, yield_stack,
+    unshift_command(:_CREATE_, nil, @temp_yield_stack,
                     {
                       :_ARGUMENT_ => :Layout, 
                       :width => @width,

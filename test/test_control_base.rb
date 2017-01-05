@@ -63,6 +63,28 @@ class TC_Foo < Minitest::Test
     assert_equal(control.serialize(), reslut)
   end
 
+  #コントロールのダンプとの比較によるテスト
+  def test_0105_1
+    #コントロールの生成
+    control = Tsukasa::Control.new() do
+      _DEFINE_ :test0105_1 do
+        _PUTS_ "test"
+      end
+      test0105_1
+      #メインループを終了する
+      _EXIT_
+    end
+
+
+    #メインループ
+    DXRuby::Window.loop() do
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0) #処理
+      control.render(0, 0, DXRuby::Window) #描画
+      break if control.exit #メインループ終了判定
+    end
+
+  end
+
   #プロパティとの比較によるテスト
   def test_2
     #コントロールの生成
@@ -205,7 +227,6 @@ class TC_Foo < Minitest::Test
               {}]]
     assert_equal(control.find_control(:test_image).serialize(), reslut)
   end
-
   #通常ループ
   def test_b_5
     control = Tsukasa::Control.new() do

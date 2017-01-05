@@ -83,7 +83,8 @@ class Control #公開インターフェイス
 
     #ブロックが付与されているなら読み込んで登録する
     if block
-      unshift_command_block(block, yield_stack, options)
+      @temp_command_block = block
+      unshift_command_block(@temp_command_block, yield_stack, options)
     end
 
     #コマンドセットがあるなら登録する（シリアライズなどで使用）
@@ -124,6 +125,9 @@ class Control #公開インターフェイス
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
       command_name, block, yield_stack, options = @command_list.shift
+
+      #コマンドブロックを退避
+      @temp_command_block = block
 
       #今フレーム処理終了判定
       break if command_name == :_END_FRAME_
@@ -282,9 +286,11 @@ class Control #内部メソッド
     #参照渡し汚染が起きないようにディープコピーで取得
     yield_stack = yield_stack ? yield_stack.dup : []
     #スタックプッシュ
-    yield_stack.push(block)
+    yield_stack.push(@temp_command_block)
     #終端コマンドを挿入
     @command_list.unshift(:_END_FUNCTION_)
+
+    @temp_command_block = function_block
 
     #functionを実行時評価しコマンド列を生成する。
     unshift_command_block(function_block, yield_stack, options)
@@ -300,7 +306,7 @@ class Control #コントロールの生成／破棄
                                         yield_stack, 
                                         @root_control, 
                                         self, 
-                                        &block)
+                                        &@temp_command_block)
     )
   #NoMethodError(NameErrorの派生クラス)をすくい取る
   rescue NoMethodError => e
@@ -377,7 +383,7 @@ class Control #セッター／ゲッター
     end
 
     #ブロックを実行する
-    unshift_command_block(block, yield_stack, result)
+    unshift_command_block(@temp_command_block, yield_stack, result)
   end
 end
 
@@ -410,7 +416,7 @@ class Control #制御構文
     #チェック条件を満たす場合
     if result
       #ブロックを実行する
-      unshift_command_block(block, yield_stack, nil)
+      unshift_command_block(@temp_command_block, yield_stack, nil)
     end
   end
 
@@ -418,7 +424,7 @@ class Control #制御構文
   def _CHECK_BLOCK_(block, yield_stack, options)
     unless yield_stack[-1] == nil
       #条件が成立したらブロックを実行する
-      unshift_command_block(block, yield_stack, nil)
+      unshift_command_block(@temp_command_block, yield_stack, nil)
     end
   end
 
@@ -440,11 +446,11 @@ class Control #制御構文
     end
 
     #リストの先端に自分自身を追加する
-    unshift_command(:_LOOP_, block, yield_stack, {_ARGUMENT_: _ARGUMENT_})
+    unshift_command(:_LOOP_, @temp_command_block, yield_stack, {_ARGUMENT_: _ARGUMENT_})
     #現在のループ終端を挿入
     unshift_command(:_END_LOOP_, nil, nil, nil)
     #ブロックを実行時評価しコマンド列を生成する。
-    unshift_command_block(block, yield_stack, args)
+    unshift_command_block(@temp_command_block, yield_stack, args)
   end
 
   def _NEXT_(block, yield_stack, _ARGUMENT_: nil)
@@ -456,7 +462,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(block, yield_stack, nil)
+      unshift_command_block(@temp_command_block, yield_stack, nil)
     end
   end
 
@@ -472,7 +478,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(block, yield_stack, nil)
+      unshift_command_block(@temp_command_block, yield_stack, nil)
     end
   end
 
@@ -486,7 +492,7 @@ class Control #制御構文
 
     if block
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(block, yield_stack.pop, nil)
+      unshift_command_block(@temp_command_block, yield_stack.pop, nil)
     end
   end
 end
@@ -494,7 +500,7 @@ end
 class Control #ユーザー定義関数操作
   #ユーザー定義コマンドを定義する
   def _DEFINE_(block, yield_stack, _ARGUMENT_:)
-    @function_list[_ARGUMENT_] = block
+    @function_list[_ARGUMENT_] = @temp_command_block
   end
 
   #ユーザー定義コマンドの別名を作る
@@ -505,10 +511,10 @@ class Control #ユーザー定義関数操作
   #関数ブロックを実行する
   def _YIELD_(block, yield_stack, options)
     yield_stack = yield_stack.dup
-    block = yield_stack.pop
-    raise unless block
+    @temp_command_block = yield_stack.pop
+    raise unless @temp_command_block
 
-    unshift_command_block(block, yield_stack, options)
+    unshift_command_block(@temp_command_block, yield_stack, options)
   end
 end
 
@@ -530,10 +536,10 @@ class Control #スクリプト制御
     #インタラプト指定されている
     if interrupt
       #子コントロールのコマンドリスト先頭に挿入
-      control.unshift_command_block(block, yield_stack, options)
+      control.unshift_command_block(@temp_command_block, yield_stack, options)
     else
       #子コントロールのコマンドリスト末端に挿入
-      control.push_command_block(block, yield_stack, options)
+      control.push_command_block(@temp_command_block, yield_stack, options)
     end
   end
 
@@ -542,7 +548,7 @@ class Control #スクリプト制御
     #子コントロール全てを探査対象とする
     @control_list.each do |control|
       next if _ARGUMENT_ and (control.id != _ARGUMENT_)
-      control._SEND_(block, yield_stack, options)
+      control._SEND_(@temp_command_block, yield_stack, options)
     end
   end
 
@@ -563,7 +569,7 @@ class Control #スクリプト制御
 
     begin
       #スクリプトをパースする
-      _PARSE_(block, yield_stack, 
+      _PARSE_(@temp_command_block, yield_stack, 
         _ARGUMENT_: File.read(path, encoding: "UTF-8"),
         parser: parser
       )
@@ -621,7 +627,7 @@ class Control #セーブデータ制御
       @command_list = _ARGUMENT_
     else
       #シリアライズし、ブロックに渡す
-      unshift_command_block(block, yield_stack, {command_list: serialize()})
+      unshift_command_block(@temp_command_block, yield_stack, {command_list: serialize()})
     end
   end
 end
@@ -666,7 +672,7 @@ class Control #プロパティのパラメータ遷移
     options[:_ARGUMENT_] = _ARGUMENT_
 
     #リストの先端に自分自身を追加する
-    unshift_command(:_MOVE_, block, yield_stack, options)
+    unshift_command(:_MOVE_, @temp_command_block, yield_stack, options)
     #現在のループ終端を挿入
     unshift_command(:_END_LOOP_, nil, nil, nil)
     #フレーム終了疑似コマンドをスタックする
@@ -674,7 +680,7 @@ class Control #プロパティのパラメータ遷移
 
     if block
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(block, yield_stack,
+      unshift_command_block(@temp_command_block, yield_stack,
                           {end: _ARGUMENT_[0], now: _ARGUMENT_[2]})
     end
   end
@@ -869,7 +875,7 @@ class Control #プロパティのパラメータ遷移
     options[:_ARGUMENT_] = _ARGUMENT_
 
     #リストの先端に自分自身を追加する
-    unshift_command(:_PATH_, block, yield_stack, options)
+    unshift_command(:_PATH_, @temp_command_block, yield_stack, options)
     #現在のループ終端を挿入
     unshift_command(:_END_LOOP_, nil, nil, nil)
     #フレーム終了疑似コマンドをスタックする
@@ -877,7 +883,7 @@ class Control #プロパティのパラメータ遷移
 
     if block
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(block, yield_stack,
+      unshift_command_block(@temp_command_block, yield_stack,
                           {end: _ARGUMENT_[0], now: _ARGUMENT_[2]})
     end
   end

@@ -286,13 +286,13 @@ class Control #内部メソッド
       raise(Tsukasa::TsukasaError, "コマンド[#{command_name}]はコントロールに登録されていません")
     end
 
+    #終端コマンドを挿入
+    @command_list.unshift(:_END_FUNCTION_)
+
     #参照渡し汚染が起きないようにディープコピーで取得
     @temp_yield_stack = @temp_yield_stack ? @temp_yield_stack.dup : []
     #スタックプッシュ
     @temp_yield_stack.push(@temp_command_block)
-    #終端コマンドを挿入
-    @command_list.unshift(:_END_FUNCTION_)
-
     @temp_command_block = function_block
 
     #functionを実行時評価しコマンド列を生成する。

@@ -571,10 +571,7 @@ class Control #スクリプト制御
 
     begin
       #スクリプトをパースする
-      _PARSE_(
-        _ARGUMENT_: File.read(path, encoding: "UTF-8"),
-        parser: parser
-      )
+      _PARSE_(_ARGUMENT_: File.read(path, encoding: "UTF-8"), parser: parser)
     rescue Errno::ENOENT
       raise(Tsukasa::TsukasaLoadError.new(path))
     end

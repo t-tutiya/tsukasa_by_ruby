@@ -85,7 +85,7 @@ class Control #公開インターフェイス
     if block
       @temp_command_block = block
       @temp_yield_stack = yield_stack
-      unshift_command_block(@temp_command_block, yield_stack, options)
+      unshift_command_block(options)
     end
 
     #コマンドセットがあるなら登録する（シリアライズなどで使用）
@@ -106,17 +106,18 @@ class Control #公開インターフェイス
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
-  def unshift_command_block(block, yield_stack, options)
+  def unshift_command_block(block = [@temp_command_block, @temp_yield_stack], options)
     @command_list = 
-      @@script_compiler.eval_block(block, yield_stack, options) + 
+      @@script_compiler.eval_block(block[0], block[1], options) + 
       @command_list
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの末尾に挿入する
-  def push_command_block(block, yield_stack, options)
+  def push_command_block(block = [@temp_command_block, @temp_yield_stack], 
+                         options)
     @command_list = 
       @command_list + 
-      @@script_compiler.eval_block(block, yield_stack, options)
+      @@script_compiler.eval_block(block[0], block[1], options)
   end
 
   def update(mouse_pos_x, mouse_pos_y, index)
@@ -295,7 +296,7 @@ class Control #内部メソッド
     @temp_command_block = function_block
 
     #functionを実行時評価しコマンド列を生成する。
-    unshift_command_block(function_block, @temp_yield_stack, options)
+    unshift_command_block(options)
   end
 end
 
@@ -385,7 +386,7 @@ class Control #セッター／ゲッター
     end
 
     #ブロックを実行する
-    unshift_command_block(@temp_command_block, @temp_yield_stack, result)
+    unshift_command_block(result)
   end
 end
 
@@ -418,7 +419,7 @@ class Control #制御構文
     #チェック条件を満たす場合
     if result
       #ブロックを実行する
-      unshift_command_block(@temp_command_block, @temp_yield_stack, nil)
+      unshift_command_block(nil)
     end
   end
 
@@ -426,7 +427,7 @@ class Control #制御構文
   def _CHECK_BLOCK_(options)
     unless @temp_yield_stack[-1] == nil
       #条件が成立したらブロックを実行する
-      unshift_command_block(@temp_command_block, @temp_yield_stack, nil)
+      unshift_command_block(nil)
     end
   end
 
@@ -452,7 +453,7 @@ class Control #制御構文
     #現在のループ終端を挿入
     unshift_command(:_END_LOOP_, nil, nil, nil)
     #ブロックを実行時評価しコマンド列を生成する。
-    unshift_command_block(@temp_command_block, @temp_yield_stack, args)
+    unshift_command_block(args)
   end
 
   def _NEXT_(_ARGUMENT_: nil)
@@ -464,7 +465,7 @@ class Control #制御構文
 
     if @temp_command_block
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(@temp_command_block, @temp_yield_stack, nil)
+      unshift_command_block(nil)
     end
   end
 
@@ -480,7 +481,7 @@ class Control #制御構文
 
     if @temp_command_block
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(@temp_command_block, @temp_yield_stack, nil)
+      unshift_command_block(nil)
     end
   end
 
@@ -494,7 +495,7 @@ class Control #制御構文
 
     if @temp_command_block
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(@temp_command_block, @temp_yield_stack.pop, nil)
+      unshift_command_block(nil)
     end
   end
 end
@@ -516,7 +517,7 @@ class Control #ユーザー定義関数操作
     @temp_command_block = @temp_yield_stack.pop
     raise unless @temp_command_block
 
-    unshift_command_block(@temp_command_block, @temp_yield_stack, options)
+    unshift_command_block(options)
   end
 end
 
@@ -538,10 +539,10 @@ class Control #スクリプト制御
     #インタラプト指定されている
     if interrupt
       #子コントロールのコマンドリスト先頭に挿入
-      control.unshift_command_block(@temp_command_block, @temp_yield_stack, options)
+      control.unshift_command_block([@temp_command_block, @temp_yield_stack], options)
     else
       #子コントロールのコマンドリスト末端に挿入
-      control.push_command_block(@temp_command_block, @temp_yield_stack, options)
+      control.push_command_block([@temp_command_block, @temp_yield_stack], options)
     end
   end
 
@@ -550,7 +551,7 @@ class Control #スクリプト制御
     #子コントロール全てを探査対象とする
     @control_list.each do |control|
       next if _ARGUMENT_ and (control.id != _ARGUMENT_)
-      control._SEND_(@temp_command_block, @temp_yield_stack, options)
+      control.unshift_command(:_SEND_, @temp_command_block, @temp_yield_stack, options)
     end
   end
 
@@ -626,7 +627,7 @@ class Control #セーブデータ制御
       @command_list = _ARGUMENT_
     else
       #シリアライズし、ブロックに渡す
-      unshift_command_block(@temp_command_block, @temp_yield_stack, {command_list: serialize()})
+      unshift_command_block({command_list: serialize()})
     end
   end
 end
@@ -679,8 +680,7 @@ class Control #プロパティのパラメータ遷移
 
     if @temp_command_block
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(@temp_command_block, @temp_yield_stack,
-                          {end: _ARGUMENT_[0], now: _ARGUMENT_[2]})
+      unshift_command_block({end: _ARGUMENT_[0], now: _ARGUMENT_[2]})
     end
   end
 
@@ -882,8 +882,7 @@ class Control #プロパティのパラメータ遷移
 
     if @temp_command_block
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(@temp_command_block, @temp_yield_stack,
-                          {end: _ARGUMENT_[0], now: _ARGUMENT_[2]})
+      unshift_command_block({end: _ARGUMENT_[0], now: _ARGUMENT_[2]})
     end
   end
 

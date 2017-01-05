@@ -141,7 +141,7 @@ class Image < Helper::Drawable
     end
     if block
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(@temp_command_block, @temp_yield_stack, @entity[x, y], nil)
+      unshift_command_block(@entity[x, y])
     end
   end
 
@@ -149,7 +149,7 @@ class Image < Helper::Drawable
   def _COMPARE_(x:, y:, color:)
     if @entity.compare(x, y, color)
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(@temp_command_block, @temp_yield_stack, @entity[x, y], nil)
+      unshift_command_block(@entity[x, y])
     end
   end
 

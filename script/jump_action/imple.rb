@@ -32,17 +32,17 @@ class MainChar < Tsukasa::Image
     super
   end
 
-  def _CHECK_LANDING_(block, yield_stack, options)
+  def _CHECK_LANDING_(options)
     #床衝突判定
     if collision_tile(@x   , @y+31) == 1 or 
        collision_tile(@x+31, @y+31) == 1
       @y = @y/32*32
       #ブロックを実行する
-      shift_command_block(options, yield_stack, block)
+      unshift_command_block(options)
     end
   end
 
-  def _ADDJUST_ROOF_(block, yield_stack, options)
+  def _ADDJUST_ROOF_(options)
     #天井衝突判定
     if collision_tile(@x   , @y   ) == 1 or 
        collision_tile(@x+31, @y   ) == 1
@@ -50,7 +50,7 @@ class MainChar < Tsukasa::Image
     end
   end
 
-  def _ADDJUST_WALL_(block, yield_stack, options)
+  def _ADDJUST_WALL_(options)
     #壁衝突判定（左側）
     if    collision_tile(@x   , @y   ) == 1 or 
           collision_tile(@x   , @y+31) == 1

@@ -75,7 +75,7 @@ class TileMap < DrawableLayout
     return super
   end
 
-  def _SET_TILE_(block, yield_stack, options)
+  def _SET_TILE_(yield_stack, options)
     begin
       if options[:_ARGUMENT_]
         @image_array[options[:_ARGUMENT_]] = DXRuby::Image.load(options[:path])
@@ -87,7 +87,7 @@ class TileMap < DrawableLayout
     end
   end
 
-  def _SET_TILE_GROUP_(block, yield_stack, options)
+  def _SET_TILE_GROUP_(yield_stack, options)
     begin
       image_array = DXRuby::Image.load_tiles( options[:path], 
                                       options[:x_count] || 1, 
@@ -108,7 +108,7 @@ class TileMap < DrawableLayout
     end
   end
 
-  def _MAP_STATUS_(block, yield_stack, options)
+  def _MAP_STATUS_(yield_stack, options)
     if options[:_ARGUMENT_]
       @map_array[options[:x] || 0][options[:y] || 0] = options[:_ARGUMENT_]
     else

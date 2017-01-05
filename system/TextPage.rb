@@ -295,7 +295,7 @@ class TextPage < Layout
 
   #charコマンド
   #指定文字（群）を描画チェインに連結する
-  def _CHAR_(block, yield_stack, options)
+  def _CHAR_(yield_stack, options)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
                                 @function_list[:_CHAR_RENDERER_],
@@ -316,7 +316,7 @@ class TextPage < Layout
   end
 
   #指定したコマンドブロックを文字列の末端に追加する
-  def _CHAR_COMMAND_(block, yield_stack, options)
+  def _CHAR_COMMAND_(yield_stack, options)
     #文字コントロールを生成する
     @control_list.last.push_command_block(@temp_command_block, yield_stack, options)
 
@@ -326,7 +326,7 @@ class TextPage < Layout
 
   #textコマンド
   #指定文字列を描画チェインに連結する
-  def _TEXT_(block, yield_stack, options)
+  def _TEXT_(yield_stack, options)
     command_list = Array.new
 
     #イメージフォントを使うかどうか
@@ -346,7 +346,7 @@ class TextPage < Layout
     @command_list = command_list + @command_list
   end
 
-  def _RUBI_(block, yield_stack, options)
+  def _RUBI_(yield_stack, options)
     #ルビを出力するTextPageを生成する
     rubi_layout =[:_CREATE_, nil, nil,
                   {
@@ -377,7 +377,7 @@ class TextPage < Layout
 
   #line_feedコマンド
   #改行処理（CR＋LF）
-  def _LINE_FEED_(block, yield_stack, options)
+  def _LINE_FEED_(yield_stack, options)
 
     #インデントスペーサーの作成
     if @indent > 0
@@ -413,7 +413,7 @@ class TextPage < Layout
 
   #flushコマンド
   #メッセージレイヤの消去
-  def _FLUSH_(block, yield_stack, options)
+  def _FLUSH_(yield_stack, options)
     #子コントロールをクリアする
     @control_list.each do |control|
       control._DELETE_(yield_stack, options)

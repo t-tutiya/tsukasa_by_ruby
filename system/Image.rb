@@ -139,7 +139,7 @@ class Image < Helper::Drawable
     if color
       @entity[x, y] = color
     end
-    if block
+    if command_block?
       #ブロックが付与されているならそれを実行する
       unshift_command_block(@entity[x, y])
     end

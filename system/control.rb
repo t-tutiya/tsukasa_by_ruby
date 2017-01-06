@@ -268,6 +268,14 @@ class Control #内部メソッド
 
   private
 
+  def command_block?()
+    if @temp_command_block
+      true
+    else
+      false
+    end
+  end
+
   #コマンドの実行
   def exec_command(command_name, options)
     #コマンドがメソッドとして存在する場合
@@ -463,7 +471,7 @@ class Control #制御構文
       break if @command_list.shift[0] == :_END_LOOP_ 
     end
 
-    if @temp_command_block
+    if command_block?
       #ブロックが付与されているならそれを実行する
       unshift_command_block(nil)
     end
@@ -479,7 +487,7 @@ class Control #制御構文
       end
     end
 
-    if @temp_command_block
+    if command_block?
       #ブロックが付与されているならそれを実行する
       unshift_command_block(nil)
     end
@@ -493,7 +501,7 @@ class Control #制御構文
       @command_list.shift
     end
 
-    if @temp_command_block
+    if command_block?
       #ブロックが付与されているならそれを実行する
       unshift_command_block(nil)
     end
@@ -678,7 +686,7 @@ class Control #プロパティのパラメータ遷移
     #フレーム終了疑似コマンドをスタックする
     unshift_command(:_END_FRAME_, nil)
 
-    if @temp_command_block
+    if command_block?
       #ブロックが付与されているならそれを実行する
       unshift_command_block({end: _ARGUMENT_[0], now: _ARGUMENT_[2]})
     end
@@ -880,7 +888,7 @@ class Control #プロパティのパラメータ遷移
     #フレーム終了疑似コマンドをスタックする
     unshift_command(:_END_FRAME_, nil)
 
-    if @temp_command_block
+    if command_block?
       #ブロックが付与されているならそれを実行する
       unshift_command_block({end: _ARGUMENT_[0], now: _ARGUMENT_[2]})
     end

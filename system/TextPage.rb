@@ -279,7 +279,7 @@ class TextPage < Layout
                       :_ARGUMENT_ => :Layout, 
                       :width => @width,
                       :height => @line_height,
-                      :float_y => :bottom
+                      :float_y => :bottom,
                     })
   end
 
@@ -339,7 +339,7 @@ class TextPage < Layout
     #文字列を分解してcharコマンドに変換する
     options[:_ARGUMENT_].to_s.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      command_list.push([char_command, nil, @temp_yield_stack, {_ARGUMENT_: ch}])
+      command_list.push([char_command, [nil, @temp_yield_stack], {_ARGUMENT_: ch}])
     end
 
     #展開したコマンドをスタックする
@@ -348,10 +348,10 @@ class TextPage < Layout
 
   def _RUBI_(options)
     #ルビを出力するTextPageを生成する
-    rubi_layout =[:_CREATE_, nil, nil,
+    rubi_layout =[:_CREATE_, [nil, nil],
                   {
                     :_ARGUMENT_ => :TextPage, 
-                    :command_list => [[:_TEXT_, nil, @temp_yield_stack, options]],
+                    :command_list => [[:_TEXT_, [nil, @temp_yield_stack], options]],
                     :x => @rubi_option[:offset_x],
                     :y => @rubi_option[:offset_y],
                     :height=> @rubi_option[:size],
@@ -382,7 +382,7 @@ class TextPage < Layout
     #インデントスペーサーの作成
     if @indent > 0
       command_list =[
-                      [ :_CREATE_, nil, @temp_yield_stack,
+                      [ :_CREATE_, [nil, @temp_yield_stack],
                         {
                           :_ARGUMENT_ => :Layout, 
                           :width => @indent,
@@ -408,7 +408,7 @@ class TextPage < Layout
                     })
 
     #行間待機処理を設定する
-    unshift_command(:_LINE_WAIT_, {})
+    unshift_command(:_LINE_WAIT_, [], {})
   end
 
   #flushコマンド

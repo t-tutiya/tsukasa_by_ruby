@@ -67,7 +67,7 @@ class ScriptCompiler
     end
 
     #コマンドを登録する
-    @command_list.push([command_name, block, @yield_stack, options])
+    @command_list.push([command_name, [block, @yield_stack], options])
   end
 end
 

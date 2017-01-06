@@ -97,12 +97,12 @@ class Control #公開インターフェイス
 
   #コマンドをスタックの先頭に挿入する
   def unshift_command(command, block = [@temp_command_block, @temp_yield_stack], options)
-    @command_list.unshift([command, block[0], block[1], options])
+    @command_list.unshift([command, block, options])
   end
 
   #コマンドをスタックの末端に挿入する
   def push_command(command, block = [@temp_command_block, @temp_yield_stack], options)
-    @command_list.push([command, block[0], block[1], options])
+    @command_list.push([command, block, options])
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
@@ -126,11 +126,11 @@ class Control #公開インターフェイス
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
-      command_name, block, yield_stack, options = @command_list.shift
+      command_name, block, options, temp = @command_list.shift
 
       #コマンドブロックを退避
-      @temp_command_block = block
-      @temp_yield_stack = yield_stack
+      @temp_command_block = block[0]
+      @temp_yield_stack = block[1]
 
       #今フレーム処理終了判定
       break if command_name == :_END_FRAME_
@@ -295,7 +295,7 @@ class Control #内部メソッド
     end
 
     #終端コマンドを挿入
-    @command_list.unshift(:_END_FUNCTION_)
+    unshift_command(:_END_FUNCTION_, [], {})
 
     #参照渡し汚染が起きないようにディープコピーで取得
     @temp_yield_stack = @temp_yield_stack ? @temp_yield_stack.dup : []

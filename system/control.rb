@@ -96,13 +96,13 @@ class Control #公開インターフェイス
   end
 
   #コマンドをスタックの先頭に挿入する
-  def unshift_command(command, block, yield_stack, options)
-    @command_list.unshift([command, block, yield_stack, options])
+  def unshift_command(command, block = [@temp_command_block, @temp_yield_stack], options)
+    @command_list.unshift([command, block[0], block[1], options])
   end
 
   #コマンドをスタックの末端に挿入する
-  def push_command(command, block, yield_stack, options)
-    @command_list.push([command, block, yield_stack, options])
+  def push_command(command, block = [@temp_command_block, @temp_yield_stack], options)
+    @command_list.push([command, block[0], block[1], options])
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
@@ -449,9 +449,9 @@ class Control #制御構文
     end
 
     #リストの先端に自分自身を追加する
-    unshift_command(:_LOOP_, @temp_command_block, @temp_yield_stack, {_ARGUMENT_: _ARGUMENT_})
+    unshift_command(:_LOOP_, {_ARGUMENT_: _ARGUMENT_})
     #現在のループ終端を挿入
-    unshift_command(:_END_LOOP_, nil, nil, nil)
+    unshift_command(:_END_LOOP_, nil)
     #ブロックを実行時評価しコマンド列を生成する。
     unshift_command_block(args)
   end
@@ -551,7 +551,7 @@ class Control #スクリプト制御
     #子コントロール全てを探査対象とする
     @control_list.each do |control|
       next if _ARGUMENT_ and (control.id != _ARGUMENT_)
-      control.unshift_command(:_SEND_, @temp_command_block, @temp_yield_stack, options)
+      control.unshift_command(:_SEND_, options)
     end
   end
 
@@ -672,11 +672,11 @@ class Control #プロパティのパラメータ遷移
     options[:_ARGUMENT_] = _ARGUMENT_
 
     #リストの先端に自分自身を追加する
-    unshift_command(:_MOVE_, @temp_command_block, @temp_yield_stack, options)
+    unshift_command(:_MOVE_, options)
     #現在のループ終端を挿入
-    unshift_command(:_END_LOOP_, nil, nil, nil)
+    unshift_command(:_END_LOOP_, nil)
     #フレーム終了疑似コマンドをスタックする
-    unshift_command(:_END_FRAME_, nil, nil, nil)
+    unshift_command(:_END_FRAME_, nil)
 
     if @temp_command_block
       #ブロックが付与されているならそれを実行する
@@ -874,11 +874,11 @@ class Control #プロパティのパラメータ遷移
     options[:_ARGUMENT_] = _ARGUMENT_
 
     #リストの先端に自分自身を追加する
-    unshift_command(:_PATH_, @temp_command_block, @temp_yield_stack, options)
+    unshift_command(:_PATH_, options)
     #現在のループ終端を挿入
-    unshift_command(:_END_LOOP_, nil, nil, nil)
+    unshift_command(:_END_LOOP_, nil)
     #フレーム終了疑似コマンドをスタックする
-    unshift_command(:_END_FRAME_, nil, nil, nil)
+    unshift_command(:_END_FRAME_, nil)
 
     if @temp_command_block
       #ブロックが付与されているならそれを実行する

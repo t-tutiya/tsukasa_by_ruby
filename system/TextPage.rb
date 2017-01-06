@@ -274,7 +274,7 @@ class TextPage < Layout
     @function_list[:_LINE_WAIT_] = options[:_LINE_WAIT_] || Proc.new(){}
 
     #次のアクティブ行コントロールを追加  
-    unshift_command(:_CREATE_, block, yield_stack, 
+    unshift_command(:_CREATE_, [block, yield_stack], 
                     {
                       :_ARGUMENT_ => :Layout, 
                       :width => @width,
@@ -298,8 +298,8 @@ class TextPage < Layout
   def _CHAR_(options)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
-                                @function_list[:_CHAR_RENDERER_],
-                                @temp_yield_stack,
+                                [@function_list[:_CHAR_RENDERER_],
+                                @temp_yield_stack],
                                 {
                                   :_ARGUMENT_ => :Char, 
                                   :offset_x => @character_pitch,
@@ -312,7 +312,7 @@ class TextPage < Layout
                                )
 
     #文字待機処理をスタックする
-    unshift_command(:_CHAR_WAIT_, nil, @temp_yield_stack, {})
+    unshift_command(:_CHAR_WAIT_, {})
   end
 
   #指定したコマンドブロックを文字列の末端に追加する
@@ -321,7 +321,7 @@ class TextPage < Layout
     @control_list.last.push_command_block([@temp_command_block, @temp_yield_stack], options)
 
     #文字待機処理をスタックする
-    unshift_command(:_CHAR_WAIT_, nil, @temp_yield_stack, {})
+    unshift_command(:_CHAR_WAIT_, {})
   end
 
   #textコマンド
@@ -365,7 +365,7 @@ class TextPage < Layout
                     :_CHAR_RENDERER_ => @function_list[:_CHAR_RENDERER_]}]
 
     #TextPageをベース文字に登録する。
-    @control_list.last.push_command(:_CREATE_, nil, nil,
+    @control_list.last.push_command(:_CREATE_, [nil, nil],
                                     {
                                       :_ARGUMENT_ => :Layout, 
                                       :width => 0,
@@ -396,7 +396,7 @@ class TextPage < Layout
     end
 
     #次のアクティブ行コントロールを追加  
-    unshift_command(:_CREATE_, nil, @temp_yield_stack, 
+    unshift_command(:_CREATE_, 
                     {
                       :_ARGUMENT_ => :Layout, 
                       :offset_y => @line_spacing,
@@ -408,7 +408,7 @@ class TextPage < Layout
                     })
 
     #行間待機処理を設定する
-    unshift_command(:_LINE_WAIT_, nil, @temp_yield_stack, {})
+    unshift_command(:_LINE_WAIT_, {})
   end
 
   #flushコマンド
@@ -421,7 +421,7 @@ class TextPage < Layout
     @control_list.clear
 
     #次のアクティブ行コントロールを追加  
-    unshift_command(:_CREATE_, nil, @temp_yield_stack,
+    unshift_command(:_CREATE_, 
                     {
                       :_ARGUMENT_ => :Layout, 
                       :width => @width,

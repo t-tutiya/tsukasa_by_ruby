@@ -375,32 +375,21 @@ class TextPage < Layout
   #line_feedコマンド
   #改行処理（CR＋LF）
   def _LINE_FEED_(options)
-
-    #インデントスペーサーの作成
-    if @indent > 0
-      command_list =[
-                      [ :_CREATE_, [nil, @temp_yield_stack],
-                        {
-                          :_ARGUMENT_ => :Layout, 
-                          :width => @indent,
-                          :height => @line_height,
-                          :float_x => :left
-                        }
-                      ]
-                    ]
-    else
-      command_list = nil
+    #インデント用無形コントロールの追加
+    unshift_command(:_GET_, _ARGUMENT_: [:indent, :line_height]) do 
+      |indent:, line_height:|
+      _SEND_ -1 do
+        _CREATE_ :Layout, width: indent, height: line_height, float_x: :left
+      end
     end
 
-    #次のアクティブ行コントロールを追加  
+    #次のアクティブ行コントロールの追加  
     unshift_command(:_CREATE_, 
                     {
                       :_ARGUMENT_ => :Layout, 
                       :offset_y => @line_spacing,
                       :width => @width,
                       :height => @line_height,
-                      #インデント用無形コントロール
-                      :command_list => command_list, 
                       :float_y => :bottom
                     })
 

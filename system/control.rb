@@ -96,7 +96,10 @@ class Control #公開インターフェイス
   end
 
   #コマンドをスタックの先頭に挿入する
-  def unshift_command(command, block = [@temp_command_block, @temp_yield_stack], options)
+  def unshift_command(command, block = [@temp_command_block, @temp_yield_stack], options, &command_block)
+    if command_block
+      block[0] = command_block
+    end
     @command_list.unshift([command, block, options])
   end
 

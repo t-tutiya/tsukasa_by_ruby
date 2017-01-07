@@ -337,13 +337,10 @@ class TextPage < Layout
     end
 
     #文字列を分解してcharコマンドに変換する
-    options[:_ARGUMENT_].to_s.each_char do |ch|
+    options[:_ARGUMENT_].to_s.reverse.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      command_list.push([char_command, [nil, @temp_yield_stack], {_ARGUMENT_: ch}])
+      unshift_command(char_command, [nil, @temp_yield_stack], {_ARGUMENT_: ch})
     end
-
-    #展開したコマンドをスタックする
-    @command_list = command_list + @command_list
   end
 
   def _RUBI_(options)

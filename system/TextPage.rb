@@ -274,7 +274,7 @@ class TextPage < Layout
     @function_list[:_LINE_WAIT_] = options[:_LINE_WAIT_] || Proc.new(){}
 
     #次のアクティブ行コントロールを追加  
-    unshift_command(:_CREATE_, [nil, nil], 
+    unshift_command(:_CREATE_, [], 
                     {
                       :_ARGUMENT_ => :Layout, 
                       :width => @width,
@@ -296,10 +296,12 @@ class TextPage < Layout
   #charコマンド
   #指定文字（群）を描画チェインに連結する
   def _CHAR_(_ARGUMENT_: nil, image_path: nil)
+    command_block = @temporary_command_block_list.dup
+    command_block.pop
+    command_block.push(@function_list[:_CHAR_RENDERER_])
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
-                                [@function_list[:_CHAR_RENDERER_],
-                                @temporary_command_block_list[1]],
+                                command_block,
                                 {
                                   :_ARGUMENT_ => :Char, 
                                   :offset_x => @character_pitch,
@@ -336,13 +338,16 @@ class TextPage < Layout
     #文字列を分解してcharコマンドに変換する
     _ARGUMENT_.to_s.reverse.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      unshift_command(char_command, [nil, @temporary_command_block_list[1]], {_ARGUMENT_: ch})
+      command_block = @temporary_command_block_list.dup
+      command_block.pop
+      command_block.push(nil)
+      unshift_command(char_command, command_block, {_ARGUMENT_: ch})
     end
   end
 
   def _RUBI_(_ARGUMENT_:)
     #TextPageをベース文字に登録する。
-    @control_list.last.push_command(:_CREATE_, [nil, nil],
+    @control_list.last.push_command(:_CREATE_, [],
                                     {
                                       :_ARGUMENT_ => :Layout, 
                                       :width => 0,
@@ -351,7 +356,7 @@ class TextPage < Layout
                                     })
 
     #ルビを出力するTextPageを生成する
-    @control_list.last.push_command(:_SEND_, [nil, nil], {_ARGUMENT_: -1, 
+    @control_list.last.push_command(:_SEND_, [], {_ARGUMENT_: -1, 
       text: _ARGUMENT_,
       x: @rubi_option[:offset_x],
       y: @rubi_option[:offset_y],
@@ -386,7 +391,7 @@ class TextPage < Layout
   #改行処理（CR＋LF）
   def _LINE_FEED_(**)
     #インデント用無形コントロールの追加
-    unshift_command(:_GET_, _ARGUMENT_: [:indent, :line_height]) do 
+    unshift_command(:_GET_, [], _ARGUMENT_: [:indent, :line_height]) do 
       |indent:, line_height:|
       _SEND_ -1 do
         _CREATE_ :Layout, width: indent, height: line_height, float_x: :left
@@ -394,7 +399,7 @@ class TextPage < Layout
     end
 
     #次のアクティブ行コントロールの追加  
-    unshift_command(:_CREATE_, 
+    unshift_command(:_CREATE_, [],
                     {
                       :_ARGUMENT_ => :Layout, 
                       :offset_y => @line_spacing,

@@ -82,11 +82,12 @@ class Control #公開インターフェイス
     @delete_flag = false       #削除フラグの初期化
 
     #ブロックが付与されているなら読み込んで登録する
+
+    @temporary_command_block_list = Array(yield_stack)
+
     if block
-      @temporary_command_block_list = [block, yield_stack]
+      @temporary_command_block_list.push(block)
       unshift_command_block(options)
-    else
-      @temporary_command_block_list = []
     end
 
     #コマンドセットがあるなら登録する（シリアライズなどで使用）
@@ -105,7 +106,7 @@ class Control #公開インターフェイス
     if command_block
       command_block_list[0] = command_block
     end
-    @command_list.unshift([command, command_block_list, options])
+    @command_list.unshift([command, command_block_list.dup, options])
   end
 
   #コマンドをスタックの末端に挿入する
@@ -117,14 +118,15 @@ class Control #公開インターフェイス
     if command_block
       command_block_list[0] = command_block
     end
-    @command_list.push([command, command_block_list, options])
+    @command_list.push([command, command_block_list.dup, options])
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
   def unshift_command_block(command_block_list = @temporary_command_block_list,
                             **options)
-    @command_list = @@script_compiler.eval_block( command_block_list[0], 
-                                                  command_block_list[1], 
+    command_block = command_block_list.pop
+    @command_list = @@script_compiler.eval_block( command_block, 
+                                                  command_block_list, 
                                                   options) + 
                     @command_list
   end
@@ -132,9 +134,10 @@ class Control #公開インターフェイス
   #ブロックをパースしてコマンド配列化し、コマンドリストの末尾に挿入する
   def push_command_block(command_block_list = @temporary_command_block_list, 
                          **options)
+    command_block = command_block_list.pop
     @command_list = @command_list + 
-                    @@script_compiler.eval_block( command_block_list[0], 
-                                                  command_block_list[1], 
+                    @@script_compiler.eval_block( command_block, 
+                                                  command_block_list, 
                                                   options)
   end
 
@@ -286,7 +289,7 @@ class Control #内部メソッド
   private
 
   def command_block?()
-    if @temporary_command_block_list[0]
+    if @temporary_command_block_list[-1]
       true
     else
       false
@@ -315,12 +318,10 @@ class Control #内部メソッド
     unshift_command(:_END_FUNCTION_)
 
     #参照渡し汚染が起きないようにディープコピーで取得
-    @temporary_command_block_list[1] =@temporary_command_block_list[1] ? 
-                                      @temporary_command_block_list[1].dup : []
-                                      
+    @temporary_command_block_list = @temporary_command_block_list.dup
+
     #スタックプッシュ
-    @temporary_command_block_list[1].push(@temporary_command_block_list[0])
-    @temporary_command_block_list[0] = function_block
+    @temporary_command_block_list.push(function_block)
 
     #functionを実行時評価しコマンド列を生成する。
     unshift_command_block(options)
@@ -331,12 +332,13 @@ class Control #コントロールの生成／破棄
   #コントロールをリストに登録する
   def _CREATE_(_ARGUMENT_:, **options)
     #コントロールを生成して子要素として登録する
+    command_block = @temporary_command_block_list.pop
     @control_list.push(
       Tsukasa.const_get(_ARGUMENT_).new(options, 
-                                        @temporary_command_block_list[1], 
+                                        @temporary_command_block_list, 
                                         @root_control, 
                                         self, 
-                                        &@temporary_command_block_list[0])
+                                        &command_block)
     )
   #NoMethodError(NameErrorの派生クラス)をすくい取る
   rescue NoMethodError => e
@@ -452,7 +454,8 @@ class Control #制御構文
 
 
   def _CHECK_BLOCK_(**)
-    unless @temporary_command_block_list[1][-1] == nil
+    #yield呼び出し可能なブロックがあるかを判定する
+    unless @temporary_command_block_list[-2] == nil
       #条件が成立したらブロックを実行する
       unshift_command_block()
     end
@@ -511,7 +514,7 @@ class Control #制御構文
     end
 
     #yield用のスタックを一段上げる
-    @temporary_command_block_list[1].pop
+    #@temporary_command_block_list.pop
 
     if command_block?
       #ブロックが付与されているならそれを実行する
@@ -523,7 +526,7 @@ end
 class Control #ユーザー定義関数操作
   #ユーザー定義コマンドを定義する
   def _DEFINE_(_ARGUMENT_:)
-    @function_list[_ARGUMENT_] = @temporary_command_block_list[0]
+    @function_list[_ARGUMENT_] = @temporary_command_block_list.pop
   end
 
   #ユーザー定義コマンドの別名を作る
@@ -533,9 +536,8 @@ class Control #ユーザー定義関数操作
 
   #関数ブロックを実行する
   def _YIELD_(**options)
-    @temporary_command_block_list[1] = @temporary_command_block_list[1].dup
-    @temporary_command_block_list[0] = @temporary_command_block_list[1].pop
-    raise unless @temporary_command_block_list[0]
+    @temporary_command_block_list.pop
+    raise unless @temporary_command_block_list[-1]
 
     unshift_command_block(options)
   end
@@ -610,11 +612,14 @@ class Control #スクリプト制御
                     )
     end
 
+    #空ブロックの削除
+    @temporary_command_block_list.pop
+
     #司スクリプトを評価してコマンド配列を取得し、コマンドリストの先頭に追加する
     @command_list = @@script_compiler.eval_commands(
                       _ARGUMENT_,
                       path,
-                      @temporary_command_block_list[1]) + 
+                      @temporary_command_block_list) + 
                     @command_list
   end
 

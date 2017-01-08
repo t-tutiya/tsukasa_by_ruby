@@ -44,8 +44,6 @@ class Control #公開インターフェイス
   #スクリプトパーサー
   @@script_compiler = ScriptCompiler.new
   @@script_parser = {}
-  #終了フラグ
-  @@exit = false
 
   #プロセスのカレントディレクトリを保存する
   @@system_path = File.expand_path('../../', __FILE__)
@@ -54,6 +52,9 @@ class Control #公開インターフェイス
   attr_reader :child_index
   attr_accessor :child_update  #子コントロールの更新可否
   attr_reader  :function_list #ユーザー定義関数
+
+  #rootコントロールになった場合のみ使用
+  attr_accessor :exit #終了
 
   def initialize( options = {}, 
                   yield_stack = nil, 
@@ -92,15 +93,6 @@ class Control #公開インターフェイス
       @command_list = options[:command_list] + @command_list
     end
 
-  end
-
-  #終了フラグの確認
-  def exit?()
-    @@exit
-  end
-  #終了フラグのリセット
-  def reset_exit()
-    @@exit = false
   end
 
   #コマンドをスタックの先頭に挿入する
@@ -625,7 +617,7 @@ class Control #スクリプト制御
 
   #アプリを終了する
   def _EXIT_(**)
-    @@exit = true
+    @root_control.exit = true
   end
 
   #文字列を評価する（デバッグ用）

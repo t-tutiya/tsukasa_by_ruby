@@ -405,7 +405,7 @@ class Char < Helper::Drawable
                   entity.effect_image_font(@font_draw_option))
   end
 
-  def _CLEAR_(block, yield_stack, options)
+  def _CLEAR_(options)
     @char = nil
     @option_update = true
   end

@@ -295,7 +295,7 @@ class TextPage < Layout
 
   #charコマンド
   #指定文字（群）を描画チェインに連結する
-  def _CHAR_(options)
+  def _CHAR_(_ARGUMENT_: nil, image_path: nil)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
                                 [@function_list[:_CHAR_RENDERER_],
@@ -304,9 +304,9 @@ class TextPage < Layout
                                   :_ARGUMENT_ => :Char, 
                                   :offset_x => @character_pitch,
                                   :align_y => :bottom,
-                                  :char => options[:_ARGUMENT_],
+                                  :char => _ARGUMENT_,
                                   :float_x => :left,
-                                  :image_path => options[:image_path]
+                                  :image_path => image_path
                                 }.merge(@char_option)
                                )
 
@@ -315,9 +315,9 @@ class TextPage < Layout
   end
 
   #指定したコマンドブロックを文字列の末端に追加する
-  def _CHAR_COMMAND_(options)
+  def _CHAR_COMMAND_(**)
     #文字コントロールを生成する
-    @control_list.last.push_command_block([@temp_command_block, @temp_yield_stack], options)
+    @control_list.last.push_command_block([@temp_command_block, @temp_yield_stack])
 
     #文字待機処理をスタックする
     unshift_command(:_CHAR_WAIT_)
@@ -325,7 +325,7 @@ class TextPage < Layout
 
   #textコマンド
   #指定文字列を描画チェインに連結する
-  def _TEXT_(options)
+  def _TEXT_(_ARGUMENT_:)
     #イメージフォントを使うかどうか
     if @use_image_font
       char_command = :image_char
@@ -334,13 +334,13 @@ class TextPage < Layout
     end
 
     #文字列を分解してcharコマンドに変換する
-    options[:_ARGUMENT_].to_s.reverse.each_char do |ch|
+    _ARGUMENT_.to_s.reverse.each_char do |ch|
       #１文字分の出力コマンドをスタックする
       unshift_command(char_command, [nil, @temp_yield_stack], {_ARGUMENT_: ch})
     end
   end
 
-  def _RUBI_(options)
+  def _RUBI_(_ARGUMENT_:)
     #TextPageをベース文字に登録する。
     @control_list.last.push_command(:_CREATE_, [nil, nil],
                                     {
@@ -352,7 +352,7 @@ class TextPage < Layout
 
     #ルビを出力するTextPageを生成する
     @control_list.last.push_command(:_SEND_, [nil, nil], {_ARGUMENT_: -1, 
-      text: options[:_ARGUMENT_],
+      text: _ARGUMENT_,
       x: @rubi_option[:offset_x],
       y: @rubi_option[:offset_y],
       size:  @rubi_option[:size],
@@ -384,7 +384,7 @@ class TextPage < Layout
 
   #line_feedコマンド
   #改行処理（CR＋LF）
-  def _LINE_FEED_(options)
+  def _LINE_FEED_(**)
     #インデント用無形コントロールの追加
     unshift_command(:_GET_, _ARGUMENT_: [:indent, :line_height]) do 
       |indent:, line_height:|
@@ -409,10 +409,10 @@ class TextPage < Layout
 
   #flushコマンド
   #メッセージレイヤの消去
-  def _FLUSH_(options)
+  def _FLUSH_(**)
     #子コントロールをクリアする
     @control_list.each do |control|
-      control._DELETE_(options)
+      control._DELETE_()
     end
     @control_list.clear
 

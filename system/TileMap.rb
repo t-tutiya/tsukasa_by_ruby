@@ -75,30 +75,29 @@ class TileMap < DrawableLayout
     return super
   end
 
-  def _SET_TILE_(options)
+  def _SET_TILE_(_ARGUMENT_: nil, path:)
     begin
-      if options[:_ARGUMENT_]
-        @image_array[options[:_ARGUMENT_]] = DXRuby::Image.load(options[:path])
+      if _ARGUMENT_
+        @image_array[_ARGUMENT_] = DXRuby::Image.load(path)
       else
-        @image_array.push(DXRuby::Image.load(options[:path]))
+        @image_array.push(DXRuby::Image.load(path))
       end
     rescue DXRuby::DXRubyError
-      warn "#{options[:path]}の読みこみに失敗しました"
+      warn "#{path}の読みこみに失敗しました"
     end
   end
 
-  def _SET_TILE_GROUP_(options)
+  def _SET_TILE_GROUP_(_ARGUMENT_: nil, path:, 
+                        x_count: 1, y_count: 1, share_switch: false )
     begin
-      image_array = DXRuby::Image.load_tiles( options[:path], 
-                                      options[:x_count] || 1, 
-                                      options[:y_count] || 1, 
-                                      options[:share_switch] || false)
+      image_array = DXRuby::Image.load_tiles(path, 
+                                      x_count, y_count, share_switch)
     rescue DXRuby::DXRubyError
-      warn "#{options[:path]}の読みこみに失敗しました"
+      warn "#{path}の読みこみに失敗しました"
     end
     
-    if options[:_ARGUMENT_]
-      counter = options[:_ARGUMENT_]
+    if _ARGUMENT_
+      counter = _ARGUMENT_
       image_array.each do |image|
         @image_array[counter] = image
         counter += 1

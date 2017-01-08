@@ -96,56 +96,35 @@ class DrawableLayout < Helper::Drawable
   end
 
   #DrawableLayout上に直線を引く
-  def _LINE_(options)
-    @entity.draw_line( 
-      options[:x1], options[:y1], options[:x2], options[:y2], options[:color], options[:z])
+  def _LINE_(x1:, y1:, x2:, y2:, color:, z: nil)
+    @entity.draw_line(x1, y1, x2, y2, color, z)
   end
 
   #DrawableLayout上に矩形を描く
-  def _BOX_(options)
-    if options[:fill]
-      @entity.draw_box_fill( 
-        options[:x1], options[:y1], options[:x2], options[:y2], 
-        options[:color], options[:z])
+  def _BOX_(x1:, y1:, x2:, y2:, color:, fill: false, z: nil)
+    if fill
+      @entity.draw_box_fill(x1, y1, x2, y2, color, z)
     else
-      @entity.draw_box(
-        options[:x1], options[:y1], options[:x2], options[:y2], 
-        options[:color], options[:z])
+      @entity.draw_box(x1, y1, x2, y2, color, z)
     end
   end
 
   #DrawableLayout上に円を描く
-  def _CIRCLE_(options)
-    if options[:fill]
-      @entity.draw_circle_fill(
-        options[:x], options[:y], options[:r], options[:color], options[:z])
+  def _CIRCLE_(x:, y:, r:, color:, fill: false)
+    if fill
+      @entity.draw_circle_fill(x, y, r, color, z)
     else
-      @entity.draw_circle( 
-        options[:x], options[:y], options[:r], options[:color], options[:z])
+      @entity.draw_circle(x, y, r, color, z)
     end
   end
 
   #DrawableLayout上に文字を描く
-  def _TEXT_(options)
-    options[:weight] = 4 unless options[:weight]
-    options[:option] = {} unless options[:option]
-    if options[:color]
-      options[:option][:color] = options[:color]  
-    else
-      options[:option][:color] = [0, 0, 0, 0]
-    end
+  def _TEXT_(text: , x: 0, y: 0, size: 24, font_name: "", weight: 4, italic: false, option: {}, color: [0, 0, 0, 0])
+    option[:color] = color
 
-    @entity.draw_font_ex(
-      options[:x] || 0, options[:y] || 0,
-      options[:text],
-      DXRuby::Font.new( options[:size] || 24,
-                options[:font_name] || "",  
-                {
-                  weight: options[:weight] * 100,
-                  italic: options[:italic] || false
-                }
-              ),
-      options[:option])
+    @entity.draw_font_ex(x, y, text, 
+      DXRuby::Font.new(size, font_name, {weight: weight*100, italic: italic}),
+      option)
   end
 end
 

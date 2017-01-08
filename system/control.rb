@@ -447,7 +447,7 @@ class Control #制御構文
   end
 
 
-  def _CHECK_BLOCK_(options)
+  def _CHECK_BLOCK_(**)
     unless @temp_yield_stack[-1] == nil
       #条件が成立したらブロックを実行する
       unshift_command_block()
@@ -479,7 +479,7 @@ class Control #制御構文
     unshift_command_block(args)
   end
 
-  def _NEXT_(_ARGUMENT_: nil)
+  def _NEXT_(**)
     #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -487,7 +487,7 @@ class Control #制御構文
     end
   end
 
-  def _BREAK_(_ARGUMENT_: nil)
+  def _BREAK_(**)
     #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -498,7 +498,7 @@ class Control #制御構文
     end
   end
 
-  def _RETURN_(_ARGUMENT_: nil)
+  def _RETURN_(**)
     #_END_FUNCTION_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_FUNCTION_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
@@ -528,7 +528,7 @@ class Control #ユーザー定義関数操作
   end
 
   #関数ブロックを実行する
-  def _YIELD_(options)
+  def _YIELD_(**options)
     @temp_yield_stack = @temp_yield_stack.dup
     @temp_command_block = @temp_yield_stack.pop
     raise unless @temp_command_block
@@ -616,7 +616,7 @@ class Control #スクリプト制御
   end
 
   #アプリを終了する
-  def _EXIT_(options)
+  def _EXIT_(**)
     @root_control.exit = true
   end
 
@@ -650,15 +650,15 @@ end
 
 class Control #内部コマンド
   #ファンクションの終点を示す
-  def _END_LOOP_(options)
+  def _END_LOOP_(**)
   end
 
   #ファンクションの終点を示す
-  def _END_FUNCTION_(options)
+  def _END_FUNCTION_(**)
   end
   
   #フレームの終了を示す（ダミーコマンド。これ自体は実行されない）
-  def _END_FRAME_(options)
+  def _END_FRAME_(**)
     raise
   end
 end
@@ -946,12 +946,12 @@ class Control #デバッグ支援機能
   end
 
   #コントロールツリーを出力する
-  def _DEBUG_TREE_(options)
+  def _DEBUG_TREE_(**)
     put_control_tree(0)
   end
 
   #プロパティの現在値を出力する
-  def _DEBUG_PROP_(options)
+  def _DEBUG_PROP_(**)
     methods.each do |method|
       method = method.to_s
       if method[-1] == "=" and not(["===", "==", "!="].index(method))
@@ -961,7 +961,7 @@ class Control #デバッグ支援機能
   end
 
   #コマンドリストを出力する
-  def _DEBUG_COMMAND_(options)
+  def _DEBUG_COMMAND_(**)
     @command_list.each do |command|
       p command
     end

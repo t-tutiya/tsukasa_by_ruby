@@ -110,8 +110,7 @@ class Image < Helper::Drawable
   end
 
   #Image上に文字を描く
-  def _TEXT_(
-              weight: 4, option: {}, color: [0, 0, 0, 0],
+  def _TEXT_( weight: 4, option: {}, color: [0, 0, 0, 0],
               x: 0, y: 0, text: "", size: 24, font_name: "", italic: false)
     if color
       option[:color] = color
@@ -130,7 +129,7 @@ class Image < Helper::Drawable
   end
 
   #Imageを[0,0,0,0]で塗りつぶす
-  def _CLEAR_(options)
+  def _CLEAR_(**)
     @entity.clear
   end
 

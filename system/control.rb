@@ -141,7 +141,7 @@ class Control #公開インターフェイス
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
-      command_name, block, options, temp = @command_list.shift
+      command_name, block, options = @command_list.shift
 
       #コマンドブロックを退避
       @temp_command_block = block[0]

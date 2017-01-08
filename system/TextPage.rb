@@ -305,7 +305,6 @@ class TextPage < Layout
                                   :offset_x => @character_pitch,
                                   :align_y => :bottom,
                                   :char => options[:_ARGUMENT_],
-                                  :command_list=> options[:command_list],
                                   :float_x => :left,
                                   :image_path => options[:image_path]
                                 }.merge(@char_option)
@@ -327,8 +326,6 @@ class TextPage < Layout
   #textコマンド
   #指定文字列を描画チェインに連結する
   def _TEXT_(options)
-    command_list = Array.new
-
     #イメージフォントを使うかどうか
     if @use_image_font
       char_command = :image_char

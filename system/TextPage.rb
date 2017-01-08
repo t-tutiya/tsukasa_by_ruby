@@ -297,8 +297,7 @@ class TextPage < Layout
   #指定文字（群）を描画チェインに連結する
   def _CHAR_(_ARGUMENT_: nil, image_path: nil)
     command_block = @temporary_command_block_list.dup
-    command_block.pop
-    command_block.push(@function_list[:_CHAR_RENDERER_])
+    command_block[-1] = @function_list[:_CHAR_RENDERER_]
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
                                 command_block,
@@ -339,8 +338,7 @@ class TextPage < Layout
     _ARGUMENT_.to_s.reverse.each_char do |ch|
       #１文字分の出力コマンドをスタックする
       command_block = @temporary_command_block_list.dup
-      command_block.pop
-      command_block.push(nil)
+      command_block[-1] = nil
       unshift_command(char_command, command_block, {_ARGUMENT_: ch})
     end
   end

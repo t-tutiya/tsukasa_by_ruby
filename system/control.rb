@@ -607,12 +607,11 @@ class Control #スクリプト制御
     end
 
     #司スクリプトを評価してコマンド配列を取得し、コマンドリストの先頭に追加する
-    command_list = @@script_compiler.eval_commands(
+    @command_list = @@script_compiler.eval_commands(
                       _ARGUMENT_,
                       path,
-                      @temp_yield_stack, 
-                    )
-    @command_list = command_list + @command_list
+                      @temp_yield_stack) + 
+                    @command_list
   end
 
   #アプリを終了する

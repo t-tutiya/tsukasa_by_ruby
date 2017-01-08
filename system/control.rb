@@ -499,7 +499,8 @@ class Control #制御構文
     #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
       if @command_list.shift[0] == :_END_LOOP_ 
-        @command_list.shift #_LOOP_をpopする
+        #再スタックされている_LOOP_ブロックを削除する
+        @command_list.shift 
         break 
       end
     end
@@ -509,15 +510,11 @@ class Control #制御構文
     #_END_FUNCTION_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_FUNCTION_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
-      break if @command_list[0][0] == :_END_FUNCTION_
-      @command_list.shift
+      break if @command_list.shift[0] == :_END_FUNCTION_ 
     end
 
-    #yield用のスタックを一段上げる
-    #@temporary_command_block_list.pop
-
+    #ブロックが付与されているならそれを実行する
     if command_block?
-      #ブロックが付与されているならそれを実行する
       unshift_command_block()
     end
   end

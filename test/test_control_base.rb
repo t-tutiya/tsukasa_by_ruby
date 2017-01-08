@@ -53,11 +53,11 @@ class TC_Foo < Minitest::Test
       break if control.exit #メインループ終了判定
     end
     
-    reslut = [[:_SET_,
+    reslut = [[:_SET_, [],
                 {:id=>:"Tsukasa::Control",
                  :child_update=>true,
                  :exit=>true},
-                {}]]
+                ]]
 
     #テスト
     assert_equal(control.serialize(), reslut)
@@ -162,11 +162,11 @@ class TC_Foo < Minitest::Test
 
     control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
     
-    reslut = [[:_SET_,
+    reslut = [[:_SET_, [],
                 {:id=>:"Tsukasa::Control",
                  :child_update=>true,
                  :exit=>true},
-                {}]]
+                ]]
     assert_equal(control.serialize(), reslut)
   end
 
@@ -179,12 +179,12 @@ class TC_Foo < Minitest::Test
 
     control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
     
-    reslut = [[:_SET_,
+    reslut = [[:_SET_, [],
                 {:id=>:"Tsukasa::Control",
                  :test=>3,
                  :child_update=>true,
                  :exit=>true},
-                {}]]
+                ]]
     assert_equal(control.serialize(), reslut)
   end
 
@@ -197,7 +197,7 @@ class TC_Foo < Minitest::Test
 
     control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
     
-    reslut = [[:_SET_, 
+    reslut = [[:_SET_, [],
               { :path=>nil, 
                 :visible=>true, 
                 :scale_x=>1, 
@@ -224,7 +224,7 @@ class TC_Foo < Minitest::Test
                 :id=>:test_image, 
                 :child_update=>true, 
                 :exit=>false}, 
-              {}]]
+              ]]
     assert_equal(control.find_control(:test_image).serialize(), reslut)
   end
   #通常ループ
@@ -241,6 +241,6 @@ class TC_Foo < Minitest::Test
       break if control.exit
     end
     
-    assert_equal(control.serialize()[0][1][:test], 400, "NO")
+    assert_equal(control.serialize()[0][2][:test], 400, "NO")
   end
 end

@@ -244,15 +244,15 @@ class Control #公開インターフェイス
       end
     end
 
-    command_list = [[:_SET_, options, {}]]
+    command_list = [[:_SET_, [], options]]
 
     #子コントロールのシリアライズコマンドを取得
     @control_list.each do |control|
-      result = [:_CREATE_,
+      result = [:_CREATE_, [],
                 {
                   _ARGUMENT_: control.class.name,
                   command_list: control.serialize()
-                },{}]
+                }]
       command_list.push(result)
     end
 

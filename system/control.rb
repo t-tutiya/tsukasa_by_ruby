@@ -485,11 +485,6 @@ class Control #制御構文
     until @command_list.empty? do
       break if @command_list.shift[0] == :_END_LOOP_ 
     end
-
-    if command_block?
-      #ブロックが付与されているならそれを実行する
-      unshift_command_block(nil)
-    end
   end
 
   def _BREAK_(_ARGUMENT_: nil)
@@ -500,11 +495,6 @@ class Control #制御構文
         @command_list.shift #_LOOP_をpopする
         break 
       end
-    end
-
-    if command_block?
-      #ブロックが付与されているならそれを実行する
-      unshift_command_block(nil)
     end
   end
 

@@ -570,7 +570,7 @@ class Control #スクリプト制御
     #子コントロール全てを探査対象とする
     @control_list.each do |control|
       next if _ARGUMENT_ and (control.id != _ARGUMENT_)
-      control.unshift_command(:_SEND_, options)
+      control.unshift_command(:_SEND_, @temporary_command_block_list.dup, options)
     end
   end
 

@@ -96,7 +96,11 @@ class Control #公開インターフェイス
   end
 
   #コマンドをスタックの先頭に挿入する
-  def unshift_command(command, block = [@temp_command_block, @temp_yield_stack], options, &command_block)
+  def unshift_command(command, 
+                      block = [@temp_command_block, @temp_yield_stack],
+                      **options, 
+                      &command_block)
+    #コマンドブロックがあるなら差し替える
     if command_block
       block[0] = command_block
     end
@@ -104,12 +108,20 @@ class Control #公開インターフェイス
   end
 
   #コマンドをスタックの末端に挿入する
-  def push_command(command, block = [@temp_command_block, @temp_yield_stack], options)
+  def push_command( command, 
+                    block = [@temp_command_block, @temp_yield_stack], 
+                    **options, 
+                    &command_block)
+    #コマンドブロックがあるなら差し替える
+    if command_block
+      block[0] = command_block
+    end
     @command_list.push([command, block, options])
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
-  def unshift_command_block(block = [@temp_command_block, @temp_yield_stack], options)
+  def unshift_command_block(block = [@temp_command_block, @temp_yield_stack], 
+                            **options)
     @command_list = 
       @@script_compiler.eval_block(block[0], block[1], options) + 
       @command_list
@@ -117,7 +129,7 @@ class Control #公開インターフェイス
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの末尾に挿入する
   def push_command_block(block = [@temp_command_block, @temp_yield_stack], 
-                         options)
+                         **options)
     @command_list = 
       @command_list + 
       @@script_compiler.eval_block(block[0], block[1], options)
@@ -298,7 +310,7 @@ class Control #内部メソッド
     end
 
     #終端コマンドを挿入
-    unshift_command(:_END_FUNCTION_, [], {})
+    unshift_command(:_END_FUNCTION_)
 
     #参照渡し汚染が起きないようにディープコピーで取得
     @temp_yield_stack = @temp_yield_stack ? @temp_yield_stack.dup : []
@@ -430,7 +442,7 @@ class Control #制御構文
     #チェック条件を満たす場合
     if result
       #ブロックを実行する
-      unshift_command_block(nil)
+      unshift_command_block()
     end
   end
 
@@ -438,7 +450,7 @@ class Control #制御構文
   def _CHECK_BLOCK_(options)
     unless @temp_yield_stack[-1] == nil
       #条件が成立したらブロックを実行する
-      unshift_command_block(nil)
+      unshift_command_block()
     end
   end
 
@@ -456,13 +468,13 @@ class Control #制御構文
 
       args = {end: _ARGUMENT_[0], now: _ARGUMENT_[1]}
     else
-      args = nil
+      args = {}
     end
 
     #リストの先端に自分自身を追加する
     unshift_command(:_LOOP_, {_ARGUMENT_: _ARGUMENT_})
     #現在のループ終端を挿入
-    unshift_command(:_END_LOOP_, nil)
+    unshift_command(:_END_LOOP_)
     #ブロックを実行時評価しコマンド列を生成する。
     unshift_command_block(args)
   end
@@ -504,9 +516,12 @@ class Control #制御構文
       @command_list.shift
     end
 
+    #yield用のスタックを一段上げる
+    @temp_yield_stack.pop
+
     if command_block?
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(nil)
+      unshift_command_block()
     end
   end
 end
@@ -685,9 +700,9 @@ class Control #プロパティのパラメータ遷移
     #リストの先端に自分自身を追加する
     unshift_command(:_MOVE_, options)
     #現在のループ終端を挿入
-    unshift_command(:_END_LOOP_, nil)
+    unshift_command(:_END_LOOP_)
     #フレーム終了疑似コマンドをスタックする
-    unshift_command(:_END_FRAME_, nil)
+    unshift_command(:_END_FRAME_)
 
     if command_block?
       #ブロックが付与されているならそれを実行する
@@ -887,9 +902,9 @@ class Control #プロパティのパラメータ遷移
     #リストの先端に自分自身を追加する
     unshift_command(:_PATH_, options)
     #現在のループ終端を挿入
-    unshift_command(:_END_LOOP_, nil)
+    unshift_command(:_END_LOOP_)
     #フレーム終了疑似コマンドをスタックする
-    unshift_command(:_END_FRAME_, nil)
+    unshift_command(:_END_FRAME_)
 
     if command_block?
       #ブロックが付与されているならそれを実行する

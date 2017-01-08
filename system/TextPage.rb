@@ -312,7 +312,7 @@ class TextPage < Layout
                                )
 
     #文字待機処理をスタックする
-    unshift_command(:_CHAR_WAIT_, {})
+    unshift_command(:_CHAR_WAIT_)
   end
 
   #指定したコマンドブロックを文字列の末端に追加する
@@ -321,7 +321,7 @@ class TextPage < Layout
     @control_list.last.push_command_block([@temp_command_block, @temp_yield_stack], options)
 
     #文字待機処理をスタックする
-    unshift_command(:_CHAR_WAIT_, {})
+    unshift_command(:_CHAR_WAIT_)
   end
 
   #textコマンド
@@ -394,7 +394,7 @@ class TextPage < Layout
                     })
 
     #行間待機処理を設定する
-    unshift_command(:_LINE_WAIT_, [], {})
+    unshift_command(:_LINE_WAIT_)
   end
 
   #flushコマンド

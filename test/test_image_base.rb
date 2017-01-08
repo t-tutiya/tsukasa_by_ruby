@@ -63,4 +63,30 @@ class TC_Image_base < Minitest::Test
     end
 
   end
+
+  #ゲーム側で判定タイミングのトリガーを用意するテスト
+  def test_2
+    #コントロールの生成
+    control = Tsukasa::Window.new() do
+      _CREATE_ :Image, width: 256, height:256 do
+        _PIXEL_ x:128, y:128, color:[255,255,255]
+        _PIXEL_ x:128, y:128 do |color:|
+          _PUTS_ color
+        end
+        _COMPARE_ x:128, y:128, color:[255,255,255] do
+          _PUTS_ "OK"
+        end
+      end
+      _END_FRAME_
+      _EXIT_
+    end
+
+    #メインループ
+    DXRuby::Window.loop() do
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0) #処理
+      control.render(0, 0, DXRuby::Window) #描画
+      break if control.exit #メインループ終了判定
+    end
+  end
+
 end

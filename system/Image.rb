@@ -135,13 +135,13 @@ class Image < Helper::Drawable
   end
 
   #Imageの指定座標への色の取得／設定
-  def _PIXEL_(x:, y:, color:)
+  def _PIXEL_(x:, y:, color: nil)
     if color
       @entity[x, y] = color
     end
     if command_block?
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(@entity[x, y])
+      unshift_command_block({color: @entity[x, y]})
     end
   end
 
@@ -149,7 +149,7 @@ class Image < Helper::Drawable
   def _COMPARE_(x:, y:, color:)
     if @entity.compare(x, y, color)
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(@entity[x, y])
+      unshift_command_block()
     end
   end
 

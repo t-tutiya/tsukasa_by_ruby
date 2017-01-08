@@ -16,6 +16,7 @@
 @ end
 @   _LINE_PAUSE_ #コマンドブロック内でのコメントは"#"を使います
 @ _SEND_ :text0 do
+@   _SET_ indent: 64
 @   _LINE_FEED_
 @ end
   _SEND_ :text0 do

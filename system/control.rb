@@ -140,7 +140,9 @@ class Control #公開インターフェイス
                                                   command_block_list, 
                                                   options)
   end
+end
 
+class Control
   def update(mouse_pos_x, mouse_pos_y, index)
     @child_index = index
 
@@ -148,13 +150,10 @@ class Control #公開インターフェイス
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
       command_name, command_block_list, options = @command_list.shift
-
-      #コマンドブロックを退避
+      #コマンドブロックスタックを一時変数に退避
       @temporary_command_block_list = command_block_list
-
       #今フレーム処理終了判定
       break if command_name == :_END_FRAME_
-
       #コマンドを実行する
       exec_command(command_name, options)
     end
@@ -177,7 +176,7 @@ class Control #公開インターフェイス
       #コントロールの削除チェック
       child_control.delete?
     end
-
+    #オフセット値を返す
     return 0, 0
   end
 
@@ -194,7 +193,9 @@ class Control #公開インターフェイス
     #オフセット値を返す
     return 0, 0
   end
+end
 
+class Control
   def find_control(id)
     #idがnilであれば自身を返す
     return self unless id

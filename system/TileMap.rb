@@ -113,7 +113,7 @@ class TileMap < DrawableLayout
       @map_array[x][y] = _ARGUMENT_
     else
       #ブロックが付与されているならそれを実行する
-      unshift_command_block(@map_array[x][y])
+      unshift_command_block({status: @map_array[x][y]})
     end
   end
 

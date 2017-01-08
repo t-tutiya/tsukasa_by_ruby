@@ -274,7 +274,7 @@ class TextPage < Layout
     @function_list[:_LINE_WAIT_] = options[:_LINE_WAIT_] || Proc.new(){}
 
     #次のアクティブ行コントロールを追加  
-    unshift_command(:_CREATE_, [block, yield_stack], 
+    unshift_command(:_CREATE_, [nil, nil], 
                     {
                       :_ARGUMENT_ => :Layout, 
                       :width => @width,
@@ -341,33 +341,46 @@ class TextPage < Layout
   end
 
   def _RUBI_(options)
-    #ルビを出力するTextPageを生成する
-    rubi_layout =[:_CREATE_, [nil, nil],
-                  {
-                    :_ARGUMENT_ => :TextPage, 
-                    :command_list => [[:_TEXT_, [nil, @temp_yield_stack], options]],
-                    :x => @rubi_option[:offset_x],
-                    :y => @rubi_option[:offset_y],
-                    :height=> @rubi_option[:size],
-                    :size => @rubi_option[:size],
-                    :line_height => @rubi_option[:size],
-                    :font_name => @char_option[:font_name],
-                    :line_spacing => 0,
-                    :character_pitch => @rubi_option[:character_pitch],
-                    :_LINE_WAIT_ => @function_list[:_LINE_WAIT_],
-                    :_CHAR_WAIT_ => @function_list[:_CHAR_WAIT_],
-                    :_CHAR_RENDERER_ => @function_list[:_CHAR_RENDERER_]}]
-
     #TextPageをベース文字に登録する。
     @control_list.last.push_command(:_CREATE_, [nil, nil],
                                     {
                                       :_ARGUMENT_ => :Layout, 
                                       :width => 0,
                                       :height => @size,
-                                      :command_list => [rubi_layout],
                                       :float_x => :left
                                     })
-  end
+
+    #ルビを出力するTextPageを生成する
+    @control_list.last.push_command(:_SEND_, [nil, nil], {_ARGUMENT_: -1, 
+      text: options[:_ARGUMENT_],
+      x: @rubi_option[:offset_x],
+      y: @rubi_option[:offset_y],
+      size:  @rubi_option[:size],
+      character_pitch: @rubi_option[:character_pitch],
+      font_name: @char_option[:font_name],
+      _LINE_WAIT_: @function_list[:_LINE_WAIT_],
+      _CHAR_WAIT_: @function_list[:_CHAR_WAIT_],
+      _CHAR_RENDERER_:  @function_list[:_CHAR_RENDERER_]
+      }) do |
+      text:, x:,y:,size:,character_pitch:, font_name:, 
+      _LINE_WAIT_:, _CHAR_WAIT_:, _CHAR_RENDERER_:|
+      _CREATE_ :TextPage, 
+        x: x,
+        y: y,
+        height: size,
+        size: size,
+        line_height: size,
+        font_name: font_name,
+        line_spacing: 0,
+        character_pitch: character_pitch,
+        _LINE_WAIT_: _LINE_WAIT_, 
+        _CHAR_WAIT_: _CHAR_WAIT_, 
+        _CHAR_RENDERER_: _CHAR_RENDERER_ do
+        _TEXT_ text
+      end
+    end
+    
+    end
 
   #line_feedコマンド
   #改行処理（CR＋LF）

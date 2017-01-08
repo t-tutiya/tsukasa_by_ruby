@@ -150,5 +150,5 @@ DXRuby::Window.loop(true) do
   tsukasa.render(0, 0, DXRuby::Window)
 
   #スクリプトで終了コマンドが実行された場合
-  break if tsukasa.exit
+  break if tsukasa.exit?
 end

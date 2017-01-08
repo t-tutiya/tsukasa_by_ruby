@@ -299,7 +299,7 @@ class TextPage < Layout
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
                                 [@function_list[:_CHAR_RENDERER_],
-                                @temp_yield_stack],
+                                @temporary_command_block_list[1]],
                                 {
                                   :_ARGUMENT_ => :Char, 
                                   :offset_x => @character_pitch,
@@ -317,7 +317,7 @@ class TextPage < Layout
   #指定したコマンドブロックを文字列の末端に追加する
   def _CHAR_COMMAND_(**)
     #文字コントロールを生成する
-    @control_list.last.push_command_block([@temp_command_block, @temp_yield_stack])
+    @control_list.last.push_command_block(@temporary_command_block_list)
 
     #文字待機処理をスタックする
     unshift_command(:_CHAR_WAIT_)
@@ -336,7 +336,7 @@ class TextPage < Layout
     #文字列を分解してcharコマンドに変換する
     _ARGUMENT_.to_s.reverse.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      unshift_command(char_command, [nil, @temp_yield_stack], {_ARGUMENT_: ch})
+      unshift_command(char_command, [nil, @temporary_command_block_list[1]], {_ARGUMENT_: ch})
     end
   end
 

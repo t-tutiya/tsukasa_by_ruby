@@ -61,8 +61,7 @@ class DrawableLayout < Helper::Drawable
   #アップデート時の背景色
   attr_reader  :bgcolor 
   def bgcolor=(arg)
-    @bgcolor = arg
-    @entity.bgcolor = @bgcolor
+    @entity.bgcolor = @bgcolor = arg
   end
   
   def initialize(options, yield_stack, root_control, parent_control, &block)
@@ -77,6 +76,8 @@ class DrawableLayout < Helper::Drawable
 
     self.width = options[:width]
     self.height = options[:height]
+
+    @update_flag = false
   end
   
   def render(offset_x, offset_y, target)

@@ -117,6 +117,8 @@ _DEFINE_ :system_menu do
                  comment: "_TO_IMAGE_とルールトランジションの組み合わせ"
       TextSelect text: "sample_2_6.rb",   path: path + "sample_2_6.rb", 
                  comment: "センタリングとＸ方向連結のサンプル"
+      TextSelect text: "sample_2_7.rb",   path: path + "sample_2_7.rb", 
+                 comment: "カスタムシェーダーサンプル"
     end
     _CREATE_ :Layout, id: 3, x:0, y:0, width: 256, float_x: :left    do
       TextSelect text: "sample_3_1.rb", path: path + "sample_3_1.tks", 

@@ -31,14 +31,23 @@
 class HorrorShader < Tsukasa::Shader
 
   def initialize(options, yield_stack, root_control, parent_control, &block)
-    @shader = HorrorText.new(2.0, 2.0, 16.0, 1.25, 1.0, 640, 200)
+    @shader = HorrorText.new(60, 2.0, 2.0, 16.0, 1.25, 1.0, 640, 200)
+    @shader.count = @shader.mode == 0 ? 0 : @shader.duration 
     super
   end
   
   def update(mouse_pos_x, mouse_pos_y, index)
-    @shader.wavePhaseU = (@shader.wavePhaseU + 1.25) % 360
-    @shader.wavePhaseV = (@shader.wavePhaseV + 1.0) % 360
+    @shader.count = @shader.count + (@shader.mode == 0 ? 1 : - 1) if check_mode()
+    @shader.wavePhaseU = (@shader.wavePhaseU + @shader.wave_speed_u) % 360
+    @shader.wavePhaseV = (@shader.wavePhaseV + @shader.wave_speed_v) % 360
+    @shader.waveAmpU   = @shader.wave_amp_u * @shader.count / @shader.duration
+    @shader.waveAmpV   = @shader.wave_amp_v * @shader.count / @shader.duration
+    @shader.waveLength = 360.0 / (@shader.wave_length * @shader.texelSize[1]) 
     super
+  end
+
+  def check_mode
+    @shader.mode == 0 && @shader.count < @shader.duration || @shader.mode == 1 && @shader.count > 0
   end
 
   class HorrorText < DXRuby::Shader
@@ -133,12 +142,31 @@ EOS
        }
     )
 
+    attr_accessor :count
     attr_accessor :duration
+    attr_accessor :mode
+    attr_accessor :wave_amp_u
+    attr_accessor :wave_amp_v
+    attr_accessor :wave_phase_u
+    attr_accessor :wave_phase_v
+    attr_accessor :wave_length
+    attr_accessor :wave_speed_u
+    attr_accessor :wave_speed_v
       
-    def initialize(wave_amp_u = 1.0, wave_amp_v = 0.0, wave_length = 8.0, 
+    def initialize(duration = 60, wave_amp_u = 1.0, wave_amp_v = 0.0, wave_length = 8.0, 
                    wave_speed_u = 1.0, wave_speed_v = 1.0,
                    width, height)
       super(@@core, "ScanShift")
+      @count     = 0
+      @duration  = duration
+      @mode      = 0
+      @wave_amp_u   = wave_amp_u
+      @wave_amp_v   = wave_amp_v
+      @wave_phase_u = 0
+      @wave_phase_v = 0
+      @wave_length  = wave_length
+      @wave_speed_u = wave_speed_u
+      @wave_speed_v = wave_speed_v
       self.waveAmpU      = 2.0
       self.waveAmpV      = 2.0
       self.wavePhaseU    = 0
@@ -147,6 +175,5 @@ EOS
       self.texelSize = 1.0 / width, 1.0 / height
     end
   end
-
 end
 

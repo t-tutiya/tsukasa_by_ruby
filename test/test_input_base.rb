@@ -37,9 +37,10 @@ require './system/Tsukasa.rb'
 MiniTest.autorun
 
 class TC_Foo < Minitest::Test
+#ユーザー入力をともなうテストのため、一時的にコメントアウト中
 =begin
   #ゲーム側で判定タイミングのトリガーを用意するテスト
-  def test_5
+  def test_2017_01_09_1_キー入力確認
     puts "zキーを押してください"
     #コントロールの生成
     control = Tsukasa::Control.new() do

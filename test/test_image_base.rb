@@ -39,7 +39,7 @@ MiniTest.autorun
 class TC_Image_base < Minitest::Test
 
   #ゲーム側で判定タイミングのトリガーを用意するテスト
-  def test_1
+  def test_2017_01_09_1_描画コマンド動作確認
     #コントロールの生成
     control = Tsukasa::Window.new() do
       _CREATE_ :Image, width: 256, height:256 do
@@ -65,7 +65,7 @@ class TC_Image_base < Minitest::Test
   end
 
   #ゲーム側で判定タイミングのトリガーを用意するテスト
-  def test_2
+  def test_2017_01_09_2_ブロック呼び出し系コマンド確認
     #コントロールの生成
     control = Tsukasa::Window.new() do
       _CREATE_ :Image, width: 256, height:256 do

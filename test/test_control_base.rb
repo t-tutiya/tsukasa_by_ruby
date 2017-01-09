@@ -39,7 +39,7 @@ MiniTest.autorun
 class TC_Foo < Minitest::Test
 
   #コントロールのダンプとの比較によるテスト
-  def test_1
+  def test_2016_12_31_1_コントロールのダンプとの比較によるテスト
     #コントロールの生成
     control = Tsukasa::Control.new() do
       #メインループを終了する
@@ -63,8 +63,7 @@ class TC_Foo < Minitest::Test
     assert_equal(control.serialize(), reslut)
   end
 
-  #コントロールのダンプとの比較によるテスト
-  def test_0105_1
+  def test_2016_12_31_2_ユーザー定義コマンドの実行
     #コントロールの生成
     control = Tsukasa::Control.new() do
       _DEFINE_ :test0105_1 do
@@ -86,7 +85,7 @@ class TC_Foo < Minitest::Test
   end
 
   #プロパティとの比較によるテスト
-  def test_2
+  def test__2016_12_31_3_プロパティとの比較によるテスト
     #コントロールの生成
     control = Tsukasa::Control.new() do
       #動的プロパティの追加
@@ -109,7 +108,7 @@ class TC_Foo < Minitest::Test
   end
 
   #メインループを回さないテスト
-  def test_3
+  def test__2016_12_31_4_メインループを回さないテスト
     #コントロールの生成
     control = Tsukasa::Control.new() do
       #動的プロパティの追加
@@ -130,7 +129,7 @@ class TC_Foo < Minitest::Test
   end
 
   #複数フレームにわたる値の変化を比較するテスト
-  def test_4
+  def test__2016_12_31_5_複数フレームに渡る値群の比較
     #コントロールの生成
     control = Tsukasa::Control.new() do
       #動的プロパティの追加
@@ -154,8 +153,8 @@ class TC_Foo < Minitest::Test
     assert_equal(result, [1, 4, 9, 16, 25, 36, 48, 64, 81, 100])
   end
 
-  #実行のみ
-  def test_b_2
+  #実行のみ_シリアライズ配列との比較
+  def test__2016_12_31_6
     control = Tsukasa::Control.new() do
       _EXIT_
     end
@@ -171,7 +170,7 @@ class TC_Foo < Minitest::Test
   end
 
   #実行のみ
-  def test_b_3
+  def test__2016_12_31_7_ループ外での実行_シリアライズ配列との比較_動的プロパティ追加
     control = Tsukasa::Control.new() do
       _DEFINE_PROPERTY_ test: 3
       _EXIT_
@@ -189,7 +188,7 @@ class TC_Foo < Minitest::Test
   end
 
   #実行のみ
-  def test_b_4
+  def test__2016_12_31_8_ループ外での実行_任意コントロールのシリアライズ配列との比較
     control = Tsukasa::Control.new() do
       _CREATE_:Image, id: :test_image
       _EXIT_
@@ -227,8 +226,9 @@ class TC_Foo < Minitest::Test
               ]]
     assert_equal(control.find_control(:test_image).serialize(), reslut)
   end
+
   #通常ループ
-  def test_b_5
+  def test__2016_12_31_9_MOVE動作チェック_シリアライズ配列からプロパティ要素を取得する
     control = Tsukasa::Control.new() do
       _DEFINE_PROPERTY_ test: 3
       _MOVE_ 30, test:[40,400]
@@ -245,7 +245,7 @@ class TC_Foo < Minitest::Test
   end
 
 
-  def test_2017_01_09_1
+  def test_2017_01_09_1_デバッグコマンド動作確認
     control = Tsukasa::Window.new() do
       _DEBUG_TREE_
       _DEBUG_PROP_

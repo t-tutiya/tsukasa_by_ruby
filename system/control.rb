@@ -264,6 +264,15 @@ class Control
 
     return command_list
   end
+
+  #終了フラグを立てる
+  def set_exit()
+    @exit = true
+    #親コントロールに伝搬する
+    unless self == @root_control
+      @parent_control.set_exit()
+    end
+  end
 end
 
 class Control #判定系
@@ -623,7 +632,7 @@ class Control #スクリプト制御
 
   #アプリを終了する
   def _EXIT_(**)
-    @root_control.exit = true
+    set_exit()
   end
 
   #文字列を評価する（デバッグ用）

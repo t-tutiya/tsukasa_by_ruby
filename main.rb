@@ -99,7 +99,7 @@ tsukasa = Tsukasa::Window.new()do
   _CREATE_ :Input, id: :_INPUT_
 
   #プラグインネイティブファイルの読み込み
-  Dir.glob("./plugin/*.rb").each do |path|
+  Dir.glob("./plugin_control/*.rb").each do |path|
     require path
   end
 

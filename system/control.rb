@@ -522,6 +522,9 @@ class Control #制御構文
       break if @command_list.shift[0] == :_END_FUNCTION_ 
     end
 
+    temp = @temporary_command_block_list.pop
+    @temporary_command_block_list[-1] = temp
+
     #ブロックが付与されているならそれを実行する
     if command_block?
       unshift_command_block()

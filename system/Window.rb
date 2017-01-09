@@ -72,7 +72,7 @@ class Window < ClickableLayout
 
   #フルスクリーン状態の取得／設定
   def full_screen()
-    DXRuby::Window.full_screen
+    DXRuby::Window.full_screen?
   end
   def full_screen=(arg)
     DXRuby::Window.full_screen = arg
@@ -101,7 +101,7 @@ class Window < ClickableLayout
   end
 
   #タイトルバーに表示するアイコン
-  def icon_path=(arg)
+  def icon_path()
     @icon_path
   end
   def icon_path=(arg)

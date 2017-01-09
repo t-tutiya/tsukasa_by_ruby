@@ -243,4 +243,21 @@ class TC_Foo < Minitest::Test
     
     assert_equal(control.serialize()[0][2][:test], 400, "NO")
   end
+
+
+  def test_2017_01_09_1
+    control = Tsukasa::Window.new() do
+      _DEBUG_TREE_
+      _DEBUG_PROP_
+      _DEBUG_COMMAND_
+      _EXIT_
+    end
+
+    DXRuby::Window.loop() do
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+      control.render(0, 0, DXRuby::Window)
+      break if control.exit
+    end
+    
+  end
 end

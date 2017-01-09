@@ -66,11 +66,8 @@ class ScriptCompiler
       options[:_ARGUMENT_] = argument
     end
 
-    command_block = @yield_stack.dup
-    command_block.push(block)
-
     #コマンドを登録する
-    @command_list.push([command_name, command_block, options])
+    @command_list.push([command_name, block, @yield_stack, options])
   end
 end
 

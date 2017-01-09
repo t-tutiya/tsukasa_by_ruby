@@ -42,7 +42,7 @@ _CREATE_ :DrawableLayout, x: 160, y: 120, width: 320, height: 256 do
         pad_x = x
         _GET_ :x do |x:|
           #Ｘ方向の増分を加算
-          _SET_ x: x + pad_x * 2
+          _SET_ x: x + pad_x * 4
         end
       end
 
@@ -94,33 +94,27 @@ end
 #通常ステート
 _DEFINE_ :state_normal do
 
-  state_x_move
-
   #スペースキー入力判定
   _CHECK_INPUT_ key_push: K_SPACE do
     #※_RETURN_の付与ブロックは、コマンドを抜けた後で実行されます。継続(continution)的な挙動になり、シーン（ステート）遷移に使えます
     _RETURN_ do
       #※ブロック内に複数のコマンドを記述できるので、下記のように複数のステートの順番を指定することもできます。
-      init_jump #ジャンプステートに遷移
+      state_jump #ジャンプステートに遷移
       state_fall #落下ステートに遷移
     end
   end
 
+  #フレームを終了する
   _END_FRAME_
 
-  _CHECK_LANDING_ do
-    _RETURN_ do
-      state_normal #通常ステートを再実行
-    end
-  end
-
   _RETURN_ do
-    state_fall
+    state_x_move #Ｘ方向移動ステートに遷移
+    state_fall #落下ステートに遷移
   end
 end
 
 #ジャンプステート
-_DEFINE_ :init_jump do
+_DEFINE_ :state_jump do
   #ジャンプ係数を初期化
   _SET_ [:_ROOT_, :_TEMP_], f: -15
 
@@ -131,23 +125,18 @@ _DEFINE_ :init_jump do
 end
 
 _DEFINE_ :state_fall do
-
-  state_x_move
-
-  _GET_ [:f, :y_prev], control: [:_ROOT_, :_TEMP_] do |f:, y_prev:|
-    _GET_ :y do |y:|
-      #Ｙ軸移動増分の設定
-      y_move = (y - y_prev) + f
-      #前フレームのＹ座標を保存＆ジャンプ係数の初期化
-      _SET_ [:_ROOT_, :_TEMP_], f: 1, y_prev: y
-      #座標増分を加算。増分が31を越えていれば強制的に31とする
-      y += y_move <= 31 ? y_move : 31
-      #Ｙ座標の更新
-      _SET_ y: y
-    end
+  _GET_ [[:f, [:_ROOT_, :_TEMP_]], [:y_prev, [:_ROOT_, :_TEMP_]], :y] do |f:, y_prev:, y:|
+    #前フレームのＹ座標を保存＆ジャンプ係数の初期化
+    _SET_ [:_ROOT_, :_TEMP_], f: 1, y_prev: y
+    #Ｙ軸移動増分の設定
+    y_move = (y - y_prev) + f
+    #座標増分を加算。増分が31を越えていれば強制的に31とする
+    y += y_move <= 31 ? y_move : 31
+    #Ｙ座標の更新
+    _SET_ y: y
   end
 
-  #マップ外判定
+  #マップ外落下判定
   _CHECK_ over: {y:480} do
     _SET_ x: 32, y: 0
     _SET_ [:_ROOT_, :_TEMP_], y_prev: 0
@@ -163,10 +152,12 @@ _DEFINE_ :state_fall do
   #天井衝突補正
   _ADDJUST_ROOF_
 
-  _END_FRAME_ #※この_END_FRAME_を_ADDJUST_ROOF_や_CHECK_LANDING_の上に持っていくと上手く動かないのですが、これが正しい挙動なのかバグがあるのか調べてません
+  #フレームを終了する
+  _END_FRAME_
 
   _RETURN_ do
-    state_fall #ジャンプステートを再実行
+    state_x_move #Ｘ方向移動ステートに遷移
+    state_fall #落下ステートに再遷移
   end
 end
 

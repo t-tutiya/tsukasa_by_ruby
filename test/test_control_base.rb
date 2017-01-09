@@ -55,8 +55,7 @@ class TC_Foo < Minitest::Test
     
     reslut = [[:_SET_, [],
                 {:id=>:"Tsukasa::Control",
-                 :child_update=>true,
-                 :exit=>true},
+                 :child_update=>true},
                 ]]
 
     #テスト
@@ -163,8 +162,7 @@ class TC_Foo < Minitest::Test
     
     reslut = [[:_SET_, [],
                 {:id=>:"Tsukasa::Control",
-                 :child_update=>true,
-                 :exit=>true},
+                 :child_update=>true},
                 ]]
     assert_equal(control.serialize(), reslut)
   end
@@ -181,8 +179,7 @@ class TC_Foo < Minitest::Test
     reslut = [[:_SET_, [],
                 {:id=>:"Tsukasa::Control",
                  :test=>3,
-                 :child_update=>true,
-                 :exit=>true},
+                 :child_update=>true},
                 ]]
     assert_equal(control.serialize(), reslut)
   end
@@ -221,8 +218,7 @@ class TC_Foo < Minitest::Test
                 :width=>1, 
                 :height=>1, 
                 :id=>:test_image, 
-                :child_update=>true, 
-                :exit=>false}, 
+                :child_update=>true}, 
               ]]
     assert_equal(control.find_control(:test_image).serialize(), reslut)
   end

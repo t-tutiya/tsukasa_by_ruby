@@ -53,8 +53,7 @@ class Control #公開インターフェイス
   attr_accessor :child_update  #子コントロールの更新可否
   attr_reader  :function_list #ユーザー定義関数
 
-  #rootコントロールになった場合のみ使用
-  attr_accessor :exit #終了
+  attr_reader :exit #終了
 
   def initialize( options = {}, 
                   yield_stack = nil, 

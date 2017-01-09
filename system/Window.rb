@@ -145,7 +145,7 @@ class Window < ClickableLayout
   def update(mouse_pos_x, mouse_pos_y, index)
     #「閉じる」ボタンが押下された
     if DXRuby::Input.requested_close? and @auto_close
-      @root_control.exit = true
+      set_exit()
     end
 
     super

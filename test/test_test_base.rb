@@ -31,9 +31,6 @@ require './system/Tsukasa.rb'
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-
-#このコードが動作する為には、testフォルダ配下にAyame.dllが配置されている必要がある（将来的に依存関係を辞めたいが、解消できるのか不明）
-
 MiniTest.autorun
 
 class TC_Test < Minitest::Test

@@ -77,15 +77,16 @@ class Control #公開インターフェイス
 
     #コマンドリスト
     @command_list = [] 
+    #コントロールリスト
+    @control_list = [] 
+    #削除フラグの初期化
+    @delete_flag = false 
 
-    @control_list = [] #コントロールリスト
-    @delete_flag = false       #削除フラグの初期化
+    @temporary_yield_stack = Array(yield_stack)
 
     #ブロックが付与されているなら読み込んで登録する
     @temporary_command_block = block
-    @temporary_yield_stack = Array(yield_stack)
-
-    if block
+    if @temporary_command_block
       unshift_command_block(options)
     end
 
@@ -98,23 +99,23 @@ class Control #公開インターフェイス
 
   #コマンドをスタックの先頭に挿入する
   def unshift_command(command, 
-                      yield_stack = @temporary_yield_stack,
+                      yield_stack = @temporary_yield_stack.dup,
                       **options, 
                       &command_block)
     @command_list.unshift([ command, 
                             command_block || @temporary_command_block, 
-                            yield_stack.dup, 
+                            yield_stack, 
                             options])
   end
 
   #コマンドをスタックの末端に挿入する
   def push_command( command, 
-                    yield_stack = @temporary_yield_stack,
+                    yield_stack = @temporary_yield_stack.dup,
                     **options, 
                     &command_block)
     @command_list.push([command, 
                         command_block || @temporary_command_block, 
-                        yield_stack.dup, 
+                        yield_stack, 
                         options])
   end
 

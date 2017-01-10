@@ -57,12 +57,13 @@ class Control #公開インターフェイス
 
   def initialize( options = {}, 
                   yield_stack = nil, 
-                  root_control = self, 
-                  parent_control = self, 
+                  root_control = nil, 
+                  parent_control = nil, 
                   &block)
     @child_update = true
 
     #rootコントロールの保存
+    root_control ||= self
     @root_control = root_control
     #親コントロールの保存
     @parent_control = parent_control

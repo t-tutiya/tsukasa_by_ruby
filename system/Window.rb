@@ -120,8 +120,8 @@ class Window < ClickableLayout
 
   def initialize( options = {}, 
                   yield_stack = nil, 
-                  root_control = self, 
-                  parent_control = self)
+                  root_control = nil, 
+                  parent_control = nil)
     #アプリ終了フラグ
     @close = false
     #「閉じる」ボタンが押下された場合自動終了する

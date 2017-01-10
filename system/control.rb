@@ -119,6 +119,16 @@ class Control #公開インターフェイス
                         options])
   end
 
+  #コマンド配列をスタックの先頭に挿入する
+  def unshift_command_array(command_array)
+    @command_list = command_array + @command_list
+  end
+
+  #コマンド配列をスタックの末尾に挿入する
+  def push_command_array(command_array)
+    @command_list += command_array
+  end
+
   #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
   def unshift_command_block(command_block = @temporary_command_block,
                             yield_stack = @temporary_yield_stack,
@@ -132,8 +142,7 @@ class Control #公開インターフェイス
   def push_command_block( command_block = @temporary_command_block,
                           yield_stack = @temporary_yield_stack,
                           **options)
-    @command_list = 
-      @command_list + 
+    @command_list += 
       @@script_compiler.eval_block(command_block, yield_stack, options)
   end
 end
@@ -644,8 +653,8 @@ class Control #セーブデータ制御
   def _SERIALIZE_(_ARGUMENT_: nil)
     #第一引数が設定されている
     if _ARGUMENT_
-      #デシリアライズする（コマンドリストが挿し変わる）
-      @command_list = _ARGUMENT_
+      #デシリアライズする
+      unshift_command_array(_ARGUMENT_)
     else
       #シリアライズし、ブロックに渡す
       unshift_command_block({command_list: serialize()})

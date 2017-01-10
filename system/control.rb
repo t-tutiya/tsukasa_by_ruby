@@ -98,51 +98,42 @@ class Control #公開インターフェイス
 
   #コマンドをスタックの先頭に挿入する
   def unshift_command(command, 
-                      command_block = @temporary_command_block,
                       yield_stack = @temporary_yield_stack,
                       **options, 
-                      &block)
-    #コマンドブロックがあるなら差し替える
-    if block
-      command_block = block
-    end
-    @command_list.unshift([command, command_block, yield_stack.dup, options])
+                      &command_block)
+    @command_list.unshift([ command, 
+                            command_block || @temporary_command_block, 
+                            yield_stack.dup, 
+                            options])
   end
 
   #コマンドをスタックの末端に挿入する
   def push_command( command, 
-                      command_block = @temporary_command_block,
-                      yield_stack = @temporary_yield_stack,
+                    yield_stack = @temporary_yield_stack,
                     **options, 
-                    &block)
-    #コマンドブロックがあるなら差し替える
-    if block
-      command_block = block
-    end
-    @command_list.push([command, command_block, yield_stack.dup, options])
+                    &command_block)
+    @command_list.push([command, 
+                        command_block || @temporary_command_block, 
+                        yield_stack.dup, 
+                        options])
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの先頭に挿入する
-  def unshift_command_block(#command_block_list = @temporary_command_block_list,
-                      command_block = @temporary_command_block,
-                      yield_stack = @temporary_yield_stack,
+  def unshift_command_block(command_block = @temporary_command_block,
+                            yield_stack = @temporary_yield_stack,
                             **options)
-
-    @command_list = @@script_compiler.eval_block( command_block, 
-                                                  yield_stack, 
-                                                  options) + 
-                    @command_list
+    @command_list = 
+      @@script_compiler.eval_block(command_block, yield_stack, options) + 
+      @command_list
   end
 
   #ブロックをパースしてコマンド配列化し、コマンドリストの末尾に挿入する
-  def push_command_block(#command_block_list = @temporary_command_block_list, 
-                      command_block = @temporary_command_block,
-                      yield_stack = @temporary_yield_stack,
-                         **options)
-    @command_list = @command_list + 
-                    @@script_compiler.eval_block( command_block, 
-                                                  yield_stack, 
-                                                  options)
+  def push_command_block( command_block = @temporary_command_block,
+                          yield_stack = @temporary_yield_stack,
+                          **options)
+    @command_list = 
+      @command_list + 
+      @@script_compiler.eval_block(command_block, yield_stack, options)
   end
 end
 
@@ -581,7 +572,7 @@ class Control #スクリプト制御
     #子コントロール全てを探査対象とする
     @control_list.each do |control|
       next if _ARGUMENT_ and (control.id != _ARGUMENT_)
-      control.unshift_command(:_SEND_, @temporary_command_block, @temporary_yield_stack.dup, options)
+      control.unshift_command(:_SEND_, @temporary_yield_stack.dup, options, &@temporary_command_block)
     end
   end
 

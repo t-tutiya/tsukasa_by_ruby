@@ -298,7 +298,6 @@ class TextPage < Layout
   def _CHAR_(_ARGUMENT_: nil, image_path: nil)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
-                                @function_list[:_CHAR_RENDERER_],
                                 @temporary_yield_stack.dup,
                                 {
                                   :_ARGUMENT_ => :Char, 
@@ -307,7 +306,8 @@ class TextPage < Layout
                                   :char => _ARGUMENT_,
                                   :float_x => :left,
                                   :image_path => image_path
-                                }.merge(@char_option)
+                                }.merge(@char_option),
+                                &@function_list[:_CHAR_RENDERER_]
                                )
 
     #文字待機処理をスタックする
@@ -336,7 +336,7 @@ class TextPage < Layout
     #文字列を分解してcharコマンドに変換する
     _ARGUMENT_.to_s.reverse.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      unshift_command(char_command, @temporary_command_block, @temporary_yield_stack, {_ARGUMENT_: ch})
+      unshift_command(char_command, @temporary_yield_stack, {_ARGUMENT_: ch}, &@temporary_command_block)
     end
   end
 

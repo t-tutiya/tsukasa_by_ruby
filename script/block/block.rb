@@ -289,9 +289,9 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     end
   end
 
-  _CREATE_ :Image, id: :ball, width: 10, height: 10, color: [255, 255, 255, 0] do
+  _CREATE_ :Image, id: :ball, width: 10, height: 10, color: [0, 0, 0, 0] do
     _DEFINE_PROPERTY_ vx: 0, vy: 0, spin: 0, boost: false, ready: true, wait: true
-    #_CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 255]
+    _CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 255]
 
     _DEFINE_ :_RESET_ do
       _SET_ vx: 0
@@ -410,8 +410,8 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     _DEFINE_ :curve do
       _GET_ [:x, :y, :width, :height] do |x:, y:, width:, height:|
         _SEND_ :_PARENT_, interrupt: true do
-          _CREATE_ :Image, x: x, y: y, width: width, height: height, color: [255, 255, 255, 0] do
-            #_CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 255, 255]
+          _CREATE_ :Image, x: x, y: y, width: width, height: height do
+            _CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 255, 255]
             _MOVE_ [6], alpha: [255, 0]
             _DELETE_
           end
@@ -422,18 +422,18 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     _DEFINE_ :aura do
       _GET_ [:x, :y, :width, :height] do |x:, y:, width:, height:|
         _SEND_ :_PARENT_, interrupt: true do
-          _CREATE_ :Image, x: x, y: y, width: width, height: height, color: [255, 255, 255, 0] do
-            #_CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 0, 0]
+          _CREATE_ :Image, x: x, y: y, width: width, height: height do
+            _CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 0, 0]
             _MOVE_ [12], alpha: [255, 0]
             _DELETE_
           end
-          _CREATE_ :Image, x: x, y: y, width: width, height: height, color: [255, 255, 255, 0] do
-            #_CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 128, 0]
+          _CREATE_ :Image, x: x, y: y, width: width, height: height do
+            _CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 128, 0]
             _MOVE_ [9], alpha: [255, 0]
             _DELETE_
           end
-          _CREATE_ :Image, x: x, y: y, width: width, height: height, color: [255, 255, 255, 0] do
-            #_CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 255, 0]
+          _CREATE_ :Image, x: x, y: y, width: width, height: height do
+            _CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 255, 0]
             _MOVE_ [6], alpha: [255, 0]
             _DELETE_
           end

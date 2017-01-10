@@ -734,3 +734,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
   _END_FRAME_
   state_setup
 end
+
+_LOOP_ do
+  _END_FRAME_
+end

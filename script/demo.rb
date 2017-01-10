@@ -140,25 +140,36 @@ _DEFINE_ :system_menu do
     end
   end
 
-  _CREATE_ :Layout, id: :top_menu2, x:0, height: 64, float_y: :bottom do
-    TextSelect  text: "デモゲーム：ノベル脱出ゲーム", 
-                path: "./script/demo_game/1_0.tks", 
-                width: 512, 
-                comment: "ノベルゲーム形式のサンプルデモです。"
+  _CREATE_ :Layout, id: :top_menu_b, x:0, y:0, width: 512, height: 256 + 64, float_x: :left do
+    _CREATE_ :Layout, id: :top_menu2, x:0, height: 64, float_y: :bottom do
+      TextSelect  text: "デモゲーム：ノベル脱出ゲーム", 
+                  path: "./script/demo_game/1_0.tks", 
+                  width: 512, 
+                  comment: "ノベルゲーム形式のサンプルデモです。"
+    end
+
+    _CREATE_ :Layout, id: :top_menu3, x:0, height: 64, float_y: :bottom do
+      TextSelect  text: "デモゲーム：野メイド", 
+                  path: "./script/nomaid/src.rb", 
+                  width: 512, 
+                  comment: "育成ＳＬＧ形式のサンプルデモです。"
+    end
+
+    _CREATE_ :Layout, id: :top_menu4, x:0, height: 64, float_y: :bottom do
+      TextSelect  text: "デモゲーム：ジャンプアクションデモ", 
+                  path: "./script/jump_action/game.rb", 
+                  width: 512, 
+                  comment: "２Ｄのスクロール式ジャンプアクションゲームのデモです。"
+    end
   end
 
-  _CREATE_ :Layout, id: :top_menu3, x:0, height: 64, float_y: :bottom do
-    TextSelect  text: "デモゲーム：野メイド", 
-                path: "./script/nomaid/src.rb", 
-                width: 512, 
-                comment: "育成ＳＬＧ形式のサンプルデモです。"
-  end
-
-  _CREATE_ :Layout, id: :top_menu4, x:0, height: 64, float_y: :bottom do
-    TextSelect  text: "デモゲーム：ジャンプアクションデモ", 
-                path: "./script/jump_action/game.rb", 
-                width: 512, 
-                comment: "２Ｄのスクロール式ジャンプアクションゲームのデモです。"
+  _CREATE_ :Layout, id: :top_menu_b2, x:0, y:0, width: 512, height: 256 + 64, float_x: :left do
+    _CREATE_ :Layout, id: :top_menu5, x:0, height: 64, float_y: :bottom do
+      TextSelect  text: "デモゲーム：ブロック崩し", 
+                  path: "./script/block/block.rb", 
+                  width: 512, 
+                  comment: "アクションゲームのサンプルです"
+    end
   end
 end
 
@@ -198,13 +209,10 @@ _DEFINE_ :inner_loop do
   _SEND_ :top_menu1 do
     _DELETE_
   end
-  _SEND_ :top_menu2 do
+  _SEND_ :top_menu_b do
     _DELETE_
   end
-  _SEND_ :top_menu3 do
-    _DELETE_
-  end
-  _SEND_ :top_menu4 do
+  _SEND_ :top_menu_b2 do
     _DELETE_
   end
   _SEND_ :comment_area do

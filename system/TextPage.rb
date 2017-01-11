@@ -280,7 +280,8 @@ class TextPage < Layout
                       :width => @width,
                       :height => @line_height,
                       :float_y => :bottom,
-                    })
+                    })do
+    end
   end
 
   #############################################################################

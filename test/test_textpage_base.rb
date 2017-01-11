@@ -40,8 +40,7 @@ MiniTest.autorun
 
 class TestTextPageBase < Minitest::Test
 
-  #コントロールのダンプとの比較によるテスト
-  def test_2016_12_31_1_コントロールのダンプとの比較によるテスト
+  def test_2017_1_1_1_テキスト表示テスト
     #コントロールの生成
     control = Tsukasa::TextPage.new({}, nil,nil,nil) do
       _TEXT_ "テキストウィンドウテスト表示１"

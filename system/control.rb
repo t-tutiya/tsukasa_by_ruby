@@ -90,9 +90,10 @@ class Control #公開インターフェイス
       unshift_command_block(options)
     end
 
-    #コマンドセットがあるなら登録する（シリアライズなどで使用）
+    #コマンドリストがあるなら登録する
     if options[:command_list]
-      @command_list = options[:command_list] + @command_list
+      #デシリアライズする
+      unshift_command_array(options[:command_list])
     end
 
   end

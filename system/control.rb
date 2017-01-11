@@ -323,7 +323,7 @@ class Control #内部メソッド
 
     #ユーザー定義コマンドが存在しない場合、例外送出する
     unless function_block
-      raise(Tsukasa::TsukasaError, "コマンド[#{command_name}]はコントロールに登録されていません")
+      raise(Tsukasa::TsukasaError, "コマンド[#{command_name}]は#{self.class.name}コントロール [#{@id}]に登録されていません")
     end
 
     #終端コマンドを挿入

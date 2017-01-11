@@ -50,7 +50,7 @@ class TestControlBase < Minitest::Test
       break if control.exit #メインループ終了判定
     end
     
-    reslut = [[:_SET_, [],
+    reslut = [[:_SET_, nil, nil,
                 {:id=>:"Tsukasa::Control",
                  :child_update=>true},
                 ]]
@@ -157,7 +157,7 @@ class TestControlBase < Minitest::Test
 
     control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
     
-    reslut = [[:_SET_, [],
+    reslut = [[:_SET_, nil, nil,
                 {:id=>:"Tsukasa::Control",
                  :child_update=>true},
                 ]]
@@ -173,7 +173,7 @@ class TestControlBase < Minitest::Test
 
     control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
     
-    reslut = [[:_SET_, [],
+    reslut = [[:_SET_, nil, nil,
                 {:id=>:"Tsukasa::Control",
                  :test=>3,
                  :child_update=>true},
@@ -190,7 +190,7 @@ class TestControlBase < Minitest::Test
 
     control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
     
-    reslut = [[:_SET_, [],
+    reslut = [[:_SET_, nil, nil,
               { :path=>nil, 
                 :visible=>true, 
                 :scale_x=>1, 
@@ -234,7 +234,7 @@ class TestControlBase < Minitest::Test
       break if control.exit
     end
     
-    assert_equal(control.serialize()[0][2][:test], 400, "NO")
+    assert_equal(control.serialize()[0][3][:test], 400, "NO")
   end
 
 

@@ -57,7 +57,44 @@ class TestTextPageBase < Minitest::Test
       _LINE_FEED_
       _TEXT_ "テキストウィンドウテスト表示２"
       _LINE_FEED_
-      _LOOP_ 60 do
+      _END_FRAME_
+      #メインループを終了する
+      _EXIT_
+    end
+
+    #メインループ
+    DXRuby::Window.loop() do
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0) #処理
+      control.render(0, 0, DXRuby::Window) #描画
+      break if control.exit #メインループ終了判定
+    end
+  end
+
+  def test_2017_1_1_2_レンダリング済みフォント表示テスト
+    #コントロールの生成
+    control = Tsukasa::Window.new({}, nil,nil,nil) do
+      #デフォルトのユーザー定義コマンド群の読み込み
+      _INCLUDE_ "./default/default_script.rb"
+
+      _INSTALL_PRERENDER_FONT_ "./resource/Fonts/FontData02.dat", font_name: "test_font_01"
+      _CREATE_ :TextPage, font_name: "test_font_01" do
+        _TEXT_ "レンダリング済みフォント表示１"
+        _LINE_FEED_
+        _TEXT_ "レンダリング済みフォント表示１"
+        _LINE_FEED_
+        _TEXT_ "レンダリング済みフォント表示１"
+        _LINE_FEED_
+        _END_FRAME_
+        _FLUSH_
+        _TEXT_ "レンダリング済みフォント表示２"
+        _LINE_FEED_
+        _TEXT_ "レンダリング済みフォント表示２"
+        _LINE_FEED_
+        _TEXT_ "レンダリング済みフォント表示２"
+        _LINE_FEED_
+        _END_FRAME_
+      end
+      _LOOP_ 2 do
         _END_FRAME_
       end
       #メインループを終了する

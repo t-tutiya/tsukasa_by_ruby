@@ -296,6 +296,8 @@ class Char < Helper::Drawable
       offset_x = offset_y = @font_draw_option[:edge_width]
     end
 
+    @font_image = {}
+
     #描画画像パスが設定されているか
     if @image_path
       #画像に文字装飾をかけて描画

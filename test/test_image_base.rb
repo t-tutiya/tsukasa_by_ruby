@@ -33,7 +33,7 @@ require './system/Tsukasa.rb'
 
 MiniTest.autorun
 
-class TC_Image_base < Minitest::Test
+class TestImageBase < Minitest::Test
 
   #ゲーム側で判定タイミングのトリガーを用意するテスト
   def test_2017_01_09_1_描画コマンド動作確認

@@ -33,7 +33,7 @@ require './system/Tsukasa.rb'
 
 MiniTest.autorun
 
-class TC_Foo < Minitest::Test
+class TestInputBase < Minitest::Test
 #ユーザー入力をともなうテストのため、一時的にコメントアウト中
 =begin
   #ゲーム側で判定タイミングのトリガーを用意するテスト

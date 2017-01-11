@@ -33,7 +33,7 @@ require './system/Tsukasa.rb'
 
 MiniTest.autorun
 
-class TestControlBase < Minitest::Test
+class TestTextPageBase < Minitest::Test
 
   #コントロールのダンプとの比較によるテスト
   def test_2016_12_31_1_コントロールのダンプとの比較によるテスト

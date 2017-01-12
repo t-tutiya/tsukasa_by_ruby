@@ -349,7 +349,8 @@ class TextPage < Layout
                                       :width => 0,
                                       :height => @size,
                                       :float_x => :left
-                                    })
+                                    })do
+    end
 
     #ルビを出力するTextPageを生成する
     @control_list.last.push_command(:_SEND_, {_ARGUMENT_: -1, 

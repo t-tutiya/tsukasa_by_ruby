@@ -34,15 +34,23 @@ require 'dxruby'
 #テキストレイヤ関連
 ###############################################################################
 
+#データストアコントロール
+require './system/Data.rb'
+#タイルマップ管理
+require './system/TileMap.rb'
+
 #tksスクリプト用のパーサーを登録
 _SCRIPT_PARSER_ ext_name: :tks, path: "./TKSParser.rb",parser: :TKSParser
+
+#テキストウィンドウ用のフラグを管理するコントロール
+_CREATE_ :Data, id: :_TEXT_WINDOW_TEMP_
 
 #標準ポーズコマンド
 _DEFINE_ :_PAUSE_ do
   #スキップ状態の場合
-  _CHECK_ [:_ROOT_, :_TEMP_], equal: {_SKIP_: true} do
+  _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_SKIP_: true} do
     #ウェイクに移行
-    _SET_ [:_ROOT_, :_TEMP_], _SLEEP_: false
+    _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _SLEEP_: false
     _RETURN_ do
       #スキップモードの誤伝搬を防ぐ
       _END_FRAME_
@@ -95,15 +103,15 @@ _DEFINE_ :_PAUSE_ do
       end
 
       #ウェイクに移行
-      _SET_ [:_ROOT_, :_TEMP_], _SLEEP_: false
+      _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _SLEEP_: false
     end
   end
 
   #スリープフラグを立てる
-  _SET_ [:_ROOT_, :_TEMP_], _SLEEP_: true
+  _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _SLEEP_: true
 
   #スリープフラグが下りるまで待機
-  _WAIT_ [:_ROOT_, :_TEMP_], equal: {_SLEEP_: false} do
+  _WAIT_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_SLEEP_: false} do
     _CHECK_INPUT_ key_down: K_RCONTROL do
       _BREAK_
     end
@@ -127,7 +135,7 @@ _DEFINE_ :_LINE_PAUSE_ do
       end
 
       #待機フラグが下がるまで待機
-      _WAIT_ [:_ROOT_, :_TEMP_], equal: {_SLEEP_: false}
+      _WAIT_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_SLEEP_: false}
 
       _DELETE_
     end
@@ -166,7 +174,7 @@ _DEFINE_ :_END_PAUSE_ do
       end
 
       #待機フラグが下がるまで待機
-      _WAIT_ [:_ROOT_, :_TEMP_], equal: {_SLEEP_: false}
+      _WAIT_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_SLEEP_: false}
 
       _DELETE_
     end
@@ -233,7 +241,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
     id: options[:_ARGUMENT_], **options do
     #文字間ウェイト
     _DEFINE_ :_CHAR_WAIT_ do
-      _WAIT_  [:_ROOT_, :_TEMP_], 
+      _WAIT_  [:_ROOT_, :_TEXT_WINDOW_TEMP_], 
         count: 4,
         equal: {_SKIP_: true} do
         _CHECK_INPUT_ key_down: K_RCONTROL,
@@ -246,7 +254,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
 
     #行間ウェイト
     _DEFINE_ :_LINE_WAIT_ do
-      _WAIT_  [:_ROOT_, :_TEMP_], 
+      _WAIT_  [:_ROOT_, :_TEXT_WINDOW_TEMP_], 
         count: 2,
         equal: {_SKIP_: true} do
         _CHECK_INPUT_ key_down: K_RCONTROL,
@@ -269,7 +277,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
           _SET_ alpha: 255
           _BREAK_
         end
-        _CHECK_ [:_ROOT_, :_TEMP_], equal: {_SKIP_: true} do
+        _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_SKIP_: true} do
           #α値を初期化
           _SET_ alpha: 255
           _BREAK_
@@ -277,7 +285,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
       end
 
       #待機フラグが下がるまで待機
-      _WAIT_ [:_ROOT_, :_TEMP_], equal: {_SLEEP_: false}
+      _WAIT_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_SLEEP_: false}
 
       #キー伝搬を防ぐためにフレームを終了する
       _END_FRAME_
@@ -291,7 +299,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
           #α値を初期化
           _SET_ alpha: 128
           #スキップモードの場合
-          _CHECK_ [:_ROOT_, :_TEMP_], equal: {_SKIP_: true} do
+          _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_SKIP_: true} do
             #α値を再度初期化
             _SET_ alpha: 255
           end
@@ -333,57 +341,57 @@ _DEFINE_ :_LABEL_ do |options|
     #ラベルにＩＤが記述されている場合
     if options[:id]
       #アクティブIDを設定値で更新
-      _SET_ [:_ROOT_, :_TEMP_], _ACTIVE_CHAPTER_ID_: options[:id]
+      _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _ACTIVE_CHAPTER_ID_: options[:id]
       #アクティブチャプターを設定値で更新
-      _SET_ [:_ROOT_, :_TEMP_], _ACTIVE_CHAPTER_NAME_: options[:chapter]
+      _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _ACTIVE_CHAPTER_NAME_: options[:chapter]
     #ラベルにＩＤが記述されていない場合
     else
       _GET_ :_ACTIVE_CHAPTER_NAME_, 
-            control: [:_ROOT_, :_TEMP_] do |_ACTIVE_CHAPTER_NAME_:|
+            control: [:_ROOT_, :_TEXT_WINDOW_TEMP_] do |_ACTIVE_CHAPTER_NAME_:|
         #直前のアクティブチャプターと設定値が同じ場合
         if _ACTIVE_CHAPTER_NAME_ == options[:chapter]
           #アクティブIDをインクリメント
           _GET_ :_ACTIVE_CHAPTER_ID_, 
-                control: [:_ROOT_, :_TEMP_] do |_ACTIVE_CHAPTER_ID_:|
-            _SET_ [:_ROOT_, :_TEMP_], _ACTIVE_CHAPTER_ID_: _ACTIVE_CHAPTER_ID_ + 1
+                control: [:_ROOT_, :_TEXT_WINDOW_TEMP_] do |_ACTIVE_CHAPTER_ID_:|
+            _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _ACTIVE_CHAPTER_ID_: _ACTIVE_CHAPTER_ID_ + 1
           end
         #直前のアクティブチャプターと設定値が異なる場合
         else
           #アクティブIDをゼロで初期化
-          _SET_ [:_ROOT_, :_TEMP_], _ACTIVE_CHAPTER_ID_: 0
+          _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _ACTIVE_CHAPTER_ID_: 0
         end
       end
       #アクティブチャプターを設定値で更新
-      _SET_ [:_ROOT_, :_TEMP_], _ACTIVE_CHAPTER_NAME_: options[:chapter]
+      _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _ACTIVE_CHAPTER_NAME_: options[:chapter]
     end
   else
     #ラベルにＩＤが記述されている場合
     if options[:id]
       #アクティブチャプター名が設定されていない場合
-      _CHECK_ [:_ROOT_, :_TEMP_], equal: {_ACTIVE_CHAPTER_NAME_: nil} do
+      _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_ACTIVE_CHAPTER_NAME_: nil} do
         raise
       end
       #idを設定
-      _SET_ [:_ROOT_, :_TEMP_], _ACTIVE_CHAPTER_ID_: options[:id]
+      _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _ACTIVE_CHAPTER_ID_: options[:id]
     #ラベルにＩＤが記述されていない場合
     else
       #アクティブチャプター名が設定されていない場合
-      _CHECK_ [:_ROOT_, :_TEMP_], equal: {_ACTIVE_CHAPTER_NAME_: nil} do
+      _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_ACTIVE_CHAPTER_NAME_: nil} do
         #例外発生
         raise
       end
       #アクティブIDが既に設定されている場合
-      _CHECK_ [:_ROOT_, :_TEMP_], not_equal: {_ACTIVE_CHAPTER_ID_: nil} do
+      _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], not_equal: {_ACTIVE_CHAPTER_ID_: nil} do
         #アクティブIDをインクリメント
         _GET_ :_ACTIVE_CHAPTER_ID_, 
-              control: [:_ROOT_, :_TEMP_] do |_ACTIVE_CHAPTER_ID_:|
-          _SET_ [:_ROOT_, :_TEMP_], _ACTIVE_CHAPTER_ID_: _ACTIVE_CHAPTER_ID_ + 1
+              control: [:_ROOT_, :_TEXT_WINDOW_TEMP_] do |_ACTIVE_CHAPTER_ID_:|
+          _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _ACTIVE_CHAPTER_ID_: _ACTIVE_CHAPTER_ID_ + 1
         end
       end
       #アクティブIDが既に設定されていない場合
-      _CHECK_ [:_ROOT_, :_TEMP_], equal: {_ACTIVE_CHAPTER_ID_: nil} do
+      _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_ACTIVE_CHAPTER_ID_: nil} do
         #アクティブIDをゼロで初期化
-        _SET_ [:_ROOT_, :_TEMP_], _ACTIVE_CHAPTER_ID_: 0
+        _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _ACTIVE_CHAPTER_ID_: 0
       end
     end
   end
@@ -392,16 +400,16 @@ _DEFINE_ :_LABEL_ do |options|
   #頭出しモードの場合
   ###################################################################
 
-  _GET_ [:_ACTIVE_CHAPTER_ID_], control: [:_ROOT_, :_TEMP_] do |
+  _GET_ [:_ACTIVE_CHAPTER_ID_], control: [:_ROOT_, :_TEXT_WINDOW_TEMP_] do |
              _ACTIVE_CHAPTER_ID_:|
-    _CHECK_ [:_ROOT_, :_TEMP_], equal: {_CHAPTER_START_MODE_: true} do
+    _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_CHAPTER_START_MODE_: true} do
       #ページが指定したＩＤでない場合
       _CHECK_ [:_ROOT_, :_LOCAL_], not_equal: {_START_: _ACTIVE_CHAPTER_ID_} do
         #ページを飛ばす
         _RETURN_
       end
       #ラベルモードをノーマルに変更する
-      _SET_ [:_ROOT_, :_TEMP_], _CHAPTER_START_MODE_: false
+      _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _CHAPTER_START_MODE_: false
     end
   end
 
@@ -410,9 +418,9 @@ _DEFINE_ :_LABEL_ do |options|
   ###################################################################
 
   #スキップモードの場合
-  _CHECK_ [:_ROOT_, :_TEMP_], equal: {_CHAPTER_SKIP_MODE_: true} do
+  _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_CHAPTER_SKIP_MODE_: true} do
     _GET_ [:_ACTIVE_CHAPTER_ID_, :_ACTIVE_CHAPTER_NAME_],
-          control: [:_ROOT_, :_TEMP_] do |
+          control: [:_ROOT_, :_TEXT_WINDOW_TEMP_] do |
              _ACTIVE_CHAPTER_ID_:, _ACTIVE_CHAPTER_NAME_:|
 
       _GET_ :_READ_CHAPTER_, 
@@ -426,10 +434,10 @@ _DEFINE_ :_LABEL_ do |options|
         #アクティブＩＤが既に書庫に格納されている場合
         if(_READ_CHAPTER_[_ACTIVE_CHAPTER_NAME_].index(_ACTIVE_CHAPTER_ID_))
           #スキップモードＯＮ
-          _SET_ [:_ROOT_, :_TEMP_], _SKIP_: true
+          _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _SKIP_: true
         else
           #スキップモードＯＦＦ
-          _SET_ [:_ROOT_, :_TEMP_], _SKIP_: false
+          _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _SKIP_: false
         end
       end
     end
@@ -441,7 +449,7 @@ _DEFINE_ :_LABEL_ do |options|
 
   _GET_ :_READ_CHAPTER_,  control: [:_ROOT_, :_SYSTEM_] do |_READ_CHAPTER_:|
     _GET_ [:_ACTIVE_CHAPTER_ID_, :_ACTIVE_CHAPTER_NAME_],
-          control: [:_ROOT_, :_TEMP_] do |
+          control: [:_ROOT_, :_TEXT_WINDOW_TEMP_] do |
             _ACTIVE_CHAPTER_ID_:, _ACTIVE_CHAPTER_NAME_:|
       if _READ_CHAPTER_[_ACTIVE_CHAPTER_NAME_]
         _READ_CHAPTER_[_ACTIVE_CHAPTER_NAME_].push(_ACTIVE_CHAPTER_ID_).uniq!

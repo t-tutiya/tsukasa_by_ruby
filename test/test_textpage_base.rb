@@ -112,28 +112,11 @@ class TestTextPageBase < Minitest::Test
   def test_2017_1_12_1_標準テキストウィンドウ表示テスト
     #コントロールの生成
     control = Tsukasa::Window.new() do
-      #ヘルパーコントロール群
-
-      #データストアコントロール
-      require './system/Data.rb'
-      #タイルマップ管理
-      require './system/TileMap.rb'
-      #シェーダー処理
-      require './system/Shader.rb'
-      #ルールトランジション
-      require './system/RuleTransition.rb'
-
       #デフォルトのユーザー定義コマンド群の読み込み
       _INCLUDE_ "./default/default_script.rb"
 
       #標準ユーティリティー群の読み込み
       _INCLUDE_ "./default/utility_script.rb"
-
-      #タイトルバーの文字列を設定
-      _SET_ caption: "Tsukasa Engine powered by DXRuby"
-
-      #一時データストア
-      _CREATE_ :Data, id: :_TEMP_
 
       #キー入力管理コントロール
       _CREATE_ :Input, id: :_INPUT_
@@ -180,28 +163,11 @@ class TestTextPageBase < Minitest::Test
   def test_2017_1_12_2_テキストウィンドウ画像表示テスト
     #コントロールの生成
     control = Tsukasa::Window.new() do
-      #ヘルパーコントロール群
-
-      #データストアコントロール
-      require './system/Data.rb'
-      #タイルマップ管理
-      require './system/TileMap.rb'
-      #シェーダー処理
-      require './system/Shader.rb'
-      #ルールトランジション
-      require './system/RuleTransition.rb'
-
       #デフォルトのユーザー定義コマンド群の読み込み
       _INCLUDE_ "./default/default_script.rb"
 
       #標準ユーティリティー群の読み込み
       _INCLUDE_ "./default/utility_script.rb"
-
-      #タイトルバーの文字列を設定
-      _SET_ caption: "Tsukasa Engine powered by DXRuby"
-
-      #一時データストア
-      _CREATE_ :Data, id: :_TEMP_
 
       #キー入力管理コントロール
       _CREATE_ :Input, id: :_INPUT_

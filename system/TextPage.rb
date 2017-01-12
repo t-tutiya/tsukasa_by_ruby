@@ -281,6 +281,7 @@ class TextPage < Layout
                       :height => @line_height,
                       :float_y => :bottom,
                     })do
+      #TODO:空ブロック
     end
   end
 
@@ -350,6 +351,7 @@ class TextPage < Layout
                                       :height => @size,
                                       :float_x => :left
                                     })do
+      #TODO:空ブロック
     end
 
     #ルビを出力するTextPageを生成する

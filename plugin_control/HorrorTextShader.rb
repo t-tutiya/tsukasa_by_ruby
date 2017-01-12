@@ -30,19 +30,114 @@
 
 class HorrorShader < Tsukasa::Shader
 
-  def initialize(options, yield_stack, root_control, parent_control, &block)
-    @shader = HorrorText.new(60, 2.0, 2.0, 16.0, 1.25, 1.0, 640, 200)
-    @shader.count = @shader.mode == 0 ? 0 : @shader.duration 
-    super
+  def texelSize()
+    @shader.texelSize[1]
   end
-  
-  def update(mouse_pos_x, mouse_pos_y, index)
-    @shader.count = @shader.count + (@shader.mode == 0 ? 1 : - 1) if check_mode()
-    @shader.wavePhaseU = (@shader.wavePhaseU + @shader.wave_speed_u) % 360
-    @shader.wavePhaseV = (@shader.wavePhaseV + @shader.wave_speed_v) % 360
-    @shader.waveAmpU   = @shader.wave_amp_u * @shader.count / @shader.duration
-    @shader.waveAmpV   = @shader.wave_amp_v * @shader.count / @shader.duration
-    @shader.waveLength = 360.0 / (@shader.wave_length * @shader.texelSize[1]) 
+
+  def mode()
+    @shader.mode
+  end
+  def mode=(arg)
+    @shader.mode = arg
+  end
+
+  def duration()
+    @shader.duration
+  end
+  def duration=(arg)
+    @shader.duration = arg
+  end
+
+  def count()
+    @shader.count
+  end
+  def count=(arg)
+    @shader.count = arg
+  end
+
+  def wavePhaseU()
+    @shader.wavePhaseU
+  end
+  def wavePhaseU=(arg)
+    @shader.wavePhaseU = arg
+  end
+
+  def wavePhaseV()
+    @shader.wavePhaseV
+  end
+  def wavePhaseV=(arg)
+    @shader.wavePhaseV = arg
+  end
+
+  def waveAmpU()
+    @shader.waveAmpU
+  end
+  def waveAmpU=(arg)
+    @shader.waveAmpU = arg
+  end
+
+  def waveAmpV()
+    @shader.waveAmpV
+  end
+  def waveAmpV=(arg)
+    @shader.waveAmpV = arg
+  end
+
+  def waveLength()
+    @shader.waveLength
+  end
+  def waveLength=(arg)
+    @shader.waveLength = arg
+  end
+
+  def wave_amp_u()
+    @shader.wave_amp_u
+  end
+  def wave_amp_u=(arg)
+    @shader.wave_amp_u = arg
+  end
+
+  def wave_amp_v()
+    @shader.wave_amp_v
+  end
+  def wave_amp_v=(arg)
+    @shader.wave_amp_v = arg
+  end
+
+  def wave_speed_u()
+    @shader.wave_speed_u
+  end
+  def wave_speed_u=(arg)
+    @shader.wave_speed_u = arg
+  end
+
+  def wave_speed_v()
+    @shader.wave_speed_v
+  end
+  def wave_speed_v=(arg)
+    @shader.wave_speed_v = arg
+  end
+
+  def wave_length()
+    @shader.wave_length
+  end
+  def wave_length=(arg)
+    @shader.wave_length = arg
+  end
+
+  def initialize(yield_stack, root_control, parent_control,
+    duration: 60, 
+    wave_amp_u: 2.0, 
+    wave_amp_v: 2.0, 
+    wave_length: 16.0, 
+    wave_speed_u: 1.25, 
+    wave_speed_v: 1.0,
+    width:0, height:0, 
+    **options, 
+    &block)
+    @shader = HorrorText.new(duration, wave_amp_u, wave_amp_v, wave_length, 
+    wave_speed_u, wave_speed_v, width, height)
+    @shader.count = @shader.mode == 0 ? 0 : @shader.duration 
     super
   end
 

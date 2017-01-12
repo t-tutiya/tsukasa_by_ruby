@@ -197,10 +197,10 @@ _DEFINE_ :_CHAR_RUBI_ do |options|
 end
 
 #デフォルトテキストウィンドウの_SET_ラッパー
-_DEFINE_ :_CHAR_IMAGE_ do |path:|
+_DEFINE_ :_CHAR_IMAGE_ do |_ARGUMENT_:|
   _GET_ :_DEFAULT_TEXT_PAGE_ do |_DEFAULT_TEXT_PAGE_:|
     _SEND_ _DEFAULT_TEXT_PAGE_ do
-      _CHAR_ image_path: path
+      _CHAR_ image_path: _ARGUMENT_
     end
   end
 end

@@ -47,7 +47,7 @@ class Sound  < Control
     @entity = Ayame.new(arg)
   end
 
-  def initialize(options, yield_stack, root_control, parent_control, &block)
+  def initialize(yield_stack, root_control, parent_control, options, &block)
     super
     
     #音声ファイルを読み込む

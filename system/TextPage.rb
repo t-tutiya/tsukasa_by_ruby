@@ -219,7 +219,7 @@ class TextPage < Layout
     @rubi_option[:character_pitch] = arg
   end
 
-  def initialize(options, yield_stack, root_control, parent_control, &block)
+  def initialize(yield_stack, root_control, parent_control, options, &block)
     #レンダリング済みフォント使用中かどうか
     @use_image_font = options[:use_image_font] || false
     #レンダリング済みフォントのフォント名

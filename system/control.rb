@@ -55,10 +55,10 @@ class Control #公開インターフェイス
 
   attr_reader :exit #終了
 
-  def initialize( options = {}, 
-                  yield_stack = nil, 
+  def initialize( yield_stack = nil, 
                   root_control = nil, 
                   parent_control = nil, 
+                  options = {}, 
                   &block)
     @child_update = true
 
@@ -348,10 +348,10 @@ class Control #コントロールの生成／破棄
     #コントロールを生成して子要素として登録する
     @control_list.push(
       #名前空間Tsukasa内のクラスを生成する
-      Tsukasa.const_get(_ARGUMENT_).new(options, 
-                                        @temporary_yield_stack, 
+      Tsukasa.const_get(_ARGUMENT_).new(@temporary_yield_stack, 
                                         @root_control, 
                                         self, 
+                                        options, 
                                         &@temporary_command_block)
     )
   #NoMethodError(NameErrorの派生クラス)をすくい取る

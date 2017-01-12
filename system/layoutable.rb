@@ -55,7 +55,7 @@ class Layoutable < Control
   attr_accessor  :width
   attr_accessor  :height
 
-  def initialize(options, yield_stack, root_control, parent_control, &block)
+  def initialize(yield_stack, root_control, parent_control, options, &block)
     @x = options[:x] || 0 #描画Ｘ座標
     @y = options[:y] || 0 #描画Ｙ座標
 

@@ -42,7 +42,7 @@ class TestTextPageBase < Minitest::Test
 
   def test_2017_1_11_1_テキスト表示テスト
     #コントロールの生成
-    control = Tsukasa::TextPage.new({}, nil,nil,nil) do
+    control = Tsukasa::TextPage.new(nil,nil,nil,{}) do
       _TEXT_ "テキストウィンドウテスト表示１"
       _LINE_FEED_
       _TEXT_ "テキストウィンドウテスト表示１"
@@ -72,7 +72,7 @@ class TestTextPageBase < Minitest::Test
 
   def test_2017_1_11_2_レンダリング済みフォント表示テスト
     #コントロールの生成
-    control = Tsukasa::Window.new({}, nil,nil,nil) do
+    control = Tsukasa::Window.new(nil,nil,nil,{}) do
       #デフォルトのユーザー定義コマンド群の読み込み
       _INCLUDE_ "./default/default_script.rb"
 

@@ -118,10 +118,10 @@ class Window < ClickableLayout
     DXRuby::Input.set_cursor(arg) 
   end
 
-  def initialize( options = {}, 
-                  yield_stack = nil, 
+  def initialize( yield_stack = nil, 
                   root_control = nil, 
-                  parent_control = nil)
+                  parent_control = nil,
+                  options = {})
     #アプリ終了フラグ
     @close = false
     #「閉じる」ボタンが押下された場合自動終了する

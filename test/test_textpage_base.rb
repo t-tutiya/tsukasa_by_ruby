@@ -161,7 +161,11 @@ class TestTextPageBase < Minitest::Test
         _RUBI_ "□□□□□□□"
         _TEXT_ "■■■■■■■"
       end
-      _END_PAUSE_
+      
+      _LOOP_ 60 do
+        _END_FRAME_
+      end
+      #_END_PAUSE_
 
       #メインループを終了する
       _EXIT_

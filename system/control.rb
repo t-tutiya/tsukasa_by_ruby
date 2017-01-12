@@ -424,7 +424,7 @@ class Control #セッター／ゲッター
         #コントロールプロパティから値を取得する
         result[property[2]] = find_control_path(property[1]).send(property[0])
       rescue
-        warn  "クラス[#{self.class}]：プロパティ[" + "#{property[1]}]は存在しません"
+        warn  "クラス[#{find_control_path(property[1]).class}]：プロパティ[" + "#{property[0]}]は存在しません"
       end
     end
 

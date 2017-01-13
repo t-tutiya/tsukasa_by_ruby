@@ -65,297 +65,297 @@ http://mirichi.github.io/dxruby-doc/api/constant_keycode.html
 
 v2.2
 
-■フォルダ構成
+*  ■フォルダ構成
 ・プラグインフォルダをネイティブファイルのフォルダとスクリプトファイルのフォルダに分離した
 
-■ユニットテスト関連
-・テスト実行用のRakeFileを配置
-・テストコードの命名ルールを設定
+*  ■ユニットテスト関連
+    *  ・テスト実行用のRakeFileを配置
+    *  ・テストコードの命名ルールを設定
 
-■内部ロジック
-・カスタムコントロールのメソッド定義インターフェイスを変更
+*  ■内部ロジック
+    *  ・カスタムコントロールのメソッド定義インターフェイスを変更
 
-■サンプル
-・ブロック崩しゲームをサンプルに追加
-・カスタムシェーダーサンプルを更新
+*  ■サンプル
+    *  ・ブロック崩しゲームをサンプルに追加
+    *  ・カスタムシェーダーサンプルを更新
 
-■default_script.rb
-・追加
-　・_GC_GARBAGE_COLLECT_
-　・_GC_ENABLE_
-　・_GC_DISABLE_
-　・_GC_LATEST_GC_INFO_
-　・_GC_STATUS_
-・廃止
-　・_PAD_ARROW_
-　・_WINDOW_STATUS_
-　・_SCREEN_MODES_
-　・_FULL_SCREEN_
-　・_MOUSE_WHEEL_POS_
+*  ■default_script.rb
+    *  ・追加
+        *  　・_GC_GARBAGE_COLLECT_
+        *  　・_GC_ENABLE_
+        *  　・_GC_DISABLE_
+        *  　・_GC_LATEST_GC_INFO_
+        *  　・_GC_STATUS_
+        *  ・廃止
+        *  　・_PAD_ARROW_
+        *  　・_WINDOW_STATUS_
+        *  　・_SCREEN_MODES_
+        *  　・_FULL_SCREEN_
+        *  　・_MOUSE_WHEEL_POS_
 
-■test_utility_script.rb
-・_CHAR_IMAGE_の引数をpathから_ARGUMENT_に変更
-・_TEXT_WINDOW_のフラグを管理する専用のDataコントロールを用意
+*  ■test_utility_script.rb
+    *  ・_CHAR_IMAGE_の引数をpathから_ARGUMENT_に変更
+    *  ・_TEXT_WINDOW_のフラグを管理する専用のDataコントロールを用意
 
-■Controlコントロール
-・_NEXT_/_BREAK_コマンドにブロックを付与できる仕様を廃止
-・_SEND_コマンドで設定したプロパティの値をブロック内で利用できるようにした
-・_SCOPE_コマンド廃止
-・_LOAD_NATIVE_コマンド廃止
-・（内部処理）exitプロパティを読み出し専用に変更（元々ドキュメントにはない）
-・（内部処理）Control#unshift/push_command_arrayメソッドを追加
+*  ■Controlコントロール
+    *  ・_NEXT_/_BREAK_コマンドにブロックを付与できる仕様を廃止
+    *  ・_SEND_コマンドで設定したプロパティの値をブロック内で利用できるようにした
+    *  ・_SCOPE_コマンド廃止
+    *  ・_LOAD_NATIVE_コマンド廃止
+    *  ・（内部処理）exitプロパティを読み出し専用に変更（元々ドキュメントにはない）
+    *  ・（内部処理）Control#unshift/push_command_arrayメソッドを追加
 
-■Windowコントロール
-・Window.caption/bgcolor/icon_path/cursor_type/full_screen/screen_modes/mouse_wheel_posプロパティ追加
+*  ■Windowコントロール
+    *  ・Window.caption/bgcolor/icon_path/cursor_type/full_screen/screen_modes/mouse_wheel_posプロパティ追加
 
-■Drawableコントロール
-・shaderプロパティをDXRuby::Shaderを直接保持する形式に変更
+*  ■Drawableコントロール
+    *  ・shaderプロパティをDXRuby::Shaderを直接保持する形式に変更
 
-■Imageコントロール
-・_PIXEL_コマンドのブロック引数名を_ARGUMENT_からcolorに変更
+*  ■Imageコントロール
+    *  ・_PIXEL_コマンドのブロック引数名を_ARGUMENT_からcolorに変更
 
-■TileMapコントロール
-・_MAP_STATUS_コマンドのブロック引数名を_ARGUMENT_からstatusに変更
+*  ■TileMapコントロール
+    *  ・_MAP_STATUS_コマンドのブロック引数名を_ARGUMENT_からstatusに変更
 
-■Inputコントロール
-・パッド番号をpad_codeプロパティで決定する形式にした
-・x/yプロパティ追加
+*  ■Inputコントロール
+    *  ・パッド番号をpad_codeプロパティで決定する形式にした
+    *  ・x/yプロパティ追加
 
-■RuleShaderコントロール
-・コア機能を分離したShaderクラスを継承する形に変更し、RuleTransition.rbに改名
+*  ■RuleShaderコントロール
+    *  ・コア機能を分離したShaderクラスを継承する形に変更し、RuleTransition.rbに改名
 
-■Shaderコントロール
-・新規追加
+*  ■Shaderコントロール
+    *  ・新規追加
 
-■pluginフォルダ
-・HorrorTextShader.rb追加
+*  ■pluginフォルダ
+    *  ・HorrorTextShader.rb追加
 
 v2.1
 
-■main.rb処理
-・初期設定をmain.rb上で構築するように変更
-・Dataコントロール:_TEMP_/:_LOCAL_/:_SYSTEM_追加
+*  ■main.rb処理
+    *  ・初期設定をmain.rb上で構築するように変更
+    *  ・Dataコントロール:_TEMP_/:_LOCAL_/:_SYSTEM_追加
 
-■ファイル構成
-・requireの依存関係を整理
-・ファイルインクルードを統合するTsukasa.rbを作成
-・ppを司エンジンの必須ライブラリから外した
-・削除
-　・bootstrap_script.rb
-　・config.rb
-・text_layer_script.rbを新設しtksパーサー関連スクリプトを整理
+*  ■ファイル構成
+    *  ・requireの依存関係を整理
+    *  ・ファイルインクルードを統合するTsukasa.rbを作成
+    *  ・ppを司エンジンの必須ライブラリから外した
+    *  ・削除
+        *  　・bootstrap_script.rb
+        *  　・config.rb
+    *  ・text_layer_script.rbを新設しtksパーサー関連スクリプトを整理
 
-■テスト
-・テストコード構築中
+*  ■テスト
+    *  ・テストコード構築中
 
-■司スクリプト
-・インラインデータ記法を廃止（パーサーには残っている）
+*  ■司スクリプト
+    *  ・インラインデータ記法を廃止（パーサーには残っている）
 
-■default_script.rb
-・requested_closeコントロールを廃止
-・_CHECK_INPUT_ユーザー定義コマンドをControlから移動
-・_CHECK_MOUSE_ユーザー定義コマンドをClickableLayoutから移動
-・追加
-　・_SYSTEM_SAVE_
-　・_SYSTEM_LOAD_
-　・_LOCAL_SAVE_
-　・_LOCAL_LOAD_
-　・_QUICK_SAVE_
-　・_QUICK_LOAD_
-・削除
-　・_MOUSE_ENABLE_
-　・_CHECK_REQUESTED_CLOSE_
+*  ■default_script.rb
+    *  ・requested_closeコントロールを廃止
+    *  ・_CHECK_INPUT_ユーザー定義コマンドをControlから移動
+    *  ・_CHECK_MOUSE_ユーザー定義コマンドをClickableLayoutから移動
+    *  ・追加
+        *  　・_SYSTEM_SAVE_
+        *  　・_SYSTEM_LOAD_
+        *  　・_LOCAL_SAVE_
+        *  　・_LOCAL_LOAD_
+        *  　・_QUICK_SAVE_
+        *  　・_QUICK_LOAD_
+    *  ・削除
+        *  　・_MOUSE_ENABLE_
+        *  　・_CHECK_REQUESTED_CLOSE_
 
-■_SYSTEM_環境変数
-・環境変数を仕様から廃止したため、以下の全環境変数を廃止
-　・_PAD_NUMBER_
-　・_SAVE_DATA_PATH_
-　・_SYSTEM_FILENAME_
-　・_LOCAL_FILENAME_
-　・_QUICK_DATA_FILENAME_
-　・_MOUSE_OFFSET_X_
-　・_MOUSE_OFFSET_Y_
-　・_MOUSE_POS_X_
-　・_MOUSE_POS_Y_
-　・_PLUGIN_PATH_
-　・_CURSOR_VISIBLE_
-　・_PAD_NUMBER_
+*  ■_SYSTEM_環境変数
+    *  ・環境変数を仕様から廃止したため、以下の全環境変数を廃止
+        *  　・_PAD_NUMBER_
+        *  　・_SAVE_DATA_PATH_
+        *  　・_SYSTEM_FILENAME_
+        *  　・_LOCAL_FILENAME_
+        *  　・_QUICK_DATA_FILENAME_
+        *  　・_MOUSE_OFFSET_X_
+        *  　・_MOUSE_OFFSET_Y_
+        *  　・_MOUSE_POS_X_
+        *  　・_MOUSE_POS_Y_
+        *  　・_PLUGIN_PATH_
+        *  　・_CURSOR_VISIBLE_
+        *  　・_PAD_NUMBER_
 
-■Controlコントロール
-・_CHECK_のdatastoreプロパティ廃止
-・_GET_の各要素の取得先コントロール名と格納名を指定できるようにした
-・単体でルートコントロールになれるように実装を更新
-・_SCRIPT_PARSER_/_LOAD_NATIVE_をWindowからControlに移動
-・_SERIALIZE_追加
-・_CHECK_INPUT_をユーザー定義コマンドに移動
-・_INCLUDE_コマンドの簡易記法を廃止
-・SET/CHECKの第１引数をコントロールパスに変更
-・_RESIZE_をClickableLayoutに移動
-・_PUTS_の仕様を更新
-・_INCLUDE_コマンドのforceオプションを廃止。これに伴い_TEMP_環境変数で保持していた_LOADED_FEATURES_を廃止。
+*  ■Controlコントロール
+    *  ・_CHECK_のdatastoreプロパティ廃止
+    *  ・_GET_の各要素の取得先コントロール名と格納名を指定できるようにした
+    *  ・単体でルートコントロールになれるように実装を更新
+    *  ・_SCRIPT_PARSER_/_LOAD_NATIVE_をWindowからControlに移動
+    *  ・_SERIALIZE_追加
+    *  ・_CHECK_INPUT_をユーザー定義コマンドに移動
+    *  ・_INCLUDE_コマンドの簡易記法を廃止
+    *  ・SET/CHECKの第１引数をコントロールパスに変更
+    *  ・_RESIZE_をClickableLayoutに移動
+    *  ・_PUTS_の仕様を更新
+    *  ・_INCLUDE_コマンドのforceオプションを廃止。これに伴い_TEMP_環境変数で保持していた_LOADED_FEATURES_を廃止。
 
-■Windowコントロール
-・Window#mouse_x/mouse_yプロパティを読み出し可能に変更（暫定処置）
-・派生元をClickableLayoutクラスに変更
-・ファイル名をTsukasa.rbからWindow.rbに変更
-・Window#mouse_enableプロパティ追加
-・_RESIZE_コマンドで実ウィンドウのサイズが変わるように修正
-・終了判定をrootコントロールのexitプロパティを見て判定する形式に変更
-・close/close?メソッドを廃止
-・auto_closeプロパティ追加
-・_CHECK_REQUESTED_CLOSE_をユーザー定義コマンドから移動
-・廃止
-　・_SAVE_
-　・_LOAD_
-　・_QUICK_SAVE_
-　・_QUICK_LOAD_
+*  ■Windowコントロール
+    *  ・Window#mouse_x/mouse_yプロパティを読み出し可能に変更（暫定処置）
+    *  ・派生元をClickableLayoutクラスに変更
+    *  ・ファイル名をTsukasa.rbからWindow.rbに変更
+    *  ・Window#mouse_enableプロパティ追加
+    *  ・_RESIZE_コマンドで実ウィンドウのサイズが変わるように修正
+    *  ・終了判定をrootコントロールのexitプロパティを見て判定する形式に変更
+    *  ・close/close?メソッドを廃止
+    *  ・auto_closeプロパティ追加
+    *  ・_CHECK_REQUESTED_CLOSE_をユーザー定義コマンドから移動
+    *  ・廃止
+        *  　・_SAVE_
+        *  　・_LOAD_
+        *  　・_QUICK_SAVE_
+        *  　・_QUICK_LOAD_
 
-■ClickableLayoutコントロール
-・_CHECK_MOUSE_での安定を汎用_CHECK_での判定に変更
-・_CHECK_MOUSE_をユーザー定義コマンドに移動
-・_RESIZE_をControlから移動
+*  ■ClickableLayoutコントロール
+    *  ・_CHECK_MOUSE_での安定を汎用_CHECK_での判定に変更
+    *  ・_CHECK_MOUSE_をユーザー定義コマンドに移動
+    *  ・_RESIZE_をControlから移動
 
-■TextPageコントロール
-・_TEXT_コマンドの簡易記法を廃止
+*  ■TextPageコントロール
+    *  ・_TEXT_コマンドの簡易記法を廃止
 
-■Dataコントロール
-・新規追加
+*  ■Dataコントロール
+    *  ・新規追加
 
-■Inputコントロール
-・新規追加
-・第１引数でパッド番号を指定出来る様にした
+*  ■Inputコントロール
+    *  ・新規追加
+    *  ・第１引数でパッド番号を指定出来る様にした
 
 v2.0
 
-■司スクリプト記法の変更
-　・コントロール送信文を廃止
-　・付与ブロックの引数をキーワード引数のみに限定し、第１引数を廃止
+*  ■司スクリプト記法の変更
+    *  　・コントロール送信文を廃止
+    *  　・付与ブロックの引数をキーワード引数のみに限定し、第１引数を廃止
 
-■Window（旧：Tsukasa）
-・コントロール名／ファイル名を変更
-・デフォルトid廃止
-・mouse_x/yプロパティを書き込み専用に変更
-・_SCRIPT_PARSER_　file_pathオプションをpathに改名
+*  ■Window（旧：Tsukasa）
+    *  ・コントロール名／ファイル名を変更
+    *  ・デフォルトid廃止
+    *  ・mouse_x/yプロパティを書き込み専用に変更
+    *  ・_SCRIPT_PARSER_　file_pathオプションをpathに改名
 
-■Control
-・_ALIAS_　追加
-・_CHECK_INPUT_　追加
-・_CHECK_BLOCK_　追加
-・_DEFINE_PROPERTY_　追加
-・_DEBUG_TREE_　追加
-・_DEBUG_PROP_　追加
-・_DEBUG_COMMAND_　追加
-・_DEBUG_TEMP_　追加
-・_DEBUG_LOCAL_　追加
-・_DEBUG_SYSTEM_　追加
+*  ■Control
+    *  ・_ALIAS_　追加
+    *  ・_CHECK_INPUT_　追加
+    *  ・_CHECK_BLOCK_　追加
+    *  ・_DEFINE_PROPERTY_　追加
+    *  ・_DEBUG_TREE_　追加
+    *  ・_DEBUG_PROP_　追加
+    *  ・_DEBUG_COMMAND_　追加
+    *  ・_DEBUG_TEMP_　追加
+    *  ・_DEBUG_LOCAL_　追加
+    *  ・_DEBUG_SYSTEM_　追加
 
-・_YIELD_　引数が設定できるようにした。
-・_DELETE_　第一引数で削除するコントロールをパス指定出来るようにした
-・_INCLUDE_/_PARSE_　file_pathオプションをpathに改名
-・_CHECK_
-　・upperをoverに改名
-　・ブロックが引数を受け取らないように変更
-　・count/child_exist/child_not_exist/null/not_null条件項目を廃止
-　・キー入力関連の条件項目を廃止し、_CHECK_INPUT_に移動
-　・requested_close条件項目を廃止し、_CHECK_BLOCK_に移動（その際systemオプションの名称をmouseに変更し、内部のキーもmouse_push/mouse_down/mouse_up/right_mouse_down/right_mouse_push/right_mouse_upをそれぞれpush/down/up/right_down/right_push/right_upに変更
-・_MOVE_/_PATH_
-　・第１引数の仕様を変更
-　・_OPTIONS_オプションを廃止。
-・_LOOP_
-　・条件判定を受け付ける仕様廃止
-　・第一引数でカウンタを指定するように変更
-　・現在のカウント値をブロック引数で取れるようにした
+    *  ・_YIELD_　引数が設定できるようにした。
+    *  ・_DELETE_　第一引数で削除するコントロールをパス指定出来るようにした
+    *  ・_INCLUDE_/_PARSE_　file_pathオプションをpathに改名
+    *  ・_CHECK_
+        *  　・upperをoverに改名
+        *  　・ブロックが引数を受け取らないように変更
+        *  　・count/child_exist/child_not_exist/null/not_null条件項目を廃止
+        *  　・キー入力関連の条件項目を廃止し、_CHECK_INPUT_に移動
+        *  　・requested_close条件項目を廃止し、_CHECK_BLOCK_に移動（その際systemオプションの名称をmouseに変更し、内部のキーもmouse_push/mouse_down/mouse_up/right_mouse_down/right_mouse_push/right_mouse_upをそれぞれpush/down/up/right_down/right_push/right_upに変更
+    *  ・_MOVE_/_PATH_
+        *  　・第１引数の仕様を変更
+        *  　・_OPTIONS_オプションを廃止。
+    *  ・_LOOP_
+        *  　・条件判定を受け付ける仕様廃止
+        *  　・第一引数でカウンタを指定するように変更
+        *  　・現在のカウント値をブロック引数で取れるようにした
 
-・_STACK_LOOP_　廃止
-・_WAIT_　廃止（仕様を更新し、ユーザー定義コマンドに変更）
+    *  ・_STACK_LOOP_　廃止
+    *  ・_WAIT_　廃止（仕様を更新し、ユーザー定義コマンドに変更）
 
-■Char（旧：CharControl）
-・コントロール名／ファイル名を変更
-・image_pathプロパティを追加
+*  ■Char（旧：CharControl）
+    *  ・コントロール名／ファイル名を変更
+    *  ・image_pathプロパティを追加
 
-・_CLEAR_　追加
+    *  ・_CLEAR_　追加
 
-■Image（旧：ImageControl）
-・コントロール名／ファイル名を変更
-・file_pathプロパティをpathに改名
-・初期化時のみentityを設定出来ていた仕様を廃止
+*  ■Image（旧：ImageControl）
+    *  ・コントロール名／ファイル名を変更
+    *  ・file_pathプロパティをpathに改名
+    *  ・初期化時のみentityを設定出来ていた仕様を廃止
 
-・_DRAW_　追加
+    *  ・_DRAW_　追加
 
-■DrawableLayout（旧：RenderTargetControl）
-・コントロール名／ファイル名を変更
+*  ■DrawableLayout（旧：RenderTargetControl）
+    *  ・コントロール名／ファイル名を変更
 
-・_LINE_　追加
-・_BOX_　追加
-・_CIRCLE_　追加
-・_TEXT_　追加
+    *  ・_LINE_　追加
+    *  ・_BOX_　追加
+    *  ・_CIRCLE_　追加
+    *  ・_TEXT_　追加
 
-■TextPage（旧：TextPageControl）
-・コントロール名／ファイル名を変更
-・character_pitchの誤字を修正
+*  ■TextPage（旧：TextPageControl）
+    *  ・コントロール名／ファイル名を変更
+    *  ・character_pitchの誤字を修正
 
-■TileMap（旧：TileMapControl）
-・コントロール名／ファイル名を変更
-・_SET_TILE_　file_pathオプションをpathに改名
-・_SET_TILE_GROUP_　file_pathオプションをpathに改名
+*  ■TileMap（旧：TileMapControl）
+    *  ・コントロール名／ファイル名を変更
+    *  ・_SET_TILE_　file_pathオプションをpathに改名
+    *  ・_SET_TILE_GROUP_　file_pathオプションをpathに改名
 
-■Layoutable(旧：LayoutableControl）
-・コントロール名／ファイル名を変更
-・ユーザーが直接生成できないように変更
+*  ■Layoutable(旧：LayoutableControl）
+    *  ・コントロール名／ファイル名を変更
+    *  ・ユーザーが直接生成できないように変更
 
-・_TO_IMAGE_　廃止
+    *  ・_TO_IMAGE_　廃止
 
-■Drawable(旧：DrawableControl）
-・コントロール名／ファイル名を変更
-・ユーザーが直接生成できないように変更
+*  ■Drawable(旧：DrawableControl）
+    *  ・コントロール名／ファイル名を変更
+    *  ・ユーザーが直接生成できないように変更
 
-■RuleShader（旧：RuleShaderControl）
-・コントロール名／ファイル名を変更
+*  ■RuleShader（旧：RuleShaderControl）
+    *  ・コントロール名／ファイル名を変更
 
-■Sound（旧：SoundControl）
-・コントロール名／ファイル名を変更
-・file_pathプロパティをpathに改名
+*  ■Sound（旧：SoundControl）
+    *  ・コントロール名／ファイル名を変更
+    *  ・file_pathプロパティをpathに改名
 
-■Layout（旧：LayoutControl）
-・コントロール名／ファイル名を変更
+*  ■Layout（旧：LayoutControl）
+    *  ・コントロール名／ファイル名を変更
 
-■ClickableLayout（旧：ClickableLayoutControl）
-・コントロール名／ファイル名を変更
-・_CHECK_MOUSE_　追加し、衝突判定を_CHECK_から分離（その際、cursor_move条件項目を廃止）
-・cursor_offset_x/yプロパティ廃止
+*  ■ClickableLayout（旧：ClickableLayoutControl）
+    *  ・コントロール名／ファイル名を変更
+    *  ・_CHECK_MOUSE_　追加し、衝突判定を_CHECK_から分離（その際、cursor_move条件項目を廃止）
+    *  ・cursor_offset_x/yプロパティ廃止
 
-■標準ユーザー定義コマンド（default_script.rb）
-・_INSTALL_PRERENDER_FONT_　追加
-・_INSTALL_FONT_　追加
-・_IMAGE_REGIST_　追加
-・_IMAGE_DISPOSE_　追加
-・_CHECK_REQUESTED_CLOSE_　追加
-・ラベルのヘッダーフッターを廃止
+*  ■標準ユーザー定義コマンド（default_script.rb）
+    *  ・_INSTALL_PRERENDER_FONT_　追加
+    *  ・_INSTALL_FONT_　追加
+    *  ・_IMAGE_REGIST_　追加
+    *  ・_IMAGE_DISPOSE_　追加
+    *  ・_CHECK_REQUESTED_CLOSE_　追加
+    *  ・ラベルのヘッダーフッターを廃止
 
-■ユーティリティーユーザー定義コマンド（utility_script.rb）
-・_WAIT_　追加
-・_TO_IMAGE_　追加
-・_BUTTON_BASE_　追加
-・_TEXT_BUTTON_　_BUTTON_BASE_ベースで実装し直しインターフェイスを刷新
-・_IMAGE_BUTTON_　_BUTTON_BASE_ベースで実装し直しインターフェイスを刷新
-・_TEXT_WINDOW_修正
-　・実行時に付与ブロックがある場合に実行するようにした
-　・初期化パラメーターを全てTextPageに委譲するようにした
-・_CHAR_SET_追加
-・_CHAR_RUBI_追加
-・_CHAR_IMAGE_追加
-・_CHECK_ARRAY_INCLUDE_　追加
+*  ■ユーティリティーユーザー定義コマンド（utility_script.rb）
+    *  ・_WAIT_　追加
+    *  ・_TO_IMAGE_　追加
+    *  ・_BUTTON_BASE_　追加
+    *  ・_TEXT_BUTTON_　_BUTTON_BASE_ベースで実装し直しインターフェイスを刷新
+    *  ・_IMAGE_BUTTON_　_BUTTON_BASE_ベースで実装し直しインターフェイスを刷新
+    *  ・_TEXT_WINDOW_修正
+        *  　・実行時に付与ブロックがある場合に実行するようにした
+        *  　・初期化パラメーターを全てTextPageに委譲するようにした
+    *  ・_CHAR_SET_追加
+    *  ・_CHAR_RUBI_追加
+    *  ・_CHAR_IMAGE_追加
+    *  ・_CHECK_ARRAY_INCLUDE_　追加
 
-■データストア
-　・_TEMP_でカーソルの絶対座標と前フレームからの相対座標を取得できるようにした
+*  ■データストア
+    *  　・_TEMP_でカーソルの絶対座標と前フレームからの相対座標を取得できるようにした
 
-■定数定義
-　・ファイルConstant.rbを導入し、以下のDXRuby定数を司エンジン上で再定義した。
-　　・キーコード定数
-　　・マウスボタン定数
-　　・パッド定数
-　　・マウスカーソル定数
-　　・色定数
+*  ■定数定義
+    *  　・ファイルConstant.rbを導入し、以下のDXRuby定数を司エンジン上で再定義した。
+        *  　　・キーコード定数
+        *  　　・マウスボタン定数
+        *  　　・パッド定数
+        *  　　・マウスカーソル定数
+        *  　　・色定数
 
 v1.2.1p9
 

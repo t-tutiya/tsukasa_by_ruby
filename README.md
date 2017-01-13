@@ -63,6 +63,168 @@ http://mirichi.github.io/dxruby-doc/api/constant_keycode.html
 
 ##更新履歴
 
+v2.2
+
+■フォルダ構成
+・プラグインフォルダをネイティブファイルのフォルダとスクリプトファイルのフォルダに分離した
+
+■ユニットテスト関連
+・テスト実行用のRakeFileを配置
+・テストコードの命名ルールを設定
+
+■内部ロジック
+・カスタムコントロールのメソッド定義インターフェイスを変更
+
+■サンプル
+・ブロック崩しゲームをサンプルに追加
+・カスタムシェーダーサンプルを更新
+
+■default_script.rb
+・追加
+　・_GC_GARBAGE_COLLECT_
+　・_GC_ENABLE_
+　・_GC_DISABLE_
+　・_GC_LATEST_GC_INFO_
+　・_GC_STATUS_
+・廃止
+　・_PAD_ARROW_
+　・_WINDOW_STATUS_
+　・_SCREEN_MODES_
+　・_FULL_SCREEN_
+　・_MOUSE_WHEEL_POS_
+
+■test_utility_script.rb
+・_CHAR_IMAGE_の引数をpathから_ARGUMENT_に変更
+・_TEXT_WINDOW_のフラグを管理する専用のDataコントロールを用意
+
+■Controlコントロール
+・_NEXT_/_BREAK_コマンドにブロックを付与できる仕様を廃止
+・_SEND_コマンドで設定したプロパティの値をブロック内で利用できるようにした
+・_SCOPE_コマンド廃止
+・_LOAD_NATIVE_コマンド廃止
+・（内部処理）exitプロパティを読み出し専用に変更（元々ドキュメントにはない）
+・（内部処理）Control#unshift/push_command_arrayメソッドを追加
+
+■Windowコントロール
+・Window.caption/bgcolor/icon_path/cursor_type/full_screen/screen_modes/mouse_wheel_posプロパティ追加
+
+■Drawableコントロール
+・shaderプロパティをDXRuby::Shaderを直接保持する形式に変更
+
+■Imageコントロール
+・_PIXEL_コマンドのブロック引数名を_ARGUMENT_からcolorに変更
+
+■TileMapコントロール
+・_MAP_STATUS_コマンドのブロック引数名を_ARGUMENT_からstatusに変更
+
+■Inputコントロール
+・パッド番号をpad_codeプロパティで決定する形式にした
+・x/yプロパティ追加
+
+■RuleShaderコントロール
+・コア機能を分離したShaderクラスを継承する形に変更し、RuleTransition.rbに改名
+
+■Shaderコントロール
+・新規追加
+
+■pluginフォルダ
+・HorrorTextShader.rb追加
+
+v2.1
+
+■main.rb処理
+・初期設定をmain.rb上で構築するように変更
+・Dataコントロール:_TEMP_/:_LOCAL_/:_SYSTEM_追加
+
+■ファイル構成
+・requireの依存関係を整理
+・ファイルインクルードを統合するTsukasa.rbを作成
+・ppを司エンジンの必須ライブラリから外した
+・削除
+　・bootstrap_script.rb
+　・config.rb
+・text_layer_script.rbを新設しtksパーサー関連スクリプトを整理
+
+■テスト
+・テストコード構築中
+
+■司スクリプト
+・インラインデータ記法を廃止（パーサーには残っている）
+
+■default_script.rb
+・requested_closeコントロールを廃止
+・_CHECK_INPUT_ユーザー定義コマンドをControlから移動
+・_CHECK_MOUSE_ユーザー定義コマンドをClickableLayoutから移動
+・追加
+　・_SYSTEM_SAVE_
+　・_SYSTEM_LOAD_
+　・_LOCAL_SAVE_
+　・_LOCAL_LOAD_
+　・_QUICK_SAVE_
+　・_QUICK_LOAD_
+・削除
+　・_MOUSE_ENABLE_
+　・_CHECK_REQUESTED_CLOSE_
+
+■_SYSTEM_環境変数
+・環境変数を仕様から廃止したため、以下の全環境変数を廃止
+　・_PAD_NUMBER_
+　・_SAVE_DATA_PATH_
+　・_SYSTEM_FILENAME_
+　・_LOCAL_FILENAME_
+　・_QUICK_DATA_FILENAME_
+　・_MOUSE_OFFSET_X_
+　・_MOUSE_OFFSET_Y_
+　・_MOUSE_POS_X_
+　・_MOUSE_POS_Y_
+　・_PLUGIN_PATH_
+　・_CURSOR_VISIBLE_
+　・_PAD_NUMBER_
+
+■Controlコントロール
+・_CHECK_のdatastoreプロパティ廃止
+・_GET_の各要素の取得先コントロール名と格納名を指定できるようにした
+・単体でルートコントロールになれるように実装を更新
+・_SCRIPT_PARSER_/_LOAD_NATIVE_をWindowからControlに移動
+・_SERIALIZE_追加
+・_CHECK_INPUT_をユーザー定義コマンドに移動
+・_INCLUDE_コマンドの簡易記法を廃止
+・SET/CHECKの第１引数をコントロールパスに変更
+・_RESIZE_をClickableLayoutに移動
+・_PUTS_の仕様を更新
+・_INCLUDE_コマンドのforceオプションを廃止。これに伴い_TEMP_環境変数で保持していた_LOADED_FEATURES_を廃止。
+
+■Windowコントロール
+・Window#mouse_x/mouse_yプロパティを読み出し可能に変更（暫定処置）
+・派生元をClickableLayoutクラスに変更
+・ファイル名をTsukasa.rbからWindow.rbに変更
+・Window#mouse_enableプロパティ追加
+・_RESIZE_コマンドで実ウィンドウのサイズが変わるように修正
+・終了判定をrootコントロールのexitプロパティを見て判定する形式に変更
+・close/close?メソッドを廃止
+・auto_closeプロパティ追加
+・_CHECK_REQUESTED_CLOSE_をユーザー定義コマンドから移動
+・廃止
+　・_SAVE_
+　・_LOAD_
+　・_QUICK_SAVE_
+　・_QUICK_LOAD_
+
+■ClickableLayoutコントロール
+・_CHECK_MOUSE_での安定を汎用_CHECK_での判定に変更
+・_CHECK_MOUSE_をユーザー定義コマンドに移動
+・_RESIZE_をControlから移動
+
+■TextPageコントロール
+・_TEXT_コマンドの簡易記法を廃止
+
+■Dataコントロール
+・新規追加
+
+■Inputコントロール
+・新規追加
+・第１引数でパッド番号を指定出来る様にした
+
 v2.0
 
 ■司スクリプト記法の変更

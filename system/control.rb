@@ -258,11 +258,11 @@ class Control
       end
     end
 
-    command_list = [[:_SET_, nil, nil, options]]
+    command_list = [[:_SET_, options]]
 
     #子コントロールのシリアライズコマンドを取得
     @control_list.each do |control|
-      result = [:_CREATE_, nil, nil,
+      result = [:_CREATE_, 
                 {
                   _ARGUMENT_: control.class.name,
                   command_list: control.serialize()

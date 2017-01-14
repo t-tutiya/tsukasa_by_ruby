@@ -104,9 +104,10 @@ class Control #公開インターフェイス
                       **options, 
                       &command_block)
     @command_list.unshift([ command, 
+                            options,
                             command_block || @temporary_command_block, 
                             yield_stack, 
-                            options])
+])
   end
 
   #コマンドをスタックの末端に挿入する
@@ -115,9 +116,9 @@ class Control #公開インターフェイス
                     **options, 
                     &command_block)
     @command_list.push([command, 
+                        options,
                         command_block || @temporary_command_block, 
-                        yield_stack, 
-                        options])
+                        yield_stack])
   end
 
   #コマンド配列をスタックの先頭に挿入する
@@ -155,7 +156,7 @@ class Control
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
-      command_name, command_block, yield_stack, options = @command_list.shift
+      command_name, options, command_block, yield_stack = @command_list.shift
       #コマンドブロックスタックを一時変数に退避
       @temporary_command_block = command_block
       @temporary_yield_stack = yield_stack

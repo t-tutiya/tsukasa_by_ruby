@@ -572,10 +572,14 @@ class Control #スクリプト制御
     #インタラプト指定されている
     if interrupt
       #子コントロールのコマンドリスト先頭に挿入
-      control.unshift_command_block(@temporary_command_block, @temporary_yield_stack, options)
+      control.unshift_command_block(@temporary_command_block, 
+                                    @temporary_yield_stack, 
+                                    options)
     else
       #子コントロールのコマンドリスト末端に挿入
-      control.push_command_block(@temporary_command_block, @temporary_yield_stack, options)
+      control.push_command_block( @temporary_command_block, 
+                                  @temporary_yield_stack, 
+                                  options)
     end
   end
 

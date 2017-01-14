@@ -100,7 +100,7 @@ class Control #公開インターフェイス
 
   #コマンドをスタックの先頭に挿入する
   def unshift_command(command, 
-                      yield_stack = @temporary_yield_stack.dup,
+                      yield_stack = @temporary_yield_stack,
                       **options, 
                       &command_block)
     @command_list.unshift([ command, 
@@ -111,7 +111,7 @@ class Control #公開インターフェイス
 
   #コマンドをスタックの末端に挿入する
   def push_command( command, 
-                    yield_stack = @temporary_yield_stack.dup,
+                    yield_stack = @temporary_yield_stack,
                     **options, 
                     &command_block)
     @command_list.push([command, 
@@ -329,9 +329,6 @@ class Control #内部メソッド
 
     #終端コマンドを挿入
     unshift_command(:_END_FUNCTION_)
-
-    #参照渡し汚染が起きないようにディープコピーで取得
-    @temporary_yield_stack = @temporary_yield_stack.dup
 
     #スタックプッシュ
     @temporary_yield_stack.push(@temporary_command_block)
@@ -588,7 +585,10 @@ class Control #スクリプト制御
     #子コントロール全てを探査対象とする
     @control_list.each do |control|
       next if _ARGUMENT_ and (control.id != _ARGUMENT_)
-      control.unshift_command(:_SEND_, @temporary_yield_stack.dup, options, &@temporary_command_block)
+      control.unshift_command(:_SEND_, 
+                              @temporary_yield_stack, 
+                              options, 
+                              &@temporary_command_block)
     end
   end
 

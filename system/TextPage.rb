@@ -300,7 +300,6 @@ class TextPage < Layout
   def _CHAR_(_ARGUMENT_: nil, image_path: nil)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, 
-                                @temporary_yield_stack.dup,
                                 {
                                   :_ARGUMENT_ => :Char, 
                                   :offset_x => @character_pitch,
@@ -319,7 +318,8 @@ class TextPage < Layout
   #指定したコマンドブロックを文字列の末端に追加する
   def _CHAR_COMMAND_(**)
     #文字コントロールを生成する
-    @control_list.last.push_command_block(@temporary_command_block, @temporary_yield_stack.dup)
+    @control_list.last.push_command_block(@temporary_command_block, 
+                                          @temporary_yield_stack)
 
     #文字待機処理をスタックする
     unshift_command(:_CHAR_WAIT_)

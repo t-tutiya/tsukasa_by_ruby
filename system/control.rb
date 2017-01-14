@@ -656,14 +656,14 @@ class Control #スクリプト制御
   end
 end
 
-class Control #セーブデータ制御
+class Control #シリアライズ
   def _SERIALIZE_(_ARGUMENT_: nil, control: nil)
     #第一引数が設定されている
     if _ARGUMENT_
-      #デシリアライズする
+      #配列を指定したコントロールのコマンドリストの先頭に挿入する
       find_control(control).unshift_command_array(_ARGUMENT_)
     else
-      #シリアライズし、ブロックに渡す
+      #指定したコントロールのコマンドリストを配列化し、ブロックに渡す
       find_control(control).unshift_command_block({command_list: serialize()})
     end
   end

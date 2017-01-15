@@ -220,11 +220,6 @@ class TextPage < Layout
   end
 
   def initialize(system, options, &block)
-    #レンダリング済みフォント使用中かどうか
-    @use_image_font = options[:use_image_font] || false
-    #レンダリング済みフォントのフォント名
-    @image_face = options[:image_face] || nil
-
     @line_spacing = options[:line_spacing] || 12   #行間の幅
     @character_pitch = options[:character_pitch ] || 0 #文字間の幅
     @line_height = options[:line_height] || 32    #行の高さ
@@ -328,17 +323,10 @@ class TextPage < Layout
   #textコマンド
   #指定文字列を描画チェインに連結する
   def _TEXT_(_ARGUMENT_:)
-    #イメージフォントを使うかどうか
-    if @use_image_font
-      char_command = :image_char
-    else
-      char_command = :_CHAR_
-    end
-
     #文字列を分解してcharコマンドに変換する
     _ARGUMENT_.to_s.reverse.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      unshift_command(char_command, @temporary_yield_stack, {_ARGUMENT_: ch}, &@temporary_command_block)
+      unshift_command(:_CHAR_, @temporary_yield_stack, {_ARGUMENT_: ch}, &@temporary_command_block)
     end
   end
 

@@ -35,6 +35,7 @@ module Tsukasa
 
 #入力系ラッパーコントロール
 class Input < Control
+  attr_accessor :pad_number
 
   #パッドのＸ方向キー増分[-1,0,1]
   def x()
@@ -46,8 +47,8 @@ class Input < Control
     DXRuby::Input.y(@pad_number)
   end
 
-  def initialize(system, options, &block)
-    @pad_number = options[:pad_number] || 0
+  def initialize(system, pad_number: 0, **options, &block)
+    @pad_number = pad_number
     super
   end
 

@@ -85,13 +85,6 @@ class Control #公開インターフェイス
     if @temporary_command_block
       unshift_command_block(options)
     end
-
-    #コマンドリストがあるなら登録する
-    if options[:command_list]
-      #デシリアライズする
-      unshift_command_array(options[:command_list])
-    end
-
   end
 
   #コマンドをスタックの先頭に挿入する
@@ -254,16 +247,14 @@ class Control
       end
     end
 
+    #自身を再構築する_SET_コマンドを生成
     command_list = [[:_SET_, options]]
 
     #子コントロールのシリアライズコマンドを取得
     @control_list.each do |control|
-      result = [:_CREATE_, 
-                {
-                  _ARGUMENT_: control.class.name,
-                  command_list: control.serialize()
-                }]
-      command_list.push(result)
+      command_list.push([:_CREATE_, {_ARGUMENT_: control.class.name}])
+      command_list.push([:_SERIALIZE_, {_ARGUMENT_: control.serialize(), 
+                                        control: -1}])
     end
 
     return command_list

@@ -125,7 +125,7 @@ class HorrorShader < Tsukasa::Shader
     @shader.wave_length = arg
   end
 
-  def initialize(yield_stack, root_control, parent_control,
+  def initialize(system,
     duration: 60, 
     wave_amp_u: 2.0, 
     wave_amp_v: 2.0, 

@@ -74,7 +74,7 @@ class TestTextPageBase < Minitest::Test
     #コントロールの生成
     control = Tsukasa::Window.new() do
       #デフォルトのユーザー定義コマンド群の読み込み
-      _INCLUDE_ "./default/default_script.rb"
+      _INCLUDE_ "./plugin_script/default_script.rb"
 
       _INSTALL_PRERENDER_FONT_ "./resource/Fonts/FontData02.dat", font_name: "test_font_01"
       _CREATE_ :TextPage, font_name: "test_font_01" do
@@ -112,11 +112,10 @@ class TestTextPageBase < Minitest::Test
   def test_2017_1_12_1_標準テキストウィンドウ表示テスト
     #コントロールの生成
     control = Tsukasa::Window.new() do
-      #デフォルトのユーザー定義コマンド群の読み込み
-      _INCLUDE_ "./default/default_script.rb"
-
-      #標準ユーティリティー群の読み込み
-      _INCLUDE_ "./default/helper_script.rb"
+      #プラグインスクリプトファイルの読み込み
+      Dir.glob("./plugin_script/*.rb").each do |path|
+        _INCLUDE_ path
+      end
 
       #キー入力管理コントロール
       _CREATE_ :Input, id: :_INPUT_
@@ -125,8 +124,7 @@ class TestTextPageBase < Minitest::Test
       require './system/Char.rb'
       #テキストページ管理
       require './system/TextPage.rb'
-      #TKSパーサーと関連するテキストレイヤのセットアップ
-      _INCLUDE_ "./default/text_layer_script.rb"
+
       #初期テキストウィンドウ
       _TEXT_WINDOW_ :text0, 
         x: 96,
@@ -163,11 +161,10 @@ class TestTextPageBase < Minitest::Test
   def test_2017_1_12_2_テキストウィンドウ画像表示テスト
     #コントロールの生成
     control = Tsukasa::Window.new() do
-      #デフォルトのユーザー定義コマンド群の読み込み
-      _INCLUDE_ "./default/default_script.rb"
-
-      #標準ユーティリティー群の読み込み
-      _INCLUDE_ "./default/helper_script.rb"
+      #プラグインスクリプトファイルの読み込み
+      Dir.glob("./plugin_script/*.rb").each do |path|
+        _INCLUDE_ path
+      end
 
       #キー入力管理コントロール
       _CREATE_ :Input, id: :_INPUT_
@@ -176,8 +173,7 @@ class TestTextPageBase < Minitest::Test
       require './system/Char.rb'
       #テキストページ管理
       require './system/TextPage.rb'
-      #TKSパーサーと関連するテキストレイヤのセットアップ
-      _INCLUDE_ "./default/text_layer_script.rb"
+
       #初期テキストウィンドウ
       _TEXT_WINDOW_ :text0, 
         x: 96,

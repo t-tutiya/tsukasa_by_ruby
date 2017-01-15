@@ -79,12 +79,6 @@ tsukasa = Tsukasa::Window.new()do
   #ルールトランジション
   require_relative './system/RuleTransition.rb'
 
-  #デフォルトのユーザー定義コマンド群の読み込み
-  _INCLUDE_ "./default/default_script.rb"
-
-  #標準ユーティリティー群の読み込み
-  _INCLUDE_ "./default/helper_script.rb"
-
   #タイトルバーの文字列を設定
   _SET_ caption: "Tsukasa Engine powered by DXRuby"
 
@@ -121,8 +115,6 @@ tsukasa = Tsukasa::Window.new()do
   require_relative './system/Char.rb'
   #テキストページ管理
   require_relative './system/TextPage.rb'
-  #TKSパーサーと関連するテキストレイヤのセットアップ
-  _INCLUDE_ "./default/text_layer_script.rb"
   #初期テキストウィンドウ
   _TEXT_WINDOW_ :text0, 
     x: 96,

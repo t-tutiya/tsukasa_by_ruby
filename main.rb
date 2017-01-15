@@ -111,10 +111,6 @@ tsukasa = Tsukasa::Window.new()do
   #初期レイヤ２
   _CREATE_ :Image, z: 3000, id: :img2
 
-  #文字描画
-  require_relative './system/Char.rb'
-  #テキストページ管理
-  require_relative './system/TextPage.rb'
   #初期テキストウィンドウ
   _TEXT_WINDOW_ :text0, 
     x: 96,

@@ -120,11 +120,6 @@ class TestTextPageBase < Minitest::Test
       #キー入力管理コントロール
       _CREATE_ :Input, id: :_INPUT_
 
-      #文字描画
-      require './system/Char.rb'
-      #テキストページ管理
-      require './system/TextPage.rb'
-
       #初期テキストウィンドウ
       _TEXT_WINDOW_ :text0, 
         x: 96,
@@ -168,11 +163,6 @@ class TestTextPageBase < Minitest::Test
 
       #キー入力管理コントロール
       _CREATE_ :Input, id: :_INPUT_
-
-      #文字描画
-      require './system/Char.rb'
-      #テキストページ管理
-      require './system/TextPage.rb'
 
       #初期テキストウィンドウ
       _TEXT_WINDOW_ :text0, 

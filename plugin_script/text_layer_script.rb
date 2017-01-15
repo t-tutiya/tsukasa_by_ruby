@@ -34,9 +34,13 @@ require 'dxruby'
 #テキストレイヤ関連
 ###############################################################################
 
+#文字コントロール
+require './system/Char.rb'
+#テキストウィンドウコントロール
+require './system/TextPage.rb'
 #データストアコントロール
 require './system/Data.rb'
-#タイルマップ管理
+#タイルマップ管理コントロール
 require './system/TileMap.rb'
 
 #tksスクリプト用のパーサーを登録

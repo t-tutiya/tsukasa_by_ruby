@@ -57,28 +57,27 @@ class Control #公開インターフェイス
 
   #system = [root_control, parent_control, yield_stack]
   def initialize(system = [nil, nil, nil], options = {}, &block)
-    @child_update = true
-
     #rootコントロールの保存
     @root_control = system[0] || self
     #親コントロールの保存
     @parent_control = system[1]
-    #終了フラグを初期化
-    @exit = false
+    #_YIELD_用ブロックのスタックリスト
+    @temporary_yield_stack = Array(system[2])
 
-    # ユーザ定義関数
+    #子コントロールの更新実行可能フラグ
+    @child_update = true
+    #ユーザ定義コマンド格納ハッシュ
     @function_list = {} 
     #コントロールのID(省略時は自身のクラス名とする)
     @id = options[:id] || self.class.name.to_sym
-
     #コマンドリスト
     @command_list = [] 
     #コントロールリスト
     @control_list = [] 
-    #削除フラグの初期化
+    #削除フラグ
     @delete_flag = false 
-
-    @temporary_yield_stack = Array(system[2])
+    #終了フラグ
+    @exit = false
 
     #ブロックが付与されているなら読み込んで登録する
     @temporary_command_block = block

@@ -264,9 +264,9 @@ class TextPage < Layout
 
     super
 
-    @function_list[:_CHAR_RENDERER_] =options[:_CHAR_RENDERER_] || Proc.new(){}
-    @function_list[:_CHAR_WAIT_] = options[:_CHAR_WAIT_] || Proc.new(){}
-    @function_list[:_LINE_WAIT_] = options[:_LINE_WAIT_] || Proc.new(){}
+    @function_list[:_CHAR_RENDERER_] = Proc.new(){}
+    @function_list[:_CHAR_WAIT_] = Proc.new(){}
+    @function_list[:_LINE_WAIT_] = Proc.new(){}
 
     #次のアクティブ行コントロールを追加  
     unshift_command(:_CREATE_, 
@@ -351,9 +351,16 @@ class TextPage < Layout
       _LINE_WAIT_: @function_list[:_LINE_WAIT_],
       _CHAR_WAIT_: @function_list[:_CHAR_WAIT_],
       _CHAR_RENDERER_:  @function_list[:_CHAR_RENDERER_]
-      }) do |
-      text:, x:,y:,size:,character_pitch:, font_name:, 
-      _LINE_WAIT_:, _CHAR_WAIT_:, _CHAR_RENDERER_:|
+    }) do |
+      text:, 
+      x:,
+      y:,
+      size:, 
+      character_pitch:, 
+      font_name:, 
+      _LINE_WAIT_:, 
+      _CHAR_WAIT_:,
+      _CHAR_RENDERER_:|
       _CREATE_ :TextPage, 
         x: x,
         y: y,
@@ -362,10 +369,10 @@ class TextPage < Layout
         line_height: size,
         font_name: font_name,
         line_spacing: 0,
-        character_pitch: character_pitch,
-        _LINE_WAIT_: _LINE_WAIT_, 
-        _CHAR_WAIT_: _CHAR_WAIT_, 
-        _CHAR_RENDERER_: _CHAR_RENDERER_ do
+        character_pitch: character_pitch do
+        _DEFINE_(:_LINE_WAIT_, &_LINE_WAIT_)
+        _DEFINE_(:_CHAR_WAIT_, &_CHAR_WAIT_)
+        _DEFINE_(:_CHAR_RENDERER_, &_CHAR_RENDERER_)
         _TEXT_ text
       end
     end

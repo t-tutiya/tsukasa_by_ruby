@@ -31,15 +31,8 @@ require 'dxruby'
 ###############################################################################
 
 ###############################################################################
-#ヘルパーコマンド関連
+#ヘルパーコマンド：待機
 ###############################################################################
-
-#配列の中に指定した値が含まれていればブロックを実行する
-_DEFINE_ :_CHECK_ARRAY_INCLUDE_ do |array:, value:|
-  if array.include?(value)
-    _YIELD_
-  end
-end
 
 #１フレーム待機する
 #オプション：_CHECK_条件
@@ -62,6 +55,18 @@ _DEFINE_ :_WAIT_ do |options|
   end
 end
 
+###############################################################################
+#ヘルパーコマンド：マウス／ゲームパッド入力
+###############################################################################
+
+#キー入力_CHECK_
+_DEFINE_ :_CHECK_INPUT_  do |options|
+  _CHECK_ [:_ROOT_, :_INPUT_], equal: options do
+    _YIELD_
+  end
+end
+
+#マウス入力_CHECK_
 _DEFINE_ :_CHECK_MOUSE_ do |_ARGUMENT_:|
   _CHECK_ equal: {collision: _ARGUMENT_} do
     _CHECK_BLOCK_ do
@@ -69,6 +74,10 @@ _DEFINE_ :_CHECK_MOUSE_ do |_ARGUMENT_:|
     end
   end
 end
+
+###############################################################################
+#ヘルパーコマンド：子コントロールの描画
+###############################################################################
 
 #Imageを生成し、指定したコントロール配下を描画する
 _DEFINE_ :_TO_IMAGE_ do 
@@ -97,7 +106,83 @@ _DEFINE_ :_TO_IMAGE_ do
 end
 
 ###############################################################################
-#汎用ボタン
+#ヘルパーコマンド：セーブロード管理
+###############################################################################
+
+#_SYSTEM_コントロールを保存する
+#※保存されるのは次フレームなので注意
+_DEFINE_ :_SYSTEM_SAVE_ do |_ARGUMENT_:|
+  _SEND_ [:_ROOT_, :_SYSTEM_] do
+    _SERIALIZE_ do |command_list:|
+      db = PStore.new(_ARGUMENT_)
+      db.transaction do
+        db["key"] = command_list
+      end
+    end
+  end
+end
+
+#_SYSTEM_コントロールに読み込む
+#※保存されるのは次フレームなので注意
+_DEFINE_ :_SYSTEM_LOAD_ do |_ARGUMENT_:|
+  _SEND_ [:_ROOT_, :_SYSTEM_] do
+    db = PStore.new(_ARGUMENT_)
+    command_list = nil
+    db.transaction do
+      command_list = db["key"]
+    end
+    _SERIALIZE_ command_list
+  end
+end
+
+#_LOCAL_コントロールを保存する
+#※保存されるのは次フレームなので注意
+_DEFINE_ :_LOCAL_SAVE_ do |_ARGUMENT_:|
+  _SEND_ [:_ROOT_, :_LOCAL_] do
+    _SERIALIZE_ do |command_list:|
+      db = PStore.new(_ARGUMENT_)
+      db.transaction do
+        db["key"] = command_list
+      end
+    end
+  end
+end
+
+#_LOCAL_コントロールを読み込む
+#※保存されるのは次フレームなので注意
+_DEFINE_ :_LOCAL_LOAD_ do |_ARGUMENT_:|
+  _SEND_ [:_ROOT_, :_LOCAL_] do
+    db = PStore.new(_ARGUMENT_)
+    command_list = nil
+    db.transaction do
+      command_list = db["key"]
+    end
+    _SERIALIZE_ command_list
+  end
+end
+
+#コントロールツリーを保存する
+_DEFINE_ :_QUICK_SAVE_ do |_ARGUMENT_:|
+  _SERIALIZE_ do |command_list:|
+    db = PStore.new(_ARGUMENT_)
+    db.transaction do
+      db["key"] = command_list
+    end
+  end
+end
+
+#コントロールツリーを読み込む
+_DEFINE_ :_QUICK_LOAD_ do |_ARGUMENT_:|
+  db = PStore.new(_ARGUMENT_)
+  command_list = nil
+  db.transaction do
+    command_list = db["key"]
+  end
+  _SERIALIZE_ command_list
+end
+
+###############################################################################
+#ヘルパーコマンド：汎用ボタン
 ###############################################################################
 
 #汎用ボタンロジック

@@ -119,11 +119,8 @@ end
 ###############################################################################
 
 #パッドのキーコンフィグを設定する
-#TODO：パッドごとにInputコントロールを持つ現仕様でどう処理するか検討中
-_DEFINE_ :_PAD_CONFIG_ do |options|
-  DXRuby::Input.set_config( options[:pad_code], 
-                    options[:key_code], 
-                    options[:pad_number] = 0)
+_DEFINE_ :_PAD_CONFIG_ do |pad_code:, key_code:, pad_number: 0|
+  DXRuby::Input.set_config(pad_code, key_code, pad_number)
 end
 
 ###############################################################################

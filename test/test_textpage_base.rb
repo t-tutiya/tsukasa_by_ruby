@@ -116,7 +116,7 @@ class TestTextPageBase < Minitest::Test
       _INCLUDE_ "./default/default_script.rb"
 
       #標準ユーティリティー群の読み込み
-      _INCLUDE_ "./default/utility_script.rb"
+      _INCLUDE_ "./default/helper_script.rb"
 
       #キー入力管理コントロール
       _CREATE_ :Input, id: :_INPUT_
@@ -167,7 +167,7 @@ class TestTextPageBase < Minitest::Test
       _INCLUDE_ "./default/default_script.rb"
 
       #標準ユーティリティー群の読み込み
-      _INCLUDE_ "./default/utility_script.rb"
+      _INCLUDE_ "./default/helper_script.rb"
 
       #キー入力管理コントロール
       _CREATE_ :Input, id: :_INPUT_

@@ -83,7 +83,7 @@ tsukasa = Tsukasa::Window.new()do
   _INCLUDE_ "./default/default_script.rb"
 
   #標準ユーティリティー群の読み込み
-  _INCLUDE_ "./default/utility_script.rb"
+  _INCLUDE_ "./default/helper_script.rb"
 
   #タイトルバーの文字列を設定
   _SET_ caption: "Tsukasa Engine powered by DXRuby"

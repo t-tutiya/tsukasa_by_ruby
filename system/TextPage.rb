@@ -270,14 +270,14 @@ class TextPage < Layout
 
     #次のアクティブ行コントロールを追加  
     unshift_command(:_CREATE_, 
+                    nil,
+                    nil,
                     {
                       :_ARGUMENT_ => :Layout, 
                       :width => @width,
                       :height => @line_height,
                       :float_y => :bottom,
-                    })do
-      #TODO:空ブロック
-    end
+                    })
   end
 
   #############################################################################
@@ -326,21 +326,19 @@ class TextPage < Layout
     #文字列を分解してcharコマンドに変換する
     _ARGUMENT_.to_s.reverse.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      unshift_command(:_CHAR_, @temporary_yield_stack, {_ARGUMENT_: ch}, &@temporary_command_block)
+      unshift_command(:_CHAR_, {_ARGUMENT_: ch})
     end
   end
 
   def _RUBI_(_ARGUMENT_:)
     #TextPageをベース文字に登録する。
-    @control_list.last.push_command(:_CREATE_, 
+    @control_list.last.push_command(:_CREATE_, nil, nil, 
                                     {
                                       :_ARGUMENT_ => :Layout, 
                                       :width => 0,
                                       :height => @size,
                                       :float_x => :left
-                                    })do
-      #TODO:空ブロック
-    end
+                                    })
 
     #ルビを出力するTextPageを生成する
     @control_list.last.push_command(:_SEND_, {_ARGUMENT_: -1, 

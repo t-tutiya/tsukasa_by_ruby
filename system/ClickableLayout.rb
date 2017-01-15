@@ -101,7 +101,7 @@ class ClickableLayout < Layout
     end 
   end
 
-  def initialize(yield_stack, root_control, parent_control, options, &block)
+  def initialize(system, options, &block)
     #カラーキー
     @colorkey_id = options[:colorkey_id]
     #カラーキーボーダー

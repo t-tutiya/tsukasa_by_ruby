@@ -60,7 +60,7 @@ class Image < Helper::Drawable
     super
   end
 
-  def initialize(yield_stack, root_control, parent_control, options, &block)
+  def initialize(system, options, &block)
     @path = nil
     super
 

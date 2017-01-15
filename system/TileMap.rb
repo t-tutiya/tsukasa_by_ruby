@@ -41,7 +41,7 @@ class TileMap < DrawableLayout
   attr_accessor :size_x
   attr_accessor :size_y
 
-  def initialize(yield_stack, root_control, parent_control, options, &block)
+  def initialize(system, options, &block)
     options[:width] = options[:width] || 32
     options[:height] = options[:height] || 32
 

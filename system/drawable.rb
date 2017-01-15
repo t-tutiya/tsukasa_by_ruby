@@ -150,7 +150,7 @@ class Drawable < Layoutable
     @draw_option[:offset_sync]
   end
 
-  def initialize(yield_stack, root_control, parent_control, options, &block)
+  def initialize(system, options, &block)
     @entity = nil
     #描画オプションの初期化
     @draw_option = options[:draw_option] || {}

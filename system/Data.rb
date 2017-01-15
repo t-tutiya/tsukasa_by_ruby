@@ -37,7 +37,7 @@ class Data < Control
   #データストアハッシュ
   attr_accessor :datastore
 
-  def initialize(yield_stack, root_control, parent_control, options, &block)
+  def initialize(system, options, &block)
     @datastore = {}
     super
   end

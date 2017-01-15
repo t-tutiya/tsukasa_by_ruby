@@ -65,7 +65,7 @@ class DrawableLayout < Helper::Drawable
     @entity.update
   end
   
-  def initialize(yield_stack, root_control, parent_control, options, &block)
+  def initialize(system, options, &block)
   
     super
 

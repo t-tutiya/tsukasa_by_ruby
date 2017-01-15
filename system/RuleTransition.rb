@@ -64,7 +64,7 @@ class RuleTransition < Tsukasa::Shader
   #ルールトランジション：曖昧さ
   attr_accessor :vague
 
-  def initialize(yield_stack, root_control, parent_control, options, &block)
+  def initialize(system, options, &block)
     @vague = options[:vague] || 40
     self.path = options[:path] if options[:path]
     self.counter = options[:counter] || 0

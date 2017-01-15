@@ -55,18 +55,14 @@ class Control #公開インターフェイス
 
   attr_reader :exit #終了
 
-  def initialize( yield_stack = nil, 
-                  root_control = nil, 
-                  parent_control = nil, 
-                  options = {}, 
-                  &block)
+  #system = [root_control, parent_control, yield_stack]
+  def initialize(system = [nil, nil, nil], options = {}, &block)
     @child_update = true
 
     #rootコントロールの保存
-    root_control ||= self
-    @root_control = root_control
+    @root_control = system[0] || self
     #親コントロールの保存
-    @parent_control = parent_control
+    @parent_control = system[1]
     #終了フラグを初期化
     @exit = false
 
@@ -82,7 +78,7 @@ class Control #公開インターフェイス
     #削除フラグの初期化
     @delete_flag = false 
 
-    @temporary_yield_stack = Array(yield_stack)
+    @temporary_yield_stack = Array(system[2])
 
     #ブロックが付与されているなら読み込んで登録する
     @temporary_command_block = block
@@ -346,9 +342,9 @@ class Control #コントロールの生成／破棄
     #コントロールを生成して子要素として登録する
     @control_list.push(
       #名前空間Tsukasa内のクラスを生成する
-      Tsukasa.const_get(_ARGUMENT_).new(@temporary_yield_stack, 
-                                        @root_control, 
-                                        self, 
+      Tsukasa.const_get(_ARGUMENT_).new([ @root_control, 
+                                          self,
+                                          @temporary_yield_stack], 
                                         options, 
                                         &@temporary_command_block)
     )

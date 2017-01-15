@@ -46,7 +46,7 @@ class Input < Control
     DXRuby::Input.y(@pad_number)
   end
 
-  def initialize(yield_stack, root_control, parent_control, options, &block)
+  def initialize(system, options, &block)
     @pad_number = options[:pad_number] || 0
     super
   end

@@ -231,7 +231,7 @@ class Char < Helper::Drawable
   #公開インターフェイス
   #############################################################################
 
-  def initialize(yield_stack, root_control, parent_control, options, &block)
+  def initialize(system, options, &block)
     @font_draw_option = {}
 
     #フォントサイズ

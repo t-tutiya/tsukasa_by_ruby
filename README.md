@@ -48,18 +48,63 @@ http://someiyoshino.main.jp/file/1218_tsukasa_engine_book_sample_chap1.pdf
 DXRuby キーコード定数
 http://mirichi.github.io/dxruby-doc/api/constant_keycode.html
 
-## フォルダ構成
-　司エンジン開発フォルダルート直下のフォルダとファイル構成を簡単に解説しておきます。
-*  system 司エンジンのソースコードが格納されています。
-*  default 初期値を設定するconfig.rb／デフォルトのスクリプトを格納するdefault_script.rbなどが格納されています。
-*  script 司/tksスクリプトを配置するフォルダです。このフォルダのfirst.rbが最初に実行されます。
-*  resource サンプルで使うリソースファイルが入っています。
-    * githubからインストールする場合は、下記ファイルを直接ダウンロードし、展開後に配置してください。
-    * https://github.com/t-tutiya/tsukasa/releases/download/v1.2.0/resource.zip
-*  datastore データストアを保存するフォルダです。初期状態では空です。
-    *  githubからインストールする場合はこのフォルダが存在しないので、手動で空フォルダを作成してください。
-*  main.rb 実行スクリプト。これ自体は司エンジンには含まれません。
-*  readme.md 簡易ドキュメント
+#フォルダ構成
+　司エンジン開発フォルダルート直下のフォルダとファイル構成は以下になります。
+
+*tsukasa/
+    *	main.exe	……実行ファイル。実行するとmain.rbを読み込みます。
+    *	main_dev.exe	……実行ファイル。標準出力用のコマンドプロンプトウィンドウを表します。
+
+    *	main.rb	……司エンジンの初期設定を行い、first.rbを司スクリプトとして実行します。
+    *	init.rb	※内部で使用
+
+    *	first.rb	……最初に実行される司スクリプトファイルです。初期状態では"./script/demo.rb"を読み込みます。このファイルを書き換えることで、任意の司スクリプトを実行できるようになります。
+
+    *	rakefile	……rakeの実行ファイルです。ユニットテスト用に"test"タスクを用意しています。
+    *	README.md	……本ドキュメント。
+
+    *	Ayame.dll	※Rubyで使用
+    *	LIBEAY32.dll	※Rubyで使用
+    *	libffi-6.dll	※Rubyで使用
+    *	msvcrt-ruby220.dll	※Rubyで使用
+
+    *	datastore/	……セーブデータなどを保存するフォルダです。初期状態では空です（githubからインストールする場合はこのフォルダが存在しないので、手動で空フォルダを作成してください）。
+	
+    *	lib/	※Rubyで使用
+
+    *	plugin_control/	……カスタムコントロール用のrubyファイルを格納するフォルダです。このフォルダに配置された.rbファイルは自動的にrubyプログラムとして読み込まれます。
+        *		HorrorTextShader.rb	……カスタムシェーダーサンプル
+
+    *	plugin_script/	……ユーザー定義コマンド用の司スクリプトを格納するフォルダです。このフォルダに配置された.rbファイルは自動的にtsukasa言語として読み込まれます。
+        *		default_script.rb	……Ruby/DXRubyのラッパーコマンド群
+        *		helper_script.rb	……tsukasaのラッパーコマンド群
+        *		text_layer_script.rb	……TextPageのヘルパーコマンド群
+
+	resource/	……画像ファイルや音声ファイルを格納するフォルダです。サンプルで使用するファイルが収納されています。
+        *		char/	……立ち絵画像
+        *		Fonts/	……プリレンダ済みフォント
+        *		icon/	……アイコン画像
+        *		music/	……ＢＧＭ
+        *		rule/	……トランジション用ルール画像
+
+            * githubからインストールする場合は、下記ファイルを直接ダウンロードし、展開後に配置してください。
+            * https://github.com/t-tutiya/tsukasa/releases/download/v2.2/resource.zip
+
+    *	script/	……司スクリプト/tksスクリプトを格納するフォルダです。サンプルコードが収納されています。
+        *		block/	……ブロック崩しゲーム
+        *		demo_game/	……ノベル脱出ゲーム
+        *		jump_action/	……ジャンプアクションゲーム
+        *		nomaid/	……野メイド
+        *		sample/	……サンプルコード群
+
+    *	system/	……司エンジンのソースコードが格納されています。
+
+    *	test/	……ユニットテストコードが格納されています。
+
+    *	tools/	……司エンジンをサポートする外部ツールが格納されています。
+        *		FontDataMaker.rb	……TrueTypeフォントデータを司エンジンで使用できるプリレンダフォントデータに変換します。
+        *		ConvertFont.rb	……FontDataMaker.rbの内部で使用しています。
+
 
 #更新履歴
 

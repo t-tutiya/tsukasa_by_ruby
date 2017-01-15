@@ -120,10 +120,10 @@ class DrawableLayout < Helper::Drawable
   end
 
   #DrawableLayout上に文字を描く
-  def _TEXT_(text: , x: 0, y: 0, size: 24, font_name: "", weight: 4, italic: false, option: {}, color: [0, 0, 0, 0])
+  def _TEXT_(_ARGUMENT_: "", x: 0, y: 0, size: 24, font_name: "", weight: 4, italic: false, option: {}, color: [0, 0, 0, 0])
     option[:color] = color
 
-    @entity.draw_font_ex(x, y, text, 
+    @entity.draw_font_ex(x, y, _ARGUMENT_, 
       DXRuby::Font.new(size, font_name, {weight: weight*100, italic: italic}),
       option)
   end

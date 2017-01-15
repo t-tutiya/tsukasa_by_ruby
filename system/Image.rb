@@ -110,15 +110,15 @@ class Image < Helper::Drawable
   end
 
   #Image上に文字を描く
-  def _TEXT_( weight: 4, option: {}, color: [0, 0, 0, 0],
-              x: 0, y: 0, text: "", size: 24, font_name: "", italic: false)
+  def _TEXT_( _ARGUMENT_: "", weight: 4, option: {}, color: [0, 0, 0, 0],
+              x: 0, y: 0, size: 24, font_name: "", italic: false)
     if color
       option[:color] = color
     end
 
     @entity.draw_font_ex(
       x, y,
-      text,
+      _ARGUMENT_,
       DXRuby::Font.new(size, font_name,{weight: weight * 100, italic: italic}),
       option)
   end

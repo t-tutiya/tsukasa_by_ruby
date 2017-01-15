@@ -3,7 +3,7 @@ _CREATE_ :Image, id: :horror_img, x: 64, y: 64, width: 1024, height: 200 do
   _GET_ :shader, control: [:horror] do |shader:|
     _SET_ shader: shader
   end
-  _TEXT_  text: "むかしむかしあるところに、おじいさんとおばあさんがおったそうな。", size: 32, color: [255,0,0]
+  _TEXT_ "むかしむかしあるところに、おじいさんとおばあさんがおったそうな。", size: 32, color: [255,0,0]
 
   _DEFINE_ :status do
     _GET_ [:duration, 

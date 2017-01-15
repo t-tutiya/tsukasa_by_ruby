@@ -55,14 +55,14 @@ BRICKS = BRICK_COLS.times.to_a.product(BRICK_ROWS.times.to_a)
 
 _CREATE_ :DrawableLayout, id: :frame, x: FRAME_X, y: FRAME_Y, width: FRAME_WIDTH, height: FRAME_HEIGHT, alpha: 0 do
   _CREATE_ :Image, x: 8, y: 8, width: (FRAME_WIDTH - 24) / 2, height: 24 do
-    _TEXT_ x: 0, y: 0, text: "REST", color: [255, 255, 255]
+    _TEXT_ "REST", x: 0, y: 0, color: [255, 255, 255]
   end
   _CREATE_ :Image, id: :rest, x: (FRAME_WIDTH - 24) / 2 + 8, y: 8, width: (FRAME_WIDTH - 24) / 2, height: 24 do
-    _TEXT_ x: 0, y: 0, text: "3", color: [255, 255, 255]
+    _TEXT_ "3", x: 0, y: 0, color: [255, 255, 255]
     _DEFINE_ :_UPDATE_ do
       _GET_ :ball_rest, control: [:_ROOT_, :stage] do |ball_rest:|
         _CLEAR_
-        _TEXT_ x: 0, y: 0, text: ball_rest.to_s, color: [255, 255, 255]
+        _TEXT_ ball_rest.to_s, x: 0, y: 0, color: [255, 255, 255]
       end
     end
   end
@@ -77,7 +77,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     _GET_ [:width, :height] do |width:, height:|
       text = 'PRESS SPACE KEY TO PLAY'
       text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ x: (width - text_width) / 2, y: (height - 24) / 2, text: text, color: [255 ,255 ,255]
+      _TEXT_ text, x: (width - text_width) / 2, y: (height - 24) / 2, color: [255 ,255 ,255]
     end
   end
 
@@ -86,7 +86,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     _GET_ [:width, :height] do |width:, height:|
       text = 'LEVEL SUCCESS!'
       text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ x: (width - text_width) / 2, y: (height - 24) / 2, text: text, color: [255 ,255 ,255]
+      _TEXT_ text, x: (width - text_width) / 2, y: (height - 24) / 2, color: [255 ,255 ,255]
     end
   end
 
@@ -95,7 +95,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     _GET_ [:width, :height] do |width:, height:|
       text = 'MISS.'
       text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ x: (width - text_width) / 2, y: (height - 24) / 2, text: text, color: [255 ,255 ,255]
+      _TEXT_ text, x: (width - text_width) / 2, y: (height - 24) / 2, color: [255 ,255 ,255]
     end
   end
 
@@ -104,7 +104,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     _GET_ [:width, :height] do |width:, height:|
       text = 'LEVEL FAILURE...'
       text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ x: (width - text_width) / 2, y: (height - 24) / 2, text: text, color: [255 ,255 ,255]
+      _TEXT_ text, x: (width - text_width) / 2, y: (height - 24) / 2, color: [255 ,255 ,255]
     end
   end
 
@@ -113,7 +113,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     _GET_ [:width, :height] do |width:, height:|
       text = 'PLAY AGAIN?'
       text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ x: (width - text_width) / 2, y: (height - 24) / 2 - 32, text: text, color: [255 ,255 ,255]
+      _TEXT_ text, x: (width - text_width) / 2, y: (height - 24) / 2 - 32, color: [255 ,255 ,255]
     end
   end
   _CREATE_ :Image, id: :select_play, width: 300, height: 300, x: 150, y: 150 do
@@ -121,7 +121,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     _GET_ [:width, :height] do |width:, height:|
       text = 'PLAY'
       text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ x: (width / 2 - text_width) / 2, y: (height - 24) / 2 + 32, text: text, color: [255 ,255 ,255]
+      _TEXT_ text, x: (width / 2 - text_width) / 2, y: (height - 24) / 2 + 32, color: [255 ,255 ,255]
     end
   end
   _CREATE_ :Image, id: :select_exit, width: 300, height: 300, x: 150, y: 150 do
@@ -129,7 +129,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     _GET_ [:width, :height] do |width:, height:|
       text = 'EXIT'
       text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ x: width / 2 + (width / 2 - text_width) / 2, y: (height - 24) / 2 + 32, text: text, color: [255 ,255 ,255]
+      _TEXT_ text, x: width / 2 + (width / 2 - text_width) / 2, y: (height - 24) / 2 + 32, color: [255 ,255 ,255]
     end
   end
 

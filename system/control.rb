@@ -272,6 +272,29 @@ class Control
 end
 
 class Control #判定系
+
+  def check_imple(options)
+    # 全ての条件を判定する
+    return options.any? do |condition, value|
+      case condition
+      #指定されたデータと値がイコールの場合
+      when :equal
+        value.any?{|key, val| check_eaual(key, val)}
+      #指定されたデータと値がイコールでない場合
+      when :not_equal
+        value.any?{|key, val| check_not_eaual(key, val)}
+      #指定されたデータと値が未満の場合
+      when :under
+        value.any?{|key, val| check_under(key, val)}
+      #指定されたデータと値がより大きい場合
+      when :over
+        value.any?{|key, val| check_over(key, val)}
+      else
+        false
+      end
+    end
+  end
+
   def check_eaual(property, value)
     return send(property) == value
   end
@@ -422,36 +445,12 @@ end
 class Control #制御構文
   #条件判定
   def _CHECK_(_ARGUMENT_: nil, **options)
-    #比較対象とするコントロールを取得する
-    control = find_control_path(_ARGUMENT_)
-
-    # 全ての条件を判定する
-    result = options.any? do |condition, value|
-      case condition
-      #指定されたデータと値がイコールの場合
-      when :equal
-        value.any?{|key, val| control.check_eaual(key, val)}
-      #指定されたデータと値がイコールでない場合
-      when :not_equal
-        value.any?{|key, val| control.check_not_eaual(key, val)}
-      #指定されたデータと値が未満の場合
-      when :under
-        value.any?{|key, val| control.check_under(key, val)}
-      #指定されたデータと値がより大きい場合
-      when :over
-        value.any?{|key, val| control.check_over(key, val)}
-      else
-        false
-      end
-    end
-
-    #チェック条件を満たす場合
-    if result
+    #対象のコントロールがチェック条件を満たす場合
+    if find_control_path(_ARGUMENT_).check_imple(options)
       #ブロックを実行する
       unshift_command_block()
     end
   end
-
 
   def _CHECK_BLOCK_(**)
     #yield呼び出し可能なブロックがあるかを判定する

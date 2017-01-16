@@ -33,11 +33,8 @@ require_relative './Control.rb'
 module Tsukasa
 
 class Data < Control
-
-  #データストアハッシュ
-  attr_accessor :datastore
-
   def initialize(system, options, &block)
+    #データストアハッシュ
     @datastore = {}
     super
   end

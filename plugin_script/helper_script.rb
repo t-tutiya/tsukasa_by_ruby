@@ -69,9 +69,7 @@ end
 #マウス入力_CHECK_
 _DEFINE_ :_CHECK_MOUSE_ do |_ARGUMENT_:|
   _CHECK_ collision: _ARGUMENT_ do
-    _CHECK_BLOCK_ do
-      _YIELD_
-    end
+    _YIELD_
   end
 end
 

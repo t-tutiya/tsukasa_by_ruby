@@ -95,8 +95,7 @@ class Control #公開インターフェイス
     @command_list.unshift([ command, 
                             options,
                             command_block ? command_block : block, 
-                            yield_stack, 
-])
+                            yield_stack ])
   end
 
   #コマンドをスタックの末端に挿入する

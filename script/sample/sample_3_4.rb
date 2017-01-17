@@ -15,15 +15,9 @@ end
 
 _CREATE_ :Layout, id: :top_menu, x:0, y:0 do
   _GET_ :screen_modes, control:[:_ROOT_]  do |screen_modes:|
-    screen_modes.each do |screen_mode|
-      if screen_mode == [640,480,60]
-        menu_button text: "640×480", id: 0
-      elsif screen_mode == [800,600,60]
-        menu_button text: "800×600", id: 1
-      elsif screen_mode == [1024,768,60]
-        menu_button text: "1024×768", id: 2
-      elsif screen_mode == [1280,720,60]
-        menu_button text: "1280×720", id: 3
+    screen_modes.each_with_index do |screen_mode, id|
+      if screen_mode[2] == 60
+        menu_button text: "#{screen_mode[0]}×#{screen_mode[1]}", id: id
       end
     end
   end
@@ -32,17 +26,14 @@ end
 _SET_ [:_ROOT_, :_TEMP_], mode: nil
 _WAIT_ [:_ROOT_, :_TEMP_],  not_equal: {mode: nil}
 
-_CHECK_ [:_ROOT_, :_TEMP_],  equal: {mode: 0} do
-  _RESIZE_ width: 640, height:480
-end
-_CHECK_ [:_ROOT_, :_TEMP_],  equal: {mode: 1} do
-  _RESIZE_ width: 800, height:600
-end
-_CHECK_ [:_ROOT_, :_TEMP_],  equal: {mode: 2} do
-  _RESIZE_ width: 1024, height:768
-end
-_CHECK_ [:_ROOT_, :_TEMP_],  equal: {mode: 3} do
-  _RESIZE_ width: 1280, height:720
+_GET_ :screen_modes, control:[:_ROOT_]  do |screen_modes:|
+  screen_modes.each_with_index do |screen_mode, id|
+    if screen_mode[2] == 60
+      _CHECK_ [:_ROOT_, :_TEMP_],  equal: {mode: id} do
+        _RESIZE_ width: screen_mode[0], height: screen_mode[1]
+      end
+    end
+  end
 end
 
 _SEND_ :top_menu do

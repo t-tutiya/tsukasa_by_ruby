@@ -52,6 +52,10 @@ class Input < Control
     super
   end
 
+  def check_imple(condition, value)
+    return super
+  end
+
   def check_eaual(property, value)
     case property
     #キーが押下された

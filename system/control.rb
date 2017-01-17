@@ -273,25 +273,22 @@ end
 
 class Control #判定系
 
-  def check_imple(options)
-    # 全ての条件を判定する
-    return options.any? do |condition, value|
-      case condition
-      #指定されたデータと値がイコールの場合
-      when :equal
-        value.any?{|key, val| check_eaual(key, val)}
-      #指定されたデータと値がイコールでない場合
-      when :not_equal
-        value.any?{|key, val| check_not_eaual(key, val)}
-      #指定されたデータと値が未満の場合
-      when :under
-        value.any?{|key, val| check_under(key, val)}
-      #指定されたデータと値がより大きい場合
-      when :over
-        value.any?{|key, val| check_over(key, val)}
-      else
-        false
-      end
+  def check_imple(condition, value)
+    case condition
+    #指定されたデータと値がイコールの場合
+    when :equal
+      value.any?{|key, val| check_eaual(key, val)}
+    #指定されたデータと値がイコールでない場合
+    when :not_equal
+      value.any?{|key, val| check_not_eaual(key, val)}
+    #指定されたデータと値が未満の場合
+    when :under
+      value.any?{|key, val| check_under(key, val)}
+    #指定されたデータと値がより大きい場合
+    when :over
+      value.any?{|key, val| check_over(key, val)}
+    else
+      false
     end
   end
 
@@ -446,7 +443,9 @@ class Control #制御構文
   #条件判定
   def _CHECK_(_ARGUMENT_: nil, **options)
     #対象のコントロールがチェック条件を満たす場合
-    if find_control_path(_ARGUMENT_).check_imple(options)
+    if options.any?{|condition, value| 
+        find_control_path(_ARGUMENT_).check_imple(condition, value)
+       }
       #ブロックを実行する
       unshift_command_block()
     end

@@ -61,7 +61,7 @@ end
 
 #キー入力_CHECK_
 _DEFINE_ :_CHECK_INPUT_  do |options|
-  _CHECK_ [:_ROOT_, :_INPUT_], equal: options do
+  _CHECK_ [:_ROOT_, :_INPUT_], input: options do
     _YIELD_
   end
 end

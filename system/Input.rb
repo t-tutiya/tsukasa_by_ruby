@@ -54,56 +54,51 @@ class Input < Control
 
   def check_imple(condition, value)
     case condition
-    when :input
-      value.any?{ |property, value|
-        case property
-        #キーが押下された
-        when :key_push
-          Array(value).any?{|key_code| DXRuby::Input.key_push?(key_code)}
-        #キーが押下されていない
-        when :not_key_push
-          !(Array(value).any?{|key_code| DXRuby::Input.key_push?(key_code)})
-        #キーが継続押下されている
-        when :key_down
-          Array(value).any?{|key_code| DXRuby::Input.key_down?(key_code)}
-        #キーが継続押下されていない
-        when :not_key_down
-          !(Array(value).any?{|key_code| DXRuby::Input.key_down?(key_code)})
-        #キーが解除された
-        when :key_up
-          Array(value).any?{|key_code| DXRuby::Input.key_release?(key_code)}
-        #キーが解除されていない
-        when :not_key_up
-          !(Array(value).any?{|key_code|DXRuby::Input.key_release?(key_code)})
-        #パッドボタンが押された
-        when :pad_down
-          Array(value).any?{|pad_code| DXRuby::Input.pad_down?(pad_code, @pad_number)}
-        #パッドボタンが継続押下されている
-        when :pad_push
-          Array(value).any?{|pad_code| DXRuby::Input.pad_push?(pad_code, @pad_number)}
-        #パッドボタンが解除された
-        when :pad_release
-          Array(value).any?{|pad_code| DXRuby::Input.pad_release?(pad_code, @pad_number)}
-        #マウス処理系
-        when :mouse
-          Array(value).any? do |key|
-            case key
-            when :push
-              DXRuby::Input.mouse_push?( M_LBUTTON )
-            when :down
-              DXRuby::Input.mouse_down?( M_LBUTTON )
-            when :up
-              DXRuby::Input.mouse_release?( M_LBUTTON )
-            when :right_down
-              DXRuby::Input.mouse_down?( M_RBUTTON )
-            when :right_push
-              DXRuby::Input.mouse_push?( M_RBUTTON )
-            when :right_up
-              DXRuby::Input.mouse_release?( M_RBUTTON )
-            end
-          end
+    #キーが押下された
+    when :key_push
+      Array(value).any?{|key_code| DXRuby::Input.key_push?(key_code)}
+    #キーが押下されていない
+    when :not_key_push
+      !(Array(value).any?{|key_code| DXRuby::Input.key_push?(key_code)})
+    #キーが継続押下されている
+    when :key_down
+      Array(value).any?{|key_code| DXRuby::Input.key_down?(key_code)}
+    #キーが継続押下されていない
+    when :not_key_down
+      !(Array(value).any?{|key_code| DXRuby::Input.key_down?(key_code)})
+    #キーが解除された
+    when :key_up
+      Array(value).any?{|key_code| DXRuby::Input.key_release?(key_code)}
+    #キーが解除されていない
+    when :not_key_up
+      !(Array(value).any?{|key_code|DXRuby::Input.key_release?(key_code)})
+    #パッドボタンが押された
+    when :pad_down
+      Array(value).any?{|pad_code| DXRuby::Input.pad_down?(pad_code, @pad_number)}
+    #パッドボタンが継続押下されている
+    when :pad_push
+      Array(value).any?{|pad_code| DXRuby::Input.pad_push?(pad_code, @pad_number)}
+    #パッドボタンが解除された
+    when :pad_release
+      Array(value).any?{|pad_code| DXRuby::Input.pad_release?(pad_code, @pad_number)}
+    #マウス処理系
+    when :mouse
+      Array(value).any? do |key|
+        case key
+        when :push
+          DXRuby::Input.mouse_push?( M_LBUTTON )
+        when :down
+          DXRuby::Input.mouse_down?( M_LBUTTON )
+        when :up
+          DXRuby::Input.mouse_release?( M_LBUTTON )
+        when :right_down
+          DXRuby::Input.mouse_down?( M_RBUTTON )
+        when :right_push
+          DXRuby::Input.mouse_push?( M_RBUTTON )
+        when :right_up
+          DXRuby::Input.mouse_release?( M_RBUTTON )
         end
-      }
+      end
     else
       super
     end

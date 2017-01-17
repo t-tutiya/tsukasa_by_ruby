@@ -277,32 +277,19 @@ class Control #判定系
     case condition
     #指定されたデータと値がイコールの場合
     when :equal
-      value.any?{|key, val| check_eaual(key, val)}
+      value.any?{|key, val| send(key) == val}
     #指定されたデータと値がイコールでない場合
     when :not_equal
-      value.any?{|key, val| check_not_eaual(key, val)}
+      value.any?{|key, val| send(key) != val}
     #指定されたデータと値が未満の場合
     when :under
-      value.any?{|key, val| check_under(key, val)}
+      value.any?{|key, val| send(key) < val}
     #指定されたデータと値がより大きい場合
     when :over
-      value.any?{|key, val| check_over(key, val)}
+      value.any?{|key, val| send(key) > val}
     else
       false
     end
-  end
-
-  def check_eaual(property, value)
-    return send(property) == value
-  end
-  def check_not_eaual(property, value)
-    return send(property) != value
-  end
-  def check_under(property, value)
-    return send(property) < value
-  end
-  def check_over(property, value)
-    return send(property) > value
   end
 end
 

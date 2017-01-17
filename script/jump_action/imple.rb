@@ -9,7 +9,7 @@ class MainChar < Tsukasa::Image
     return @map[y/32][x/32] #マップ配列の仕様上、ｘとｙが逆になっているのに注意
   end
 
-  def initialize(options, yield_stack, root_control, parent_control, &block)
+  def initialize(system, options)
 
     #マップデータ
     @map = [[1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],

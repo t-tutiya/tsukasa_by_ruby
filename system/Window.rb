@@ -145,6 +145,9 @@ class Window < ClickableLayout
       set_exit()
     end
 
+    #windowがアクティブで無ければ子コントロールを動作せずに終了
+    return  unless DXRuby::Window.active?
+
     super
 
     #カーソルが画面外に出た時／戻った時にカーソル可視状態を復帰する

@@ -35,7 +35,7 @@ require_relative './ClickableLayout.rb'
 
 module Tsukasa
 
-class Window < ClickableLayout
+class Window < ClickableLayout #マウスカーソルがウィンドウの外に出たかを判定するため、ClickableLayoutを継承する
   attr_accessor :auto_close #「閉じる」ボタンが押下された際に自動的に終了する
 
   #ウィンドウ座標上のマウスＸ座標
@@ -169,7 +169,9 @@ class Window < ClickableLayout
 
   def _RESIZE_(width:, height:)
     DXRuby::Window.resize(width, height)
-    super
+    @collision_sprite.collision = [ 0, 0, width, height]
+    @width = width
+    @height = height
   end
 end
 

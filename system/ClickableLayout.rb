@@ -213,13 +213,6 @@ class ClickableLayout < Layout
 
     return super
   end
-
-  #衝突範囲の変更
-  def _RESIZE_(width:, height:)
-    @collision_sprite.collision = [ 0, 0, width, height]
-    @width = width
-    @height = height
-  end
 end
 
 end

@@ -636,7 +636,7 @@ class Control #シリアライズ
       find_control(control).unshift_command_array(_ARGUMENT_)
     else
       #指定したコントロールのコマンドリストを配列化し、ブロックに渡す
-      find_control(control).unshift_command_block({command_list: serialize()})
+      unshift_command_block({command_list: find_control_path(control).serialize()})
     end
   end
 end

@@ -110,12 +110,10 @@ end
 #_SYSTEM_コントロールを保存する
 #※保存されるのは次フレームなので注意
 _DEFINE_ :_SYSTEM_SAVE_ do |_ARGUMENT_:|
-  _SEND_ [:_ROOT_, :_SYSTEM_] do
-    _SERIALIZE_ do |command_list:|
-      db = PStore.new(_ARGUMENT_)
-      db.transaction do
-        db["key"] = command_list
-      end
+  _SERIALIZE_ control: [:_ROOT_, :_SYSTEM_] do |command_list:|
+    db = PStore.new(_ARGUMENT_)
+    db.transaction do
+      db["key"] = command_list
     end
   end
 end

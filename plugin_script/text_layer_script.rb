@@ -330,9 +330,6 @@ end
 #既読管理ラベル
 _DEFINE_ :_LABEL_ do |options|
 
-  _GET_:_READ_CHAPTER_,  control: [:_ROOT_, :_TEXT_WINDOW_TEMP_]do |_READ_CHAPTER_:|
-    pp _READ_CHAPTER_
-  end
   #既読フラグハッシュが無ければ新設
   _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_READ_CHAPTER_: nil} do
     _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _READ_CHAPTER_: {}

@@ -206,16 +206,16 @@ class TKSParser < Parslet::Parser
     rule(
       :chapter => simple(:chapter), :id => simple(:id)
     ) { 
-      "end\n" + 
-      "_LABEL_ chapter: :#{chapter}, id: #{id} do\n"
+      "end;" + 
+      "_LABEL_ chapter: :#{chapter}, id: #{id} do;"
     }
 
     #シナリオラベル（id無し）
     rule(
       :chapter => simple(:chapter)
     ) { 
-      "end\n" + 
-      "_LABEL_ chapter: :#{chapter} do\n"
+      "end;" + 
+      "_LABEL_ chapter: :#{chapter} do;"
     }
 
     #コメント行→無視
@@ -242,29 +242,29 @@ class TKSParser < Parslet::Parser
       :text_node => simple(:target)
     ) {
       text = "#{target}".gsub(/"/, '\"')
-  "_GET_ :_DEFAULT_TEXT_PAGE_ do |_DEFAULT_TEXT_PAGE_:|\n"+
-  "  _SEND_ _DEFAULT_TEXT_PAGE_ do\n" + 
+  "_GET_ :_DEFAULT_TEXT_PAGE_ do |_DEFAULT_TEXT_PAGE_:|;"+
+  "  _SEND_ _DEFAULT_TEXT_PAGE_ do;" + 
       %Q'_TEXT_ "#{text}"' +
-  "  end\n" + 
-  "end\n" 
+  "  end;" + 
+  "end;" 
     }
 
     #インラインコマンド→そのまま返す
     rule(
       :inline_command_node => simple(:target)
     ) { 
-      target.to_s + "\n"
+      target.to_s + ";"
     }
 
     #インラインデータ→textコマンド
     rule(
       :inline_data_node => simple(:target)
     ) {
-  "_GET_ :_DEFAULT_TEXT_PAGE_ do |_DEFAULT_TEXT_PAGE_:|\n"+
-  "  _SEND_ _DEFAULT_TEXT_PAGE_ do\n" + 
+  "_GET_ :_DEFAULT_TEXT_PAGE_ do |_DEFAULT_TEXT_PAGE_:|;"+
+  "  _SEND_ _DEFAULT_TEXT_PAGE_ do;" + 
        "_TEXT_ " + target.to_s +
-  "  end\n" + 
-  "end\n" 
+  "  end;" + 
+  "end;" 
     }
 
     #text行→末端に改行コード追加
@@ -272,29 +272,29 @@ class TKSParser < Parslet::Parser
       :text_line => sequence(:target)
     ) { 
       target.join + 
-  "_GET_ :_DEFAULT_TEXT_PAGE_ do |_DEFAULT_TEXT_PAGE_:|\n"+
-  "  _SEND_ _DEFAULT_TEXT_PAGE_ do\n" + 
-  "    _LINE_FEED_\n" + 
-  "  end\n" + 
+  "_GET_ :_DEFAULT_TEXT_PAGE_ do |_DEFAULT_TEXT_PAGE_:|;"+
+  "  _SEND_ _DEFAULT_TEXT_PAGE_ do;" + 
+  "    _LINE_FEED_;" + 
+  "  end;" + 
   "end\n" 
     }
 
     rule(
       :output => sequence(:target)
     ) { 
-      "_LABEL_ chapter: :_TKS_ do\n" + 
-      target.join + "\n" +
-      "end\n"
+      "_LABEL_ chapter: :_TKS_ do;" + 
+      target.join + ";" +
+      "end;"
     }
 
     #空行ブロック→キー入力待ちコマンド追加
     rule(
       :flush => simple(:target)
     ) { 
-  "_GET_ :_DEFAULT_TEXT_PAGE_ do |_DEFAULT_TEXT_PAGE_:|\n"+
-  "  _SEND_ _DEFAULT_TEXT_PAGE_ do\n" + 
-  "    _FLUSH_\n" + 
-  "  end\n" + 
+  "_GET_ :_DEFAULT_TEXT_PAGE_ do |_DEFAULT_TEXT_PAGE_:|;"+
+  "  _SEND_ _DEFAULT_TEXT_PAGE_ do;" + 
+  "    _FLUSH_;" + 
+  "  end;" + 
   "end\n" 
     }
   end

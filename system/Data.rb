@@ -32,29 +32,13 @@ require_relative './Control.rb'
 
 module Tsukasa
 
+#汎用書庫を表現するコントロール
 class Data < Control
-  #全てのメソッドアクセスをデータストアアクセスとみなす
   def method_missing(command_name, argument = nil)
+    #セッターへのアクセスでなければ無視する。
     return unless command_name.to_s[-1] == '='
-
-    command_name =  command_name.to_s.chop
-    
-    #インスタンス変数を動的に生成し、値を設定する
-    instance_variable_set('@' + command_name, argument)
-    
-    #ゲッターメソッドを動的に生成する
-    singleton_class.send( :define_method, 
-                          command_name,
-                          lambda{ 
-                            instance_variable_get('@' + command_name) 
-                          })
-    
-    #セッターメソッドを動的に生成する
-    singleton_class.send( :define_method, 
-                          command_name.to_s + '=', 
-                          lambda{ |set_value| 
-                            instance_variable_set('@' + command_name,set_value)
-                          })
+    #プロパティへのアクセスとみなし、プロパティを新規作成する。
+    _DEFINE_PROPERTY_({command_name.to_s.chop.to_sym => argument})
   end
 end
 

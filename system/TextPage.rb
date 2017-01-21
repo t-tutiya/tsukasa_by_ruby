@@ -294,7 +294,7 @@ class TextPage < Layout
   #指定文字（群）を描画チェインに連結する
   def _CHAR_(_ARGUMENT_: nil, image_path: nil)
     #文字コントロールを生成する
-    @control_list.last.push_command(:_CREATE_, 
+    @control_list.last.push_command(:_CREATE_, nil, nil,
                                 {
                                   :_ARGUMENT_ => :Char, 
                                   :offset_x => @character_pitch,

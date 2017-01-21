@@ -408,7 +408,7 @@ _DEFINE_ :_LABEL_ do |options|
              _ACTIVE_CHAPTER_ID_:|
     _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_CHAPTER_START_MODE_: true} do
       #ページが指定したＩＤでない場合
-      _CHECK_ [:_ROOT_, :_LOCAL_], not_equal: {_START_: _ACTIVE_CHAPTER_ID_} do
+      _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], not_equal: {_START_: _ACTIVE_CHAPTER_ID_} do
         #ページを飛ばす
         _RETURN_
       end

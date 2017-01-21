@@ -282,7 +282,9 @@ class TKSParser < Parslet::Parser
     rule(
       :output => sequence(:target)
     ) { 
-      target.join + "\n"
+      "_LABEL_ chapter: :_TKS_ do\n" + 
+      target.join + "\n" +
+      "end\n"
     }
 
     #空行ブロック→キー入力待ちコマンド追加

@@ -121,7 +121,7 @@ _DEFINE_ :system_menu do
                  comment: "カスタムシェーダーサンプル"
     end
     _CREATE_ :Layout, id: 3, x:0, y:0, width: 256, float_x: :left    do
-      TextSelect text: "sample_3_1.rb", path: path + "sample_3_1.tks", 
+      TextSelect text: "sample_3_1.tks", path: path + "sample_3_1.tks", 
                  comment: "既読フラグサンプル"
       TextSelect text: "sample_3_2_1.rb", path: path + "sample_3_2_1.rb", 
                  comment: "シリアライズサンプル：セーブ"

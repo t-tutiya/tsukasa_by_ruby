@@ -1,6 +1,6 @@
-  _SET_ [:_ROOT_, :_TEMP_], _CHAPTER_SKIP_MODE_: true
-  _SET_ [:_ROOT_, :_SYSTEM_], _READ_CHAPTER_: {:test0 => [0,1,2,4]}
-  _SET_ [:_ROOT_, :_TEMP_],  _ACTIVE_CHAPTER_NAME_: {}
+  _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _CHAPTER_SKIP_MODE_: true
+  _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _READ_CHAPTER_: {:test0 => [0,1,2,4]}
+  _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_],  _ACTIVE_CHAPTER_NAME_: {}
 
 @	_LABEL_ chapter: :test0, id: 0 do
 ページ０ページ０ページ０ページ０ページ０
@@ -39,7 +39,7 @@
 
 @	end
 
-  _GET_ :_READ_CHAPTER_, control: [:_ROOT_, :_SYSTEM_] do |_READ_CHAPTER_:|
+  _GET_ :_READ_CHAPTER_, control: [:_ROOT_, :_TEXT_WINDOW_TEMP_] do |_READ_CHAPTER_:|
     _READ_CHAPTER_[:chap0_0] = [0,1,2,4]
   end
 

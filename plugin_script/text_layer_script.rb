@@ -330,9 +330,12 @@ end
 #既読管理ラベル
 _DEFINE_ :_LABEL_ do |options|
 
+  _GET_:_READ_CHAPTER_,  control: [:_ROOT_, :_TEXT_WINDOW_TEMP_]do |_READ_CHAPTER_:|
+    pp _READ_CHAPTER_
+  end
   #既読フラグハッシュが無ければ新設
-  _CHECK_ [:_ROOT_, :_SYSTEM_], equal: {_READ_CHAPTER_: nil} do
-    _SET_ [:_ROOT_, :_SYSTEM_], _READ_CHAPTER_: {}
+  _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_READ_CHAPTER_: nil} do
+    _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _READ_CHAPTER_: {}
   end
 
   ###################################################################
@@ -428,7 +431,7 @@ _DEFINE_ :_LABEL_ do |options|
              _ACTIVE_CHAPTER_ID_:, _ACTIVE_CHAPTER_NAME_:|
 
       _GET_ :_READ_CHAPTER_, 
-            control: [:_ROOT_, :_SYSTEM_] do |_READ_CHAPTER_:|
+            control: [:_ROOT_, :_TEXT_WINDOW_TEMP_] do |_READ_CHAPTER_:|
 
         #初出のチャプターであればハッシュに書庫を作成
         unless _READ_CHAPTER_[_ACTIVE_CHAPTER_NAME_]
@@ -451,7 +454,7 @@ _DEFINE_ :_LABEL_ do |options|
   #現在のチャプターを保存
   ###################################################################
 
-  _GET_ :_READ_CHAPTER_,  control: [:_ROOT_, :_SYSTEM_] do |_READ_CHAPTER_:|
+  _GET_ :_READ_CHAPTER_,  control: [:_ROOT_, :_TEXT_WINDOW_TEMP_] do |_READ_CHAPTER_:|
     _GET_ [:_ACTIVE_CHAPTER_ID_, :_ACTIVE_CHAPTER_NAME_],
           control: [:_ROOT_, :_TEXT_WINDOW_TEMP_] do |
             _ACTIVE_CHAPTER_ID_:, _ACTIVE_CHAPTER_NAME_:|

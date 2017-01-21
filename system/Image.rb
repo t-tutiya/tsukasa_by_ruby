@@ -167,7 +167,7 @@ class Image < Helper::Drawable
 
     #子コントロールを再帰的に検索
     Array(_ARGUMENT_).each do |control_id|
-      control = control.find_control(control_id)
+      control = control.child_control(control_id)
       break unless control
     end
 

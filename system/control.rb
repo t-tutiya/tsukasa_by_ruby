@@ -193,7 +193,7 @@ class Control
 end
 
 class Control
-  def find_control(id)
+  def child_control(id)
     #idがnilであれば自身を返す
     return self unless id
     #整数であれば子要素の添え字と見なす
@@ -206,10 +206,10 @@ class Control
     return @control_list.find {|control| control.id == id }
   end
 
-  def find_control_path(control_path)
+  def find_control(control_path)
     control = self
     Array(control_path).each do |control_id|
-      control = control.find_control(control_id)
+      control = control.child_control(control_id)
       break unless control
     end
 
@@ -357,7 +357,7 @@ class Control #コントロールの生成／破棄
   #コントロールを削除する
   def _DELETE_(_ARGUMENT_: nil)
     #コントロールを検索する
-    control = find_control_path(_ARGUMENT_)
+    control = find_control(_ARGUMENT_)
 
     #削除フラグを立てる
     control.dispose() if control
@@ -412,7 +412,7 @@ class Control #セッター／ゲッター
     options.each do |key, val|
       begin
         #コントロールプロパティに値を代入
-        find_control_path(_ARGUMENT_).send(key.to_s + "=", val)
+        find_control(_ARGUMENT_).send(key.to_s + "=", val)
       rescue
         warn  "クラス[#{self.class}]：プロパティ[" + "#{key}]は存在しません"
       end
@@ -432,9 +432,9 @@ class Control #セッター／ゲッター
       property[2] = property[0] unless property[2]
       begin
         #コントロールプロパティから値を取得する
-        result[property[2]] = find_control_path(property[1]).send(property[0])
+        result[property[2]] = find_control(property[1]).send(property[0])
       rescue
-        warn  "クラス[#{find_control_path(property[1]).class}]：プロパティ[" + "#{property[0]}]は存在しません"
+        warn  "クラス[#{find_control(property[1]).class}]：プロパティ[" + "#{property[0]}]は存在しません"
       end
     end
 
@@ -448,7 +448,7 @@ class Control #制御構文
   def _CHECK_(_ARGUMENT_: nil, **options)
     #対象のコントロールがチェック条件を満たす場合
     if options.any?{|condition, value| 
-        find_control_path(_ARGUMENT_).check_imple(condition, value)
+        find_control(_ARGUMENT_).check_imple(condition, value)
        }
       #ブロックを実行する
       unshift_command_block()
@@ -534,7 +534,7 @@ class Control #スクリプト制御
   #子コントロールを検索してコマンドブロックを送信する
   def _SEND_(_ARGUMENT_: nil, interrupt: nil, **options)
     #コントロールを検索する
-    control = find_control_path(_ARGUMENT_)
+    control = find_control(_ARGUMENT_)
     return unless control
 
     #インタラプト指定されている
@@ -633,10 +633,10 @@ class Control #シリアライズ
     #第一引数が設定されている
     if _ARGUMENT_
       #配列を指定したコントロールのコマンドリストの先頭に挿入する
-      find_control(control).unshift_command_array(_ARGUMENT_)
+      child_control(control).unshift_command_array(_ARGUMENT_)
     else
       #指定したコントロールのコマンドリストを配列化し、ブロックに渡す
-      unshift_command_block({command_list: find_control_path(control).serialize()})
+      unshift_command_block({command_list: find_control(control).serialize()})
     end
   end
 end

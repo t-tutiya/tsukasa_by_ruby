@@ -163,7 +163,9 @@ class ClickableLayout < Layout
     if not (@mouse_sprite === @collision_sprite)
       #マウスカーソルがコリジョン範囲内に無い
       @on_inner_control = false
-    elsif @colorkey_id and (find_control(@colorkey_id).entity[mouse_pos_x - @x, mouse_pos_y - @y][0] <= @colorkey_border)
+    elsif @colorkey_id and (
+      child_control(@colorkey_id).entity[
+        mouse_pos_x - @x, mouse_pos_y - @y][0] <= @colorkey_border)
       #マウスカーソルがコリジョン範囲内にあるがカラーキーボーダー内に無い
       @on_inner_control = false
     else

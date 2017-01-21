@@ -34,21 +34,15 @@ module Tsukasa
 
 class ClickableLayout < Layout
   #コリジョンのエンティティ
-  attr_accessor  :collision_shape
+  attr_reader :shape
+  def shape=(arg)
+    @shape = arg
+  end
 
   attr_reader  :cursor_x
   attr_reader  :cursor_y
   attr_accessor  :colorkey_id
   attr_accessor  :colorkey_border
-
-  def width=(arg)
-    @collision_sprite.collision = [ 0, 0, arg, @height]
-    super
-  end
-  def height=(arg)
-    @collision_sprite.collision = [ 0, 0, @width, arg]
-    super
-  end
 
   def check_imple(condition, value)
     case condition
@@ -111,12 +105,11 @@ class ClickableLayout < Layout
     @colorkey_border = options[:colorkey_border] || 255
 
     #コリジョン形状の指定
-    @collision_shape = options[:collision_shape] || 
-                      [0, 0, options[:width] || 0, options[:height] || 0]
+    @shape = options[:shape] || [0,0]
 
     #コントロールSprite初期化
     @collision_sprite = DXRuby::Sprite.new
-    @collision_sprite.collision = @collision_shape
+    @collision_sprite.collision = @shape
 
     #カーソルSprite初期化
     @mouse_sprite = DXRuby::Sprite.new

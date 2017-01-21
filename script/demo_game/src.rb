@@ -51,6 +51,7 @@ end
 _DEFINE_ :TextSelect do |options|
   _CREATE_ :ClickableLayout,
     float_x: :left,
+    shape: [0, 0, 196, 32],
     x: options[:x] || 0, 
     y: options[:y] || 0, 
     width: 196, 

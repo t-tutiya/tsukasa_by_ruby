@@ -182,9 +182,9 @@ end
 ###############################################################################
 
 #汎用ボタンロジック
-_DEFINE_ :_BUTTON_BASE_ do |id:, **options|
+_DEFINE_ :_BUTTON_BASE_ do |id:, shape:, **options|
   _CREATE_ :ClickableLayout, 
-    id: id || nil,
+    id: id || nil, shape: shape,
     **options do
 
     #カーソルがコントロールから外れた
@@ -282,7 +282,7 @@ _DEFINE_ :_TEXT_BUTTON_ do
   char_options: {},
   **options|
   
-  _BUTTON_BASE_ id: id, width: width, height: height, **options do
+  _BUTTON_BASE_ id: id, shape: [0,0,width,height], width: width, height: height, **options do
     #背景
     _CREATE_ :DrawableLayout, id: :bg, 
       width: width, height: height, bgcolor: out_color

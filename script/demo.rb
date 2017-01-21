@@ -10,6 +10,7 @@ _CREATE_ :Char,
 #テキストボタン定義
 _DEFINE_ :TextSelect do |options|
   _CREATE_ :ClickableLayout,
+    shape: [0, 0, options[:width] || 228, 32],
     float_y: :bottom,
     x: options[:x] || 0, 
     y: options[:y] || 0, 

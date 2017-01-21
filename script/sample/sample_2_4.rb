@@ -1,6 +1,7 @@
 _CREATE_ :ClickableLayout, 
   width:256, 
   height:256,
+  shape: [0,0,256,256],
   id: :test01 do
   _CREATE_ :TileMap, id: :icon, 
     width: 256,

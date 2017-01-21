@@ -3,7 +3,7 @@ _CREATE_ :ClickableLayout,
   width: 256,
   height: 256,
   id: :test01,
-  collision_shape: [128,128,128] do
+  shape: [128,128,128] do
   _CREATE_ :Image, id: :normal, width:256, height:256 do
     _CIRCLE_ x: 128,  y: 128, r: 128, color: C_BLUE, fill: true
     _TEXT_ "NORMAL", x:80, y:120, color: [0,255,0]

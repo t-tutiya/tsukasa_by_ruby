@@ -10,7 +10,7 @@ _CREATE_ :Char,
   font_name: "ＭＳ ゴシック",
   char: " "
 
-_CREATE_ :ClickableLayout, x: 640-256, y: 480-256, width:256, height: 256 do
+_CREATE_ :ClickableLayout, x: 640-256, y: 480-256, shape:[0,0,256,256], width:256, height: 256 do
   _CREATE_ :Image, path: "./resource/button_normal.png"
   _DEFINE_ :inner_loop do
     _CHECK_MOUSE_:cursor_over do 

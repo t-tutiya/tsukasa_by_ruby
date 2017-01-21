@@ -1,5 +1,6 @@
 #ボタンコントロール
 _CREATE_ :ClickableLayout, 
+        shape: [0,0,256,256],
         width: 256,
         height: 256,
         id: :test01,

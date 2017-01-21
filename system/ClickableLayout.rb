@@ -37,6 +37,7 @@ class ClickableLayout < Layout
   attr_reader :shape
   def shape=(arg)
     @shape = arg
+    @collision_sprite.collision = @shape
   end
 
   attr_reader  :cursor_x

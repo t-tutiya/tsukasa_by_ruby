@@ -363,6 +363,11 @@ class Control #コントロールの生成／破棄
     control.dispose() if control
   end
 
+  #ユーザー定義コマンドを定義する
+  def _DEFINE_(_ARGUMENT_:)
+    @function_list[_ARGUMENT_] = @temporary_command_block
+  end
+
   #プロパティを動的に追加する
   def _DEFINE_PROPERTY_(options)
     #ハッシュを巡回
@@ -384,6 +389,19 @@ class Control #コントロールの生成／破棄
                               instance_variable_set('@' + key.to_s, set_value) 
                             })
     end
+  end
+
+  #ユーザー定義コマンドの別名を作る
+  def _ALIAS_(new:, old:)
+    @function_list[new] = @function_list[old]
+  end
+
+  #関数ブロックを実行する
+  def _YIELD_(**options)
+    @temporary_command_block = @temporary_yield_stack.pop
+    raise unless @temporary_command_block
+
+    unshift_command_block(options)
   end
 end
 
@@ -501,26 +519,6 @@ class Control #制御構文
     if command_block?
       unshift_command_block()
     end
-  end
-end
-
-class Control #ユーザー定義関数操作
-  #ユーザー定義コマンドを定義する
-  def _DEFINE_(_ARGUMENT_:)
-    @function_list[_ARGUMENT_] = @temporary_command_block
-  end
-
-  #ユーザー定義コマンドの別名を作る
-  def _ALIAS_(new:, old:)
-    @function_list[new] = @function_list[old]
-  end
-
-  #関数ブロックを実行する
-  def _YIELD_(**options)
-    @temporary_command_block = @temporary_yield_stack.pop
-    raise unless @temporary_command_block
-
-    unshift_command_block(options)
   end
 end
 

@@ -306,6 +306,7 @@ end
 #ボタンコントロール
 _DEFINE_ :_IMAGE_BUTTON_ do |options|
   _BUTTON_BASE_ options[:_ARGUMENT_],
+    shape: [0,0,256,256],
     width:256, 
     height:256,
     id:  options[:_ARGUMENT_],

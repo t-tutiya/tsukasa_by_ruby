@@ -73,11 +73,11 @@ class Input < Control
     when :not_key_up
       !(Array(value).any?{|key_code|DXRuby::Input.key_release?(key_code)})
     #パッドボタンが押された
-    when :pad_down
-      Array(value).any?{|pad_code| DXRuby::Input.pad_down?(pad_code, @pad_number)}
-    #パッドボタンが継続押下されている
     when :pad_push
       Array(value).any?{|pad_code| DXRuby::Input.pad_push?(pad_code, @pad_number)}
+    #パッドボタンが継続押下されている
+    when :pad_down
+      Array(value).any?{|pad_code| DXRuby::Input.pad_down?(pad_code, @pad_number)}
     #パッドボタンが解除された
     when :pad_release
       Array(value).any?{|pad_code| DXRuby::Input.pad_release?(pad_code, @pad_number)}

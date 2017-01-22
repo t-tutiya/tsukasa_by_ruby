@@ -500,7 +500,7 @@ _SEND_(:text0){
 }
 
 #ＯＰ文字列表示
-_INCLUDE_ "./script/nomaid/op.tks"
+_INCLUDE_ "./script/sample/nomaid/op.tks"
 
 #■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 #■メインシーン

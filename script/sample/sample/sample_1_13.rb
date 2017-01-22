@@ -14,11 +14,11 @@ end
 _WAIT_ [:_ROOT_, :_TEMP_], not_equal: {click: nil}
 
 _CHECK_ [:_ROOT_, :_TEMP_], equal:{click: :left} do
-	_INCLUDE_ "./script/sample/sample_1_13a.rb"
+	_INCLUDE_ "./script/sample/sample/sample_1_13a.rb"
 end
 
 _CHECK_ [:_ROOT_, :_TEMP_],equal:{click: :right} do
-	_INCLUDE_ "./script/sample/sample_1_13b.rb"
+	_INCLUDE_ "./script/sample/sample/sample_1_13b.rb"
 end
 
 _SEND_ :button1, interrupt: true do

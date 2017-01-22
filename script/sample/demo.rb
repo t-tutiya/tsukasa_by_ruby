@@ -62,7 +62,7 @@ end
 
 _DEFINE_ :system_menu do
   _CREATE_ :Layout, id: :top_menu1, x:0, y:0, height: 256 + 64, float_y: :bottom do
-    path = "./script/sample/"
+    path = "./script/sample/sample/"
     _CREATE_ :Layout, id: 0, x:0, y:0, width: 256, float_x: :left  do
       TextSelect text: "sample_1_1.rb", path: path + "sample_1_1.rb", 
                  comment: "画像の表示"
@@ -144,21 +144,21 @@ _DEFINE_ :system_menu do
   _CREATE_ :Layout, id: :top_menu_b, x:0, y:0, width: 512, height: 256 + 64, float_x: :left do
     _CREATE_ :Layout, id: :top_menu2, x:0, height: 64, float_y: :bottom do
       TextSelect  text: "デモゲーム：ノベル脱出ゲーム", 
-                  path: "./script/demo_game/1_0.tks", 
+                  path: "./script/sample/demo_game/1_0.tks", 
                   width: 512, 
                   comment: "ノベルゲーム形式のサンプルデモです。"
     end
 
     _CREATE_ :Layout, id: :top_menu3, x:0, height: 64, float_y: :bottom do
       TextSelect  text: "デモゲーム：野メイド", 
-                  path: "./script/nomaid/src.rb", 
+                  path: "./script/sample/nomaid/src.rb", 
                   width: 512, 
                   comment: "育成ＳＬＧ形式のサンプルデモです。"
     end
 
     _CREATE_ :Layout, id: :top_menu4, x:0, height: 64, float_y: :bottom do
       TextSelect  text: "デモゲーム：ジャンプアクションデモ", 
-                  path: "./script/jump_action/game.rb", 
+                  path: "./script/sample/jump_action/game.rb", 
                   width: 512, 
                   comment: "２Ｄのスクロール式ジャンプアクションゲームのデモです。"
     end
@@ -167,7 +167,7 @@ _DEFINE_ :system_menu do
   _CREATE_ :Layout, id: :top_menu_b2, x:0, y:0, width: 512, height: 256 + 64, float_x: :left do
     _CREATE_ :Layout, id: :top_menu5, x:0, height: 64, float_y: :bottom do
       TextSelect  text: "デモゲーム：ブロック崩し", 
-                  path: "./script/block/block.rb", 
+                  path: "./script/sample/block/block.rb", 
                   width: 512, 
                   comment: "アクションゲームのサンプルです"
     end

@@ -26,62 +26,63 @@
 ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 
 #フォルダ構成
-　司エンジン開発フォルダルート直下のフォルダとファイル構成は以下になります。
+　司エンジン開発フォルダルート直下のフォルダとファイル構成は以下になります（ファイルについては最低限の物のみ説明しています）。
 
     tsukasa/
-    	main.exe	……実行ファイル。実行するとmain.rbを読み込みます。
-    	main_dev.exe	……実行ファイル。標準出力用のコマンドプロンプトウィンドウを表します。
+      main.exe  ……実行ファイルです。ruby本体をラップしていて、実行するとTsukasa.rbを読み込んだ後、main.rbを実行します
+      main_dev.exe  ……main.exeにデバッグモードが付与された物です。標準出力用のコマンドプロンプトウィンドウを表示します。
 
-    	main.rb	……司エンジンの初期設定を行い、first.rbを司スクリプトとして実行します。
-    	init.rb	※内部で使用
+      main.rb  ……rubyのソースコードです。司エンジンの初期設定を行い、first.rbを司スクリプトとして実行します。
 
-    	first.rb	……最初に実行される司スクリプトファイルです。初期状態では"./script/demo.rb"を読み込みます。このファイルを書き換えることで、任意の司スクリプトを実行できるようになります。
+      first.rb  ……最初に実行される司スクリプトファイルです。初期状態では"./script/demo.rb"を読み込みます。このファイルを書き換えることで、任意の司スクリプトを実行できます。
 
-    	rakefile	……rakeの実行ファイルです。ユニットテスト用に"test"タスクを用意しています。
-    	README.md	……本ドキュメント。
+      rakefile  ……rake用のスクリプトです。現時点ではユニットテスト用の"test"タスクのみ用意されています。
+      README.md  ……readmeファイル。概要と更新履歴を収録。
 
-    	Ayame.dll	※Rubyで使用
-    	LIBEAY32.dll	※Rubyで使用
-    	libffi-6.dll	※Rubyで使用
-    	msvcrt-ruby220.dll	※Rubyで使用
+      init.rb  ※内部で使用
+      Ayame.dll  ※Rubyで使用
+      LIBEAY32.dll  ※Rubyで使用
+      libffi-6.dll  ※Rubyで使用
+      msvcrt-ruby220.dll  ※Rubyで使用
 
-    	datastore/	……セーブデータなどを保存するフォルダです。初期状態では空です（githubからインストールする場合はこのフォルダが存在しないので、手動で空フォルダを作成してください）。
-    	
-    	lib/	※Rubyで使用
+      script/  ……司スクリプト/tksスクリプトを格納するフォルダです。ゲームで使用されるスクリプトを配置することを想定としています。
+        sample/ サンプルコードが収納されています。
+          demo.rb  ……サンプルコードのランチャーです。
+          block/  ……ブロック崩しゲーム
+          demo_game/  ……ノベル脱出ゲーム
+          jump_action/  ……ジャンプアクションゲーム
+          nomaid/  ……野メイド
+          sample/  ……サンプルコード群
 
-    	plugin_control/	……カスタムコントロール用のrubyファイルを格納するフォルダです。このフォルダに配置された.rbファイルは自動的にrubyプログラムとして読み込まれます。
-    		HorrorTextShader.rb	……カスタムシェーダーサンプル
+      doc/  ……ガイドブックとドキュメントを格納するフォルダです。
 
-    	plugin_script/	……ユーザー定義コマンド用の司スクリプトを格納するフォルダです。このフォルダに配置された.rbファイルは自動的にtsukasa言語として読み込まれます。
-    		default_script.rb	……Ruby/DXRubyのラッパーコマンド群
-    		helper_script.rb	……tsukasaのラッパーコマンド群
-    		text_layer_script.rb	……TextPageのヘルパーコマンド群
+      datastore/  ……セーブデータなど保存を想定しているフォルダです。初期状態では空です。
+      
+      plugin_control/  ……カスタムコントロール用のrubyファイルを格納するフォルダです。このフォルダに配置された.rbファイルは自動的にrubyプログラムとして読み込まれます。
+        HorrorTextShader.rb  ……カスタムシェーダーサンプル
 
-    	resource/	……画像ファイルや音声ファイルを格納するフォルダです。サンプルで使用するファイルが収納されています。
-    		char/	……立ち絵画像
-    		Fonts/	……プリレンダ済みフォント
-    		icon/	……アイコン画像
-    		music/	……ＢＧＭ
-    		rule/	……トランジション用ルール画像
+      plugin_script/  ……ユーザー定義コマンド用の司スクリプトを格納するフォルダです。このフォルダに配置された.rbファイルは自動的にtsukasa言語として読み込まれます。
+        default_script.rb  ……Ruby/DXRubyのラッパーコマンド群
+        helper_script.rb  ……tsukasaのラッパーコマンド群
+        text_layer_script.rb  ……TextPageのヘルパーコマンド群
 
-        * githubからインストールする場合は、下記ファイルを直接ダウンロードし、展開後に配置してください。
-        * https://github.com/t-tutiya/tsukasa/releases/download/v2.2/resource.zip
+      resource/  ……画像ファイルや音声ファイルの格納を想定したフォルダです。サンプルで使用するファイルが収納されています。
+        char/  ……立ち絵画像
+        Fonts/  ……プリレンダ済みフォント
+        icon/  ……アイコン画像
+        music/  ……ＢＧＭ
+        rule/  ……トランジション用ルール画像
 
-    	script/	……司スクリプト/tksスクリプトを格納するフォルダです。サンプルコードが収納されています。
-    		block/	……ブロック崩しゲーム
-    		demo_game/	……ノベル脱出ゲーム
-    		jump_action/	……ジャンプアクションゲーム
-    		nomaid/	……野メイド
-    		sample/	……サンプルコード群
+      system/  ……司エンジンのrubyソースコードが格納されています。
+        Tsukasa.rb  ……司エンジンを構成する最低限のコードを読み込みます。
 
-    	system/	……司エンジンのソースコードが格納されています。
+      lib/  ※Rubyで使用するシステムフォルダ。
 
-    	test/	……ユニットテストコードが格納されています。
+      test/  ……ユニットテスト用のrubyソースコードが格納されています。
 
-    	tools/	……司エンジンをサポートする外部ツールが格納されています。
-    		FontDataMaker.rb	……TrueTypeフォントデータを司エンジンで使用できるプリレンダフォントデータに変換します。
-    		ConvertFont.rb	……FontDataMaker.rbの内部で使用しています。
-
+      tools/  ……司エンジンをサポートする外部ツールが格納されています。
+        FontDataMaker.rb  ……TrueTypeフォントデータを司エンジンで使用できるプリレンダフォントデータに変換します。
+        ConvertFont.rb  ……FontDataMaker.rbの内部で使用しています。
 
 #更新履歴
 

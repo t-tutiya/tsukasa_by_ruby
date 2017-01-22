@@ -14,22 +14,22 @@ _CREATE_ :ClickableLayout,
     id: :key_down, visible: false
 
   _DEFINE_ :inner_loop do
-    _CHECK_MOUSE_:cursor_over do
+    _CHECK_ collision: :cursor_over do
       _SEND_(:normal)  {_SET_ visible: false}
       _SEND_(:over)    {_SET_ visible: true}
       _SEND_(:key_down){_SET_ visible: false}
     end
-    _CHECK_MOUSE_:cursor_out do
+    _CHECK_ collision: :cursor_out do
       _SEND_(:normal)  {_SET_ visible: true}
       _SEND_(:over)    {_SET_ visible: false}
       _SEND_(:key_down){_SET_ visible: false}
     end
-    _CHECK_MOUSE_:key_down do
+    _CHECK_ collision: :key_down do
       _SEND_(:normal)  {_SET_ visible: false}
       _SEND_(:over)    {_SET_ visible: false}
       _SEND_(:key_down){_SET_ visible: true}
     end
-    _CHECK_MOUSE_:key_up do
+    _CHECK_ collision: :key_up do
       _SEND_(:normal)  {_SET_ visible: false}
       _SEND_(:over)    {_SET_ visible: true}
       _SEND_(:key_down){_SET_ visible: false}

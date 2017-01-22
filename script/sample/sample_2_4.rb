@@ -15,7 +15,7 @@ _CREATE_ :ClickableLayout,
   _DEFINE_ :drug_control do
     #カーソルが画像の上に来るまで待機
     _WAIT_ do
-      _CHECK_MOUSE_ :cursor_on do
+      _CHECK_ collision:  :cursor_on do
         _BREAK_
       end
     end
@@ -27,19 +27,19 @@ _CREATE_ :ClickableLayout,
 
     #キーがクリックされるまで待機
     _WAIT_ do
-      _CHECK_MOUSE_ [:key_push] do
+      _CHECK_ collision: :key_push do
         _GET_ [:cursor_x, :cursor_y] do |cursor_x:, cursor_y:|
           _SET_ offset_x: - cursor_x, offset_y: - cursor_y
         end
         _BREAK_
       end
-      _CHECK_MOUSE_ [:cursor_out] do
+      _CHECK_ collision: :cursor_out do
         _BREAK_
       end
     end
 
     #カーソルが画像の外に移動した場合
-    _CHECK_MOUSE_ :cursor_out do
+    _CHECK_ collision:  :cursor_out do
       #画像を「NORMAL」に差し替える
       _SEND_ :icon do
         _MAP_STATUS_ 0
@@ -57,7 +57,7 @@ _CREATE_ :ClickableLayout,
 
     #キーが離されるまで待機し、その間ブロックを実行する
     _WAIT_ do
-      _CHECK_MOUSE_ :key_up do
+      _CHECK_ collision:  :key_up do
         _GET_ [[:mouse_x, [:_ROOT_]], 
                [:mouse_y, [:_ROOT_]], 
                 :offset_x, 

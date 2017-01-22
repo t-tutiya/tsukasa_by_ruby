@@ -30,7 +30,7 @@ _DEFINE_ :TextSelect do |options|
         char: options[:text]
     end
     _DEFINE_ :inner_loop do
-      _CHECK_MOUSE_ :cursor_over do
+      _CHECK_ collision: :cursor_over do
       #マウスが領域内に入ったら色を変え、
         _SEND_ :text_area do
           _SET_ bgcolor: [255,0,255]
@@ -40,13 +40,13 @@ _DEFINE_ :TextSelect do |options|
         end
       end
       #マウスが領域外に出たら色を戻す
-      _CHECK_MOUSE_ :cursor_out do
+      _CHECK_ collision: :cursor_out do
         _SEND_ :text_area do
           _SET_ bgcolor: [0,255,255]
         end
       end
       #マウスがクリックされたらフラグを立てる
-      _CHECK_MOUSE_ :key_push do
+      _CHECK_ collision: :key_push do
         _SET_ [:_ROOT_, :_TEMP_], path: options[:path]
         _EVAL_ "puts '[" + options[:text].to_s + "]が押されました'"
         _RETURN_

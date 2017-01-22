@@ -13,7 +13,7 @@ _CREATE_ :Char,
 _CREATE_ :ClickableLayout, x: 640-256, y: 480-256, shape:[0,0,256,256], width:256, height: 256 do
   _CREATE_ :Image, path: "./resource/button_normal.png"
   _DEFINE_ :inner_loop do
-    _CHECK_MOUSE_:cursor_over do 
+    _CHECK_ collision: :cursor_over do 
       _SET_ [:_ROOT_ ,:_SYSTEM_] , data0: true
     end
     _END_FRAME_

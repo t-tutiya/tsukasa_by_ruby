@@ -66,13 +66,6 @@ _DEFINE_ :_CHECK_INPUT_  do |options|
   end
 end
 
-#マウス入力_CHECK_
-_DEFINE_ :_CHECK_MOUSE_ do |_ARGUMENT_:|
-  _CHECK_ collision: _ARGUMENT_ do
-    _YIELD_
-  end
-end
-
 ###############################################################################
 #ヘルパーコマンド：子コントロールの描画
 ###############################################################################
@@ -208,7 +201,7 @@ _DEFINE_ :_BUTTON_BASE_ do |id:, shape:, **options|
       on_mouse_out
       #マウスが領域内に入ったら色を変える
       _WAIT_ do
-        _CHECK_MOUSE_ :cursor_over do
+        _CHECK_ collision: :cursor_over do
           _BREAK_
         end
       end
@@ -221,18 +214,18 @@ _DEFINE_ :_BUTTON_BASE_ do |id:, shape:, **options|
     _DEFINE_ :on_mouse_inner_over do
       on_mouse_over
       _WAIT_ do
-        _CHECK_MOUSE_ [:cursor_out, :key_push] do
+        _CHECK_ collision: [:cursor_out, :key_push] do
           _BREAK_
         end
       end
-      _CHECK_MOUSE_ :cursor_out do
+      _CHECK_ collision: :cursor_out do
         _RETURN_ do
           on_mouse_inner_out
         end
       end
 
       #マウスがクリックされたら付与ブロックを実行する
-      _CHECK_MOUSE_ :key_push do
+      _CHECK_ collision: :key_push do
         _RETURN_ do
           on_key_inner_push
         end
@@ -243,7 +236,7 @@ _DEFINE_ :_BUTTON_BASE_ do |id:, shape:, **options|
     _DEFINE_ :on_key_inner_push do
       on_key_push
       _WAIT_ do
-        _CHECK_MOUSE_ :key_up do
+        _CHECK_ collision: :key_up do
           _BREAK_
         end
       end

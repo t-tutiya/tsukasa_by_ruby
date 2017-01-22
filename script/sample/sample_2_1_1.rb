@@ -9,16 +9,16 @@ _CREATE_ :ClickableLayout, x: 100, y: 100, shape:[0,0,256,256],width: 256, heigh
   end
 
   _DEFINE_ :inner_loop do
-    _CHECK_MOUSE_ :cursor_over do
+    _CHECK_ collision: :cursor_over do
       _SEND_(0){ _MAP_STATUS_ 1}
     end
-    _CHECK_MOUSE_:cursor_out do
+    _CHECK_ collision: :cursor_out do
       _SEND_(0){ _MAP_STATUS_ 0}
     end
-    _CHECK_MOUSE_:key_down do
+    _CHECK_ collision: :key_down do
       _SEND_(0){ _MAP_STATUS_ 2}
     end
-    _CHECK_MOUSE_:key_up do
+    _CHECK_ collision: :key_up do
       _SEND_(0){ _MAP_STATUS_ 1}
     end
     _END_FRAME_

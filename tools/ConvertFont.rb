@@ -4,10 +4,10 @@ require "tmpdir"
 require 'pp'
 
 ###############################################################################
-#TSUKASA for DXRuby ver2.1(2016/12/23)
+#TSUKASA for DXRuby ver2.2(2017/1/28)
 #メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby
 #
-#Copyright (c) <2013-2016> <tsukasa TSUCHIYA>
+#Copyright (c) <2013-2017> <tsukasa TSUCHIYA>
 #
 #This software is provided 'as-is', without any express or implied
 #warranty. In no event will the authors be held liable for any damages

@@ -37,6 +37,7 @@ module Tsukasa
 
 class Window < ClickableLayout #マウスカーソルがウィンドウの外に出たかを判定するため、ClickableLayoutを継承する
   attr_accessor :auto_close #「閉じる」ボタンが押下された際に自動的に終了する
+  attr_accessor :inactive_pause #非アクティブ時に更新処理を停止するかどうか
 
   #ウィンドウ座標上のマウスＸ座標
   def mouse_x()
@@ -123,6 +124,8 @@ class Window < ClickableLayout #マウスカーソルがウィンドウの外に
     @close = false
     #「閉じる」ボタンが押下された場合自動終了する
     @auto_close = options[:auto_close] || true
+    #非アクティブ時に更新処理を行うかどうか
+    @inactive_pause = true
 
     #マウスカーソル可視フラグ
     self.mouse_enable = options[:mouse_enable] || true
@@ -146,7 +149,7 @@ class Window < ClickableLayout #マウスカーソルがウィンドウの外に
     end
 
     #windowがアクティブで無ければ子コントロールを動作せずに終了
-    return  unless DXRuby::Window.active?
+    return  unless DXRuby::Window.active? and @inactive_pause
 
     super
 

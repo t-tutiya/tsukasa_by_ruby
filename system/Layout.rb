@@ -32,7 +32,8 @@ require_relative './Layoutable.rb'
 
 module Tsukasa
 
-class Layout < Helper::Layoutable
+class Layout < Control
+  include Layoutable
   def render(offset_x, offset_y, target)
 
     super(offset_x + @x + @offset_x + check_align_x(), 

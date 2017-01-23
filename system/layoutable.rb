@@ -32,9 +32,7 @@ require_relative './Control.rb'
 
 module Tsukasa
 
-module Helper
-
-class Layoutable < Control
+module Layoutable
   #座標
   attr_accessor  :x
   attr_accessor  :y
@@ -140,8 +138,6 @@ class Layoutable < Control
 
     return dx, dy
   end
-end
-
 end
 
 end

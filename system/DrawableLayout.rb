@@ -32,7 +32,8 @@ require_relative './Drawable.rb'
 
 module Tsukasa
 
-class DrawableLayout < Helper::Drawable
+class DrawableLayout < Control
+  include Drawable
   #Ｘ幅
   def width=(arg)
     super

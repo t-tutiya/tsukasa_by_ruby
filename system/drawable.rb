@@ -34,9 +34,8 @@ require_relative './CacheManager.rb'
 
 module Tsukasa
 
-module Helper
-
-class Drawable < Layoutable
+module Drawable
+  include Layoutable
   attr_reader  :entity
 
   #可視フラグ
@@ -188,8 +187,6 @@ class Drawable < Layoutable
 
     return check_float
   end
-end
-
 end
 
 end

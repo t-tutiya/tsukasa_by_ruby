@@ -32,7 +32,8 @@ require_relative './Drawable.rb'
 
 module Tsukasa
 
-class Char < Helper::Drawable
+class Char < Control
+  include Drawable
   #DXRuby::Imageのキャッシュマネージャー
   @@ImageCache = CacheManager.new do |id|
     DXRuby::Image.load(id)

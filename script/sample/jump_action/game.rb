@@ -26,9 +26,9 @@ _CREATE_ :DrawableLayout, x: 160, y: 120, width: 320, height: 256 do
           [1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1],
           [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1],
           [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1]] do
-    _SET_TILE_ 0, path: "./script/jump_action/blue.png"
-    _SET_TILE_ 1, path: "./script/jump_action/blown.png"
-    _SET_TILE_ 2, path: "./script/jump_action/white.png"
+    _SET_TILE_ 0, path: "./script/sample/jump_action/blue.png"
+    _SET_TILE_ 1, path: "./script/sample/jump_action/blown.png"
+    _SET_TILE_ 2, path: "./script/sample/jump_action/white.png"
 
   end
   #キャラの生成

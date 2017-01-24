@@ -11,7 +11,6 @@ _CREATE_ :Char,
 _DEFINE_ :TextSelect do |options|
   _CREATE_ :ClickableLayout,
     shape: [0, 0, options[:width] || 228, 32],
-    float_y: :bottom,
     x: options[:x] || 0, 
     y: options[:y] || 0, 
     width: options[:width] || 228, 
@@ -61,102 +60,102 @@ _DEFINE_ :TextSelect do |options|
 end
 
 _DEFINE_ :system_menu do
-  _CREATE_ :Layout, id: :top_menu1, x:0, y:0, height: 256 + 64, float_y: :bottom do
+  _CREATE_ :Layout, id: :top_menu1, x:0, y:0, height: 256 + 64 do
     path = "./script/sample/sample/"
     _CREATE_ :Layout, id: 0, x:0, y:0, width: 256, float_x: :left  do
       TextSelect text: "sample_1_1.rb", path: path + "sample_1_1.rb", 
-                 comment: "画像の表示"
+                 comment: "画像の表示", y: 32 * 0
       TextSelect text: "sample_1_2.rb", path: path + "sample_1_2.rb", 
-                 comment: "画像の直線移動"
+                 comment: "画像の直線移動", y: 32 *1
       TextSelect text: "sample_1_3.rb", path: path + "sample_1_3.rb", 
-                 comment: "画像のスプライン移動"
+                 comment: "画像のスプライン移動", y: 32 * 2
       TextSelect text: "sample_1_4.rb", path: path + "sample_1_4.rb", 
-                 comment: "フェードイン・アウト"
+                 comment: "フェードイン・アウト", y:32 * 3
       TextSelect text: "sample_1_5.rb", path: path + "sample_1_5.rb", 
-                 comment: "より自然なフェードイン・アウト"
+                 comment: "より自然なフェードイン・アウト", y:32 * 4
       TextSelect text: "sample_1_6.rb", path: path + "sample_1_6.rb", 
-                 comment: "フェードトランジション"
+                 comment: "フェードトランジション", y:32 * 5
       TextSelect text: "sample_1_7.rb", path: path + "sample_1_7.rb", 
-                 comment: "より自然なフェードトランジション"
+                 comment: "より自然なフェードトランジション", y:32 * 6
       TextSelect text: "sample_1_8.rb", path: path + "sample_1_8.rb", 
-                 comment: "ルールトランジション"
+                 comment: "ルールトランジション", y:32 * 7
       TextSelect text: "sample_1_9.rb", path: path + "sample_1_9.rb", 
-                 comment: "ユーザー定義コマンドを使う"
+                 comment: "ユーザー定義コマンドを使う", y:32 * 8
     end
     _CREATE_ :Layout, id: 1, x:0, y:0, width: 256, float_x: :left   do
       TextSelect text: "sample_1_10.rb", path: path + "sample_1_10.rb", 
-                 comment: "データストアとインラインデータ記法"
+                 comment: "データストアとインラインデータ記法", y: 32 * 0
       TextSelect text: "sample_1_11.rb", path: path + "sample_1_11.rb", 
-                 comment: "条件判定"
+                 comment: "条件判定", y: 32 * 1
       TextSelect text: "sample_1_12.rb", path: path + "sample_1_12.rb", 
-                 comment: "繰り返し構文"
+                 comment: "繰り返し構文", y: 32 * 2
       TextSelect text: "sample_1_13.rb", path: path + "sample_1_13.rb", 
-                 comment: "ボタンの表示"
+                 comment: "ボタンの表示", y: 32 * 3
       TextSelect text: "sample_1_14.rb", path: path + "sample_1_14.rb", 
-                 comment: "サウンド"
+                 comment: "サウンド", y: 32 * 4
       TextSelect text: "sample_1_15.rb", path: path + "sample_1_15.rb", 
-                 comment: "セーブ／ロード"
+                 comment: "セーブ／ロード", y: 32 * 5
       TextSelect text: "sample_1_16.tks", path: path + "sample_1_16.tks", 
-                 comment: "【tks】文字列の表示"
+                 comment: "【tks】文字列の表示", y: 32 * 6
       TextSelect text: "sample_1_17.tks", path: path + "sample_1_17.tks", 
-                 comment: "【tks】文字列の表示：応用"
+                 comment: "【tks】文字列の表示：応用", y: 32 * 7
     end
     _CREATE_ :Layout, id: 2, x:0, y:0, width: 256, float_x: :left    do
       TextSelect text: "sample_2_1_1.rb", path: path + "sample_2_1_1.rb", 
-                 comment: "ボタンサンプル１：通常"
+                 comment: "ボタンサンプル１：通常", y: 32 * 0
       TextSelect text: "sample_2_1_2.rb", path: path + "sample_2_1_2.rb", 
-                 comment: "ボタンサンプル２：多角形コリジョン"
+                 comment: "ボタンサンプル２：多角形コリジョン", y: 32 * 1
       TextSelect text: "sample_2_1_3.rb", path: path + "sample_2_1_3.rb", 
-                 comment: "ボタンサンプル３：抜き色"
+                 comment: "ボタンサンプル３：抜き色", y: 32 * 2
       TextSelect text: "sample_2_2.rb",   path: path + "sample_2_2.rb", 
-                 comment: "アニメーションサンプル"
+                 comment: "アニメーションサンプル", y: 32 * 3
       TextSelect text: "sample_2_3.rb",   path: path + "sample_2_3.rb", 
-                 comment: "コマンドメニュー/右クリックサンプル"
+                 comment: "コマンドメニュー/右クリックサンプル", y: 32 * 4
       TextSelect text: "sample_2_4.rb",   path: path + "sample_2_4.rb", 
-                 comment: "ドラッグ操作サンプル"
+                 comment: "ドラッグ操作サンプル", y: 32 * 5
       TextSelect text: "sample_2_5.rb",   path: path + "sample_2_5.rb", 
-                 comment: "_TO_IMAGE_とルールトランジションの組み合わせ"
+                 comment: "_TO_IMAGE_とルールトランジションの組み合わせ", y: 32 * 6
       TextSelect text: "sample_2_6.rb",   path: path + "sample_2_6.rb", 
-                 comment: "センタリングとＸ方向連結のサンプル"
+                 comment: "センタリングとＸ方向連結のサンプル", y: 32 * 7
       TextSelect text: "sample_2_7.rb",   path: path + "sample_2_7.rb", 
-                 comment: "カスタムシェーダーサンプル"
+                 comment: "カスタムシェーダーサンプル", y: 32 * 8
     end
     _CREATE_ :Layout, id: 3, x:0, y:0, width: 256, float_x: :left    do
       TextSelect text: "sample_3_1.tks", path: path + "sample_3_1.tks", 
-                 comment: "既読フラグサンプル"
+                 comment: "既読フラグサンプル", y: 32 * 0
       TextSelect text: "sample_3_2_1.rb", path: path + "sample_3_2_1.rb", 
-                 comment: "シリアライズサンプル：セーブ"
+                 comment: "シリアライズサンプル：セーブ", y: 32 * 1
       TextSelect text: "sample_3_2_2.rb", path: path + "sample_3_2_2.rb", 
-                 comment: "シリアライズサンプル：ロード"
+                 comment: "シリアライズサンプル：ロード", y: 32 * 2
       TextSelect text: "sample_3_3.rb", path: path + "sample_3_3.rb", 
-                 comment: "システムステータスの取得"
+                 comment: "システムステータスの取得", y: 32 * 3
       TextSelect text: "sample_3_4.rb", path: path + "sample_3_4.rb", 
-                 comment: "フルスクリーン化"
+                 comment: "フルスクリーン化", y: 32 * 4
       TextSelect text: "sample_3_5.rb", path: path + "sample_3_5.rb", 
-                 comment: "マウス画像のカスタマイズ"
+                 comment: "マウス画像のカスタマイズ", y: 32 * 5
       TextSelect text: "sample_3_6.rb", path: path + "sample_3_6.rb", 
-                 comment: "疑似if文（コンソールに結果を出力）"
+                 comment: "疑似if文（コンソールに結果を出力）", y: 32 * 6
       TextSelect text: "sample_3_7.tks", path: path + "sample_3_7.tks", 
-                 comment: "シーン管理サンプル"
+                 comment: "シーン管理サンプル", y: 32 * 7
     end
   end
 
-  _CREATE_ :Layout, id: :top_menu_b, x:0, y:0, width: 512, height: 256 + 64, float_x: :left do
-    _CREATE_ :Layout, id: :top_menu2, x:0, height: 64, float_y: :bottom do
+  _CREATE_ :Layout, id: :top_menu_b, width: 512, height: 256 + 64, x: 0, y: 256 + 64 do
+    _CREATE_ :Layout, id: :top_menu2, x:0, height: 64, y: 64 * 0 do
       TextSelect  text: "デモゲーム：ノベル脱出ゲーム", 
                   path: "./script/sample/demo_game/1_0.tks", 
                   width: 512, 
                   comment: "ノベルゲーム形式のサンプルデモです。"
     end
 
-    _CREATE_ :Layout, id: :top_menu3, x:0, height: 64, float_y: :bottom do
+    _CREATE_ :Layout, id: :top_menu3, x:0, height: 64, y: 64 * 1 do
       TextSelect  text: "デモゲーム：野メイド", 
                   path: "./script/sample/nomaid/src.rb", 
                   width: 512, 
                   comment: "育成ＳＬＧ形式のサンプルデモです。"
     end
 
-    _CREATE_ :Layout, id: :top_menu4, x:0, height: 64, float_y: :bottom do
+    _CREATE_ :Layout, id: :top_menu4, x:0, height: 64, y: 64 * 2 do
       TextSelect  text: "デモゲーム：ジャンプアクションデモ", 
                   path: "./script/sample/jump_action/game.rb", 
                   width: 512, 
@@ -164,8 +163,8 @@ _DEFINE_ :system_menu do
     end
   end
 
-  _CREATE_ :Layout, id: :top_menu_b2, x:0, y:0, width: 512, height: 256 + 64, float_x: :left do
-    _CREATE_ :Layout, id: :top_menu5, x:0, height: 64, float_y: :bottom do
+  _CREATE_ :Layout, id: :top_menu_b2, width: 512, height: 256 + 64, x:512, y: 256 + 64  do
+    _CREATE_ :Layout, id: :top_menu5, x:0, height: 64, y: 64 * 0 do
       TextSelect  text: "デモゲーム：ブロック崩し", 
                   path: "./script/sample/block/block.rb", 
                   width: 512, 

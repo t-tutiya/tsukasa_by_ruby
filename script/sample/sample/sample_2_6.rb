@@ -1,58 +1,65 @@
-
-_CREATE_ :Layout, id: :layout01 do
-_CREATE_ :DrawableLayout, id: :DrawableLayout0, 
-  width: 512, height: 128, bgcolor: [128,0,0] do
-  _CREATE_ :Image, id: :Image0,
-    width: 128, height: 128,
-    align_x: :right do
-    _FILL_ [255,0,0]
-    _TEXT_ "右寄せ", color: [255,255,255]
+_CREATE_ :Image, id: :horror_img, x: 64, y: 64, width: 1024, height: 200 do
+  _CREATE_ :HorrorShader, id: :horror, width: 640, height: 200
+  _GET_ :shader, control: [:horror] do |shader:|
+    _SET_ shader: shader
   end
-end
+  _TEXT_ "むかしむかしあるところに、おじいさんとおばあさんがおったそうな。", size: 32, color: [255,0,0]
 
-_CREATE_ :DrawableLayout, id: :DrawableLayout0, 
-  y: 128+64,
-  width: 512, height: 128, bgcolor: [0,128,0] do
-  _CREATE_ :Image, id: :Image0,
-    width: 128, height: 128,
-    align_x: :center do
-    _FILL_ [0,255,0]
-    _TEXT_ "中央揃え", color: [255,255,255]
+  _DEFINE_ :status do
+    _GET_ [:duration, 
+            :check_mode, 
+            :mode, 
+            :count, 
+            :wavePhaseU, 
+            :wavePhaseV, 
+            :waveAmpU, 
+            :waveAmpV, 
+            :waveLength, 
+            :wave_speed_u, 
+            :wave_speed_v, 
+            :wave_amp_u, 
+            :wave_amp_v, 
+            :wave_length,
+            :texelSize], 
+            control: [:_ROOT_, :horror_img, :horror] do | 
+            duration:, 
+            check_mode:, 
+            mode:, 
+            count:, 
+            wavePhaseU:, 
+            wavePhaseV:, 
+            waveAmpU:, 
+            waveAmpV:, 
+            waveLength:, 
+            wave_speed_u:, 
+            wave_speed_v:, 
+            wave_amp_u:, 
+            wave_amp_v:, 
+            wave_length:,
+            texelSize:|
+
+      if check_mode
+        count = count + (mode == 0 ? 1 : - 1)
+      end
+      
+      _SET_ [:_ROOT_, :horror_img, :horror], 
+        count: count,
+        wavePhaseU: ((wavePhaseU + wave_speed_u) % 360), 
+        wavePhaseV: ((wavePhaseV + wave_speed_v) % 360), 
+        waveAmpU: (wave_amp_u * count / duration), 
+        waveAmpV: (wave_amp_v * count / duration), 
+        waveLength: (360.0 / (wave_length * texelSize)) 
+    end
+    _RETURN_ do
+      _END_FRAME_
+      status
+    end
   end
+
+  status
+
 end
 
-_CREATE_ :Image, id: :Image0,
-  y: 256 + 128,
-  width: 128, height: 128,
-  float_x: :left do
-  _FILL_ [0,0,128]
-  _TEXT_ "Ｘ方向連結1", color: [255,255,255]
+_LOOP_ do
+  _END_FRAME_
 end
-_CREATE_ :Image, id: :Image0,
-  y: 256 + 128,
-  width: 128, height: 128,
-  float_x: :left do
-  _FILL_ [0,0,128+32]
-  _TEXT_ "Ｘ方向連結2", color: [255,255,255]
-end
-_CREATE_ :Image, id: :Image0,
-  y: 256 + 128,
-  width: 128, height: 128,
-  float_x: :left do
-  _FILL_ [0,0,128+64]
-  _TEXT_ "Ｘ方向連結3", color: [255,255,255]
-end
-_CREATE_ :Image, id: :Image0,
-  y: 256 + 128,
-  width: 128, height: 128 do
-  _FILL_ [0,0,128+96]
-  _TEXT_ "Ｘ方向連結4", color: [255,255,255]
-end
-end
-
-_WAIT_ input:{mouse: :right_push}
-
-_SEND_ :layout01, interrupt: true do
-  _DELETE_
-end
-

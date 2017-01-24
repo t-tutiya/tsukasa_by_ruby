@@ -1,11 +1,11 @@
-_DEFINE_ :menu_button do |id:, text: |
+_DEFINE_ :menu_button do |id:, text:, y: |
   _TEXT_BUTTON_ text: text, 
     id: id,
     width: 228, 
     height:32,
+    y: y,
     char_color: [255,255,0], #文字色
-    out_color: [0,255,255],
-    float_y: :bottom do
+    out_color: [0,255,255] do
     #キーがクリックされた
     _DEFINE_ :on_key_push do
       _SET_ [:_ROOT_, :_TEMP_], mode: id
@@ -15,9 +15,11 @@ end
 
 _CREATE_ :Layout, id: :top_menu, x:0, y:0 do
   _GET_ :screen_modes, control:[:_ROOT_]  do |screen_modes:|
+    y = 0
     screen_modes.each_with_index do |screen_mode, id|
       if screen_mode[2] == 60
-        menu_button text: "#{screen_mode[0]}×#{screen_mode[1]}", id: id
+        menu_button text: "#{screen_mode[0]}×#{screen_mode[1]}", id: id, y: y
+        y += 32
       end
     end
   end

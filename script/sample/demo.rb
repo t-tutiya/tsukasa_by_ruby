@@ -17,7 +17,6 @@ _DEFINE_ :TextSelect do |options|
     height: 32 do
     #テキストを描画するDrawableLayout
     _CREATE_ :DrawableLayout,
-      float_x: :left,
       width: options[:width] || 228, 
       height: 32, 
       id: :text_area, 
@@ -62,7 +61,7 @@ end
 _DEFINE_ :system_menu do
   _CREATE_ :Layout, id: :top_menu1, x:0, y:0, height: 256 + 64 do
     path = "./script/sample/sample/"
-    _CREATE_ :Layout, id: 0, x:0, y:0, width: 256, float_x: :left  do
+    _CREATE_ :Layout, id: 0, x:0, y:0, width: 256 do
       TextSelect text: "sample_1_1.rb", path: path + "sample_1_1.rb", 
                  comment: "画像の表示", y: 32 * 0
       TextSelect text: "sample_1_2.rb", path: path + "sample_1_2.rb", 
@@ -82,7 +81,7 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_1_9.rb", path: path + "sample_1_9.rb", 
                  comment: "ユーザー定義コマンドを使う", y:32 * 8
     end
-    _CREATE_ :Layout, id: 1, x:0, y:0, width: 256, float_x: :left   do
+    _CREATE_ :Layout, id: 1, x:256, y:0, width: 256 do
       TextSelect text: "sample_1_10.rb", path: path + "sample_1_10.rb", 
                  comment: "データストアとインラインデータ記法", y: 32 * 0
       TextSelect text: "sample_1_11.rb", path: path + "sample_1_11.rb", 
@@ -100,7 +99,7 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_1_17.tks", path: path + "sample_1_17.tks", 
                  comment: "【tks】文字列の表示：応用", y: 32 * 7
     end
-    _CREATE_ :Layout, id: 2, x:0, y:0, width: 256, float_x: :left    do
+    _CREATE_ :Layout, id: 2, x:256*2, y:0, width: 256 do
       TextSelect text: "sample_2_1_1.rb", path: path + "sample_2_1_1.rb", 
                  comment: "ボタンサンプル１：通常", y: 32 * 0
       TextSelect text: "sample_2_1_2.rb", path: path + "sample_2_1_2.rb", 
@@ -116,11 +115,9 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_2_5.rb",   path: path + "sample_2_5.rb", 
                  comment: "_TO_IMAGE_とルールトランジションの組み合わせ", y: 32 * 6
       TextSelect text: "sample_2_6.rb",   path: path + "sample_2_6.rb", 
-                 comment: "センタリングとＸ方向連結のサンプル", y: 32 * 7
-      TextSelect text: "sample_2_7.rb",   path: path + "sample_2_7.rb", 
-                 comment: "カスタムシェーダーサンプル", y: 32 * 8
+                 comment: "カスタムシェーダーサンプル", y: 32 * 7
     end
-    _CREATE_ :Layout, id: 3, x:0, y:0, width: 256, float_x: :left    do
+    _CREATE_ :Layout, id: 3, x:256*3, y:0, width: 256 do
       TextSelect text: "sample_3_1.tks", path: path + "sample_3_1.tks", 
                  comment: "既読フラグサンプル", y: 32 * 0
       TextSelect text: "sample_3_2_1.rb", path: path + "sample_3_2_1.rb", 

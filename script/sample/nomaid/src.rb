@@ -1,15 +1,15 @@
 #! ruby -E utf-8
 
 #メニューの選択肢ボタン
-_DEFINE_ :menu_button do |id:, text: |
+_DEFINE_ :menu_button do |id:, text:, y: |
   _TEXT_BUTTON_ text: text, 
     char_options: {font_name: "ＭＳＰ ゴシック"},
     id: id,
     width: 228, 
     height:32,
+    y: y, 
     char_color: [255,255,0], #文字色
-    out_color: [0,255,255],
-    float_y: :bottom do 
+    out_color: [0,255,255] do
     #キーがクリックされた
     _DEFINE_ :on_key_push do
       _SET_ [:_ROOT_, :_TEMP_], flag: id
@@ -28,11 +28,11 @@ _CREATE_ :Char,
   char: nil
 
 #ステータスウィンドウ作成用のヘルパーコマンド
-_DEFINE_ :status_text do |id: nil, char: nil|
+_DEFINE_ :status_text do |id: nil, char: nil, x: 0|
   _CREATE_ :Char, 
     size: 32,
     id: id,
-    float_x: :left, 
+    x: x, 
     color:[255,255,0], 
     font_name: "ＭＳＰ ゴシック",
     char: char || nil
@@ -46,57 +46,57 @@ _DEFINE_ :set_status_window do
     y: 256,
     width: 1024,
     height: 192 do
-    _CREATE_ :Layout, id: :line1, height: 42, float_y: :bottom do
-      status_text char: "第"
-      status_text id: :week
-      status_text char: "週　第"
-      status_text id: :day
-      status_text char: "日目　現在の所持金は＄"
-      status_text id: :gold
-      status_text char: "。"
+    _CREATE_ :Layout, id: :line1, height: 42, y: 42 * 0 do
+      status_text char: "第", x: 32 * 0
+      status_text id: :week, x: 32 * 1
+      status_text char: "週　第", x: 32 * 2
+      status_text id: :day, x: 32 * 5
+      status_text char: "日目　現在の所持金は＄", x: 32 * 6
+      status_text id: :gold, x: 32 * 17
+      status_text char: "。", x: 32 * 20
     end
-    _CREATE_ :Layout, id: :line2, height: 42, float_y: :bottom do
-      status_text char: "借金の返済まであと"
-      status_text id: :last_day
-      status_text char: "日。"
+    _CREATE_ :Layout, id: :line2, height: 42, y: 42 * 1 do
+      status_text char: "借金の返済まであと", x: 32 * 0
+      status_text id: :last_day, x: 32 * 9
+      status_text char: "日。", x: 32 * 10
     end
-    _CREATE_ :Layout, id: :line3, height: 42, float_y: :bottom do
-      status_text char: "今週の返済額は＄"
-      status_text id: :week_debt
-      status_text char: "で、あと＄"
-      status_text id: :week_debt_last_gold
-      status_text char: "必要だ。"
+    _CREATE_ :Layout, id: :line3, height: 42, y: 42 * 2 do
+      status_text char: "今週の返済額は$", x: 32 * 0
+      status_text id: :week_debt, x: 32 * 8
+      status_text char: "で、あと$", x: 32 * 11
+      status_text id: :week_debt_last_gold, x: 32 * 15
+      status_text char: "必要だ。", x: 32 * 18
     end
-    _CREATE_ :Layout, id: :line4, height: 42, float_y: :bottom do
+    _CREATE_ :Layout, id: :line4, height: 42, y: 42 * 3 do
       status_text char: "＝＝＝＝"
     end
-    _CREATE_ :Layout, id: :line5, height: 42, float_y: :bottom do
-      status_text char: "所持金："
-      status_text id: :gold
-      status_text char: "　ＨＰ："
-      status_text id: :helth_point
-      status_text char: "/"
-      status_text id: :helth_point_max
-      status_text char: "　ＭＰ："
-      status_text id: :mental_point
-      status_text char: "/"
-      status_text id: :mental_point_max
+    _CREATE_ :Layout, id: :line5, height: 42, y: 42 * 4 do
+      status_text char: "所持金：", x: 32 * 0
+      status_text id: :gold, x: 32 * 4
+      status_text char: "　ＨＰ：", x: 32 * 6
+      status_text id: :helth_point, x: 32 * 9
+      status_text char: "/", x: 32 * 11
+      status_text id: :helth_point_max, x: 32 * 12
+      status_text char: "　ＭＰ：", x: 32 * 14
+      status_text id: :mental_point, x: 32 * 17
+      status_text char: "/", x: 32 * 19
+      status_text id: :mental_point_max, x: 32 * 20
     end
-    _CREATE_ :Layout, id: :line6, height: 42, float_y: :bottom do
-      status_text char: "魅力："
-      status_text id: :charm
-      status_text char: "　気品："
-      status_text id: :noble
-      status_text char: "　教養："
-      status_text id: :culture
+    _CREATE_ :Layout, id: :line6, height: 42, y: 42 * 5 do
+      status_text char: "魅力：", x: 32 * 0
+      status_text id: :charm, x: 32 * 3
+      status_text char: "　気品：", x: 32 * 5
+      status_text id: :noble, x: 32 * 9
+      status_text char: "　教養：", x: 32 * 11
+      status_text id: :culture, x: 32 * 15
     end
-    _CREATE_ :Layout, id: :line7, height: 42, float_y: :bottom do
-      status_text char: "知性："
-      status_text id: :intelligence
-      status_text char: "　恭順："
-      status_text id: :allegiance
-      status_text char: "　礼節："
-      status_text id: :courtesy
+    _CREATE_ :Layout, id: :line7, height: 42, y: 42 * 6 do
+      status_text char: "知性：", x: 32 * 0
+      status_text id: :intelligence, x: 32 * 3
+      status_text char: "　恭順：", x: 32 * 5
+      status_text id: :allegiance, x: 32 * 9
+      status_text char: "　礼節：", x: 32 * 11
+      status_text id: :courtesy, x: 32 * 15
     end
     _DEFINE_ :update_status do
       _GET_ [ :week, 
@@ -178,9 +178,9 @@ _DEFINE_ :top_menu do
   _SET_ [:_ROOT_, :_TEMP_], flag: nil
 
   _CREATE_ :Layout, id: :top_menu, x:100, y:100 do
-    menu_button text: "習い事をさせる", id: :lesson
-    menu_button text: "働かせる", id: :work
-    menu_button text: "休ませる", id: :rest
+    menu_button text: "習い事をさせる", id: :lesson, y: 32 * 0
+    menu_button text: "働かせる", id: :work, y: 32 * 1
+    menu_button text: "休ませる", id: :rest, y: 32 * 2
   end
 
   _WAIT_ [:_ROOT_, :_TEMP_],  not_equal: {flag: nil}
@@ -216,11 +216,11 @@ end
 #「習い事をさせる」メニュー
 _DEFINE_ :lesson_menu do
   _CREATE_ :Layout, id: :lesson_menu, x:100, y:100 do
-    menu_button text: "礼拝", id: :pray
-    menu_button text: "学問", id: :academy
-    menu_button text: "舞踏", id: :dance
-    menu_button text: "礼儀作法", id: :courtesy
-    menu_button text: "戻る", id: :cancel
+    menu_button text: "礼拝", id: :pray, y: 32 * 0
+    menu_button text: "学問", id: :academy, y: 32 * 1
+    menu_button text: "舞踏", id: :dance, y: 32 * 2
+    menu_button text: "礼儀作法", id: :courtesy, y: 32 * 3
+    menu_button text: "戻る", id: :cancel, y: 32 * 4
   end
 
   _SET_ [:_ROOT_, :_TEMP_], flag: nil
@@ -322,11 +322,11 @@ end
 #「働かせる」メニュー
 _DEFINE_ :work_menu do
   _CREATE_ :Layout, id: :work_menu, x:100, y:100 do
-    menu_button text: "清掃", id: :cleaning
-    menu_button text: "給仕", id: :waitress
-    menu_button text: "家庭教師", id: :tutor
-    menu_button text: "接待", id: :party
-    menu_button text: "戻る", id: :cancel
+    menu_button text: "清掃", id: :cleaning, y: 32 * 0
+    menu_button text: "給仕", id: :waitress, y: 32 * 1
+    menu_button text: "家庭教師", id: :tutor, y: 32 * 2
+    menu_button text: "接待", id: :party, y: 32 * 3
+    menu_button text: "戻る", id: :cancel, y: 32 * 4
   end
   _SET_ [:_ROOT_, :_TEMP_], flag: nil
   _WAIT_ [:_ROOT_, :_TEMP_],  not_equal: {flag: nil}

@@ -41,10 +41,6 @@ module Layoutable
   attr_accessor  :offset_x
   attr_accessor  :offset_y
 
-  #寄せ指定
-  attr_accessor  :align_x
-  attr_accessor  :align_y
-
   #サイズ
   attr_accessor  :width
   attr_accessor  :height
@@ -59,10 +55,6 @@ module Layoutable
     @width = options[:width] || 1 #幅
     @height = options[:height] || 1 #高さ
 
-    #下寄せ指定
-    @align_x = options[:align_x]
-    @align_y = options[:align_y]
-
     super
   end
 
@@ -70,38 +62,6 @@ module Layoutable
     super(mouse_pos_x - @x - @offset_x, 
           mouse_pos_y - @y - @offset_y,
           index)
-  end
-
-  #Ｘ方向のセンタリング補正
-  def check_align_x()
-    case @align_x
-    when nil
-      offset_x = 0
-    when :right 
-      offset_x = @parent_control.width - @width
-    when :center 
-      offset_x = @parent_control.width/2 - @width/2
-    else
-      raise
-    end
-
-    return offset_x
-  end
-
-  #Ｙ方向のセンタリング補正
-  def check_align_y()
-    case @align_y
-    when nil
-      offset_y = 0
-    when :bottom 
-      offset_y = @parent_control.height - @height
-    when :center 
-      offset_y = @parent_control.height/2 - @height/2
-    else
-      raise
-    end
-
-    return offset_y
   end
 end
 

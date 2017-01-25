@@ -208,8 +208,6 @@ class TestControlBase < Minitest::Test
                 :y=>0, 
                 :offset_x=>0, 
                 :offset_y=>0, 
-                :align_x=>nil, 
-                :align_y=>nil, 
                 :width=>1, 
                 :height=>1, 
                 :id=>:test_image, 

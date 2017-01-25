@@ -304,9 +304,9 @@ class TextPage < Layout
                                 {
                                   :_ARGUMENT_ => :Char, 
                                   :offset_x => @character_pitch,
-                                  :align_y => :bottom,
                                   :char => _ARGUMENT_,
                                   :x => @next_char_x, 
+                                  :y => @line_height - @char_option[:size],
                                   :image_path => image_path
                                 }.merge(@char_option),
                                 &@function_list[:_CHAR_RENDERER_]

@@ -124,9 +124,6 @@ module Clickable
 
   #描画
   def update(mouse_pos_x, mouse_pos_y, index)
-    mouse_pos_x -= check_align_x()
-    mouse_pos_y -= check_align_y()
-
     @on_inner_control = false
     @on_mouse_over  = false
     @on_mouse_out   = false

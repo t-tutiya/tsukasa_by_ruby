@@ -156,25 +156,18 @@ class Control
     end
 
     #子コントロールを更新しない場合は処理を終了
-    return 0, 0 unless @child_update
+    return unless @child_update
 
     child_index = 0
 
     #下位コントロール巡回
     @control_list.delete_if do |child_control|
       #下位コントロールを自ターゲットに直接描画
-      child_dx, child_dy = child_control.update(
-                            mouse_pos_x, mouse_pos_y, child_index)
-      #マウス座標のオフセットを更新する
-      mouse_pos_x -= child_dx
-      mouse_pos_y -= child_dy
+      child_control.update(mouse_pos_x, mouse_pos_y, child_index)
       child_index += 1
-
       #コントロールの削除チェック
       child_control.delete?
     end
-    #オフセット値を返す
-    return 0, 0
   end
 
   #描画
@@ -182,13 +175,8 @@ class Control
     #下位コントロール巡回
     @control_list.each do |child_control|
       #下位コントロールを自ターゲットに直接描画
-      child_dx, child_dy = child_control.render(offset_x, offset_y, target)
-      #次のコントロールの描画座標原点を設定する
-      offset_x += child_dx
-      offset_y += child_dy
+      child_control.render(offset_x, offset_y, target)
     end
-    #オフセット値を返す
-    return 0, 0
   end
 end
 

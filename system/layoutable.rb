@@ -41,10 +41,6 @@ module Layoutable
   attr_accessor  :offset_x
   attr_accessor  :offset_y
 
-  #次のコントロールの接続方向指定
-  attr_accessor  :float_x
-  attr_accessor  :float_y
-
   #寄せ指定
   attr_accessor  :align_x
   attr_accessor  :align_y
@@ -63,10 +59,6 @@ module Layoutable
     @width = options[:width] || 1 #幅
     @height = options[:height] || 1 #高さ
 
-    #次コントロールの接続方向指定
-    @float_x = options[:float_x]
-    @float_y = options[:float_y]
-
     #下寄せ指定
     @align_x = options[:align_x]
     @align_y = options[:align_y]
@@ -78,7 +70,6 @@ module Layoutable
     super(mouse_pos_x - @x - @offset_x, 
           mouse_pos_y - @y - @offset_y,
           index)
-    return check_float
   end
 
   #Ｘ方向のセンタリング補正
@@ -111,32 +102,6 @@ module Layoutable
     end
 
     return offset_y
-  end
-
-  def check_float
-    #連結指定チェック
-    case @float_x
-    when nil
-      dx = 0
-    #右連結
-    when :left
-      dx = @width + @offset_x + @x
-    else
-      raise
-    end
-
-    #連結指定チェック
-    case @float_y
-    when nil
-      dy = 0
-    #下連結
-    when :bottom
-      dy = @height + @offset_y + @y
-    else
-      raise
-    end
-
-    return dx, dy
   end
 end
 

@@ -224,6 +224,9 @@ class TextPage < Layout
     @character_pitch = options[:character_pitch ] || 0 #文字間の幅
     @line_height = options[:line_height] || 32    #行の高さ
 
+    @next_char_x = 0 #次のCharの描画X座標
+    @next_line_y = 0 #次の行の描画Y座標
+
     #文字情報
     @char_option = {
       :size => options[:size] || 24,                 #フォントサイズ
@@ -273,11 +276,14 @@ class TextPage < Layout
                     nil,
                     nil,
                     {
-                      :_ARGUMENT_ => :Layout, 
-                      :width => @width,
-                      :height => @line_height,
-                      :float_y => :bottom,
+                      _ARGUMENT_: :Layout, 
+                      width: @width,
+                      height: @line_height,
+                      y: @next_line_y
                     })
+
+    #その次の行コントロールのY座標を生成
+    @next_line_y += (@line_height + @line_spacing)
   end
 
   #############################################################################
@@ -300,7 +306,7 @@ class TextPage < Layout
                                   :offset_x => @character_pitch,
                                   :align_y => :bottom,
                                   :char => _ARGUMENT_,
-                                  :float_x => :left,
+                                  :x => @next_char_x, 
                                   :image_path => image_path
                                 }.merge(@char_option),
                                 &@function_list[:_CHAR_RENDERER_]
@@ -308,6 +314,13 @@ class TextPage < Layout
 
     #文字待機処理をスタックする
     unshift_command(:_CHAR_WAIT_)
+
+    #次の文字の描画X座標を生成
+    @next_char_x += DXRuby::Font.new( @char_option[:size], 
+                          @char_option[:font_name], 
+                          { :weight=>@char_option[:weight], 
+                            :italic=>@char_option[:italic],
+                            :auto_fitting=>true }).get_width(_ARGUMENT_ || "")
   end
 
   #指定したコマンドブロックを文字列の末端に追加する
@@ -337,7 +350,6 @@ class TextPage < Layout
                                       :_ARGUMENT_ => :Layout, 
                                       :width => 0,
                                       :height => @size,
-                                      :float_x => :left
                                     })
 
     #ルビを出力するTextPageを生成する
@@ -386,7 +398,7 @@ class TextPage < Layout
     unshift_command(:_GET_, _ARGUMENT_: [:indent, :line_height]) do 
       |indent:, line_height:|
       _SEND_ -1 do
-        _CREATE_ :Layout, width: indent, height: line_height, float_x: :left
+        _CREATE_ :Layout, width: indent, height: line_height
       end
     end
 
@@ -394,14 +406,18 @@ class TextPage < Layout
     unshift_command(:_CREATE_, 
                     {
                       :_ARGUMENT_ => :Layout, 
-                      :offset_y => @line_spacing,
                       :width => @width,
                       :height => @line_height,
-                      :float_y => :bottom
+                      :y => @next_line_y,
                     })
 
     #行間待機処理を設定する
     unshift_command(:_LINE_WAIT_)
+
+    #文字描画X座標をリセット
+    @next_char_x = @indent
+    #その次の行コントロールのY座標を生成
+    @next_line_y += (@line_height + @line_spacing)
   end
 
   #flushコマンド
@@ -413,14 +429,20 @@ class TextPage < Layout
     end
     @control_list.clear
 
+    @next_char_x = 0
+    @next_line_y = 0
+
     #次のアクティブ行コントロールを追加  
     unshift_command(:_CREATE_, 
                     {
                       :_ARGUMENT_ => :Layout, 
                       :width => @width,
                       :height => @line_height,
-                      :float_y => :bottom
+                      :y => @next_line_y 
                     })
+
+    #その次の行コントロールのY座標をリセット
+    @next_line_y = @line_height + @line_spacing
   end
 end
 

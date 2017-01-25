@@ -184,8 +184,6 @@ module Drawable
                     @y + @offset_y + offset_y + check_align_y(), 
                     @entity, 
                     @draw_option)
-
-    return check_float
   end
 end
 

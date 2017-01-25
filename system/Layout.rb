@@ -39,8 +39,6 @@ class Layout < Control
     super(offset_x + @x + @offset_x + check_align_x(), 
           offset_y + @y + @offset_y + check_align_y(), 
           target)
-
-    return check_float
   end
 end
 

@@ -50,7 +50,7 @@ _SCRIPT_PARSER_ ext_name: :tks, path: "./TKSParser.rb",parser: :TKSParser
 _CREATE_ :Data, id: :_TEXT_WINDOW_TEMP_
 
 #標準ポーズコマンド
-_DEFINE_ :_PAUSE_ do
+_DEFINE_ :_PAUSE_ do |skip: false|
   #スキップ状態の場合
   _CHECK_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_SKIP_: true} do
     #ウェイクに移行
@@ -66,7 +66,7 @@ _DEFINE_ :_PAUSE_ do
     _SEND_ _DEFAULT_TEXT_PAGE_ do
       #クリック待ちアイコンの表示
       _CHECK_BLOCK_ do
-        _CHAR_COMMAND_ do
+        _CHAR_COMMAND_ width: 24, height: 24, skip: skip do |x:, y:|
           _WAIT_ count: 28 do
             _CHECK_INPUT_ key_down: K_RCONTROL,
                  key_push: K_SPACE,
@@ -75,7 +75,7 @@ _DEFINE_ :_PAUSE_ do
             end
           end
                  
-          _YIELD_
+          _YIELD_ x: x, y: y
         end
       end
 
@@ -127,8 +127,8 @@ _INCLUDE_ "./resource/icon/icon_8_a.rb"
 #行クリック待ちポーズ
 _DEFINE_ :_LINE_PAUSE_ do
   #ルートのクリック待ち
-  _PAUSE_ do
-    _CREATE_ :Layout, width: 24, height: 24,
+  _PAUSE_ skip: true do |x:, y:|
+    _CREATE_ :Layout, x: x, y: y, width: 24, height: 24,
       align_y: :bottom, float_x: :left do
       _CREATE_ :TileMap, 
         map_array: [[0]], size_x: 1, size_y: 1, 
@@ -153,8 +153,8 @@ end
 
 _DEFINE_ :_END_PAUSE_ do
   #ルートのクリック待ち
-  _PAUSE_ do
-    _CREATE_ :Layout, width: 24, height: 24,
+  _PAUSE_ do |x:, y:|
+    _CREATE_ :Layout, x: x, y: y, width: 24, height: 24,
       align_y: :bottom, float_x: :left do
       _CREATE_ :TileMap, 
         map_array: [[0]], size_x: 1, size_y: 1, 

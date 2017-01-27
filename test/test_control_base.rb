@@ -45,7 +45,7 @@ class TestControlBase < Minitest::Test
 
     #メインループ
     DXRuby::Window.loop() do
-      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0) #処理
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y) #処理
       control.render(0, 0, DXRuby::Window) #描画
       break if control.exit #メインループ終了判定
     end
@@ -73,7 +73,7 @@ class TestControlBase < Minitest::Test
 
     #メインループ
     DXRuby::Window.loop() do
-      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0) #処理
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y) #処理
       control.render(0, 0, DXRuby::Window) #描画
       break if control.exit #メインループ終了判定
     end
@@ -94,7 +94,7 @@ class TestControlBase < Minitest::Test
 
     #メインループ
     DXRuby::Window.loop() do
-      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0) #処理
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y) #処理
       control.render(0, 0, DXRuby::Window) #描画
       break if control.exit #メインループ終了判定
     end
@@ -117,7 +117,7 @@ class TestControlBase < Minitest::Test
 
     #２５フレーム回したと想定
     25.times do
-      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y)
     end
 
     #テスト
@@ -140,7 +140,7 @@ class TestControlBase < Minitest::Test
 
     #１０フレーム回したと想定
     10.times do
-      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y)
       result.push(control.test.to_i)
     end
 
@@ -155,7 +155,7 @@ class TestControlBase < Minitest::Test
       _EXIT_
     end
 
-    control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+    control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y)
     
     reslut = [[:_SET_, 
                 {:id=>:"Tsukasa::Control",
@@ -171,7 +171,7 @@ class TestControlBase < Minitest::Test
       _EXIT_
     end
 
-    control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+    control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y)
     
     reslut = [[:_SET_, 
                 {:id=>:"Tsukasa::Control",
@@ -188,7 +188,7 @@ class TestControlBase < Minitest::Test
       _EXIT_
     end
 
-    control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+    control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y)
     
     reslut = [[:_SET_, 
               { :path=>nil, 
@@ -225,7 +225,7 @@ class TestControlBase < Minitest::Test
     end
 
     DXRuby::Window.loop() do
-      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y)
       control.render(0, 0, DXRuby::Window)
       break if control.exit
     end
@@ -243,7 +243,7 @@ class TestControlBase < Minitest::Test
     end
 
     DXRuby::Window.loop() do
-      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y)
       control.render(0, 0, DXRuby::Window)
       break if control.exit
     end

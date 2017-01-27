@@ -52,7 +52,7 @@ class TestTestBase < Minitest::Test
 
     #メインループ
     DXRuby::Window.loop() do
-      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0) #処理
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y) #処理
       control.render(0, 0, DXRuby::Window) #描画
       break if control.exit #メインループ終了判定
     end

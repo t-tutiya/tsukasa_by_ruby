@@ -9,22 +9,24 @@ _SEND_(:text0) do
   z: 1000000
   _SET_  font_name: "ＭＳ ゴシック"
   _DEFINE_ :_CHAR_RENDERER_ do |argument, options,control|
-    #フェードイン（スペースキーか右CTRLが押されたらスキップ）
-    _MOVE_ [30, :out_quart], 
-      x:[ 800,0], 
-      y:[-600,0] do
-        _CHECK_INPUT_ key_down: K_RCONTROL, 
-                      key_push: K_SPACE,
-                      mouse: :push do
-        _SET_ x: 0, y:0
-        _BREAK_
+    _GET_ [:x, :y] do |x:, y:|
+      #フェードイン（スペースキーか右CTRLが押されたらスキップ）
+      _MOVE_ [30, :out_quart], 
+        x:[ 800,x], 
+        y:[-600,y] do
+          _CHECK_INPUT_ key_down: K_RCONTROL, 
+                        key_push: K_SPACE,
+                        mouse: :push do
+          _SET_ x: x, y:y
+          _BREAK_
+        end
       end
     end
     #待機フラグが下がるまで待機
     _WAIT_ [:_ROOT_, :_TEMP_], not_equal: {flag: nil}
     #文字列をカスケードアウトさせる
-    _GET_ :child_index do |options|
-      _MOVE_ [30 + options[:child_index] * 3, :in_back], y:[0,600]
+    _GET_ [:x, :y] do |x:, y:|
+      _MOVE_ [x/32*3 + 30, :in_back], y:[y, 600]
     end
   end
   _DEFINE_ :_CHAR_WAIT_ do
@@ -69,13 +71,15 @@ _DEFINE_ :TextSelect do |options|
         font_name: "ＭＳ ゴシック", 
         char: options[:text]
     end
-    _MOVE_ [30, :out_quart], 
-      x:[800,0] do
-      _CHECK_INPUT_ key_down: K_RCONTROL, 
-                    key_push: K_SPACE,
-                    mouse: :push do
-        _SET_ x: 0
-       _BREAK_
+    _GET_ :x do |x:|
+      _MOVE_ [30, :out_quart], 
+        x:[800,x] do
+        _CHECK_INPUT_ key_down: K_RCONTROL, 
+                      key_push: K_SPACE,
+                      mouse: :push do
+          _SET_ x: 0
+         _BREAK_
+        end
       end
     end
     _DEFINE_ :inner_loop do
@@ -114,8 +118,8 @@ end
 #文字列中にボタンを埋め込む
 _DEFINE_ :func_select do |options|
   _SEND_ :text0 do
-    _CHAR_COMMAND_ do
-      TextSelect id: options[:id], text: options[:_ARGUMENT_]
+    _CHAR_COMMAND_ width: 196, height: 32 do |x:, y:|
+      TextSelect id: options[:id], text: options[:_ARGUMENT_], x: x, y:y
       _WAIT_  count: 3 do
         _CHECK_INPUT_ key_down: K_RCONTROL, 
                       key_push: K_SPACE,

@@ -134,7 +134,7 @@ end
 DXRuby::Window.loop(true) do
 
   #司エンジン処理
-  tsukasa.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y, 0)
+  tsukasa.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y)
   tsukasa.render(0, 0, DXRuby::Window)
 
   #スクリプトで終了コマンドが実行された場合

@@ -123,7 +123,7 @@ module Clickable
   end
 
   #描画
-  def update(mouse_pos_x, mouse_pos_y, index)
+  def update(mouse_pos_x, mouse_pos_y)
     @on_inner_control = false
     @on_mouse_over  = false
     @on_mouse_out   = false

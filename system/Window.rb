@@ -142,7 +142,7 @@ class Window < ClickableLayout #マウスカーソルがウィンドウの外に
     super
   end
 
-  def update(mouse_pos_x, mouse_pos_y, index)
+  def update(mouse_pos_x, mouse_pos_y)
     #「閉じる」ボタンが押下された
     if DXRuby::Input.requested_close? and @auto_close
       set_exit()

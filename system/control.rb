@@ -49,7 +49,6 @@ class Control #公開インターフェイス
   @@system_path = File.expand_path('../../', __FILE__)
 
   attr_accessor :id
-  attr_reader :child_index
   attr_accessor :child_update  #子コントロールの更新可否
   attr_reader  :function_list #ユーザー定義関数
 
@@ -139,9 +138,7 @@ class Control #公開インターフェイス
 end
 
 class Control
-  def update(mouse_pos_x, mouse_pos_y, index)
-    @child_index = index
-
+  def update(mouse_pos_x, mouse_pos_y)
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
@@ -158,13 +155,10 @@ class Control
     #子コントロールを更新しない場合は処理を終了
     return unless @child_update
 
-    child_index = 0
-
     #下位コントロール巡回
     @control_list.delete_if do |child_control|
       #下位コントロールを自ターゲットに直接描画
-      child_control.update(mouse_pos_x, mouse_pos_y, child_index)
-      child_index += 1
+      child_control.update(mouse_pos_x, mouse_pos_y)
       #コントロールの削除チェック
       child_control.delete?
     end

@@ -145,10 +145,10 @@ class Control
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
-      command_name, options, command_block, yield_stack = @command_list.shift
-      #コマンドブロックスタックを一時変数に退避
-      @temporary_command_block = command_block
-      @temporary_yield_stack = yield_stack
+      command_name, 
+      options, 
+      @temporary_command_block, 
+      @temporary_yield_stack = @command_list.shift
       #今フレーム処理終了判定
       break if command_name == :_END_FRAME_
       #コマンドを実行する

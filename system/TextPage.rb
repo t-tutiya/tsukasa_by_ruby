@@ -298,7 +298,7 @@ class TextPage < Layout
 
   #charコマンド
   #指定文字（群）を文字列チェインに連結する。
-  def _CHAR_(_ARGUMENT_: nil, image_path: nil)
+  def _INSERT_CHAR_(_ARGUMENT_: nil, image_path: nil)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, nil, nil,
                                 {
@@ -368,7 +368,7 @@ class TextPage < Layout
     #文字列を分解してcharコマンドに変換する
     _ARGUMENT_.to_s.reverse.each_char do |ch|
       #１文字分の出力コマンドをスタックする
-      unshift_command(:_CHAR_, {_ARGUMENT_: ch})
+      unshift_command(:_INSERT_CHAR_, {_ARGUMENT_: ch})
     end
   end
 

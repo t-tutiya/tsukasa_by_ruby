@@ -28,9 +28,6 @@ _CREATE_ :ClickableLayout,
     #キーがクリックされるまで待機
     _WAIT_ do
       _CHECK_ collision: :key_push do
-        _GET_ [:cursor_x, :cursor_y] do |cursor_x:, cursor_y:|
-          _SET_ offset_x: - cursor_x, offset_y: - cursor_y
-        end
         _BREAK_
       end
       _CHECK_ collision: :cursor_out do
@@ -58,25 +55,12 @@ _CREATE_ :ClickableLayout,
     #キーが離されるまで待機し、その間ブロックを実行する
     _WAIT_ do
       _CHECK_ collision:  :key_up do
-        _GET_ [[:mouse_x, [:_ROOT_]], 
-               [:mouse_y, [:_ROOT_]], 
-                :offset_x, 
-                :offset_y] do |
-                mouse_x:, 
-                mouse_y:, 
-                offset_x:, 
-                offset_y:|
-          _SET_ x: mouse_x + offset_x, 
-                y: mouse_y + offset_y
-        end
-        _SET_ offset_x: 0, 
-              offset_y: 0
         _BREAK_
       end
 
-      _GET_ [:mouse_x, :mouse_y], control: [:_ROOT_] do |mouse_x:, mouse_y:|
+      _GET_ [[:mouse_offset_x, :_ROOT_], [:mouse_offset_y, :_ROOT_], :x, :y] do |mouse_offset_x:, mouse_offset_y:, x:, y:|
         #コントロールのＸＹ座標にカーソルの移動オフセット値を加算
-        _SET_ x: mouse_x, y: mouse_y
+        _SET_ x: x + mouse_offset_x, y: y + mouse_offset_y
       end
     end
     _RETURN_ do

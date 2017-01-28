@@ -40,20 +40,24 @@ class Window < ClickableLayout #マウスカーソルがウィンドウの外に
   attr_accessor :inactive_pause #非アクティブ時に更新処理を停止するかどうか
 
   #ウィンドウ座標上のマウスＸ座標
-  def mouse_x()
-    return DXRuby::Input.mouse_x
-  end
+  attr_reader :mouse_x
   def mouse_x=(arg)
     DXRuby::Input.set_mouse_pos(arg, DXRuby::Input.mouse_y)
+    @mouse_x = arg
   end
 
+  #ウィンドウ座標上のマウスＸ座標前フレームからの増分
+  attr_accessor :mouse_offset_x
+
   #ウィンドウ座標上のマウスＹ座標
-  def mouse_y()
-    return DXRuby::Input.mouse_y
-  end
+  attr_reader :mouse_y
   def mouse_y=(arg)
     DXRuby::Input.set_mouse_pos(DXRuby::Input.mouse_x, arg)
+    @mouse_y = arg
   end
+
+  #ウィンドウ座標上のマウスＸ座標前フレームからの増分
+  attr_accessor :mouse_offset_y
 
   def mouse_wheel_pos()
     DXRuby::Input.mouse_wheel_pos
@@ -127,6 +131,9 @@ class Window < ClickableLayout #マウスカーソルがウィンドウの外に
     #非アクティブ時に更新処理を行うかどうか
     @inactive_pause = true
 
+    @mouse_x = 0
+    @mouse_y = 0
+
     #マウスカーソル可視フラグ
     self.mouse_enable = options[:mouse_enable] || true
     #タイトルバーに表示するアイコン
@@ -147,6 +154,14 @@ class Window < ClickableLayout #マウスカーソルがウィンドウの外に
     if DXRuby::Input.requested_close? and @auto_close
       set_exit()
     end
+
+    @mouse_offset_x = mouse_pos_x - @mouse_x
+    @mouse_x = mouse_pos_x
+
+    @mouse_offset_y = mouse_pos_y - @mouse_y
+    @mouse_y = mouse_pos_y
+
+    pp mouse_offset_x
 
     #windowがアクティブで無ければ子コントロールを動作せずに終了
     return  unless DXRuby::Window.active? and @inactive_pause

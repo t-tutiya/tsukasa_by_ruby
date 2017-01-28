@@ -346,7 +346,7 @@ class TextPage < Layout
 
 
   #指定したコマンドブロックを文字列の末端に追加する
-  def _CHAR_COMMAND_(width: 0, height: 0, skip: false, **)
+  def _INSERT_COMMAND_(width: 0, height: 0, skip: false, **)
     @control_list.last.push_command_block(@temporary_command_block, 
                                           @temporary_yield_stack,
                                           {

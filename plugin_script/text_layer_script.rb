@@ -66,7 +66,7 @@ _DEFINE_ :_PAUSE_ do |skip: false|
     _SEND_ _DEFAULT_TEXT_PAGE_ do
       #クリック待ちアイコンの表示
       _CHECK_BLOCK_ do
-        _CHAR_COMMAND_ width: 24, height: 24, skip: skip do |x:, y:|
+        _INSERT_COMMAND_ width: 24, height: 24, skip: skip do |x:, y:|
           _WAIT_ count: 28 do
             _CHECK_INPUT_ key_down: K_RCONTROL,
                  key_push: K_SPACE,

@@ -118,7 +118,7 @@ end
 #文字列中にボタンを埋め込む
 _DEFINE_ :func_select do |options|
   _SEND_ :text0 do
-    _CHAR_COMMAND_ width: 196, height: 32 do |x:, y:|
+    _INSERT_COMMAND_ width: 196, height: 32 do |x:, y:|
       TextSelect id: options[:id], text: options[:_ARGUMENT_], x: x, y:y
       _WAIT_  count: 3 do
         _CHECK_INPUT_ key_down: K_RCONTROL, 

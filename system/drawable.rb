@@ -176,14 +176,11 @@ module Drawable
     super(0, 0, @entity)
 
     #描画オブジェクトを持ち、かつ可視でなければ戻る
-    return 0, 0 unless @entity and @visible
-    return 0, 0 if @entity.disposed?
+    return unless @entity and @visible
+    return if @entity.disposed?
 
     #自エンティティを上位ターゲットに描画
-    target.draw_ex( @x + offset_x,
-                    @y + offset_y, 
-                    @entity, 
-                    @draw_option)
+    target.draw_ex(@x + offset_x, @y + offset_y, @entity, @draw_option)
   end
 end
 

@@ -35,10 +35,8 @@ module Tsukasa
 class Layout < Control
   include Layoutable
   def render(offset_x, offset_y, target)
-
-    super(offset_x + @x, 
-          offset_y + @y, 
-          target)
+    #自身の描画座標を補正する
+    super(@x + offset_x, @y + offset_y, target)
   end
 end
 

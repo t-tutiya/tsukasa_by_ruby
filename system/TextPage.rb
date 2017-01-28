@@ -303,9 +303,8 @@ class TextPage < Layout
     @control_list.last.push_command(:_CREATE_, nil, nil,
                                 {
                                   :_ARGUMENT_ => :Char, 
-                                  :offset_x => @character_pitch,
                                   :char => _ARGUMENT_,
-                                  :x => @next_char_x, 
+                                  :x => @next_char_x + @character_pitch, 
                                   :y => @line_height - @char_option[:size],
                                   :image_path => image_path
                                 }.merge(@char_option),
@@ -316,7 +315,7 @@ class TextPage < Layout
     unshift_command(:_CHAR_WAIT_)
 
     #次の文字の描画X座標を生成
-    @next_char_x += DXRuby::Font.new( @char_option[:size], 
+    @next_char_x += @character_pitch + DXRuby::Font.new( @char_option[:size], 
                           @char_option[:font_name], 
                           { :weight=>@char_option[:weight], 
                             :italic=>@char_option[:italic],
@@ -329,9 +328,8 @@ class TextPage < Layout
     @control_list.last.push_command(:_CREATE_, nil, nil,
                                 {
                                   :_ARGUMENT_ => :Char, 
-                                  :offset_x => @character_pitch,
                                   :image_path => _ARGUMENT_,
-                                  :x => @next_char_x, 
+                                  :x => @next_char_x + @character_pitch, 
                                   :y => @line_height - height,
                                 }.merge(@char_option),
                                 &@function_list[:_CHAR_RENDERER_]
@@ -341,7 +339,7 @@ class TextPage < Layout
     unshift_command(:_CHAR_WAIT_)
 
     #次の文字の描画X座標を生成
-    @next_char_x += width
+    @next_char_x += @character_pitch + width
   end
 
 

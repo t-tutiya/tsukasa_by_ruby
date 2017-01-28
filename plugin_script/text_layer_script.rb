@@ -57,7 +57,7 @@ _DEFINE_ :_PAUSE_ do |skip: false|
     _SET_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], _SLEEP_: false
     _RETURN_ do
       #スキップモードの誤伝搬を防ぐ
-      _END_FRAME_
+      _HALT_
     end
   end
 
@@ -292,7 +292,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
       _WAIT_ [:_ROOT_, :_TEXT_WINDOW_TEMP_], equal: {_SLEEP_: false}
 
       #キー伝搬を防ぐためにフレームを終了する
-      _END_FRAME_
+      _HALT_
 
       #ハーフフェードアウト
       _MOVE_ 60, alpha: [255, 128] do

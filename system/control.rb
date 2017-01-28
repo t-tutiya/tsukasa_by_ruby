@@ -147,7 +147,7 @@ class Control
       @temporary_command_block, 
       @temporary_yield_stack = @command_list.shift
       #今フレーム処理終了判定
-      break if command_name == :_END_FRAME_
+      break if command_name == :_HALT_
       #コマンドを実行する
       exec_command(command_name, options)
     end
@@ -633,7 +633,7 @@ class Control #内部コマンド
   end
   
   #フレームの終了を示す（ダミーコマンド。これ自体は実行されない）
-  def _END_FRAME_(**)
+  def _HALT_(**)
     raise
   end
 end
@@ -667,7 +667,7 @@ class Control #プロパティのパラメータ遷移
     #現在のループ終端を挿入
     unshift_command(:_END_LOOP_)
     #フレーム終了疑似コマンドをスタックする
-    unshift_command(:_END_FRAME_)
+    unshift_command(:_HALT_)
 
     if command_block?
       #ブロックが付与されているならそれを実行する
@@ -869,7 +869,7 @@ class Control #プロパティのパラメータ遷移
     #現在のループ終端を挿入
     unshift_command(:_END_LOOP_)
     #フレーム終了疑似コマンドをスタックする
-    unshift_command(:_END_FRAME_)
+    unshift_command(:_HALT_)
 
     if command_block?
       #ブロックが付与されているならそれを実行する

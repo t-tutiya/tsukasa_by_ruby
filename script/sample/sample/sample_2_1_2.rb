@@ -37,7 +37,7 @@ _CREATE_ :ClickableLayout,
       _SEND_(:over)    {_SET_ visible: true}
       _SEND_(:key_down){_SET_ visible: false}
     end
-    _END_FRAME_
+    _HALT_
     _RETURN_ do
       inner_loop
     end

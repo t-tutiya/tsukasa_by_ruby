@@ -48,7 +48,7 @@ class TestImageBase < Minitest::Test
         _TRIANGLE_ x1:32, y1:32, x2: 64, y2:64, x3:32, y3:64, color:[0,0,255]
         _TRIANGLE_ x1:64, y1:64, x2: 96, y2:96, x3:64, y3:96, color:[0,0,255], fill: true
       end
-      _END_FRAME_
+      _HALT_
       _EXIT_
     end
 
@@ -74,7 +74,7 @@ class TestImageBase < Minitest::Test
           _PUTS_ "OK"
         end
       end
-      _END_FRAME_
+      _HALT_
       _EXIT_
     end
 

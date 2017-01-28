@@ -41,7 +41,7 @@ class TestTestBase < Minitest::Test
     control = Tsukasa::Window.new() do
       #メインループを終了する
       _DEFINE_ :test01 do
-        _END_FRAME_
+        _HALT_
         _RETURN_ do
           test01
         end

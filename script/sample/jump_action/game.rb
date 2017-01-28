@@ -85,7 +85,7 @@ _DEFINE_ :state_scroll do
     _SET_ relative_x: ox, relative_y: oy
   end
 
-  _END_FRAME_
+  _HALT_
   _RETURN_ do
     state_scroll
   end
@@ -105,7 +105,7 @@ _DEFINE_ :state_normal do
   end
 
   #フレームを終了する
-  _END_FRAME_
+  _HALT_
 
   _RETURN_ do
     state_x_move #Ｘ方向移動ステートに遷移
@@ -153,7 +153,7 @@ _DEFINE_ :state_fall do
   _ADDJUST_ROOF_
 
   #フレームを終了する
-  _END_FRAME_
+  _HALT_
 
   _RETURN_ do
     state_x_move #Ｘ方向移動ステートに遷移

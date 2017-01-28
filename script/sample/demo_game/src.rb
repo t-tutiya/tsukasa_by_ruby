@@ -106,7 +106,7 @@ _DEFINE_ :TextSelect do |options|
         _DELETE_
         _RETURN_
       end
-      _END_FRAME_
+      _HALT_
       _RETURN_ do
         inner_loop
       end

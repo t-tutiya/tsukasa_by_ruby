@@ -51,7 +51,7 @@ _DEFINE_ :_WAIT_ do |options|
     _CHECK_BLOCK_ do
       _YIELD_
     end
-    _END_FRAME_
+    _HALT_
   end
 end
 
@@ -93,7 +93,7 @@ _DEFINE_ :_TO_IMAGE_ do
     end
   end
   #Imageのコマンドリストを評価させるために１フレ送る
-  _END_FRAME_
+  _HALT_
 end
 
 ###############################################################################
@@ -258,7 +258,7 @@ _DEFINE_ :_BUTTON_BASE_ do |id:, shape:, **options|
       _YIELD_ id, options
     end
 
-    _END_FRAME_
+    _HALT_
 
     on_mouse_inner_out
   end

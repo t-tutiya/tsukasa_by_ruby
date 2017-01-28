@@ -16,7 +16,7 @@ _CREATE_ :ClickableLayout, x: 640-256, y: 480-256, shape:[0,0,256,256], width:25
     _CHECK_ collision: :cursor_over do 
       _SET_ [:_ROOT_ ,:_SYSTEM_] , data0: true
     end
-    _END_FRAME_
+    _HALT_
     _RETURN_ do
       inner_loop
     end
@@ -49,7 +49,7 @@ end
 end
 _SET_ mouse_enable: false
 
-_END_FRAME_
+_HALT_
 
 _LOOP_ do
   _GET_ [:mouse_x, :mouse_y], control: [:_ROOT_] do |mouse_x:, mouse_y:|
@@ -86,7 +86,7 @@ _LOOP_ do
     _RESIZE_ width:1024, height:600
     _BREAK_
   end
-  _END_FRAME_
+  _HALT_
 end
 
 #カーソル可視設定

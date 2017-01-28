@@ -54,7 +54,7 @@ class TestInputBase < Minitest::Test
           _EXIT_
         end
         #１フレ送る
-        _END_FRAME_
+        _HALT_
       end
     end
 

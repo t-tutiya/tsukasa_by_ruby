@@ -57,11 +57,12 @@ class ScriptCompiler
   end
 
   def method_missing(command_name, argument = nil, **options, &block)
-    if [:_END_FUNCTION_].index(command_name)
-      warn "\"#{command_name}\"コマンドは使用できません"
-      return
+    if command_name == :_END_FRAME_
+      warn "warning: _END_FRAME_コマンドは非推奨です。_HALT_コマンドを使ってください"
+      command_name = :_HALT_
     end
 
+    #第１引数が設定されているならオプションに追加する
     unless nil == argument
       options[:_ARGUMENT_] = argument
     end

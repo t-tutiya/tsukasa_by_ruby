@@ -21,7 +21,7 @@ _CREATE_ :ClickableLayout, x: 100, y: 100, shape:[0,0,256,256],width: 256, heigh
     _CHECK_ collision: :key_up do
       _SEND_(0){ _MAP_STATUS_ 1}
     end
-    _END_FRAME_
+    _HALT_
     _RETURN_ do
       inner_loop
     end

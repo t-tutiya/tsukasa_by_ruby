@@ -49,7 +49,7 @@ _DEFINE_ :TextSelect do |options|
         _EVAL_ "puts '[" + options[:text].to_s + "]が押されました'"
         _RETURN_
       end
-      _END_FRAME_
+      _HALT_
       _RETURN_ do
         inner_loop
       end
@@ -216,7 +216,7 @@ _DEFINE_ :inner_loop do
     _SET_ char: ""
   end
 
-  _END_FRAME_
+  _HALT_
 
   _GET_ :path, control: [:_ROOT_, :_TEMP_] do |path:|
     _INCLUDE_ path, force: true

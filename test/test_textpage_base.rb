@@ -49,7 +49,7 @@ class TestTextPageBase < Minitest::Test
       _LINE_FEED_
       _TEXT_ "テキストウィンドウテスト表示１"
       _LINE_FEED_
-      _END_FRAME_
+      _HALT_
       _FLUSH_
       _TEXT_ "テキストウィンドウテスト表示２"
       _LINE_FEED_
@@ -57,7 +57,7 @@ class TestTextPageBase < Minitest::Test
       _LINE_FEED_
       _TEXT_ "テキストウィンドウテスト表示２"
       _LINE_FEED_
-      _END_FRAME_
+      _HALT_
       #メインループを終了する
       _EXIT_
     end
@@ -84,7 +84,7 @@ class TestTextPageBase < Minitest::Test
         _LINE_FEED_
         _TEXT_ "レンダリング済みフォント表示１"
         _LINE_FEED_
-        _END_FRAME_
+        _HALT_
         _FLUSH_
         _TEXT_ "レンダリング済みフォント表示２"
         _LINE_FEED_
@@ -92,10 +92,10 @@ class TestTextPageBase < Minitest::Test
         _LINE_FEED_
         _TEXT_ "レンダリング済みフォント表示２"
         _LINE_FEED_
-        _END_FRAME_
+        _HALT_
       end
       _LOOP_ 2 do
-        _END_FRAME_
+        _HALT_
       end
       #メインループを終了する
       _EXIT_
@@ -137,7 +137,7 @@ class TestTextPageBase < Minitest::Test
         _TEXT_ "■■■■■■■"
       end
       _LOOP_ 60 do
-        _END_FRAME_
+        _HALT_
       end
       #_END_PAUSE_
 
@@ -181,7 +181,7 @@ class TestTextPageBase < Minitest::Test
         _TEXT_ "外字画像表示テスト"
       end
       _LOOP_ 60 do
-        _END_FRAME_
+        _HALT_
       end
       #_END_PAUSE_
 

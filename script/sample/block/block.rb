@@ -182,7 +182,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
                 end
               end
             end
-            _END_FRAME_
+            _HALT_
             _RETURN_ do
               state_normal
             end
@@ -260,13 +260,13 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
 
       _DEFINE_ :state_normal do
         _CHECK_ equal: { wait: true } do
-          _END_FRAME_
+          _HALT_
           _RETURN_ do
             state_wait
           end
         end
         state_move
-        _END_FRAME_
+        _HALT_
         _RETURN_ do
           state_normal
         end
@@ -274,12 +274,12 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
 
       _DEFINE_ :state_wait do
         _CHECK_ equal: { wait: false } do
-          _END_FRAME_
+          _HALT_
           _RETURN_ do
             state_normal
           end
         end
-        _END_FRAME_
+        _HALT_
         _RETURN_ do
           state_wait
         end
@@ -372,12 +372,12 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
 
     _DEFINE_ :state_miss do
       _CHECK_ equal: { ready: true } do
-        _END_FRAME_
+        _HALT_
         _RETURN_ do
           state_idle
         end
       end
-      _END_FRAME_
+      _HALT_
       _RETURN_ do
         state_miss
       end
@@ -385,7 +385,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
 
     _DEFINE_ :state_idle do
       _CHECK_ equal: { wait: true } do
-        _END_FRAME_
+        _HALT_
         _RETURN_ do
           state_wait
         end
@@ -393,7 +393,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       _CHECK_INPUT_ key_push: K_SPACE do
         _SET_ vx: 4
         _SET_ vy: -9
-        _END_FRAME_
+        _HALT_
         _RETURN_ do
           state_normal
         end
@@ -401,7 +401,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       _GET_ :x, control: [:_PARENT_, :bar] do |x:|
         _SET_ x: x + 45
       end
-      _END_FRAME_
+      _HALT_
       _RETURN_ do
         state_idle
       end
@@ -443,7 +443,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
 
     _DEFINE_ :state_normal do
       _CHECK_ equal: { wait: true } do
-        _END_FRAME_
+        _HALT_
         _RETURN_ do
           state_wait
         end
@@ -457,7 +457,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       _CHECK_ equal: { boost: true } do
         aura
       end
-      _END_FRAME_
+      _HALT_
       _RETURN_ do
         state_normal
       end
@@ -465,12 +465,12 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
 
     _DEFINE_ :state_wait do
       _CHECK_ equal: { wait: false } do
-        _END_FRAME_
+        _HALT_
         _RETURN_ do
           state_idle
         end
       end
-      _END_FRAME_
+      _HALT_
       _RETURN_ do
         state_wait
       end
@@ -510,7 +510,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       _SET_ visible: false
     end
 
-    _END_FRAME_
+    _HALT_
     _RETURN_ do
       _SET_ ball_alive: true
       state_normal
@@ -527,7 +527,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     end
     _WAIT_ count: 60
     _SELECT_
-    _END_FRAME_
+    _HALT_
     _RETURN_ do
       state_focus_play
     end
@@ -562,7 +562,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       _SEND_ :select_exit, interrupt: true do
         _SET_ alpha: 255
       end
-      _END_FRAME_
+      _HALT_
       _RETURN_ do
         state_focus_exit
       end
@@ -605,10 +605,10 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       end
       _WAIT_ count: 12
 
-      _END_FRAME_
+      _HALT_
       state_begin
     end
-    _END_FRAME_
+    _HALT_
     _RETURN_ do
       state_focus_play
     end
@@ -622,16 +622,16 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       _SEND_ :select_exit, interrupt: true do
         _SET_ alpha: 128
       end
-      _END_FRAME_
+      _HALT_
       _RETURN_ do
         state_focus_play
       end
     end
     _CHECK_INPUT_ key_push: [K_SPACE] do
-      _END_FRAME_
+      _HALT_
       _EXIT_
     end
-    _END_FRAME_
+    _HALT_
     _RETURN_ do
       state_focus_exit
     end
@@ -648,7 +648,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     _WAIT_ count: 60
     _SELECT_
     _WAIT_ count: 10
-    _END_FRAME_
+    _HALT_
     _RETURN_ do
       state_focus_play
     end
@@ -656,7 +656,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
 
   _DEFINE_ :state_normal do
     _CHECK_ equal: { ball_alive: false } do
-      _END_FRAME_
+      _HALT_
       _RETURN_ do
         state_miss
       end
@@ -665,7 +665,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       _SEND_ :bricks, interrupt: true do
         _DELETE_
       end
-      _END_FRAME_
+      _HALT_
       _SEND_ :ball, interrupt: true do
         _RESET_
       end
@@ -673,7 +673,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
         state_level_success
       end
     end
-    _END_FRAME_
+    _HALT_
     _RETURN_ do
       state_normal
     end
@@ -716,7 +716,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       _SEND_ :bar, interrupt: true do
         _SET_ wait: false
       end
-      _END_FRAME_
+      _HALT_
       _SEND_ :message_ready, interrupt: true do
         _MOVE_ [12], alpha: [255, 0]
       end
@@ -725,16 +725,16 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       end
     end
 
-    _END_FRAME_
+    _HALT_
     _RETURN_ do
       state_begin
     end
   end
 
-  _END_FRAME_
+  _HALT_
   state_setup
 end
 
 _LOOP_ do
-  _END_FRAME_
+  _HALT_
 end

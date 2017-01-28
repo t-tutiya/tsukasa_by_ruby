@@ -51,7 +51,7 @@ _CREATE_ :Image, id: :horror_img, x: 64, y: 64, width: 1024, height: 200 do
         waveLength: (360.0 / (wave_length * texelSize)) 
     end
     _RETURN_ do
-      _END_FRAME_
+      _HALT_
       status
     end
   end
@@ -61,5 +61,5 @@ _CREATE_ :Image, id: :horror_img, x: 64, y: 64, width: 1024, height: 200 do
 end
 
 _LOOP_ do
-  _END_FRAME_
+  _HALT_
 end

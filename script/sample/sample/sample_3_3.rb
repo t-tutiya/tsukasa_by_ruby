@@ -63,6 +63,6 @@ _LOOP_ do
     end
     _BREAK_
   end
-  _END_FRAME_
+  _HALT_
 end
 

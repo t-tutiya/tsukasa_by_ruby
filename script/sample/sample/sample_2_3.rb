@@ -59,7 +59,7 @@ _DEFINE_ :command_window do |options|
         end
         _DELETE_
       end
-      _END_FRAME_
+      _HALT_
       _RETURN_ do
         inner_loop
       end
@@ -71,5 +71,5 @@ end
 command_window x:0, y:0
 
 _LOOP_ do
-  _END_FRAME_
+  _HALT_
 end

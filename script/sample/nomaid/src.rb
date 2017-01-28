@@ -535,7 +535,7 @@ _LOOP_ 7 do
     _GET_ [:day], control: [:_ROOT_, :_TEMP_] do |day:|
       _SET_ [:_ROOT_, :_TEMP_], day: day + 1
     end
-    _END_FRAME_
+    _HALT_
   end
 
   #ゲームオーバー判定
@@ -569,7 +569,7 @@ end
 
 _DELETE_ :status_window
 
-_END_FRAME_
+_HALT_
 
 #ゲームオーバーならテキストを出力して終了
 _CHECK_ [:_ROOT_, :_TEMP_], equal: {gameover: true} do

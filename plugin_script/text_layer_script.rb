@@ -208,11 +208,11 @@ _DEFINE_ :_CHAR_RUBI_ do |options|
   end
 end
 
-#デフォルトテキストウィンドウの_SET_ラッパー
-_DEFINE_ :_CHAR_IMAGE_ do |_ARGUMENT_:|
+#デフォルトテキストウィンドウに外字画像を挿入するラッパー
+_DEFINE_ :_CHAR_IMAGE_ do |_ARGUMENT_:, width:, height:|
   _GET_ :_DEFAULT_TEXT_PAGE_ do |_DEFAULT_TEXT_PAGE_:|
     _SEND_ _DEFAULT_TEXT_PAGE_ do
-      _CHAR_ image_path: _ARGUMENT_
+      _INSERT_CHAR_IMAGE_ _ARGUMENT_, width: width, height: height
     end
   end
 end

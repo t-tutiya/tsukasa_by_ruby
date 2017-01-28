@@ -176,7 +176,7 @@ class TestTextPageBase < Minitest::Test
       #初期テキストウィンドウのidを格納
       _DEFINE_PROPERTY_ _DEFAULT_TEXT_PAGE_: [:_ROOT_, :text0]
 
-      _CHAR_IMAGE_ "./resource/button_key_up.png"
+      _CHAR_IMAGE_ "./resource/button_key_up.png", width:256,height:256
       _SEND_ [:_ROOT_, :text0] do
         _TEXT_ "外字画像表示テスト"
       end

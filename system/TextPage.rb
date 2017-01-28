@@ -297,7 +297,7 @@ class TextPage < Layout
   #############################################################################
 
   #charコマンド
-  #指定文字（群）を描画チェインに連結する
+  #指定文字（群）を文字列チェインに連結する。
   def _CHAR_(_ARGUMENT_: nil, image_path: nil)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, nil, nil,
@@ -322,6 +322,28 @@ class TextPage < Layout
                             :italic=>@char_option[:italic],
                             :auto_fitting=>true }).get_width(_ARGUMENT_ || "")
   end
+
+  #外字画像を文字列チェインに連結する。
+  def _INSERT_CHAR_IMAGE_(_ARGUMENT_: nil, width: 0, height: 0)
+    #文字コントロールを生成する
+    @control_list.last.push_command(:_CREATE_, nil, nil,
+                                {
+                                  :_ARGUMENT_ => :Char, 
+                                  :offset_x => @character_pitch,
+                                  :image_path => _ARGUMENT_,
+                                  :x => @next_char_x, 
+                                  :y => @line_height - height,
+                                }.merge(@char_option),
+                                &@function_list[:_CHAR_RENDERER_]
+                               )
+
+    #文字待機処理をスタックする
+    unshift_command(:_CHAR_WAIT_)
+
+    #次の文字の描画X座標を生成
+    @next_char_x += width
+  end
+
 
   #指定したコマンドブロックを文字列の末端に追加する
   def _CHAR_COMMAND_(width: 0, height: 0, skip: false, **)

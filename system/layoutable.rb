@@ -37,10 +37,6 @@ module Layoutable
   attr_accessor  :x
   attr_accessor  :y
 
-  #オフセット座標
-  attr_accessor  :offset_x
-  attr_accessor  :offset_y
-
   #サイズ
   attr_accessor  :width
   attr_accessor  :height
@@ -49,9 +45,6 @@ module Layoutable
     @x = options[:x] || 0 #描画Ｘ座標
     @y = options[:y] || 0 #描画Ｙ座標
 
-    @offset_x = options[:offset_x] || 0 #描画オフセットＸ座標
-    @offset_y = options[:offset_y] || 0 #描画オフセットＹ座標
-
     @width = options[:width] || 1 #幅
     @height = options[:height] || 1 #高さ
 
@@ -59,8 +52,8 @@ module Layoutable
   end
 
   def update(mouse_pos_x, mouse_pos_y)
-    super(mouse_pos_x - @x - @offset_x, 
-          mouse_pos_y - @y - @offset_y)
+    super(mouse_pos_x - @x, 
+          mouse_pos_y - @y)
   end
 end
 

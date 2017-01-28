@@ -36,8 +36,8 @@ class Layout < Control
   include Layoutable
   def render(offset_x, offset_y, target)
 
-    super(offset_x + @x + @offset_x, 
-          offset_y + @y + @offset_y, 
+    super(offset_x + @x, 
+          offset_y + @y, 
           target)
   end
 end

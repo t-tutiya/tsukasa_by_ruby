@@ -110,6 +110,10 @@ module Clickable
     @collision_sprite = DXRuby::Sprite.new
     @collision_sprite.collision = @shape
 
+    #コリジョン図形の位置を補正
+    @collision_sprite.x = 0
+    @collision_sprite.y = 0
+
     #カーソルSprite初期化
     @mouse_sprite = DXRuby::Sprite.new
     @mouse_sprite.collision = [0, 0]
@@ -143,10 +147,6 @@ module Clickable
     #カーソル座標を保存する
     @cursor_x = @mouse_sprite.x = mouse_pos_x - @x
     @cursor_y = @mouse_sprite.y = mouse_pos_y - @y
-
-    #コリジョン図形の位置を補正
-    @collision_sprite.x = @offset_x
-    @collision_sprite.y = @offset_y
 
     #マウスカーソル座標との衝突判定
     if not (@mouse_sprite === @collision_sprite)

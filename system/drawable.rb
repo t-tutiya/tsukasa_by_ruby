@@ -180,8 +180,8 @@ module Drawable
     return 0, 0 if @entity.disposed?
 
     #自エンティティを上位ターゲットに描画
-    target.draw_ex( @x + @offset_x + offset_x,
-                    @y + @offset_y + offset_y, 
+    target.draw_ex( @x + offset_x,
+                    @y + offset_y, 
                     @entity, 
                     @draw_option)
   end

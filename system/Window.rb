@@ -155,13 +155,12 @@ class Window < ClickableLayout #マウスカーソルがウィンドウの外に
       set_exit()
     end
 
+    #マウスのオフセット増分と座標を保存
     @mouse_offset_x = mouse_pos_x - @mouse_x
     @mouse_x = mouse_pos_x
 
     @mouse_offset_y = mouse_pos_y - @mouse_y
     @mouse_y = mouse_pos_y
-
-    pp mouse_offset_x
 
     #windowがアクティブで無ければ子コントロールを動作せずに終了
     return  unless DXRuby::Window.active? and @inactive_pause

@@ -77,7 +77,7 @@ _DEFINE_ :TextSelect do |options|
         _CHECK_INPUT_ key_down: K_RCONTROL, 
                       key_push: K_SPACE,
                       mouse: :push do
-          _SET_ x: 0
+          _SET_ x: x
          _BREAK_
         end
       end

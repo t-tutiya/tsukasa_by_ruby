@@ -163,14 +163,8 @@ class Image < Control
     #中間バッファを生成
     rt = DXRuby::RenderTarget.new(@width, @height)
 
-    #コントロールの初期化
-    control = self
-
-    #子コントロールを再帰的に検索
-    Array(_ARGUMENT_).each do |control_id|
-      control = control.child_control(control_id)
-      break unless control
-    end
+    #描画対象コントロールの検索
+    control = find_control(_ARGUMENT_)
 
     #コントロールの探査に失敗
     unless control

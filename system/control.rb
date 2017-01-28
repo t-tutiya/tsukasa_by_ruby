@@ -374,8 +374,8 @@ class Control #コントロールの生成／破棄
   end
 
   #ユーザー定義コマンドの別名を作る
-  def _ALIAS_(new:, old:)
-    @function_list[new] = @function_list[old]
+  def _ALIAS_(new_name:, original_name:)
+    @function_list[new_name] = @function_list[original_name]
   end
 
   #関数ブロックを実行する

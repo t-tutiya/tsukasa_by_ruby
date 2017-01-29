@@ -36,13 +36,13 @@ class DrawableLayout < Control
   include Drawable
   #Ｘ幅
   def width=(arg)
-    super
+    @width = arg
     @update_flag = true
   end
 
   #Ｙ幅
   def height=(arg)
-    super
+    @height = arg
     @update_flag = true
   end
 
@@ -66,18 +66,16 @@ class DrawableLayout < Control
     @entity.update
   end
   
-  def initialize(system, options, &block)
+  def initialize(system, width:, height:, bgcolor: [0,0,0,0], **options, &block)
   
     super
 
-    @bgcolor = options[:bgcolor]  || [0,0,0,0]
+    @bgcolor = bgcolor
     #保持オブジェクトの初期化
-    @entity = DXRuby::RenderTarget.new( options[:width]  || 1, 
-                                options[:height] || 1, 
-                                @bgcolor)
+    @entity = DXRuby::RenderTarget.new(width, height, @bgcolor)
 
-    self.width = options[:width]
-    self.height = options[:height]
+    self.width = width
+    self.height = height
 
     @update_flag = false
   end

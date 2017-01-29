@@ -128,7 +128,7 @@ _INCLUDE_ "./resource/icon/icon_8_a.rb"
 _DEFINE_ :_LINE_PAUSE_ do
   #ルートのクリック待ち
   _PAUSE_ skip: true do |x:, y:|
-    _CREATE_ :Layout, x: x, y: y, width: 24, height: 24,
+    _CREATE_ :Layout, x: x, y: y,
       align_y: :bottom, float_x: :left do
       _CREATE_ :TileMap, 
         map_array: [[0]], size_x: 1, size_y: 1, 
@@ -154,7 +154,7 @@ end
 _DEFINE_ :_END_PAUSE_ do
   #ルートのクリック待ち
   _PAUSE_ do |x:, y:|
-    _CREATE_ :Layout, x: x, y: y, width: 24, height: 24,
+    _CREATE_ :Layout, x: x, y: y,
       align_y: :bottom, float_x: :left do
       _CREATE_ :TileMap, 
         map_array: [[0]], size_x: 1, size_y: 1, 

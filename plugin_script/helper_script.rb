@@ -73,23 +73,16 @@ end
 #Imageを生成し、指定したコントロール配下を描画する
 _DEFINE_ :_TO_IMAGE_ do 
   |_ARGUMENT_:, width: nil, height: nil, scale: nil, z: Float::INFINITY, visible: true|
-  _GET_ [:width, :height] do |options|
-    #width/heightのどちらかが設定されていない場合、現在の幅を使用する
-    unless width and height
-      width = options[:width]
-      height= options[:height]
-    end
-    #新規Imageの生成（初期設定では不可視）
-    _CREATE_ :Image, id: _ARGUMENT_, z: z, visible: false,
-      width: width, height: height do
-      #自身と並列の子コントロールを描画する（自身は除く）
-      _DRAW_ [:_PARENT_], scale: scale
-      #可視設定を更新する
-      _SET_ visible: visible
-      #ブロックコマンド実行
-      _CHECK_BLOCK_ do
-        _YIELD_
-      end
+  #新規Imageの生成（初期設定では不可視）
+  _CREATE_ :Image, id: _ARGUMENT_, z: z, visible: false,
+    width: width, height: height do
+    #自身と並列の子コントロールを描画する（自身は除く）
+    _DRAW_ [:_PARENT_], scale: scale
+    #可視設定を更新する
+    _SET_ visible: visible
+    #ブロックコマンド実行
+    _CHECK_BLOCK_ do
+      _YIELD_
     end
   end
   #Imageのコマンドリストを評価させるために１フレ送る

@@ -333,14 +333,13 @@ class Char < Control
                             :auto_fitting=>true })
 
     #現状での縦幅、横幅を取得
-    @width = width
-    @width += @font_obj.get_width(@char)
-    @width = 1 if @width == 0
-    @height = height + @size
+    width += @font_obj.get_width(@char)
+    width = 1 if width == 0
+    height += @size
 
     #文字用のimageを作成
     @entity.dispose if @entity and !(@entity.disposed?)
-    @entity = DXRuby::Image.new(@width, @height, [0, 0, 0, 0]) 
+    @entity = DXRuby::Image.new(width, height, [0, 0, 0, 0]) 
 
     #フォントを描画
     @entity.draw_font_ex( offset_x, 
@@ -356,19 +355,18 @@ class Char < Control
     @font_data = @@fonts_file_cache[@font_name][0]
 
     #現状での縦幅、横幅を取得
-    @width = width
     @char.each_char do |char|
       #文字のデータ構造体を取得
       font = @font_data[char.encode("windows-31j")]
       #Ｘ座標更新
-      @width += font[0] - font[1]
+      width += font[0] - font[1]
     end
-    @width = 1 if @width == 0
-    @height = height + @@fonts_file_cache[@font_name][1]
+    width = 1 if width == 0
+    height += @@fonts_file_cache[@font_name][1]
 
     #文字用のimageを作成
     @entity.dispose if @entity and !(@entity.disposed?)
-    @entity = DXRuby::Image.new(@width, @height, [0, 0, 0, 0])
+    @entity = DXRuby::Image.new(width, height, [0, 0, 0, 0])
 
     #全ての文字を描画する
     @char.each_char do |char|
@@ -397,12 +395,12 @@ class Char < Control
     entity = @@ImageCache.load(@image_path)
 
     #現状での縦幅、横幅を取得
-    @width = width + entity.width
-    @height = height + entity.height
+    width += entity.width
+    height += entity.height
 
     #imageを作成
     @entity.dispose if @entity and !(@entity.disposed?)
-    @entity = DXRuby::Image.new(@width, @height, [0, 0, 0, 0]) 
+    @entity = DXRuby::Image.new(width, height, [0, 0, 0, 0]) 
 
     #画像をグリフ化してImageに書き込む
     @entity.draw( offset_x/2, 

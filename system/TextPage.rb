@@ -277,8 +277,6 @@ class TextPage < Layout
                     nil,
                     {
                       _ARGUMENT_: :Layout, 
-                      width: @width,
-                      height: @line_height,
                       y: @next_line_y
                     })
 
@@ -374,8 +372,6 @@ class TextPage < Layout
     @control_list.last.push_command(:_CREATE_, nil, nil, 
                                     {
                                       :_ARGUMENT_ => :Layout, 
-                                      :width => 0,
-                                      :height => @size,
                                     })
 
     #ルビを出力するTextPageを生成する
@@ -432,8 +428,6 @@ class TextPage < Layout
     unshift_command(:_CREATE_, 
                     {
                       :_ARGUMENT_ => :Layout, 
-                      :width => @width,
-                      :height => @line_height,
                       :y => @next_line_y,
                     })
 
@@ -462,8 +456,6 @@ class TextPage < Layout
     unshift_command(:_CREATE_, 
                     {
                       :_ARGUMENT_ => :Layout, 
-                      :width => @width,
-                      :height => @line_height,
                       :y => @next_line_y 
                     })
 

@@ -103,20 +103,18 @@ tsukasa = Tsukasa::Window.new()do
   end
 
   #初期レイヤ（背景）
-  _CREATE_ :Image, z:    0, id: :base
+  _CREATE_ :Image, width: 1, height:1, z:    0, id: :base
   #初期レイヤ０
-  _CREATE_ :Image, z: 1000, id: :img0
+  _CREATE_ :Image, width: 1, height:1, z: 1000, id: :img0
   #初期レイヤ１
-  _CREATE_ :Image, z: 2000, id: :img1
+  _CREATE_ :Image, width: 1, height:1, z: 2000, id: :img1
   #初期レイヤ２
-  _CREATE_ :Image, z: 3000, id: :img2
+  _CREATE_ :Image, width: 1, height:1, z: 3000, id: :img2
 
   #初期テキストウィンドウ
   _TEXT_WINDOW_ :text0, 
     x: 96,
     y: 256 + 164,
-    width: 1024,
-    height: 192,
     size: 32, 
     font_name: "ＭＳＰ ゴシック",
     z: 1000000 #描画順序

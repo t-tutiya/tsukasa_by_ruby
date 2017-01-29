@@ -37,17 +37,9 @@ module Layoutable
   attr_accessor  :x
   attr_accessor  :y
 
-  #サイズ
-  attr_accessor  :width
-  attr_accessor  :height
-
-  def initialize(system, options, &block)
-    @x = options[:x] || 0 #描画Ｘ座標
-    @y = options[:y] || 0 #描画Ｙ座標
-
-    @width = options[:width] || 1 #幅
-    @height = options[:height] || 1 #高さ
-
+  def initialize(system, x: 0, y: 0, **options, &block)
+    @x = x #描画Ｘ座標
+    @y = y #描画Ｙ座標
     super
   end
 

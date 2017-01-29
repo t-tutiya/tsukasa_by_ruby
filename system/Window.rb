@@ -187,8 +187,6 @@ class Window < ClickableLayout #マウスカーソルがウィンドウの外に
   def _RESIZE_(width:, height:)
     DXRuby::Window.resize(width, height)
     @collision_sprite.collision = [ 0, 0, width, height]
-    @width = width
-    @height = height
   end
 end
 

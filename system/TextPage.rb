@@ -298,7 +298,7 @@ class TextPage < Layout
 
   #charコマンド
   #指定文字（群）を文字列チェインに連結する。
-  def _INSERT_CHAR_(_ARGUMENT_: nil, image_path: nil)
+  def _INSERT_CHAR_(_ARGUMENT_: nil)
     #文字コントロールを生成する
     @control_list.last.push_command(:_CREATE_, nil, nil,
                                 {
@@ -306,7 +306,6 @@ class TextPage < Layout
                                   :char => _ARGUMENT_,
                                   :x => @next_char_x + @character_pitch, 
                                   :y => @line_height - @char_option[:size],
-                                  :image_path => image_path
                                 }.merge(@char_option),
                                 &@function_list[:_CHAR_RENDERER_]
                                )

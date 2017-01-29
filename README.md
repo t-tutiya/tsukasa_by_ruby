@@ -26,7 +26,7 @@
 ・ドキュメントは下記URLから取得してください（上記パッケージにも同梱されています）。
 ★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 ・ソースコードはGitHub上で開発継続中です。
-★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+https://github.com/t-tutiya/tsukasa
 
 #ファーストステップ
 
@@ -124,31 +124,52 @@
         *  _SCREEN_MODES_
         *  _FULL_SCREEN_
         *  _MOUSE_WHEEL_POS_
+        *  _INPUT_MOUSE_
 
 *  helper_script.rb(utility_script.rbから改名)
     *  ファイル名を変更し、内容を整理。
     *  _CHAR_IMAGE_の引数をpathから_ARGUMENT_に変更
     *  _TEXT_WINDOW_のフラグを管理する専用のDataコントロールを用意
+    *  _TO_IMAGE_で生成するImageコントロールのサイズ指定を必須とした
 
 *  Controlコントロール
+    *  _END_FRAME_コマンドの名称を_HALT_に変更
     *  _NEXT_/_BREAK_コマンドにブロックを付与できる仕様を廃止
     *  _SEND_コマンドで設定したプロパティの値をブロック内で利用できるようにした
     *  _SCOPE_コマンド廃止
     *  _LOAD_NATIVE_コマンド廃止
     *  _SERIALIZE_コマンドにcontrolオプションを追加
+    *  _ALIAS_のオプション名をnew/oldからnew_name/original_nameに変更（newが紛らわしいため）
     *  command_listプロパティを廃止（ドキュメントには元々記載無し）
+    *  child_indexプロパティ廃止
     *  （内部処理）exitプロパティを読み出し専用に変更（元々ドキュメントにはない）
     *  （内部処理）Control#unshift/push_command_arrayメソッドを追加
-
+    *  （内部処理）Control#updateメソッドのインターフェイスを変更
 
 *  Windowコントロール
-    *  Window.caption/bgcolor/icon_path/cursor_type/full_screen/screen_modes/mouse_wheel_posプロパティ追加
+    *  継承元をClickableLayoutに変更
+    *  Window.caption/bgcolor/icon_path/cursor_type/full_screen/screen_modes/mouse_wheel_pos/inactive_pause/mouse_offset_x/mouse_offset_yプロパティ追加
 
-*  Drawableコントロール
+*  Drawableモジュール（旧Drawableコントロール）
+    *  モジュールに変更
     *  shaderプロパティをDXRuby::Shaderを直接保持する形式に変更
+
+*  Layoutableモジュール（旧Layoutableコントロール）
+    *  モジュールに変更
+    *  width/height/float_x/float_y/align_x/align_y/offset_x/offset_yプロパティ廃止
+    *  check_float/check_alignメソッド廃止
+
+*  Clickableモジュール
+    *  新規作成
+    *  collision_shapeプロパティをshapeに改名
+
+*  ClickableLayoutコントロール
+    *  Clickableモジュールをインクルードする形式に変更
+    *  collision_shapeプロパティをshapeに改名
 
 *  Imageコントロール
     *  _PIXEL_コマンドのブロック引数名を_ARGUMENT_からcolorに変更
+    *  _DRAW_コマンドの第１引数をコントロールへの相対パスに変更
 
 *  TileMapコントロール
     *  _MAP_STATUS_コマンドのブロック引数名を_ARGUMENT_からstatusに変更
@@ -166,6 +187,9 @@
 *  TextPageコントロール
     *  _CHAR_RENDERER_/_CHAR_WAIT_/_LINE_WAIT_コマンドブロックを初期値として設定できる仕様を廃止（ドキュメントには元々記載無し）
     *  use_image_font/image_face初期化プロパティ廃止（ドキュメントには元々記載無し）
+    *  _INSERT_CHAR_IMAGE_コマンド追加
+    *  _CHAR_コマンドの名称を_INSERT_CHAR_に変更
+    *  _CHAR_COMMAND_の名称を_INSERT_COMMAND_に変更
 
 *  pluginフォルダ
     *  HorrorTextShader.rb追加

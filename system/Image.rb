@@ -46,6 +46,7 @@ class Image < Control
 
   attr_reader :path
   def path=(path)
+    pp path
     #元Imageを解放
     @@ImageCache.dispose(@path) if @path
     #新Imageを取得
@@ -58,7 +59,7 @@ class Image < Control
     super
   end
 
-  def initialize(system, width: nil, height: nil, path: nil, color: [0,0,0,0], **options, &block)
+  def initialize(system, width: 1, height: 1, path: nil, color: [0,0,0,0], **options, &block)
     @path = nil
     super
 

@@ -27,15 +27,13 @@ initialize(system, options = {})
 
 ■メインループ関連（オーバーライド可能）
 
-update(mouse_pos_x, mouse_pos_y, index)
+update(mouse_pos_x, mouse_pos_y)
 ・毎フレーム毎に呼びだされます。更新処理を行います。
 ・全てのコントロールについてupdateが実行された後、renderが実行されます。
 ・mouse_pos_x/mouse_pos_y：コントロールの左上を原点としたマウスカーソルの相対座標が格納されます。
-・index：コントロールリスト上の自身の実行順番号が格納されます。
 
-render(offset_x, offset_y, target)
+render(target)
 ・毎フレーム毎に呼びだされます。描画処理を行います。
-・offset_x/offset_y：システムから指定された描画オフセット更新値が格納されます。
 ・target：自身を描画する対象の描画ターゲットが格納されます。
 
 ■コマンド処理（オーバーライド不可）

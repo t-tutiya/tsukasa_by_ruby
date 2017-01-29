@@ -151,9 +151,9 @@ class Image < Control
   end
 
   #指定したツリーを描画する
-  def _DRAW_(_ARGUMENT_: , width: , height: , x: 0, y: 0, scale: nil, **)
+  def _DRAW_(_ARGUMENT_: , x: 0, y: 0, scale: nil)
     #中間バッファを生成
-    rt = DXRuby::RenderTarget.new(width, height)
+    rt = DXRuby::RenderTarget.new(@entity.width, @entity.height)
 
     #描画対象コントロールの検索
     control = find_control(_ARGUMENT_)
@@ -170,10 +170,11 @@ class Image < Control
     #拡大率が設定されている場合
     if scale
       #第２中間バッファを生成
-      rt2 = DXRuby::RenderTarget.new( scale * width, scale * height)
+      rt2 = DXRuby::RenderTarget.new( scale * @entity.width, 
+                                      scale * @entity.height)
       #拡大率を反映して第２中間バッファに描画
-      rt2.draw_ex(-1 * scale**2 * width,
-                  -1 * scale**2 * height,
+      rt2.draw_ex(-1 * scale**2 * @entity.width,
+                  -1 * scale**2 * @entity.height,
                   rt,
                   {:scale_x => scale,
                    :scale_y => scale,})

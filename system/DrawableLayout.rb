@@ -66,7 +66,7 @@ class DrawableLayout < Control
     @entity.update
   end
   
-  def initialize(system, width:, height:, bgcolor: [0,0,0,0], **options, &block)
+  def initialize(system, width:, height:, bgcolor: [0,0,0,0], relative_x: 0, relative_y: 0, **options, &block)
   
     super
 
@@ -76,6 +76,9 @@ class DrawableLayout < Control
 
     self.width = width
     self.height = height
+    self.bgcolor = bgcolor
+    self.relative_x = relative_x
+    self.relative_y = relative_y
 
     @update_flag = false
   end

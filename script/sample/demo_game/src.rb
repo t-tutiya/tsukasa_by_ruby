@@ -4,8 +4,6 @@
 _SEND_(:text0) do
   _SET_ x: 32,
   y: 32,
-  width: 1024,
-  height: 1024,
   z: 1000000
   _SET_  font_name: "ＭＳ ゴシック"
   _DEFINE_ :_CHAR_RENDERER_ do |argument, options,control|
@@ -55,9 +53,7 @@ _DEFINE_ :TextSelect do |options|
     float_x: :left,
     shape: [0, 0, 196, 32],
     x: options[:x] || 0, 
-    y: options[:y] || 0, 
-    width: 196, 
-    height: 32 do
+    y: options[:y] || 0 do
     #テキストを描画するDrawableLayout
     _CREATE_ :DrawableLayout,
       float_x: :left,

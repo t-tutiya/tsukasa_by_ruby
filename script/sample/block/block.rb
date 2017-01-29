@@ -74,63 +74,49 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
   _DEFINE_PROPERTY_ bricks: BRICK_ROWS * BRICK_COLS, ball_alive: true, ball_rest: 3
 
   _CREATE_ :Image, id: :message_ready, width: 600, height: 600, x: 0, y: 0, z: 100 do
-    _GET_ [:width, :height] do |width:, height:|
-      text = 'PRESS SPACE KEY TO PLAY'
-      text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ text, x: (width - text_width) / 2, y: (height - 24) / 2, color: [255 ,255 ,255]
-    end
+    text = 'PRESS SPACE KEY TO PLAY'
+    text_width = DXRuby::Font.default.get_width(text)
+    _TEXT_ text, x: (600 - text_width) / 2, y: (600 - 24) / 2, color: [255 ,255 ,255]
   end
 
   _CREATE_ :Image, id: :message_success, width: 300, height: 300, x: 150, y: 150 do
     _SET_ visible: false
-    _GET_ [:width, :height] do |width:, height:|
-      text = 'LEVEL SUCCESS!'
-      text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ text, x: (width - text_width) / 2, y: (height - 24) / 2, color: [255 ,255 ,255]
-    end
+    text = 'LEVEL SUCCESS!'
+    text_width = DXRuby::Font.default.get_width(text)
+    _TEXT_ text, x: (300 - text_width) / 2, y: (300 - 24) / 2, color: [255 ,255 ,255]
   end
 
   _CREATE_ :Image, id: :message_miss, width: 300, height: 300, x: 150, y: 150 do
     _SET_ visible: false
-    _GET_ [:width, :height] do |width:, height:|
       text = 'MISS.'
       text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ text, x: (width - text_width) / 2, y: (height - 24) / 2, color: [255 ,255 ,255]
-    end
+      _TEXT_ text, x: (300 - text_width) / 2, y: (300 - 24) / 2, color: [255 ,255 ,255]
   end
 
   _CREATE_ :Image, id: :message_failure, width: 300, height: 300, x: 150, y: 150 do
     _SET_ visible: false
-    _GET_ [:width, :height] do |width:, height:|
       text = 'LEVEL FAILURE...'
       text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ text, x: (width - text_width) / 2, y: (height - 24) / 2, color: [255 ,255 ,255]
-    end
+      _TEXT_ text, x: (300 - text_width) / 2, y: (300 - 24) / 2, color: [255 ,255 ,255]
   end
 
   _CREATE_ :Image, id: :message_play_again, width: 300, height: 300, x: 150, y: 150 do
     _SET_ visible: false
-    _GET_ [:width, :height] do |width:, height:|
-      text = 'PLAY AGAIN?'
-      text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ text, x: (width - text_width) / 2, y: (height - 24) / 2 - 32, color: [255 ,255 ,255]
-    end
+    text = 'PLAY AGAIN?'
+    text_width = DXRuby::Font.default.get_width(text)
+    _TEXT_ text, x: (300 - text_width) / 2, y: (300 - 24) / 2 - 32, color: [255 ,255 ,255]
   end
   _CREATE_ :Image, id: :select_play, width: 300, height: 300, x: 150, y: 150 do
     _SET_ visible: false
-    _GET_ [:width, :height] do |width:, height:|
-      text = 'PLAY'
-      text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ text, x: (width / 2 - text_width) / 2, y: (height - 24) / 2 + 32, color: [255 ,255 ,255]
-    end
+    text = 'PLAY'
+    text_width = DXRuby::Font.default.get_width(text)
+    _TEXT_ text, x: (300 / 2 - text_width) / 2, y: (300 - 24) / 2 + 32, color: [255 ,255 ,255]
   end
   _CREATE_ :Image, id: :select_exit, width: 300, height: 300, x: 150, y: 150 do
     _SET_ visible: false
-    _GET_ [:width, :height] do |width:, height:|
-      text = 'EXIT'
-      text_width = DXRuby::Font.default.get_width(text)
-      _TEXT_ text, x: width / 2 + (width / 2 - text_width) / 2, y: (height - 24) / 2 + 32, color: [255 ,255 ,255]
-    end
+    text = 'EXIT'
+    text_width = DXRuby::Font.default.get_width(text)
+    _TEXT_ text, x: 300 / 2 + (300 / 2 - text_width) / 2, y: (300 - 24) / 2 + 32, color: [255 ,255 ,255]
   end
 
   _CREATE_ :Image, id: :wall_left, width: 10, height: 600, color: [128, 128, 128], x: 0, y: 0 do
@@ -148,23 +134,23 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
         _CREATE_ :Image, width: BRICK_WIDTH, height: BRICK_HEIGHT, color: [255, 255, 255], x: 13 + 48 * x, y: 37 + 12 * y do
           _DEFINE_ :state_normal do
             local_vars = {}
-            _GET_ [:x, :vx, :y, :vy, :width], control: [:_ROOT_, :stage, :ball] do |x:, vx:, y:, vy:, width:|
+            _GET_ [:x, :vx, :y, :vy], control: [:_ROOT_, :stage, :ball] do |x:, vx:, y:, vy:|
               local_vars[:vx] = vx
               local_vars[:vy] = vy
-              local_vars[:center_x] = x + vx + width / 2
-              local_vars[:center_y] = y + vy + width / 2
-              local_vars[:ball_r] = width / 2
+              local_vars[:center_x] = x + vx + 10 / 2
+              local_vars[:center_y] = y + vy + 10 / 2
+              local_vars[:ball_r] = 10 / 2
             end
-            _GET_ [:x, :y, :width, :height] do |x:, y:, width:, height:|
+            _GET_ [:x, :y] do |x:, y:|
               vx = local_vars[:vx]
               vy = local_vars[:vy]
               center_x = local_vars[:center_x]
               center_y = local_vars[:center_y]
               ball_r = local_vars[:ball_r]
               left = x - ball_r
-              right = x + width + ball_r
+              right = x + BRICK_WIDTH + ball_r
               top = y - ball_r
-              bottom = y + height + ball_r
+              bottom = y + 10 + ball_r
               if left < center_x && center_x < right && top < center_y && center_y < bottom
                 _SEND_ [:_ROOT_, :stage, :ball], interrupt: true do
                   _CHECK_ equal: { boost: false } do
@@ -189,14 +175,14 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
           end
 
           _DEFINE_ :state_break do
-            _GET_ [:x, :y, :width, :height] do |x:, y:, width:, height:|
+            _GET_ [:x, :y] do |x:, y:|
               _SEND_ [:_ROOT_, :stage], interrupt: true do
-                particles = (width / 4).times.to_a.product((height / 2).times.to_a)
+                particles = (BRICK_WIDTH / 4).times.to_a.product((BRICK_HEIGHT / 2).times.to_a)
                 particles.sample(particles.size / 8).each do |col, row|
-                  particle_width = (width * 1.0) / (width / 4)
-                  particle_height = (height * 1.0) / (height / 2)
-                  center_x = x + width / 2.0
-                  center_y = y + height / 2.0
+                  particle_width = (BRICK_WIDTH * 1.0) / (BRICK_WIDTH / 4)
+                  particle_height = (BRICK_HEIGHT * 1.0) / (BRICK_HEIGHT / 2)
+                  center_x = x + BRICK_WIDTH / 2.0
+                  center_y = y + BRICK_HEIGHT / 2.0
                   particle_x = x + particle_width * col
                   particle_y = y + particle_height * row
                   direction = Math.atan2((particle_x - center_x), (particle_y - center_y))
@@ -235,11 +221,9 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     _DEFINE_PROPERTY_ vx: 0, wait: true
 
     local_vars = {}
-    _GET_ :width, control: [:_PARENT_, :wall_left] do |width:|
-      local_vars[:wall_width] = width
-    end
 
-    _GET_ :width do |width:|
+    local_vars[:wall_width] = 10
+
       wall_width = local_vars[:wall_width]
       _DEFINE_ :state_move do
         _GET_ [:x, :y], control: [:_ROOT_, :_INPUT_] do |x:, y:|
@@ -249,8 +233,8 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
             case
             when x + vx <= wall_width
               x, vx = wall_width, 0
-            when STAGE_WIDTH - wall_width - width <= x + vx
-              x, vx = STAGE_WIDTH - wall_width - width, 0
+            when STAGE_WIDTH - wall_width - BAR_INIT_WIDTH <= x + vx
+              x, vx = STAGE_WIDTH - wall_width - BAR_INIT_WIDTH, 0
             end
             _SET_ x: x + vx
             _SET_ vx: vx * 0.9
@@ -286,7 +270,6 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       end
 
       state_wait
-    end
   end
 
   _CREATE_ :Image, id: :ball, width: 10, height: 10, color: [0, 0, 0, 0] do
@@ -302,17 +285,11 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     end
 
     local_vars = {}
-    _GET_ :width, control: [:_PARENT_, :wall_left] do |width:|
-      local_vars[:wall_left_x] = width
-    end
-    _GET_ :x, control: [:_PARENT_, :wall_right] do |x:|
-      local_vars[:wall_rigth_x] = x
-    end
-    _GET_ :height, control: [:_PARENT_, :ceil] do |height:|
-      local_vars[:ceil_bottom_y] = height
-    end
+    local_vars[:wall_left_x] = 10
 
-    _GET_ [:width, :height] do |width:, height:|
+    local_vars[:wall_rigth_x] = 590
+    local_vars[:ceil_bottom_y] = 10
+
       wall_left_x = local_vars[:wall_left_x]
       wall_rigth_x = local_vars[:wall_rigth_x]
       ceil_bottom_y = local_vars[:ceil_bottom_y]
@@ -322,9 +299,9 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
           when x + vx <= wall_left_x
            _SET_ vx: vx * -1
             x, vx = wall_left_x, 0
-          when wall_rigth_x - width <= x + vx
+          when wall_rigth_x - 10 <= x + vx
             _SET_ vx: vx * -1
-            x, vx = wall_rigth_x - width, 0
+            x, vx = wall_rigth_x - 10, 0
           end
           case
           when y + vy <= ceil_bottom_y
@@ -343,15 +320,15 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
           end
           ball_vx = vx
           center_x, center_y = x + vx + 5, y + vy + 5
-          _GET_ [:x, :y, :vx, :width, :height], control: [:_PARENT_, :bar] do |x:, y:, vx:, width:, height:|
+          _GET_ [:x, :y, :vx], control: [:_PARENT_, :bar] do |x:, y:, vx:|
             left = x - 5
-            right = x + width + 5
+            right = x + BAR_INIT_WIDTH + 5
             top = y - 5
-            bottom = y + height + 5
+            bottom = y + BAR_INIT_HEIGHT + 5
             if left < center_x && center_x < right && top < center_y && center_y < bottom
               _SET_ spin: vx / -2
               _SET_ vy: vy * -1
-              if left + width / 2 - 10 < center_x && center_x < right - width / 2 + 10
+              if left + BAR_INIT_WIDTH / 2 - 10 < center_x && center_x < right - BAR_INIT_WIDTH / 2 + 10
                 _SET_ boost: true
               else
                 _SET_ boost: false
@@ -368,7 +345,6 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
           end
         end
       end
-    end
 
     _DEFINE_ :state_miss do
       _CHECK_ equal: { ready: true } do
@@ -408,9 +384,9 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     end
 
     _DEFINE_ :curve do
-      _GET_ [:x, :y, :width, :height] do |x:, y:, width:, height:|
+      _GET_ [:x, :y] do |x:, y:|
         _SEND_ :_PARENT_, interrupt: true do
-          _CREATE_ :Image, x: x, y: y, width: width, height: height do
+          _CREATE_ :Image, x: x, y: y, width: 10, height: 10 do
             _CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 255, 255]
             _MOVE_ [6], alpha: [255, 0]
             _DELETE_
@@ -420,19 +396,19 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     end
 
     _DEFINE_ :aura do
-      _GET_ [:x, :y, :width, :height] do |x:, y:, width:, height:|
+      _GET_ [:x, :y] do |x:, y:|
         _SEND_ :_PARENT_, interrupt: true do
-          _CREATE_ :Image, x: x, y: y, width: width, height: height do
+          _CREATE_ :Image, x: x, y: y, width: 10, height: 10 do
             _CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 0, 0]
             _MOVE_ [12], alpha: [255, 0]
             _DELETE_
           end
-          _CREATE_ :Image, x: x, y: y, width: width, height: height do
+          _CREATE_ :Image, x: x, y: y, width: 10, height: 10 do
             _CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 128, 0]
             _MOVE_ [9], alpha: [255, 0]
             _DELETE_
           end
-          _CREATE_ :Image, x: x, y: y, width: width, height: height do
+          _CREATE_ :Image, x: x, y: y, width: 10, height: 10 do
             _CIRCLE_ fill: true, x: 5, y: 5, r: 5, color: [255, 255, 255, 0]
             _MOVE_ [6], alpha: [255, 0]
             _DELETE_
@@ -496,14 +472,12 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       _MOVE_ [10], alpha: [128, 255], angle: [45, -20]
       _MOVE_ [20, :out_bounce], angle: [-20, 0]
       _WAIT_ count: 10
-      _GET_ [:x, :y, :width], control: [:_PARENT_, :bar] do |x:, y:, width:|
+      _GET_ [:x, :y], control: [:_PARENT_, :bar] do |x:, y:|
         _SEND_ [:_PARENT_, :ball], interrupt: true do
-          _GET_ [:height] do |height:|
-            _SET_ x: x + width / 2 - 5
-            _SET_ y: y - height
+            _SET_ x: x + BAR_INIT_WIDTH / 2 - 5
+            _SET_ y: y - 10
             _SET_ visible: true
             _SET_ ready: true
-          end
         end
       end
       _MOVE_ [10], alpha: [255, 0]
@@ -582,14 +556,12 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
       _SEND_ [:_ROOT_, :frame, :rest], interrupt: true do
         _UPDATE_
       end
-      _GET_ [:x, :y, :width], control: :bar do |x:, y:, width:|
+      _GET_ [:x, :y], control: :bar do |x:, y:|
         _SEND_ :ball, interrupt: true do
-          _GET_ [:height] do |height:|
-            _SET_ x: x + width / 2 - 5
-            _SET_ y: y - height
+            _SET_ x: x + BAR_INIT_WIDTH / 2 - 5
+            _SET_ y: y - 10
             _SET_ visible: true
             _SET_ ready: true
-          end
         end
       end
       _CHECK_ over: { bricks: 0 } do

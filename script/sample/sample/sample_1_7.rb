@@ -8,7 +8,7 @@ end
 
 _WAIT_ input: {key_push: K_SPACE}
 
-_TO_IMAGE_ :test0
+_TO_IMAGE_ :test0, height: 1024, width: 600
 
 _SEND_ :img0 do
   _SET_ path: "./resource/char/B-2.png"

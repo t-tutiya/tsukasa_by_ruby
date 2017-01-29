@@ -184,7 +184,7 @@ class TestControlBase < Minitest::Test
   #実行のみ
   def test__2016_12_31_8_ループ外での実行_任意コントロールのシリアライズ配列との比較
     control = Tsukasa::Control.new() do
-      _CREATE_:Image, id: :test_image
+      _CREATE_:Image, id: :test_image, width: 255, height:255
       _EXIT_
     end
 
@@ -199,15 +199,13 @@ class TestControlBase < Minitest::Test
                 :center_y=>nil, 
                 :alpha=>255, 
                 :blend=>:alpha, 
-                :color=>[255, 255, 255], 
+                :color=>[0, 0, 0, 0], 
                 :angle=>0, 
                 :z=>0, 
                 :shader=>nil, 
                 :offset_sync=>false, 
                 :x=>0, 
                 :y=>0, 
-                :width=>1, 
-                :height=>1, 
                 :id=>:test_image, 
                 :child_update=>true}, 
               ]]

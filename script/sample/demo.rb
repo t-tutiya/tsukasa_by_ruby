@@ -12,9 +12,7 @@ _DEFINE_ :TextSelect do |options|
   _CREATE_ :ClickableLayout,
     shape: [0, 0, options[:width] || 228, 32],
     x: options[:x] || 0, 
-    y: options[:y] || 0, 
-    width: options[:width] || 228, 
-    height: 32 do
+    y: options[:y] || 0 do
     #テキストを描画するDrawableLayout
     _CREATE_ :DrawableLayout,
       width: options[:width] || 228, 
@@ -59,9 +57,9 @@ _DEFINE_ :TextSelect do |options|
 end
 
 _DEFINE_ :system_menu do
-  _CREATE_ :Layout, id: :top_menu1, x:0, y:0, height: 256 + 64 do
+  _CREATE_ :Layout, id: :top_menu1, x:0, y:0 do
     path = "./script/sample/sample/"
-    _CREATE_ :Layout, id: 0, x:0, y:0, width: 256 do
+    _CREATE_ :Layout, id: 0, x:0, y:0 do
       TextSelect text: "sample_1_1.rb", path: path + "sample_1_1.rb", 
                  comment: "画像の表示", y: 32 * 0
       TextSelect text: "sample_1_2.rb", path: path + "sample_1_2.rb", 
@@ -81,7 +79,7 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_1_9.rb", path: path + "sample_1_9.rb", 
                  comment: "ユーザー定義コマンドを使う", y:32 * 8
     end
-    _CREATE_ :Layout, id: 1, x:256, y:0, width: 256 do
+    _CREATE_ :Layout, id: 1, x:256, y:0 do
       TextSelect text: "sample_1_10.rb", path: path + "sample_1_10.rb", 
                  comment: "データストアとインラインデータ記法", y: 32 * 0
       TextSelect text: "sample_1_11.rb", path: path + "sample_1_11.rb", 
@@ -99,7 +97,7 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_1_17.tks", path: path + "sample_1_17.tks", 
                  comment: "【tks】文字列の表示：応用", y: 32 * 7
     end
-    _CREATE_ :Layout, id: 2, x:256*2, y:0, width: 256 do
+    _CREATE_ :Layout, id: 2, x:256*2, y:0 do
       TextSelect text: "sample_2_1_1.rb", path: path + "sample_2_1_1.rb", 
                  comment: "ボタンサンプル１：通常", y: 32 * 0
       TextSelect text: "sample_2_1_2.rb", path: path + "sample_2_1_2.rb", 
@@ -117,7 +115,7 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_2_6.rb",   path: path + "sample_2_6.rb", 
                  comment: "カスタムシェーダーサンプル", y: 32 * 7
     end
-    _CREATE_ :Layout, id: 3, x:256*3, y:0, width: 256 do
+    _CREATE_ :Layout, id: 3, x:256*3, y:0 do
       TextSelect text: "sample_3_1.tks", path: path + "sample_3_1.tks", 
                  comment: "既読フラグサンプル", y: 32 * 0
       TextSelect text: "sample_3_2_1.rb", path: path + "sample_3_2_1.rb", 
@@ -137,34 +135,34 @@ _DEFINE_ :system_menu do
     end
   end
 
-  _CREATE_ :Layout, id: :top_menu_b, width: 512, height: 256 + 64, x: 0, y: 256 + 64 do
-    _CREATE_ :Layout, id: :top_menu2, x:0, height: 64, y: 64 * 0 do
+  _CREATE_ :Layout, id: :top_menu_b, x: 0, y: 256 + 64 do
+    _CREATE_ :Layout, id: :top_menu2, x:0, y: 64 * 0 do
       TextSelect  text: "デモゲーム：ノベル脱出ゲーム", 
                   path: "./script/sample/demo_game/1_0.tks", 
-                  width: 512, 
+                  width: 512,
                   comment: "ノベルゲーム形式のサンプルデモです。"
     end
 
-    _CREATE_ :Layout, id: :top_menu3, x:0, height: 64, y: 64 * 1 do
+    _CREATE_ :Layout, id: :top_menu3, x:0, y: 64 * 1 do
       TextSelect  text: "デモゲーム：野メイド", 
                   path: "./script/sample/nomaid/src.rb", 
-                  width: 512, 
+                  width: 512,
                   comment: "育成ＳＬＧ形式のサンプルデモです。"
     end
 
-    _CREATE_ :Layout, id: :top_menu4, x:0, height: 64, y: 64 * 2 do
+    _CREATE_ :Layout, id: :top_menu4, x:0, y: 64 * 2 do
       TextSelect  text: "デモゲーム：ジャンプアクションデモ", 
                   path: "./script/sample/jump_action/game.rb", 
-                  width: 512, 
+                  width: 512,
                   comment: "２Ｄのスクロール式ジャンプアクションゲームのデモです。"
     end
   end
 
-  _CREATE_ :Layout, id: :top_menu_b2, width: 512, height: 256 + 64, x:512, y: 256 + 64  do
-    _CREATE_ :Layout, id: :top_menu5, x:0, height: 64, y: 64 * 0 do
+  _CREATE_ :Layout, id: :top_menu_b2, x:512, y: 256 + 64  do
+    _CREATE_ :Layout, id: :top_menu5, x:0, y: 64 * 0 do
       TextSelect  text: "デモゲーム：ブロック崩し", 
                   path: "./script/sample/block/block.rb", 
-                  width: 512, 
+                  width: 512,
                   comment: "アクションゲームのサンプルです"
     end
   end
@@ -182,18 +180,24 @@ end
 
 _DEFINE_ :inner_loop do
 
- _CREATE_ :Image,
-   z: 0,
-   id: :base do
- end
- _CREATE_ :Image,
-   z: 1000,
-   id: :img0 do
- end
- _CREATE_ :Image,
-   z: 2000,
-   id: :img1 do
- end
+  _CREATE_ :Image,
+    width: 1,
+    height: 1,
+    z: 0,
+    id: :base do
+  end
+  _CREATE_ :Image,
+    width: 1,
+    height: 1,
+    z: 1000,
+    id: :img0 do
+  end
+  _CREATE_ :Image,
+    width: 1,
+    height: 1,
+    z: 2000,
+    id: :img1 do
+  end
 
   _SET_ [:_ROOT_, :_TEMP_], path: nil
 

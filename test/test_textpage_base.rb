@@ -124,8 +124,6 @@ class TestTextPageBase < Minitest::Test
       _TEXT_WINDOW_ :text0, 
         x: 96,
         y: 256,
-        width: 1024,
-        height: 192,
         size: 32, 
         font_name: "ＭＳＰ ゴシック",
         z: 1000000 #描画順序
@@ -168,8 +166,6 @@ class TestTextPageBase < Minitest::Test
       _TEXT_WINDOW_ :text0, 
         x: 96,
         y: 256,
-        width: 1024,
-        height: 192,
         size: 32, 
         font_name: "ＭＳＰ ゴシック",
         z: 1000000 #描画順序

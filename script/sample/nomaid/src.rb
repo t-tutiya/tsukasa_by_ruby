@@ -43,9 +43,7 @@ _DEFINE_ :set_status_window do
   _CREATE_ :Layout,
     id: :status_window, 
     x: 32,
-    y: 256,
-    width: 1024,
-    height: 192 do
+    y: 256 do
     _CREATE_ :Layout, id: :line1, height: 42, y: 42 * 0 do
       status_text char: "第", x: 32 * 0
       status_text id: :week, x: 32 * 1
@@ -496,7 +494,7 @@ _SET_ [:_ROOT_, :_TEMP_],
 
 #ＯＰ用テキストレイアウト指定
 _SEND_(:text0){
-  _SET_ x:32, y:32, width: 1024, height: 1024, size:24
+  _SET_ x:32, y:32, size:24
 }
 
 #ＯＰ文字列表示

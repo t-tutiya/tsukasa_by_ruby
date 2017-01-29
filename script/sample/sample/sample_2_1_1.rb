@@ -1,5 +1,5 @@
 #ボタンコントロール
-_CREATE_ :ClickableLayout, x: 100, y: 100, shape:[0,0,256,256],width: 256, height: 256, id: :test01 do
+_CREATE_ :ClickableLayout, x: 100, y: 100, shape:[0,0,256,256], id: :test01 do
   _CREATE_ :TileMap, 
     width: 256, height: 256 do
     _SET_ map_array: [[0]]

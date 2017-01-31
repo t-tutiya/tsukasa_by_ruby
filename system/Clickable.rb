@@ -28,9 +28,13 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
+require_relative './Layoutable.rb'
+
 module Tsukasa
 
 module Clickable
+  include Layoutable
+
   #コリジョンのエンティティ
   attr_reader :shape
   def shape=(arg)

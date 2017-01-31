@@ -31,11 +31,14 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require_relative './ClickableLayout.rb'
+require_relative './Clickable.rb'
 
 module Tsukasa
 
-class Window < ClickableLayout #マウスカーソルがウィンドウの外に出たかを判定するため、ClickableLayoutを継承する
+class Window < Control
+  #マウスカーソルがウィンドウの外に出たかを判定するため、Clickableをmix-inする
+  include Clickable
+
   attr_accessor :auto_close #「閉じる」ボタンが押下された際に自動的に終了する
   attr_accessor :inactive_pause #非アクティブ時に更新処理を停止するかどうか
 

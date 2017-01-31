@@ -35,7 +35,7 @@ require_relative './Clickable.rb'
 
 module Tsukasa
 
-class Window < Control
+class Window < Layout
   #マウスカーソルがウィンドウの外に出たかを判定するため、Clickableをmix-inする
   include Clickable
 

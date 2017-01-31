@@ -189,7 +189,7 @@ class Window < Layout
 
   def _RESIZE_(width:, height:)
     DXRuby::Window.resize(width, height)
-    @collision_sprite.collision = [ 0, 0, width, height]
+    self.shape = [ 0, 0, width, height]
   end
 end
 

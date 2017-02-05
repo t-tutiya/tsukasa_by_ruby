@@ -39,16 +39,17 @@ class Input < Control
 
   #パッドのＸ方向キー増分[-1,0,1]
   def x()
-    DXRuby::Input.x(@pad_number)
+    @_API_.x(@pad_number)
   end
 
   #パッドのＹ方向キー増分[-1,0,1]
   def y()
-    DXRuby::Input.y(@pad_number)
+    @_API_.y(@pad_number)
   end
 
-  def initialize(system, pad_number: 0, **options, &block)
+  def initialize(system, pad_number: 0, _API_: DXRuby::Input , **options, &block)
     @pad_number = pad_number
+    @_API_ = _API_
     super
   end
 
@@ -56,47 +57,47 @@ class Input < Control
     case condition
     #キーが押下された
     when :key_push
-      Array(value).any?{|key_code| DXRuby::Input.key_push?(key_code)}
+      Array(value).any?{|key_code| @_API_.key_push?(key_code)}
     #キーが押下されていない
     when :not_key_push
-      !(Array(value).any?{|key_code| DXRuby::Input.key_push?(key_code)})
+      !(Array(value).any?{|key_code| @_API_.key_push?(key_code)})
     #キーが継続押下されている
     when :key_down
-      Array(value).any?{|key_code| DXRuby::Input.key_down?(key_code)}
+      Array(value).any?{|key_code| @_API_.key_down?(key_code)}
     #キーが継続押下されていない
     when :not_key_down
-      !(Array(value).any?{|key_code| DXRuby::Input.key_down?(key_code)})
+      !(Array(value).any?{|key_code| @_API_.key_down?(key_code)})
     #キーが解除された
     when :key_up
-      Array(value).any?{|key_code| DXRuby::Input.key_release?(key_code)}
+      Array(value).any?{|key_code| @_API_.key_release?(key_code)}
     #キーが解除されていない
     when :not_key_up
-      !(Array(value).any?{|key_code|DXRuby::Input.key_release?(key_code)})
+      !(Array(value).any?{|key_code|@_API_.key_release?(key_code)})
     #パッドボタンが押された
     when :pad_push
-      Array(value).any?{|pad_code| DXRuby::Input.pad_push?(pad_code, @pad_number)}
+      Array(value).any?{|pad_code| @_API_.pad_push?(pad_code, @pad_number)}
     #パッドボタンが継続押下されている
     when :pad_down
-      Array(value).any?{|pad_code| DXRuby::Input.pad_down?(pad_code, @pad_number)}
+      Array(value).any?{|pad_code| @_API_.pad_down?(pad_code, @pad_number)}
     #パッドボタンが解除された
     when :pad_release
-      Array(value).any?{|pad_code| DXRuby::Input.pad_release?(pad_code, @pad_number)}
+      Array(value).any?{|pad_code| @_API_.pad_release?(pad_code, @pad_number)}
     #マウス処理系
     when :mouse
       Array(value).any? do |key|
         case key
         when :push
-          DXRuby::Input.mouse_push?( M_LBUTTON )
+          @_API_.mouse_push?( M_LBUTTON )
         when :down
-          DXRuby::Input.mouse_down?( M_LBUTTON )
+          @_API_.mouse_down?( M_LBUTTON )
         when :up
-          DXRuby::Input.mouse_release?( M_LBUTTON )
+          @_API_.mouse_release?( M_LBUTTON )
         when :right_down
-          DXRuby::Input.mouse_down?( M_RBUTTON )
+          @_API_.mouse_down?( M_RBUTTON )
         when :right_push
-          DXRuby::Input.mouse_push?( M_RBUTTON )
+          @_API_.mouse_push?( M_RBUTTON )
         when :right_up
-          DXRuby::Input.mouse_release?( M_RBUTTON )
+          @_API_.mouse_release?( M_RBUTTON )
         end
       end
     else

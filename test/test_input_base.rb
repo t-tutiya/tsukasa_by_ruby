@@ -33,9 +33,18 @@ require './system/Tsukasa.rb'
 
 MiniTest.autorun
 
+class TestInput
+  def self.key_down?(pad_code)
+    return Tsukasa::K_Z
+  end
+  def self.method_missing(command_name, options)
+    return DXRuby::Input.send(command_name, options)
+  end
+end
+
 class TestInputBase < Minitest::Test
 #ユーザー入力をともなうテストのため、一時的にコメントアウト中
-=begin
+
   #ゲーム側で判定タイミングのトリガーを用意するテスト
   def test_2017_01_09_1_キー入力確認
     puts "zキーを押してください"
@@ -45,9 +54,9 @@ class TestInputBase < Minitest::Test
       _DEFINE_PROPERTY_ test: nil
       #無限ループ
       _LOOP_ do
-        _CREATE_ :Input, id: :input
+        _CREATE_ :Input, id: :input, _API_: TestInput
         #zキーが押された場合
-        _CHECK_ [:_ROOT_, :input], equal:{ key_down: Tsukasa::K_Z} do
+        _CHECK_ [:_ROOT_, :input], key_down: Tsukasa::K_Z do
           #プロパティに値を設定
           _SET_ test: Tsukasa::K_Z
           #メインループを終了する
@@ -69,5 +78,4 @@ class TestInputBase < Minitest::Test
     assert_equal(control.test, Tsukasa::K_Z)
   end
 
-=end
 end

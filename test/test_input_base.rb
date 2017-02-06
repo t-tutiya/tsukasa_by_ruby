@@ -61,6 +61,7 @@ class TestInputBase < Minitest::Test
       _DEFINE_PROPERTY_ test: nil
       #無限ループ
       _LOOP_ do
+        #Inputオブジェクトをモックのクラスを指定して生成
         _CREATE_ :Input, id: :input, _INPUT_API_: TestInput
         #zキーが押された場合
         _CHECK_ [:_ROOT_, :input], key_down: Tsukasa::K_Z do

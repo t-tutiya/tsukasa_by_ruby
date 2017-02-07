@@ -34,7 +34,7 @@ require './system/Tsukasa.rb'
 
 MiniTest.autorun
 
-#テスト用DXRuby::Inputエミュレートクラス
+#DXRuby::Inputカスタムクラス
 class TestInput
   #DXRuby::Input.key_down?をフックする
   def self.key_down?(pad_code)
@@ -54,14 +54,22 @@ end
 
 class TestInputBase < Minitest::Test
   #ゲーム側で判定タイミングのトリガーを用意するテスト
-  def test_2017_01_09_1_キー入力確認
+  def test_2017_02_08_1_キー入力確認_minitest_mock
+    #DXRuby::Inputを模倣するモックオブジェクトを生成する
     test_module_mock = MiniTest::Mock.new
+    #Input.key_down?(Tsukasa::K_Z)が実行された時に返す真偽値を設定する
+    #１フレーム目：false
     test_module_mock.expect :call, false, [Tsukasa::K_Z]
+    #２フレーム目：false
     test_module_mock.expect :call, false, [Tsukasa::K_Z]
+    #３フレーム目：true←ここで_CHECK_が成立する
     test_module_mock.expect :call, true, [Tsukasa::K_Z]
 
-    #key_downのスタブを用意
+    #スタブを設定する
     DXRuby::Input.stub(:key_down?,  test_module_mock) do
+    
+      #このブロック内でInput.key_down?が実行されるとtest_module_mockが代わりに呼びだされる。
+    
       puts "zキーを押してください"
       #コントロールの生成
       control = Tsukasa::Control.new() do
@@ -70,7 +78,6 @@ class TestInputBase < Minitest::Test
         #無限ループ
         _LOOP_ do
           #Inputオブジェクトをモックのクラスを指定して生成
-#          _CREATE_ :Input, id: :input , _INPUT_API_: TestInput
           _CREATE_ :Input, id: :input
           #zキーが押された場合
           _CHECK_ [:_ROOT_, :input], key_down: Tsukasa::K_Z do
@@ -94,5 +101,39 @@ class TestInputBase < Minitest::Test
     end
 
     #テスト
+  end
+
+  #ゲーム側で判定タイミングのトリガーを用意するテスト
+  def test_2017_02_08_2_キー入力確認_カスタムクラスを使用
+    puts "zキーを押してください"
+    #コントロールの生成
+    control = Tsukasa::Control.new() do
+      #動的プロパティの追加
+      _DEFINE_PROPERTY_ test: nil
+      #無限ループ
+      _LOOP_ do
+        #Inputオブジェクトをモックのクラスを指定して生成
+        _CREATE_ :Input, id: :input , _INPUT_API_: TestInput
+        #zキーが押された場合
+        _CHECK_ [:_ROOT_, :input], key_down: Tsukasa::K_Z do
+          #プロパティに値を設定
+          _SET_ test: Tsukasa::K_Z
+          #メインループを終了する
+          _EXIT_
+        end
+        #１フレ送る
+        _HALT_
+      end
+    end
+    #メインループ
+    DXRuby::Window.loop() do
+      control.update(DXRuby::Input.mouse_x, DXRuby::Input.mouse_y) #処理
+      control.render(0, 0, DXRuby::Window) #描画
+      break if control.exit #メインループ終了判定
+    end
+
+    #テスト
+    assert_equal(control.test, Tsukasa::K_Z)
+
   end
 end

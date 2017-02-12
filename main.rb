@@ -4,7 +4,7 @@ require './system/Tsukasa.rb'
 require 'pp'
 
 ###############################################################################
-#TSUKASA for DXRuby ver2.2(2017/1/28)
+#TSUKASA for DXRuby ver2.2(2017/2/14)
 #メッセージ指向ゲーム記述言語「司エンジン（Tsukasa Engine）」 for DXRuby
 #
 #Copyright (c) <2013-2017> <tsukasa TSUCHIYA>

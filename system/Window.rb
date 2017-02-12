@@ -144,6 +144,7 @@ class Window < Layout
     #フレーム更新時のリセット背景色
     self.bgcolor = options[:bgcolor] || [0,0,0]
     #タイトルバーに表示するアイコン
+    @icon_path = nil
     if options[:icon_path]
       self.icon_path = options[:icon_path]
     end

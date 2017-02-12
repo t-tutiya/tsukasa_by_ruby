@@ -411,7 +411,7 @@ class TextPage < Layout
       end
     end
     
-    end
+  end
 
   #line_feedコマンド
   #改行処理（CR＋LF）
@@ -419,7 +419,7 @@ class TextPage < Layout
     #インデント用無形コントロールの追加
     unshift_command(:_GET_, _ARGUMENT_: [:indent, :line_height]) do 
       |indent:, line_height:|
-      _SEND_ -1 do
+      _SEND_ (-1) do
         _CREATE_ :Layout, width: indent, height: line_height
       end
     end

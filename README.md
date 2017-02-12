@@ -22,9 +22,11 @@
 #パッケージの入手とドキュメント
 
 ・実行環境がすべて収録されたパッケージは下記URLから取得してください。
-★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-・ドキュメントは下記URLから取得してください（上記パッケージにも同梱されています）。
-★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+http://someiyoshino.main.jp/file/tsukasa/tsukasa_engine_starter_kit_v2_2.zip
+
+・ドキュメントは下記URLから取得してください。最新版は第３版第２刷になります（上記パッケージにも同梱されています）。
+http://someiyoshino.main.jp/file/tsukasa/tsukasa_engine_guide_book_for_v2_2.pdf
+
 ・ソースコードはGitHub上で開発継続中です。
 https://github.com/t-tutiya/tsukasa
 
@@ -44,7 +46,10 @@ https://github.com/t-tutiya/tsukasa
 
       first.rb  ……最初に実行される司スクリプトファイルです。初期状態では"./script/demo.rb"を読み込みます。このファイルを書き換えることで、任意の司スクリプトを実行できます。
 
-      rakefile  ……rake用のスクリプトです。現時点ではユニットテスト用の"test"タスクのみ用意されています。
+      rakefile  ……rake用のスクリプトです。現在はユニットテストを実行するspecタスク/testタスクのみを提供しています。 
+      .rspec  ……RSpecの実行時オプション格納ファイル
+      GemFile ……Bundler用のインストールパッケージ記述ファイル
+      GemFile.lock ……Bundlerで使用
       README.md  ……readmeファイル。概要と更新履歴を収録。
 
       init.rb  ※内部で使用
@@ -86,7 +91,8 @@ https://github.com/t-tutiya/tsukasa
 
       lib/  ※Rubyで使用するシステムフォルダ。
 
-      test/  ……ユニットテスト用のrubyソースコードが格納されています。
+      spec/  ……ユニットテスト(Spec)用のrubyソースコードが格納されています。
+      test/  ……ユニットテスト(Minitest)のrubyソースコードが格納されています。
 
       tools/  ……司エンジンをサポートする外部ツールが格納されています。
         FontDataMaker.rb  ……TrueTypeフォントデータを司エンジンで使用できるプリレンダフォントデータに変換します。
@@ -94,17 +100,22 @@ https://github.com/t-tutiya/tsukasa
 
 #更新履歴
 
-##v2.2(2017/1/未定)
+##v2.2(2017/2/14)
 
 *  フォルダ構成
 ・プラグインフォルダをネイティブファイルのフォルダとスクリプトファイルのフォルダに分離した
 
+*  ビルド関連
+    *  Bundler環境を整備
+
 *  ユニットテスト関連
+    *  RSpec環境を整備
     *  テスト実行用のRakeFileを配置
     *  テストコードの命名ルールを設定
 
 *  内部ロジック
     *  カスタムコントロールのメソッド定義インターフェイスを変更
+    *  DXRubyオブジェクトをinitialize時に互換オブジェクトに差し替えられるようにした
 
 *  サンプル
     *  ブロック崩しゲームをサンプルに追加
@@ -160,12 +171,11 @@ https://github.com/t-tutiya/tsukasa
     *  check_float/check_alignメソッド廃止
 
 *  Clickableモジュール
-    *  新規作成
+    *  新規作成（旧ClickableLayoutコントロールから実装を移動）
     *  collision_shapeプロパティをshapeに改名
 
 *  ClickableLayoutコントロール
     *  Clickableモジュールをインクルードする形式に変更
-    *  collision_shapeプロパティをshapeに改名
 
 *  Imageコントロール
     *  _PIXEL_コマンドのブロック引数名を_ARGUMENT_からcolorに変更
@@ -179,7 +189,7 @@ https://github.com/t-tutiya/tsukasa
     *  x/yプロパティ追加
 
 *  RuleShaderコントロール
-    *  コア機能を分離したShaderクラスを継承する形に変更し、RuleTransition.rbに改名
+    *  Shaderクラスを継承する形に変更し、RuleTransition.rbに改名
 
 *  Shaderコントロール
     *  新規追加

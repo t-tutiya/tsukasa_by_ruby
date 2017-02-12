@@ -1,3 +1,3 @@
 --color
---format d
+--format documentation
 --require spec_helper

@@ -45,7 +45,7 @@ class Window < Layout
   #ウィンドウ座標上のマウスＸ座標
   attr_reader :mouse_x
   def mouse_x=(arg)
-    DXRuby::Input.set_mouse_pos(arg, DXRuby::Input.mouse_y)
+    @_INPUT_API_.set_mouse_pos(arg, @_INPUT_API_.mouse_y)
     @mouse_x = arg
   end
 
@@ -55,7 +55,7 @@ class Window < Layout
   #ウィンドウ座標上のマウスＹ座標
   attr_reader :mouse_y
   def mouse_y=(arg)
-    DXRuby::Input.set_mouse_pos(DXRuby::Input.mouse_x, arg)
+    @_INPUT_API_.set_mouse_pos(@_INPUT_API_.mouse_x, arg)
     @mouse_y = arg
   end
 
@@ -63,10 +63,10 @@ class Window < Layout
   attr_accessor :mouse_offset_y
 
   def mouse_wheel_pos()
-    DXRuby::Input.mouse_wheel_pos
+    @_INPUT_API_.mouse_wheel_pos
   end
   def mouse_wheel_pos=(arg)
-    DXRuby::Input.mouse_wheel_pos = arg
+    @_INPUT_API_.mouse_wheel_pos = arg
   end
 
   #マウスカーソル可視フラグ
@@ -75,37 +75,37 @@ class Window < Layout
   end
   def mouse_enable=(arg)
     @mouse_enable = arg
-    DXRuby::Input.mouse_enable = @mouse_enable
+    @_INPUT_API_.mouse_enable = @mouse_enable
   end
 
   #フルスクリーン状態の取得／設定
   def full_screen()
-    DXRuby::Window.full_screen?
+    @_WINDOW_API_.full_screen?
   end
   def full_screen=(arg)
-    DXRuby::Window.full_screen = arg
+    @_WINDOW_API_.full_screen = arg
   end
 
   #フルスクリーン時に使用可能な解像度
   #[[width, height, refreshrate], ...]
   def screen_modes()
-    DXRuby::Window.get_screen_modes
+    @_WINDOW_API_.get_screen_modes
   end
 
   #タイトルバーに表示する文字列
   def caption()
-    DXRuby::Window.caption
+    @_WINDOW_API_.caption
   end
   def caption=(arg)
-    DXRuby::Window.caption = arg
+    @_WINDOW_API_.caption = arg
   end
 
   #フレーム更新時のリセット背景色
   def bgcolor()
-    DXRuby::Window.bgcolor
+    @_WINDOW_API_.bgcolor
   end
   def bgcolor=(arg)
-    DXRuby::Window.bgcolor = arg
+    @_WINDOW_API_.bgcolor = arg
   end
 
   #タイトルバーに表示するアイコン
@@ -114,7 +114,7 @@ class Window < Layout
   end
   def icon_path=(arg)
     @icon_path = arg
-    DXRuby::Window.load_icon(arg)
+    @_WINDOW_API_.load_icon(arg)
   end
 
   #マウスカーソルの形状
@@ -123,10 +123,18 @@ class Window < Layout
   end
   def cursor_type=(arg)
     @cursor_type = arg
-    DXRuby::Input.set_cursor(arg) 
+    @_INPUT_API_.set_cursor(arg) 
   end
 
-  def initialize(system = [nil, nil, nil], options = {}, &block)
+  def initialize(system = [nil, nil, nil],
+                 _INPUT_API_: DXRuby::Input, 
+                 _WINDOW_API_: DXRuby::Window, 
+                 **options, 
+                 &block)
+    #ベースオブジェクト
+    @_INPUT_API_ = _INPUT_API_
+    @_WINDOW_API_ = _WINDOW_API_
+
     #アプリ終了フラグ
     @close = false
     #「閉じる」ボタンが押下された場合自動終了する
@@ -155,7 +163,7 @@ class Window < Layout
 
   def update(mouse_pos_x, mouse_pos_y)
     #「閉じる」ボタンが押下された
-    if DXRuby::Input.requested_close? and @auto_close
+    if @_INPUT_API_.requested_close? and @auto_close
       set_exit()
     end
 
@@ -167,29 +175,29 @@ class Window < Layout
     @mouse_y = mouse_pos_y
 
     #windowがアクティブで無ければ子コントロールを動作せずに終了
-    return  unless DXRuby::Window.active? and @inactive_pause
+    return  unless @_WINDOW_API_.active? and @inactive_pause
 
     super
 
     #カーソルが画面外に出た時／戻った時にカーソル可視状態を復帰する
     #※ウィンドウ枠に出た時に標準カーソルを表示させるために必要
     if @on_inner_control
-      DXRuby::Input.mouse_enable = false unless @mouse_enable
+      @_INPUT_API_.mouse_enable = false unless @mouse_enable
     else
-      DXRuby::Input.mouse_enable = true unless @mouse_enable
+      @_INPUT_API_.mouse_enable = true unless @mouse_enable
     end
   end
 
   #ウィンドウの閉じるボタンが押されたかどうかの判定
   def _CHECK_REQUESTED_CLOSE_(**)
     #「閉じる」ボタンが押下された
-    if DXRuby::Input.requested_close?
+    if @_INPUT_API_.requested_close?
       unshift_command_block()
     end
   end
 
   def _RESIZE_(width:, height:)
-    DXRuby::Window.resize(width, height)
+    @_WINDOW_API_.resize(width, height)
     self.shape = [ 0, 0, width, height]
   end
 end

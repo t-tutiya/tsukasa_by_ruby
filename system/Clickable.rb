@@ -101,7 +101,13 @@ module Clickable
     end
   end
 
-  def initialize(system, options, &block)
+  def initialize( system, 
+                  _INPUT_API_: DXRuby::Input,
+                  _SPRITE_API_: DXRuby::Sprite,
+                  **options, 
+                  &block)
+    #ベースクラス
+    @_INPUT_API_ = _INPUT_API_
     #カラーキー
     @colorkey_id = options[:colorkey_id]
     #カラーキーボーダー
@@ -111,7 +117,7 @@ module Clickable
     @shape = options[:shape] || [0,0]
 
     #コントロールSprite初期化
-    @collision_sprite = DXRuby::Sprite.new
+    @collision_sprite = _SPRITE_API_.new
     @collision_sprite.collision = @shape
 
     #コリジョン図形の位置を補正
@@ -119,7 +125,7 @@ module Clickable
     @collision_sprite.y = 0
 
     #カーソルSprite初期化
-    @mouse_sprite = DXRuby::Sprite.new
+    @mouse_sprite = _SPRITE_API_.new
     @mouse_sprite.collision = [0, 0]
 
     #カーソル座標がコントロール内にある
@@ -176,17 +182,17 @@ module Clickable
       end
 
       #キー継続押下チェック
-      @on_key_down = DXRuby::Input.mouse_down?( M_LBUTTON )
+      @on_key_down = @_INPUT_API_.mouse_down?( M_LBUTTON )
       #キー押下チェック
-      @on_key_push = DXRuby::Input.mouse_push?( M_LBUTTON )
+      @on_key_push = @_INPUT_API_.mouse_push?( M_LBUTTON )
       #キー解除チェック
-      @on_key_up = DXRuby::Input.mouse_release?( M_LBUTTON )
+      @on_key_up = @_INPUT_API_.mouse_release?( M_LBUTTON )
       #キー継続押下チェック
-      @on_right_key_down = DXRuby::Input.mouse_down?( M_RBUTTON )
+      @on_right_key_down = @_INPUT_API_.mouse_down?( M_RBUTTON )
       #右キー押下チェック
-      @on_right_key_push = DXRuby::Input.mouse_push?( M_RBUTTON )
+      @on_right_key_push = @_INPUT_API_.mouse_push?( M_RBUTTON )
       #右キー解除チェック
-      @on_right_key_up = DXRuby::Input.mouse_release?( M_RBUTTON )
+      @on_right_key_up = @_INPUT_API_.mouse_release?( M_RBUTTON )
     else
       #前フレームでカーソル座標がコントロール内だった場合
       if @cursor_in
@@ -197,13 +203,13 @@ module Clickable
       end
 
       #キー押下チェック
-      @on_key_down_out = DXRuby::Input.mouse_down?( M_LBUTTON )
+      @on_key_down_out = @_INPUT_API_.mouse_down?( M_LBUTTON )
       #キー解除チェック
-      @on_key_up_out = DXRuby::Input.mouse_release?( M_LBUTTON )
+      @on_key_up_out = @_INPUT_API_.mouse_release?( M_LBUTTON )
       #右キー押下チェック
-      @on_right_key_down_out = DXRuby::Input.mouse_down?( M_RBUTTON )
+      @on_right_key_down_out = @_INPUT_API_.mouse_down?( M_RBUTTON )
       #右キー解除チェック
-      @on_right_key_up_out = DXRuby::Input.mouse_release?( M_RBUTTON )
+      @on_right_key_up_out = @_INPUT_API_.mouse_release?( M_RBUTTON )
     end
 
     return super

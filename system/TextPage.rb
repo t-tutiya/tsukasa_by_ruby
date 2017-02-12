@@ -219,7 +219,11 @@ class TextPage < Layout
     @rubi_option[:character_pitch] = arg
   end
 
-  def initialize(system, options, &block)
+  def initialize( system, 
+                  _FONT_API_: DXRuby::Font,
+                  **options, 
+                  &block)
+    @_FONT_API_ = _FONT_API_
     @line_spacing = options[:line_spacing] || 12   #行間の幅
     @character_pitch = options[:character_pitch ] || 0 #文字間の幅
     @line_height = options[:line_height] || 32    #行の高さ
@@ -312,7 +316,7 @@ class TextPage < Layout
     unshift_command(:_CHAR_WAIT_)
 
     #次の文字の描画X座標を生成
-    @next_char_x += @character_pitch + DXRuby::Font.new( @char_option[:size], 
+    @next_char_x += @character_pitch + @_FONT_API_.new( @char_option[:size], 
                           @char_option[:font_name], 
                           { :weight=>@char_option[:weight], 
                             :italic=>@char_option[:italic],

@@ -66,13 +66,23 @@ class DrawableLayout < Control
     @entity.update
   end
   
-  def initialize(system, width:, height:, bgcolor: [0,0,0,0], relative_x: 0, relative_y: 0, **options, &block)
-  
+  def initialize( system, 
+                  _RENDERTARGET_API_: DXRuby::RenderTarget,
+                  _FONT_API_: DXRuby::Font,
+                  width:, 
+                  height:, 
+                  bgcolor: [0,0,0,0], 
+                  relative_x: 0, 
+                  relative_y: 0, 
+                  **options, 
+                  &block)
+    @_RENDERTARGET_API_ = _RENDERTARGET_API_
+    @_FONT_API_ = _FONT_API_
     super
 
     @bgcolor = bgcolor
     #保持オブジェクトの初期化
-    @entity = DXRuby::RenderTarget.new(width, height, @bgcolor)
+    @entity = @_RENDERTARGET_API_.new(width, height, @bgcolor)
 
     self.width = width
     self.height = height
@@ -126,7 +136,7 @@ class DrawableLayout < Control
     option[:color] = color
 
     @entity.draw_font_ex(x, y, _ARGUMENT_, 
-      DXRuby::Font.new(size, font_name, {weight: weight*100, italic: italic}),
+      @_FONT_API_.new(size, font_name, {weight: weight*100, italic: italic}),
       option)
   end
 end

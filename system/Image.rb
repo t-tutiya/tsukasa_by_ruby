@@ -46,7 +46,6 @@ class Image < Control
 
   attr_reader :path
   def path=(path)
-    pp path
     #元Imageを解放
     @@ImageCache.dispose(@path) if @path
     #新Imageを取得
@@ -59,14 +58,26 @@ class Image < Control
     super
   end
 
-  def initialize(system, width: 1, height: 1, path: nil, color: [0,0,0,0], **options, &block)
+  def initialize( system, 
+                  _IMAGE_API_: DXRuby::Image,
+                  _FONT_API_: DXRuby::Font,
+                  _RENDERTARGET_API_: DXRuby::RenderTarget,
+                  width: 1, 
+                  height: 1, 
+                  path: nil, 
+                  color: [0,0,0,0], 
+                  **options, 
+                  &block)
+    @_IMAGE_API_ = _IMAGE_API_
+    @_FONT_API_ = _FONT_API_
+    @_RENDERTARGET_API_ = _RENDERTARGET_API_
     @path = nil
     super
 
     if path
       self.path = path
     else
-      @entity = DXRuby::Image.new(width, height, color)
+      @entity = @_IMAGE_API_.new(width, height, color)
     end
   end
 
@@ -113,7 +124,7 @@ class Image < Control
     @entity.draw_font_ex(
       x, y,
       _ARGUMENT_,
-      DXRuby::Font.new(size, font_name,{weight: weight * 100, italic: italic}),
+      @_FONT_API_.new(size, font_name,{weight: weight * 100, italic: italic}),
       option)
   end
 
@@ -154,7 +165,7 @@ class Image < Control
   #指定したツリーを描画する
   def _DRAW_(_ARGUMENT_: , x: 0, y: 0, scale: nil)
     #中間バッファを生成
-    rt = DXRuby::RenderTarget.new(@entity.width, @entity.height)
+    rt = @_RENDERTARGET_API_.new(@entity.width, @entity.height)
 
     #描画対象コントロールの検索
     control = find_control(_ARGUMENT_)
@@ -171,7 +182,7 @@ class Image < Control
     #拡大率が設定されている場合
     if scale
       #第２中間バッファを生成
-      rt2 = DXRuby::RenderTarget.new( scale * @entity.width, 
+      rt2 = @_RENDERTARGET_API_.new( scale * @entity.width, 
                                       scale * @entity.height)
       #拡大率を反映して第２中間バッファに描画
       rt2.draw_ex(-1 * scale**2 * @entity.width,

@@ -234,7 +234,13 @@ class Char < Control
   #公開インターフェイス
   #############################################################################
 
-  def initialize(system, options, &block)
+  def initialize( system, 
+                  _IMAGE_API_: DXRuby::Image,
+                  _FONT_API_: DXRuby::Font,
+                  **options, 
+                  &block)
+    @_IMAGE_API_ = _IMAGE_API_
+    @_FONT_API_ = _FONT_API_
     @font_draw_option = {}
 
     #フォントサイズ
@@ -326,7 +332,7 @@ class Char < Control
   #通常文字の描画
   def draw_character(width, height, offset_x, offset_y)
     #フォントオブジェクトの初期化
-    @font_obj = DXRuby::Font.new( @size, 
+    @font_obj = @_FONT_API_.new( @size, 
                           @font_name, 
                           { :weight=>@weight, 
                             :italic=>@italic,
@@ -339,7 +345,7 @@ class Char < Control
 
     #文字用のimageを作成
     @entity.dispose if @entity and !(@entity.disposed?)
-    @entity = DXRuby::Image.new(width, height, [0, 0, 0, 0]) 
+    @entity = @_IMAGE_API_.new(width, height, [0, 0, 0, 0]) 
 
     #フォントを描画
     @entity.draw_font_ex( offset_x, 
@@ -366,7 +372,7 @@ class Char < Control
 
     #文字用のimageを作成
     @entity.dispose if @entity and !(@entity.disposed?)
-    @entity = DXRuby::Image.new(width, height, [0, 0, 0, 0])
+    @entity = @_IMAGE_API_.new(width, height, [0, 0, 0, 0])
 
     #全ての文字を描画する
     @char.each_char do |char|
@@ -376,7 +382,7 @@ class Char < Control
       #キャッシュにその文字が登録されていない場合
       unless @font_image.has_key?(char)
         #文字をバイナリからイメージ化してキャッシュに格納する
-        @font_image[char] = DXRuby::Image.load_from_file_in_memory(font[2])
+        @font_image[char] = @_IMAGE_API_.load_from_file_in_memory(font[2])
       end
 
       #文字をグリフ化してImageに書き込む
@@ -400,7 +406,7 @@ class Char < Control
 
     #imageを作成
     @entity.dispose if @entity and !(@entity.disposed?)
-    @entity = DXRuby::Image.new(width, height, [0, 0, 0, 0]) 
+    @entity = @_IMAGE_API_.new(width, height, [0, 0, 0, 0]) 
 
     #画像をグリフ化してImageに書き込む
     @entity.draw( offset_x/2, 

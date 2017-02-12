@@ -47,9 +47,13 @@ class Input < Control
     @_INPUT_API_.y(@pad_number)
   end
 
-  def initialize(system, pad_number: 0, _INPUT_API_: DXRuby::Input , **options, &block)
-    @pad_number = pad_number
+  def initialize( system, 
+                  _INPUT_API_: DXRuby::Input , 
+                  pad_number: 0, 
+                  **options, 
+                  &block)
     @_INPUT_API_ = _INPUT_API_
+    @pad_number = pad_number
     super
   end
 

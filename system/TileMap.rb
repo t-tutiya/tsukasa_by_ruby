@@ -41,7 +41,12 @@ class TileMap < DrawableLayout
   attr_accessor :size_x
   attr_accessor :size_y
 
-  def initialize(system, options, &block)
+  def initialize( system, 
+                  _IMAGE_API_: DXRuby::Image,
+                  **options, 
+                  &block)
+    @_IMAGE_API_ = _IMAGE_API_
+    
     options[:width] = options[:width] || 32
     options[:height] = options[:height] || 32
 
@@ -78,9 +83,9 @@ class TileMap < DrawableLayout
   def _SET_TILE_(_ARGUMENT_: nil, path:)
     begin
       if _ARGUMENT_
-        @image_array[_ARGUMENT_] = DXRuby::Image.load(path)
+        @image_array[_ARGUMENT_] = @_IMAGE_API_.load(path)
       else
-        @image_array.push(DXRuby::Image.load(path))
+        @image_array.push(@_IMAGE_API_.load(path))
       end
     rescue DXRuby::DXRubyError
       warn "#{path}の読みこみに失敗しました"
@@ -90,7 +95,7 @@ class TileMap < DrawableLayout
   def _SET_TILE_GROUP_(_ARGUMENT_: nil, path:, 
                         x_count: 1, y_count: 1, share_switch: false )
     begin
-      image_array = DXRuby::Image.load_tiles(path, 
+      image_array = @_IMAGE_API_.load_tiles(path, 
                                       x_count, y_count, share_switch)
     rescue DXRuby::DXRubyError
       warn "#{path}の読みこみに失敗しました"

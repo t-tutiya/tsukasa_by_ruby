@@ -1,7 +1,7 @@
 #! ruby -E utf-8
 
 #TODO将来的にはプリミティブライブラリへの依存を解消したい
-require_relative 'ayame'
+#require_relative 'ayame'
 
 ###############################################################################
 #TSUKASA for DXRuby ver2.2(2017/2/14)

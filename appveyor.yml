@@ -11,6 +11,5 @@ before_test:
   - bundle -v
 
 test_script:
-  - bundle exec rake app_install
   - bundle exec rake spec
   

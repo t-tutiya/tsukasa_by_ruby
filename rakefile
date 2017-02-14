@@ -2,6 +2,7 @@
 
 task :app_install
 
+=begin
 require 'net/http'
 Net::HTTP.start('t-tutiya.github.io') do |http|
   res = http.get('/tsukasa/ayame.so')
@@ -15,7 +16,7 @@ Net::HTTP.start('t-tutiya.github.io') do |http|
     f.write(res.body)
   }
 end
-
+=end
 task :test
 
 require 'rake/testtask'
@@ -29,9 +30,6 @@ Rake::TestTask.new do |test|
 end
 
 task :spec
-
-
-puts `dir system`
 
 require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new("spec")

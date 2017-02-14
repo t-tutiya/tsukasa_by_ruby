@@ -30,7 +30,7 @@ end
 
 task :spec
 
-puts `dir`
+puts `dir system`
 
 require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new("spec")

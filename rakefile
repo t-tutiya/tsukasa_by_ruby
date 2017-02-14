@@ -1,5 +1,15 @@
 # coding: UTF-8
 
+task :app_install
+
+require 'net/http'
+Net::HTTP.start('t-tutiya.github.io') do |http|
+  res = http.get('/tsukasa/ayame.so')
+  open('C:\Ruby22\lib\ruby\site_ruby\2.2.0\i386-msvcrt\ayame.so', 'wb'){|f|
+    f.write(res.body)
+  }
+end
+
 task :test
 
 require 'rake/testtask'

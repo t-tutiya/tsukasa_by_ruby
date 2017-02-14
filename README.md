@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/95ur7ml460vr7bye/branch/master?svg=true)](https://ci.appveyor.com/project/t-tutiya/tsukasa/branch/master)
+
 # オリジナルのプログラミング言語で動くゲームエンジン「司エンジン（Tsukasa Engine）」
 
 # 概要

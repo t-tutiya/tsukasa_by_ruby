@@ -1,36 +1,42 @@
 # coding: UTF-8
 
-task :app_install
+task :app_install do
 
 =begin
-require 'net/http'
-Net::HTTP.start('t-tutiya.github.io') do |http|
-  res = http.get('/tsukasa/ayame.so')
-  open('C:\Ruby22\lib\ruby\site_ruby\2.2.0\i386-msvcrt\ayame.so', 'wb'){|f|
-    f.write(res.body)
-  }
-end
-Net::HTTP.start('t-tutiya.github.io') do |http|
-  res = http.get('/tsukasa/Ayame.dll')
-  open('.\Ayame.dll', 'wb'){|f|
-    f.write(res.body)
-  }
-end
+	require 'net/http'
+	Net::HTTP.start('t-tutiya.github.io') do |http|
+	  res = http.get('/tsukasa/ayame.so')
+	  open('C:\Ruby22\lib\ruby\site_ruby\2.2.0\i386-msvcrt\ayame.so', 'wb'){|f|
+	    f.write(res.body)
+	  }
+	end
+	Net::HTTP.start('t-tutiya.github.io') do |http|
+	  res = http.get('/tsukasa/Ayame.dll')
+	  open('.\Ayame.dll', 'wb'){|f|
+	    f.write(res.body)
+	  }
+	end
 =end
-task :test
 
-require 'rake/testtask'
-
-Rake::TestTask.new do |test|
-  # $LOAD_PATH に追加するパス (デフォルトで 'lib' は入っている)
-  test.libs << 'test'
-  # テスト対象ファイルの指定
-  test.test_files = Dir[ 'test/**/test_*.rb' ]
-  test.verbose = true
 end
 
-task :spec
+task :test do
 
-require "rspec/core/rake_task"
-RSpec::Core::RakeTask.new("spec")
+	require 'rake/testtask'
 
+	Rake::TestTask.new do |test|
+	  # $LOAD_PATH に追加するパス (デフォルトで 'lib' は入っている)
+	  test.libs << 'test'
+	  # テスト対象ファイルの指定
+	  test.test_files = Dir[ 'test/**/test_*.rb' ]
+	  test.verbose = true
+	end
+
+end
+
+task :spec do
+
+	require "rspec/core/rake_task"
+	RSpec::Core::RakeTask.new("spec")
+
+end

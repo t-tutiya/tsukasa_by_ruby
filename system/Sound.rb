@@ -2,7 +2,7 @@
 
 #TODO将来的にはプリミティブライブラリへの依存を解消したい
 
-pp ENV
+puts ENV["APPVEYOR_BUILD"]
 
 unless ENV["APPVEYOR_BUILD"] == "true"
   require_relative './ayame.so'

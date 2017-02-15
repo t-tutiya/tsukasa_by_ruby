@@ -2,9 +2,11 @@
 
 #TODO将来的にはプリミティブライブラリへの依存を解消したい
 
-puts ENV["APPVEYOR_BUILD"]
+puts "test"
+puts ENV['APPVEYOR_BUILD']
+puts ENV['PATH']
 
-unless ENV["APPVEYOR_BUILD"] == "true"
+unless ENV['APPVEYOR_BUILD'] == "true"
   require_relative './ayame.so'
 end
 

@@ -1,11 +1,7 @@
 #! ruby -E utf-8
 
 #TODO将来的にはプリミティブライブラリへの依存を解消したい
-
-puts "test"
-puts ENV['APPVEYOR_BUILD']
-puts ENV['PATH']
-
+#TODO現状appveyor上でAyame.dllをロードする方法が不明なため緊急回避
 unless ENV['APPVEYOR_BUILD'] == "true"
   require_relative './ayame.so'
 end

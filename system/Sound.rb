@@ -1,7 +1,12 @@
 #! ruby -E utf-8
 
 #TODO将来的にはプリミティブライブラリへの依存を解消したい
-#require_relative './ayame.so'
+
+pp ENV
+
+unless ENV["APPVEYOR_BUILD"] == "true"
+  require_relative './ayame.so'
+end
 
 ###############################################################################
 #TSUKASA for DXRuby ver2.2(2017/2/14)

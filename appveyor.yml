@@ -1,6 +1,7 @@
 # appveyor.yml
 install:
   - set PATH=C:\Ruby22\bin;%PATH%
+  - set APPVEYOR_BUILD =true
   - bundle install
 
 build: off

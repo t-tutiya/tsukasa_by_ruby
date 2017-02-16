@@ -63,7 +63,7 @@ _DEFINE_ :system_menu do
       TextSelect text: "sample_1_1.rb", path: path + "sample_1_1.rb", 
                  comment: "画像の表示", y: 32 * 0
       TextSelect text: "sample_1_2.rb", path: path + "sample_1_2.rb", 
-                 comment: "画像の直線移動", y: 32 *1
+                 comment: "画像の直線移動", y: 32 * 1
       TextSelect text: "sample_1_3.rb", path: path + "sample_1_3.rb", 
                  comment: "画像のスプライン移動", y: 32 * 2
       TextSelect text: "sample_1_4.rb", path: path + "sample_1_4.rb", 

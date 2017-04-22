@@ -31,7 +31,7 @@ require './system/Tsukasa.rb'
 ###############################################################################
 
 
-RSpec.describe Tsukasa::Control do
+RSpec.describe Tsukasa::Input do
 
   it '2017_02_08_1_キー入力確認' do
     #DXRuby::Input.key_down?(Tsukasa::K_Z)にスタブを設定
@@ -41,10 +41,10 @@ RSpec.describe Tsukasa::Control do
     control = Tsukasa::Control.new() do
       #動的プロパティの追加
       _DEFINE_PROPERTY_ test: nil
+      #Inputオブジェクトをモックのクラスを指定して生成
+      _CREATE_ :Input, id: :input
       #無限ループ
       _LOOP_ do
-        #Inputオブジェクトをモックのクラスを指定して生成
-        _CREATE_ :Input, id: :input
         #zキーが押された場合
         _CHECK_ [:_ROOT_, :input], key_down: Tsukasa::K_Z do
           #プロパティに値を設定

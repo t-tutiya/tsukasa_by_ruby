@@ -131,7 +131,7 @@ class TestControlBase < Minitest::Test
       #動的プロパティの追加
       _DEFINE_PROPERTY_ test: 0
       #１０フレームかけてin_quadイージングでtestの値を０から１００まで遷移させる
-      _MOVE_ [10, :in_quad], test:[0,100]
+      _MOVE_ [10, easing: :in_quad], test:[0,100]
       #メインループを終了する
       _EXIT_
     end

@@ -63,7 +63,7 @@ _LOOP_ do
   _CHECK_ [:_ROOT_, :_SYSTEM_], equal: {data0: true},key_down: [K_Z] do
     _GET_ [:mouse_x, :mouse_y], control: [:_ROOT_] do |mouse_x:, mouse_y:|
       _SEND_ [:layout01, :cursor] do 
-        _MOVE_ [30, :out_quart], 
+        _MOVE_ [30, easing: :out_quart], 
           x: [mouse_x, 0], 
           y: [mouse_y, 0]
       end

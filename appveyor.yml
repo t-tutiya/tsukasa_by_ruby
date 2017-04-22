@@ -2,6 +2,7 @@
 install:
   - set PATH=C:\Ruby22\bin;%PATH%
   - set APPVEYOR_BUILD=true
+  - gem install bundler
   - bundle install
 
 build: off

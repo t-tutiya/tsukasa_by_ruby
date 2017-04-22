@@ -272,7 +272,7 @@ _DEFINE_ :_TEXT_WINDOW_ do |options|
     #文字レンダラ
     _DEFINE_ :_CHAR_RENDERER_ do
       #フェードイン
-      _MOVE_ [20, :in_quint], alpha: [0,255] do
+      _MOVE_ [20, easing: :in_quint], alpha: [0,255] do
         #キー入力判定
         _CHECK_INPUT_  key_down: K_RCONTROL,
                        key_push: K_SPACE,

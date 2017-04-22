@@ -9,7 +9,7 @@ _SEND_(:text0) do
   _DEFINE_ :_CHAR_RENDERER_ do |argument, options,control|
     _GET_ [:x, :y] do |x:, y:|
       #フェードイン（スペースキーか右CTRLが押されたらスキップ）
-      _MOVE_ [30, :out_quart], 
+      _MOVE_ [30, easing: :out_quart], 
         x:[ 800,x], 
         y:[-600,y] do
           _CHECK_INPUT_ key_down: K_RCONTROL, 
@@ -24,7 +24,7 @@ _SEND_(:text0) do
     _WAIT_ [:_ROOT_, :_TEMP_], not_equal: {flag: nil}
     #文字列をカスケードアウトさせる
     _GET_ [:x, :y] do |x:, y:|
-      _MOVE_ [x/32*3 + 30, :in_back], y:[y, 600]
+      _MOVE_ [x/32*3 + 30, {easing: :in_back}], y:[y, 600]
     end
   end
   _DEFINE_ :_CHAR_WAIT_ do
@@ -68,7 +68,7 @@ _DEFINE_ :TextSelect do |options|
         char: options[:text]
     end
     _GET_ :x do |x:|
-      _MOVE_ [30, :out_quart], 
+      _MOVE_ [30, {easing: :out_quart}], 
         x:[800,x] do
         _CHECK_INPUT_ key_down: K_RCONTROL, 
                       key_push: K_SPACE,
@@ -98,7 +98,7 @@ _DEFINE_ :TextSelect do |options|
       end
       #フラグが立っていればボタンをアウトさせてループを終了する
       _CHECK_ [:_ROOT_, :_TEMP_],  not_equal: {flag: nil} do
-        _MOVE_ [60, :in_back], y:[0,600]
+        _MOVE_ [60, {easing: :in_back}], y:[0,600]
         _DELETE_
         _RETURN_
       end

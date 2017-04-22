@@ -67,7 +67,7 @@ _CREATE_ :DrawableLayout, id: :frame, x: FRAME_X, y: FRAME_Y, width: FRAME_WIDTH
     end
   end
 
-  _MOVE_ [30, :out_sine], alpha: [0, 255]
+  _MOVE_ [30, easing: :out_sine], alpha: [0, 255]
 end
 
 _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, alpha: 0 do
@@ -470,7 +470,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     _SEND_ :message_miss, interrupt: true do
       _SET_ visible: true
       _MOVE_ [10], alpha: [128, 255], angle: [45, -20]
-      _MOVE_ [20, :out_bounce], angle: [-20, 0]
+      _MOVE_ [20, easing: :out_bounce], angle: [-20, 0]
       _WAIT_ count: 10
       _GET_ [:x, :y], control: [:_PARENT_, :bar] do |x:, y:|
         _SEND_ [:_PARENT_, :ball], interrupt: true do
@@ -673,7 +673,7 @@ _CREATE_ :DrawableLayout, id: :stage, width: STAGE_WIDTH, height: STAGE_HEIGHT, 
     end
     _CREATE_BRICKS_
 
-    _MOVE_ [30, :out_sine], alpha: [0, 255]
+    _MOVE_ [30, easing: :out_sine], alpha: [0, 255]
 
     _RETURN_ do
       state_begin

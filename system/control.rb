@@ -640,26 +640,43 @@ end
 
 class Control #プロパティのパラメータ遷移
 
+  #_MOVE_ [フレーム数, 
+  #          {
+  #            easing: イージング種類,
+  #            lerp: 補間種類,
+  #            control: コントールへの相対パス,
+  #          }, 
+  #         現在フレーム数
+  #       ], 
+  #       プロパティ名： [補間パラメータ], プロパティ名２...
   def _MOVE_(_ARGUMENT_:, **options)
+    #第１引数をarray化
     _ARGUMENT_ = Array(_ARGUMENT_)
-    # Easingパラメータが設定されていない場合は線形移動を設定
-    _ARGUMENT_[1] ||= :liner
-    #現在の経過カウントを初期化
+    #第１引数の第２要素が設定されていなければハッシュを初期化
+    hash = _ARGUMENT_[1] || {}
+    #現在フレーム数初期化
     _ARGUMENT_[2] ||= 0
+
     #カウントが終了しているならループを終了する
     return if _ARGUMENT_[0] == _ARGUMENT_[2]
     #カウントアップ
     _ARGUMENT_[2] += 1
 
+    #経過量（0.0～1.0）を決定する
+    step = EasingProcHash[hash[:easing] || :liner].call(
+              _ARGUMENT_[2].fdiv(_ARGUMENT_[0])
+            )
+
+    #プロパティ走査
     options.each do |key, value|
       #値を更新する
-      send(key.to_s + "=", 
-        (value[0] + (value[1] - value[0]).to_f * 
-          EasingProcHash[_ARGUMENT_[1]].call(_ARGUMENT_[2].fdiv(_ARGUMENT_[0]))
-        )
+      find_control(hash[:control]).send(key.to_s + "=", 
+        #線形補完実行
+        LerpProcHash[hash[:lerp] || :liner].call(value, step)
       )
     end
 
+    #第１引数をオプションに復帰
     options[:_ARGUMENT_] = _ARGUMENT_
 
     #リストの先端に自分自身を追加する
@@ -671,9 +688,57 @@ class Control #プロパティのパラメータ遷移
 
     if command_block?
       #ブロックが付与されているならそれを実行する
-      unshift_command_block({end: _ARGUMENT_[0], now: _ARGUMENT_[2]})
+      unshift_command_block(options)
     end
   end
+
+  LerpProcHash = {
+    #線形補間
+    :liner => ->(value,step){
+      return value[0] * (1.0 - step) + value[1] * step
+    },
+    #２次ベジェ補間
+    :quadratic_bezier => ->(value, step){
+      one_minus_step = 1.0 - step
+      return   one_minus_step ** 2      *      value[0] + 
+               one_minus_step *    step *      value[1] * 2 +
+                                   step ** 2 * value[2] 
+    },
+    #３次ベジェ補間
+    :cubic_bezier => ->(value, step){
+      one_minus_step = 1.0 - step
+      return one_minus_step ** 3             * value[0] +
+             one_minus_step ** 2 * step      * value[1] * 3 +
+             one_minus_step *      step ** 2 * value[2] * 3 +
+                                   step ** 3 * value[3]
+    },
+    #Ｂスプライン補間
+    #これらの実装については以下のサイトを参考にさせて頂きました。感謝します。
+    # http://www1.u-netsurf.ne.jp/~future/HTML/bspline.html
+    :b_spline => ->(value, step){
+      step = (value.size - 1) * step
+      result = 0.0
+
+      #全ての座標を巡回し、それぞれの座標についてstep量に応じた重み付けを行い、その総和を現countでの座標とする
+      value.size.times do |index|
+        t = (step - index).abs
+        # -1.0 < t < 1.0
+        if t < 1.0 
+          coefficent = (3.0 * t ** 3 - 6.0 * t ** 2 + 4.0) / 6.0
+        # -2.0 < t <= -1.0 or 1.0 <= t < 2.0
+        elsif t < 2.0 
+          coefficent = -(t - 2.0) ** 3 / 6.0
+        # t <= -2.0 or 2.0 <= t
+        else 
+          coefficent =  0.0
+        end
+        result += value[index] * coefficent
+      end
+      
+      return result
+    }
+  }
+
 
   # jQuery + jQueryEasingPluginより32種類の内蔵イージング関数。それぞれの動きはサンプルを実行して確認のこと。
   EasingProcHash = {
@@ -873,7 +938,7 @@ class Control #プロパティのパラメータ遷移
 
     if command_block?
       #ブロックが付与されているならそれを実行する
-      unshift_command_block({end: _ARGUMENT_[0], now: _ARGUMENT_[2]})
+      unshift_command_block(options)
     end
   end
 

@@ -67,7 +67,7 @@ _LOOP_ do
           x: [mouse_x, 0], 
           y: [mouse_y, 0]
       end
-      _MOVE_ 30,  mouse_x: [mouse_x, 0], 
+      _MOVE_ [30, int: true],  mouse_x: [mouse_x, 0], 
                   mouse_y: [mouse_y, 0] do
         _GET_ [:mouse_x, :mouse_y], control: [:_ROOT_] do |mouse_x:, mouse_y:|
           _SEND_ [:layout01, :comment_area] do

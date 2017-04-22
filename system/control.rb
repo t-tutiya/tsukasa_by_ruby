@@ -642,11 +642,12 @@ class Control #プロパティのパラメータ遷移
 
   #_MOVE_ [フレーム数, 
   #          {
-  #            easing: イージング種類,
-  #            lerp: 補間種類,
-  #            control: コントールへの相対パス,
+  #            easing: イージング種類（初期値： :liner）,
+  #            lerp: 補間種類（初期値： :liner）,
+  #            control: コントールへの相対パス（初期値： nil）,
+  #            int: 整数化するかどうかのフラグ）（初期値： nil）
   #          }, 
-  #         現在フレーム数
+  #         現在フレーム数（初期値：0）
   #       ], 
   #       プロパティ名： [補間パラメータ], プロパティ名２...
   def _MOVE_(_ARGUMENT_:, **options)
@@ -669,10 +670,13 @@ class Control #プロパティのパラメータ遷移
 
     #プロパティ走査
     options.each do |key, value|
+      #線形補完実行
+      result = LerpProcHash[hash[:lerp] || :liner].call(value, step)
+
       #値を更新する
       find_control(hash[:control]).send(key.to_s + "=", 
-        #線形補完実行
-        LerpProcHash[hash[:lerp] || :liner].call(value, step)
+        #intオプションが設定されているなら整数化する
+        hash[:int] ? result.to_i : result
       )
     end
 

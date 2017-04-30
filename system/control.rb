@@ -478,14 +478,15 @@ class Control #制御構文
     end
   end
 
-  def _BREAK_(**)
+  def _BREAK_(_ARGUMENT_: 1, **)
     #_END_LOOP_タグが見つかるまで@command_listからコマンドを取り除く
     #_END_LOOP_タグが見つからない場合は@command_listを空にする
     until @command_list.empty? do
       if @command_list.shift[0] == :_END_LOOP_ 
         #再スタックされている_LOOP_ブロックを削除する
         @command_list.shift 
-        break 
+        _ARGUMENT_ -= 1
+        break if _ARGUMENT_ == 0
       end
     end
   end

@@ -35,7 +35,11 @@ module Tsukasa
 module Clickable
   include Layoutable
 
-  #コリジョンのエンティティ
+  #コリジョンの配列指定
+  #[x, y]                    1ピクセルの点
+  #[x, y, r]                 中心(x, y)から半径rのサイズの円
+  #[x1, y1, x2, y2]          左上(x1, y1)と右下(x2, y2)を結ぶ矩形
+  #[x1, y1, x2, y2, x3, y3]  (x1, y1)～(x2, y2)～(x3, y3)を結ぶ三角形
   attr_reader :shape
   def shape=(arg)
     @shape = arg

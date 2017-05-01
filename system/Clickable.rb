@@ -28,23 +28,12 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require_relative './Layoutable.rb'
+require_relative './Collisionable.rb'
 
 module Tsukasa
 
 module Clickable
-  include Layoutable
-
-  #コリジョンの配列指定
-  #[x, y]                    1ピクセルの点
-  #[x, y, r]                 中心(x, y)から半径rのサイズの円
-  #[x1, y1, x2, y2]          左上(x1, y1)と右下(x2, y2)を結ぶ矩形
-  #[x1, y1, x2, y2, x3, y3]  (x1, y1)～(x2, y2)～(x3, y3)を結ぶ三角形
-  attr_reader :shape
-  def shape=(arg)
-    @shape = arg
-    @collision_sprite.collision = @shape
-  end
+  include Collisionable
 
   def cursor_x()
     @mouse_sprite.x - @absolute_x
@@ -116,23 +105,13 @@ module Clickable
                   _SPRITE_API_: DXRuby::Sprite,
                   **options, 
                   &block)
-    #ベースクラス
-    @_INPUT_API_ = _INPUT_API_
     #カラーキー
     @colorkey_id = options[:colorkey_id]
     #カラーキーボーダー
     @colorkey_border = options[:colorkey_border] || 255
 
-    #コリジョン形状の指定
-    @shape = options[:shape] || [0,0]
-
-    #コントロールSprite初期化
-    @collision_sprite = _SPRITE_API_.new
-    @collision_sprite.collision = @shape
-
-    #コリジョン図形の位置を補正
-    @collision_sprite.x = 0
-    @collision_sprite.y = 0
+    #コリジョンの初期化
+    options[:shape] ||= [0,0]
 
     #カーソルSprite初期化
     @mouse_sprite = _SPRITE_API_.new
@@ -165,8 +144,6 @@ module Clickable
     #カーソル座標を保存する
     @mouse_sprite.x = @_INPUT_API_.mouse_x
     @mouse_sprite.y = @_INPUT_API_.mouse_y
-    @collision_sprite.x = absolute_x + @x
-    @collision_sprite.y = absolute_y + @y
 
     #マウスカーソル座標との衝突判定
     if not (@mouse_sprite === @collision_sprite)

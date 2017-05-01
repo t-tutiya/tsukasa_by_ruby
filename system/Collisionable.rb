@@ -39,7 +39,11 @@ module Collisionable
   #DXRuby::Sprite
   attr_reader :collision_sprite
 
-  #コリジョンの配列
+  #コリジョンの配列指定
+  #[x, y]                    1ピクセルの点
+  #[x, y, r]                 中心(x, y)から半径rのサイズの円
+  #[x1, y1, x2, y2]          左上(x1, y1)と右下(x2, y2)を結ぶ矩形
+  #[x1, y1, x2, y2, x3, y3]  (x1, y1)～(x2, y2)～(x3, y3)を結ぶ三角形
   attr_reader :shape
   def shape=(arg)
     @shape = arg
@@ -72,16 +76,16 @@ module Collisionable
     @collision_sprite = _SPRITE_API_.new
     @collision_sprite.collision = @shape
 
-    super
-
     #コリジョン図形の位置を補正
-    @collision_sprite.x = @x
-    @collision_sprite.y = @y
+    @collision_sprite.x = 0
+    @collision_sprite.y = 0
+
+    super
   end
   
   def update(absolute_x, absolute_y)
-    @collision_sprite.x = @x
-    @collision_sprite.y = @y
+    @collision_sprite.x = absolute_x + @x
+    @collision_sprite.y = absolute_y + @y
     super
   end
   

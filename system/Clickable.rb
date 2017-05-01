@@ -46,8 +46,14 @@ module Clickable
     @collision_sprite.collision = @shape
   end
 
-  attr_reader  :cursor_x
-  attr_reader  :cursor_y
+  def cursor_x()
+    @mouse_sprite.x - @absolute_x
+  end
+
+  def cursor_y()
+    @mouse_sprite.y - @absolute_y
+  end
+
   attr_accessor  :colorkey_id
   attr_accessor  :colorkey_border
 
@@ -135,13 +141,11 @@ module Clickable
     #カーソル座標がコントロール内にある
     @cursor_in  = false
 
-    #コントロールに対するカーソルの相対座標
-    @cursor_x = @cursor_y = 0
     super
   end
 
   #描画
-  def update(mouse_pos_x, mouse_pos_y)
+  def update(absolute_x, absolute_y)
     @on_inner_control = false
     @on_mouse_over  = false
     @on_mouse_out   = false
@@ -159,8 +163,10 @@ module Clickable
     @on_right_key_up_out  = false
 
     #カーソル座標を保存する
-    @cursor_x = @mouse_sprite.x = mouse_pos_x - @x
-    @cursor_y = @mouse_sprite.y = mouse_pos_y - @y
+    @mouse_sprite.x = @_INPUT_API_.mouse_x
+    @mouse_sprite.y = @_INPUT_API_.mouse_y
+    @collision_sprite.x = absolute_x + @x
+    @collision_sprite.y = absolute_y + @y
 
     #マウスカーソル座標との衝突判定
     if not (@mouse_sprite === @collision_sprite)
@@ -168,7 +174,8 @@ module Clickable
       @on_inner_control = false
     elsif @colorkey_id and (
       child_control(@colorkey_id).entity[
-        mouse_pos_x - @x, mouse_pos_y - @y][0] <= @colorkey_border)
+        @mouse_sprite.x - @absolute_x, @mouse_sprite.y - @absolute_y
+      ][0] <= @colorkey_border)
       #マウスカーソルがコリジョン範囲内にあるがカラーキーボーダー内に無い
       @on_inner_control = false
     else

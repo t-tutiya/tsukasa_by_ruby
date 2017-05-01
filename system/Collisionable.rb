@@ -79,7 +79,7 @@ module Collisionable
     @collision_sprite.y = @y
   end
   
-  def update(mouse_pos_x, mouse_pos_y)
+  def update(absolute_x, absolute_y)
     @collision_sprite.x = @x
     @collision_sprite.y = @y
     super

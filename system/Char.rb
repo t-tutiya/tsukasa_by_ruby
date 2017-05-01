@@ -272,7 +272,7 @@ class Char < Control
     super
   end
 
-  def update(mouse_pos_x, mouse_pos_y)
+  def update(absolute_x, absolute_y)
     #更新フラグが立っていないなら終了
     return super unless @option_update
 

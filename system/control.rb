@@ -138,7 +138,7 @@ class Control #公開インターフェイス
 end
 
 class Control
-  def update(mouse_pos_x, mouse_pos_y)
+  def update(absolute_x, absolute_y)
     #コマンドリストが空になるまで走査し、コマンドを実行する
     until @command_list.empty?
       #コマンドリストの先頭要素を取得
@@ -158,7 +158,7 @@ class Control
     #下位コントロール巡回
     @control_list.delete_if do |child_control|
       #下位コントロールを自ターゲットに直接描画
-      child_control.update(mouse_pos_x, mouse_pos_y)
+      child_control.update(absolute_x, absolute_y)
       #コントロールの削除チェック
       child_control.delete?
     end

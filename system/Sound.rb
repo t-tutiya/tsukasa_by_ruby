@@ -57,7 +57,7 @@ class Sound  < Control
     self.path = options[:path]
   end
 
-  def update(mouse_pos_x, mouse_pos_y)
+  def update(absolute_x, absolute_y)
     Ayame.update
     super
   end

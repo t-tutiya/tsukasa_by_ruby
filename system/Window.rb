@@ -161,18 +161,18 @@ class Window < Layout
     super
   end
 
-  def update(mouse_pos_x, mouse_pos_y)
+  def update(absolute_x, absolute_y)
     #「閉じる」ボタンが押下された
     if @_INPUT_API_.requested_close? and @auto_close
       set_exit()
     end
 
     #マウスのオフセット増分と座標を保存
-    @mouse_offset_x = mouse_pos_x - @mouse_x
-    @mouse_x = mouse_pos_x
+    @mouse_offset_x = @_INPUT_API_.mouse_x - @mouse_x
+    @mouse_x = @_INPUT_API_.mouse_x
 
-    @mouse_offset_y = mouse_pos_y - @mouse_y
-    @mouse_y = mouse_pos_y
+    @mouse_offset_y = @_INPUT_API_.mouse_y - @mouse_y
+    @mouse_y = @_INPUT_API_.mouse_y
 
     #windowがアクティブで無ければ子コントロールを動作せずに終了
     return  unless @_WINDOW_API_.active? and @inactive_pause

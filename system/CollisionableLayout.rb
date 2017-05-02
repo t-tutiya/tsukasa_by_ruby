@@ -97,6 +97,24 @@ module Collisionable
     @collision_sprite.angle
   end
 
+  #衝突判定の有効、無効を変更します。
+  #bool (初期値： true)
+  def collision_enable=(arg)
+    @collision_sprite.collision_enable = arg
+  end
+  def angle()
+    @collision_sprite.collision_enable
+  end
+
+  #衝突判定範囲に回転/スケーリングを加味する場合に真を返します。
+  #bool (初期値： true)
+  def collision_sync=(arg)
+    @collision_sprite.collision_sync = arg
+  end
+  def angle()
+    @collision_sprite.collision_sync
+  end
+
   def check_imple(condition, value)
     case condition
     when :collision_target
@@ -112,6 +130,13 @@ module Collisionable
                   _INPUT_API_: DXRuby::Input,
                   _SPRITE_API_: DXRuby::Sprite,
                   shape:, 
+                  scale_x: 1.0,
+                  scale_y: 1.0,
+                  center_x: 0,
+                  center_y: 0,
+                  angle: 0.0,
+                  collision_enable: true,
+                  collision_sync: true,
                   **options, 
                   &block)
     #ベースクラス
@@ -122,11 +147,15 @@ module Collisionable
     self.shape = shape
 
     #アフィン変換系初期化
-    self.scale_x = options[:scale_x] || 1.0
-    self.scale_y = options[:scale_y] || 1.0
-    self.center_x = options[:center_x] || 0
-    self.center_y = options[:center_y] || 0
-    self.angle = options[:angle] || 0.0
+    self.scale_x = scale_x
+    self.scale_y = scale_y
+    self.center_x = center_x
+    self.center_y = center_y
+    self.angle = angle
+    
+    #フラグ初期化
+    self.collision_enable = collision_enable
+    self.collision_sync = collision_sync
 
     #コリジョン図形の位置を補正
     @collision_sprite.x = 0

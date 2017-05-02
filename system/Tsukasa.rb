@@ -41,8 +41,6 @@ require_relative './Control.rb'
 
 #レイアウトコントロール
 require_relative './Layout.rb'
-#衝突判定を持つレイアウトコントロール
-require_relative './Collisionable.rb'
 #描画実体を持つレイアウトコントロール
 require_relative './DrawableLayout.rb'
 #マウスカーソル衝突判定を持つレイアウトコントロール

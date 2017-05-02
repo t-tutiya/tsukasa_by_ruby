@@ -107,15 +107,13 @@ module Clickable
   def initialize( system, 
                   _INPUT_API_: DXRuby::Input,
                   _SPRITE_API_: DXRuby::Sprite,
+                  shape:,
                   **options, 
                   &block)
     #カラーキー
     @colorkey_id = options[:colorkey_id]
     #カラーキーボーダー
     @colorkey_border = options[:colorkey_border] || 255
-
-    #コリジョンの初期化
-    options[:shape] ||= [0,0]
 
     #カーソルSprite初期化
     @mouse_sprite = _SPRITE_API_.new

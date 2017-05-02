@@ -129,6 +129,7 @@ class Window < Layout
   def initialize(system = [nil, nil, nil],
                  _INPUT_API_: DXRuby::Input, 
                  _WINDOW_API_: DXRuby::Window, 
+                 shape: [0,0],
                  **options, 
                  &block)
     #ベースオブジェクト

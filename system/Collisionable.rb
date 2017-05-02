@@ -44,10 +44,11 @@ module Collisionable
   #[x, y, r]                 中心(x, y)から半径rのサイズの円
   #[x1, y1, x2, y2]          左上(x1, y1)と右下(x2, y2)を結ぶ矩形
   #[x1, y1, x2, y2, x3, y3]  (x1, y1)～(x2, y2)～(x3, y3)を結ぶ三角形
-  attr_reader :shape
+  def shape()
+    @collision_sprite.collision
+  end
   def shape=(arg)
-    @shape = arg
-    @collision_sprite.collision = @shape
+    @collision_sprite.collision = arg
   end
 
   def check_imple(condition, value)
@@ -64,17 +65,15 @@ module Collisionable
   def initialize( system, 
                   _INPUT_API_: DXRuby::Input,
                   _SPRITE_API_: DXRuby::Sprite,
+                  shape:, 
                   **options, 
                   &block)
     #ベースクラス
     @_INPUT_API_ = _INPUT_API_
 
-    #コリジョン形状の指定
-    @shape = options[:shape] || [0,0, options[:width], options[:height]]
-
     #コントロールSprite初期化
     @collision_sprite = _SPRITE_API_.new
-    @collision_sprite.collision = @shape
+    @collision_sprite.collision = shape
 
     #コリジョン図形の位置を補正
     @collision_sprite.x = 0
@@ -86,6 +85,7 @@ module Collisionable
   def update(absolute_x, absolute_y)
     @collision_sprite.x = absolute_x + @x
     @collision_sprite.y = absolute_y + @y
+
     super
   end
   

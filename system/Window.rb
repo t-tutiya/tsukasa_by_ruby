@@ -134,7 +134,6 @@ class Window < Layout
                  **options, 
                  &block)
     #ベースオブジェクト
-    @_INPUT_API_ = _INPUT_API_
     @_WINDOW_API_ = _WINDOW_API_
 
     #アプリ終了フラグ
@@ -147,8 +146,6 @@ class Window < Layout
     @mouse_x = 0
     @mouse_y = 0
 
-    #マウスカーソル可視フラグ
-    self.mouse_enable = options[:mouse_enable] || true
     #タイトルバーに表示するアイコン
     self.caption = options[:caption] || "Tsukasa Engine powered by DXRuby"
     #フレーム更新時のリセット背景色
@@ -161,9 +158,13 @@ class Window < Layout
     
     #マウスカーソルコリジョン範囲の初期化
     options[:shape] = [ 0, 0, width, height]
+
+    super
+
+    #マウスカーソル可視フラグ
+    self.mouse_enable = options[:mouse_enable] || true
     #マウスカーソルの形状
     self.cursor_type = options[:cursor_type] || IDC_ARROW
-    super
   end
 
   def update(absolute_x, absolute_y)

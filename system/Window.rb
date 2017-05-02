@@ -31,7 +31,7 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require_relative './Clickable.rb'
+require_relative './ClickableLayout.rb'
 
 module Tsukasa
 

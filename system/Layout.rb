@@ -28,9 +28,31 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require_relative './Layoutable.rb'
+require_relative './Control.rb'
 
 module Tsukasa
+
+module Layoutable
+  #座標
+  attr_accessor  :x
+  attr_accessor  :y
+  attr_reader  :absolute_x
+  attr_reader  :absolute_y
+
+  def initialize(system, x: 0, y: 0, **options, &block)
+    @x = x #描画Ｘ座標
+    @y = y #描画Ｙ座標
+    @absolute_x = 0
+    @absolute_y = 0
+    super
+  end
+
+  def update(absolute_x, absolute_y)
+    @absolute_x = @x + absolute_x
+    @absolute_y = @y + absolute_y
+    super(@absolute_x, @absolute_y)
+  end
+end
 
 class Layout < Control
   include Layoutable

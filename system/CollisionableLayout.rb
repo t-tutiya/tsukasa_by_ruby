@@ -29,7 +29,7 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require_relative './Layoutable.rb'
+require_relative './Layout.rb'
 
 module Tsukasa
 

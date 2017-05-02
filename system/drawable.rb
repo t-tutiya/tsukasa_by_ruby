@@ -28,7 +28,7 @@
 #[The zlib/libpng License http://opensource.org/licenses/Zlib]
 ###############################################################################
 
-require_relative './Layoutable.rb'
+require_relative './Layout.rb'
 #汎用リソースキャッシュ管理機構
 require_relative './CacheManager.rb'
 

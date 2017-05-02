@@ -44,11 +44,57 @@ module Collisionable
   #[x, y, r]                 中心(x, y)から半径rのサイズの円
   #[x1, y1, x2, y2]          左上(x1, y1)と右下(x2, y2)を結ぶ矩形
   #[x1, y1, x2, y2, x3, y3]  (x1, y1)～(x2, y2)～(x3, y3)を結ぶ三角形
+  def shape=(arg)
+    @collision_sprite.collision = arg
+  end
   def shape()
     @collision_sprite.collision
   end
-  def shape=(arg)
-    @collision_sprite.collision = arg
+
+  #横の拡大率 
+  #Float (初期値： 1.0)
+  def scale_x=(arg)
+    @collision_sprite.scale_x = arg
+  end
+  def scale_x()
+    @collision_sprite.scale_x
+  end
+
+  #縦の拡大率  
+  #Float (初期値： 1.0)
+  def scale_y=(arg)
+    @collision_sprite.scale_y = arg
+  end
+  def scale_y()
+    @collision_sprite.scale_y
+  end
+
+  #回転、拡大の中心X座標。
+  #Integer (初期値： 0)
+  def center_x=(arg)
+    @collision_sprite.center_x = arg
+  end
+  def center_x()
+    @collision_sprite.center_x
+  end
+
+  #回転、拡大の中心Y座標。
+  #Integer (初期値： 0)
+  def center_y=(arg)
+    @collision_sprite.center_y = arg
+  end
+  def center_y()
+    @collision_sprite.center_y
+  end
+
+
+  #360度系で画像の回転角度を指定します。
+  #Float (初期値： 0.0)
+  def angle=(arg)
+    @collision_sprite.angle = arg
+  end
+  def angle()
+    @collision_sprite.angle
   end
 
   def check_imple(condition, value)
@@ -73,7 +119,14 @@ module Collisionable
 
     #コントロールSprite初期化
     @collision_sprite = _SPRITE_API_.new
-    @collision_sprite.collision = shape
+    self.shape = shape
+
+    #アフィン変換系初期化
+    self.scale_x = options[:scale_x] || 1.0
+    self.scale_y = options[:scale_y] || 1.0
+    self.center_x = options[:center_x] || 0
+    self.center_y = options[:center_y] || 0
+    self.angle = options[:angle] || 0.0
 
     #コリジョン図形の位置を補正
     @collision_sprite.x = 0

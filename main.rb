@@ -67,7 +67,7 @@ end
 DXRuby::Window.x = x
 DXRuby::Window.y = y
 
-tsukasa = Tsukasa::Window.new()do
+tsukasa = Tsukasa::Window.new(width: width, height: height)do
   #ヘルパーコントロール群
 
   #データストアコントロール
@@ -120,9 +120,6 @@ tsukasa = Tsukasa::Window.new()do
     z: 1000000 #描画順序
   #初期テキストウィンドウのidを格納
   _DEFINE_PROPERTY_ _DEFAULT_TEXT_PAGE_: [:_ROOT_, :text0]
-
-  #画面サイズ変更
-  _RESIZE_ width: 1024, height: 600
 
   #最初に実行するスクリプトファイルを呼びだす
   _INCLUDE_ "./first.rb"

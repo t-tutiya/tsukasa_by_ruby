@@ -129,7 +129,8 @@ class Window < Layout
   def initialize(system = [nil, nil, nil],
                  _INPUT_API_: DXRuby::Input, 
                  _WINDOW_API_: DXRuby::Window, 
-                 shape: [0,0],
+                 width: 640,
+                 height: 480,
                  **options, 
                  &block)
     #ベースオブジェクト
@@ -157,6 +158,9 @@ class Window < Layout
     if options[:icon_path]
       self.icon_path = options[:icon_path]
     end
+    
+    #マウスカーソルコリジョン範囲の初期化
+    options[:shape] = [ 0, 0, width, height]
     #マウスカーソルの形状
     self.cursor_type = options[:cursor_type] || IDC_ARROW
     super

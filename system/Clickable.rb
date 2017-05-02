@@ -35,15 +35,19 @@ module Tsukasa
 module Clickable
   include Collisionable
 
+  #コントロール原点とマウスカーソル座標との相対Ｘ座標
   def cursor_x()
     @mouse_sprite.x - @absolute_x
   end
 
+  #コントロール原点とマウスカーソル座標との相対Ｙ座標
   def cursor_y()
     @mouse_sprite.y - @absolute_y
   end
 
+  #カラーキーに使用するマスク画像を持つImageコントロールへの相対パス
   attr_accessor  :colorkey_id
+  #マスクデータを判定要素に用いる閾値
   attr_accessor  :colorkey_border
 
   def check_imple(condition, value)
@@ -150,7 +154,7 @@ module Clickable
       #マウスカーソルがコリジョン範囲内に無い
       @on_inner_control = false
     elsif @colorkey_id and (
-      child_control(@colorkey_id).entity[
+      find_control(@colorkey_id).entity[
         @mouse_sprite.x - @absolute_x, @mouse_sprite.y - @absolute_y
       ][0] <= @colorkey_border)
       #マウスカーソルがコリジョン範囲内にあるがカラーキーボーダー内に無い

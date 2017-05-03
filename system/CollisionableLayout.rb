@@ -102,7 +102,7 @@ module Collisionable
   def collision_enable=(arg)
     @collision_sprite.collision_enable = arg
   end
-  def angle()
+  def collision_enable()
     @collision_sprite.collision_enable
   end
 
@@ -111,7 +111,7 @@ module Collisionable
   def collision_sync=(arg)
     @collision_sprite.collision_sync = arg
   end
-  def angle()
+  def collision_sync()
     @collision_sprite.collision_sync
   end
 

@@ -319,10 +319,13 @@ end
 class Control #コントロールの生成／破棄
   #コントロールをリストに登録する
   def _CREATE_(_ARGUMENT_:, **options)
+    _ARGUMENT_ = Array(_ARGUMENT_)
+    control_name = _ARGUMENT_[0]
+    index = _ARGUMENT_[1] || -1
     #コントロールを生成して子要素として登録する
-    @control_list.push(
+    @control_list.insert(index, 
       #名前空間Tsukasa内のクラスを生成する
-      Tsukasa.const_get(_ARGUMENT_).new([ @root_control, 
+      Tsukasa.const_get(control_name).new([ @root_control, 
                                           self,
                                           @temporary_yield_stack], 
                                         options, 

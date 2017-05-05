@@ -419,8 +419,9 @@ class Control #セッター／ゲッター
       begin
         #コントロールプロパティから値を取得する
         result[property[2]] = find_control(property[1]).send(property[0])
-      rescue
+      rescue NoMethodError => e
         warn  "クラス[#{find_control(property[1]).class}]：プロパティ[" + "#{property[0]}]は存在しません"
+        puts e
       end
     end
 

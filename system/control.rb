@@ -398,8 +398,9 @@ class Control #セッター／ゲッター
       begin
         #コントロールプロパティに値を代入
         find_control(_ARGUMENT_).send(key.to_s + "=", val)
-      rescue
+      rescue NoMethodError => e
         warn  "クラス[#{self.class}]：プロパティ[" + "#{key}]は存在しません"
+        puts e
       end
     end
   end

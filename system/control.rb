@@ -287,7 +287,7 @@ class Control #内部メソッド
   end
 
   #コマンドの実行
-  def exec_command(command_name, options)
+  def exec_command(command_name, options, &block)
     #コマンドがメソッドとして存在する場合
     if self.respond_to?(command_name, true)
       #コマンドを実行する
@@ -307,8 +307,11 @@ class Control #内部メソッド
     #終端コマンドを挿入
     unshift_command(:_END_FUNCTION_)
 
-    #スタックプッシュ
+    #ブロックが直接付与されていればそれを付与ブロックとする
+    @temporary_command_block = block if block
+    #付与ブロックをスタックプッシュ
     @temporary_yield_stack.push(@temporary_command_block)
+    #次のメソッドで使用する為にユーザー定義関数をテンポラリブロックに格納
     @temporary_command_block = function_block
 
     #functionを実行時評価しコマンド列を生成する。
